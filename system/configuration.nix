@@ -41,14 +41,31 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
+  #i18n.defaultLocale = "en_US.UTF-8";
+  i18n = {
+    #consoleFont = "cyr-sun16";
+    #consoleKeyMap = "ruwin_cplk-UTF-8";
+    defaultLocale = "ru_RU.UTF-8";
+  };
+  #console = {
+  #  font = "Lat2-Terminus16";
+  #  keyMap = "us";
+  #};
   console = {
-    font = "Lat2-Terminus16";
-    keyMap = "us";
+    font = "cyr-sun16";
+    keyMap = "ruwin_cplk-UTF-8";
   };
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  # Configure keymap in X11
+  services.xserver = {
+    exportConfiguration = true;
+    enable = true;
+    xkbModel = "microsoft";
+    layout = "us,ru(winkeys)";
+    xkbOptions = "grp:toggle"; # rctrl toggle keyboard
+    xkbVariant = "winkeys";
+  };
 
   # Enable SDDM
   services.xserver.displayManager.sddm.enable = true;
@@ -74,10 +91,6 @@
   #    dwm = prev.dwm.overrideAttrs (old: { src = /home/cory/dwm-6.2 ;});
   #  })
   #];
-
-  # Configure keymap in X11
-  services.xserver.layout = "us";
-  # services.xserver.xkbOptions = "eurosign:e";
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -234,6 +247,8 @@
     #anbox
     blender
     zathura
+    joplin
+    joplin-desktop
 
     # other essentials
     nerdfonts
@@ -248,6 +263,7 @@
     #conky
     git-crypt
     gnupg
+    cool-retro-term
   ];
 
   # Fonts
@@ -282,6 +298,12 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "21.05"; # Did you read the comment?
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 14d";
+  };
 
 }
 

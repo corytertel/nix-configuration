@@ -19,6 +19,21 @@
     lib = nixpkgs.lib;
 
   in {
+    homeManagerConfigurations = {
+      #entry for each user account
+      cory = home-manager.lib.homeManagerConfiguration {
+        inherit system pkgs;
+        username = "cory";
+        stateVersion = "21.05";
+        homeDirectory = "/home/cory";
+        configuration = {
+          imports = [
+            ./users/cory/home.nix
+          ];
+        };
+      };
+    };
+
     nixosConfigurations = {
       # use the host name
       nixos = lib.nixosSystem {
@@ -26,6 +41,11 @@
 
         modules = [
           ./system/configuration.nix
+          home-manager.nixosModules.home-manager {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            #home-manager.users.cory = import ./users/cory/home.nix;
+          }
         ];
       };
     };
