@@ -8,10 +8,8 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./apps/nvim
-      ./apps/vscode
-      #./apps/kitty
-      #./apps/bash
+      #./apps/nvim
+      #./apps/vscode
       #./steam.nix
     ];
 
@@ -41,16 +39,9 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
-  #i18n.defaultLocale = "en_US.UTF-8";
   i18n = {
-    #consoleFont = "cyr-sun16";
-    #consoleKeyMap = "ruwin_cplk-UTF-8";
     defaultLocale = "ru_RU.UTF-8";
   };
-  #console = {
-  #  font = "Lat2-Terminus16";
-  #  keyMap = "us";
-  #};
   console = {
     font = "cyr-sun16";
     keyMap = "ruwin_cplk-UTF-8";
@@ -196,74 +187,6 @@
     os-prober
     ntfs3g
    # end install essentials
-
-   # linux basics
-    killall
-    chezmoi
-    #neovim 
-    kitty
-    vlc
-    gwenview
-    neofetch
-    cmus
-    youtube-dl
-    feh
-    cmatrix
-    pipes
-    dmenu
-    networkmanager_dmenu
-    picom
-    dunst
-    alacritty
-    slock
-    ranger
-    bpytop
-    atool
-    libsForQt5.ark
-    nodejs
-    yarn
-
-  # development basics
-    ccls
-    clang_12
-    llvmPackages_12.clang-unwrapped # clangd
-    clang-tools
-    llvmPackages_12.libcxx
-    clang-analyzer
-    cppcheck
-    ncurses
-    global
-    gdb
-
-   # essential user apps
-    discord
-    #steam
-    #vscode
-    tdesktop
-    flameshot
-    libreoffice
-    gimp
-    #wpgtk
-    #anbox
-    blender
-    zathura
-    joplin
-    joplin-desktop
-
-    # other essentials
-    nerdfonts
-    roboto-mono
-    libsForQt5.krohnkite
-    betterdiscord-installer
-    nix-prefetch-github
-    haskellPackages.xmobar
-    libsForQt5.plasma-applet-virtual-desktop-bar
-   # latte-dock
-    #libsForQt5.qtstyleplugin-kvantum
-    #conky
-    git-crypt
-    gnupg
-    cool-retro-term
   ];
 
   # Fonts
