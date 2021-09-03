@@ -66,6 +66,9 @@
     global
     gdb
 
+  # other programing languages
+    jdk11 #openjdk11 for java
+
    # essential user apps
     discord
     #steam
@@ -98,6 +101,12 @@
     bb
     htop
     qbittorrent
+    audacity
+    protonvpn-gui
+    protonvpn-cli
+    polkit
+    libsForQt5.polkit-qt
+    brave
   ];
 
   home.file = {
