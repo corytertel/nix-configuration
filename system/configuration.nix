@@ -124,6 +124,7 @@
 
   # Enable steam
   programs.steam.enable = true;
+  nixpkgs.config.allowNonFree = true;
 
   # Enable zsh
   #programs.zsh.enable = true;
@@ -147,6 +148,8 @@
     wpa_supplicant
     mtools
     dosfstools
+    parted
+    gparted
    # base development tools 
     autoconf
     automake

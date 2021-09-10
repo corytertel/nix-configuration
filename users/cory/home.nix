@@ -68,6 +68,8 @@
 
   # other programing languages
     jdk11 #openjdk11 for java
+    python39Full
+    python39Packages.pip
 
    # essential user apps
     discord
@@ -107,6 +109,8 @@
     polkit
     libsForQt5.polkit-qt
     brave
+    celluloid
+    gnome.gnome-disk-utility
   ];
 
   home.file = {
