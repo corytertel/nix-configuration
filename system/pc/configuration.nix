@@ -76,7 +76,7 @@
   #services.xserver.displayManager.lightdm.enable = true;
 
   # Enable DWM
-  services.xserver.windowManager.dwm.enable = true; 
+  #services.xserver.windowManager.dwm.enable = true; 
 
   # Enable the Plasma 5 Desktop Environment.
   services.xserver.desktopManager.plasma5.enable = true;
@@ -88,11 +88,11 @@
   #};
 
   # Use custom DWM build
-  nixpkgs.overlays = [
-    (final: prev: {
-      dwm = prev.dwm.overrideAttrs (old: { src = ../dwm/dwm-6.2 ;});
-    })
-  ];
+  #nixpkgs.overlays = [
+  #  (final: prev: {
+  #    dwm = prev.dwm.overrideAttrs (old: { src = ./dwm/dwm-6.2 ;});
+  #  })
+  #];
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
