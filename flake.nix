@@ -21,14 +21,26 @@
   in {
     homeManagerConfigurations = {
       #entry for each user account
-      cory = home-manager.lib.homeManagerConfiguration {
+      pc = home-manager.lib.homeManagerConfiguration {
         inherit system pkgs;
         username = "cory";
         stateVersion = "21.05";
         homeDirectory = "/home/cory";
         configuration = {
           imports = [
-            ./users/cory/home.nix
+            ./users/pc/home.nix
+          ];
+        };
+      };
+
+      laptop = home-manager.lib.homeManagerConfiguration {
+        inherit system pkgs;
+        username = "cory";
+        stateVersion = "21.05";
+        homeDirectory = "/home/cory";
+        configuration = {
+          imports = [
+            ./users/laptop/home.nix
           ];
         };
       };
