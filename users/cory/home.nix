@@ -7,6 +7,7 @@
       ./apps/kitty
       ./apps/bash
       ./apps/vscode
+      #./apps/emacs
     ];
 
   # Let Home Manager install and manage itself.
@@ -43,7 +44,7 @@
     dmenu
     networkmanager_dmenu
     picom
-    dunst
+    #dunst
     alacritty
     slock
     ranger
@@ -90,6 +91,7 @@
     roboto-mono
     libsForQt5.krohnkite
     betterdiscord-installer
+    betterdiscordctl
     nix-prefetch-github
     #haskellPackages.xmobar
     libsForQt5.plasma-applet-virtual-desktop-bar
@@ -111,6 +113,9 @@
     brave
     celluloid
     gnome.gnome-disk-utility
+    steamPackages.steamcmd
+    steam-tui
+    mpv
   ];
 
   home.file = {

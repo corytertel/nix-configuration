@@ -12,6 +12,7 @@ PS1='[\u@\h \W]\$ '
 alias vim='nvim'
 export EDITOR='nvim'
 alias cvim='chezmoi edit'
+export CHEZMOI_PROFILE='pc'
 export ELEMENTS='/run/media/cory/Elements'
 export MUSIC='/run/media/cory/Elements/Public/Music/Playlists/'
 
@@ -260,7 +261,9 @@ bash_prompt() {
 	local BACKGROUND_3=$MAGENTA
 	local TEXTEFFECT_3=$BOLD
 
-	local PROMT_FORMAT=$WHITE_BOLD 
+	#local PROMT_FORMAT=$WHITE_BOLD 
+	local PROMT_FORMAT=$NO_FORMAT
+    
     
 	############################################################################
 	## EXAMPLE CONFIGURATIONS                                                 ##

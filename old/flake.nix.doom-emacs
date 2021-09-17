@@ -5,9 +5,10 @@
     nixpkgs.url = "nixpkgs/nixos-21.05";
     home-manager.url = "github:nix-community/home-manager/release-21.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    nix-doom-emacs.url = "github:vlaci/nix-doom-emacs";
   };
 
-  outputs = { nixpkgs, home-manager, ... }: 
+  outputs = { nixpkgs, home-manager, nix-doom-emacs, ... }: 
   let
     system = "x86_64-linux";
 
@@ -36,28 +37,23 @@
 
     nixosConfigurations = {
       # use the host name
-      pc = lib.nixosSystem {
+      nixos = lib.nixosSystem {
         inherit system;
 
         modules = [
-          ./system/pc/configuration.nix
+          ./system/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             #home-manager.users.cory = import ./users/cory/home.nix;
-          }
-        ];
-      };
 
-      laptop = lib.nixosSystem {
-        inherit system;
-
-        modules = [
-          ./system/laptop/configuration.nix
-          home-manager.nixosModules.home-manager {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            #home-manager.users.cory = import ./users/cory/home.nix;
+            home-manager.users.cory = { pkgs, ... }: {
+            imports = [ nix-doom-emacs.hmModule ];
+            programs.doom-emacs = {
+              enable = true;
+              doomPrivateDir = ./users/cory/apps/emacs/doom.d;
+            };
+          };
           }
         ];
       };

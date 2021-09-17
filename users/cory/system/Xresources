@@ -2,4 +2,4 @@
 # Set DPI to the scale you want your applications at
 # 175 for desktop, 250 for laptop typically
 
-Xft.dpi: 250
+Xft.dpi: 175

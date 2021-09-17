@@ -5,13 +5,13 @@
     enable = true;
     extensions = (with pkgs.vscode-extensions; [
       bbenoist.Nix
-      ms-vscode.cpptools
+      #ms-vscode.cpptools
       vscodevim.vim
       ms-vscode-remote.remote-ssh
       haskell.haskell
       coenraads.bracket-pair-colorizer-2
       matklad.rust-analyzer
-      streetsidesoftware.code-spell-checker
+      #streetsidesoftware.code-spell-checker
     ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
       name = "gruvbox";
       publisher = "jdinhlife";
