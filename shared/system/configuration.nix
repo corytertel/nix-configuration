@@ -6,19 +6,17 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+    [
+
     ];
 
-  # Use the systemd-boot EFI boot loader.
-  # boot.loader.systemd-boot.enable = true;
+  # Dual booting with GRUB
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub.enable = true;
   boot.loader.grub.devices = ["nodev"];
   boot.loader.grub.efiSupport = true;
   boot.loader.grub.useOSProber = true;
 
-  # Networking 
   networking.hostName = "nixos"; # Define your hostname.
   networking.wireless.enable = false;  # Enables wireless support via wpa_supplicant.
 
@@ -29,10 +27,6 @@
   # Per-interface useDHCP will be mandatory in the future, so this generated config
   # replicates the default behaviour.
   networking.useDHCP = false;
-  #networking.interfaces.wlp0s20f3.useDHCP = true;
-  networking.interfaces.enp0s20u1.useDHCP = true;
-  networking.interfaces.enp3s0.useDHCP = true;
-  networking.interfaces.wlp6s0.useDHCP = true;
   networking.networkmanager.enable = true;
 
   # Configure network proxy if necessary
@@ -45,13 +39,6 @@
     font = "Lat2-Terminus16";
     keyMap = "us";
   };
-  #i18n = {
-  #  defaultLocale = "ru_RU.UTF-8";
-  #};
-  #console = {
-  #  font = "cyr-sun16";
-  #  keyMap = "ruwin_cplk-UTF-8";
-  #};
 
   # Enable the X11 windowing system.
   # Configure keymap in X11
@@ -62,11 +49,6 @@
     layout = "us,ru(winkeys)";
     xkbOptions = "grp:toggle"; # ralt toggle keyboard
     xkbVariant = "winkeys";
-  };
-
-  # Drivers
-  services.xserver = {
-    videoDrivers = [ "nvidia" ];
   };
 
   # Enable SDDM
@@ -90,7 +72,7 @@
   # Use custom DWM build
   #nixpkgs.overlays = [
   #  (final: prev: {
-  #    dwm = prev.dwm.overrideAttrs (old: { src = ./dwm/dwm-6.2 ;});
+  #    dwm = prev.dwm.overrideAttrs (old: { src = /home/cory/dwm-6.2 ;});
   #  })
   #];
 
@@ -138,11 +120,6 @@
   # Enable steam
   programs.steam.enable = true;
   nixpkgs.config.allowNonFree = true;
-
-  # Enable zsh
-  #programs.zsh.enable = true;
-  #programs.zsh.oh-my-zsh.enable = false;
-  #users.defaultUserShell = pkgs.zsh;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget

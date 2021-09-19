@@ -4,10 +4,8 @@
   imports =
     [
       ./apps/nvim
-      ./apps/kitty
       ./apps/bash
       ./apps/vscode
-      #./apps/emacs
     ];
 
   # Let Home Manager install and manage itself.
@@ -86,6 +84,33 @@
     joplin
     joplin-desktop
 
+    # modern unix
+    bat #cat
+    exa # ls
+    lsd # ls
+    delta # viewer for git and diff output
+    dust # du
+    duf # df
+    broot # tree
+    fd # find
+    ripgrep # grep
+    ag # ack
+    fzf
+    mcfly
+    choose # cut and sometimes awk
+    jq # sed for json
+    sd # sed
+    cheat # cheatsheet
+    tldr # man
+    hyperfine
+    gping
+    procs # ps
+    httpie
+    curlie # curl
+    xh
+    zoxide # cd
+    dog # dig
+
     # other essentials
     nerdfonts
     roboto-mono
@@ -101,7 +126,6 @@
     git-crypt
     gnupg
     cool-retro-term
-    bat
     bb
     htop
     qbittorrent
@@ -117,8 +141,4 @@
     steam-tui
     mpv
   ];
-
-  home.file = {
-    ".Xresources".text = builtins.readFile ./system/Xresources;
-  };
 }
