@@ -43,6 +43,11 @@
       publisher = "ms-vscode";
       version = "1.7.3";
       sha256 = "0jisjyk5n5y59f1lbpbg8kmjdpnp1q2bmhzbc1skq7fa8hj54hp9";
+    } {
+      name = "org-mode";
+      publisher = "tootone";
+      version = "0.5.0";
+      sha256 = "0sjplq9h3mc42f41gcyr30ixix8sclgsdi5mcgqazh2bh7g2hz5x";
     }];
   };
 
