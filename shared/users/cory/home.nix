@@ -57,6 +57,7 @@
     clang_12
     #llvmPackages_12.clang-unwrapped # clangd
     clang-tools # clang-tidy and clang-analyzer
+    #llvmPackages_13.libclang
     #libclang
     llvmPackages_12.libcxx
     #libcxx
