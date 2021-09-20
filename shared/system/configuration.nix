@@ -183,7 +183,8 @@
   # Fonts
   fonts.fonts = with pkgs; [
     roboto-mono
-    (nerdfonts.override { fonts = ["RobotoMono"]; })
+    iosevka
+    (nerdfonts.override { fonts = ["RobotoMono" "Iosevka"]; })
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
