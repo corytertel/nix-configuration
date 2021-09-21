@@ -4,7 +4,6 @@
   imports =
     [
       ./apps/nvim
-      ./apps/bash
       ./apps/vscode
     ];
 

@@ -4,6 +4,7 @@
   imports =
     [
       ./apps/kitty
+      ./apps/bash
     ];
 
   home.file = {
