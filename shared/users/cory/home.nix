@@ -50,6 +50,7 @@
     libsForQt5.ark
     nodejs
     yarn
+    tree-sitter
 
   # development basics
     ccls
@@ -141,5 +142,7 @@
     steamPackages.steamcmd
     steam-tui
     mpv
+    minecraft
+    pywal
   ];
 }

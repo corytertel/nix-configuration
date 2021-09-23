@@ -76,6 +76,25 @@
   #  })
   #];
 
+  nixpkgs.overlays = [
+    (self: super: { 
+      discord = super.discord.overrideAttrs (_: { 
+        src = builtins.fetchTarball "https://discord.com/api/download?platform=linux&format=tar.gz"; 
+      });
+    })
+
+    #(final: prev: {
+    #  neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (old: {
+    #    src = pkgs.fetchFromGitHub {
+    #      owner = "neovim";
+    #      repo = "neovim";
+    #      rev = "aba397991b59dbadad21b9ab7ad9f7a3a21f6259";
+    #      sha256 = "H5AFg54qhEEYBOVoaMGRmAQagEy2Fb8L3YqH1POCojo=";
+    #    };
+    #  });
+    #})
+  ];
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 

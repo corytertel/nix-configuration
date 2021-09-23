@@ -10,8 +10,8 @@
     plugins = with pkgs.vimPlugins; [
       
       # UI and Theme
-      #gruvbox
-      ayu-vim
+      gruvbox
+      #ayu-vim
       nerdtree
       vim-nerdtree-syntax-highlight
 

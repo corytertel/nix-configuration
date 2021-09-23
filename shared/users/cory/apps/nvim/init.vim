@@ -4,9 +4,9 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 set termguicolors
-let ayucolor="light"                   "Ayu light theme
-"set background=light                    "Gruvbox theme
-colorscheme ayu
+"let ayucolor="light"                   "Ayu light theme
+set background=dark                    "Gruvbox theme
+colorscheme gruvbox
 
 " Vim essentials
 syntax enable                           " Enables syntax highlighing
