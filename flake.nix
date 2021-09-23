@@ -2,8 +2,9 @@
   description = "Cory's system configuration";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-21.05";
-    home-manager.url = "github:nix-community/home-manager/release-21.05";
+    nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs-unstable.url = "nixpkgs/master";
+    home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-doom-emacs.url = "github:vlaci/nix-doom-emacs";
   };

@@ -58,7 +58,7 @@
   #services.xserver.displayManager.lightdm.enable = true;
 
   # Enable DWM
-  #services.xserver.windowManager.dwm.enable = true; 
+  services.xserver.windowManager.dwm.enable = true; 
 
   # Enable the Plasma 5 Desktop Environment.
   services.xserver.desktopManager.plasma5.enable = true;
@@ -69,19 +69,25 @@
   #  xmonad.enableContribAndExtras = true;
   #};
 
-  # Use custom DWM build
-  #nixpkgs.overlays = [
-  #  (final: prev: {
-  #    dwm = prev.dwm.overrideAttrs (old: { src = /home/cory/dwm-6.2 ;});
-  #  })
-  #];
-
   nixpkgs.overlays = [
-    (self: super: { 
-      discord = super.discord.overrideAttrs (_: { 
-        src = builtins.fetchTarball "https://discord.com/api/download?platform=linux&format=tar.gz"; 
+    # Use custom DWM build
+    (final: prev: {
+      dwm = prev.dwm.overrideAttrs (old: { 
+        src = pkgs.fetchFromGitHub {
+          owner = "corytertel";
+          repo = "dwm";
+          rev = "c66265a89867d684200370f8ce88226551b19b44";
+          sha256 = "Jw2mUT7ZmpTJbMLZvvXeCdj1OppVp2yE7mqJo4jKByw=";
+        };
+        #src = /home/cory/.nix-configuration/shared/system/dwm/dwm-6.2;
       });
     })
+
+    #(self: super: { 
+    #  discord = super.discord.overrideAttrs (_: { 
+    #    src = builtins.fetchTarball "https://discord.com/api/download?platform=linux&format=tar.gz"; 
+    #  });
+    #})
 
     #(final: prev: {
     #  neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (old: {
@@ -197,6 +203,10 @@
     os-prober
     ntfs3g
    # end install essentials
+
+   # for window managers
+    picom
+    dunst
   ];
 
   # Fonts

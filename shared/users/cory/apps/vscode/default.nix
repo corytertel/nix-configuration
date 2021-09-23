@@ -4,7 +4,7 @@
   programs.vscode = {
     enable = true;
     extensions = (with pkgs.vscode-extensions; [
-      bbenoist.Nix
+      bbenoist.nix
       #ms-vscode.cpptools
       vscodevim.vim
       ms-vscode-remote.remote-ssh

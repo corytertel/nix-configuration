@@ -40,8 +40,6 @@
     pipes
     dmenu
     networkmanager_dmenu
-    picom
-    #dunst
     alacritty
     slock
     ranger
@@ -144,5 +142,6 @@
     mpv
     minecraft
     pywal
+    airshipper
   ];
 }

@@ -14,6 +14,7 @@
       #ayu-vim
       nerdtree
       vim-nerdtree-syntax-highlight
+      dashboard-nvim
 
       # Code autocompletion, language servers, and other tools
 
