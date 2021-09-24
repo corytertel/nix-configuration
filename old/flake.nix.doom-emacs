@@ -2,8 +2,9 @@
   description = "Cory's system configuration";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-21.05";
-    home-manager.url = "github:nix-community/home-manager/release-21.05";
+    nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs-unstable.url = "nixpkgs/master";
+    home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-doom-emacs.url = "github:vlaci/nix-doom-emacs";
   };
@@ -22,38 +23,67 @@
   in {
     homeManagerConfigurations = {
       #entry for each user account
-      cory = home-manager.lib.homeManagerConfiguration {
+      pc = home-manager.lib.homeManagerConfiguration {
         inherit system pkgs;
         username = "cory";
         stateVersion = "21.05";
         homeDirectory = "/home/cory";
         configuration = {
           imports = [
-            ./users/cory/home.nix
+            ./shared/users/cory/home.nix
+            ./pc/users/cory/home.nix
+            nix-doom-emacs.hmModule
           ];
+          programs.doom-emacs = {
+            enable = true;
+            doomPrivateDir = ./shared/users/cory/apps/emacs/doom.d;
+          };
+        };
+      };
+
+      laptop = home-manager.lib.homeManagerConfiguration {
+        inherit system pkgs;
+        username = "cory";
+        stateVersion = "21.05";
+        homeDirectory = "/home/cory";
+        configuration = {
+          imports = [
+            ./shared/users/cory/home.nix
+            ./laptop/users/cory/home.nix
+            nix-doom-emacs.hmModule
+          ];
+          programs.doom-emacs = {
+            enable = true;
+            doomPrivateDir = ./shared/users/cory/apps/emacs/doom.d;
+          };
         };
       };
     };
 
     nixosConfigurations = {
       # use the host name
-      nixos = lib.nixosSystem {
+      pc = lib.nixosSystem {
         inherit system;
 
         modules = [
-          ./system/configuration.nix
+          ./pc/system/configuration.nix
+          ./shared/system/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            #home-manager.users.cory = import ./users/cory/home.nix;
+          }
+        ];
+      };
 
-            home-manager.users.cory = { pkgs, ... }: {
-            imports = [ nix-doom-emacs.hmModule ];
-            programs.doom-emacs = {
-              enable = true;
-              doomPrivateDir = ./users/cory/apps/emacs/doom.d;
-            };
-          };
+      laptop = lib.nixosSystem {
+        inherit system;
+
+        modules = [
+          ./laptop/system/configuration.nix
+          ./shared/system/configuration.nix
+          home-manager.nixosModules.home-manager {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
           }
         ];
       };

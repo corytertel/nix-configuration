@@ -83,11 +83,19 @@
       });
     })
 
-    #(self: super: { 
-    #  discord = super.discord.overrideAttrs (_: { 
-    #    src = builtins.fetchTarball "https://discord.com/api/download?platform=linux&format=tar.gz"; 
-    #  });
-    #})
+    # Discord
+    (self: super: { 
+      discord = super.discord.overrideAttrs (_: { 
+        src = builtins.fetchTarball "https://discord.com/api/download?platform=linux&format=tar.gz"; 
+      });
+    })
+
+    # EmacsGcc
+    #(import (builtins.fetchGit {
+    #  url = "https://github.com/nix-community/emacs-overlay.git";
+    #  ref = "master";
+    #  rev = "1f0315a2e2b9376c86bd71bda459cc237c1c30e2";
+    #}))
 
     #(final: prev: {
     #  neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (old: {
@@ -100,6 +108,9 @@
     #  });
     #})
   ];
+
+  # Emacs
+  #services.emacs.package = pkgs.emacsGcc;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -191,6 +202,8 @@
     sudo
     texinfo
     which
+    fd
+    coreutils
    # end base devel tools
     linuxHeaders
     avahi
@@ -207,6 +220,9 @@
    # for window managers
     picom
     dunst
+
+   # emacsGcc
+    #emacsGcc
   ];
 
   # Fonts

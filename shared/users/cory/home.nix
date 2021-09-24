@@ -25,6 +25,11 @@
   # changes in each release.
   home.stateVersion = "21.05";
 
+  # Direnv
+  programs.direnv.enable = true;
+  programs.direnv.nix-direnv.enable = true;
+  programs.direnv.nix-direnv.enableFlakes = true;
+
   home.packages = with pkgs; [
    # linux basics
     killall

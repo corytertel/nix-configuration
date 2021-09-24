@@ -53,6 +53,9 @@
       rainbow
       vim-cpp-enhanced-highlight
       vim-orgmode
+      telescope-nvim
+      vim-clap
+      fzf-vim
     ];
 
     # import init.vim
