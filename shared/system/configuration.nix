@@ -63,12 +63,6 @@
   # Enable the Plasma 5 Desktop Environment.
   services.xserver.desktopManager.plasma5.enable = true;
 
-  # Enable Xmonad
-  #services.xserver.windowManager = {
-  #  xmonad.enable = true;
-  #  xmonad.enableContribAndExtras = true;
-  #};
-
   nixpkgs.overlays = [
     # Use custom DWM build
     (final: prev: {
@@ -223,6 +217,9 @@
 
    # emacsGcc
     #emacsGcc
+
+   # xmonad
+    haskellPackages.xmobar
   ];
 
   # Fonts

@@ -10,6 +10,13 @@
       ./hardware-configuration.nix
     ];
 
+  # Enable Xmonad
+  services.xserver.windowManager.xmonad = {
+    enable = true;
+    enableContribAndExtras = true;
+    config = ./xmonad/xmonad.hs;
+  };
+
   # Network Devices
   networking.interfaces.enp0s20u1.useDHCP = true;
   networking.interfaces.enp3s0.useDHCP = true;
