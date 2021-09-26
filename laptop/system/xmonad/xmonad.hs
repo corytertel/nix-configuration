@@ -3,13 +3,13 @@
 --
 -- A template showing all available configuration hooks,
 -- and how to override the defaults in your own xmonad.hs conf file.
---
 -- Normally, you'd only override those defaults you care about.
 --
 
 import XMonad
 import Data.Monoid (mappend)
 import Data.Map (fromList)
+import Graphics.X11.ExtraTypes.XF86
 import System.Exit
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
@@ -17,7 +17,8 @@ import XMonad.Layout.Spacing
 import XMonad.Layout.ThreeColumns
 import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End))
 import XMonad.Hooks.ManageDocks
-import XMonad.Actions.Volume
+import XMonad.Hooks.DynamicLog
+--import XMonad.Actions.Volume
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -55,11 +56,11 @@ myModMask       = mod4Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
+myWorkspaces    = ["\61728", "\62057", "\62074", "\61729", "\61564", "\61878", "\61441", "\61704", "\61704"]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
-myNormalBorderColor  = "#dddddd"
+myNormalBorderColor  = "#444444"
 myFocusedBorderColor = "#cc241d"
 
 ------------------------------------------------------------------------
@@ -142,9 +143,12 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_slash ), spawn ("echo \"" ++ help ++ "\" | xmessage -file -"))
 
     -- Volume
-    , ((0                 , xF86XK_AudioLowerVolume), lowerVolume 4 >> return())
-    , ((0                 , xF86XK_AudioRaiseVolume), raiseVolume 4 >> return())
-    , ((0                 , xF86XK_AudioMute), toggleMute >> return())
+    --, ((0                 , xF86XK_AudioLowerVolume), lowerVolume 4 >> return())
+    --, ((0                 , xF86XK_AudioRaiseVolume), raiseVolume 4 >> return())
+    --, ((0                 , xF86XK_AudioMute), toggleMute >> return())
+    , ((0                 , xF86XK_AudioLowerVolume), spawn "pamixer --decrease 2")
+    , ((0                 , xF86XK_AudioRaiseVolume), spawn "pamixer --increase 2")
+    , ((0                 , xF86XK_AudioMute), spawn "pamixer --toggle-mute")
     ]
     ++
 
@@ -268,13 +272,21 @@ myStartupHook = do
         spawnOnce "picom &"
 
 ------------------------------------------------------------------------
+-- Command to launch the bar.
+myBar = "xmobar"
+
+-- Custom PP, configure it as you like. It determines what is being written to the bar.
+myPP = xmobarPP { ppCurrent = xmobarColor "#cc241d" "" . wrap " " " " }
+
+-- Key binding to toggle the gap from the bar.
+toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
+
+------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
 
 -- Run xmonad with the settings you specify. No need to modify this.
 --
-main = do
-    xmproc <- spawnPipe "xmobar -x 0 /home/cory/.config/xmobar/xmobarrc"
-    xmonad $ docks defaults
+main = xmonad =<< statusBar myBar myPP toggleStrutsKey defaults
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will

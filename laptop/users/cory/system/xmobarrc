@@ -4,15 +4,15 @@ Config {
      font =         "xft:JetBrains Mono Nerd Font:size=12:bold:antialias=true"
    , bgColor =      "#762423"
    , fgColor =      "#ffffff"
-   , position =     Top
-   , border =       BottomB
+   , position =     Static { xpos = 100 , ypos = 25, width = 3640 , height = 38 }
+   , border =       NoBorder
    , borderColor =  "#762423"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
    --, template = "%battery% | %multicpu% | %coretemp% | %memory% | %dynnetwork% }{ %RJTT% | %date% || %kbd% "
-   , template = " }{ %battery% | %dynnetwork% | %date% || %kbd% "
+   , template = " %UnsafeStdinReader% }{ %date%                                      %battery% | VOL %volume% | %dynnetwork% || %kbd% "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -41,6 +41,12 @@ Config {
         -- weather monitor
         [ Run Weather "RJTT" [ "--template", "<skyCondition> | <fc=#4682B4><tempC></fc>°C | <fc=#4682B4><rh></fc>% | <fc=#4682B4><pressure></fc>hPa"
                              ] 36000
+
+        -- Volume
+        , Run Com "pamixer" ["--get-volume"] "volume" 1
+
+        -- UnsafeStdinReader
+        , Run UnsafeStdinReader
 
         -- network activity monitor (dynamic interface resolution)
         , Run DynNetwork     [ "--template" , "<dev>: <tx>kB/s|<rx>kB/s"
@@ -97,7 +103,7 @@ Config {
 
         -- time and date indicator 
         --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
-        , Run Date           "<fc=#ABABAB>%m/%d/%y (%a) %T</fc>" "date" 10
+        , Run Date           "%m/%d/%y %I:%M:%S %p" "date" 10
 
         -- keyboard layout indicator
         , Run Kbd            [ ("ru(winkeys)" , "<fc=#00008B>RU</fc>")

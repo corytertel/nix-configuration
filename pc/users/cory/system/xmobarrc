@@ -5,7 +5,7 @@ Config {
    , bgColor =      "#282828"
    , fgColor =      "#ebdbb2"
    , position =     Static { xpos = 100 , ypos = 25, width = 3640 , height = 38 }
-   , border =       BottomB
+   , border =       FullB
    , borderColor =  "#cc241d"
 
    -- layout
