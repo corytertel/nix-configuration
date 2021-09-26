@@ -8,7 +8,8 @@
 --
 
 import XMonad
-import Data.Monoid
+import Data.Monoid (mappend)
+import Data.Map (fromList)
 import System.Exit
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
@@ -16,6 +17,7 @@ import XMonad.Layout.Spacing
 import XMonad.Layout.ThreeColumns
 import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End))
 import XMonad.Hooks.ManageDocks
+import XMonad.Actions.Volume
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -138,6 +140,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Run xmessage with a summary of the default keybindings (useful for beginners)
     , ((modm .|. shiftMask, xK_slash ), spawn ("echo \"" ++ help ++ "\" | xmessage -file -"))
+
+    -- Volume
+    , ((0                 , xF86AudioLowerVolume), lowerVolume 4 >> return())
+    , ((0                 , xF86AudioRaiseVolume), raiseVolume 4 >> return())
     ]
     ++
 
