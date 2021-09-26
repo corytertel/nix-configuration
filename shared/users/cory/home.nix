@@ -30,6 +30,21 @@
   programs.direnv.nix-direnv.enable = true;
   programs.direnv.nix-direnv.enableFlakes = true;
 
+  # Fix pointer cursor
+  xsession = {
+    enable = true;
+    pointerCursor = {
+      #name = "Bibata_Amber";
+      #package = pkgs.bibata-cursors;
+      #defaultCursor = "left_ptr";
+      #size = 36;
+      name = "Adwaita";
+      package = pkgs.gnome3.adwaita-icon-theme;
+      defaultCursor = "left_ptr";
+      size = 36;
+    };
+  };
+  
   home.packages = with pkgs; [
    # linux basics
     killall

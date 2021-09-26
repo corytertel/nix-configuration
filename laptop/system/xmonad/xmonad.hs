@@ -142,8 +142,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_slash ), spawn ("echo \"" ++ help ++ "\" | xmessage -file -"))
 
     -- Volume
-    , ((0                 , xF86AudioLowerVolume), lowerVolume 4 >> return())
-    , ((0                 , xF86AudioRaiseVolume), raiseVolume 4 >> return())
+    , ((0                 , xF86XK_AudioLowerVolume), lowerVolume 4 >> return())
+    , ((0                 , xF86XK_AudioRaiseVolume), raiseVolume 4 >> return())
+    , ((0                 , xF86XK_AudioMute), toggleMute >> return())
     ]
     ++
 

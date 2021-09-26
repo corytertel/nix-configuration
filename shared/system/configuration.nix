@@ -54,6 +54,9 @@
   # Enable SDDM
   services.xserver.displayManager.sddm.enable = true;
 
+  # Make XMonad the default
+  services.xserver.displayManager.defaultSession = "none+xmonad";
+
   # Enable LightDM
   #services.xserver.displayManager.lightdm.enable = true;
 
@@ -136,7 +139,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.cory = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "network" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "network" "audio" ]; # Enable ‘sudo’ for the user.
   };
 
   # Enable flakes
@@ -212,7 +215,6 @@
    # end install essentials
 
    # for window managers
-    picom
     dunst
 
    # emacsGcc
