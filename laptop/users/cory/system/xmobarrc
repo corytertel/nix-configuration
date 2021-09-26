@@ -1,7 +1,7 @@
 Config { 
 
    -- appearance
-     font =         "xft:JetBrains Mono Nerd Font:size=12:bold:antialias=true"
+     font =         "xft:RobotoMono Nerd Font:size=12:bold:antialias=true"
    , bgColor =      "#762423"
    , fgColor =      "#ffffff"
    , position =     Static { xpos = 100 , ypos = 25, width = 3640 , height = 38 }
