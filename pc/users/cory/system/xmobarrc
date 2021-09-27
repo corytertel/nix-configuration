@@ -12,7 +12,7 @@ Config {
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
    --, template = "%battery% | %multicpu% | %coretemp% | %memory% | %dynnetwork% }{ %RJTT% | %date% || %kbd% "
-   , template = " %UnsafeStdinReader% }{ %date%                                                       VOL %volume% | %dynnetwork% || %kbd% "
+   , template = "   %UnsafeStdinReader% }{ %date%                                                     VOL %volume% | %dynnetwork% || %kbd%   "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
