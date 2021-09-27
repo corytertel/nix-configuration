@@ -56,7 +56,7 @@ myModMask       = mod4Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["\61728", "\62057", "\62074", "\61729", "\61564", "\61878", "\61441", "\61704", "\61704"]
+myWorkspaces    = [" \61728 ", " \62057 ", " \62074 ", " \61729 ", " \61564 ", " \61878 ", " \61441 ", " \61704 ", " \61704 "]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -276,7 +276,7 @@ myStartupHook = do
 myBar = "xmobar"
 
 -- Custom PP, configure it as you like. It determines what is being written to the bar.
-myPP = xmobarPP { ppCurrent = xmobarColor "#ffffff" "" . wrap " " " " }
+myPP = xmobarPP { ppCurrent = xmobarColor "#ffffff" "" . wrap "" "" }
 
 -- Key binding to toggle the gap from the bar.
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
