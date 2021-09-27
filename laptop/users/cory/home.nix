@@ -15,10 +15,25 @@
     Xft.dpi: 250
   '';
 
+  # Fix pointer cursor
+  xsession = {
+    enable = true;
+    pointerCursor = {
+      #name = "Bibata_Amber";
+      #package = pkgs.bibata-cursors;
+      #defaultCursor = "left_ptr";
+      #size = 36;
+      name = "Adwaita";
+      package = pkgs.gnome3.adwaita-icon-theme;
+      defaultCursor = "left_ptr";
+      size = 48;
+    };
+  };
+  
   services.picom = {
     enable = true;
-    inactiveOpacity = "0.50";
-    activeOpacity = "0.90";
+    inactiveOpacity = "0.90";
+    activeOpacity = "1.00";
     blur = true;
     experimentalBackends = true;
     opacityRule = [
@@ -28,8 +43,8 @@
     ];
     extraOptions = ''
       blur-method = "dual_kawase";
-      blur-strength = 8;
-      corner-radius = 16;
+      blur-strength = 4;
+      corner-radius = 32;
       round-borders = 1;
         
       rounded-corners-exclude = [

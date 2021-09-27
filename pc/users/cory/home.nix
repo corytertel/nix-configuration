@@ -15,6 +15,21 @@
     Xft.dpi: 175
   '';
 
+  # Fix pointer cursor
+  xsession = {
+    enable = true;
+    pointerCursor = {
+      #name = "Bibata_Amber";
+      #package = pkgs.bibata-cursors;
+      #defaultCursor = "left_ptr";
+      #size = 36;
+      name = "Adwaita";
+      package = pkgs.gnome3.adwaita-icon-theme;
+      defaultCursor = "left_ptr";
+      size = 36;
+    };
+  };
+  
   services.picom = {
     enable = true;
     inactiveOpacity = "1.0";

@@ -200,7 +200,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = spacingRaw False (Border 100 0 100 0) True (Border 0 100 0 100) True $
+myLayout = spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
         avoidStruts (tiled ||| Mirror tiled ||| threeColumn ||| threeColumnMid |||Full)
   where
      -- default tiling algorithm partitions the screen into two panes
@@ -276,7 +276,7 @@ myStartupHook = do
 myBar = "xmobar"
 
 -- Custom PP, configure it as you like. It determines what is being written to the bar.
-myPP = xmobarPP { ppCurrent = xmobarColor "#cc241d" "" . wrap " " " " }
+myPP = xmobarPP { ppCurrent = xmobarColor "#ffffff" "" . wrap " " " " }
 
 -- Key binding to toggle the gap from the bar.
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)

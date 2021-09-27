@@ -2,17 +2,17 @@ Config {
 
    -- appearance
      font =         "xft:RobotoMono Nerd Font:size=12:bold:antialias=true"
-   , bgColor =      "#762423"
+   , bgColor =      "#7d474a"
    , fgColor =      "#ffffff"
-   , position =     Static { xpos = 100 , ypos = 25, width = 3640 , height = 38 }
+   , position =     Static { xpos = 54 , ypos = 0, width = 3732 , height = 54 }
    , border =       NoBorder
-   , borderColor =  "#762423"
+   , borderColor =  "#7d474a"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
    --, template = "%battery% | %multicpu% | %coretemp% | %memory% | %dynnetwork% }{ %RJTT% | %date% || %kbd% "
-   , template = " %UnsafeStdinReader% }{ %date%                                      %battery% | VOL %volume% | %dynnetwork% || %kbd% "
+   , template = " %UnsafeStdinReader% }{ %date%                                           %battery% |  %volume% |  %kbd% "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -88,17 +88,18 @@ Config {
         , Run Battery        [ "--template" , "<acstatus>"
                              , "--Low"      , "10"        -- units: %
                              , "--High"     , "80"        -- units: %
-                             , "--low"      , "darkred"
-                             , "--normal"   , "darkorange"
-                             , "--high"     , "darkgreen"
+                             , "--low"      , "white"
+                             , "--normal"   , "white"
+                             , "--high"     , "white"
 
                              , "--" -- battery specific options
                                        -- discharging status
-                                       , "-o"	, " <left>% (<timeleft>)"
+                                       --, "-o"	, " <left>% (<timeleft>)"
+                                       , "-o"	, "  <left>%"
                                        -- AC "on" status
-                                       , "-O"	, "<fc=#dAA520> <left>%</fc>"
+                                       , "-O"	, " <left>%"
                                        -- charged status
-                                       , "-i"	, "<fc=#006000> <left>%</fc>"
+                                       , "-i"	, " <left>%"
                              ] 50
 
         -- time and date indicator 
@@ -106,8 +107,8 @@ Config {
         , Run Date           "%m/%d/%y %I:%M:%S %p" "date" 10
 
         -- keyboard layout indicator
-        , Run Kbd            [ ("ru(winkeys)" , "<fc=#00008B>RU</fc>")
-                             , ("us"         , "<fc=#8B0000>US</fc>")
+        , Run Kbd            [ ("ru(winkeys)" , "ru")
+                             , ("us"         , "us")
                              ]
         ]
    }
