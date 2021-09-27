@@ -48,7 +48,7 @@
       round-borders = 1;
         
       rounded-corners-exclude = [
-        "class_g = 'Polybar'",
+        "class_g = 'plptool-gui-PLPToolApp'",
       ];
     '';
     fade = false;
