@@ -222,6 +222,8 @@
 
    # xmonad
     haskellPackages.xmobar
+    taffybar
+    haskellPackages.taffybar
   ];
 
   # Fonts
@@ -229,6 +231,7 @@
     roboto-mono
     iosevka
     (nerdfonts.override { fonts = ["RobotoMono" "Iosevka"]; })
+    source-code-pro
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

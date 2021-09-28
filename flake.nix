@@ -35,9 +35,10 @@
             nix-doom-emacs.hmModule
           ];
           programs.doom-emacs = {
-            enable = true;
+            enable = false;
             doomPrivateDir = ./shared/users/cory/apps/emacs/doom.d;
           };
+          programs.emacs.enable = true;
         };
       };
 
@@ -53,9 +54,10 @@
             nix-doom-emacs.hmModule
           ];
           programs.doom-emacs = {
-            enable = true;
+            enable = false;
             doomPrivateDir = ./shared/users/cory/apps/emacs/doom.d;
           };
+          programs.emacs.enable = true;
         };
       };
     };

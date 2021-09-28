@@ -41,7 +41,7 @@
     blur = false;
     experimentalBackends = true;
     opacityRule = [
-      "100:class_g   *?= 'Google-chrome'"
+      #"50:class_g   *?= 'emacs'"
       "95:class_g   *?= 'Deadd-notification-center'"
       "75:class_g   *?= 'Rofi'"
     ];
