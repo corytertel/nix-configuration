@@ -12,7 +12,7 @@ Config {
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
    --, template = "%battery% | %multicpu% | %coretemp% | %memory% | %dynnetwork% }{ %RJTT% | %date% || %kbd% "
-   , template = "   %UnsafeStdinReader% }{ %date%                                                     VOL %volume% | %dynnetwork% || %kbd%   "
+   , template = "   %StdinReader% }{ %date%                                                                               VOL %volume% | %kbd%  "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -43,10 +43,10 @@ Config {
                              ] 36000
 
         -- Volume
-        , Run Com "pamixer" ["--get-volume"] "volume" 1
+        , Run Com "pamixer" ["--get-volume-human"] "volume" 1
 
-        -- UnsafeStdinReader
-        , Run UnsafeStdinReader
+        -- StdinReader
+        , Run StdinReader
 
         -- network activity monitor (dynamic interface resolution)
         , Run DynNetwork     [ "--template" , "<dev>: <tx>kB/s|<rx>kB/s"
