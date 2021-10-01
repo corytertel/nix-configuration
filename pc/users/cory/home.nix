@@ -41,12 +41,12 @@
     blur = false;
     experimentalBackends = true;
     opacityRule = [
-      #"50:class_g   *?= 'emacs'"
+      "90:class_g   *?= 'emacs'"
       "95:class_g   *?= 'Deadd-notification-center'"
       "75:class_g   *?= 'Rofi'"
     ];
     extraOptions = ''
-      corner-radius = 16;
+      corner-radius = 32;
       round-borders = 1;
         
       rounded-corners-exclude = [
