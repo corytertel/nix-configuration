@@ -47,8 +47,8 @@
     enable = true;
     xkbModel = "microsoft";
     layout = "us,ru(winkeys)";
-    #xkbOptions = "grp:toggle"; # ralt toggle keyboard
-    xkbOptions = "grp:caps_toggle"; # caps toggle keyboard
+    xkbOptions = "grp:toggle"; # ralt toggle keyboard
+    #xkbOptions = "grp:caps_toggle"; # caps toggle keyboard
     xkbVariant = "winkeys";
   };
 

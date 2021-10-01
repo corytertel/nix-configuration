@@ -55,7 +55,7 @@ myModMask       = mod4Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = [" \61728 ", " \62057 ", " \62074 ", " \61729 ", " \61564 ", " \61878 ", " \61441 ", " \61704 ", " \61704 "]
+myWorkspaces    = [" \61728 ", " \62057 ", " \62074 ", " \61729 ", " \61564 ", " \61878 ", " \61441 ", " \61704 ", " 9 "]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -256,7 +256,8 @@ myEventHook = mempty
 -- Perform an arbitrary action on each internal state change or X event.
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
 --
-myLogHook = dynamicLogWithPP xmobarPP
+myLogHook = return ()
+{-myLogHook = dynamicLogWithPP xmobarPP
     { ppOutput = hPutStrLn xmproc
     , ppCurrent = xmobarColor "#cc241d" "" . wrap "" "" 
     , ppHidden = xmobarColor "black" "green" . wrap "" ""
@@ -264,6 +265,7 @@ myLogHook = dynamicLogWithPP xmobarPP
     , ppVisible = xmobarColor "black" "green" . wrap "" ""
     , ppTitle = xmobarColor "green" "" . shorten 40
     }
+-}
 
 ------------------------------------------------------------------------
 -- Startup hook
@@ -279,21 +281,26 @@ myStartupHook = do
 
 ------------------------------------------------------------------------
 -- Command to launch the bar.
---myBar = "xmobar"
+myBar = "xmobar"
 
 -- Custom PP, configure it as you like. It determines what is being written to the bar.
---myPP = xmobarPP { ppCurrent = xmobarColor "#cc241d" "" . wrap "" "" }
+myPP = xmobarPP { ppCurrent = xmobarColor "#282828" "#cc241d" . wrap "" "" --current selected desktop
+                , ppHidden = xmobarColor "#ebdbb2" "#282828" . wrap "" ""
+                , ppHiddenNoWindows = xmobarColor "#ebdbb2" "#282828" . wrap "" "" --desktops with no windows
+                , ppVisible = xmobarColor "#ebdbb2" "#282828" . wrap "" ""
+                , ppTitle = xmobarColor "#282828" "#cc241d" . shorten 40
+                }
 
 -- Key binding to toggle the gap from the bar.
---toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
+toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
 
 -- Run xmonad with the settings you specify. No need to modify this.
 --
---main = xmonad =<< statusBar myBar myPP toggleStrutsKey defaults
-main = xmonad defaults
+main = xmonad =<< statusBar myBar myPP toggleStrutsKey defaults
+--main = xmonad defaults
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will

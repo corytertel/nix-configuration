@@ -148,5 +148,8 @@
     minecraft
     pywal
     airshipper
+    tree
+    gnome.nautilus
+    nyxt
   ];
 }
