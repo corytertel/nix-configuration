@@ -12,9 +12,9 @@ PS1='[\u@\h \W]\$ '
 alias vim='nvim'
 export EDITOR='nvim'
 alias cvim='chezmoi edit'
-export CHEZMOI_PROFILE='pc'
 export ELEMENTS='/run/media/cory/Elements'
 export MUSIC='/run/media/cory/Elements/Public/Music/Playlists/'
+alias ls='exa'
 
 #!/bin/sh
 
@@ -452,3 +452,4 @@ unset bash_prompt
 
 ### EOF ###
 
+eval "$(direnv hook bash)"

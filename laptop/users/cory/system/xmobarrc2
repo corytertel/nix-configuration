@@ -1,0 +1,69 @@
+Config { 
+
+   -- appearance
+     font =         "xft:Fantasque Sans Mono Nerd Font:size=12:bold:antialias=true"
+   , bgColor =      "#7d474a"
+   , alpha =        190
+   --, bgColor =      "#762423"
+   --, alpha =        127
+   , fgColor =      "#ffffff"
+   , position =     Static { xpos = 3166 , ypos = 27, width = 620 , height = 81 }
+   , border =       NoBorder
+   , borderColor =  "#7d474a"
+
+   -- layout
+   , sepChar =  "%"   -- delineator between plugin names and straight text
+   , alignSep = "}{"  -- separator between left-right alignment
+   , template = "}{  %battery%   <fc=#71be6b>  %volume%</fc>   <fc=#6bbeb8>  %kbd%</fc>  "
+
+   -- general behavior
+   , lowerOnStart =     True    -- send to bottom of window stack on start
+   , hideOnStart =      False   -- start with window unmapped (hidden)
+   , allDesktops =      True    -- show on all desktops
+   , overrideRedirect = True    -- set the Override Redirect flag (Xlib)
+   , pickBroadest =     False   -- choose widest display (multi-monitor)
+   , persistent =       True    -- enable/disable hiding (True = disabled)
+
+   -- plugins
+   --   Numbers can be automatically colored according to their value. xmobar
+   --   decides color based on a three-tier/two-cutoff system, controlled by
+   --   command options:
+   --     --Low sets the low cutoff
+   --     --High sets the high cutoff
+   --
+   --     --low sets the color below --Low cutoff
+   --     --normal sets the color between --Low and --High cutoffs
+   --     --High sets the color above --High cutoff
+   --
+   --   The --template option controls how the plugin is displayed. Text
+   --   color can be set by enclosing in <fc></fc> tags. For more details
+   --   see http://projects.haskell.org/xmobar/#system-monitor-plugins.
+   , commands = 
+
+        -- Volume
+        [ Run Com "pamixer" ["--get-volume-human"] "volume" 1
+
+        -- battery monitor
+        , Run Battery        [ "--template" , "<acstatus>"
+                             , "--Low"      , "10"        -- units: %
+                             , "--High"     , "40"        -- units: %
+                             , "--low"      , "#e02453"
+                             , "--normal"   , "#beb86b"
+                             , "--high"     , "#aff08b"
+
+                             , "--" -- battery specific options
+                                       -- discharging status
+                                       --, "-o"	, " <left>% (<timeleft>)"
+                                       , "-o"	, "  <left>%"
+                                       -- AC "on" status
+                                       , "-O"	, "  <left>%"
+                                       -- charged status
+                                       , "-i"	, "  <left>%"
+                             ] 50
+
+        -- keyboard layout indicator
+        , Run Kbd            [ ("ru(winkeys)" , "ru")
+                             , ("us"         , "us")
+                             ]
+        ]
+   }

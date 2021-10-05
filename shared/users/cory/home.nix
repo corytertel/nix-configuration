@@ -151,5 +151,11 @@
     tree
     gnome.nautilus
     nyxt
+    icecat-bin
+    palemoon
+    xbrightness
+    ncmpcpp
+    imagemagick
+    ungoogled-chromium
   ];
 }

@@ -14,6 +14,7 @@ export EDITOR='nvim'
 alias cvim='chezmoi edit'
 export ELEMENTS='/run/media/cory/Elements'
 export MUSIC='/run/media/cory/Elements/Public/Music/Playlists/'
+alias ls='exa'
 
 #!/bin/sh
 

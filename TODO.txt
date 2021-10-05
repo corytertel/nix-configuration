@@ -1,0 +1,7 @@
+Dunst
+Rofi
+Betterscreenlock
+Custom kernel
+calculator
+ncmpp music player
+gnome keyring

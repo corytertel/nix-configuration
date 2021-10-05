@@ -225,6 +225,7 @@
     haskellPackages.xmobar
     taffybar
     haskellPackages.taffybar
+    xorg.xkill
   ];
 
   # Fonts

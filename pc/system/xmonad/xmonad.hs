@@ -281,7 +281,7 @@ myStartupHook = do
 
 ------------------------------------------------------------------------
 -- Command to launch the bar.
-myBar = "xmobar"
+myBar = "xmobar $HOME/.config/xmobar/xmobarrc0"
 
 -- Custom PP, configure it as you like. It determines what is being written to the bar.
 myPP = xmobarPP { ppCurrent = xmobarColor "#282828" "#cc241d" . wrap "" "" --current selected desktop

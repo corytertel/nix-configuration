@@ -37,18 +37,19 @@
     blur = true;
     experimentalBackends = true;
     opacityRule = [
-      "100:class_g   *?= 'Google-chrome'"
-      "95:class_g   *?= 'Deadd-notification-center'"
+      "90:class_g   *?= 'emacs'"
+      "90:class_g   *?= 'discord'"
       "75:class_g   *?= 'Rofi'"
     ];
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 4;
-      corner-radius = 32;
+      corner-radius = 40;
       round-borders = 1;
         
       rounded-corners-exclude = [
         "class_g = 'plptool-gui-PLPToolApp'",
+        "class_g = 'dmenu'",
       ];
     '';
     fade = false;
@@ -67,6 +68,8 @@
 
   home.file = {
     #".Xresources".text = builtins.readFile ./system/Xresources;
-    ".config/xmobar/xmobarrc".text = builtins.readFile ./system/xmobarrc;
+    ".config/xmobar/xmobarrc0".text = builtins.readFile ./system/xmobarrc0;
+    ".config/xmobar/xmobarrc1".text = builtins.readFile ./system/xmobarrc1;
+    ".config/xmobar/xmobarrc2".text = builtins.readFile ./system/xmobarrc2;
   };
 }
