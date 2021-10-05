@@ -143,7 +143,6 @@
     celluloid
     gnome.gnome-disk-utility
     steamPackages.steamcmd
-    steam-tui
     mpv
     minecraft
     pywal
