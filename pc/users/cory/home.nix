@@ -42,7 +42,7 @@
     experimentalBackends = true;
     opacityRule = [
       "90:class_g   *?= 'emacs'"
-      "95:class_g   *?= 'Deadd-notification-center'"
+      "90:class_g   *?= 'discord'"
       "75:class_g   *?= 'Rofi'"
     ];
     extraOptions = ''
@@ -51,6 +51,7 @@
         
       rounded-corners-exclude = [
         "class_g = 'Polybar'",
+        "class_g = 'dmenu'",
       ];
     '';
     fade = false;
@@ -68,6 +69,9 @@
 
   home.file = {
     #".Xresources".text = builtins.readFile ./system/Xresources;
-    ".config/xmobar/xmobarrc".text = builtins.readFile ./system/xmobarrc;
+    #".config/xmobar/xmobarrc".text = builtins.readFile ./system/xmobarrc;
+    ".config/xmobar/xmobarrc0".text = builtins.readFile ./system/xmobarrc0;
+    ".config/xmobar/xmobarrc1".text = builtins.readFile ./system/xmobarrc1;
+    ".config/xmobar/xmobarrc2".text = builtins.readFile ./system/xmobarrc2;
   };
 }

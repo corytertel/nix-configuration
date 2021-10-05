@@ -305,6 +305,8 @@ myPP = xmobarPP { ppCurrent = xmobarColor "#ddb7df" "" . wrap "[" "]" --current 
                 , ppOrder = \(ws:_:_:_) -> [ws]
                 }
 
+myPP2 = xmobarPP { ppOrder = \(_:_:_:_) -> [] }
+
 -- Key binding to toggle the gap from the bar.
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
@@ -313,7 +315,7 @@ toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
 -- Run xmonad with the settings you specify. No need to modify this.
 --
-main = xmonad =<< statusBar myBar0 myPP toggleStrutsKey =<< statusBar myBar1 myPP toggleStrutsKey =<< statusBar myBar2 myPP toggleStrutsKey defaults
+main = xmonad =<< statusBar myBar0 myPP toggleStrutsKey =<< statusBar myBar1 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey defaults
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will

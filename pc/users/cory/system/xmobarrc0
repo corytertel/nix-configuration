@@ -1,19 +1,18 @@
 Config { 
 
    -- appearance
-     font =         "xft:Fantasque Sans Mono Nerd Font:size=14:bold:antialias=true"
+     font =         "xft:Fantasque Sans Mono Nerd Font:size=18:bold:antialias=true"
    , bgColor =      "#282828"
    , alpha =        190
    , fgColor =      "#ebdbb2"
-   , position =     Static { xpos = 100 , ypos = 25, width = 3640 , height = 80 }
+   , position =     Static { xpos = 100 , ypos = 50, width = 750 , height = 80 }
    , border =       NoBorder
    , borderColor =  "#cc241d"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   --, template = "%battery% | %multicpu% | %coretemp% | %memory% | %dynnetwork% }{ %RJTT% | %date% || %kbd% "
-   , template = "  %StdinReader%  }{ %date%  <fc=#71be6b>  %volume%</fc>   <fc=#6bbeb8>  %kbd%</fc>  "
+   , template = "  %StdinReader%  "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -40,19 +39,6 @@ Config {
    , commands = 
 
         [
-        -- Volume
-          Run Com "pamixer" ["--get-volume-human"] "volume" 1
-
-        -- StdinReader
-        , Run StdinReader
-
-        -- time and date indicator 
-        --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
-        , Run Date           "%m/%d/%y %I:%M:%S %p" "date" 10
-
-        -- keyboard layout indicator
-        , Run Kbd            [ ("ru(winkeys)" , "ru")
-                             , ("us"         , "us")
-                             ]
+        Run StdinReader
         ]
    }

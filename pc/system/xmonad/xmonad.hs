@@ -55,7 +55,16 @@ myModMask       = mod4Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = [" \61728 ", " \62057 ", " \62074 ", " \61729 ", " \61564 ", " \61878 ", " \61441 ", " \61704 ", " 9 "]
+--myWorkspaces    = [" \61728  ", " \62057  ", " \62074  ", " \61729  ", " \61564  ", " \61878  ", " \61441  ", " \61704  ", " \61612  "]
+myWorkspaces    =   [ "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icons/kitty_logo.xpm/>"
+                    , "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icons/firefox_logo.xpm/>"
+                    , "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icons/discord_logo.xpm/>"
+                    , "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icons/spacemacs_logo.xpm/>"
+                    , "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icons/dolphin_logo.xpm/>"
+                    , "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icons/steam_logo.xpm/>"
+                    , "\61441 "
+                    , "\61704 "
+                    , "\61612 "]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -148,6 +157,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0                 , xF86XK_AudioLowerVolume), spawn "pamixer --decrease 2")
     , ((0                 , xF86XK_AudioRaiseVolume), spawn "pamixer --increase 2")
     , ((0                 , xF86XK_AudioMute), spawn "pamixer --toggle-mute")
+
+    -- Brightness
+    , ((0                 , xF86XK_MonBrightnessUp), spawn "xbrightness +5000")
+    , ((0                 , xF86XK_MonBrightnessDown), spawn "xbrightness -5000")
     ]
     ++
 
@@ -199,7 +212,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = spacingRaw False (Border 100 0 100 0) True (Border 0 100 0 100) True $
+myLayout = spacingRaw False (Border 50 0 100 0) True (Border 0 100 0 100) True $
         avoidStruts (tiled ||| Mirror tiled ||| threeColumn ||| threeColumnMid |||Full)
   where
      -- default tiling algorithm partitions the screen into two panes
@@ -257,15 +270,6 @@ myEventHook = mempty
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
 --
 myLogHook = return ()
-{-myLogHook = dynamicLogWithPP xmobarPP
-    { ppOutput = hPutStrLn xmproc
-    , ppCurrent = xmobarColor "#cc241d" "" . wrap "" "" 
-    , ppHidden = xmobarColor "black" "green" . wrap "" ""
-    , ppHiddenNoWindows = xmobarColor "black" "darkGreen" . wrap "" ""
-    , ppVisible = xmobarColor "black" "green" . wrap "" ""
-    , ppTitle = xmobarColor "green" "" . shorten 40
-    }
--}
 
 ------------------------------------------------------------------------
 -- Startup hook
@@ -281,15 +285,27 @@ myStartupHook = do
 
 ------------------------------------------------------------------------
 -- Command to launch the bar.
-myBar = "xmobar $HOME/.config/xmobar/xmobarrc0"
+myBar  = "xmobar $HOME/.config/xmobar/xmobarrc"
+myBar0 = "xmobar $HOME/.config/xmobar/xmobarrc0"
+myBar1 = "xmobar $HOME/.config/xmobar/xmobarrc1"
+myBar2 = "xmobar $HOME/.config/xmobar/xmobarrc2"
 
 -- Custom PP, configure it as you like. It determines what is being written to the bar.
-myPP = xmobarPP { ppCurrent = xmobarColor "#282828" "#cc241d" . wrap "" "" --current selected desktop
-                , ppHidden = xmobarColor "#ebdbb2" "#282828" . wrap "" ""
-                , ppHiddenNoWindows = xmobarColor "#ebdbb2" "#282828" . wrap "" "" --desktops with no windows
-                , ppVisible = xmobarColor "#ebdbb2" "#282828" . wrap "" ""
-                , ppTitle = xmobarColor "#282828" "#cc241d" . shorten 40
+--myPP = xmobarPP { ppCurrent = xmobarColor "#282828" "#cc241d" . wrap "" "" --current selected desktop
+--                , ppHidden = xmobarColor "#ebdbb2" "#282828" . wrap "" ""
+--                , ppHiddenNoWindows = xmobarColor "#ebdbb2" "#282828" . wrap "" "" --desktops with no windows
+--                , ppVisible = xmobarColor "#ebdbb2" "#282828" . wrap "" ""
+--                , ppTitle = xmobarColor "#282828" "#cc241d" . shorten 40
+--                }
+myPP = xmobarPP { ppCurrent = xmobarColor "#cc241d" "" . wrap "[" "]" --current selected desktop
+                , ppHidden = xmobarColor "#ebdbb2" "" . wrap "" ""
+                , ppHiddenNoWindows = xmobarColor "#ebdbb2" "" . wrap "" "" --desktops with no windows
+                , ppVisible = xmobarColor "#ebdbb2" "" . wrap "" ""
+                , ppTitle = xmobarColor "#282828" "" . shorten 40
+                , ppOrder = \(ws:_:_:_) -> [ws]
                 }
+
+myPP2 = xmobarPP { ppOrder = \(_:_:_:_) -> [] }
 
 -- Key binding to toggle the gap from the bar.
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
@@ -299,8 +315,8 @@ toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
 -- Run xmonad with the settings you specify. No need to modify this.
 --
-main = xmonad =<< statusBar myBar myPP toggleStrutsKey defaults
---main = xmonad defaults
+main = xmonad =<< statusBar myBar0 myPP toggleStrutsKey =<< statusBar myBar1 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey defaults
+--main = xmonad =<< statusBar myBar myPP toggleStrutsKey defaults
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will
