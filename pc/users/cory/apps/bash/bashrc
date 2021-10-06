@@ -248,21 +248,36 @@ bash_prompt() {
 
 	#local PROMT_FORMAT=$BLUE_BOLD
 
-    #CUSTOM
-	local FONT_COLOR_1=$DEFAULT
-	local BACKGROUND_1=$BLUE
+    #CUSTOM Yellow, Cyan, Magenta
+	local FONT_COLOR_1=$D_GRAY
+	local BACKGROUND_1=$YELLOW
 	local TEXTEFFECT_1=$BOLD
 
-	local FONT_COLOR_2=$DEFAULT
-	local BACKGROUND_2=$L_BLUE
+	local FONT_COLOR_2=$D_GRAY
+	local BACKGROUND_2=$CYAN
 	local TEXTEFFECT_2=$BOLD
 
-	local FONT_COLOR_3=$DEFAULT
-	local BACKGROUND_3=$RED
+	local FONT_COLOR_3=$D_GRAY
+	local BACKGROUND_3=$MAGENTA
 	local TEXTEFFECT_3=$BOLD
 
 	#local PROMT_FORMAT=$WHITE_BOLD 
 	local PROMT_FORMAT=$NO_FORMAT
+
+    #CUSTOM Blue, Light Blue, Red
+	#local FONT_COLOR_1=$DEFAULT
+	#local BACKGROUND_1=$BLUE
+	#local TEXTEFFECT_1=$BOLD
+
+	#local FONT_COLOR_2=$DEFAULT
+	#local BACKGROUND_2=$L_BLUE
+	#local TEXTEFFECT_2=$BOLD
+
+	#local FONT_COLOR_3=$DEFAULT
+	#local BACKGROUND_3=$RED
+	#local TEXTEFFECT_3=$BOLD
+
+	#local PROMT_FORMAT=$NO_FORMAT
     
     
 	############################################################################

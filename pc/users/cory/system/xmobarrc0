@@ -2,17 +2,18 @@ Config {
 
    -- appearance
      font =         "xft:Fantasque Sans Mono Nerd Font:size=18:bold:antialias=true"
-   , bgColor =      "#282828"
+   , bgColor =      "#282a36"
    , alpha =        190
-   , fgColor =      "#ebdbb2"
-   , position =     Static { xpos = 100 , ypos = 50, width = 750 , height = 80 }
-   , border =       NoBorder
-   , borderColor =  "#cc241d"
+   , fgColor =      "#f8f8f2"
+   , position =     Static { xpos = 100 , ypos = 50, width = 700 , height = 80 }
+   , border =       BottomB
+   , borderWidth =  4
+   , borderColor =  "#ff5555"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "  %StdinReader%  "
+   , template = " %StdinReader% "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start

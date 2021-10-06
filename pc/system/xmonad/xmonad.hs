@@ -57,7 +57,7 @@ myModMask       = mod4Mask
 --
 --myWorkspaces    = [" \61728  ", " \62057  ", " \62074  ", " \61729  ", " \61564  ", " \61878  ", " \61441  ", " \61704  ", " \61612  "]
 myWorkspaces    =   [ "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icons/kitty_logo.xpm/>"
-                    , "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icons/firefox_logo.xpm/>"
+                    , "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icons/chromium_logo.xpm/>"
                     , "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icons/discord_logo.xpm/>"
                     , "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icons/spacemacs_logo.xpm/>"
                     , "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icons/dolphin_logo.xpm/>"
@@ -69,7 +69,7 @@ myWorkspaces    =   [ "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icon
 -- Border colors for unfocused and focused windows, respectively.
 --
 myNormalBorderColor  = "#444444"
-myFocusedBorderColor = "#cc241d"
+myFocusedBorderColor = "#ff5555"
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -280,7 +280,8 @@ myLogHook = return ()
 --
 -- By default, do nothing.
 myStartupHook = do
-        spawnOnce "feh --bg-fill $HOME/.nix-configuration/pc/system/xmonad/the_n9n.png"
+        --spawnOnce "feh --bg-fill $HOME/.nix-configuration/pc/system/xmonad/the_n9n.png"
+        spawnOnce "feh --bg-fill $HOME/.nix-configuration/pc/system/xmonad/aurora4k.jpg"
         spawnOnce "picom &"
 
 ------------------------------------------------------------------------
@@ -297,11 +298,11 @@ myBar2 = "xmobar $HOME/.config/xmobar/xmobarrc2"
 --                , ppVisible = xmobarColor "#ebdbb2" "#282828" . wrap "" ""
 --                , ppTitle = xmobarColor "#282828" "#cc241d" . shorten 40
 --                }
-myPP = xmobarPP { ppCurrent = xmobarColor "#cc241d" "" . wrap "[" "]" --current selected desktop
-                , ppHidden = xmobarColor "#ebdbb2" "" . wrap "" ""
-                , ppHiddenNoWindows = xmobarColor "#ebdbb2" "" . wrap "" "" --desktops with no windows
-                , ppVisible = xmobarColor "#ebdbb2" "" . wrap "" ""
-                , ppTitle = xmobarColor "#282828" "" . shorten 40
+myPP = xmobarPP { ppCurrent = xmobarColor "#ff5555" "" . wrap "[" "]" --current selected desktop
+                , ppHidden = xmobarColor "#f8f8f2" "" . wrap "" ""
+                , ppHiddenNoWindows = xmobarColor "#f8f8f2" "" . wrap "" "" --desktops with no windows
+                , ppVisible = xmobarColor "#f8f8f2" "" . wrap "" ""
+                , ppTitle = xmobarColor "#282a36" "" . shorten 40
                 , ppOrder = \(ws:_:_:_) -> [ws]
                 }
 

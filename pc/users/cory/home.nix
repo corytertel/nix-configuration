@@ -33,7 +33,7 @@
       #size = 36;
     };
   };
-  
+
   services.picom = {
     enable = true;
     inactiveOpacity = "1.0";
@@ -46,11 +46,10 @@
       "75:class_g   *?= 'Rofi'"
     ];
     extraOptions = ''
-      corner-radius = 32;
+      corner-radius = 20;
       round-borders = 1;
-        
+
       rounded-corners-exclude = [
-        "class_g = 'Polybar'",
         "class_g = 'dmenu'",
       ];
     '';

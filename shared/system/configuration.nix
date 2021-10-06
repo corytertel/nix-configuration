@@ -10,6 +10,10 @@
 
     ];
 
+  # Zen Kernel
+  boot.kernelPackages = pkgs.linuxPackages_zen;
+  boot.kernelParams = [ "pcie_aspm.policy=performance" ];
+
   # Dual booting with GRUB
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub.enable = true;

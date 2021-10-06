@@ -5,3 +5,6 @@ Custom kernel
 calculator
 ncmpp music player
 gnome keyring
+russian keyboard
+mouse options (sentivity, acceleration)
+emacs overlay
