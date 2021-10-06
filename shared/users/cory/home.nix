@@ -5,6 +5,8 @@
     [
       ./apps/nvim
       ./apps/vscode
+      ./apps/ungoogled-chromium
+      ./apps/neofetch
     ];
 
   # Let Home Manager install and manage itself.
@@ -155,6 +157,7 @@
     xbrightness
     ncmpcpp
     imagemagick
-    ungoogled-chromium
+    yt-dlp
+    libsForQt5.kcalc
   ];
 }

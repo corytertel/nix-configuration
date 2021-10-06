@@ -257,7 +257,7 @@ bash_prompt() {
 	local BACKGROUND_2=$CYAN
 	local TEXTEFFECT_2=$BOLD
 
-	local FONT_COLOR_3=$D_GRAY
+	local FONT_COLOR_3=$WHITE
 	local BACKGROUND_3=$MAGENTA
 	local TEXTEFFECT_3=$BOLD
 

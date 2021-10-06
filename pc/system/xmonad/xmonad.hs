@@ -161,6 +161,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Brightness
     , ((0                 , xF86XK_MonBrightnessUp), spawn "xbrightness +5000")
     , ((0                 , xF86XK_MonBrightnessDown), spawn "xbrightness -5000")
+
+    -- Keyboard Layout
+    --, ((modm              , xK_F8), spawn "setxkbmap us")
+    --, ((modm .|. shiftMask, xK_F8), spawn "setxkbmap ru(winkeys)")
     ]
     ++
 
