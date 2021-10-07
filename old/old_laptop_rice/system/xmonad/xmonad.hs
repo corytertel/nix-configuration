@@ -37,7 +37,7 @@ myClickJustFocuses = False
 
 -- Width of the window border in pixels.
 --
-myBorderWidth   = 8
+myBorderWidth   = 0
 
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -56,20 +56,20 @@ myModMask       = mod4Mask
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
 --myWorkspaces    = [" \61728  ", " \62057  ", " \62074  ", " \61729  ", " \61564  ", " \61878  ", " \61441  ", " \61704  ", " \61612  "]
-myWorkspaces    =   [ "1"
-                    , "2"
-                    , "3"
-                    , "4"
-                    , "5"
-                    , "6"
-                    , "7"
-                    , "8"
-                    , "9 "]
+myWorkspaces    =   [ "<icon=/home/cory/.nix-configuration/laptop/system/xmonad/icons/kitty_logo.xpm/>"
+                    , "<icon=/home/cory/.nix-configuration/laptop/system/xmonad/icons/chromium_logo.xpm/>"
+                    , "<icon=/home/cory/.nix-configuration/laptop/system/xmonad/icons/discord_logo.xpm/>"
+                    , "<icon=/home/cory/.nix-configuration/laptop/system/xmonad/icons/spacemacs_logo.xpm/>"
+                    , "<icon=/home/cory/.nix-configuration/laptop/system/xmonad/icons/dolphin_logo.xpm/>"
+                    , "<icon=/home/cory/.nix-configuration/laptop/system/xmonad/icons/steam_logo.xpm/>"
+                    , "\61441 "
+                    , "\61704 "
+                    , "\61612 "]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
 myNormalBorderColor  = "#444444"
-myFocusedBorderColor = "#dddddd"
+myFocusedBorderColor = "#cc241d"
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -280,7 +280,7 @@ myLogHook = return ()
 --
 -- By default, do nothing.
 myStartupHook = do
-        spawnOnce "feh --bg-fill $HOME/.nix-configuration/laptop/system/xmonad/tree.jpg"
+        spawnOnce "feh --bg-fill $HOME/.nix-configuration/laptop/system/xmonad/95869.jpg"
         spawnOnce "picom &"
 
 ------------------------------------------------------------------------

@@ -1,20 +1,21 @@
 Config { 
 
    -- appearance
-     font =         "xft:Fantasque Sans Mono Nerd Font:size=12:bold:antialias=true"
+     font =         "xft:Fantasque Sans Mono Nerd Font:size=12:antialias=true"
    , bgColor =      "#7d474a"
-   , alpha =        190
+   , alpha =        229
    --, bgColor =      "#762423"
    --, alpha =        127
    , fgColor =      "#ffffff"
    , position =     Static { xpos = 1645 , ypos = 27, width = 530 , height = 81 }
-   , border =       NoBorder
-   , borderColor =  "#7d474a"
+   , border =       BottomB
+   , borderWidth =  8
+   , borderColor =  "#beb86b"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "  %date%  "
+   , template = "  <fc=#beb86b>%date%</fc>  "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start

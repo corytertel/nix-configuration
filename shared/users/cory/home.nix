@@ -159,5 +159,6 @@
     imagemagick
     yt-dlp
     libsForQt5.kcalc
+    pfetch
   ];
 }

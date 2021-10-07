@@ -1,7 +1,7 @@
 Config { 
 
    -- appearance
-     font =         "xft:Fantasque Sans Mono Nerd Font:size=12:antialias=true"
+     font =         "xft:Fantasque Sans Mono Nerd Font:size=12:bold:antialias=true"
    , bgColor =      "#7d474a"
    , alpha =        229
    --, bgColor =      "#762423"

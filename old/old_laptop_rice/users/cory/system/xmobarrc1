@@ -1,21 +1,21 @@
 Config { 
 
    -- appearance
-     font =         "xft:Fantasque Sans Mono Nerd Font:size=12:antialias=true"
+     font =         "xft:Fantasque Sans Mono Nerd Font:size=12:bold:antialias=true"
    , bgColor =      "#7d474a"
    , alpha =        229
    --, bgColor =      "#762423"
    --, alpha =        127
    , fgColor =      "#ffffff"
-   , position =     Static { xpos = 3166 , ypos = 27, width = 620 , height = 81 }
+   , position =     Static { xpos = 1645 , ypos = 27, width = 530 , height = 81 }
    , border =       BottomB
    , borderWidth =  8
-   , borderColor =  "#71be6b"
+   , borderColor =  "#beb86b"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "}{  %battery%   <fc=#71be6b>  %volume%</fc>   <fc=#6bbeb8>  %kbd%</fc>  "
+   , template = "  <fc=#beb86b>%date%</fc>  "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -41,30 +41,9 @@ Config {
    --   see http://projects.haskell.org/xmobar/#system-monitor-plugins.
    , commands = 
 
-        -- Volume
-        [ Run Com "pamixer" ["--get-volume-human"] "volume" 1
-
-        -- battery monitor
-        , Run Battery        [ "--template" , "<acstatus>"
-                             , "--Low"      , "10"        -- units: %
-                             , "--High"     , "40"        -- units: %
-                             , "--low"      , "#e02453"
-                             , "--normal"   , "#beb86b"
-                             , "--high"     , "#aff08b"
-
-                             , "--" -- battery specific options
-                                       -- discharging status
-                                       --, "-o"	, " <left>% (<timeleft>)"
-                                       , "-o"	, "  <left>%"
-                                       -- AC "on" status
-                                       , "-O"	, "  <left>%"
-                                       -- charged status
-                                       , "-i"	, "  <left>%"
-                             ] 50
-
-        -- keyboard layout indicator
-        , Run Kbd            [ ("ru(winkeys)" , "ru")
-                             , ("us"         , "us")
-                             ]
+        [
+        -- time and date indicator 
+        --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
+        Run Date           "%m/%d/%y %I:%M:%S %p" "date" 10
         ]
    }
