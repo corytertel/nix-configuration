@@ -2,20 +2,18 @@ Config {
 
    -- appearance
      font =         "xft:Fantasque Sans Mono Nerd Font:size=12:antialias=true"
-   , bgColor =      "#7d474a"
-   , alpha =        229
-   --, bgColor =      "#762423"
-   --, alpha =        127
-   , fgColor =      "#ffffff"
-   , position =     Static { xpos = 3166 , ypos = 27, width = 620 , height = 81 }
-   , border =       BottomB
+   , bgColor =      "#0f0f0f"
+   , alpha =        255
+   , fgColor =      "#f0f0f0"
+   , position =     Static { xpos = 3246 , ypos = 2292, width = 540 , height = 81 }
+   , border =       TopB
    , borderWidth =  8
-   , borderColor =  "#71be6b"
+   , borderColor =  "#444444"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "}{  %battery%   <fc=#71be6b>  %volume%</fc>   <fc=#6bbeb8>  %kbd%</fc>  "
+   , template = "}{ %battery%    %volume%    %kbd% "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -50,7 +48,7 @@ Config {
                              , "--High"     , "40"        -- units: %
                              , "--low"      , "#e02453"
                              , "--normal"   , "#beb86b"
-                             , "--high"     , "#aff08b"
+                             , "--high"     , "#f0f0f0"
 
                              , "--" -- battery specific options
                                        -- discharging status

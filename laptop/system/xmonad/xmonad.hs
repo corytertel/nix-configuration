@@ -64,7 +64,7 @@ myWorkspaces    =   [ "1"
                     , "6"
                     , "7"
                     , "8"
-                    , "9 "]
+                    , "9"]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -80,11 +80,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     --[ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
     [ ((modm,               xK_Return), spawn $ XMonad.terminal conf)
 
-    -- launch dmenu
-    , ((modm,               xK_space     ), spawn "dmenu_run")
+    -- launch rofi
+    , ((modm,               xK_space     ), spawn "rofi -show run")
 
-    -- launch gmrun
-    , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
+    -- launch dmenu
+    , ((modm .|. shiftMask, xK_space     ), spawn "dmenu_run")
 
     -- close focused window
     , ((modm,               xK_q     ), kill)
@@ -247,8 +247,9 @@ myLayout = spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
 myManageHook = composeAll
     [ insertPosition End Newer -- open new windows at the end
     , className =? "MPlayer"        --> doFloat
-    , className =? "vlc"           --> doFloat
-    , className =? "gwenview"           --> doFloat
+    , className =? "vlc"            --> doFloat
+    , className =? "gwenview"       --> doFloat
+    , className =? "mpv"            --> doFloat
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore ]
 
@@ -280,7 +281,7 @@ myLogHook = return ()
 --
 -- By default, do nothing.
 myStartupHook = do
-        spawnOnce "feh --bg-fill $HOME/.nix-configuration/laptop/system/xmonad/tree.jpg"
+        spawnOnce "feh --bg-fill $HOME/.nix-configuration/laptop/system/xmonad/tree2.jpg"
         spawnOnce "picom &"
 
 ------------------------------------------------------------------------
@@ -297,11 +298,11 @@ myBar2 = "xmobar $HOME/.config/xmobar/xmobarrc2"
 --                , ppTitle = xmobarColor "#282828" "#cc241d" . shorten 40
 --                , ppOrder = \(ws:_:_:_) -> [ws]
 --                }
-myPP = xmobarPP { ppCurrent = xmobarColor "#ddb7df" "" . wrap "[" "]" --current selected desktop
-                , ppHidden = xmobarColor "#ffffff" "" . wrap "" ""
-                , ppHiddenNoWindows = xmobarColor "#ffffff" "" . wrap "" "" --desktops with no windows
-                , ppVisible = xmobarColor "#ffffff" "" . wrap "" ""
-                , ppTitle = xmobarColor "#282828" "" . shorten 40
+myPP = xmobarPP { ppCurrent = xmobarColor "#f0f0f0" "" . wrap "[" "]" --current selected desktop
+                , ppHidden = xmobarColor "#f0f0f0" "" . wrap "" ""
+                , ppHiddenNoWindows = xmobarColor "#707070" "" . wrap "" "" --desktops with no windows
+                , ppVisible = xmobarColor "#f0f0f0" "" . wrap "" ""
+                , ppTitle = xmobarColor "#f0f0f0" "" . shorten 40
                 , ppOrder = \(ws:_:_:_) -> [ws]
                 }
 
