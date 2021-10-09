@@ -3,7 +3,6 @@
 {
   imports =
     [
-      ./apps/kitty
       ./apps/bash
     ];
 

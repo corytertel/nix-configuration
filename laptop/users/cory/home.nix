@@ -3,11 +3,7 @@
 {
   imports =
     [
-      ./apps/kitty
       ./apps/bash
-      ./apps/dunst
-      ./apps/zathura
-      ./apps/rofi
     ];
 
   # Xresources

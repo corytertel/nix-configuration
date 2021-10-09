@@ -3,11 +3,15 @@
 {
   imports =
     [
-      ./apps/nvim
-      ./apps/vscode
-      ./apps/ungoogled-chromium
-      ./apps/neofetch
+      ./apps/dunst
       ./apps/emacs
+      ./apps/kitty
+      ./apps/neofetch
+      ./apps/nvim
+      ./apps/rofi
+      ./apps/ungoogled-chromium
+      ./apps/vscode
+      ./apps/zathura
     ];
 
   # Let Home Manager install and manage itself.
