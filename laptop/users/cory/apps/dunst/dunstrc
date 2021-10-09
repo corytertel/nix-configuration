@@ -1,15 +1,15 @@
 [global]
     monitor = 0
     follow = keyboard
-    geometry = "350x400-12+60"
+    geometry = "700x800-24+120"
     indicate_hidden = no
     shrink = no
     transparency = 0
     notification_height = 0
-    separator_height = 4
-    padding = 12
-    horizontal_padding = 12
-    frame_width = 4
+    separator_height = 8
+    padding = 20
+    horizontal_padding = 20
+    frame_width = 8
     frame_color = "#262626"
     separator_color = auto
     sort = no

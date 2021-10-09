@@ -10,10 +10,6 @@
 
     ];
 
-  # Zen Kernel
-  boot.kernelPackages = pkgs.linuxPackages_zen;
-  boot.kernelParams = [ "pcie_aspm.policy=performance" ];
-
   # Dual booting with GRUB
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub.enable = true;
@@ -99,6 +95,17 @@
     #  rev = "1f0315a2e2b9376c86bd71bda459cc237c1c30e2";
     #}))
 
+    #(import (builtins.fetchTarball {
+    #  url = https://github.com/nix-community/emacs-overlay/archive/master.tar.gz;
+    #}))
+
+    #(import (pkgs.fetchFromGitHub {
+    #  owner = "nix-community";
+    #  repo = "emacs-overlay";
+    #  rev = "5ee2f08137100840c1db4d017420fc05c440e97e";
+    #  sha256 = "BHLRbwPPwpOIm9n9xYvrFPw+g6DbRVZXPVZoeMlpp+U=";
+    #}))
+
     #(final: prev: {
     #  neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (old: {
     #    src = pkgs.fetchFromGitHub {
@@ -144,7 +151,9 @@
   ];
 
   # Emacs
-  #services.emacs.package = pkgs.emacsGcc;
+  #services.emacs.package = pkgs.emacsUnstable;
+  #services.emacs.package = pkgs.emacsPgtkGcc;
+  services.emacs.enable = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -152,6 +161,7 @@
   # Enable sound.
   sound.enable = true;
   hardware.pulseaudio.enable = true;
+  sound.mediaKeys.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.xserver.libinput.enable = true;

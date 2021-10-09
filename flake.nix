@@ -6,16 +6,20 @@
     nixpkgs-unstable.url = "nixpkgs/master";
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    nix-doom-emacs.url = "github:vlaci/nix-doom-emacs";
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
   };
 
-  outputs = { nixpkgs, home-manager, nix-doom-emacs, ... }: 
+  outputs = { nixpkgs, home-manager, emacs-overlay, ... }: 
   let
     system = "x86_64-linux";
 
     pkgs = import nixpkgs {
       inherit system;
       config = { allowUnfree = true; };
+      overlays = [
+          emacs-overlay.overlay
+          #(import ./overlays)
+        ];
     };
 
     lib = nixpkgs.lib;
@@ -32,13 +36,7 @@
           imports = [
             ./shared/users/cory/home.nix
             ./pc/users/cory/home.nix
-            nix-doom-emacs.hmModule
           ];
-          programs.doom-emacs = {
-            enable = false;
-            doomPrivateDir = ./shared/users/cory/apps/emacs/doom.d;
-          };
-          programs.emacs.enable = true;
         };
       };
 
@@ -51,13 +49,7 @@
           imports = [
             ./shared/users/cory/home.nix
             ./laptop/users/cory/home.nix
-            nix-doom-emacs.hmModule
           ];
-          programs.doom-emacs = {
-            enable = false;
-            doomPrivateDir = ./shared/users/cory/apps/emacs/doom.d;
-          };
-          programs.emacs.enable = true;
         };
       };
     };

@@ -10,6 +10,10 @@
       ./hardware-configuration.nix
     ];
 
+  # Zen Kernel
+  boot.kernelPackages = pkgs.linuxPackages_zen;
+  boot.kernelParams = [ "pcie_aspm.policy=performance" ];
+
   # Enable Xmonad
   services.xserver.windowManager.xmonad = {
     enable = true;

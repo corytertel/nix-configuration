@@ -7,6 +7,7 @@
       ./apps/vscode
       ./apps/ungoogled-chromium
       ./apps/neofetch
+      ./apps/emacs
     ];
 
   # Let Home Manager install and manage itself.
@@ -160,5 +161,7 @@
     yt-dlp
     libsForQt5.kcalc
     pfetch
+    virtualbox
+    qemu
   ];
 }

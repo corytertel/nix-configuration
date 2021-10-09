@@ -1,0 +1,23 @@
+
+#+title:Cory's Nix Configuration TODO
+#+description: Cory's  Nix Configuration TODO
+
+* Dunst
+** Laptop: fix notification width
+** PC: implement
+* Rofi
+** Laptop: fix colors and size
+** PC: implement
+* Betterscreenlock
+* Custom kernel
+** Figure out libre kernel
+* gnome keyring
+* russian keyboard
+* mouse options (sentivity, acceleration)
+* emacs overlay
+* laptop power options
+* splash screen?
+* laptop mountain color theming (gtk, etc)
+* Fix PC Rice
+* Reorganize file structure
+** Clean up files too

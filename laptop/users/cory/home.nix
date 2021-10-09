@@ -61,7 +61,7 @@
     experimentalBackends = true;
     opacityRule = [
       "98:class_g   *?= 'emacs'"
-      #"90:class_g   *?= 'discord'"
+      "98:class_g   *?= 'discord'"
       #"75:class_g   *?= 'Rofi'"
     ];
     extraOptions = ''

@@ -10,6 +10,25 @@
       ./hardware-configuration.nix
     ];
 
+  # Libre Kernel
+  #boot.kernelPackages = pkgs.linuxPackages_latest-libre;
+  #boot.kernelPackages = pkgs.linuxPackages-libre;
+
+  # Zen Kernel
+  boot.kernelPackages = pkgs.linuxPackages_zen;
+  boot.kernelParams = [ "pcie_aspm.policy=performance" ];
+
+  # Power
+  powerManagement.cpuFreqGovernor = "powersave";
+  powerManagement.enable = true;
+  powerManagement.powertop.enable = true;
+  services.tlp.enable = true;
+  services.thermald.enable = true;
+  #services.undervolt = {
+  #  enable = true;
+  #  coreOffset = -50;
+  #};
+
   # Enable Xmonad
   services.xserver.windowManager.xmonad = {
     enable = true;
