@@ -1,6 +1,5 @@
-
 #+title:Cory's Nix Configuration TODO
-#+description: Cory's  Nix Configuration TODO
+#+description: Cory's Nix Configuration TODO
 
 * Dunst
 ** Laptop: fix notification width
@@ -21,3 +20,5 @@
 * Fix PC Rice
 * Reorganize file structure
 ** Clean up files too
+* Remove home-manager for more reproducability/declaration
+** Move to a more flake-based setup

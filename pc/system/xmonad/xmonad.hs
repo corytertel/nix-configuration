@@ -216,7 +216,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = spacingRaw False (Border 50 0 100 0) True (Border 0 100 0 100) True $
+myLayout = spacingRaw False (Border 50 0 50 0) True (Border 0 50 0 50) True $
         avoidStruts (tiled ||| Mirror tiled ||| threeColumn ||| threeColumnMid |||Full)
   where
      -- default tiling algorithm partitions the screen into two panes
@@ -302,11 +302,11 @@ myBar2 = "xmobar $HOME/.config/xmobar/xmobarrc2"
 --                , ppVisible = xmobarColor "#ebdbb2" "#282828" . wrap "" ""
 --                , ppTitle = xmobarColor "#282828" "#cc241d" . shorten 40
 --                }
-myPP = xmobarPP { ppCurrent = xmobarColor "#ff5555" "" . wrap "[" "]" --current selected desktop
-                , ppHidden = xmobarColor "#f8f8f2" "" . wrap "" ""
-                , ppHiddenNoWindows = xmobarColor "#f8f8f2" "" . wrap "" "" --desktops with no windows
-                , ppVisible = xmobarColor "#f8f8f2" "" . wrap "" ""
-                , ppTitle = xmobarColor "#282a36" "" . shorten 40
+myPP = xmobarPP { ppCurrent = xmobarColor "#ac8a8c" "" . wrap "[" "]" --current selected desktop
+                , ppHidden = xmobarColor "#f0f0f0" "" . wrap "" ""
+                , ppHiddenNoWindows = xmobarColor "#f0f0f0" "" . wrap "" "" --desktops with no windows
+                , ppVisible = xmobarColor "#f0f0f0" "" . wrap "" ""
+                , ppTitle = xmobarColor "#f0f0f0" "" . shorten 40
                 , ppOrder = \(ws:_:_:_) -> [ws]
                 }
 

@@ -2,13 +2,13 @@ Config {
 
    -- appearance
      font =         "xft:Fantasque Sans Mono Nerd Font:size=18:bold:antialias=true"
-   , bgColor =      "#282a36"
-   , alpha =        190
-   , fgColor =      "#f8f8f2"
+   , bgColor =      "#0f0f0f"
+   , alpha =        255
+   , fgColor =      "#f0f0f0"
    , position =     Static { xpos = 100 , ypos = 50, width = 700 , height = 80 }
    , border =       BottomB
    , borderWidth =  4
-   , borderColor =  "#ff5555"
+   , borderColor =  "#ac8a8c"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
