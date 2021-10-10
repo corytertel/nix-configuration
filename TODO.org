@@ -22,3 +22,5 @@
 ** Clean up files too
 * Remove home-manager for more reproducability/declaration
 ** Move to a more flake-based setup
+* Package 'layout_switch.sh' in a nix derivation for reproducability
+* Change vim colorscheme and maybe spacevim

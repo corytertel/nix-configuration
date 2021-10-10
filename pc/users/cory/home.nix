@@ -37,7 +37,7 @@
     enable = true;
     inactiveOpacity = "1.0";
     activeOpacity = "1.0";
-    blur = false;
+    blur = true;
     experimentalBackends = true;
     opacityRule = [
       "98:class_g   *?= 'emacs'"
@@ -45,7 +45,9 @@
       #"75:class_g   *?= 'Rofi'"
     ];
     extraOptions = ''
-      corner-radius = 20;
+      blur-method = "dual_kawase";
+      blur-strength = 4;
+      corner-radius = 40;
       round-borders = 1;
 
       rounded-corners-exclude = [

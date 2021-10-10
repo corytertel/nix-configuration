@@ -37,7 +37,7 @@ myClickJustFocuses = False
 
 -- Width of the window border in pixels.
 --
-myBorderWidth   = 1
+myBorderWidth   = 4
 
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -68,8 +68,8 @@ myWorkspaces    =   [ "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icon
 
 -- Border colors for unfocused and focused windows, respectively.
 --
-myNormalBorderColor  = "#444444"
-myFocusedBorderColor = "#ff5555"
+myNormalBorderColor  = "#0f0f0f"
+myFocusedBorderColor = "#f0f0f0"
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -80,11 +80,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     --[ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
     [ ((modm,               xK_Return), spawn $ XMonad.terminal conf)
 
-    -- launch dmenu
-    , ((modm,               xK_space     ), spawn "dmenu_run")
+    -- launch rofi
+    , ((modm,               xK_space     ), spawn "rofi -show run")
 
-    -- launch gmrun
-    , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
+    -- launch dmenu
+    , ((modm .|. shiftMask, xK_space     ), spawn "dmenu_run")
 
     -- close focused window
     , ((modm,               xK_q     ), kill)
@@ -163,8 +163,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0                 , xF86XK_MonBrightnessDown), spawn "xbrightness -5000")
 
     -- Keyboard Layout
-    --, ((modm              , xK_F8), spawn "setxkbmap us")
-    --, ((modm .|. shiftMask, xK_F8), spawn "setxkbmap ru(winkeys)")
+    , ((0                 , xK_Alt_R), spawn "/home/cory/manual_installs/layout_switch.sh")
+    , ((mod1Mask          , xK_Escape), spawn "/home/cory/manual_installs/layout_switch.sh")
     ]
     ++
 
@@ -285,7 +285,7 @@ myLogHook = return ()
 -- By default, do nothing.
 myStartupHook = do
         --spawnOnce "feh --bg-fill $HOME/.nix-configuration/pc/system/xmonad/the_n9n.png"
-        spawnOnce "feh --bg-fill $HOME/.nix-configuration/pc/system/xmonad/ukraine.jpeg"
+        spawnOnce "feh --bg-fill $HOME/.nix-configuration/pc/system/xmonad/view.jpeg"
         spawnOnce "picom &"
 
 ------------------------------------------------------------------------
