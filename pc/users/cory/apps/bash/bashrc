@@ -249,11 +249,11 @@ bash_prompt() {
 	#local PROMT_FORMAT=$BLUE_BOLD
 
     #CUSTOM Yellow, Cyan, Magenta
-	local FONT_COLOR_1=$D_GRAY
+	local FONT_COLOR_1=$WHITE
 	local BACKGROUND_1=$YELLOW
 	local TEXTEFFECT_1=$BOLD
 
-	local FONT_COLOR_2=$D_GRAY
+	local FONT_COLOR_2=$WHITE
 	local BACKGROUND_2=$CYAN
 	local TEXTEFFECT_2=$BOLD
 

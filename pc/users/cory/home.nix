@@ -40,9 +40,9 @@
     blur = false;
     experimentalBackends = true;
     opacityRule = [
-      "90:class_g   *?= 'emacs'"
-      "90:class_g   *?= 'discord'"
-      "75:class_g   *?= 'Rofi'"
+      "98:class_g   *?= 'emacs'"
+      "98:class_g   *?= 'discord'"
+      #"75:class_g   *?= 'Rofi'"
     ];
     extraOptions = ''
       corner-radius = 20;

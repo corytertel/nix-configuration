@@ -285,7 +285,7 @@ myLogHook = return ()
 -- By default, do nothing.
 myStartupHook = do
         --spawnOnce "feh --bg-fill $HOME/.nix-configuration/pc/system/xmonad/the_n9n.png"
-        spawnOnce "feh --bg-fill $HOME/.nix-configuration/pc/system/xmonad/aurora4k.jpg"
+        spawnOnce "feh --bg-fill $HOME/.nix-configuration/pc/system/xmonad/ukraine.jpeg"
         spawnOnce "picom &"
 
 ------------------------------------------------------------------------
