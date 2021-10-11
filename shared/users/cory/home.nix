@@ -91,7 +91,6 @@
     libreoffice
     gimp
     #wpgtk
-    #anbox
     blender
     zathura
     joplin
