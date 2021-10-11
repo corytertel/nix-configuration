@@ -161,6 +161,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Brightness
     , ((0                 , xF86XK_MonBrightnessUp), spawn "xbrightness +5000")
     , ((0                 , xF86XK_MonBrightnessDown), spawn "xbrightness -5000")
+
+    -- Keyboard Layout
+    , ((0                 , xK_Alt_R), spawn "/home/cory/manual_installs/layout_switch.sh")
     ]
     ++
 

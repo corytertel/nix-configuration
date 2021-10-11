@@ -16,7 +16,7 @@
 * emacs overlay
 * laptop power options
 * splash screen?
-* laptop mountain color theming (gtk, etc)
+* mountain color theming (gtk, qt, etcj)
 * Fix PC Rice
 * Reorganize file structure
 ** Clean up files too

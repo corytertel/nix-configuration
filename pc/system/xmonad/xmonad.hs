@@ -55,7 +55,9 @@ myModMask       = mod4Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
---myWorkspaces    = [" \61728  ", " \62057  ", " \62074  ", " \61729  ", " \61564  ", " \61878  ", " \61441  ", " \61704  ", " \61612  "]
+--myWorkspaces    = ["\61728 ", "\62057 ", "\62074 ", "\61729 ", "\61564 ", "\61878 ", "\61441 ", "\61704 ", "\61612 "]
+myWorkspaces    = ["\61728 ", " ", "\62074 ", "\61729 ", "\61564 ", "\61878 ", "\61441 ", "\61704 ", "\61612 "]
+{-
 myWorkspaces    =   [ "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icons/kitty_logo.xpm/>"
                     , "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icons/chromium_logo.xpm/>"
                     , "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icons/discord_logo.xpm/>"
@@ -65,6 +67,7 @@ myWorkspaces    =   [ "<icon=/home/cory/.nix-configuration/pc/system/xmonad/icon
                     , "\61441 "
                     , "\61704 "
                     , "\61612 "]
+--}
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -164,7 +167,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Keyboard Layout
     , ((0                 , xK_Alt_R), spawn "/home/cory/manual_installs/layout_switch.sh")
-    , ((mod1Mask          , xK_Escape), spawn "/home/cory/manual_installs/layout_switch.sh")
     ]
     ++
 

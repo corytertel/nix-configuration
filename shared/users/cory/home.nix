@@ -6,6 +6,7 @@
       ./apps/dunst
       ./apps/emacs
       ./apps/kitty
+      ./apps/layout_switch
       ./apps/neofetch
       ./apps/nvim
       ./apps/rofi

@@ -5,7 +5,7 @@ Config {
    , bgColor =      "#0f0f0f"
    , alpha =        255
    , fgColor =      "#f0f0f0"
-   , position =     Static { xpos = 1675, ypos = 50, width = 470, height = 80 }
+   , position =     Static { xpos = 1690, ypos = 50, width = 440, height = 80 }
    , border =       BottomB
    , borderWidth =  4
    , borderColor =  "#aca98a"
@@ -13,7 +13,7 @@ Config {
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "  <fc=#aca98a>%date%</fc>  "
+   , template = " <fc=#aca98a>%date%</fc> "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
