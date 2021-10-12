@@ -165,7 +165,9 @@
     yt-dlp
     libsForQt5.kcalc
     pfetch
-    virtualbox
+    #virtualbox
     qemu
+    vmware-horizon-client
+    qutebrowser
   ];
 }
