@@ -166,7 +166,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0                 , xF86XK_MonBrightnessDown), spawn "xbrightness -5000")
 
     -- Keyboard Layout
-    , ((0                 , xK_Alt_R), spawn "/home/cory/manual_installs/layout_switch.sh")
+    , ((0                 , xK_Alt_R), spawn "/home/cory/.nix-configuration/shared/users/cory/apps/layout_switch/layout_switch.sh")
     ]
     ++
 
@@ -254,9 +254,12 @@ myManageHook = composeAll
     [ insertPosition End Newer -- open new windows at the end
     , className =? "MPlayer"        --> doFloat
     , className =? "vlc"           --> doFloat
+    , className =? "mpv"           --> doFloat
     , className =? "gwenview"           --> doFloat
     , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore ]
+    , resource  =? "kdesktop"       --> doIgnore
+    , title     =? "Save Image"     --> unfloat
+    ] where unfloat = ask >>= doF . W.sink
 
 ------------------------------------------------------------------------
 -- Event handling
