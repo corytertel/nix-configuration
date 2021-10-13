@@ -169,5 +169,6 @@
     qemu
     vmware-horizon-client
     qutebrowser
+    xfce.thunar
   ];
 }

@@ -7,7 +7,7 @@
 {
   imports =
     [
-
+      ./theme.nix
     ];
 
   # Dual booting with GRUB

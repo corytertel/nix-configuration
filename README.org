@@ -1,0 +1,10 @@
+
+#+TITLE:Cory's Nix Configuration
+
+* Laptop
+
+[[Screenshot][img/laptop.png]]
+
+* PC
+
+[[Screenshot][img/pc.png]]
