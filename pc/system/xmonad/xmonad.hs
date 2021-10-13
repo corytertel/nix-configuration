@@ -167,6 +167,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Keyboard Layout
     , ((0                 , xK_Alt_R), spawn "/home/cory/.nix-configuration/shared/users/cory/apps/layout_switch/layout_switch.sh")
+
+    -- Kill App
+    , ((modm              , xK_Escape), spawn "xkill")
     ]
     ++
 
@@ -289,8 +292,7 @@ myLogHook = return ()
 --
 -- By default, do nothing.
 myStartupHook = do
-        --spawnOnce "feh --bg-fill $HOME/.nix-configuration/pc/system/xmonad/the_n9n.png"
-        spawnOnce "feh --bg-fill $HOME/.nix-configuration/pc/system/xmonad/view.jpeg"
+        spawnOnce "feh --bg-fill $HOME/Pictures/wallpaper.jpg"
         spawnOnce "picom &"
 
 ------------------------------------------------------------------------

@@ -73,5 +73,6 @@
     ".config/xmobar/xmobarrc0".text = builtins.readFile ./system/xmobarrc0;
     ".config/xmobar/xmobarrc1".text = builtins.readFile ./system/xmobarrc1;
     ".config/xmobar/xmobarrc2".text = builtins.readFile ./system/xmobarrc2;
+    "Pictures/wallpaper.jpg".source = ./system/view.jpg;
   };
 }

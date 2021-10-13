@@ -163,7 +163,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0                 , xF86XK_MonBrightnessDown), spawn "xbrightness -5000")
 
     -- Keyboard Layout
-    , ((0                 , xK_Alt_R), spawn "/home/cory/manual_installs/layout_switch.sh")
+    , ((0                 , xK_Alt_R), spawn "/home/cory/.nix-configuration/shared/users/cory/apps/layout_switch/layout_switch.sh")
+
+    -- Kill App
+    , ((modm              , xK_Escape), spawn "xkill")
     ]
     ++
 
@@ -216,7 +219,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- which denotes layout choice.
 --
 myLayout = spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
-        avoidStruts (tiled ||| Mirror tiled ||| threeColumn ||| threeColumnMid |||Full)
+        avoidStruts (tiled ||| Mirror tiled ||| threeColumn ||| threeColumnMid ||| Full)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -250,11 +253,13 @@ myLayout = spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
 myManageHook = composeAll
     [ insertPosition End Newer -- open new windows at the end
     , className =? "MPlayer"        --> doFloat
-    , className =? "vlc"            --> doFloat
-    , className =? "gwenview"       --> doFloat
-    , className =? "mpv"            --> doFloat
+    , className =? "vlc"           --> doFloat
+    , className =? "mpv"           --> doFloat
+    , className =? "gwenview"           --> doFloat
     , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore ]
+    , resource  =? "kdesktop"       --> doIgnore
+    , title     =? "Save Image"     --> unfloat
+    ] where unfloat = ask >>= doF . W.sink
 
 ------------------------------------------------------------------------
 -- Event handling
@@ -284,7 +289,7 @@ myLogHook = return ()
 --
 -- By default, do nothing.
 myStartupHook = do
-        spawnOnce "feh --bg-fill $HOME/.nix-configuration/laptop/system/xmonad/tree2.jpg"
+        spawnOnce "feh --bg-fill $HOME/Pictures/wallpaper.jpg"
         spawnOnce "picom &"
 
 ------------------------------------------------------------------------

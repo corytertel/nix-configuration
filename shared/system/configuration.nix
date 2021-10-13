@@ -183,6 +183,11 @@
   services.xserver.libinput.touchpad.tapping = false;
   services.xserver.libinput.touchpad.tappingDragLock = false;
 
+  # Mouse settings
+  services.xserver.libinput.mouse.accelProfile = "flat";
+  services.xserver.libinput.mouse.accelSpeed = null;
+  #services.xserver.libinput.mouse.transformationMatrix = "1 0 0 0 1 0 0 0 1";
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.cory = {
     isNormalUser = true;
