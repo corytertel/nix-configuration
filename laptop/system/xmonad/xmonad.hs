@@ -18,7 +18,7 @@ import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End))
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
 --import XMonad.Hooks.EwmhDesktops
-import qualified XMonad.Layout.Fullscreen as FS
+--import qualified XMonad.Layout.Fullscreen as FS
 --import XMonad.Actions.Volume
 
 import qualified XMonad.StackSet as W
@@ -58,15 +58,7 @@ myModMask       = mod4Mask
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
 --myWorkspaces    = [" \61728  ", " \62057  ", " \62074  ", " \61729  ", " \61564  ", " \61878  ", " \61441  ", " \61704  ", " \61612  "]
-myWorkspaces    =   [ "1"
-                    , "2"
-                    , "3"
-                    , "4"
-                    , "5"
-                    , "6"
-                    , "7"
-                    , "8"
-                    , "9"]
+myWorkspaces    =   [ "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -223,7 +215,8 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = FS.fullscreenFocus $ spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
+--myLayout = FS.fullscreenFocus $ spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
+myLayout = spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
         avoidStruts (tiled ||| Mirror tiled ||| threeColumn ||| threeColumnMid ||| Full)
   where
      -- default tiling algorithm partitions the screen into two panes
@@ -257,7 +250,7 @@ myLayout = FS.fullscreenFocus $ spacingRaw False (Border 54 0 54 0) True (Border
 --
 myManageHook = composeAll
     [ insertPosition End Newer -- open new windows at the end
-    , FS.fullscreenManageHook
+    --, FS.fullscreenManageHook
     , className =? "MPlayer"        --> doFloat
     , className =? "vlc"           --> doFloat
     , className =? "mpv"           --> doFloat
@@ -265,6 +258,7 @@ myManageHook = composeAll
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore
     , title     =? "Save Image"     --> unfloat
+    , title     =? "Save File"     --> unfloat
     , title     =? "Open"     --> unfloat
     ] where unfloat = ask >>= doF . W.sink
 
@@ -277,8 +271,8 @@ myManageHook = composeAll
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
---myEventHook = mempty
-myEventHook = FS.fullscreenEventHook
+myEventHook = mempty
+--myEventHook = FS.fullscreenEventHook
 
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -306,14 +300,6 @@ myBar0 = "xmobar $HOME/.config/xmobar/xmobarrc0"
 myBar1 = "xmobar $HOME/.config/xmobar/xmobarrc1"
 myBar2 = "xmobar $HOME/.config/xmobar/xmobarrc2"
 
--- Custom PP, configure it as you like. It determines what is being written to the bar.
---myPP = xmobarPP { ppCurrent = xmobarColor "#7d474a" "#ffffff" . wrap "" "" --current selected desktop
---                , ppHidden = xmobarColor "#ffffff" "#7d474a" . wrap "" ""
---                , ppHiddenNoWindows = xmobarColor "#ffffff" "#7d474a" . wrap "" "" --desktops with no windows
---                , ppVisible = xmobarColor "#ffffff" "#7d474a" . wrap "" ""
---                , ppTitle = xmobarColor "#282828" "#cc241d" . shorten 40
---                , ppOrder = \(ws:_:_:_) -> [ws]
---                }
 myPP = xmobarPP { ppCurrent = xmobarColor "#f0f0f0" "" . wrap "[" "]" --current selected desktop
                 , ppHidden = xmobarColor "#f0f0f0" "" . wrap "" ""
                 , ppHiddenNoWindows = xmobarColor "#707070" "" . wrap "" "" --desktops with no windows

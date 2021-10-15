@@ -265,6 +265,7 @@ myManageHook = composeAll
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore
     , title     =? "Save Image"     --> unfloat
+    , title     =? "Save File"     --> unfloat
     , title     =? "Open"     --> unfloat
     ] where unfloat = ask >>= doF . W.sink
 
@@ -290,7 +291,7 @@ myLogHook = return ()
 ------------------------------------------------------------------------
 -- Startup hook
 
--- Perform an arbitrary action each time xmonad starts or is restarted
+  -- Perform an arbitrary action each time xmonad starts or is restarted
 -- with mod-q.  Used by, e.g., XMonad.Layout.PerWorkspace to initialize
 -- per-workspace layout choices.
 --
@@ -306,13 +307,6 @@ myBar0 = "xmobar $HOME/.config/xmobar/xmobarrc0"
 myBar1 = "xmobar $HOME/.config/xmobar/xmobarrc1"
 myBar2 = "xmobar $HOME/.config/xmobar/xmobarrc2"
 
--- Custom PP, configure it as you like. It determines what is being written to the bar.
---myPP = xmobarPP { ppCurrent = xmobarColor "#282828" "#cc241d" . wrap "" "" --current selected desktop
---                , ppHidden = xmobarColor "#ebdbb2" "#282828" . wrap "" ""
---                , ppHiddenNoWindows = xmobarColor "#ebdbb2" "#282828" . wrap "" "" --desktops with no windows
---                , ppVisible = xmobarColor "#ebdbb2" "#282828" . wrap "" ""
---                , ppTitle = xmobarColor "#282828" "#cc241d" . shorten 40
---                }
 myPP = xmobarPP { ppCurrent = xmobarColor "#ac8a8c" "" . wrap "[" "]" --current selected desktop
                 , ppHidden = xmobarColor "#f0f0f0" "" . wrap "" ""
                 , ppHiddenNoWindows = xmobarColor "#f0f0f0" "" . wrap "" "" --desktops with no windows
@@ -332,7 +326,6 @@ toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 -- Run xmonad with the settings you specify. No need to modify this.
 --
 main = xmonad =<< statusBar myBar0 myPP toggleStrutsKey =<< statusBar myBar1 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey defaults
---main = xmonad =<< statusBar myBar myPP toggleStrutsKey defaults
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will

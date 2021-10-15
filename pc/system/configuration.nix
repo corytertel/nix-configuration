@@ -12,7 +12,7 @@
 
   # Zen Kernel
   boot.kernelPackages = pkgs.linuxPackages_zen;
-  boot.kernelParams = [ "pcie_aspm.policy=performance" ];
+  boot.kernelParams = [ "pcie_aspm.policy=performance" "mitigations=off" ];
 
   # Enable Xmonad
   services.xserver.windowManager.xmonad = {

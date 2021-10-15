@@ -82,6 +82,8 @@
     jdk11 #openjdk11 for java
     python39Full
     python39Packages.pip
+    rustc
+    rust-analyzer
 
    # essential user apps
     discord

@@ -12,11 +12,11 @@
 
   # Libre Kernel
   #boot.kernelPackages = pkgs.linuxPackages_latest-libre;
-  #boot.kernelPackages = pkgs.linuxPackages-libre;
+  boot.kernelPackages = pkgs.linuxPackages-libre;
 
   # Zen Kernel
-  boot.kernelPackages = pkgs.linuxPackages_zen;
-  boot.kernelParams = [ "pcie_aspm.policy=performance" ];
+  #boot.kernelPackages = pkgs.linuxPackages_zen;
+  #boot.kernelParams = [ "pcie_aspm.policy=performance" ];
 
   # Power
   powerManagement.cpuFreqGovernor = "powersave";
