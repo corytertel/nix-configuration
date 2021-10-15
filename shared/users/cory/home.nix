@@ -170,5 +170,7 @@
     vmware-horizon-client
     qutebrowser
     xfce.thunar
+    xscreensaver
+    krita
   ];
 }

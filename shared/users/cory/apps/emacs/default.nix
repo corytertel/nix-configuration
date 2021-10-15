@@ -17,5 +17,6 @@
     ".spacemacs".text = builtins.readFile ./spacemacs;
     ".emacs.d/core/banners/005-banner.txt".text = builtins.readFile ./005-banner.txt;
     ".emacs.d/core/banners/006-banner.txt".text = builtins.readFile ./006-banner.txt;
+    ".emacs.d/core/banners/007-banner.txt".text = builtins.readFile ./007-banner.txt;
   };
 }

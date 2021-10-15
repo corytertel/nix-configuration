@@ -7,7 +7,7 @@
 {
   imports =
     [
-      ./theme.nix
+      ./theme_breeze.nix
     ];
 
   # Dual booting with GRUB

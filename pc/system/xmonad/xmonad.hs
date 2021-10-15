@@ -170,6 +170,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Kill App
     , ((modm              , xK_Escape), spawn "xkill")
+
+    -- Lock Screen
+    , ((modm .|. shiftMask, xK_z), spawn "xscreensaver-command -lock")
     ]
     ++
 
@@ -262,6 +265,7 @@ myManageHook = composeAll
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore
     , title     =? "Save Image"     --> unfloat
+    , title     =? "Open"     --> unfloat
     ] where unfloat = ask >>= doF . W.sink
 
 ------------------------------------------------------------------------

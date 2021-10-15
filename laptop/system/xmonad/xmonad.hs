@@ -17,6 +17,8 @@ import XMonad.Layout.ThreeColumns
 import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End))
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
+--import XMonad.Hooks.EwmhDesktops
+import qualified XMonad.Layout.Fullscreen as FS
 --import XMonad.Actions.Volume
 
 import qualified XMonad.StackSet as W
@@ -167,6 +169,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Kill App
     , ((modm              , xK_Escape), spawn "xkill")
+
+    -- Lock Screen
+    , ((modm .|. shiftMask, xK_z), spawn "xscreensaver-command -lock")
     ]
     ++
 
@@ -218,7 +223,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
+myLayout = FS.fullscreenFocus $ spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
         avoidStruts (tiled ||| Mirror tiled ||| threeColumn ||| threeColumnMid ||| Full)
   where
      -- default tiling algorithm partitions the screen into two panes
@@ -252,6 +257,7 @@ myLayout = spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
 --
 myManageHook = composeAll
     [ insertPosition End Newer -- open new windows at the end
+    , FS.fullscreenManageHook
     , className =? "MPlayer"        --> doFloat
     , className =? "vlc"           --> doFloat
     , className =? "mpv"           --> doFloat
@@ -259,6 +265,7 @@ myManageHook = composeAll
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore
     , title     =? "Save Image"     --> unfloat
+    , title     =? "Open"     --> unfloat
     ] where unfloat = ask >>= doF . W.sink
 
 ------------------------------------------------------------------------
@@ -270,7 +277,8 @@ myManageHook = composeAll
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = mempty
+--myEventHook = mempty
+myEventHook = FS.fullscreenEventHook
 
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -324,6 +332,7 @@ toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
 -- Run xmonad with the settings you specify. No need to modify this.
 --
+--main = xmonad . ewmh =<< statusBar myBar0 myPP toggleStrutsKey =<< statusBar myBar1 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey defaults
 main = xmonad =<< statusBar myBar0 myPP toggleStrutsKey =<< statusBar myBar1 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey defaults
 
 -- A structure containing your configuration settings, overriding
