@@ -15,7 +15,15 @@
 
     pkgs = import nixpkgs {
       inherit system;
-      #config = { allowUnfree = true; };
+      config = { allowUnfree = true; };
+      overlays = [
+          emacs-overlay.overlay
+          #(import ./overlays)
+        ];
+    };
+    pkgs_free = import nixpkgs {
+      inherit system;
+      config = { allowUnfree = false; };
       overlays = [
           emacs-overlay.overlay
           #(import ./overlays)
@@ -29,7 +37,6 @@
       #entry for each user account
       pc = home-manager.lib.homeManagerConfiguration {
         inherit system pkgs;
-        pkgs.config = { allowUnfree = true; };
         username = "cory";
         stateVersion = "21.05";
         homeDirectory = "/home/cory";
@@ -42,8 +49,7 @@
       };
 
       laptop = home-manager.lib.homeManagerConfiguration {
-        inherit system pkgs;
-        pkgs.config = { allowUnfree = false; };
+        inherit system pkgs_free;
         username = "cory";
         stateVersion = "21.05";
         homeDirectory = "/home/cory";
