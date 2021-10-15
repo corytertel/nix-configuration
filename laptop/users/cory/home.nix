@@ -73,6 +73,7 @@
     '';
     fade = true;
     fadeDelta = 5;
+    shadow = true;
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
@@ -90,6 +91,6 @@
     ".config/xmobar/xmobarrc0".text = builtins.readFile ./system/xmobarrc0;
     ".config/xmobar/xmobarrc1".text = builtins.readFile ./system/xmobarrc1;
     ".config/xmobar/xmobarrc2".text = builtins.readFile ./system/xmobarrc2;
-    "Pictures/wallpaper.jpg".source = ./system/tree2.jpg;
+    "Pictures/wallpaper.jpg".source = ./system/tree.jpg;
   };
 }
