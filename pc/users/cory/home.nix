@@ -75,4 +75,12 @@
     ".config/xmobar/xmobarrc2".text = builtins.readFile ./system/xmobarrc2;
     "Pictures/wallpaper.jpg".source = ./system/view.jpg;
   };
+
+  home.packages = with pkgs; [
+    discord
+    betterdiscord-installer
+    betterdiscordctl
+    steamPackages.steamcmd
+    minecraft
+  ];
 }

@@ -3,6 +3,7 @@
 {
   imports =
     [
+      ./apps/discord
       ./apps/dunst
       ./apps/emacs
       ./apps/kitty
@@ -86,8 +87,6 @@
     rust-analyzer
 
    # essential user apps
-    discord
-    #steam
     tdesktop
     flameshot
     libreoffice
@@ -129,8 +128,6 @@
     nerdfonts
     roboto-mono
     libsForQt5.krohnkite
-    betterdiscord-installer
-    betterdiscordctl
     nix-prefetch-github
     #haskellPackages.xmobar
     libsForQt5.plasma-applet-virtual-desktop-bar
@@ -151,9 +148,7 @@
     brave
     celluloid
     gnome.gnome-disk-utility
-    steamPackages.steamcmd
     mpv
-    minecraft
     pywal
     airshipper
     tree
@@ -167,9 +162,7 @@
     yt-dlp
     libsForQt5.kcalc
     pfetch
-    #virtualbox
     qemu
-    vmware-horizon-client
     qutebrowser
     xfce.thunar
     xscreensaver

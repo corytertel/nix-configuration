@@ -202,13 +202,8 @@
     '';
   };
 
-  # Enable steam
-  programs.steam.enable = true;
-  nixpkgs.config.allowNonFree = true;
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  nixpkgs.config.allowUnfree = true; 
   environment.systemPackages = with pkgs; [
 
    # install essentials
@@ -274,8 +269,6 @@
 
    # xmonad
     haskellPackages.xmobar
-    taffybar
-    haskellPackages.taffybar
     xorg.xkill
   ];
 

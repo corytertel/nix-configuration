@@ -11,12 +11,12 @@
     ];
 
   # Libre Kernel
-  #boot.kernelPackages = pkgs.linuxPackages_latest-libre;
-  boot.kernelPackages = pkgs.linuxPackages-libre;
+ # boot.kernelPackages = pkgs.linuxPackages_latest-libre;
+  #boot.kernelPackages = pkgs.linuxPackages-libre;
 
   # Zen Kernel
-  #boot.kernelPackages = pkgs.linuxPackages_zen;
-  #boot.kernelParams = [ "pcie_aspm.policy=performance" ];
+  boot.kernelPackages = pkgs.linuxPackages_zen;
+  boot.kernelParams = [ "pcie_aspm.policy=performance" "mitigations=off" ];
 
   # Power
   powerManagement.cpuFreqGovernor = "powersave";
@@ -38,6 +38,9 @@
 
   # Network Devices
   networking.interfaces.wlp0s20f3.useDHCP = true;
+
+  # Forbid Unfree Packages
+  nixpkgs.config.allowUnfree = false;
 
   environment.systemPackages = with pkgs; [
 

@@ -74,6 +74,7 @@
     fade = true;
     fadeDelta = 5;
     shadow = true;
+    shadowOpacity = "0.5";
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
