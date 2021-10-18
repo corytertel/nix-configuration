@@ -224,7 +224,8 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = spacingRaw False (Border 50 0 50 0) True (Border 0 50 0 50) True $
+--myLayout = spacingRaw False (Border 50 0 50 0) True (Border 0 50 0 50) True $
+myLayout = spacingRaw False (Border 150 100  430 380) True (Border 0 50 0 50) True $
         avoidStruts (tiled ||| Mirror tiled ||| threeColumn ||| threeColumnMid ||| Full)
   where
      -- default tiling algorithm partitions the screen into two panes

@@ -2,18 +2,13 @@
 #+description: Cory's Nix Configuration TODO
 
 * Dunst
-** Laptop: fix notification width
-** PC: implement
+** fix notification width
 * Rofi
-** Laptop: fix colors and size
-** PC: implement
+** fix colors and size
 * Betterscreenlock
-* Custom kernel
-** Figure out libre kernel
 * gnome keyring
 * russian keyboard
-* mouse options (sentivity, acceleration)
-* emacs overlay
+** package layout switch as a derivation
 * laptop power options
 * splash screen?
 * mountain color theming (gtk, qt, etcj)
@@ -24,3 +19,8 @@
 ** Move to a more flake-based setup
 * Package 'layout_switch.sh' in a nix derivation for reproducability
 * Change vim colorscheme and maybe spacevim
+* xmonad 0.17 (cabal build)
+* spacemacs
+** fix font for gui client
+** fix colorscheme to load on start
+* fix xmonad keybindings to also work with russian keyboard

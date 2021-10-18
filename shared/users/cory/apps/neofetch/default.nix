@@ -1,3 +1,5 @@
+# Big thanks to Icy-Thought for his neofetch config
+# https://github.com/Icy-Thought/Snowflake/blob/main/config/neofetch/config.conf
 { config, lib, pkgs, ... }:
 
 let

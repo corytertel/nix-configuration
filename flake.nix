@@ -15,6 +15,7 @@
 
     pkgs = import nixpkgs {
       inherit system;
+      config = { allowUnfree = true; };
       overlays = [
           emacs-overlay.overlay
           #(import ./overlays)
@@ -33,8 +34,8 @@
         homeDirectory = "/home/cory";
         configuration = {
           imports = [
-            ./shared/users/cory/home.nix
             ./pc/users/cory/home.nix
+            ./shared/users/cory/home.nix
           ];
         };
       };
@@ -46,8 +47,8 @@
         homeDirectory = "/home/cory";
         configuration = {
           imports = [
-            ./shared/users/cory/home.nix
             ./laptop/users/cory/home.nix
+            ./shared/users/cory/home.nix
           ];
         };
       };

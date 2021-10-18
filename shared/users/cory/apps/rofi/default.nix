@@ -4,6 +4,6 @@
   programs.rofi = {
     enable = true;
     terminal = "${pkgs.kitty}/bin/kitty";
-    theme = ./mountain.rasi;
+    theme = ./mountain2.rasi;
   };
 }

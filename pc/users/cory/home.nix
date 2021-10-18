@@ -54,7 +54,8 @@
         "class_g = 'dmenu'",
       ];
     '';
-    fade = false;
+    fade = true;
+    fadeDelta = 5;
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
