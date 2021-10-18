@@ -60,15 +60,18 @@
       "98:class_g   *?= 'discord'"
       #"75:class_g   *?= 'Rofi'"
     ];
+    # Minimal Rice: corner-radius = 0, round-borders = 0
+    # Minimal Rice: corner-radius = 10, round-borders = 1
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 4;
-      corner-radius = 0;
-      round-borders = 0;
+      corner-radius = 10;
+      round-borders = 1;
 
       rounded-corners-exclude = [
         "class_g = 'plptool-gui-PLPToolApp'",
         "class_g = 'dmenu'",
+        "class_g = 'xmobar'",
       ];
     '';
     fade = true;
@@ -89,9 +92,13 @@
 
   home.file = {
     #".Xresources".text = builtins.readFile ./system/Xresources;
-    ".config/xmobar/xmobarrc0".text = builtins.readFile ./system/xmobarrc0;
-    ".config/xmobar/xmobarrc1".text = builtins.readFile ./system/xmobarrc1;
-    ".config/xmobar/xmobarrc2".text = builtins.readFile ./system/xmobarrc2;
-    "Pictures/wallpaper.jpg".source = ./system/tree.jpg;
+    # Minimal Rice:
+    #".config/xmobar/xmobarrc0".text = builtins.readFile ./system/xmobarrc0;
+    #".config/xmobar/xmobarrc1".text = builtins.readFile ./system/xmobarrc1;
+    #".config/xmobar/xmobarrc2".text = builtins.readFile ./system/xmobarrc2;
+    #"Pictures/wallpaper.jpg".source = ./system/tree.jpg;
+    # Mac Rice:
+    ".config/xmobar/xmobarrc".text = builtins.readFile ./system/xmobarrc;
+    "Pictures/wallpaper.jpg".source = ./system/big_sur.jpg;
   };
 }
