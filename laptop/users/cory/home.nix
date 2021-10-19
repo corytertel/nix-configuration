@@ -61,23 +61,25 @@
       #"75:class_g   *?= 'Rofi'"
     ];
     # Minimal Rice: corner-radius = 0, round-borders = 0
-    # Minimal Rice: corner-radius = 10, round-borders = 1
+    # Mac Rice: corner-radius = 30, round-borders = 1
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 4;
-      corner-radius = 10;
-      round-borders = 1;
+      corner-radius = 0;
+      round-borders = 0;
 
       rounded-corners-exclude = [
         "class_g = 'plptool-gui-PLPToolApp'",
         "class_g = 'dmenu'",
-        "class_g = 'xmobar'",
       ];
     '';
     fade = true;
     fadeDelta = 5;
+    # Minimal Rice:
     shadow = true;
     shadowOpacity = "0.5";
+    # Mac Rice:
+    #shadow = false;
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
@@ -93,12 +95,12 @@
   home.file = {
     #".Xresources".text = builtins.readFile ./system/Xresources;
     # Minimal Rice:
-    #".config/xmobar/xmobarrc0".text = builtins.readFile ./system/xmobarrc0;
-    #".config/xmobar/xmobarrc1".text = builtins.readFile ./system/xmobarrc1;
-    #".config/xmobar/xmobarrc2".text = builtins.readFile ./system/xmobarrc2;
-    #"Pictures/wallpaper.jpg".source = ./system/tree.jpg;
+    ".config/xmobar/xmobarrc0".text = builtins.readFile ./system/xmobarrc0;
+    ".config/xmobar/xmobarrc1".text = builtins.readFile ./system/xmobarrc1;
+    ".config/xmobar/xmobarrc2".text = builtins.readFile ./system/xmobarrc2;
+    "Pictures/wallpaper.jpg".source = ./system/tree.jpg;
     # Mac Rice:
-    ".config/xmobar/xmobarrc".text = builtins.readFile ./system/xmobarrc;
-    "Pictures/wallpaper.jpg".source = ./system/big_sur.jpg;
+    #".config/xmobar/xmobarrc".text = builtins.readFile ./system/xmobarrc;
+    #"Pictures/wallpaper.jpg".source = ./system/big_sur.jpg;
   };
 }

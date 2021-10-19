@@ -40,9 +40,9 @@ myClickJustFocuses = False
 -- Width of the window border in pixels.
 --
 -- Minimal Rice:
---myBorderWidth   = 8
+myBorderWidth   = 8
 -- Mac Rice:
-myBorderWidth   = 4
+--myBorderWidth   = 4
 
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -62,9 +62,10 @@ myModMask       = mod4Mask
 --
 --myWorkspaces    = [" \61728  ", " \62057  ", " \62074  ", " \61729  ", " \61564  ", " \61878  ", " \61441  ", " \61704  ", " \61612  "]
 -- Minimal Rice:
---myWorkspaces    =   [ "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+myWorkspaces    =   [ "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 -- Mac Rice:
-myWorkspaces    =   [ "<icon=/home/cory/.nix-configuration/laptop/system/xmonad/icons/kitty_logo.xpm/>"
+{-
+}myWorkspaces    =   [ "<icon=/home/cory/.nix-configuration/laptop/system/xmonad/icons/kitty_logo.xpm/>"
                     , "<icon=/home/cory/.nix-configuration/laptop/system/xmonad/icons/chromium_logo.xpm/>"
                     , "<icon=/home/cory/.nix-configuration/laptop/system/xmonad/icons/discord_logo.xpm/>"
                     , "<icon=/home/cory/.nix-configuration/laptop/system/xmonad/icons/spacemacs_logo.xpm/>"
@@ -73,6 +74,7 @@ myWorkspaces    =   [ "<icon=/home/cory/.nix-configuration/laptop/system/xmonad/
                     , "\61441 "
                     , "\61704 "
                     , "\61612 "]
+-}
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -311,11 +313,11 @@ myStartupHook = do
 ------------------------------------------------------------------------
 -- Command to launch the bar.
 -- Minimal Rice:
---myBar0 = "xmobar $HOME/.config/xmobar/xmobarrc0"
---myBar1 = "xmobar $HOME/.config/xmobar/xmobarrc1"
---myBar2 = "xmobar $HOME/.config/xmobar/xmobarrc2"
+myBar0 = "xmobar $HOME/.config/xmobar/xmobarrc0"
+myBar1 = "xmobar $HOME/.config/xmobar/xmobarrc1"
+myBar2 = "xmobar $HOME/.config/xmobar/xmobarrc2"
 -- Mac Rice:
-myBar = "xmobar $HOME/.config/xmobar/xmobarrc"
+--myBar = "xmobar $HOME/.config/xmobar/xmobarrc"
 
 myPP = xmobarPP { ppCurrent = xmobarColor "#f0f0f0" "" . wrap "[" "]" --current selected desktop
                 , ppHidden = xmobarColor "#f0f0f0" "" . wrap "" ""
@@ -326,7 +328,7 @@ myPP = xmobarPP { ppCurrent = xmobarColor "#f0f0f0" "" . wrap "[" "]" --current 
                 }
 
 -- Minimal Rice:
---myPP2 = xmobarPP { ppOrder = \(_:_:_:_) -> [] }
+myPP2 = xmobarPP { ppOrder = \(_:_:_:_) -> [] }
 
 -- Key binding to toggle the gap from the bar.
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
@@ -338,9 +340,9 @@ toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 --
 --main = xmonad . ewmh =<< statusBar myBar0 myPP toggleStrutsKey =<< statusBar myBar1 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey defaults
 -- Minimal Rice:
---main = xmonad =<< statusBar myBar0 myPP toggleStrutsKey =<< statusBar myBar1 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey defaults
+main = xmonad =<< statusBar myBar0 myPP toggleStrutsKey =<< statusBar myBar1 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey defaults
 -- Mac Rice:
-main = xmonad =<< statusBar myBar myPP toggleStrutsKey defaults
+--main = xmonad =<< statusBar myBar myPP toggleStrutsKey defaults
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will

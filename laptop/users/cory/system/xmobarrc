@@ -1,11 +1,11 @@
 Config { 
 
    -- appearance
-     font =         "xft:RobotoMono Nerd Font:size=12:bold:antialias=true"
+     font =         "xft:RobotoMono Nerd Font:size=12:antialias=true"
    , bgColor =      "#0f0f0f"
    , alpha =        250
    , fgColor =      "#f0f0f0"
-   , position =     Static { xpos = 0 , ypos = 0, width = 3840 , height = 54 }
+   , position =     Static { xpos = -30 , ypos = 0, width = 3900 , height = 54 }
    , border =       NoBorder
    , borderColor =  "#262626"
 
@@ -13,7 +13,7 @@ Config {
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
    --, template = "%battery% | %multicpu% | %coretemp% | %memory% | %dynnetwork% }{ %RJTT% | %date% || %kbd% "
-   , template = "     %UnsafeStdinReader% }{ %battery%   %volume%   %kbd%  %date%  "
+   , template = "      %UnsafeStdinReader% }{ %battery%   %volume%   %kbd%  %date%   "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
