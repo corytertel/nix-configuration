@@ -5,7 +5,7 @@ Config {
    , bgColor =      "#0f0f0f"
    , alpha =        255
    , fgColor =      "#f0f0f0"
-   , position =     Static { xpos = 3246 , ypos = 2292, width = 540 , height = 81 }
+   , position =     Static { xpos = 3266 , ypos = 2292, width = 520 , height = 81 }
    , border =       TopB
    , borderWidth =  8
    , borderColor =  "#444444"
