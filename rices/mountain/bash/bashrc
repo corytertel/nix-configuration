@@ -435,7 +435,7 @@ bash_prompt() {
 	## BASH PROMT                                                             ##
 	## Generate promt and remove format from the rest                         ##
 	############################################################################
-	local NIX_LOGO=$"$TEXT_FORMAT_2  "
+	local NIX_LOGO=$"$TEXT_FORMAT_2  "
 	#PS1="$TITLEBAR\n${PROMT_USER}${SEPARATOR_1}${PROMT_HOST}${SEPARATOR_2}${PROMT_PWD}${SEPARATOR_3}${PROMT_INPUT}"
 	#PS1="$TITLEBAR\n${PROMT_USER}${PROMT_HOST}${PROMT_PWD}${PROMT_INPUT}"
 	PS1="$TITLEBAR\n${NIX_LOGO}${PROMT_PWD}${PROMT_INPUT}"
