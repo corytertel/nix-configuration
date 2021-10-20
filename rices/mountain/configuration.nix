@@ -10,12 +10,11 @@
         user = "cory";
         extraConfig = ''
           [greeter-theme]
-          background-image = "$HOME/Pictures/wallpaper.jpg";
-          background-color = "#0C0F12"
-          text-color = "#ff79c6"
-          password-background-color = "#1E2029"
-          window-color = "#181a23"
-          border-color = "#bd93f9"
+          background-image = "/usr/share/wallpaper.jpg";
+          text-color = "#f0f0f0"
+          password-background-color = "#0f0f0f"
+          window-color = "#0f0f0f"
+          border-color = "#f0f0f0"
         '';
       };
     };

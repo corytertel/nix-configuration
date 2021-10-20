@@ -1,5 +1,8 @@
-
 #+TITLE:Cory's Nix Configuration
+
+[[https://nixos.org/][https://img.shields.io/badge/NixOS-v21.11-blue.svg?style=flat-square&logo=NixOS&logoColor=white]]
+[[https://builtwithnix.org][https://img.shields.io/badge/Built_With-Nix-5277C3.svg?style=flat-square&logo=nixos&labelColor=41439a&logoColor=white]]
+[[https://develop.spacemacs.org][https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
 
 * Laptop
 
