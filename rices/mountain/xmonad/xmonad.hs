@@ -229,8 +229,13 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- which denotes layout choice.
 --
 --myLayout = spacingRaw False (Border 50 0 50 0) True (Border 0 50 0 50) True $
-myLayout = spacingRaw False (Border 150 100  430 380) True (Border 0 50 0 50) True $
-        avoidStruts (tiled ||| Mirror tiled ||| threeColumn ||| threeColumnMid ||| Full)
+--myLayout = spacingRaw False (Border 150 100  430 380) True (Border 0 50 0 50) True $
+--        avoidStruts (tiled ||| Mirror tiled ||| threeColumn ||| threeColumnMid ||| Full)
+myLayout = (spacingRaw False (Border 150 100 430 380) True (Border 0 50 0 50) True $ avoidStruts (tiled))
+       ||| (spacingRaw False (Border 50 0 50 0) True (Border 0 50 0 50) True $ avoidStruts (tiled))
+       ||| (spacingRaw False (Border 50 0 50 0) True (Border 0 50 0 50) True $ avoidStruts (threeColumnMid))
+       |||  Full
+       ||| (spacingRaw False (Border 150 100 430 380) True (Border 0 50 0 50) True $ avoidStruts (Mirror tiled))
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio

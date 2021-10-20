@@ -3,10 +3,13 @@
 {
   services.xserver = {
     # LightDM
-    displayManager.lightdm = {
-      enable = true;
-      greeters.enso.enable = true;
-    };
+    #displayManager.lightdm = {
+    #  enable = true;
+    #  greeters.enso.enable = true;
+    #};
+
+    # Enable SDDM
+    displayManager.sddm.enable = true;
 
     # Xmonad
     displayManager.defaultSession = "none+xmonad";

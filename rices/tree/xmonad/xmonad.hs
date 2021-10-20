@@ -166,8 +166,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_z), spawn "xscreensaver-command -lock")
 
     -- Screenshot
-    , ((modm .|. shiftMask, xK_3), spawn "flameshot full -p ~/Pictures")
-    , ((modm .|. shiftMask, xK_4), spawn "flameshot gui")
+    , ((modm .|. shiftMask, xK_s), spawn "flameshot full -p ~/Pictures")
+    , ((modm              , xK_s), spawn "flameshot gui")
     ]
     ++
 
@@ -258,12 +258,14 @@ myManageHook = composeAll
     , className =? "MPlayer"        --> doFloat
     , className =? "vlc"           --> doFloat
     , className =? "mpv"           --> doFloat
+    , className =? "io.github.celluloid_player.Celluloid" --> doFloat
     , className =? "gwenview"           --> doFloat
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore
     , title     =? "Save Image"     --> unfloat
     , title     =? "Save File"     --> unfloat
     , title     =? "Open"     --> unfloat
+    , title     =? "Open Files"     --> unfloat
     ] where unfloat = ask >>= doF . W.sink
 
 ------------------------------------------------------------------------
