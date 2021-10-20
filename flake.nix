@@ -11,10 +11,6 @@
 
   outputs = { nixpkgs, home-manager, emacs-overlay, ... }: 
   let
-
-    pc_rice = "mountain";
-    laptop_rice = "tree";
-
     system = "x86_64-linux";
 
     pkgs = import nixpkgs {
@@ -40,7 +36,7 @@
           imports = [
             ./pc/users/cory/home.nix
             ./shared/users/cory/home.nix
-            ./rices/${pc_rice}/home.nix
+            ./rices/mountain/home.nix
           ];
         };
       };
@@ -54,7 +50,7 @@
           imports = [
             ./laptop/users/cory/home.nix
             ./shared/users/cory/home.nix
-            ./rices/${laptop_rice}/home.nix
+            ./rices/tree/home.nix
           ];
         };
       };
@@ -68,7 +64,7 @@
         modules = [
           ./pc/system/configuration.nix
           ./shared/system/configuration.nix
-          ./rices/${pc_rice}/configuration.nix
+          ./rices/mountain/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
@@ -82,7 +78,7 @@
         modules = [
           ./laptop/system/configuration.nix
           ./shared/system/configuration.nix
-          ./rices/${laptop_rice}/configuration.nix
+          ./rices/tree/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
