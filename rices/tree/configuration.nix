@@ -3,16 +3,27 @@
 {
   services.xserver = {
     # LightDM
-    #displayManager.lightdm = {
-    #  enable = true;
-    #  greeters.enso.enable = true;
-    #};
+    displayManager = {
+      defaultSession = "none+xmonad";
+      lightdm.greeters.mini = {
+        enable = true;
+        user = "cory";
+        extraConfig = ''
+          [greeter-theme]
+          background-image = "/usr/share/wallpaper.jpg"
+          background-color = "#0f0f0f"
+          text-color = "#f0f0f0"
+          password-background-color = "#0f0f0f"
+          window-color = "#0f0f0f"
+          border-color = "#f0f0f0"
+        '';
+      };
+    };
 
     # Enable SDDM
-    displayManager.sddm.enable = true;
+    #displayManager.sddm.enable = true;
 
     # Xmonad
-    displayManager.defaultSession = "none+xmonad";
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;

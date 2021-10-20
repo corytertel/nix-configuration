@@ -221,11 +221,11 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 --
 --myLayout = FS.fullscreenFocus $ spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
 --myLayout = spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
-myLayout = (spacingRaw False (Border 150 100 430 380) True (Border 0 54 0 54) True $ avoidStruts (tiled))
+myLayout = (spacingRaw False (Border 200 146 330 276) True (Border 0 54 0 54) True $ avoidStruts (tiled))
        ||| (spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $ avoidStruts (tiled))
        ||| (spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $ avoidStruts (threeColumnMid))
        |||  Full
-       ||| (spacingRaw False (Border 150 100 430 380) True (Border 0 54 0 54) True $ avoidStruts (Mirror tiled))
+       ||| (spacingRaw False (Border 200 146 330 276) True (Border 0 54 0 54) True $ avoidStruts (Mirror tiled))
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
