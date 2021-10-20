@@ -39,7 +39,7 @@ myClickJustFocuses = False
 
 -- Width of the window border in pixels.
 --
-myBorderWidth   = 8
+myBorderWidth   = 4
 
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -220,8 +220,12 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- which denotes layout choice.
 --
 --myLayout = FS.fullscreenFocus $ spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
-myLayout = spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
-        avoidStruts (tiled ||| Mirror tiled ||| threeColumn ||| threeColumnMid ||| Full)
+--myLayout = spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
+myLayout = (spacingRaw False (Border 150 100 430 380) True (Border 0 54 0 54) True $ avoidStruts (tiled))
+       ||| (spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $ avoidStruts (tiled))
+       ||| (spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $ avoidStruts (threeColumnMid))
+       |||  Full
+       ||| (spacingRaw False (Border 150 100 430 380) True (Border 0 54 0 54) True $ avoidStruts (Mirror tiled))
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio

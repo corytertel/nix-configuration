@@ -166,7 +166,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0                 , xF86XK_MonBrightnessDown), spawn "xbrightness -5000")
 
     -- Keyboard Layout
-    --, ((0                 , xK_Alt_R), spawn "/home/cory/.nix-configuration/shared/users/cory/apps/layout_switch/layout_switch.sh")
+    , ((0                 , xK_Alt_R), spawn "/home/cory/.nix-configuration/shared/users/cory/apps/layout_switch/layout_switch.sh")
 
     -- Kill App
     , ((modm              , xK_Escape), spawn "xkill")

@@ -248,21 +248,36 @@ bash_prompt() {
 
 	#local PROMT_FORMAT=$BLUE_BOLD
 
-    #CUSTOM
-	local FONT_COLOR_1=$WHITE
-	local BACKGROUND_1=$YELLOW
-	local TEXTEFFECT_1=$NONE
+    #CUSTOM Yellow, Cyan, Magenta
+	local FONT_COLOR_1=$YELLOW
+	local BACKGROUND_1=$DEFAULT
+	local TEXTEFFECT_1=$BOLD
 
-	local FONT_COLOR_2=$WHITE
-	local BACKGROUND_2=$CYAN
-	local TEXTEFFECT_2=$NONE
+	local FONT_COLOR_2=$CYAN
+	local BACKGROUND_2=$DEFAULT
+	local TEXTEFFECT_2=$BOLD
 
-	local FONT_COLOR_3=$WHITE
-	local BACKGROUND_3=$MAGENTA
-	local TEXTEFFECT_3=$NONE
+	local FONT_COLOR_3=$MAGENTA
+	local BACKGROUND_3=$DEFAULT
+	local TEXTEFFECT_3=$BOLD
 
 	#local PROMT_FORMAT=$WHITE_BOLD 
 	local PROMT_FORMAT=$NO_FORMAT
+
+    #CUSTOM Blue, Light Blue, Red
+	#local FONT_COLOR_1=$DEFAULT
+	#local BACKGROUND_1=$BLUE
+	#local TEXTEFFECT_1=$BOLD
+
+	#local FONT_COLOR_2=$DEFAULT
+	#local BACKGROUND_2=$L_BLUE
+	#local TEXTEFFECT_2=$BOLD
+
+	#local FONT_COLOR_3=$DEFAULT
+	#local BACKGROUND_3=$RED
+	#local TEXTEFFECT_3=$BOLD
+
+	#local PROMT_FORMAT=$NO_FORMAT
     
     
 	############################################################################
@@ -420,8 +435,10 @@ bash_prompt() {
 	## BASH PROMT                                                             ##
 	## Generate promt and remove format from the rest                         ##
 	############################################################################
+	local NIX_LOGO=$"$TEXT_FORMAT_2  "
 	#PS1="$TITLEBAR\n${PROMT_USER}${SEPARATOR_1}${PROMT_HOST}${SEPARATOR_2}${PROMT_PWD}${SEPARATOR_3}${PROMT_INPUT}"
-    PS1="\n \w > "
+	#PS1="$TITLEBAR\n${PROMT_USER}${PROMT_HOST}${PROMT_PWD}${PROMT_INPUT}"
+	PS1="$TITLEBAR\n${NIX_LOGO}${PROMT_PWD}${PROMT_INPUT}"
 
 
 

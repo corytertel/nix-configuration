@@ -10,7 +10,8 @@
         user = "cory";
         extraConfig = ''
           [greeter-theme]
-          background-image = "/usr/share/wallpaper.jpg";
+          background-image = "/usr/share/wallpaper.jpg"
+          background-color = "#0f0f0f"
           text-color = "#f0f0f0"
           password-background-color = "#0f0f0f"
           window-color = "#0f0f0f"
