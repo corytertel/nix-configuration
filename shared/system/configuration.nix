@@ -8,7 +8,11 @@
   imports =
     [
       ./theme_breeze.nix
+      #./blender.nix
     ];
+
+  # Nix
+  nix.buildCores = 4;
 
   # Dual booting with GRUB
   boot.loader.efi.canTouchEfiVariables = true;
@@ -46,20 +50,14 @@
     exportConfiguration = true;
     enable = true;
     xkbModel = "microsoft";
-    layout = "us,ru(winkeys)";
+    layout = "us,ru";
     xkbOptions = "grp:toggle"; # ralt toggle keyboard
     #xkbOptions = "grp:caps_toggle"; # caps toggle keyboard
     xkbVariant = "winkeys";
   };
 
   # Enable SDDM
-  services.xserver.displayManager.sddm.enable = true;
-
-  # Make XMonad the default
-  services.xserver.displayManager.defaultSession = "none+xmonad";
-
-  # Enable LightDM
-  #services.xserver.displayManager.lightdm.enable = true;
+  #services.xserver.displayManager.sddm.enable = true;
 
   # Enable DWM
   services.xserver.windowManager.dwm.enable = true; 
@@ -148,12 +146,42 @@
         ];
       };
     })
+
+    # ERROR: not working. gets an error with the makefile every build
+    # TODO: create a custom derivation
+    #(final: prev: {
+    #  blender = prev.blender.overrideAttrs ( old: {
+    #   #src = builtins.fetchTarball {
+    #     # 2.83.9
+    #     #url = "https://download.blender.org/release/Blender2.83/blender-2.83.9-linux64.tar.xz";
+    #     # from blender
+    #     # sha256 = "08b4bc330c66e1125c7d0461507ffa3f078f802f26b71fd51bcd854d94c274ef";
+    #     # from nix
+    #     #sha256 = "13qk31wsg3i5mdmfi165gk5ppgxb6q43yk55vnmql7m9lfxlcyn4";
+    #   #};
+    #    pname = "blender";
+    #    #version = "2.83.5";
+    #    #version = "2.83.9";
+    #    version = "2.83.18";
+    #    src = builtins.fetchurl {
+    #      #url = "https://download.blender.org/source/blender-2.83.5.tar.xz";
+    #      #sha256 = "0xyawly00a59hfdb6b7va84k5fhcv2mxnzd77vs22bzi9y7sap43";
+    #      #url = "https://download.blender.org/source/blender-2.83.9.tar.xz";
+    #      #sha256 = "106w9vi6z0gi2nbr73g8pm40w3wn7dkjcibzvvzbc786yrnzvkhb";
+    #      url = "https://download.blender.org/source/blender-2.83.18.tar.xz";
+    #      sha256 = "1jfm0fjssp0d00p6j040vs4x0ahi3d484fya7q6949cdysxd149p";
+    #    };
+    #  });
+    #})
   ];
 
   # Emacs
   #services.emacs.package = pkgs.emacsUnstable;
   #services.emacs.package = pkgs.emacsPgtkGcc;
   services.emacs.enable = true;
+
+  # Bash
+  programs.bash.enableCompletion = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -270,6 +298,8 @@
    # xmonad
     haskellPackages.xmobar
     xorg.xkill
+
+    #blender
   ];
 
   # Fonts

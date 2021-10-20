@@ -3,7 +3,6 @@
 {
   imports =
     [
-      ./apps/bash
     ];
 
   # Xresources
@@ -47,60 +46,5 @@
       defaultCursor = "left_ptr";
       size = 48;
     };
-  };
-
-  services.picom = {
-    enable = true;
-    inactiveOpacity = "1.00";
-    activeOpacity = "1.00";
-    blur = true;
-    experimentalBackends = true;
-    opacityRule = [
-      "98:class_g   *?= 'emacs'"
-      "98:class_g   *?= 'discord'"
-      #"75:class_g   *?= 'Rofi'"
-    ];
-    # Minimal Rice: corner-radius = 0, round-borders = 0
-    # Mac Rice: corner-radius = 30, round-borders = 1
-    extraOptions = ''
-      blur-method = "dual_kawase";
-      blur-strength = 4;
-      corner-radius = 0;
-      round-borders = 0;
-
-      rounded-corners-exclude = [
-        "class_g = 'plptool-gui-PLPToolApp'",
-        "class_g = 'dmenu'",
-      ];
-    '';
-    fade = true;
-    fadeDelta = 5;
-    # Minimal Rice:
-    shadow = true;
-    shadowOpacity = "0.5";
-    # Mac Rice:
-    #shadow = false;
-    package = pkgs.picom.overrideAttrs (
-      o: {
-        src = pkgs.fetchFromGitHub {
-          repo = "picom";
-          owner = "ibhagwan";
-          rev = "44b4970f70d6b23759a61a2b94d9bfb4351b41b1";
-          sha256 = "0iff4bwpc00xbjad0m000midslgx12aihs33mdvfckr75r114ylh";
-        };
-      }
-    );
-  };
-
-  home.file = {
-    #".Xresources".text = builtins.readFile ./system/Xresources;
-    # Minimal Rice:
-    ".config/xmobar/xmobarrc0".text = builtins.readFile ./system/xmobarrc0;
-    ".config/xmobar/xmobarrc1".text = builtins.readFile ./system/xmobarrc1;
-    ".config/xmobar/xmobarrc2".text = builtins.readFile ./system/xmobarrc2;
-    "Pictures/wallpaper.jpg".source = ./system/tree.jpg;
-    # Mac Rice:
-    #".config/xmobar/xmobarrc".text = builtins.readFile ./system/xmobarrc;
-    #"Pictures/wallpaper.jpg".source = ./system/big_sur.jpg;
   };
 }

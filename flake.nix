@@ -36,6 +36,7 @@
           imports = [
             ./pc/users/cory/home.nix
             ./shared/users/cory/home.nix
+            ./rices/mountain/home.nix
           ];
         };
       };
@@ -49,6 +50,7 @@
           imports = [
             ./laptop/users/cory/home.nix
             ./shared/users/cory/home.nix
+            ./rices/tree/home.nix
           ];
         };
       };
@@ -62,6 +64,7 @@
         modules = [
           ./pc/system/configuration.nix
           ./shared/system/configuration.nix
+          ./rices/mountain/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
@@ -75,6 +78,7 @@
         modules = [
           ./laptop/system/configuration.nix
           ./shared/system/configuration.nix
+          ./rices/tree/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;

@@ -3,17 +3,12 @@
 {
   imports =
     [
-      ./apps/discord
-      ./apps/dunst
       ./apps/emacs
-      ./apps/kitty
       ./apps/layout_switch
       ./apps/neofetch
       ./apps/nvim
-      ./apps/rofi
       ./apps/ungoogled-chromium
       ./apps/vscode
-      ./apps/zathura
     ];
 
   # Let Home Manager install and manage itself.
@@ -85,6 +80,7 @@
     python39Packages.pip
     rustc
     rust-analyzer
+    clisp
 
    # essential user apps
     tdesktop
@@ -92,7 +88,7 @@
     libreoffice
     gimp
     #wpgtk
-    blender
+    #blender
     zathura
     joplin
     joplin-desktop
@@ -167,5 +163,6 @@
     xfce.thunar
     xscreensaver
     krita
+    cava
   ];
 }

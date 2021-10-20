@@ -3,8 +3,6 @@
 
 * Dunst
 ** fix notification width
-* Rofi
-** fix colors and size
 * Betterscreenlock
 * gnome keyring
 * russian keyboard
@@ -24,3 +22,8 @@
 ** fix font for gui client
 ** fix colorscheme to load on start
 * fix xmonad keybindings to also work with russian keyboard
+* change layouts to have different spacing
+* clicable workspaces
+* fullscreen fix
+* lightdm
+* rices folder
