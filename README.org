@@ -4,10 +4,36 @@
 [[https://builtwithnix.org][https://img.shields.io/badge/Built_With-Nix-5277C3.svg?style=flat-square&logo=nixos&labelColor=41439a&logoColor=white]]
 [[https://develop.spacemacs.org][https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
 
+* PC
+
+[[Screenshot][img/pc.png]]
+
+#+ATTR_HTML: :border 2 :rules all :frame border
+|---------------+---------------------|
+| *OS*          | NixOS               |
+| *Shell*       | bash                |
+| *Terminal*    | Kitty               |
+| *Colorscheme* | Mountain            |
+| *WM*          | xmonad              |
+| *Font*        | Fantasque Sans Mono |
+| *Editor*      | Spacemacs           |
+| *Fetch*       | pfetch              |
+
 * Laptop
 
 [[Screenshot][img/laptop.png]]
 
-* PC
+#+ATTR_HTML: :border 2 :rules all :frame border
+|---------------+---------------------|
+| *OS*          | NixOS               |
+| *Shell*       | bash                |
+| *Terminal*    | Kitty               |
+| *Colorscheme* | Mountain            |
+| *WM*          | xmonad              |
+| *Font*        | Fantasque Sans Mono |
+| *Editor*      | Spacemacs           |
+| *Fetch*       | pfetch              |
 
-[[Screenshot][img/pc.png]]
+* Inspired by
+
+[[https://github.com/erikbackman/nixos-config/]]

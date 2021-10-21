@@ -8,6 +8,7 @@
 import XMonad
 import Data.Monoid (mappend)
 import Data.Map (fromList)
+import Data.Ratio ((%)) -- for video
 import Graphics.X11.ExtraTypes.XF86
 import System.Exit
 import XMonad.Util.SpawnOnce
@@ -17,6 +18,7 @@ import XMonad.Layout.ThreeColumns
 import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End))
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ManageHelpers (isFullscreen, isDialog,  doFullFloat, doCenterFloat, doRectFloat)
 --import XMonad.Actions.Volume
 
 import qualified XMonad.StackSet as W
@@ -236,6 +238,7 @@ myLayout = (spacingRaw False (Border 150 100 430 380) True (Border 0 50 0 50) Tr
        ||| (spacingRaw False (Border 50 0 50 0) True (Border 0 50 0 50) True $ avoidStruts (threeColumnMid))
        |||  Full
        ||| (spacingRaw False (Border 150 100 430 380) True (Border 0 50 0 50) True $ avoidStruts (Mirror tiled))
+       ||| (spacingRaw False (Border 150 100 1250 1200) True (Border 0 50 0 50) True $ avoidStruts (Full))
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -269,16 +272,18 @@ myLayout = (spacingRaw False (Border 150 100 430 380) True (Border 0 50 0 50) Tr
 myManageHook = composeAll
     [ insertPosition End Newer -- open new windows at the end
     , className =? "MPlayer"        --> doFloat
-    , className =? "vlc"           --> doFloat
-    , className =? "mpv"           --> doFloat
-    , className =? "io.github.celluloid_player.Celluloid" --> doFloat
-    , className =? "gwenview"           --> doFloat
+    , className =? "mpv"            --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
+    , className =? "vlc"            --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
+    , className =? "gwenview"       --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
+    --, className =? "Firefox" <&&> resource =? "Toolkit"   --> doFloat -- firefox pip
+    --, className =? "chromium-browser" <&&> resource =? "Toolkit"  --> doFloat -- firefox pip
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore
-    , title     =? "Save Image"     --> unfloat
-    , title     =? "Save File"     --> unfloat
-    , title     =? "Open"     --> unfloat
-    , title     =? "Open Files"     --> unfloat
+    , title     =? "Save Image"     --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
+    , title     =? "Save File"      --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
+    , title     =? "Open"           --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
+    , title     =? "Open Files"     --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
+    , isFullscreen                  --> doFullFloat
     ] where unfloat = ask >>= doF . W.sink
 
 ------------------------------------------------------------------------

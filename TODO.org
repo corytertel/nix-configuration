@@ -10,7 +10,6 @@
 * laptop power options
 * splash screen?
 * mountain color theming (gtk, qt, etcj)
-* Fix PC Rice
 * Reorganize file structure
 ** Clean up files too
 * Remove home-manager for more reproducability/declaration
@@ -22,8 +21,5 @@
 ** fix font for gui client
 ** fix colorscheme to load on start
 * fix xmonad keybindings to also work with russian keyboard
-* change layouts to have different spacing
 * clicable workspaces
 * fullscreen fix
-* lightdm
-* rices folder
