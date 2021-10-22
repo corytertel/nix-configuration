@@ -18,10 +18,11 @@ import XMonad.Layout.ThreeColumns
 import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End))
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageHelpers (isFullscreen, isDialog,  doFullFloat, doCenterFloat, doRectFloat)
---import XMonad.Hooks.EwmhDesktops
---import qualified XMonad.Layout.Fullscreen as FS
---import XMonad.Actions.Volume
+import XMonad.Hooks.ManageHelpers
+  (isFullscreen, isDialog,  doFullFloat, doCenterFloat, doRectFloat, composeOne, isInProperty)
+import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
+import XMonad.Layout.MultiToggle.Instances (StdTransformers (NBFULL))
+import XMonad.Layout.MultiToggle (mkToggle, single, Toggle (..))
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -41,7 +42,7 @@ myClickJustFocuses = False
 
 -- Width of the window border in pixels.
 --
-myBorderWidth   = 4
+myBorderWidth   = 0
 
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -170,6 +171,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Screenshot
     , ((modm .|. shiftMask, xK_s), spawn "flameshot full -p ~/Pictures")
     , ((modm              , xK_s), spawn "flameshot gui")
+
+    -- Fullscreen
+    , ((modm              , xK_f), sendMessage (Toggle NBFULL))
     ]
     ++
 
@@ -221,14 +225,12 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
---myLayout = FS.fullscreenFocus $ spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
---myLayout = spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $
-myLayout = (spacingRaw False (Border 200 146 330 276) True (Border 0 54 0 54) True $ avoidStruts (tiled))
-       ||| (spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $ avoidStruts (tiled))
-       ||| (spacingRaw False (Border 54 0 54 0) True (Border 0 54 0 54) True $ avoidStruts (threeColumnMid))
-       |||  Full
-       ||| (spacingRaw False (Border 200 146 330 276) True (Border 0 54 0 54) True $ avoidStruts (Mirror tiled))
-       ||| (spacingRaw False (Border 150 96 1150 1096) True (Border 0 54 0 54) True $ avoidStruts (Full))
+myLayout = fullScreenToggle $
+           (spacingRaw False (Border 150 100 430 380) True (Border 0 50 0 50) True $ avoidStruts (tiled))
+       ||| (spacingRaw False (Border 50 0 50 0) True (Border 0 50 0 50) True $ avoidStruts (tiled))
+       ||| (spacingRaw False (Border 50 0 50 0) True (Border 0 50 0 50) True $ avoidStruts (threeColumnMid))
+       ||| (spacingRaw False (Border 150 100 430 380) True (Border 0 50 0 50) True $ avoidStruts (Mirror tiled))
+       ||| (spacingRaw False (Border 150 100 1250 1200) True (Border 0 50 0 50) True $ avoidStruts (Full))
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -243,6 +245,9 @@ myLayout = (spacingRaw False (Border 200 146 330 276) True (Border 0 54 0 54) Tr
 
      -- Percent of screen to increment by when resizing panes
      delta   = 3/100
+
+     -- Fullscreen
+     fullScreenToggle = mkToggle (single NBFULL)
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -261,21 +266,27 @@ myLayout = (spacingRaw False (Border 200 146 330 276) True (Border 0 54 0 54) Tr
 --
 myManageHook = composeAll
     [ insertPosition End Newer -- open new windows at the end
-    --, FS.fullscreenManageHook
-    , className =? "MPlayer"        --> doFloat
-    , className =? "mpv"            --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
-    , className =? "vlc"            --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
-    , className =? "gwenview"       --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
-    --, className =? "Firefox" <&&> resource =? "Toolkit"   --> doFloat -- firefox pip
-    --, className =? "chromium-browser" <&&> resource =? "Toolkit"  --> doFloat -- firefox pip
-    , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore
-    , title     =? "Save Image"     --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
-    , title     =? "Save File"      --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
-    , title     =? "Open"           --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
-    , title     =? "Open Files"     --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
-    , isFullscreen                  --> doFullFloat
-    ] where unfloat = ask >>= doF . W.sink
+    , className =? "MPlayer"                                          --> myRectFloat
+    , className =? "mpv"                                              --> myRectFloat
+    , className =? "vlc"                                              --> myRectFloat
+    , className =? "gwenview"                                         --> myRectFloat
+    , className =? "Firefox" <&&> resource =? "Toolkit"               --> myRectFloat
+    , className =? "chromium-browser" <&&> isDialog                   --> myRectFloat
+    , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog"       --> myRectFloat
+    , stringProperty "WM_WINDOW_ROLE" =? "pop-up"                     --> myRectFloat
+    , isDialog                                                        --> myRectFloat
+    , isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH" --> myRectFloat
+    , title     =? "Save Image"                                       --> myRectFloat
+    , title     =? "Save File"                                        --> myRectFloat
+    , title     =? "Open"                                             --> myRectFloat
+    , title     =? "Open Files"                                       --> myRectFloat
+    , resource  =? "desktop_window"                                   --> doIgnore
+    , resource  =? "kdesktop"                                         --> doIgnore
+    , isFullscreen                                                    --> doFullFloat
+    ]
+  where
+    unfloat = ask >>= doF . W.sink
+    myRectFloat = doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
 
 ------------------------------------------------------------------------
 -- Event handling
@@ -286,8 +297,7 @@ myManageHook = composeAll
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
-myEventHook = mempty
---myEventHook = FS.fullscreenEventHook
+myEventHook = fullscreenEventHook
 
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -333,8 +343,7 @@ toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
 -- Run xmonad with the settings you specify. No need to modify this.
 --
---main = xmonad . ewmh =<< statusBar myBar0 myPP toggleStrutsKey =<< statusBar myBar1 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey defaults
-main = xmonad =<< statusBar myBar0 myPP toggleStrutsKey =<< statusBar myBar1 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey defaults
+main = xmonad . ewmh =<< statusBar myBar0 myPP toggleStrutsKey =<< statusBar myBar1 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey defaults
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will

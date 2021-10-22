@@ -37,3 +37,4 @@
 * Inspired by
 
 [[https://github.com/erikbackman/nixos-config/]]
+[[https://github.com/Icy-Thought/Snowflake]]
