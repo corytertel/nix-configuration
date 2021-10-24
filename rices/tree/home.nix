@@ -18,8 +18,8 @@
     blur = true;
     experimentalBackends = true;
     opacityRule = [
-      #"98:class_g   *?= 'emacs'"
-      #"98:class_g   *?= 'discord'"
+      "98:class_g   *?= 'emacs'"
+      "98:class_g   *?= 'discord'"
     ];
     extraOptions = ''
       blur-method = "dual_kawase";

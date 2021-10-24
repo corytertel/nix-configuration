@@ -244,8 +244,7 @@ myLayout = fullScreenToggle $ smartBorders $
        ||| (smallGaps $ avoidStruts (tiled))
        ||| (smallGaps $ avoidStruts (threeColumnMid))
        ||| (paperGaps $ avoidStruts (Full))
-       ||| (musicGaps $ avoidStruts (Mirror Tall 1 2/5 3/100))
-       ||| (bigGaps   $ avoidStruts (Mirror Mirror Tall 1 35/100 3/100))
+       ||| (musicGaps $ avoidStruts (Mirror tiled))
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
