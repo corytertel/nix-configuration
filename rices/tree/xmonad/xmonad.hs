@@ -23,6 +23,7 @@ import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Layout.MultiToggle.Instances (StdTransformers (NBFULL))
 import XMonad.Layout.MultiToggle (mkToggle, single, Toggle (..))
+import XMonad.Layout.NoBorders (noBorders, smartBorders)
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -42,7 +43,7 @@ myClickJustFocuses = False
 
 -- Width of the window border in pixels.
 --
-myBorderWidth   = 0
+myBorderWidth   = 8
 
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -225,12 +226,13 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = fullScreenToggle $
-           (spacingRaw False (Border 150 100 430 380) True (Border 0 50 0 50) True $ avoidStruts (tiled))
-       ||| (spacingRaw False (Border 50 0 50 0) True (Border 0 50 0 50) True $ avoidStruts (tiled))
-       ||| (spacingRaw False (Border 50 0 50 0) True (Border 0 50 0 50) True $ avoidStruts (threeColumnMid))
-       ||| (spacingRaw False (Border 150 100 430 380) True (Border 0 50 0 50) True $ avoidStruts (Mirror tiled))
-       ||| (spacingRaw False (Border 150 100 1250 1200) True (Border 0 50 0 50) True $ avoidStruts (Full))
+myLayout = fullScreenToggle $ smartBorders $
+           (bigGaps   $ avoidStruts (tiled))
+       ||| (smallGaps $ avoidStruts (tiled))
+       ||| (smallGaps $ avoidStruts (threeColumnMid))
+       ||| (paperGaps $ avoidStruts (Full))
+       ||| (musicGaps $ avoidStruts (Mirror Tall 1 2/5 3/100))
+       ||| (bigGaps   $ avoidStruts (Mirror Mirror Tall 1 35/100 3/100))
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -248,6 +250,12 @@ myLayout = fullScreenToggle $
 
      -- Fullscreen
      fullScreenToggle = mkToggle (single NBFULL)
+
+     -- Spacing
+     bigGaps   = spacingRaw False (Border 150 96 330 276)   True (Border 0 54 0 54) True
+     smallGaps = spacingRaw False (Border 54 0 54 0)        True (Border 0 54 0 54) True
+     paperGaps = spacingRaw False (Border 150 96 1150 1096) True (Border 0 54 0 54) True
+     musicGaps = spacingRaw False (Border 300 244 860 806)  True (Border 0 54 0 54) True
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -269,6 +277,7 @@ myManageHook = composeAll
     , className =? "MPlayer"                                          --> myRectFloat
     , className =? "mpv"                                              --> myRectFloat
     , className =? "vlc"                                              --> myRectFloat
+    , className =? "Io.github.celluloid_player.Celluloid"             --> myRectFloat
     , className =? "gwenview"                                         --> myRectFloat
     , className =? "Firefox" <&&> resource =? "Toolkit"               --> myRectFloat
     , className =? "chromium-browser" <&&> isDialog                   --> myRectFloat

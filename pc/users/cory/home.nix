@@ -6,9 +6,9 @@
     ];
 
   # Xresources
-    # DPI settings
-    # Set DPI to the scale you want your applications at
-    # 175 for desktop, 250 for laptop typically
+  # DPI settings
+  # Set DPI to the scale you want your applications at
+  # 175 for desktop, 250 for laptop typically
   xresources.extraConfig = ''
     Xft.dpi: 175
   '';

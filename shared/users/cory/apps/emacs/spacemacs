@@ -51,8 +51,8 @@ This function should only modify configuration layer settings."
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
-     spell-checking
-     syntax-checking
+     ;;spell-checking
+     ;;syntax-checking
      ;; version-control
      treemacs
      haskell
@@ -63,6 +63,8 @@ This function should only modify configuration layer settings."
      shell-scripts
      rust
      java
+     (clojure :variables
+              clojure-enable-fancify-symbols t)
      javascript
      vimscript
      latex
@@ -255,8 +257,8 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   ;dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
-   dotspacemacs-mode-line-theme 'vanilla
+   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+   ;dotspacemacs-mode-line-theme 'vanilla
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)

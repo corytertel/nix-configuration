@@ -38,3 +38,5 @@
 
 [[https://github.com/erikbackman/nixos-config/]]
 [[https://github.com/Icy-Thought/Snowflake]]
+[[https://github.com/alternateved/nixos-config]]
+[[https://github.com/mahallow/thinkdots]]

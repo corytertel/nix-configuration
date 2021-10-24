@@ -10,6 +10,12 @@
       ./hardware-configuration.nix
     ];
 
+  # Nix
+  nix.buildCores = 4;
+
+  # Latest Kernel
+  #boot.kernelPackages = pkgs.linuxPackages_latest;
+
   # Zen Kernel
   boot.kernelPackages = pkgs.linuxPackages_zen;
   boot.kernelParams = [ "pcie_aspm.policy=performance" "mitigations=off" ];
@@ -19,7 +25,7 @@
   networking.interfaces.enp3s0.useDHCP = true;
   networking.interfaces.wlp6s0.useDHCP = true;
 
-  # Drivers
+  # Xserver
   services.xserver = {
     videoDrivers = [ "nvidia" ];
   };

@@ -81,6 +81,7 @@
     rustc
     rust-analyzer
     clisp
+    leiningen
 
    # essential user apps
     tdesktop
@@ -164,5 +165,8 @@
     xscreensaver
     krita
     cava
+    tty-clock
+    wine
+    winetricks
   ];
 }

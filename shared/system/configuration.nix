@@ -7,12 +7,9 @@
 {
   imports =
     [
-      ./theme_breeze.nix
+      #./theme_mountain.nix
       #./blender.nix
     ];
-
-  # Nix
-  nix.buildCores = 4;
 
   # Dual booting with GRUB
   boot.loader.efi.canTouchEfiVariables = true;
@@ -20,6 +17,10 @@
   boot.loader.grub.devices = ["nodev"];
   boot.loader.grub.efiSupport = true;
   boot.loader.grub.useOSProber = true;
+
+  # Splash screen
+  #boot.plymouth.enable = true;
+  #boot.plymouth.theme = "breeze";
 
   networking.hostName = "nixos"; # Define your hostname.
   networking.wireless.enable = false;  # Enables wireless support via wpa_supplicant.
@@ -221,6 +222,15 @@
     isNormalUser = true;
     extraGroups = [ "wheel" "network" "audio" ]; # Enable ‘sudo’ for the user.
   };
+
+  # Enable doas instead of sudo
+  #security.sudo.enable = false;
+  #security.doas.enable = true;
+  #security.doas.extraRules = [{
+	#  users = [ "cory" ];
+	#  keepEnv = true;
+  #  persist = true;
+  #}];
 
   # Enable flakes
   nix = {

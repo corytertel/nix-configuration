@@ -10,6 +10,9 @@
       ./hardware-configuration.nix
     ];
 
+  # Nix
+  nix.buildCores = 6;
+
   # Libre Kernel
  # boot.kernelPackages = pkgs.linuxPackages_latest-libre;
   #boot.kernelPackages = pkgs.linuxPackages-libre;
@@ -32,8 +35,8 @@
   # Network Devices
   networking.interfaces.wlp0s20f3.useDHCP = true;
 
-  # Forbid Unfree Packages
-  nixpkgs.config.allowUnfree = false;
+  # Allow Unfree Packages
+  nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
 
