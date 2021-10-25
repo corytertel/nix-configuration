@@ -46,4 +46,10 @@
       size = 48;
     };
   };
+
+  home.packages = with pkgs; [
+    discord
+    betterdiscord-installer
+    betterdiscordctl
+  ];
 }

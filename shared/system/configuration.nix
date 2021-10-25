@@ -224,13 +224,13 @@
   };
 
   # Enable doas instead of sudo
-  #security.sudo.enable = false;
-  #security.doas.enable = true;
-  #security.doas.extraRules = [{
-	#  users = [ "cory" ];
-	#  keepEnv = true;
-  #  persist = true;
-  #}];
+  security.sudo.enable = false;
+  security.doas.enable = true;
+  security.doas.extraRules = [{
+	  users = [ "cory" ];
+	  keepEnv = true;
+    persist = true;
+  }];
 
   # Enable flakes
   nix = {
@@ -281,7 +281,6 @@
     gnupatch
     pkgconf
     sedutil
-    sudo
     texinfo
     which
     fd

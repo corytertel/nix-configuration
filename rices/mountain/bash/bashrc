@@ -15,6 +15,7 @@ alias cvim='chezmoi edit'
 export ELEMENTS='/run/media/cory/Elements'
 export MUSIC='/run/media/cory/Elements/Public/Music/Playlists/'
 alias ls='exa'
+alias sudo='doas'
 
 #!/bin/sh
 
