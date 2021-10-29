@@ -7,7 +7,7 @@
 {
   imports =
     [
-      #./theme_mountain.nix
+      ./theme_breeze.nix
       #./blender.nix
     ];
 
@@ -181,9 +181,6 @@
   #services.emacs.package = pkgs.emacsPgtkGcc;
   services.emacs.enable = true;
 
-  # Bash
-  programs.bash.enableCompletion = true;
-
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
@@ -216,6 +213,12 @@
   services.xserver.libinput.mouse.accelProfile = "flat";
   services.xserver.libinput.mouse.accelSpeed = null;
   #services.xserver.libinput.mouse.transformationMatrix = "1 0 0 0 1 0 0 0 1";
+
+  # Bash
+  programs.bash.enableCompletion = true;
+
+  # Nushell
+  #users.users.cory.shell = pkgs.nushell;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.cory = {
@@ -309,6 +312,8 @@
     xorg.xkill
 
     #blender
+
+    nushell
   ];
 
   # Fonts

@@ -62,8 +62,8 @@
         inherit system;
 
         modules = [
-          ./pc/system/configuration.nix
-          ./shared/system/configuration.nix
+          ./pc/configuration.nix
+          ./shared/configuration.nix
           ./rices/mountain/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
@@ -76,8 +76,8 @@
         inherit system;
 
         modules = [
-          ./laptop/system/configuration.nix
-          ./shared/system/configuration.nix
+          ./laptop/configuration.nix
+          ./shared/configuration.nix
           ./rices/tree/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;

@@ -4,5 +4,6 @@ pushd ~/.nix-configuration
 nix build .#homeManagerConfigurations.laptop.activationPackage --show-trace
 ./result/activate
 # System
-sudo nixos-rebuild switch --flake .#laptop
+#sudo nixos-rebuild switch --flake .#laptop
+doas nixos-rebuild switch --flake .#laptop
 popd

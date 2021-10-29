@@ -8,8 +8,8 @@
     source = pkgs.fetchFromGitHub {
       owner = "syl20bnr";
       repo = "spacemacs";
-      rev = "63056ecb50f93808781b97feab1c3225d35c7aa1";
-      sha256 = "/bxfNUcMq1Wcj1RAYi82LNk67nKAFjjQ/osA0rx1GQ0=";
+      rev = "4f7246da07e7eb1e07a26de23a80cd2d89a89a7c";
+      sha256 = "4DjCFQigEU6OcsAn/6vjUYO01KLilI3wqhS/Xn/UEH8=";
     };
   };
 
@@ -18,6 +18,7 @@
     ".emacs.d/core/banners/005-banner.txt".text = builtins.readFile ./005-banner.txt;
     ".emacs.d/core/banners/006-banner.txt".text = builtins.readFile ./006-banner.txt;
     ".emacs.d/core/banners/007-banner.txt".text = builtins.readFile ./007-banner.txt;
+    ".emacs.d/core/banners/img/emacs-logo-mountain.png".source = ./emacs-logo-mountain.png;
     ".emacs.d/private/themes/mountain-theme/mountain.el".text = builtins.readFile ./mountain.el;
   };
 }
