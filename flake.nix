@@ -34,8 +34,8 @@
         homeDirectory = "/home/cory";
         configuration = {
           imports = [
-            ./pc/users/cory/home.nix
-            ./shared/users/cory/home.nix
+            ./pc/home.nix
+            ./shared/home.nix
             ./rices/mountain/home.nix
           ];
         };
@@ -48,8 +48,8 @@
         homeDirectory = "/home/cory";
         configuration = {
           imports = [
-            ./laptop/users/cory/home.nix
-            ./shared/users/cory/home.nix
+            ./laptop/home.nix
+            ./shared/home.nix
             ./rices/tree/home.nix
           ];
         };

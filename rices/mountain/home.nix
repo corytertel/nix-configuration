@@ -50,7 +50,7 @@
     ".config/xmobar/xmobarrc0".text = builtins.readFile ./xmobar/xmobarrc0;
     ".config/xmobar/xmobarrc1".text = builtins.readFile ./xmobar/xmobarrc1;
     ".config/xmobar/xmobarrc2".text = builtins.readFile ./xmobar/xmobarrc2;
-    "Pictures/wallpaper.jpg".source = ./wallpaper.jpg;
+    "Pictures/wallpaper.jpg".source = ./mountain.jpg;
   };
 
 #  home.packages = with pkgs; [
