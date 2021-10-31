@@ -245,8 +245,7 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(mountain
-                         spacemacs-dark
+   dotspacemacs-themes '(spacemacs-dark
                          twilight
                          gruvbox-dark-medium
                          dracula
@@ -259,8 +258,8 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
-   ;dotspacemacs-mode-line-theme 'vanilla
+   ;dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+   dotspacemacs-mode-line-theme 'doom
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -556,7 +555,55 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (add-to-list 'custom-theme-load-path "~/.emacs.d/private/themes/mountain-theme/"))
+  (defun spacemacs-buffer//insert-buttons ())
+  (defun spacemacs-buffer//insert-startup-lists ())
+  (defconst spacemacs-buffer-logo-title "" "")
+  (defun spacemacs-buffer/goto-buffer (&optional refresh)
+    (interactive)
+    (let ((buffer-exists (buffer-live-p (get-buffer spacemacs-buffer-name)))
+          (save-line nil))
+      (when (not buffer-exists)
+        (setq spacemacs-buffer--note-widgets nil))
+      (when (or (not (eq spacemacs-buffer--last-width (window-width)))
+                (not buffer-exists)
+                refresh)
+        (setq spacemacs-buffer--window-width (if dotspacemacs-startup-buffer-responsive
+                                                 (window-width)
+                                               80)
+              spacemacs-buffer--last-width spacemacs-buffer--window-width)
+        (with-current-buffer (get-buffer-create spacemacs-buffer-name)
+          (page-break-lines-mode)
+          (save-excursion
+            (when (> (buffer-size) 0)
+              (set 'save-line (line-number-at-pos))
+              (let ((inhibit-read-only t))
+                (erase-buffer)))
+            (spacemacs-buffer/set-mode-line "")
+            (if dotspacemacs-startup-buffer-show-version
+                (spacemacs-buffer//insert-version)
+              (let ((inhibit-read-only t))
+                (insert "\n")))
+            (insert "\n\n\n\n\n\n\n\n\n\n")
+            (spacemacs-buffer/insert-banner-and-buttons)
+            (when (bound-and-true-p spacemacs-initialized)
+              (spacemacs-buffer//notes-redisplay-current-note)
+              (configuration-layer/display-summary emacs-start-time)
+              (when dotspacemacs-startup-lists
+                (spacemacs-buffer/insert-startup-lists))
+              (spacemacs-buffer//insert-footer)
+              (spacemacs-buffer/set-mode-line spacemacs--default-mode-line)
+              (force-mode-line-update)
+              (spacemacs-buffer-mode)))
+          (if save-line
+              (progn (goto-char (point-min))
+                     (forward-line (1- save-line))
+                     (forward-to-indentation 0))
+            (spacemacs-buffer/goto-link-line)))
+        (if current-prefix-arg
+            (switch-to-buffer-other-window spacemacs-buffer-name)
+          (switch-to-buffer spacemacs-buffer-name))
+        (spacemacs//redisplay))))
+  )
 
 
 (defun dotspacemacs/user-load ()
@@ -571,7 +618,21 @@ dump.")
 This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
-before packages are loaded.")
+before packages are loaded."
+  (defun spacemacs-buffer//insert-footer ())
+  (defun spacemacs-buffer//insert-page-break ())
+  (defun spacemacs-buffer//insert-version ())
+  ;(defun spacemacs-buffer/insert-banner-and-buttons ()
+  ;  (let ((banner (spacemacs-buffer//choose-banner))
+  ;        (buffer-read-only nil))
+  ;    (progn
+  ;      (when banner
+  ;        (spacemacs-buffer/message (format "Banner: %s" banner))
+  ;        (if (image-type-available-p (intern (file-name-extension banner)))
+  ;            (spacemacs-buffer//insert-image-banner banner)
+  ;          (spacemacs-buffer//insert-ascii-banner-centered banner)))
+  ;      (spacemacs//redisplay))))
+  )
 
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -606,7 +667,7 @@ This function is called at the very end of Spacemacs initialization."
                                    (const . "#ac8a8c")
                                    (comment . "#4c4c4c")
                                    (comment-bg . "#0f0f0f")
-                                   (comp . "#9ec49f")
+                                   (comp . "#8f8aac")
                                    (err . "#c49ea0")
                                    (func . "#8aac8b")
                                    (head1 . "#8aacab")
@@ -619,16 +680,16 @@ This function is called at the very end of Spacemacs initialization."
                                    (head4-bg . "#0f0f0f")
                                    (highlight . "#262626")
                                    (highlight-dim . "#171717")
-                                   (keyword . "#ac8aac")
+                                   (keyword . "#8aacab")
                                    (lnum . "#4c4c4c")
                                    (mat . "#f0f0f0")
-                                   (meta . "#c49ec4")
+                                   (meta . "#c4c19e")
                                    (str . "#aca98a")
                                    (suc . "#9ec49f")
                                    (ttip . "#f0f0f0")
                                    (ttip-sl . "#262626")
                                    (ttip-bg . "#0f0f0f")
-                                   (type . "#8aacab")
+                                   (type . "#ac8aac")
                                    (var . "#8f8aac")
                                    (war . "#c4c19e")
                                    (aqua . "#9ec3c4")
