@@ -6,6 +6,7 @@
       ./apps/emacs
       ./apps/layout_switch
       ./apps/neofetch
+      ./apps/nu
       ./apps/nvim
       ./apps/ungoogled-chromium
       ./apps/vscode
