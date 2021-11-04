@@ -1,4 +1,4 @@
-filesize_format = "MB" # can be b, kb, kib, mb, mib, gb, gib, etc
+filesize_format = "B" # can be b, kb, kib, mb, mib, gb, gib, etc
 filesize_metric = true # true => (KB, MB, GB), false => (KiB, MiB, GiB)
 skip_welcome_message = false # Note to nushell developer: This is expected to be false, when testing nushell itself
 disable_table_indexes = false
@@ -12,7 +12,7 @@ ctrlc_exit = false
 complete_from_path = true
 rm_always_trash = true
 #prompt = "build-string (ansi gb) (pwd) (ansi reset) '(' (ansi cb) (do -i { git rev-parse --abbrev-ref HEAD } | str trim ) (ansi reset) ')' (char newline) (ansi yb) (date format '%m/%d/%Y %I:%M:%S%.3f %p') (ansi reset) '> ' "
-prompt = "build-string (char newline) (ansi yb) ' ' (ansi pb) (pwd) (ansi reset) ' (' (ansi cb) (do -i { git rev-parse --abbrev-ref HEAD } | str trim ) (ansi reset) ') > ' "
+prompt = "build-string (ansi cb) ' ' (ansi pb) (pwd) (ansi reset) ' (' (ansi yb) (do -i { git rev-parse --abbrev-ref HEAD } | str trim ) (ansi reset) ')' (char newline) '❯ ' "
 
 # for each of the options in the color_config section, you are able to set
 # the color alone or with one of the following attributes.
@@ -37,21 +37,21 @@ prompt = "build-string (char newline) (ansi yb) ' ' (ansi pb) (pwd) (ansi res
 [color_config]
 primitive_int = "green"
 primitive_decimal = "red"
-primitive_filesize = "ur"
-primitive_string = "pb"
+primitive_filesize = "cb"
+primitive_string = "green"
 primitive_line = "yellow"
 primitive_columnpath = "cyan"
 primitive_pattern = "white"
 primitive_boolean = "green"
-primitive_date = "ru"
+primitive_date = "blue"
 primitive_duration = "blue"
 primitive_range = "purple"
 primitive_path = "yellow"
 primitive_binary = "cyan"
-separator_color = "purple"
+separator_color = "white" # table color
 header_align = "l" # left|l, right|r, center|c
-header_color = "c" # green|g, red|r, blue|u, black|b, yellow|y, purple|p, cyan|c, white|w
-index_color = "rd"
+header_color = "white" # green|g, red|r, blue|u, black|b, yellow|y, purple|p, cyan|c, white|w
+index_color = "red"
 leading_trailing_space_bg = "white"
 
 [line_editor]
