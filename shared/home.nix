@@ -139,8 +139,6 @@
     htop
     qbittorrent
     audacity
-    protonvpn-gui
-    protonvpn-cli
     polkit
     libsForQt5.polkit-qt
     brave
@@ -167,7 +165,10 @@
     krita
     cava
     tty-clock
-    wine
+    wine64
     winetricks
+    grapejuice
+    pciutils
+    rxvt-unicode
   ];
 }

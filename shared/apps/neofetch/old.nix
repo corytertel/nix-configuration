@@ -1,66 +1,57 @@
-# Big thanks to Icy-Thought and tralph3 for their neofetch configs for inspiration
+# Big thanks to Icy-Thought for his neofetch config
 # https://github.com/Icy-Thought/Snowflake/blob/main/config/neofetch/config.conf
-# https://github.com/tralph3/.dotfiles/blob/master/.config/neofetch/config.conf
 { config, lib, pkgs, ... }:
 
 let
-  nixLogo = ./nixLogo.png;
+  nixLogo = ./nixB-logo.png;
 
   config = ''
     print_info() {
-      info title
-      prin ""
-      prin "$(color 6)Eat  , Sleep  , Nixify  ."
-      prin ""
-
-      prin "$(color 6)╭──────────── $(color 4)Software$(color 6) ────────────"
-      info "$(color 6)│ $(color 4) " distro
-      info "$(color 6)│ $(color 4) " kernel
-      info "$(color 6)│ $(color 4) " wm
-      info "$(color 6)│ $(color 4) " term
-      info "$(color 6)│ $(color 4) " shell
-      info "$(color 6)│ $(color 4) " packages
-      prin "$(color 6)├──────────── $(color 4)Hardware$(color 6) ────────────"
-      info "$(color 6)│ $(color 4) " model
-      info "$(color 6)│ $(color 4) " cpu
-      info "$(color 6)│ $(color 4)﬙ " gpu
-      info "$(color 6)│ $(color 4)ﳔ " memory
-      info "$(color 6)│ $(color 4) " resolution
-      info "$(color 6)│ $(color 4) " battery
-      prin "$(color 6)├───────────── $(color 4)Uptime$(color 6) ─────────────"
-      info "$(color 6)│ $(color 4) " uptime
-      prin "$(color 6)╰──────────────────────────────────"
+        info underline
+        prin "Eat  , Sleep  , Nixify  ."
+        info underline
+        prin "Hardware Information"
+        info " " model
+        info " " cpu
+        info "﬙ " gpu
+        info " " disk
+        info "ﳔ " memory
+        info " " resolution
+        info " " battery
+        info underline
+        prin "Software Information"
+        info " " kernel
+        info " " distro
+        info " " wm
+        info " " theme
+        info " " icons
+        info " " term_font
+        info " " packages
+        info cols
     }
-
     # Kernel
     # Shorten the output of the kernel function.
     kernel_shorthand="off"
-
     # Distro
     # Shorten the output of the distro function
     distro_shorthand="off"
     # Show/Hide OS Architecture.
     # Show 'x86_64', 'x86' and etc in 'Distro:' output.
-    os_arch="off"
-
+    os_arch="on"
     # Uptime
     # Shorten the output of the uptime function
     uptime_shorthand="on"
-
     # Memory
     # Show memory pecentage in output.
     memory_percent="on"
-
     # Packages
     # Show/Hide Package Manager names.
-    package_managers="off"
-
+    package_managers="on"
     # Shell
     # Show the path to $SHELL
     shell_path="off"
     # Show $SHELL version
     shell_version="on"
-
     # CPU
     # CPU speed type
     speed_type="bios_limit"
@@ -77,17 +68,14 @@ let
     # CPU Temperature
     # Hide/Show CPU temperature.
     cpu_temp="off"
-
     # GPU
     # Enable/Disable GPU Brand
     gpu_brand="on"
     # Which GPU to display
     gpu_type="all"
-
     # Resolution
     # Display refresh rate next to each monitor
     refresh_rate="on"
-
     # Gtk Theme / Icons / Font
     # Shorten output of GTK Theme / Icons / Font
     gtk_shorthand="on"
@@ -95,20 +83,17 @@ let
     gtk2="on"
     # Enable/Disable gtk3 Theme / Icons / Font
     gtk3="on"
-
     # IP Address
     # Website to ping for the public IP
     public_ip_host="http://ident.me"
     # Public IP timeout.
     public_ip_timeout=2
-
     # Disk
     # Which disks to display.
     disk_show=('/')
     # Disk subtitle.
     # What to append to the Disk subtitle.
     disk_subtitle="mount"
-
     # Song
     # Manually specify a music player.
     music_player="auto"
@@ -120,7 +105,6 @@ let
     mpc_args=()
     # Text Colors
     colors=(distro)
-
     # Text Options
     # Toggle bold text
     bold="on"
@@ -128,7 +112,6 @@ let
     underline_enabled="on"
     # Underline character
     underline_char="-"
-
     # Info Separator
     # Replace the default separator with the specified string.
     separator=" => "
@@ -140,23 +123,19 @@ let
     block_width=3
     # Color block height in lines
     block_height=1
-
     # Progress Bars
     # Bar characters
     bar_char_elapsed="-"
     bar_char_total="="
     # Toggle Bar border
     bar_border="on"
-
     # Progress bar length in spaces
     # Number of chars long to make the progress bars.
     bar_length=15
-
     # Progress bar colors
     # When set to distro, uses your distro's logo colors.
     bar_color_elapsed="distro"
     bar_color_total="distro"
-
     # Info display
     # Display a bar with the info.
     cpu_display="on"
@@ -167,7 +146,6 @@ let
     image_backend="ascii"
     # Image Source
     image_source="${nixLogo}"
-
     # Ascii distro
     # Which distro's ascii art to display.
     ascii_distro="auto"
@@ -188,11 +166,9 @@ let
     # Image offsets
     yoffset=0
     xoffset=0
-
     # Image background color
     # Only works with the w3m backend.
     background_color=
-
     # Stdout mode
     # Turn off all colors and disables image backend (ASCII/Image).
     stdout="off"

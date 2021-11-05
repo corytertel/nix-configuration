@@ -1,4 +1,4 @@
-filesize_format = "B" # can be b, kb, kib, mb, mib, gb, gib, etc
+filesize_format = "KB" # can be b, kb, kib, mb, mib, gb, gib, etc
 filesize_metric = true # true => (KB, MB, GB), false => (KiB, MiB, GiB)
 skip_welcome_message = false # Note to nushell developer: This is expected to be false, when testing nushell itself
 disable_table_indexes = false
@@ -6,13 +6,13 @@ nonzero_exit_errors = true
 startup = [
     "alias l = ls -a",
     ]
-table_mode = "light" # basic, compact, compact_double, light, thin, with_love, rounded, reinforced, heavy, none, other
+table_mode = "rounded" # basic, compact, compact_double, light, thin, with_love, rounded, reinforced, heavy, none, other
 pivot_mode = "auto" # auto, always, never
 ctrlc_exit = false
 complete_from_path = true
-rm_always_trash = true
+rm_always_trash = false
 #prompt = "build-string (ansi gb) (pwd) (ansi reset) '(' (ansi cb) (do -i { git rev-parse --abbrev-ref HEAD } | str trim ) (ansi reset) ')' (char newline) (ansi yb) (date format '%m/%d/%Y %I:%M:%S%.3f %p') (ansi reset) '> ' "
-prompt = "build-string (ansi cb) ' ' (ansi pb) (pwd) (ansi reset) ' (' (ansi yb) (do -i { git rev-parse --abbrev-ref HEAD } | str trim ) (ansi reset) ')' (char newline) '❯ ' "
+prompt = "build-string (ansi cb) ' ' (ansi ub) (pwd) (ansi reset) ' (' (ansi yb) (do -i { git rev-parse --abbrev-ref HEAD } | str trim ) (ansi reset) ')' (char newline) '╰─❯ ' "
 
 # for each of the options in the color_config section, you are able to set
 # the color alone or with one of the following attributes.
@@ -43,14 +43,14 @@ primitive_line = "yellow"
 primitive_columnpath = "cyan"
 primitive_pattern = "white"
 primitive_boolean = "green"
-primitive_date = "blue"
+primitive_date = "uu"
 primitive_duration = "blue"
 primitive_range = "purple"
 primitive_path = "yellow"
 primitive_binary = "cyan"
 separator_color = "white" # table color
 header_align = "l" # left|l, right|r, center|c
-header_color = "white" # green|g, red|r, blue|u, black|b, yellow|y, purple|p, cyan|c, white|w
+header_color = "cb" # green|g, red|r, blue|u, black|b, yellow|y, purple|p, cyan|c, white|w
 index_color = "red"
 leading_trailing_space_bg = "white"
 

@@ -11,7 +11,7 @@
       #ms-vscode-remote.remote-ssh
       haskell.haskell
       coenraads.bracket-pair-colorizer-2
-      matklad.rust-analyzer
+      #matklad.rust-analyzer
       #streetsidesoftware.code-spell-checker
       zhuangtongfa.material-theme
     ]) ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [{
