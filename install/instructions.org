@@ -1,0 +1,14 @@
+#+title:Install Instructions
+
+* Configuration
+  1. Copy `configuration.nix` to /etc/nixos/configuration.nix
+
+* Home Manager
+  1.
+     nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+     nix-channel --update
+  2. Logout or Reboot
+  3. nix-shell '<home-manager>' -A install
+
+* Add Wallpaper
+  1. Add wallpaper to /usr/share/wallpaper.jpg

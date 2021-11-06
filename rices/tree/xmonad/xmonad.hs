@@ -24,6 +24,12 @@ import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Layout.MultiToggle.Instances (StdTransformers (NBFULL))
 import XMonad.Layout.MultiToggle (mkToggle, single, Toggle (..))
 import XMonad.Layout.NoBorders (noBorders, smartBorders)
+import XMonad.Layout.TwoPane
+import XMonad.Layout.ResizableTile
+import XMonad.Layout.BinarySpacePartition
+import XMonad.Layout.Dwindle
+import XMonad.Util.NamedScratchpad
+--import XMonad.Actions.Volume
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -90,12 +96,13 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
      -- Rotate through the available layout algorithms
     --, ((modm,               xK_space ), sendMessage NextLayout)
     , ((modm,               xK_backslash ), sendMessage NextLayout)
+    , ((modm .|. shiftMask, xK_backslash ), sendMessage FirstLayout)
 
     --  Reset the layouts on the current workspace to default
     , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
 
     -- Resize viewed windows to the correct size
-    , ((modm,               xK_n     ), refresh)
+    --, ((modm,               xK_n     ), refresh)
 
     -- Move focus to the next window
     , ((modm,               xK_Tab   ), windows W.focusDown)
@@ -161,7 +168,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0                 , xF86XK_MonBrightnessDown), spawn "xbrightness -5000")
 
     -- Keyboard Layout
-    , ((0                 , xK_Alt_R), spawn "/home/cory/.nix-configuration/shared/users/cory/apps/layout_switch/layout_switch.sh")
+    , ((0                 , xK_Alt_R), spawn "/home/cory/.nix-configuration/shared/apps/layout_switch/layout_switch.sh")
 
     -- Kill App
     , ((modm              , xK_Escape), spawn "xkill")
@@ -175,6 +182,14 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Fullscreen
     , ((modm              , xK_f), sendMessage (Toggle NBFULL))
+
+    -- Resize resizableTall
+    , ((modm              , xK_m), sendMessage MirrorExpand)
+    , ((modm              , xK_n), sendMessage MirrorShrink)
+
+    -- Scratchpads
+    , ((modm              , xK_apostrophe), namedScratchpadAction myScratchpads "terminal")
+    , ((0                 , xF86XK_AudioPlay), namedScratchpadAction myScratchpads "cmus")
     ]
     ++
 
@@ -227,16 +242,20 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- which denotes layout choice.
 --
 myLayout = fullScreenToggle $ smartBorders $
-           (bigGaps   $ avoidStruts (tiled))
-       ||| (smallGaps $ avoidStruts (tiled))
-       ||| (smallGaps $ avoidStruts (threeColumnMid))
+           (bigGaps   $ avoidStruts (resizableTile))
+       ||| (smallGaps   $ avoidStruts (resizableTile))
+       ||| (smallGaps $ avoidStruts (twoPane))
        ||| (paperGaps $ avoidStruts (Full))
-       ||| (musicGaps $ avoidStruts (Mirror tiled))
+       ||| (musicGaps $ avoidStruts (Mirror resizableTile))
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
      threeColumn = ThreeCol nmaster delta ratio
      threeColumnMid = ThreeColMid nmaster delta ratio
+     twoPane = TwoPane (3/100) (1/2)
+     resizableTile = ResizableTall 1 (3/100) (1/2) []
+     binarySpacePartition = emptyBSP
+     --dwindle = Dwindle 1 (3/100) (1/2)
 
      -- The default number of windows in the master pane
      nmaster = 1
@@ -251,10 +270,10 @@ myLayout = fullScreenToggle $ smartBorders $
      fullScreenToggle = mkToggle (single NBFULL)
 
      -- Spacing
-     bigGaps   = spacingRaw False (Border 100 46 230 176)   True (Border 0 54 0 54) True
-     smallGaps = spacingRaw False (Border 54 0 54 0)        True (Border 0 54 0 54) True
-     paperGaps = spacingRaw False (Border 150 96 1050 996)  True (Border 0 54 0 54) True
-     musicGaps = spacingRaw False (Border 300 244 860 806)  True (Border 0 54 0 54) True
+     bigGaps   = spacingRaw False (Border 100 74 230 204)    True (Border 0 26 0 26) True
+     smallGaps = spacingRaw False (Border 26 0 26 0)         True (Border 0 26 0 26) True
+     paperGaps = spacingRaw False (Border 150 124 1050 1024) True (Border 0 26 0 26) True
+     musicGaps = spacingRaw False (Border 300 274 860 834)   True (Border 0 26 0 26) True
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -291,7 +310,7 @@ myManageHook = composeAll
     , resource  =? "desktop_window"                                   --> doIgnore
     , resource  =? "kdesktop"                                         --> doIgnore
     , isFullscreen                                                    --> doFullFloat
-    ]
+    ] <+> namedScratchpadManageHook myScratchpads
   where
     unfloat = ask >>= doF . W.sink
     myRectFloat = doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
@@ -318,7 +337,7 @@ myLogHook = return ()
 ------------------------------------------------------------------------
 -- Startup hook
 
--- Perform an arbitrary action each time xmonad starts or is restarted
+  -- Perform an arbitrary action each time xmonad starts or is restarted
 -- with mod-q.  Used by, e.g., XMonad.Layout.PerWorkspace to initialize
 -- per-workspace layout choices.
 --
@@ -345,6 +364,19 @@ myPP2 = xmobarPP { ppOrder = \(_:_:_:_) -> [] }
 
 -- Key binding to toggle the gap from the bar.
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
+
+------------------------------------------------------------------------
+-- Scratchpads
+myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
+                , NS "cmus" spawnCmus findCmus manageCmus
+                ]
+  where
+    spawnTerm  = myTerminal ++ " --name=scratchpad"
+    findTerm   = resource =? "scratchpad"
+    manageTerm = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
+    spawnCmus  = myTerminal ++ " --name=cmus 'cmus'"
+    findCmus   = resource =? "cmus"
+    manageCmus = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
