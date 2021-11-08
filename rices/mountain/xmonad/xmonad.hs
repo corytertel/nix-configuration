@@ -95,6 +95,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     --[ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
     [ ((modm,               xK_Return), spawn $ XMonad.terminal conf)
 
+    -- launch emacs
+    , ((modm .|. shiftMask, xK_Return), spawn "emacsclient -c")
+
     -- launch rofi
     , ((modm,               xK_space     ), spawn "rofi -show run")
 
@@ -310,6 +313,7 @@ myManageHook = composeAll
     , className =? "gwenview"                                         --> myRectFloat
     , className =? "Firefox" <&&> resource =? "Toolkit"               --> myRectFloat
     , className =? "chromium-browser" <&&> isDialog                   --> myRectFloat
+    , className =? "gimp"                                             --> doFloat
     , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog"       --> myRectFloat
     , stringProperty "WM_WINDOW_ROLE" =? "pop-up"                     --> myRectFloat
     , isDialog                                                        --> myRectFloat

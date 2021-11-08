@@ -15,7 +15,7 @@ import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
 import XMonad.Layout.Spacing
 import XMonad.Layout.ThreeColumns
-import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End))
+import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End), Position(Above))
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageHelpers
@@ -83,6 +83,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- launch a terminal
     --[ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
     [ ((modm,               xK_Return), spawn $ XMonad.terminal conf)
+
+    -- launch emacs
+    , ((modm .|. shiftMask, xK_Return), spawn "emacsclient -c")
 
     -- launch rofi
     , ((modm,               xK_space     ), spawn "rofi -show run")
@@ -291,7 +294,8 @@ myLayout = fullScreenToggle $ smartBorders $
 -- 'className' and 'resource' are used below.
 --
 myManageHook = composeAll
-    [ insertPosition End Newer -- open new windows at the end
+    --[ insertPosition End Newer -- open new windows at the end
+    [ insertPosition Above Newer -- open new windows above current window
     , className =? "MPlayer"                                          --> myRectFloat
     , className =? "mpv"                                              --> myRectFloat
     , className =? "vlc"                                              --> myRectFloat
@@ -299,6 +303,7 @@ myManageHook = composeAll
     , className =? "gwenview"                                         --> myRectFloat
     , className =? "Firefox" <&&> resource =? "Toolkit"               --> myRectFloat
     , className =? "chromium-browser" <&&> isDialog                   --> myRectFloat
+    , className =? "gimp"                                             --> doFloat
     , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog"       --> myRectFloat
     , stringProperty "WM_WINDOW_ROLE" =? "pop-up"                     --> myRectFloat
     , isDialog                                                        --> myRectFloat

@@ -28,7 +28,6 @@
       round-borders = 0;
 
       rounded-corners-exclude = [
-        "class_g = 'plptool-gui-PLPToolApp'",
         "class_g = 'dmenu'",
       ];
     '';
