@@ -16,6 +16,7 @@ import XMonad.Util.Run
 import XMonad.Layout.Spacing
 import XMonad.Layout.ThreeColumns
 import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End), Position(Above))
+--import XMonad.Hooks.ManageDocks (avoidStruts, Direction2D (D, R, U))
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageHelpers
@@ -27,8 +28,11 @@ import XMonad.Layout.NoBorders (noBorders, smartBorders)
 import XMonad.Layout.TwoPane
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.BinarySpacePartition
-import XMonad.Layout.Dwindle
 import XMonad.Util.NamedScratchpad
+--import XMonad.Actions.Navigation2D
+import XMonad.Actions.Navigation2D (switchLayer)
+--import XMonad.Layout.WindowNavigation (windowNavigation, Direction2D(L, R, D, U), Navigate (Go, Swap))
+import qualified XMonad.Layout.WindowNavigation as WN
 --import XMonad.Actions.Volume
 
 import qualified XMonad.StackSet as W
@@ -91,7 +95,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_space     ), spawn "rofi -show run")
 
     -- launch dmenu
-    , ((modm .|. shiftMask, xK_space     ), spawn "dmenu_run")
+    --, ((modm .|. shiftMask, xK_space     ), spawn "dmenu_run")
 
     -- close focused window
     , ((modm,               xK_q     ), kill)
@@ -102,46 +106,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_backslash ), sendMessage FirstLayout)
 
     --  Reset the layouts on the current workspace to default
-    , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
+    --, ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
 
-    -- Resize viewed windows to the correct size
-    --, ((modm,               xK_n     ), refresh)
-
-    -- Move focus to the next window
-    , ((modm,               xK_Tab   ), windows W.focusDown)
-
-    -- Move focus to the next window
-    , ((modm,               xK_j     ), windows W.focusDown)
-
-    -- Move focus to the previous window
-    , ((modm,               xK_k     ), windows W.focusUp  )
-
-    -- Move focus to the master window
-    , ((modm,               xK_m     ), windows W.focusMaster  )
-
-    -- Swap the focused window and the master window
-    --, ((modm,               xK_Return), windows W.swapMaster)
-
-    -- Swap the focused window with the next window
-    , ((modm .|. shiftMask, xK_j     ), windows W.swapDown  )
-
-    -- Swap the focused window with the previous window
-    , ((modm .|. shiftMask, xK_k     ), windows W.swapUp    )
-
-    -- Shrink the master area
-    , ((modm,               xK_h     ), sendMessage Shrink)
-
-    -- Expand the master area
-    , ((modm,               xK_l     ), sendMessage Expand)
 
     -- Push window back into tiling
     , ((modm,               xK_t     ), withFocused $ windows . W.sink)
-
-    -- Increment the number of windows in the master area
-    , ((modm              , xK_comma ), sendMessage (IncMasterN 1))
-
-    -- Deincrement the number of windows in the master area
-    , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
 
     -- Toggle the status bar gap
     -- Use this binding with avoidStruts from Hooks.ManageDocks.
@@ -186,14 +155,88 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Fullscreen
     , ((modm              , xK_f), sendMessage (Toggle NBFULL))
 
-    -- Resize resizableTall
-    , ((modm              , xK_m), sendMessage MirrorExpand)
-    , ((modm              , xK_n), sendMessage MirrorShrink)
-
     -- Scratchpads
     , ((modm              , xK_apostrophe), namedScratchpadAction myScratchpads "terminal")
     , ((0                 , xF86XK_AudioPlay), namedScratchpadAction myScratchpads "cmus")
-    ]
+
+    -- Master and Stack Controls
+    -- Resize viewed windows to the correct size
+    --, ((modm,               xK_r     ), refresh)
+    -- Move focus to the master window
+    --, ((modm,               xK_m     ), windows W.focusMaster  )
+    -- Move focus to the next window
+    --, ((modm,               xK_Tab   ), windows W.focusDown)
+    -- Move focus to the next window
+    --, ((modm,               xK_j     ), windows W.focusDown)
+    -- Move focus to the previous window
+    --, ((modm,               xK_k     ), windows W.focusUp  )
+    -- Swap the focused window and the master window
+    --, ((modm,               xK_Return), windows W.swapMaster)
+    -- Swap the focused window with the next window
+    --, ((modm .|. shiftMask, xK_j     ), windows W.swapDown  )
+    -- Swap the focused window with the previous window
+    --, ((modm .|. shiftMask, xK_k     ), windows W.swapUp    )
+    -- Shrink the master area
+    --, ((modm,               xK_h     ), sendMessage Shrink)
+    -- Expand the master area
+    --, ((modm,               xK_l     ), sendMessage Expand)
+    -- Resize resizableTall
+    --, ((modm              , xK_m), sendMessage MirrorExpand)
+    --, ((modm              , xK_n), sendMessage MirrorShrink)
+    -- Increment the number of windows in the master area
+    --, ((modm              , xK_comma ), sendMessage (IncMasterN 1))
+    -- Deincrement the number of windows in the master area
+    --, ((modm              , xK_period), sendMessage (IncMasterN (-1)))
+
+    -- Binary Space Partition Controls
+    , ((modm .|. mod1Mask,                    xK_l     ), sendMessage $ ExpandTowards WN.R)
+    , ((modm .|. mod1Mask,                    xK_h     ), sendMessage $ ExpandTowards WN.L)
+    , ((modm .|. mod1Mask,                    xK_j     ), sendMessage $ ExpandTowards WN.D)
+    , ((modm .|. mod1Mask,                    xK_k     ), sendMessage $ ExpandTowards WN.U)
+    , ((modm .|. mod1Mask .|. controlMask ,   xK_l     ), sendMessage $ ShrinkFrom WN.R)
+    , ((modm .|. mod1Mask .|. controlMask ,   xK_h     ), sendMessage $ ShrinkFrom WN.L)
+    , ((modm .|. mod1Mask .|. controlMask ,   xK_j     ), sendMessage $ ShrinkFrom WN.D)
+    , ((modm .|. mod1Mask .|. controlMask ,   xK_k     ), sendMessage $ ShrinkFrom WN.U)
+    --, ((modm,                                xK_r     ), sendMessage Rotate)
+    --, ((modm,                                xK_s     ), sendMessage Swap)
+    --, ((modm,                                xK_n     ), sendMessage FocusParent)
+    --, ((modm .|. controlMask,                xK_n     ), sendMessage SelectNode)
+    --, ((modm .|. shiftMask,                  xK_n     ), sendMessage MoveNode)
+    , ((modm .|. shiftMask .|. controlMask , xK_j     ), sendMessage $ SplitShift Prev)
+    , ((modm .|. shiftMask .|. controlMask , xK_k     ), sendMessage $ SplitShift Next)
+    , ((modm,               xK_a),     sendMessage Balance)
+    , ((modm .|. shiftMask, xK_a),     sendMessage Equalize)
+
+      -- Switch between layers
+    , ((modm .|. shiftMask, xK_space), switchLayer)
+
+    {-
+    -- Directional navigation of windows
+    , ((modm,                 xK_Right), windowGo R False)
+    , ((modm,                 xK_Left ), windowGo L False)
+    , ((modm,                 xK_Up   ), windowGo U False)
+    , ((modm,                 xK_Down ), windowGo D False)
+
+    , ((modm,                 xK_l), windowGo R False)
+    , ((modm,                 xK_h), windowGo L False)
+    , ((modm,                 xK_k), windowGo U False)
+    , ((modm,                 xK_j), windowGo D False)
+-}
+    , ((modm, xK_h), sendMessage $ WN.Go WN.L)
+    , ((modm, xK_j), sendMessage $ WN.Go WN.D)
+    , ((modm, xK_k), sendMessage $ WN.Go WN.U)
+    , ((modm, xK_l), sendMessage $ WN.Go WN.R)
+    , ((modm, xK_n), windows W.focusUp)
+    , ((modm, xK_n), windows W.focusDown)
+
+
+    -- Swap adjacent windows
+    , ((modm .|. controlMask, xK_l), sendMessage $ WN.Swap WN.R)
+    , ((modm .|. controlMask, xK_h), sendMessage $ WN.Swap WN.L)
+    , ((modm .|. controlMask, xK_k), sendMessage $ WN.Swap WN.U)
+    , ((modm .|. controlMask, xK_j), sendMessage $ WN.Swap WN.D)
+
+   ]
     ++
 
     --
@@ -244,12 +287,22 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = fullScreenToggle $ smartBorders $
-           (bigGaps   $ avoidStruts (resizableTile))
-       ||| (smallGaps   $ avoidStruts (resizableTile))
-       ||| (smallGaps $ avoidStruts (twoPane))
-       ||| (paperGaps $ avoidStruts (Full))
-       ||| (musicGaps $ avoidStruts (Mirror resizableTile))
+--myLayout = fullScreenToggle $ smartBorders $
+--           (bigGaps   $ avoidStruts (binarySpacePartition))
+--       ||| (smallGaps $ avoidStruts (resizableTile))
+--       ||| (smallGaps $ avoidStruts (twoPane))
+--       ||| (paperGaps $ avoidStruts (Full))
+--       ||| (musicGaps $ avoidStruts (Mirror resizableTile))
+--  where
+myLayout = avoidStruts
+         . WN.windowNavigation
+         . smartBorders
+         . fullScreenToggle $
+           (bigGaps   $ binarySpacePartition)
+       ||| (smallGaps $ binarySpacePartition)
+       ||| (smallGaps $ twoPane)
+       ||| (paperGaps $ Full)
+       ||| (musicGaps $ Mirror binarySpacePartition)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -260,7 +313,7 @@ myLayout = fullScreenToggle $ smartBorders $
      binarySpacePartition = emptyBSP
      --dwindle = Dwindle 1 (3/100) (1/2)
 
-     -- The default number of windows in the master pane
+     -- The defaulWN.t number of windows in the master pane
      nmaster = 1
 
      -- Default proportion of screen occupied by master pane
@@ -388,6 +441,7 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
 
 -- Run xmonad with the settings you specify. No need to modify this.
 --
+--main = xmonad . ewmh . withNavigation2DConfig def =<< statusBar myBar0 myPP toggleStrutsKey =<< statusBar myBar1 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey defaults
 main = xmonad . ewmh =<< statusBar myBar0 myPP toggleStrutsKey =<< statusBar myBar1 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey defaults
 
 -- A structure containing your configuration settings, overriding
