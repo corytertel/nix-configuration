@@ -10,7 +10,8 @@ PS1='[\u@\h \W]\$ '
 alias vim='nvim'
 export EDITOR='nvim'
 alias ls='exa'
-alias l='exa -lah'
+alias l='exa --icons --long --all --no-permissions --no-filesize --no-user --no-time'
+alias ll='exa --icons --long --all --header --git'
 alias c='clear'
 
 # Prompt
@@ -26,10 +27,10 @@ bash_prompt() {
     bold="\e[1m"
     uline="\e[4m"
     reset="\e[0m"
-    
+
     #git rev-parse --abbrev-ref HEAD
     #git status 2>/dev/null | grep 'On branch' | sed 's/On branch / => /'
-    
+
     export PS1="${cyan}${bold} ${reset}${yellow}${bold}\W${reset} ${green}${uline}\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)${reset}\n╰─❯ "
 }
 
