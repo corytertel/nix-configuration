@@ -42,24 +42,21 @@
     URxvt*color7:     #e7e7e7
     URxvt*color15:    #f5f5f5
 
-    Xcursor.size: 11
-
     !! URxvt Appearance
-    URxvt.font: xft:FantasqueSansMono Nerd Font:style=Regular:size=11
-    URxvt.boldFont: xft:FantasqueSansMono Nerd Font:style=Bold:size=11
-    URxvt.italicFont: xft:FantasqueSansMono Nerd Font:style=Italic:size=11
-    URxvt.boldItalicFont: xft:FantasqueSansMono Nerd Font:style=Bold Italic:size=11
+    URxvt.font: xft:FantasqueSansMono Nerd Font:style=Regular:size=11,xft:Font Awesome 5 Free Regular:style=Regular:size11,xft:Font Awesome 5 Free Solid:style=Solid:size11,xft:Font Awesome 5 Brands Regular:style=Regular:size11
+    URxvt.boldFont: xft:FantasqueSansMono Nerd Font:style=Bold:size=11,xft:Font Awesome 5 Free Regular:style=Regular:size11,xft:Font Awesome 5 Free Solid:style=Solid:size11,xft:Font Awesome 5 Brands Regular:style=Regular:size11
+    URxvt.italicFont: xft:FantasqueSansMono Nerd Font:style=Italic:size=11,xft:Font Awesome 5 Free Regular:style=Regular:size11,xft:Font Awesome 5 Free Solid:style=Solid:size11,xft:Font Awesome 5 Brands Regular:style=Regular:size11
+    URxvt.boldItalicFont: xft:FantasqueSansMono Nerd Font:style=Bold Italic:size=11,xft:Font Awesome 5 Free Regular:style=Regular:size11,xft:Font Awesome 5 Free Solid:style=Solid:size11,xft:Font Awesome 5 Brands Regular:style=Regular:size11
     URxvt.letterSpace: 0
     URxvt.lineSpace: 0
     URxvt.geometry: 92x24
-    URxvt.internalBorder: 24
+    URxvt.internalBorder: 48
     URxvt.cursorBlink: true
     URxvt.cursorUnderline: false
     URxvt.saveline: 2048
     URxvt.scrollBar: false
     URxvt.scrollBar_right: false
     URxvt.urgentOnBell: true
-    !URxvt.depth: 24
     URxvt.depth: 32
     URxvt.iso14755: false
 

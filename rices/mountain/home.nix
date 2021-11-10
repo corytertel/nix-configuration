@@ -13,19 +13,18 @@
 
   services.picom = {
     enable = true;
-    inactiveOpacity = "1.0";
-    activeOpacity = "1.0";
+    inactiveOpacity = "0.93";
+    activeOpacity = "0.98";
     blur = true;
     experimentalBackends = true;
     opacityRule = [
-      "98:class_g   *?= 'emacs'"
-      "98:class_g   *?= 'discord'"
-      #"75:class_g   *?= 'Rofi'"
+      #"98:class_g   *?= 'emacs'"
+      #"98:class_g   *?= 'discord'"
     ];
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 4;
-      corner-radius = 40;
+      corner-radius = 30;
       round-borders = 1;
 
       rounded-corners-exclude = [

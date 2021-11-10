@@ -2,6 +2,6 @@
 
 {
   home.file = {
-    ".bashrc".text = builtins.readFile ./bashrc2;
+    ".bashrc".text = builtins.readFile ./bashrc;
   };
 }

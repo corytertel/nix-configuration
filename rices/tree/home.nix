@@ -13,19 +13,19 @@
 
   services.picom = {
     enable = true;
-    inactiveOpacity = "1.00";
-    activeOpacity = "1.00";
+    inactiveOpacity = "0.93";
+    activeOpacity = "0.98";
     blur = true;
     experimentalBackends = true;
     opacityRule = [
-      "98:class_g   *?= 'emacs'"
-      "98:class_g   *?= 'discord'"
+      #"98:class_g   *?= 'emacs'"
+      #"98:class_g   *?= 'discord'"
     ];
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 4;
-      corner-radius = 0;
-      round-borders = 0;
+      corner-radius = 20;
+      round-borders = 1;
 
       rounded-corners-exclude = [
         "class_g = 'dmenu'",
@@ -33,8 +33,8 @@
     '';
     fade = true;
     fadeDelta = 5;
-    shadow = true;
-    shadowOpacity = "0.5";
+    #shadow = true;
+    #shadowOpacity = "0.5";
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
