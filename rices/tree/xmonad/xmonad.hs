@@ -242,7 +242,6 @@ myLayout = avoidStruts
 ------------------------------------------------------------------------
 
 myManageHook = composeAll
-    --[ insertPosition End Newer -- open new windows at the end
     [ insertPosition Above Newer -- open new windows above current window
     , className =? "MPlayer"                                          --> myRectFloat
     , className =? "mpv"                                              --> myRectFloat

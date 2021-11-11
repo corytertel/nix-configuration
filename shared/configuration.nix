@@ -7,7 +7,7 @@
 {
   imports =
     [
-      ./theme_breeze.nix
+      #./theme_breeze.nix
       #./blender.nix
     ];
 

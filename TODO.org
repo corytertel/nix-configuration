@@ -20,3 +20,7 @@
 ** fix colorscheme to load on start
 * fix xmonad keybindings to also work with russian keyboard
 * clicable workspaces
+* gtk theme
+* xmonad native launcher, rofi replacement
+* pc rice
+* Makefiles

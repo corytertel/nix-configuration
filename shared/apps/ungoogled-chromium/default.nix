@@ -19,6 +19,8 @@
         updateUrl =
           "https://raw.githubusercontent.com/iamadamdev/bypass-paywalls-chrome/master/updates.xml";
       }
+      { id = "aghfnjkcakhmadgdomlmlhhaocbkloab"; } # Just Black
+      #{ id = "kioklelcojgbjoljlilalgdcppkiioge"; } # Void Theme - Black and Minimal
     ];
   };
 }

@@ -52,28 +52,52 @@
     "Pictures/wallpaper.jpg".source = ./wallpapers/mountain2.jpg;
   };
 
-#  home.packages = with pkgs; [
-#    whitesur-icon-theme
-#    orchis-theme
-#  ];
-#
-#  gtk = {
-#    enable = true;
-#
-#    iconTheme = {
-#      package = pkgs.whitesur-icon-theme;
-#      name = "WhiteSur-dark";
-#    };
-#
-#    theme = {
-#      package = pkgs.orchis-theme;
-#      name = "orchis-dark-compact";
-#    };
-#
-#    gtk3.extraConfig = {
-#      gtk-icon-theme-name = "WhiteSur-dark";
-#      gtk-theme-name = "orchis-dark-compact";
-#      gtk-application-prefer-dark-theme = 1;
-#    };
-#  };
+  home.packages = with pkgs; [
+    arc-theme
+    tela-icon-theme
+    orchis-theme
+    whitesur-icon-theme
+    libsForQt5.qtstyleplugins
+    gnome3.dconf
+    gsettings-desktop-schemas
+    gnome.gnome-themes-extra
+  ];
+
+  dconf.enable = true;
+  gtk = {
+    enable = true;
+
+    font = {
+      package = null;
+      name = "FantasqueSansMono Nerd Font 11";
+    };
+
+    theme = {
+      #package = pkgs.arc-theme;
+      #name = "Arc-Dark";
+      package = pkgs.orchis-theme;
+      name = "Orchis-dark-compact";
+    };
+
+    iconTheme = {
+      package = pkgs.tela-icon-theme;
+      name = "Tela";
+      #package = pkgs.whitesur-icon-theme;
+      #name = "WhiteSur-dark";
+    };
+
+    gtk3.extraConfig = {
+      gtk-icon-theme-name = "Tela";
+      #gtk-theme-name = "Arc-Dark";
+      #gtk-icon-theme-name = "WhiteSur-dark";
+      gtk-theme-name = "Orchis-dark-compact";
+      gtk-application-prefer-dark-theme = 1;
+    };
+  };
+
+  qt = {
+    enable = true;
+    platformTheme = "gtk";
+    style.name = "gtk2";
+  };
 }

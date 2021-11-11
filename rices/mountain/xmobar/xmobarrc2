@@ -5,15 +5,15 @@ Config {
    , bgColor =      "#0f0f0f"
    , alpha =        255
    , fgColor =      "#f0f0f0"
-   , position =     Static { xpos = 3550, ypos = 50, width = 240, height = 80 }
+   , position =     Static { xpos = 3580, ypos = 50, width = 210, height = 70 }
    , border =       BottomB
-   , borderWidth =  4
+   , borderWidth =  6
    , borderColor =  "#8aac8b"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "}{  <fc=#8aac8b>  %volume%</fc>  <fc=#8aacab>  %kbd%</fc>  "
+   , template = "}{ <fc=#8aac8b>  %volume%</fc>  <fc=#8aacab>  %kbd%</fc> "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start

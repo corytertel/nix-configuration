@@ -118,6 +118,7 @@ myAdditionalKeys =
     -- Scratchpads
     , ("M-'", namedScratchpadAction myScratchpads "terminal")
     , ("<XF86AudioPlay>", namedScratchpadAction myScratchpads "cmus")
+    , ("M-e", namedScratchpadAction myScratchpads "emacs")
     -- Master and Stack Controls
     -- Resize viewed windows to the correct size
     --, ("M-r", refresh)
@@ -155,16 +156,17 @@ myAdditionalKeys =
     , ("M-M1-C-h", sendMessage $ ShrinkFrom WN.L)
     , ("M-M1-C-j", sendMessage $ ShrinkFrom WN.D)
     , ("M-M1-C-k", sendMessage $ ShrinkFrom WN.U)
-    , ("M-r", sendMessage RotateL)
-    , ("M-S-r", sendMessage RotateR)
-    --, ("M-s", sendMessage Swap)
+    --, ("M-r", sendMessage RotateL)
+    --, ("M-S-r", sendMessage RotateR)
+    , ("M-r", sendMessage Rotate)
+    , ("M-s", sendMessage Swap)
     --, ("M-n", sendMessage FocusParent)
     --, ("M-C-n", sendMessage SelectNode)
     --, ("M-S-n", sendMessage MoveNode)
     , ("M-S-C-j", sendMessage $ SplitShift Prev)
     , ("M-S-C-k", sendMessage $ SplitShift Next)
-    , ("M-b",     sendMessage Balance)
-    , ("M-S-b",     sendMessage Equalize)
+    , ("M-v",     sendMessage Balance)
+    , ("M-S-v",     sendMessage Equalize)
     -- Switch between layers
     , ("M-S-<Space>", switchLayer)
     -- Directional navigation of windows
@@ -255,7 +257,7 @@ myLayout = avoidStruts
 ------------------------------------------------------------------------
 
 myManageHook = composeAll
-    [ insertPosition End Newer -- open new windows at the end
+    [ insertPosition Above Newer -- open new windows above current window
     , className =? "MPlayer"                                          --> myRectFloat
     , className =? "mpv"                                              --> myRectFloat
     , className =? "vlc"                                              --> myRectFloat
@@ -318,14 +320,18 @@ toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
 myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
                 , NS "cmus" spawnCmus findCmus manageCmus
+                , NS "emacs" spawnEmacs findEmacs manageEmacs
                 ]
   where
-    spawnTerm  = myTerminal ++ " --name=scratchpad"
-    findTerm   = resource =? "scratchpad"
-    manageTerm = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
-    spawnCmus  = myTerminal ++ " --name=cmus 'cmus'"
-    findCmus   = resource =? "cmus"
-    manageCmus = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
+    spawnTerm   = myTerminal ++ " --name=scratchpad"
+    findTerm    = resource =? "scratchpad"
+    manageTerm  = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
+    spawnCmus   = myTerminal ++ " --name=cmus 'cmus'"
+    findCmus    = resource =? "cmus"
+    manageCmus  = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
+    spawnEmacs  = "emacsclient -c"
+    findEmacs   = resource =? "emacs-scratchpad"
+    manageEmacs = customFloating $ W.RationalRect (1 % 2) (1 % 2) (1 % 2) (1 % 2)
 
 ------------------------------------------------------------------------
 
