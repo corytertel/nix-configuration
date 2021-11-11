@@ -21,6 +21,8 @@
       }
       { id = "aghfnjkcakhmadgdomlmlhhaocbkloab"; } # Just Black
       #{ id = "kioklelcojgbjoljlilalgdcppkiioge"; } # Void Theme - Black and Minimal
+      { id = "dbepggeogbaibhgnhhndojpepiihcmeb"; } # Vimium
+      { id = "hompjdfbfmmmgflfjdlnkohcplmboaeo"; } # Allow Right Click
     ];
   };
 }

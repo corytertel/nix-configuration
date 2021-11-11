@@ -118,7 +118,6 @@ myAdditionalKeys =
     -- Scratchpads
     , ("M-'", namedScratchpadAction myScratchpads "terminal")
     , ("<XF86AudioPlay>", namedScratchpadAction myScratchpads "cmus")
-    , ("M-e", namedScratchpadAction myScratchpads "emacs")
     -- Master and Stack Controls
     -- Resize viewed windows to the correct size
     --, ("M-r", refresh)
@@ -320,7 +319,6 @@ toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
 myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
                 , NS "cmus" spawnCmus findCmus manageCmus
-                , NS "emacs" spawnEmacs findEmacs manageEmacs
                 ]
   where
     spawnTerm   = myTerminal ++ " --name=scratchpad"
@@ -329,9 +327,6 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
     spawnCmus   = myTerminal ++ " --name=cmus 'cmus'"
     findCmus    = resource =? "cmus"
     manageCmus  = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
-    spawnEmacs  = "emacsclient -c"
-    findEmacs   = resource =? "emacs-scratchpad"
-    manageEmacs = customFloating $ W.RationalRect (1 % 2) (1 % 2) (1 % 2) (1 % 2)
 
 ------------------------------------------------------------------------
 
