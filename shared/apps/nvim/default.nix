@@ -1,10 +1,10 @@
-{ home-manager, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   programs.neovim = {
 
     enable = true;
-
+    package = pkgs.neovim;
     vimAlias = true;
 
     plugins = with pkgs.vimPlugins // import ./vimPlugins.nix; [

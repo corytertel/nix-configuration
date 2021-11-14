@@ -18,7 +18,7 @@
 
   # Zen Kernel
   boot.kernelPackages = pkgs.linuxPackages_zen;
-  boot.kernelParams = [ "pcie_aspm.policy=performance" "mitigations=off" ];
+  boot.kernelParams = [ "pcie_aspm.policy=performance" "mitigations=off" "intel_iommu=on" "iommu=pt" ];
 
   # Network Devices
   networking.interfaces.enp0s20u1.useDHCP = true;

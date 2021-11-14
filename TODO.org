@@ -9,18 +9,15 @@
 ** package layout switch as a derivation
 * laptop power options
 * splash screen?
-* mountain color theming (gtk, qt, etcj)
 * Reorganize file structure
 ** Clean up files too
 * Remove home-manager for more reproducability/declaration
 ** Move to a more flake-based setup
 * Package 'layout_switch.sh' in a nix derivation for reproducability
 * xmonad 0.17 (cabal build)
-* spacemacs
-** fix colorscheme to load on start
 * fix xmonad keybindings to also work with russian keyboard
 * clicable workspaces
-* gtk theme
 * xmonad native launcher, rofi replacement
 * pc rice
 * Makefiles
+* Sort through old files

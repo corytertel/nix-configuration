@@ -42,7 +42,7 @@ bash_prompt() {
     #╰─>
     #╰─❯
 
-    export PS1="╭╴${cyan}${bold} ${reset}${yellow}${bold}\W${reset} ${green}${uline}\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)${reset}\n╰─> "
+    export PS1="╭╴${cyan}${bold} ${reset}${yellow}${bold}\W${reset} ${green}${uline}\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)${reset}\n╰─λ "
 }
 
 bash_prompt

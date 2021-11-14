@@ -7,9 +7,10 @@
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
+    neovim-git.url = "github:neovim/neovim?dir=contrib";
   };
 
-  outputs = { nixpkgs, home-manager, emacs-overlay, ... }: 
+  outputs = { nixpkgs, home-manager, emacs-overlay, neovim-git, ... }: 
   let
     system = "x86_64-linux";
 
@@ -18,6 +19,7 @@
       config = { allowUnfree = true; };
       overlays = [
           emacs-overlay.overlay
+          neovim-git.overlay
           #(import ./overlays)
         ];
     };

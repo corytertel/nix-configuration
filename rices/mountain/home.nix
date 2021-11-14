@@ -24,7 +24,7 @@
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 4;
-      corner-radius = 30;
+      corner-radius = 20;
       round-borders = 1;
 
       rounded-corners-exclude = [
@@ -36,10 +36,10 @@
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
+          owner = "jonaburg";
           repo = "picom";
-          owner = "ibhagwan";
-          rev = "44b4970f70d6b23759a61a2b94d9bfb4351b41b1";
-          sha256 = "0iff4bwpc00xbjad0m000midslgx12aihs33mdvfckr75r114ylh";
+          rev = "a8445684fe18946604848efb73ace9457b29bf80";
+          sha256 = "R+YUGBrLst6CpUgG9VCwaZ+LiBSDWTp0TLt1Ou4xmpQ=";
         };
       }
     );
@@ -49,7 +49,7 @@
     ".config/xmobar/xmobarrc0".text = builtins.readFile ./xmobar/xmobarrc0;
     ".config/xmobar/xmobarrc1".text = builtins.readFile ./xmobar/xmobarrc1;
     ".config/xmobar/xmobarrc2".text = builtins.readFile ./xmobar/xmobarrc2;
-    "Pictures/wallpaper.jpg".source = ./wallpapers/mountain2.jpg;
+    "Pictures/wallpaper.jpg".source = ./wallpapers/fog.jpg;
   };
 
   home.packages = with pkgs; [
@@ -73,8 +73,6 @@
     };
 
     theme = {
-      #package = pkgs.arc-theme;
-      #name = "Arc-Dark";
       package = pkgs.orchis-theme;
       name = "Orchis-dark-compact";
     };
@@ -82,14 +80,10 @@
     iconTheme = {
       package = pkgs.tela-icon-theme;
       name = "Tela";
-      #package = pkgs.whitesur-icon-theme;
-      #name = "WhiteSur-dark";
     };
 
     gtk3.extraConfig = {
       gtk-icon-theme-name = "Tela";
-      #gtk-theme-name = "Arc-Dark";
-      #gtk-icon-theme-name = "WhiteSur-dark";
       gtk-theme-name = "Orchis-dark-compact";
       gtk-application-prefer-dark-theme = 1;
     };

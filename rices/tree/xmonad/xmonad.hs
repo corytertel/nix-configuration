@@ -21,6 +21,7 @@ import XMonad.Layout.NoBorders (noBorders, smartBorders)
 import XMonad.Layout.TwoPane
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.BinarySpacePartition
+import XMonad.Layout.IfMax
 
 import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End), Position(Above))
 import XMonad.Hooks.ManageDocks
@@ -31,6 +32,10 @@ import XMonad.Hooks.ManageHelpers
 
 import XMonad.Actions.Navigation2D (switchLayer)
 import XMonad.Actions.FloatKeys
+import XMonad.Actions.Search
+
+import XMonad.Prompt
+import XMonad.Prompt.Shell (shellPrompt)
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -39,19 +44,19 @@ import qualified XMonad.Layout.WindowNavigation as WN
 myTerminal      = "kitty"
 
 myFocusFollowsMouse :: Bool
-myFocusFollowsMouse = False
+myFocusFollowsMouse = True
 
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
 
 myBorderWidth   = 0
 
+myNormalBorderColor  = "#0f0f0f"
+myFocusedBorderColor = "#f0f0f0"
+
 myModMask       = mod4Mask
 
 myWorkspaces    =   [ "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-
-myNormalBorderColor  = "#0f0f0f"
-myFocusedBorderColor = "#f0f0f0"
 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-[1..9], Switch to workspace N
@@ -72,8 +77,10 @@ myAdditionalKeys =
     [ ("M-<Return>", spawn $ myTerminal)
     -- launch emacs
     , ("M-S-<Return>", spawn "emacsclient -c")
+    -- Xmonad prompt
+    , ("M-<Space>", shellPrompt myXPConfig)
     -- launch rofi
-    , ("M-<Space>", spawn "rofi -show run")
+    , ("M-C-<Space>", spawn "rofi -show run")
     -- close focused window
     , ("M-q", kill)
      -- Rotate through the available layout algorithms
@@ -143,9 +150,10 @@ myAdditionalKeys =
     , ("M-M1-C-h", sendMessage $ ShrinkFrom WN.L)
     , ("M-M1-C-j", sendMessage $ ShrinkFrom WN.D)
     , ("M-M1-C-k", sendMessage $ ShrinkFrom WN.U)
-    , ("M-r", sendMessage RotateL)
-    , ("M-S-r", sendMessage RotateR)
-    --, ("M-s", sendMessage Swap)
+    --, ("M-r", sendMessage RotateL)
+    --, ("M-S-r", sendMessage RotateR)
+    , ("M-r", sendMessage Rotate)
+    , ("M-s", sendMessage Swap)
     --, ("M-n", sendMessage FocusParent)
     --, ("M-C-n", sendMessage SelectNode)
     --, ("M-S-n", sendMessage MoveNode)
@@ -212,11 +220,11 @@ myLayout = avoidStruts
          . WN.windowNavigation
          . smartBorders
          . fullScreenToggle $
-           (bigGaps   $ binarySpacePartition)
+           (ifMax 1 (vertGaps $ Full) (bigGaps $ binarySpacePartition))
+       ||| (bigGaps   $ binarySpacePartition)
        ||| (smallGaps $ binarySpacePartition)
-       ||| (smallGaps $ twoPane)
        ||| (paperGaps $ Full)
-       ||| (musicGaps $ Mirror binarySpacePartition)
+       ||| (musicGaps $ binarySpacePartition)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -235,6 +243,7 @@ myLayout = avoidStruts
      fullScreenToggle = mkToggle (single NBFULL)
      -- Spacing
      bigGaps   = spacingRaw False (Border 100 74 230 204)    True (Border 0 26 0 26) True
+     vertGaps  = spacingRaw False (Border 100 74 1080 1054)  True (Border 0 26 0 26) True
      smallGaps = spacingRaw False (Border 26 0 26 0)         True (Border 0 26 0 26) True
      paperGaps = spacingRaw False (Border 150 124 1050 1024) True (Border 0 26 0 26) True
      musicGaps = spacingRaw False (Border 300 274 860 834)   True (Border 0 26 0 26) True
@@ -299,6 +308,60 @@ myPP2 = xmobarPP { ppOrder = \(_:_:_:_) -> [] }
 
 -- Key binding to toggle the gap from the bar.
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
+
+------------------------------------------------------------------------
+
+myXPKeymap :: M.Map (KeyMask,KeySym) (XP ())
+myXPKeymap  = M.fromList
+  [ ((controlMask, xK_z), killBefore)
+  , ((controlMask, xK_k), killAfter)
+  , ((controlMask, xK_a), startOfLine)
+  , ((controlMask, xK_e), endOfLine)
+  , ((controlMask, xK_m), deleteString Next)
+  , ((controlMask, xK_b), moveCursor Prev)
+  , ((controlMask, xK_f), moveCursor Next)
+  , ((controlMask, xK_BackSpace), killWord Prev)
+  , ((controlMask, xK_y), pasteString)
+  , ((controlMask, xK_g), quit)
+  , ((controlMask, xK_bracketleft), quit)
+  , ((mod1Mask, xK_BackSpace), killWord Prev)
+  , ((mod1Mask, xK_f), moveWord Next)
+  , ((mod1Mask, xK_b), moveWord Prev)
+  , ((mod1Mask, xK_d), killWord Next)
+  , ((mod1Mask, xK_n), moveHistory W.focusUp')
+  , ((mod1Mask, xK_p), moveHistory W.focusDown')
+  , ((0, xK_Return), setSuccess True >> setDone True)
+  , ((0, xK_KP_Enter), setSuccess True >> setDone True)
+  , ((0, xK_BackSpace), deleteString Prev)
+  , ((0, xK_Delete), deleteString Next)
+  , ((0, xK_Left), moveCursor Prev)
+  , ((0, xK_Right), moveCursor Next)
+  , ((0, xK_Home), startOfLine)
+  , ((0, xK_End), endOfLine)
+  , ((0, xK_Down), moveHistory W.focusUp')
+  , ((0, xK_Up), moveHistory W.focusDown')
+  , ((0, xK_Escape), quit)
+  ]
+
+myXPConfig = def { font = "xft:FantasqueSansMono Nerd Font:size=24"
+                 , bgColor = "#0f0f0f"
+                 , fgColor = "#f0f0f0"
+                 , bgHLight = "#262626"
+                 , fgHLight = "#e7e7e7"
+                 , borderColor = "#f0f0f0"
+                 , promptBorderWidth = 0
+                 , promptKeymap = myXPKeymap
+                 , position = CenteredAt (1 % 2) (1 % 4)
+                 , height = 160
+                 , historySize = 256
+                 , historyFilter = id
+                 , defaultText = []
+                 , autoComplete = Nothing
+                 , showCompletionOnTab = True
+                 , searchPredicate = isPrefixOf
+                 , alwaysHighlight = True
+                 , maxComplRows = Nothing
+                 }
 
 ------------------------------------------------------------------------
 

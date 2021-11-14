@@ -169,6 +169,6 @@
     winetricks
     grapejuice
     pciutils
-    rxvt-unicode
+    virt-manager
   ];
 }

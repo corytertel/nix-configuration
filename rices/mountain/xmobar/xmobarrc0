@@ -5,9 +5,9 @@ Config {
    , bgColor =      "#0f0f0f"
    , alpha =        255
    , fgColor =      "#f0f0f0"
-   , position =     Static { xpos = 50 , ypos = 50, width = 420 , height = 70 }
+   , position =     Static { xpos = 50, ypos = 10, width = 420, height = 50 }
    , border =       BottomB
-   , borderWidth =  6
+   , borderWidth =  4
    , borderColor =  "#ac8a8c"
 
    -- layout

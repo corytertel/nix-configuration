@@ -88,33 +88,13 @@
     })
 
     # EmacsGcc
-    #(import (builtins.fetchGit {
-    #  url = "https://github.com/nix-community/emacs-overlay.git";
-    #  ref = "master";
-    #  rev = "1f0315a2e2b9376c86bd71bda459cc237c1c30e2";
-    #}))
-
-    #(import (builtins.fetchTarball {
-    #  url = https://github.com/nix-community/emacs-overlay/archive/master.tar.gz;
-    #}))
-
-    #(import (pkgs.fetchFromGitHub {
-    #  owner = "nix-community";
-    #  repo = "emacs-overlay";
-    #  rev = "5ee2f08137100840c1db4d017420fc05c440e97e";
-    #  sha256 = "BHLRbwPPwpOIm9n9xYvrFPw+g6DbRVZXPVZoeMlpp+U=";
-    #}))
-
-    #(final: prev: {
-    #  neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (old: {
-    #    src = pkgs.fetchFromGitHub {
-    #      owner = "neovim";
-    #      repo = "neovim";
-    #      rev = "aba397991b59dbadad21b9ab7ad9f7a3a21f6259";
-    #      sha256 = "H5AFg54qhEEYBOVoaMGRmAQagEy2Fb8L3YqH1POCojo=";
-    #    };
-    #  });
-    #})
+    (import (builtins.fetchGit {
+      url = "https://github.com/nix-community/emacs-overlay.git";
+      ref = "master";
+      #rev = "1f0315a2e2b9376c86bd71bda459cc237c1c30e2";
+      #rev = "bfc8f6edcb7bcf3cf24e4a7199b3f6fed96aaecf";
+      rev = "c75b7c047cc4635b0ecdedfd4ad78e1ac76e41c5";
+    }))
 
     (final: prev: {
       ungoogled-chromium = prev.ungoogled-chromium.override {
@@ -177,9 +157,8 @@
   ];
 
   # Emacs
-  #services.emacs.package = pkgs.emacsUnstable;
-  #services.emacs.package = pkgs.emacsPgtkGcc;
   services.emacs.enable = true;
+  #services.emacs.package = pkgs.emacsGcc;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
