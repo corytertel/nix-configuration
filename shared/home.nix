@@ -169,5 +169,6 @@
     grapejuice
     pciutils
     virt-manager
+    pcmanfm
   ];
 }
