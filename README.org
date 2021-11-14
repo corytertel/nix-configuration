@@ -1,6 +1,7 @@
 #+TITLE:Cory's Nix Configuration
 
-[[https://builtwithnix.org][https://builtwithnix.org/badge.svg ]][[https://develop.spacemacs.org][https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
+[[https://builtwithnix.org][https://builtwithnix.org/badge.svg]]
+[[https://develop.spacemacs.org][https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
 
 * PC
 
@@ -32,7 +33,7 @@
 | *WM*          | xmonad              |
 | *Font*        | Fantasque Sans Mono |
 | *Editor*      | Spacemacs           |
-| *Fetch*       | pfetch              |
+| *Fetch*       | neofetch            |
 
 * TO DO
 
