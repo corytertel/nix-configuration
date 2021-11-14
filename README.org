@@ -1,8 +1,6 @@
 #+TITLE:Cory's Nix Configuration
 
-[[https://nixos.org/][https://img.shields.io/badge/NixOS-v21.11-blue.svg?style=flat-square&logo=NixOS&logoColor=white]]
-[[https://builtwithnix.org][https://img.shields.io/badge/Built_With-Nix-5277C3.svg?style=flat-square&logo=nixos&labelColor=41439a&logoColor=white]]
-[[https://develop.spacemacs.org][https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
+[[https://builtwithnix.org][https://builtwithnix.org/badge.svg ]][[https://develop.spacemacs.org][https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
 
 * PC
 
@@ -36,7 +34,7 @@
 | *Editor*      | Spacemacs           |
 | *Fetch*       | pfetch              |
 
-* TODO
+* TO DO
 
 ** Major
 + Remove home-manager for more reproducability/declaration
@@ -72,12 +70,8 @@
 * Inspired by
 
 #+ATTR_HTML: :border 2 :rules all :frame border
-+----------------------------------------------+
+|----------------------------------------------|
 | [[https://github.com/erikbackman/nixos-config/]] |
-+----------------------------------------------+
 | [[https://github.com/Icy-Thought/Snowflake]]     |
-+----------------------------------------------+
 | [[https://github.com/alternateved/nixos-config]] |
-+----------------------------------------------+
 | [[https://github.com/mahallow/thinkdots]]        |
-+----------------------------------------------+
