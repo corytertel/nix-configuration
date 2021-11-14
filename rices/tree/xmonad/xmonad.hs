@@ -343,7 +343,7 @@ myXPKeymap  = M.fromList
   , ((0, xK_Escape), quit)
   ]
 
-myXPConfig = def { font = "xft:FantasqueSansMono Nerd Font:size=24"
+myXPConfig = def { font = "xft:FantasqueSansMono Nerd Font:size=12"
                  , bgColor = "#0f0f0f"
                  , fgColor = "#f0f0f0"
                  , bgHLight = "#262626"
