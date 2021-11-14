@@ -21,7 +21,9 @@
 
 * Laptop
 
-[[Screenshot][img/laptop.png]]
+[[Screenshot][img/laptop1.png]]
+[[Screenshot][img/laptop2.png]]
+[[Screenshot][img/laptop3.png]]
 
 #+ATTR_HTML: :border 2 :rules all :frame border
 |---------------+---------------------|
@@ -34,9 +36,48 @@
 | *Editor*      | Spacemacs           |
 | *Fetch*       | pfetch              |
 
+* TODO
+
+** Major
++ Remove home-manager for more reproducability/declaration
+  + Move to a more flake-based setup
++ Implement a more roles based setup
++ Implement program configurations as nix derviations
++ Investigate nushell
+
+** Minor
++ Dunst
+  + fix notification width
++ Screen lock
+  + betterscreenlock
+  + xscreensaver
++ gnome keyring
+  + for wifi
++ russian keyboard
+  + package layout switch as a derivation
++ laptop power options
+  + undervolt cpu for more battery life
++ splash screen?
++ Reorganize file structure
+  + Clean up files too
++ Package 'layout_switch.sh' in a nix derivation for reproducability
++ fix xmonad keybindings to also work with russian keyboard
++ clicable workspaces
++ Sort through and remove unnecessary files in `old`
+
+** Bugs
++ Dunst notification width too small on PC (sometimes)
++ Volume display errors out when equal to 0% or muted
+
 * Inspired by
 
-[[https://github.com/erikbackman/nixos-config/]]
-[[https://github.com/Icy-Thought/Snowflake]]
-[[https://github.com/alternateved/nixos-config]]
-[[https://github.com/mahallow/thinkdots]]
+#+ATTR_HTML: :border 2 :rules all :frame border
++----------------------------------------------+
+| [[https://github.com/erikbackman/nixos-config/]] |
++----------------------------------------------+
+| [[https://github.com/Icy-Thought/Snowflake]]     |
++----------------------------------------------+
+| [[https://github.com/alternateved/nixos-config]] |
++----------------------------------------------+
+| [[https://github.com/mahallow/thinkdots]]        |
++----------------------------------------------+
