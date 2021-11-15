@@ -43,6 +43,7 @@
 + Implement a more roles based setup
 + Implement program configurations as nix derviations
 + Investigate nushell
++ Slowly go through everything, replacing what is implementing with home-manager to not be with home manager
 
 ** Minor
 + Dunst

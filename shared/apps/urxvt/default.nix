@@ -37,8 +37,12 @@
       "cursorUnderline" = "false";
       "urgentOnBell" = "true";
       "depth" = "32";
-      "perl-ext-common" = "default,tabbedex";
-      "perl-lib" = "${config.home.profileDirectory}/lib/urxvt/perl";
+      "perl-ext-common" = "default,tabbedex,keyboard-select,url-select";
+      #"perl-lib" = "${config.home.profileDirectory}/lib/urxvt/perl";
+
+      "urlLauncher" = "firefox";
+      "underlineURLs" = "true";
+      "urlButton" = "1";
     };
     fonts = [
       "xft:FantasqueSansMono Nerd Font:style=Regular:size=12"
@@ -59,6 +63,10 @@
       "Control-Left" = "\033[1;5D";
       "Shift-Control-V" = "eval:paste_clipboard";
       "Shift-Control-C" = "eval:selection_to_clipboard";
+
+      "Control-Escape" = "perl:keyboard-select:activate";
+      "Control-S" = "perl:keyboard-select:search";
+      "Control-U" = "perl:url-select:select_next";
     };
     scroll = {
       bar.enable = false;
@@ -70,6 +78,9 @@
   };
 
   home.file = {
-    "lib/urxvt/perl/tabbedex".text = builtins.readFile ./tabbedex;
+    ".urxvt/ext/tabbedex".text = builtins.readFile ./tabbedex;
+    ".urxvt/ext/keyboard-select".text = builtins.readFile ./keyboard-select;
+    ".urxvt/ext/url-select".text = builtins.readFile ./url-select;
+    ".urxvt/ext/clipboard".text = builtins.readFile ./clipboard;
   };
 }

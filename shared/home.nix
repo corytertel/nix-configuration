@@ -9,6 +9,7 @@
       ./apps/nu
       ./apps/nvim
       ./apps/ungoogled-chromium
+      #./apps/urxvt
       ./apps/vscode
     ];
 
@@ -170,5 +171,7 @@
     pciutils
     virt-manager
     pcmanfm
+    xclip
+    powershell
   ];
 }
