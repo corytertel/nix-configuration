@@ -32,7 +32,7 @@
       "color7"      = "#e7e7e7";
       "color15"     = "#f5f5f5";
 
-      "internalBorder" = "48";
+      "internalBorder" = "24";
       "cursorBlink" = "true";
       "cursorUnderline" = "false";
       "urgentOnBell" = "true";
@@ -45,10 +45,7 @@
       "urlButton" = "1";
     };
     fonts = [
-      "xft:FantasqueSansMono Nerd Font:style=Regular:size=12"
-      "xft:FantasqueSansMono Nerd Font:style=Bold:size=12"
-      "xft:FantasqueSansMono Nerd Font:style=Italic:size=12"
-      "xft:FantasqueSansMono Nerd Font:style=Bold Italic:size=12"
+      "xft:CozetteVector:style=Regular:size=11:antialias=true"
       "xft:Font Awesome 5 Free Regular:style=Regular:size11"
       "xft:Font Awesome 5 Free Solid:style=Solid:size11"
       "xft:Font Awesome 5 Brands Regular:style=Regular:size11"

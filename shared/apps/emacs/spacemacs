@@ -62,6 +62,7 @@ This function should only modify configuration layer settings."
      common-lisp
      shell
      shell-scripts
+     windows-scripts
      rust
      java
      (clojure :variables

@@ -302,6 +302,8 @@
     nerdfonts
     source-code-pro
     font-awesome
+    dina-font
+    cozette
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

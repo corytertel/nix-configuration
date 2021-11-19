@@ -3,12 +3,7 @@
 {
   imports =
     [
-      ./bash
-      ./discord
-      ./dunst
-      ./kitty
       ./rofi
-      ./zathura
     ];
 
   services.picom = {
@@ -24,7 +19,7 @@
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 4;
-      corner-radius = 20;
+      corner-radius = 30;
       round-borders = 1;
 
       rounded-corners-exclude = [
@@ -49,7 +44,7 @@
     ".config/xmobar/xmobarrc0".text = builtins.readFile ./xmobar/xmobarrc0;
     ".config/xmobar/xmobarrc1".text = builtins.readFile ./xmobar/xmobarrc1;
     ".config/xmobar/xmobarrc2".text = builtins.readFile ./xmobar/xmobarrc2;
-    "Pictures/wallpaper.jpg".source = ./wallpapers/fog.jpg;
+    "Pictures/wallpaper.jpg".source = ./wallpapers/fog2.jpg;
   };
 
   home.packages = with pkgs; [

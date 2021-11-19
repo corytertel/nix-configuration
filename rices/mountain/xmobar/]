@@ -3,17 +3,17 @@ Config {
    -- appearance
      font =         "xft:Fantasque Sans Mono Nerd Font:size=11:antialias=true"
    , bgColor =      "#0f0f0f"
-   , alpha =        250
+   , alpha =        255
    , fgColor =      "#f0f0f0"
-   , position =     Static { xpos = 1765, ypos = 20, width = 310, height = 60 }
+   , position =     Static { xpos = 3580, ypos = 20, width = 210, height = 60 }
    , border =       BottomB
    , borderWidth =  4
-   , borderColor =  "#aca98a"
+   , borderColor =  "#8aac8b"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = " <fc=#aca98a>%date%</fc> "
+   , template = "}{ <fc=#8aac8b>  %volume%</fc>  <fc=#8aacab>  %kbd%</fc> "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -39,9 +39,12 @@ Config {
    --   see http://projects.haskell.org/xmobar/#system-monitor-plugins.
    , commands = 
 
-        [
-        -- time and date indicator 
-        --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
-          Run Date           "%m/%d/%y %I:%M:%S %p" "date" 10
+        -- Volume
+        [ Run Com "pamixer" ["--get-volume-human"] "volume" 1
+
+        -- keyboard layout indicator
+        , Run Kbd            [ ("ru(winkeys)" , "ru")
+                             , ("us"         , "us")
+                             ]
         ]
    }

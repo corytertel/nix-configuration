@@ -8,8 +8,8 @@
 
   services.picom = {
     enable = true;
-    inactiveOpacity = "0.93";
-    activeOpacity = "0.98";
+    inactiveOpacity = "0.96";
+    activeOpacity = "1.00";
     blur = true;
     experimentalBackends = true;
     opacityRule = [
@@ -19,7 +19,7 @@
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 4;
-      corner-radius = 20;
+      corner-radius = 30;
       round-borders = 1;
 
       rounded-corners-exclude = [
@@ -31,10 +31,6 @@
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
-          #repo = "picom";
-          #owner = "ibhagwan";
-          #rev = "44b4970f70d6b23759a61a2b94d9bfb4351b41b1";
-          #sha256 = "0iff4bwpc00xbjad0m000midslgx12aihs33mdvfckr75r114ylh";
           owner = "jonaburg";
           repo = "picom";
           rev = "a8445684fe18946604848efb73ace9457b29bf80";
@@ -48,7 +44,7 @@
     ".config/xmobar/xmobarrc0".text = builtins.readFile ./xmobar/xmobarrc0;
     ".config/xmobar/xmobarrc1".text = builtins.readFile ./xmobar/xmobarrc1;
     ".config/xmobar/xmobarrc2".text = builtins.readFile ./xmobar/xmobarrc2;
-    "Pictures/wallpaper.jpg".source = ./wallpapers/tree3.jpg;
+    "Pictures/wallpaper.jpg".source = ./wallpapers/ridge2.jpg;
   };
 
   home.packages = with pkgs; [

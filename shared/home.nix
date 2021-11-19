@@ -3,14 +3,20 @@
 {
   imports =
     [
+      ./apps/bash
+      ./apps/discord
+      ./apps/dunst
       ./apps/emacs
+      ./apps/kitty
       ./apps/layout_switch
       ./apps/neofetch
       ./apps/nu
       ./apps/nvim
+      ./apps/powershell
       ./apps/ungoogled-chromium
-      #./apps/urxvt
+      ./apps/urxvt
       ./apps/vscode
+      ./apps/zathura
     ];
 
   # Let Home Manager install and manage itself.

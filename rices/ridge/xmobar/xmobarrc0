@@ -1,19 +1,19 @@
 Config { 
 
    -- appearance
-     font =         "xft:Fantasque Sans Mono Nerd Font:size=11:antialias=true"
-   , bgColor =      "#0f0f0f"
-   , alpha =        250
-   , fgColor =      "#f0f0f0"
-   , position =     Static { xpos = 1765, ypos = 20, width = 310, height = 60 }
+     font =         "xft:Fantasque Sans Mono Nerd Font:size=18:antialias=true"
+   , bgColor =      "#f0f0f0"
+   , alpha =        0
+   , fgColor =      "#0f0f0f"
+   , position =     Static { xpos = 50, ypos = 20, width = 690, height = 60 }
    , border =       BottomB
    , borderWidth =  4
-   , borderColor =  "#aca98a"
+   , borderColor =  "#0f0f0f"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = " <fc=#aca98a>%date%</fc> "
+   , template = " %StdinReader% "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -40,8 +40,6 @@ Config {
    , commands = 
 
         [
-        -- time and date indicator 
-        --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
-          Run Date           "%m/%d/%y %I:%M:%S %p" "date" 10
+        Run StdinReader
         ]
    }

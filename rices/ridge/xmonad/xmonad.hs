@@ -296,11 +296,11 @@ myBar0 = "xmobar $HOME/.config/xmobar/xmobarrc0"
 myBar1 = "xmobar $HOME/.config/xmobar/xmobarrc1"
 myBar2 = "xmobar $HOME/.config/xmobar/xmobarrc2"
 
-myPP = xmobarPP { ppCurrent = xmobarColor "#ac8a8c" "" . wrap "[" "]" --current selected desktop
-                , ppHidden = xmobarColor "#f0f0f0" "" . wrap "" ""
+myPP = xmobarPP { ppCurrent = xmobarColor "#0f0f0f" "" . wrap "[" "]" --current selected desktop
+                , ppHidden = xmobarColor "#0f0f0f" "" . wrap "" ""
                 , ppHiddenNoWindows = xmobarColor "#707070" "" . wrap "" "" --desktops with no windows
-                , ppVisible = xmobarColor "#f0f0f0" "" . wrap "" ""
-                , ppTitle = xmobarColor "#f0f0f0" "" . shorten 40
+                , ppVisible = xmobarColor "#0f0f0f" "" . wrap "" ""
+                , ppTitle = xmobarColor "#0f0f0f" "" . shorten 40
                 , ppOrder = \(ws:_:_:_) -> [ws]
                 }
 
