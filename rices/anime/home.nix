@@ -64,7 +64,7 @@
 
     font = {
       package = null;
-      name = "FantasqueSansMono Nerd Font 11";
+      name = "FantasqueSansMono Nerd Font";
     };
 
     theme = {
