@@ -179,5 +179,7 @@
     pcmanfm
     xclip
     powershell
+    cinnamon.nemo
+    krusader
   ];
 }

@@ -38,7 +38,7 @@
           imports = [
             ./pc/home.nix
             ./shared/home.nix
-            ./rices/ridge/home.nix
+            ./rices/anime/home.nix
           ];
         };
       };
@@ -66,7 +66,7 @@
         modules = [
           ./pc/configuration.nix
           ./shared/configuration.nix
-          ./rices/ridge/configuration.nix
+          ./rices/anime/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;

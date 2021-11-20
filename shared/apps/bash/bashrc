@@ -8,11 +8,13 @@ PS1='[\u@\h \W]\$ '
 
 # Neovim config
 alias vim='nvim'
-export EDITOR='nvim'
+export EDITOR='emacsclient -nw'
 alias ls='exa'
 alias l='exa --icons --long --all --no-permissions --no-filesize --no-user --no-time'
 alias ll='exa --icons --long --all --header --git'
 alias c='clear'
+alias f='neofetch'
+alias e='emacsclient -nw'
 
 # Prompt
 bash_prompt() {

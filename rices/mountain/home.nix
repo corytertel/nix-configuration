@@ -19,7 +19,7 @@
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 4;
-      corner-radius = 30;
+      corner-radius = 40;
       round-borders = 1;
 
       rounded-corners-exclude = [
@@ -44,7 +44,7 @@
     ".config/xmobar/xmobarrc0".text = builtins.readFile ./xmobar/xmobarrc0;
     ".config/xmobar/xmobarrc1".text = builtins.readFile ./xmobar/xmobarrc1;
     ".config/xmobar/xmobarrc2".text = builtins.readFile ./xmobar/xmobarrc2;
-    "Pictures/wallpaper.jpg".source = ./wallpapers/fog2.jpg;
+    "Pictures/wallpaper.jpg".source = ./wallpapers/fog.jpg;
   };
 
   home.packages = with pkgs; [

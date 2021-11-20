@@ -220,8 +220,8 @@ myLayout = avoidStruts
          . WN.windowNavigation
          . smartBorders
          . fullScreenToggle $
-           (ifMax 1 (vertGaps $ Full) (smallGaps $ binarySpacePartition))
-       ||| (bigGaps   $ binarySpacePartition)
+           (ifMax 1 (vertGaps $ Full) (bigGaps $ binarySpacePartition))
+       ||| (smallGaps $ binarySpacePartition)
        ||| (paperGaps $ Full)
        ||| (musicGaps $ binarySpacePartition)
   where
@@ -243,7 +243,7 @@ myLayout = avoidStruts
      -- Spacing
      -- top, bottom, right, left
      bigGaps   = spacingRaw False (Border 150 140 430 420)   True (Border 0 10 0 10) True
-     vertGaps  = spacingRaw False (Border 50 40 960 950)     True (Border 0 10 0 10) True
+     vertGaps  = spacingRaw False (Border 150 140 960 950)   True (Border 0 10 0 10) True
      smallGaps = spacingRaw False (Border 50 40 50 40)       True (Border 0 10 0 10) True
      paperGaps = spacingRaw False (Border 150 150 1250 1250) True (Border 0  0 0  0) True
      musicGaps = spacingRaw False (Border 300 290 860 850)   True (Border 0 10 0 10) True

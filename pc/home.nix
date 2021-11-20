@@ -25,10 +25,6 @@
       package = pkgs.gnome3.adwaita-icon-theme;
       defaultCursor = "left_ptr";
       size = 32;
-      #name = "Breeze_Snow";
-      #package = pkgs.libsForQt5.breeze-icons;
-      #defaultCursor = "left_ptr";
-      #size = 36;
     };
   };
 
