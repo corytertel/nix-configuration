@@ -4,10 +4,6 @@
   imports =
     [
       ./apps/bash
-      ./apps/discord
-      ./apps/dunst
-      ./apps/emacs
-      ./apps/kitty
       ./apps/layout_switch
       ./apps/neofetch
       ./apps/nu
@@ -16,7 +12,6 @@
       ./apps/ungoogled-chromium
       ./apps/urxvt
       ./apps/vscode
-      ./apps/zathura
     ];
 
   # Let Home Manager install and manage itself.
@@ -180,5 +175,6 @@
     powershell
     cinnamon.nemo
     #krusader
+    lxappearance
   ];
 }

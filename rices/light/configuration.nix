@@ -13,7 +13,7 @@
           background-image = "/usr/share/wallpaper.jpg"
           background-color = "#f0f0f0"
           text-color = "#0f0f0f"
-          password-background-color = "#f0f0f0"
+          password-background-color = "#0f0f0f"
           window-color = "#f0f0f0"
           border-color = "#0f0f0f"
         '';

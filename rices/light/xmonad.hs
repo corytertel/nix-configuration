@@ -51,21 +51,12 @@ myClickJustFocuses = False
 
 myBorderWidth   = 0
 
-myNormalBorderColor  = "#0f0f0f"
-myFocusedBorderColor = "#f0f0f0"
+myNormalBorderColor  = "#f0f0f0"
+myFocusedBorderColor = "#0f0f0f"
 
 myModMask       = mod4Mask
 
---myWorkspaces    = ["\61728 ", "\62056 ", "\62074 ", "\61729 ", "\61564 ", "\61878 ", "\61441 ", "\61704 ", "\61612 "]
-myWorkspaces    =   [ "<icon=/home/cory/.nix-configuration/rices/eugen/icons/kitty_logo.xpm/>"
-                    , "<icon=/home/cory/.nix-configuration/rices/eugen/icons/chromium_logo.xpm/>"
-                    , "<icon=/home/cory/.nix-configuration/rices/eugen/icons/discord_logo.xpm/>"
-                    , "<icon=/home/cory/.nix-configuration/rices/eugen/icons/spacemacs_logo.xpm/>"
-                    , "<icon=/home/cory/.nix-configuration/rices/eugen/icons/dolphin_logo.xpm/>"
-                    , "<icon=/home/cory/.nix-configuration/rices/eugen/icons/steam_logo.xpm/>"
-                    , "\61441 "
-                    , "\61704 "
-                    , "\61612 "]
+myWorkspaces    = ["\61728 ", "\62056 ", "\62074 ", "\61729 ", "\61564 ", "\61878 ", "\61441 ", "\61704 ", "\61612 "]
 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-[1..9], Switch to workspace N
@@ -199,7 +190,7 @@ myLayout = avoidStruts
          . fullScreenToggle $
            (ifMax 1 (vertGaps $ Full) (bigGaps $ binarySpacePartition))
        ||| (bigGaps   $ binarySpacePartition)
-       ||| (smallGaps $ binarySpacePartition)
+       ||| (noGaps    $ binarySpacePartition)
        ||| (paperGaps $ Full)
        ||| (musicGaps $ binarySpacePartition)
   where
@@ -222,7 +213,7 @@ myLayout = avoidStruts
      -- top, bottom, right, left
      bigGaps   = spacingRaw False (Border 100 90 270 220)    True (Border 0 10 0 50) True
      vertGaps  = spacingRaw False (Border 100 90 1100 1090)  True (Border 0 10 0 10) True
-     smallGaps = spacingRaw False (Border 50 40 50 40)       True (Border 0 10 0 10) True
+     noGaps    = spacingRaw False (Border 0 0 0 0)           True (Border 0  0 0  0) True
      paperGaps = spacingRaw False (Border 150 150 1250 1250) True (Border 0  0 0  0) True
      musicGaps = spacingRaw False (Border 300 290 860 850)   True (Border 0 10 0 10) True
 
@@ -273,11 +264,11 @@ myStartupHook = do
 
 myBar = "xmobar $HOME/.config/xmobar/xmobarrc"
 
-myPP = xmobarPP { ppCurrent = xmobarColor "#0f0f0f" "#ac8a8c" . wrap "" "" --current selected desktop
-                , ppHidden = xmobarColor "#f0f0f0" "#262626" . wrap "" ""
-                , ppHiddenNoWindows = xmobarColor "#707070" "#262626" . wrap "" "" --desktops with no windows
-                , ppVisible = xmobarColor "#f0f0f0" "#262626" . wrap "" ""
-                , ppTitle = xmobarColor "#f0f0f0" "#262626" . shorten 40
+myPP = xmobarPP { ppCurrent = xmobarColor "#0f0f0f" "" . wrap "[" "]" --current selected desktop
+                , ppHidden = xmobarColor "#0f0f0f" "" . wrap "" ""
+                , ppHiddenNoWindows = xmobarColor "#707070" "" . wrap "" "" --desktops with no windows
+                , ppVisible = xmobarColor "#0f0f0f" "" . wrap "" ""
+                , ppTitle = xmobarColor "#0f0f0f" "" . shorten 40
                 , ppOrder = \(ws:_:_:_) -> [ws]
                 }
 
@@ -319,11 +310,11 @@ myXPKeymap  = M.fromList
   ]
 
 myXPConfig = def { font = "xft:FantasqueSansMono Nerd Font:size=12"
-                 , bgColor = "#0f0f0f"
-                 , fgColor = "#f0f0f0"
-                 , bgHLight = "#262626"
-                 , fgHLight = "#e7e7e7"
-                 , borderColor = "#f0f0f0"
+                 , bgColor = "#f0f0f0"
+                 , fgColor = "#0f0f0f"
+                 , bgHLight = "#d9d9d9"
+                 , fgHLight = "#262626"
+                 , borderColor = "#0f0f0f"
                  , promptBorderWidth = 0
                  , promptKeymap = myXPKeymap
                  , position = CenteredAt (1 % 2) (1 % 4)

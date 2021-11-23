@@ -3,7 +3,12 @@
 {
   imports =
     [
+      ./discord
+      ./dunst
+      ./emacs
+      ./kitty
       ./rofi
+      ./zathura
     ];
 
   services.picom = {

@@ -3,7 +3,12 @@
 {
   imports =
     [
+      ./discord
+      ./dunst
+      ./emacs
+      ./kitty
       ./rofi
+      ./zathura
     ];
 
   services.picom = {
@@ -48,10 +53,8 @@
   };
 
   home.packages = with pkgs; [
-    arc-theme
     tela-icon-theme
     orchis-theme
-    whitesur-icon-theme
     libsForQt5.qtstyleplugins
     gnome3.dconf
     gsettings-desktop-schemas

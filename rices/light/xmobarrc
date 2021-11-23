@@ -2,20 +2,17 @@ Config {
 
    -- appearance
      font =         "xft:Fantasque Sans Mono Nerd Font:size=14:antialias=true"
-   , bgColor =      "#0f0f0f"
-   , fgColor =      "#f0f0f0"
-   , position =     Static { xpos = -20, ypos = 2090, width = 3880, height = 70 }
+   , bgColor =      "#f0f0f0"
+   , fgColor =      "#0f0f0f"
+   , position =     Static { xpos = 0, ypos = 2110, width = 3840, height = 50 }
    , border =       NoBorder
    , borderWidth =  0
-   , borderColor =  "#ac8a8c"
+   , borderColor =  "#0f0f0f"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   -- For emojis
-   --, template = "                       <fc=#f0f0f0,#262626:12> %date% </fc>                                          %StdinReader%  }{  <fc=#f0f0f0,#262626:12>   %volume%    %kbd% </fc>                       "
-   -- For icons
-   , template = "                       <fc=#f0f0f0,#262626:12> %date% </fc>                                          %StdinReader%  }{  <fc=#f0f0f0,#262626:12>   %volume%    %kbd% </fc>                       "
+   , template = "                        %date%                                          %StdinReader%  }{     %volume%    %kbd%                        "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start

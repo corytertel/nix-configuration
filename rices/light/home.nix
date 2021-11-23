@@ -3,31 +3,25 @@
 {
   imports =
     [
+      ./discord
+      ./dunst
+      ./emacs
+      ./kitty
+      ./zathura
     ];
 
   services.picom = {
     enable = true;
-    inactiveOpacity = "0.95";
-    activeOpacity = "1.00";
+    inactiveDim = "0.1";
     blur = true;
     experimentalBackends = true;
-    opacityRule = [
-      #"98:class_g   *?= 'emacs'"
-      #"98:class_g   *?= 'discord'"
-    ];
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 4;
-      corner-radius =0;
-      round-borders = 1;
-
-      rounded-corners-exclude = [
-        "class_g = 'dmenu'",
-        "class_g = 'xmobar'",
-      ];
     '';
     fade = true;
     fadeDelta = 5;
+    shadow = true;
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
@@ -42,7 +36,7 @@
 
   home.file = {
     ".config/xmobar/xmobarrc".text = builtins.readFile ./xmobarrc;
-    "Pictures/wallpaper.jpg".source = ./wallpapers/eugen-mountain.jpg;
+    "Pictures/wallpaper.jpg".source = ./wallpapers/swirls.jpg;
   };
 
   home.packages = with pkgs; [
@@ -76,7 +70,7 @@
     gtk3.extraConfig = {
       gtk-icon-theme-name = "Tela";
       gtk-theme-name = "Orchis-light-compact";
-      gtk-application-prefer-dark-theme = 1;
+      gtk-application-prefer-dark-theme = 0;
     };
   };
 

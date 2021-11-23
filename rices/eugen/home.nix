@@ -3,6 +3,11 @@
 {
   imports =
     [
+      ./discord
+      ./dunst
+      ./emacs
+      ./kitty
+      ./zathura
     ];
 
   services.picom = {
@@ -70,11 +75,11 @@
 
     iconTheme = {
       package = pkgs.tela-icon-theme;
-      name = "Tela red dark";
+      name = "Tela";
     };
 
     gtk3.extraConfig = {
-      gtk-icon-theme-name = "Tela red dark";
+      gtk-icon-theme-name = "Tela";
       gtk-theme-name = "Orchis-dark-compact";
       gtk-application-prefer-dark-theme = 1;
     };
