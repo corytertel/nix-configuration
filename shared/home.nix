@@ -44,27 +44,25 @@
   home.packages = with pkgs; [
    # linux basics
     killall
-    chezmoi
+    #chezmoi
     kitty
-    vlc
+    #vlc
     gwenview
     neofetch
     cmus
-    youtube-dl
+    #youtube-dl
     feh
     cmatrix
-    pipes
+    #pipes
     dmenu
     networkmanager_dmenu
-    alacritty
-    slock
-    ranger
+    #alacritty
+    #slock
+    #ranger
     bpytop
     atool
     libsForQt5.ark
-    nodejs
-    yarn
-    tree-sitter
+    #tree-sitter
 
   # development basics
     ccls
@@ -80,9 +78,12 @@
     ncurses
     global
     gdb
+    nodejs
+    yarn
 
   # other programing languages
-    jdk11 #openjdk11 for java
+    #jdk11 #openjdk11 for java
+    jdk #openjdk17 for java
     python39Full
     python39Packages.pip
     rustc
@@ -96,53 +97,53 @@
     libreoffice
     gimp
     #wpgtk
-    #blender
+    blender
     zathura
-    joplin
+    #joplin
     joplin-desktop
 
     # modern unix
     bat #cat
     exa # ls
-    lsd # ls
-    delta # viewer for git and diff output
-    dust # du
-    duf # df
-    broot # tree
+    #lsd # ls
+    #delta # viewer for git and diff output
+    #dust # du
+    #duf # df
+    #broot # tree
     fd # find
     ripgrep # grep
-    ag # ack
+    #ag # ack
     fzf
-    mcfly
-    choose # cut and sometimes awk
-    jq # sed for json
-    sd # sed
-    cheat # cheatsheet
-    tldr # man
-    hyperfine
-    gping
-    procs # ps
-    httpie
-    curlie # curl
-    xh
-    zoxide # cd
-    dog # dig
+    #mcfly
+    #choose # cut and sometimes awk
+    #jq # sed for json
+    #sd # sed
+    #cheat # cheatsheet
+    #tldr # man
+    #hyperfine
+    #gping
+    #procs # ps
+    #httpie
+    #curlie # curl
+    #xh
+    #zoxide # cd
+    #dog # dig
 
     # other essentials
-    nerdfonts
-    roboto-mono
-    libsForQt5.krohnkite
+    #nerdfonts
+    #roboto-mono
+    #libsForQt5.krohnkite
+    #libsForQt5.plasma-applet-virtual-desktop-bar
     nix-prefetch-github
     #haskellPackages.xmobar
-    libsForQt5.plasma-applet-virtual-desktop-bar
     #latte-dock
     #libsForQt5.qtstyleplugin-kvantum
     #conky
     git-crypt
     gnupg
-    cool-retro-term
+    #cool-retro-term
     bb
-    htop
+    #htop
     qbittorrent
     audacity
     polkit
@@ -154,10 +155,8 @@
     pywal
     airshipper
     tree
-    gnome.nautilus
-    nyxt
-    icecat-bin
-    palemoon
+    #gnome.nautilus
+    #nyxt
     xbrightness
     ncmpcpp
     imagemagick
@@ -176,10 +175,10 @@
     grapejuice
     pciutils
     virt-manager
-    pcmanfm
-    xclip
+    #pcmanfm
+    #xclip
     powershell
     cinnamon.nemo
-    krusader
+    #krusader
   ];
 }

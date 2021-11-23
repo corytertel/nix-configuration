@@ -2,6 +2,6 @@
 
 {
   home.file = {
-    ".config/kitty/kitty.conf".text = builtins.readFile ./mountain.conf;
+    ".config/kitty/kitty.conf".text = builtins.readFile ./light-mountain.conf;
   };
 }

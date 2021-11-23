@@ -13,7 +13,7 @@ Config {
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "}{ <fc=#8aac8b>  %volume%</fc>  <fc=#8aacab>  %kbd%</fc> "
+   , template = "}{  <fc=#8aac8b>  %volume%</fc>  <fc=#8aacab>  %kbd%</fc>  "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start

@@ -41,17 +41,12 @@
   };
 
   home.file = {
-    ".config/xmobar/xmobarrc0".text = builtins.readFile ./xmobar/xmobarrc0;
-    ".config/xmobar/xmobarrc1".text = builtins.readFile ./xmobar/xmobarrc1;
-    ".config/xmobar/xmobarrc2".text = builtins.readFile ./xmobar/xmobarrc2;
     "Pictures/wallpaper.jpg".source = ./wallpapers/eugen-mountain3.jpg;
   };
 
   home.packages = with pkgs; [
-    arc-theme
     tela-icon-theme
     orchis-theme
-    whitesur-icon-theme
     libsForQt5.qtstyleplugins
     gnome3.dconf
     gsettings-desktop-schemas
@@ -64,7 +59,7 @@
 
     font = {
       package = null;
-      name = "FantasqueSansMono Nerd Font";
+      name = "FantasqueSansMono Nerd Font Regular";
     };
 
     theme = {
@@ -74,11 +69,11 @@
 
     iconTheme = {
       package = pkgs.tela-icon-theme;
-      name = "Tela";
+      name = "Tela red dark";
     };
 
     gtk3.extraConfig = {
-      gtk-icon-theme-name = "Tela";
+      gtk-icon-theme-name = "Tela red dark";
       gtk-theme-name = "Orchis-dark-compact";
       gtk-application-prefer-dark-theme = 1;
     };

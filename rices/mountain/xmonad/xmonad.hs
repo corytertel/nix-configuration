@@ -221,6 +221,7 @@ myLayout = avoidStruts
          . smartBorders
          . fullScreenToggle $
            (ifMax 1 (vertGaps $ Full) (bigGaps $ binarySpacePartition))
+       ||| (bigGaps   $ binarySpacePartition)
        ||| (smallGaps $ binarySpacePartition)
        ||| (paperGaps $ Full)
        ||| (musicGaps $ binarySpacePartition)
@@ -242,8 +243,8 @@ myLayout = avoidStruts
      fullScreenToggle = mkToggle (single NBFULL)
      -- Spacing
      -- top, bottom, right, left
-     bigGaps   = spacingRaw False (Border 150 140 430 420)   True (Border 0 10 0 10) True
-     vertGaps  = spacingRaw False (Border 150 140 960 950)   True (Border 0 10 0 10) True
+     bigGaps   = spacingRaw False (Border 100 90 270 220)    True (Border 0 10 0 50) True
+     vertGaps  = spacingRaw False (Border 100 90 1100 1090)  True (Border 0 10 0 10) True
      smallGaps = spacingRaw False (Border 50 40 50 40)       True (Border 0 10 0 10) True
      paperGaps = spacingRaw False (Border 150 150 1250 1250) True (Border 0  0 0  0) True
      musicGaps = spacingRaw False (Border 300 290 860 850)   True (Border 0 10 0 10) True

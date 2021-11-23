@@ -57,7 +57,7 @@ myFocusedBorderColor = "#f0f0f0"
 
 myModMask       = mod4Mask
 
-myWorkspaces    = [" \61728 ", " \62056 ", " \62074 ", " \61729 ", " \61564 ", " \61878 ", " \61441 ", " \61704 ", " \61612 "]
+myWorkspaces    = [" \61728", " \62056", " \62074", " \61729", " \61564", " \61878", " \61441", " \61704", " \61612"]
 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-[1..9], Switch to workspace N
@@ -189,8 +189,8 @@ myLayout = avoidStruts
          . WN.windowNavigation
          . smartBorders
          . fullScreenToggle $
-           (ifMax 1 (vertGaps $ Full) (smallGaps $ binarySpacePartition))
-       ||| (bigGaps   $ binarySpacePartition)
+           (ifMax 1 (vertGaps $ Full) (bigGaps $ binarySpacePartition))
+       ||| (smallGaps $ binarySpacePartition)
        ||| (paperGaps $ Full)
        ||| (musicGaps $ binarySpacePartition)
   where
@@ -217,8 +217,8 @@ myLayout = avoidStruts
      --paperGaps = spacingRaw False (Border 150 150 1250 1250) True (Border 0  0 0  0) True
      --musicGaps = spacingRaw False (Border 300 290 860 850)   True (Border 0 10 0 10) True
      -- add 110 px gap on left for left bar (20px gap + 90 px bar width)
-     bigGaps   = spacingRaw False (Border 150 140 430 530)   True (Border 0 10 0 10) True
-     vertGaps  = spacingRaw False (Border 50 40 960 1060)    True (Border 0 10 0 10) True
+     bigGaps   = spacingRaw False (Border 100 90 220 280)    True (Border 0 10 0 50) True
+     vertGaps  = spacingRaw False (Border 100 90 1050 1150)  True (Border 0 10 0 10) True
      smallGaps = spacingRaw False (Border 50 40 50 150)      True (Border 0 10 0 10) True
      paperGaps = spacingRaw False (Border 150 150 1250 1360) True (Border 0  0 0  0) True
      musicGaps = spacingRaw False (Border 300 290 860 960)   True (Border 0 10 0 10) True

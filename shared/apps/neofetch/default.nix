@@ -16,6 +16,7 @@ let
       prin "$(color 6)╭──────────── $(color 4)Software$(color 6) ────────────"
       info "$(color 6)│ $(color 4) " distro
       info "$(color 6)│ $(color 4) " kernel
+      info "$(color 6)│ $(color 4) " de
       info "$(color 6)│ $(color 4) " wm
       info "$(color 6)│ $(color 4) " term
       info "$(color 6)│ $(color 4) " shell
