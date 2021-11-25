@@ -51,12 +51,12 @@ myClickJustFocuses = False
 
 myBorderWidth   = 0
 
-myNormalBorderColor  = "#0f0f0f"
-myFocusedBorderColor = "#f0f0f0"
+myNormalBorderColor  = "#f0f0f0"
+myFocusedBorderColor = "#0f0f0f"
 
 myModMask       = mod4Mask
 
-myWorkspaces    = ["\61728 ", "\62056 ", "\62074 ", "\61729 ", "\61564 ", "\61878 ", "\61441 ", "\61704 ", "\61612 "]
+myWorkspaces    =   [ "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-[1..9], Switch to workspace N
@@ -157,8 +157,8 @@ myAdditionalKeys =
     --, ("M-S-n", sendMessage MoveNode)
     , ("M-S-C-j", sendMessage $ SplitShift Prev)
     , ("M-S-C-k", sendMessage $ SplitShift Next)
-    , ("M-v",     sendMessage Balance)
-    , ("M-S-v",     sendMessage Equalize)
+    , ("M-b",     sendMessage Balance)
+    , ("M-S-b",     sendMessage Equalize)
     -- Switch between layers
     , ("M-S-<Space>", switchLayer)
     -- Directional navigation of windows
@@ -231,7 +231,7 @@ myLayout = avoidStruts
      twoPane = TwoPane (3/100) (1/2)
      resizableTile = ResizableTall 1 (3/100) (1/2) []
      binarySpacePartition = emptyBSP
-     -- The default number of windows in the master pane
+     -- The defaulWN.t number of windows in the master pane
      nmaster = 1
      -- Default proportion of screen occupied by master pane
      ratio   = 1/2
@@ -240,12 +240,11 @@ myLayout = avoidStruts
      -- Fullscreen
      fullScreenToggle = mkToggle (single NBFULL)
      -- Spacing
-     -- top, bottom, right, left
-     bigGaps   = spacingRaw False (Border 100 90 270 220)    True (Border 0 10 0 50) True
-     vertGaps  = spacingRaw False (Border 100 90 1100 1090)  True (Border 0 10 0 10) True
-     smallGaps = spacingRaw False (Border 50 40 50 40)       True (Border 0 10 0 10) True
-     paperGaps = spacingRaw False (Border 150 150 1250 1250) True (Border 0  0 0  0) True
-     musicGaps = spacingRaw False (Border 300 290 860 850)   True (Border 0 10 0 10) True
+     bigGaps   = spacingRaw False (Border 100 74 230 204)    True (Border 0 26 0 26) True
+     vertGaps  = spacingRaw False (Border 100 74 1080 1054)  True (Border 0 26 0 26) True
+     smallGaps = spacingRaw False (Border 26 0 26 0)         True (Border 0 26 0 26) True
+     paperGaps = spacingRaw False (Border 150 124 1050 1024) True (Border 0 26 0 26) True
+     musicGaps = spacingRaw False (Border 300 274 860 834)   True (Border 0 26 0 26) True
 
 ------------------------------------------------------------------------
 
@@ -295,11 +294,11 @@ myBar0 = "xmobar $HOME/.config/xmobar/xmobarrc0"
 myBar1 = "xmobar $HOME/.config/xmobar/xmobarrc1"
 myBar2 = "xmobar $HOME/.config/xmobar/xmobarrc2"
 
-myPP = xmobarPP { ppCurrent = xmobarColor "#ac8a8c" "" . wrap "[" "]" --current selected desktop
-                , ppHidden = xmobarColor "#f0f0f0" "" . wrap "" ""
+myPP = xmobarPP { ppCurrent = xmobarColor "#0f0f0f" "" . wrap "[" "]" --current selected desktop
+                , ppHidden = xmobarColor "#0f0f0f" "" . wrap "" ""
                 , ppHiddenNoWindows = xmobarColor "#707070" "" . wrap "" "" --desktops with no windows
-                , ppVisible = xmobarColor "#f0f0f0" "" . wrap "" ""
-                , ppTitle = xmobarColor "#f0f0f0" "" . shorten 40
+                , ppVisible = xmobarColor "#0f0f0f" "" . wrap "" ""
+                , ppTitle = xmobarColor "#0f0f0f" "" . shorten 40
                 , ppOrder = \(ws:_:_:_) -> [ws]
                 }
 
@@ -343,15 +342,15 @@ myXPKeymap  = M.fromList
   ]
 
 myXPConfig = def { font = "xft:FantasqueSansMono Nerd Font:size=12"
-                 , bgColor = "#0f0f0f"
-                 , fgColor = "#f0f0f0"
-                 , bgHLight = "#262626"
-                 , fgHLight = "#e7e7e7"
-                 , borderColor = "#f0f0f0"
+                 , bgColor = "#f0f0f0"
+                 , fgColor = "#0f0f0f"
+                 , bgHLight = "#d9d9d9"
+                 , fgHLight = "#262626"
+                 , borderColor = "#0f0f0f"
                  , promptBorderWidth = 0
                  , promptKeymap = myXPKeymap
                  , position = CenteredAt (1 % 2) (1 % 4)
-                 , height = 80
+                 , height = 160
                  , historySize = 256
                  , historyFilter = id
                  , defaultText = []
@@ -368,12 +367,12 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
                 , NS "cmus" spawnCmus findCmus manageCmus
                 ]
   where
-    spawnTerm   = myTerminal ++ " --name=scratchpad"
-    findTerm    = resource =? "scratchpad"
-    manageTerm  = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
-    spawnCmus   = myTerminal ++ " --name=cmus 'cmus'"
-    findCmus    = resource =? "cmus"
-    manageCmus  = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
+    spawnTerm  = myTerminal ++ " --name=scratchpad"
+    findTerm   = resource =? "scratchpad"
+    manageTerm = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
+    spawnCmus  = myTerminal ++ " --name=cmus 'cmus'"
+    findCmus   = resource =? "cmus"
+    manageCmus = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
 
 ------------------------------------------------------------------------
 

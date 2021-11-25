@@ -7,13 +7,13 @@
       ./dunst
       ./emacs
       ./kitty
+      ./rofi
       ./zathura
     ];
 
   services.picom = {
     enable = true;
-    inactiveOpacity = "0.93";
-    activeOpacity = "0.98";
+    inactiveDim = "0.1";
     blur = true;
     experimentalBackends = true;
     opacityRule = [
@@ -23,7 +23,7 @@
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 4;
-      corner-radius = 40;
+      corner-radius = 20;
       round-borders = 1;
 
       rounded-corners-exclude = [
@@ -48,7 +48,7 @@
     ".config/xmobar/xmobarrc0".text = builtins.readFile ./xmobar/xmobarrc0;
     ".config/xmobar/xmobarrc1".text = builtins.readFile ./xmobar/xmobarrc1;
     ".config/xmobar/xmobarrc2".text = builtins.readFile ./xmobar/xmobarrc2;
-    "Pictures/wallpaper.jpg".source = ./wallpapers/fog.jpg;
+    "Pictures/wallpaper.jpg".source = ./wallpapers/tree.jpg;
   };
 
   home.packages = with pkgs; [
@@ -71,7 +71,7 @@
 
     theme = {
       package = pkgs.orchis-theme;
-      name = "Orchis-dark-compact";
+      name = "Orchis-light";
     };
 
     iconTheme = {
@@ -81,8 +81,8 @@
 
     gtk3.extraConfig = {
       gtk-icon-theme-name = "Tela";
-      gtk-theme-name = "Orchis-dark-compact";
-      gtk-application-prefer-dark-theme = 1;
+      gtk-theme-name = "Orchis-light";
+      gtk-application-prefer-dark-theme = 0;
     };
   };
 

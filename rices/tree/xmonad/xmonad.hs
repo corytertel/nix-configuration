@@ -79,8 +79,6 @@ myAdditionalKeys =
     , ("M-S-<Return>", spawn "emacsclient -c")
     -- Xmonad prompt
     , ("M-<Space>", shellPrompt myXPConfig)
-    -- launch rofi
-    , ("M-C-<Space>", spawn "rofi -show run")
     -- close focused window
     , ("M-q", kill)
      -- Rotate through the available layout algorithms
@@ -100,7 +98,7 @@ myAdditionalKeys =
     , ("<XF86MonBrightnessUp>", spawn "xbrightness +5000")
     , ("<XF86MonBrightnessDown>", spawn "xbrightness -5000")
     -- Keyboard Layout
-    , ("M3-<Space>", spawn "/home/cory/.nix-configuration/shared/apps/layout_switch/layout_switch.sh")
+    , ("M-C-<Space>", spawn "/home/cory/.nix-configuration/shared/apps/layout_switch/layout_switch.sh")
     -- Kill App
     , ("M-<Escape>", spawn "xkill")
     -- Lock Screen

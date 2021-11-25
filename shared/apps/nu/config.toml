@@ -15,7 +15,7 @@ ctrlc_exit = false
 complete_from_path = true
 rm_always_trash = false
 #prompt = "build-string (ansi gb) (pwd) (ansi reset) '(' (ansi cb) (do -i { git rev-parse --abbrev-ref HEAD } | str trim ) (ansi reset) ')' (char newline) (ansi yb) (date format '%m/%d/%Y %I:%M:%S%.3f %p') (ansi reset) '> ' "
-prompt = "build-string '╭╴' (ansi c) ' ' (ansi reset) (ansi yb) (pwd) (ansi reset) ' ' (ansi gu) (do -i { git rev-parse --abbrev-ref HEAD } | str trim) (ansi reset) (char newline) '╰─λ ' "
+prompt = "build-string '╭╴' (ansi c) ' ' (ansi reset) (ansi yb) (basename $(pwd)) (ansi reset) ' ' (ansi gu) (do -i { git rev-parse --abbrev-ref HEAD } | str trim) (ansi reset) (char newline) '╰─λ ' "
 
 # for each of the options in the color_config section, you are able to set
 # the color alone or with one of the following attributes.
