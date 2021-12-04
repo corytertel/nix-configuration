@@ -18,6 +18,7 @@ alias f='neofetch'
 alias e='emacsclient -nw'
 alias settings='xfce4-settings-manager'
 alias bat='bat --theme base16'
+alias nc='cd ~/.nix-configuration'
 alias myxclock='xclock -digital -bg gray -fg black -face "Tinos Nerd Font:antialias=false:Regular::size=24" -strftime "%I:%M:%S %p" -p 16 -geometry 174x60+0+0 -update 1'
 
 # Prompt

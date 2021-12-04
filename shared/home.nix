@@ -12,6 +12,7 @@
       ./apps/ungoogled-chromium
       ./apps/urxvt
       ./apps/vscode
+      ./apps/xfce4-terminal
     ];
 
   # Let Home Manager install and manage itself.
