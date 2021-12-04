@@ -7,7 +7,7 @@
       ./apps/layout_switch
       ./apps/neofetch
       ./apps/nu
-      ./apps/nvim
+      ./apps/pcmanfm
       ./apps/powershell
       ./apps/ungoogled-chromium
       ./apps/urxvt
@@ -160,7 +160,7 @@
     pfetch
     qemu
     qutebrowser
-    xfce.thunar
+    #xfce.thunar
     xscreensaver
     krita
     cava
@@ -170,11 +170,32 @@
     grapejuice
     pciutils
     virt-manager
-    #pcmanfm
+    pcmanfm
     #xclip
     powershell
     cinnamon.nemo
     #krusader
     lxappearance
+    libsForQt5.dolphin
+    peek # simple animated gif screen recorder
+    sxiv
+    leafpad
+    onlyoffice-bin
+    xfce.xfce4-terminal
+    xfce.orage #simple calendar
+    xfce.parole #media player
+    xfce.ristretto #image viewer
+    xfce.xfce4-battery-plugin
+    xfce.xfce4-appfinder
+    xorg.xclock
+    stalonetray
+    imagemagick
+    audacious
+
+    discord
+    betterdiscord-installer
+    betterdiscordctl
+    steamPackages.steamcmd
+    minecraft
   ];
 }

@@ -7,7 +7,7 @@
       ./dunst
       ./emacs
       ./kitty
-      ./rofi
+      ./nvim
       ./zathura
     ];
 
@@ -36,10 +36,6 @@
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
-          #repo = "picom";
-          #owner = "ibhagwan";
-          #rev = "44b4970f70d6b23759a61a2b94d9bfb4351b41b1";
-          #sha256 = "0iff4bwpc00xbjad0m000midslgx12aihs33mdvfckr75r114ylh";
           owner = "jonaburg";
           repo = "picom";
           rev = "a8445684fe18946604848efb73ace9457b29bf80";
@@ -78,7 +74,7 @@
 
     theme = {
       package = pkgs.orchis-theme;
-      name = "Orchis-dark-compact";
+      name = "Orchis-dark";
     };
 
     iconTheme = {
@@ -88,7 +84,7 @@
 
     gtk3.extraConfig = {
       gtk-icon-theme-name = "Tela";
-      gtk-theme-name = "Orchis-dark-compact";
+      gtk-theme-name = "Orchis-dark";
       gtk-application-prefer-dark-theme = 1;
     };
   };

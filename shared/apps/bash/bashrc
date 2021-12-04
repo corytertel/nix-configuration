@@ -10,13 +10,15 @@ PS1='[\u@\h \W]\$ '
 alias vim='nvim'
 export EDITOR='emacsclient -nw'
 alias ls='exa'
-alias l='exa --icons --long --all --no-permissions --no-filesize --no-user --no-time'
+#alias l='exa --icons --long --all --no-permissions --no-filesize --no-user --no-time'
+alias l='exa --icons --all --oneline'
 alias ll='exa --icons --long --all --header --git'
 alias c='clear'
 alias f='neofetch'
 alias e='emacsclient -nw'
 alias settings='xfce4-settings-manager'
 alias bat='bat --theme base16'
+alias myxclock='xclock -digital -bg gray -fg black -face "Tinos Nerd Font:antialias=false:Regular::size=24" -strftime "%I:%M:%S %p" -p 16 -geometry 174x60+0+0 -update 1'
 
 # Prompt
 bash_prompt() {
@@ -46,7 +48,7 @@ bash_prompt() {
     #╰─>
     #╰─❯
 
-    export PS1="╭╴${cyan}${bold} ${reset}${yellow}${bold}\W${reset} ${green}${uline}\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)${reset}\n╰─λ "
+    export PS1="╭╴${cyan}${bold}  ${reset}${yellow}${bold}\W${reset} ${green}${uline}\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)${reset}\n╰─λ "
 }
 
 bash_prompt

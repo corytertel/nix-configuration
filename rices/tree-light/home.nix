@@ -7,6 +7,7 @@
       ./dunst
       ./emacs
       ./kitty
+      ./nvim
       ./rofi
       ./zathura
     ];

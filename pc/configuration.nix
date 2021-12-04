@@ -33,9 +33,6 @@
   # Allow for Unfree Packages
   nixpkgs.config.allowUnfree = true;
 
-  # Enable steam
-  programs.steam.enable = true;
-
   environment.systemPackages = with pkgs; [
 
   ];

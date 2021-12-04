@@ -57,14 +57,11 @@
     xkbVariant = "winkeys";
   };
 
-  # Enable SDDM
-  #services.xserver.displayManager.sddm.enable = true;
-
   # Enable DWM
-  services.xserver.windowManager.dwm.enable = true; 
+  #services.xserver.windowManager.dwm.enable = true; 
 
   # Enable the Plasma 5 Desktop Environment.
-  services.xserver.desktopManager.plasma5.enable = true;
+  #services.xserver.desktopManager.plasma5.enable = true;
 
   nixpkgs.overlays = [
     # Use custom DWM build
@@ -76,7 +73,6 @@
           rev = "c66265a89867d684200370f8ce88226551b19b44";
           sha256 = "Jw2mUT7ZmpTJbMLZvvXeCdj1OppVp2yE7mqJo4jKByw=";
         };
-        #src = /home/cory/.nix-configuration/shared/system/dwm/dwm-6.2;
       });
     })
 
@@ -117,7 +113,7 @@
           }"
 
           # Dark mode
-          "--force-dark-mode"
+          #"--force-dark-mode"
 
           # Performance
           "--enable-gpu-rasterization"
@@ -171,6 +167,7 @@
   # Enable touchpad support (enabled default in most desktopManager).
   services.xserver.libinput.enable = true;
   services.xserver.libinput.touchpad.accelProfile = "adaptive";
+  #services.xserver.libinput.touchpad.accelProfile = "flat";
   services.xserver.libinput.touchpad.accelSpeed = null;
   services.xserver.libinput.touchpad.additionalOptions = "";
   services.xserver.libinput.touchpad.buttonMapping = null;
@@ -187,6 +184,8 @@
   services.xserver.libinput.touchpad.sendEventsMode = "enabled";
   services.xserver.libinput.touchpad.tapping = false;
   services.xserver.libinput.touchpad.tappingDragLock = false;
+  #services.xserver.libinput.touchpad.transformationMatrix = "14 0 0 0 14 0 0 0 1";
+  services.xserver.libinput.touchpad.transformationMatrix = "3 0 0 0 3 0 0 0 1";
 
   # Mouse settings
   services.xserver.libinput.mouse.accelProfile = "flat";
@@ -202,7 +201,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.cory = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "network" "audio" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "network" "audio" "libvirtd" ];
   };
 
   # Enable doas instead of sudo
@@ -293,6 +292,7 @@
     #blender
 
     nushell
+    ksh
   ];
 
   # Fonts
@@ -328,6 +328,13 @@
   # Virtual Box
   virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "cory" ];
+
+  # virt-manager
+  virtualisation.libvirtd.enable = true;
+  programs.dconf.enable = true;
+
+  # Enable steam
+  programs.steam.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

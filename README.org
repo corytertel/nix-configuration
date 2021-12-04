@@ -64,6 +64,12 @@
 + fix xmonad keybindings to also work with russian keyboard
 + clicable workspaces
 + Sort through and remove unnecessary files in `old`
++ Add fvwm dotfiles to nix
++ Add pcmanfm dotfiles to nix
++ Add xfce4-terminal dotfiles to nix
++ Add ksh dotfiles to nix
++ Add firefox home-manager configuration
++ Add nvim to rices
 
 ** Bugs
 + Dunst notification width too small on PC (sometimes)
