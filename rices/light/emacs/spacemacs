@@ -584,7 +584,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                 (spacemacs-buffer//insert-version)
               (let ((inhibit-read-only t))
                 (insert "\n")))
-            (insert "\n\n\n\n\n\n\n\n\n\n")
+            ;(insert "\n\n\n\n\n\n\n\n\n\n")
             (spacemacs-buffer/insert-banner-and-buttons)
             (when (bound-and-true-p spacemacs-initialized)
               (spacemacs-buffer//notes-redisplay-current-note)
@@ -605,7 +605,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
           (switch-to-buffer spacemacs-buffer-name))
         (spacemacs//redisplay))))
   (custom-set-variables
-   ;; mountain color scheme, based off dracula format
+   ;; light mountain color scheme, based off dracula format
    '(spacemacs-theme-custom-colors '(
                                      (act1 . "#f0f0f0")
                                      (act2 . "#1a1054")

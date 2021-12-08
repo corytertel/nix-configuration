@@ -13,12 +13,16 @@
 
   services.picom = {
     enable = true;
-    inactiveDim = "0.1";
+    inactiveDim = "0.05";
     blur = true;
     experimentalBackends = true;
+    opacityRule = [
+      #"85:class_g   *?= 'emacs'"
+      #"85:class_g   *?= 'discord'"
+    ];
     extraOptions = ''
       blur-method = "dual_kawase";
-      blur-strength = 4;
+      blur-strength = 0;
     '';
     fade = true;
     fadeDelta = 5;
@@ -41,8 +45,8 @@
   };
 
   home.packages = with pkgs; [
-    tela-icon-theme
-    orchis-theme
+    luna-icons
+    libsForQt5.breeze-gtk
     libsForQt5.qtstyleplugins
     gnome3.dconf
     gsettings-desktop-schemas
@@ -55,22 +59,22 @@
 
     font = {
       package = null;
-      name = "FantasqueSansMono Nerd Font 11";
+      name = "Tinos Nerd Font 11";
     };
 
     theme = {
-      package = pkgs.orchis-theme;
-      name = "Orchis-light-compact";
+      package = pkgs.libsForQt5.breeze-gtk;
+      name = "Breeze";
     };
 
     iconTheme = {
-      package = pkgs.tela-icon-theme;
-      name = "Tela";
+      package = pkgs.luna-icons;
+      name = "Luna";
     };
 
     gtk3.extraConfig = {
-      gtk-icon-theme-name = "Tela";
-      gtk-theme-name = "Orchis-light-compact";
+      gtk-icon-theme-name = "Luna";
+      gtk-theme-name = "Breeze";
       gtk-application-prefer-dark-theme = 0;
     };
   };

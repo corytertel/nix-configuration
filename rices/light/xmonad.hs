@@ -22,6 +22,7 @@ import XMonad.Layout.TwoPane
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.BinarySpacePartition
 import XMonad.Layout.IfMax
+import XMonad.Layout.SimpleFloat
 
 import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End), Position(Above))
 import XMonad.Hooks.ManageDocks
@@ -32,6 +33,7 @@ import XMonad.Hooks.ManageHelpers
 
 import XMonad.Actions.Navigation2D (switchLayer)
 import XMonad.Actions.FloatKeys
+import XMonad.Actions.FloatSnap
 import XMonad.Actions.Search
 
 import XMonad.Prompt
@@ -49,14 +51,14 @@ myFocusFollowsMouse = True
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
 
-myBorderWidth   = 0
+myBorderWidth   = 2
 
-myNormalBorderColor  = "#f0f0f0"
+myNormalBorderColor  = "#d8d8d8"
 myFocusedBorderColor = "#0f0f0f"
 
 myModMask       = mod4Mask
 
-myWorkspaces    = ["\61728 ", "\62056 ", "\62074 ", "\61729 ", "\61564 ", "\61878 ", "\61441 ", "\61704 ", "\61612 "]
+myWorkspaces    = ["\61728 ", "\62057 ", "\62074 ", "\61729 ", "\61564 ", "\61878 ", "\61441 ", "\61704 ", "\61612 "]
 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-[1..9], Switch to workspace N
@@ -79,6 +81,8 @@ myAdditionalKeys =
     , ("M-S-<Return>", spawn "emacsclient -c")
     -- Xmonad prompt
     , ("M-<Space>", shellPrompt myXPConfig)
+    -- Pcmanfm
+    , ("M-e", spawn "pcmanfm --new-win")
     -- close focused window
     , ("M-q", kill)
      -- Rotate through the available layout algorithms
@@ -90,10 +94,14 @@ myAdditionalKeys =
     , ("M-S-q", io (exitWith ExitSuccess))
     -- Restart xmonad
     , ("M-C-r", spawn "xmonad --recompile; xmonad --restart")
-    -- Volume
+    -- Audio Controls
     , ("<XF86AudioLowerVolume>", spawn "pamixer --decrease 2")
     , ("<XF86AudioRaiseVolume>", spawn "pamixer --increase 2")
     , ("<XF86AudioMute>", spawn "pamixer --toggle-mute")
+    , ("<XF86AudioNext>", spawn "audacious --fwd")
+    , ("<XF86AudioPrev>", spawn "audacious --rew")
+    , ("<XF86AudioPlay>", spawn "audacious --play-pause")
+    , ("<XF86AudioStop>", spawn "audacious --stop")
     -- Brightness
     , ("<XF86MonBrightnessUp>", spawn "xbrightness +5000")
     , ("<XF86MonBrightnessDown>", spawn "xbrightness -5000")
@@ -110,58 +118,84 @@ myAdditionalKeys =
     , ("M-f", sendMessage (Toggle NBFULL))
     -- Scratchpads
     , ("M-'", namedScratchpadAction myScratchpads "terminal")
-    , ("<XF86AudioPlay>", namedScratchpadAction myScratchpads "cmus")
-    -- Binary Space Partition Controls
-    , ("M-M1-l", sendMessage $ ExpandTowards WN.R)
-    , ("M-M1-h", sendMessage $ ExpandTowards WN.L)
-    , ("M-M1-j", sendMessage $ ExpandTowards WN.D)
-    , ("M-M1-k", sendMessage $ ExpandTowards WN.U)
-    , ("M-M1-C-l", sendMessage $ ShrinkFrom WN.R)
-    , ("M-M1-C-h", sendMessage $ ShrinkFrom WN.L)
-    , ("M-M1-C-j", sendMessage $ ShrinkFrom WN.D)
-    , ("M-M1-C-k", sendMessage $ ShrinkFrom WN.U)
-    , ("M-r", sendMessage Rotate)
-    , ("M-s", sendMessage Swap)
-    , ("M-,", sendMessage FocusParent)
-    , ("M-C-,", sendMessage SelectNode)
-    , ("M-S-,", sendMessage MoveNode)
-    , ("M-S-C-j", sendMessage $ SplitShift Prev)
-    , ("M-S-C-k", sendMessage $ SplitShift Next)
-    , ("M-v",     sendMessage Balance)
-    , ("M-S-v",     sendMessage Equalize)
-    -- Switch between layers
-    , ("M-S-<Space>", switchLayer)
-    -- Directional navigation of windows
-    , ("M-h", sendMessage $ WN.Go WN.L)
-    , ("M-j", sendMessage $ WN.Go WN.D)
-    , ("M-k", sendMessage $ WN.Go WN.U)
-    , ("M-l", sendMessage $ WN.Go WN.R)
-    , ("M-m", windows W.focusUp)
-    , ("M-n", windows W.focusDown)
-    -- Swap adjacent windows
-    , ("M-C-l", sendMessage $ WN.Swap WN.R)
-    , ("M-C-h", sendMessage $ WN.Swap WN.L)
-    , ("M-C-k", sendMessage $ WN.Swap WN.U)
-    , ("M-C-j", sendMessage $ WN.Swap WN.D)
+    , ("M-0", namedScratchpadAction myScratchpads "audacious")
+    -- Master and Stack Controls
+    , ("M-r", refresh)
+    --, ("M-m", windows W.focusMaster  )
+    , ("M1-<Tab>", windows W.focusDown)
+    , ("M-j", windows W.focusDown)
+    , ("M-k", windows W.focusUp  )
+    --, ("M-<Return>", windows W.swapMaster)
+    , ("M-S-j", windows W.swapDown  )
+    , ("M-S-k", windows W.swapUp    )
+    , ("M-h", sendMessage Shrink)
+    , ("M-l", sendMessage Expand)
+    , ("M-m", sendMessage MirrorExpand)
+    , ("M-n", sendMessage MirrorShrink)
+    , ("M-,", sendMessage (IncMasterN 1))
+    , ("M-.", sendMessage (IncMasterN (-1)))
+    -- -- Binary Space Partition Controls
+    -- , ("M-M1-l", sendMessage $ ExpandTowards WN.R)
+    -- , ("M-M1-h", sendMessage $ ExpandTowards WN.L)
+    -- , ("M-M1-j", sendMessage $ ExpandTowards WN.D)
+    -- , ("M-M1-k", sendMessage $ ExpandTowards WN.U)
+    -- , ("M-M1-C-l", sendMessage $ ShrinkFrom WN.R)
+    -- , ("M-M1-C-h", sendMessage $ ShrinkFrom WN.L)
+    -- , ("M-M1-C-j", sendMessage $ ShrinkFrom WN.D)
+    -- , ("M-M1-C-k", sendMessage $ ShrinkFrom WN.U)
+    -- , ("M-r", sendMessage Rotate)
+    -- , ("M-s", sendMessage Swap)
+    -- , ("M-,", sendMessage FocusParent)
+    -- , ("M-C-,", sendMessage SelectNode)
+    -- , ("M-S-,", sendMessage MoveNode)
+    -- , ("M-S-C-j", sendMessage $ SplitShift Prev)
+    -- , ("M-S-C-k", sendMessage $ SplitShift Next)
+    -- , ("M-v",     sendMessage Balance)
+    -- , ("M-S-v",     sendMessage Equalize)
+    -- -- Switch between layers
+    -- , ("M-S-<Space>", switchLayer)
+    -- -- Directional navigation of windows
+    -- , ("M-h", sendMessage $ WN.Go WN.L)
+    -- , ("M-j", sendMessage $ WN.Go WN.D)
+    -- , ("M-k", sendMessage $ WN.Go WN.U)
+    -- , ("M-l", sendMessage $ WN.Go WN.R)
+    -- , ("M-m", windows W.focusUp)
+    -- , ("M-n", windows W.focusDown)
+    -- -- Swap adjacent windows
+    -- , ("M-C-l", sendMessage $ WN.Swap WN.R)
+    -- , ("M-C-h", sendMessage $ WN.Swap WN.L)
+    -- , ("M-C-k", sendMessage $ WN.Swap WN.U)
+    -- , ("M-C-j", sendMessage $ WN.Swap WN.D)
     -- Float keys
-    , ("M-<U>", withFocused (keysMoveWindow (0,-40)))
-    , ("M-<D>", withFocused (keysMoveWindow (0, 40)))
-    , ("M-<L>", withFocused (keysMoveWindow (-40,0)))
-    , ("M-<R>", withFocused (keysMoveWindow (40, 0)))
-    , ("M-<U>-<L>", withFocused (keysMoveWindow (-40,-40)))
-    , ("M-<U>-<R>", withFocused (keysMoveWindow ( 40,-40)))
-    , ("M-<D>-<L>", withFocused (keysMoveWindow (-40, 40)))
-    , ("M-<D>-<R>", withFocused (keysMoveWindow ( 40, 40)))
-    , ("M-M1-<U>", withFocused (keysResizeWindow (0,40) (1,0)))
-    , ("M-M1-<D>", withFocused (keysResizeWindow (0,40) (0,0)))
-    , ("M-M1-<L>", withFocused (keysResizeWindow (40,0) (1,0)))
-    , ("M-M1-<R>", withFocused (keysResizeWindow (40,0) (0,0)))
-    , ("M-M1-C-<U>", withFocused (keysResizeWindow (0,-40) (1,0)))
-    , ("M-M1-C-<D>", withFocused (keysResizeWindow (0,-40) (0,0)))
-    , ("M-M1-C-<L>", withFocused (keysResizeWindow (-40,0) (1,0)))
-    , ("M-M1-C-<R>", withFocused (keysResizeWindow (-40,0) (0,0)))
-    , ("M-S-<L>", withFocused (keysAbsResizeWindow (-40,-40) (2048,1504)))
-    , ("M-S-<R>", withFocused (keysAbsResizeWindow ( 40, 40) (2048,1504)))
+    , ("M-M1-<U>", withFocused (keysMoveWindow (0,-80)))
+    , ("M-M1-<D>", withFocused (keysMoveWindow (0, 80)))
+    , ("M-M1-<L>", withFocused (keysMoveWindow (-80,0)))
+    , ("M-M1-<R>", withFocused (keysMoveWindow (80, 0)))
+    -- , ("M-<U>-<L>", withFocused (keysMoveWindow (-40,-40)))
+    -- , ("M-<U>-<R>", withFocused (keysMoveWindow ( 40,-40)))
+    -- , ("M-<D>-<L>", withFocused (keysMoveWindow (-40, 40)))
+    -- , ("M-<D>-<R>", withFocused (keysMoveWindow ( 40, 40)))
+    -- , ("M-M1-<U>", withFocused (keysResizeWindow (0,40) (1,0)))
+    -- , ("M-M1-<D>", withFocused (keysResizeWindow (0,40) (0,0)))
+    -- , ("M-M1-<L>", withFocused (keysResizeWindow (40,0) (1,0)))
+    -- , ("M-M1-<R>", withFocused (keysResizeWindow (40,0) (0,0)))
+    -- , ("M-M1-C-<U>", withFocused (keysResizeWindow (0,-40) (1,0)))
+    -- , ("M-M1-C-<D>", withFocused (keysResizeWindow (0,-40) (0,0)))
+    -- , ("M-M1-C-<L>", withFocused (keysResizeWindow (-40,0) (1,0)))
+    -- , ("M-M1-C-<R>", withFocused (keysResizeWindow (-40,0) (0,0)))
+    -- , ("M-S-<L>", withFocused (keysAbsResizeWindow (-40,-40) (2048,1504)))
+    -- , ("M-S-<R>", withFocused (keysAbsResizeWindow ( 40, 40) (2048,1504)))
+    -- Center the window
+    , ("M-c", withFocused (keysMoveWindowTo (1920,1080) (1%2, 1%2)))
+    -- Float Snapping Keys
+    , ("M-<L>", withFocused $ snapMove L Nothing)
+    , ("M-<R>", withFocused $ snapMove R Nothing)
+    , ("M-<U>", withFocused $ snapMove U Nothing)
+    , ("M-<D>", withFocused $ snapMove D Nothing)
+    , ("M-S-<L>", withFocused $ snapShrink R Nothing)
+    , ("M-S-<R>", withFocused $ snapGrow R Nothing)
+    , ("M-S-<U>", withFocused $ snapShrink D Nothing)
+    , ("m-S-<D>", withFocused $ snapGrow D Nothing)
     ]
 
 ------------------------------------------------------------------------
@@ -180,6 +214,15 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
                                        >> windows W.shiftMaster))
 
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
+
+    -- Float Snapping Mouse Bindings
+    , ((mod1Mask, button1), (\w -> focus w >> mouseMoveWindow w >> ifClick (snapMagicMove (Just 50) (Just 50) w)))
+    , ((mod1Mask .|. shiftMask, button1), (\w -> focus w >> mouseMoveWindow w >> ifClick (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)))
+    , ((mod1Mask, button3), (\w -> focus w >> mouseResizeWindow w >> ifClick (snapMagicResize [R,D] (Just 50) (Just 50) w)))
+    -- alternative mouse bindings
+    --, ((modm,               button1), (\w -> focus w >> mouseMoveWindow w >> afterDrag (snapMagicMove (Just 50) (Just 50) w)))
+    --, ((modm .|. shiftMask, button1), (\w -> focus w >> mouseMoveWindow w >> afterDrag (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)))
+    --, ((modm,               button3), (\w -> focus w >> mouseResizeWindow w >> afterDrag (snapMagicResize [R,D] (Just 50) (Just 50) w)))
     ]
 
 ------------------------------------------------------------------------
@@ -188,11 +231,13 @@ myLayout = avoidStruts
          . WN.windowNavigation
          . smartBorders
          . fullScreenToggle $
-           (ifMax 1 (vertGaps $ Full) (bigGaps $ binarySpacePartition))
-       ||| (bigGaps   $ binarySpacePartition)
-       ||| (noGaps    $ binarySpacePartition)
-       ||| (paperGaps $ Full)
-       ||| (musicGaps $ binarySpacePartition)
+           (ifMax 1 (musicGaps $ Full) (bigGaps $ resizableTile))
+       ||| (bigGaps   $ resizableTile)
+       ||| (noGaps    $ resizableTile)
+       ||| (ifMax 1 (threeGapsAlone $ Full) (threeGaps $ threeColumnMid))
+       ||| (ifMax 1 (paperGaps $ Full) (bigGaps $ resizableTile))
+       ||| (musicGaps $ resizableTile)
+       ||| (simpleFloat)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -214,6 +259,8 @@ myLayout = avoidStruts
      bigGaps   = spacingRaw False (Border 100 90 270 220)    True (Border 0 10 0 50) True
      vertGaps  = spacingRaw False (Border 100 90 1100 1090)  True (Border 0 10 0 10) True
      noGaps    = spacingRaw False (Border 0 0 0 0)           True (Border 0  0 0  0) True
+     threeGapsAlone = spacingRaw False (Border 100 90 1100 1050)    True (Border 0 10 0 50) True
+     threeGaps = spacingRaw False (Border 100 90 100 50)    True (Border 0 10 0 50) True
      paperGaps = spacingRaw False (Border 150 150 1250 1250) True (Border 0  0 0  0) True
      musicGaps = spacingRaw False (Border 300 290 860 850)   True (Border 0 10 0 10) True
 
@@ -226,10 +273,9 @@ myManageHook = composeAll
     , className =? "vlc"                                              --> myRectFloat
     , className =? "Io.github.celluloid_player.Celluloid"             --> myRectFloat
     , className =? "gwenview"                                         --> myRectFloat
-    , className =? "Nemo"                                             --> myRectFloat
+    , className =? "Gimp"                                             --> doFloat
     , className =? "Firefox" <&&> resource =? "Toolkit"               --> myRectFloat
     , className =? "chromium-browser" <&&> isDialog                   --> myRectFloat
-    , className =? "Gimp"                                             --> doFloat
     , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog"       --> myRectFloat
     , stringProperty "WM_WINDOW_ROLE" =? "pop-up"                     --> myRectFloat
     , isDialog                                                        --> myRectFloat
@@ -332,15 +378,15 @@ myXPConfig = def { font = "xft:FantasqueSansMono Nerd Font:size=12"
 ------------------------------------------------------------------------
 
 myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
-                , NS "cmus" spawnCmus findCmus manageCmus
+                , NS "audacious" spawnAudacious findAudacious manageAudacious
                 ]
   where
     spawnTerm   = myTerminal ++ " --name=scratchpad"
     findTerm    = resource =? "scratchpad"
     manageTerm  = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
-    spawnCmus   = myTerminal ++ " --name=cmus 'cmus'"
-    findCmus    = resource =? "cmus"
-    manageCmus  = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
+    spawnAudacious  = "audacious"
+    findAudacious   = resource =? "audacious"
+    manageAudacious = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
 
 ------------------------------------------------------------------------
 

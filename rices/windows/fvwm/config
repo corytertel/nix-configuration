@@ -441,7 +441,7 @@ DestroyModuleConfig MyButtons: *
 *MyButtons: Colorset 9
 *MyButtons: Rows 1
 #*MyButtons: Columns 38
-*MyButtons: Columns 294
+*MyButtons: Columns 258
 *MyButtons: Frame 0
 *MyButtons: Font "Shadow=3:xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
 *MyButtons: (2x1, Frame 0, Title(Center) "")

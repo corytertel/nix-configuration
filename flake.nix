@@ -38,7 +38,7 @@
           imports = [
             ./pc/home.nix
             ./shared/home.nix
-            ./rices/windows/home.nix
+            ./rices/light/home.nix
           ];
         };
       };
@@ -66,7 +66,7 @@
         modules = [
           ./pc/configuration.nix
           ./shared/configuration.nix
-          ./rices/windows/configuration.nix
+          ./rices/light/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;

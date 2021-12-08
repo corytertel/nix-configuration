@@ -1,18 +1,21 @@
 Config { 
 
    -- appearance
-     font =         "xft:Fantasque Sans Mono Nerd Font:size=14:antialias=true"
+     font =         "xft:FantasqueSansMono Nerd Font:size=14:antialias=true"
    , bgColor =      "#f0f0f0"
    , fgColor =      "#0f0f0f"
    , position =     Static { xpos = 0, ypos = 2110, width = 3840, height = 50 }
-   , border =       NoBorder
-   , borderWidth =  0
+   , border =       TopB
+   , borderWidth =  2
    , borderColor =  "#0f0f0f"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "                        %date%                                          %StdinReader%  }{     %volume%    %kbd%                        "
+   -- Fantasque 14
+   , template = "                        %date%                                                               %StdinReader%  }{     %volume%    %kbd%                        "
+   -- Terminess 12
+   --, template = "                        %date%                                                                               %StdinReader%  }{     %volume%    %kbd%                        "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
