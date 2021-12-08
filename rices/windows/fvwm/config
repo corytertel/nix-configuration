@@ -21,7 +21,7 @@ SetEnv fvwm_ss flameshot
 
 ImagePath $[fvwm_icon]:$[fvwm_icon];.png:$[fvwm_wallpaper]:+
 
-DesktopSize 2x2
+DesktopSize 3x3
 DesktopName 0 Main
 DesktopName 1 Code
 DesktopName 2 Read
@@ -135,7 +135,7 @@ Silent Key K        A     S4      SwapWindowsDir NorthEast NorthWest
 #Silent Key K        A     MC      Tile 49 48 -1 +2
 Silent Key H        A     MC      Tile 45 90 +3 +4
 Silent Key L        A     MC      Tile 45 90 -3 +4
-Silent Key J        A     MC      Tile 45 38 -3 -6
+Silent Key J        A     MC      Tile 45 40 -3 -4
 Silent Key K        A     MC      Tile 45 50 -3 +4
 
 # Super+J/H/K/L - move window, etc
@@ -143,10 +143,10 @@ Silent Key H        A     4MC     AnimatedMove +0 w0px
 Silent Key L        A     4MC     AnimatedMove -0 w0px
 Silent Key J        A     4MC     AnimatedMove w0px -0
 Silent Key K        A     4MC     AnimatedMove w0px +0
-Silent Key H        A     4M      Move w-40px w0px
-Silent Key L        A     4M      Move w40px w0px
-Silent Key J        A     4M      Move w0px w40px
-Silent Key K        A     4M      Move w0px w-40px
+Silent Key H        A     4M      Move w-80px w0px
+Silent Key L        A     4M      Move w80px w0px
+Silent Key J        A     4M      Move w0px w80px
+Silent Key K        A     4M      Move w0px w-80px
 
 # Maximize in direction until we hit another window.
 Silent Key H        A     4C      Maximize growleft 0
@@ -197,11 +197,9 @@ Silent Key Tab      A    M        WindowList (CurrentDesk) Root c c CurrentAtEnd
 Silent Key 1        A    4        GotoDesk 0 0
 Silent Key 2        A    4        GotoDesk 0 1
 Silent Key 3        A    4        GotoDesk 0 2
-Silent Key 4        A    4        GotoDesk 0 3
 Silent Key 1        A    S4       MoveAndGotoDesk 0 0
 Silent Key 2        A    S4       MoveAndGotoDesk 0 1
 Silent Key 3        A    S4       MoveAndGotoDesk 0 2
-Silent Key 4        A    S4       MoveAndGotoDesk 0 3
 Silent Key K        A    M        GotoPage 0p -1p
 Silent Key J        A    M        GotoPage 0p +1p
 Silent Key H        A    M        GotoPage -1p 0p
@@ -244,14 +242,15 @@ Silent Key XF86MonBrightnessDown A A Exec exec xbrightness -5000
 # Colorset 4 fg Black, bg #a6a797  	# fg: black, bg: gray
 # Colorset 5 fg White, bg Black
 
-Colorset 3 fg #101060, bg #f0f0f0       # fg: darkblue, bg: milk white
-Colorset 4 fg Black, bg #f8f8f8  	# fg: black, bg: gray
-Colorset 5 fg White, bg Black
+#Colorset 3 fg #101060, bg #f8f8f8       # fg: darkblue, bg: milk white
+Colorset 3 fg #f0f0f0, bg #0f0f0f
+Colorset 4 fg #0f0f0f, bg #f0f0f0
+Colorset 5 fg #f0f0f0, bg #0f0f0f
 
 
 DestroyDecor FlatDecor
 AddToDecor   FlatDecor
-+ TitleStyle LeftJustified Height 54
++ TitleStyle LeftJustified Height 40
 + ButtonStyle 2 \
         ActiveUp     (Pixmap $[fvwm_img]/button/close-activeup.png -- Flat) \
         ActiveDown   (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat) \
@@ -273,13 +272,13 @@ AddToDecor   FlatDecor
 
 
 Style "*" UseDecor FlatDecor
-Style "*" Font "xft:FantasqueSansMono Nerd Font:size=11:minspace=False:antialias=True"
+Style "*" Font "xft:Tinos Nerd Font:size=11:minspace=False:antialias=True"
 Style "*" BorderWidth 1, HandleWidth 1
 Style "*" MWMBorder, FirmBorder
 Style "*" Colorset 4
 Style "*" HilightColorset 3
-Style "*" BorderColorset 5
-Style "*" HilightBorderColorset 4
+Style "*" BorderColorset 4
+Style "*" HilightBorderColorset 5
 
 # Colorset 7 fg Black, bg #e6e7d7, sh Black, hi #202070
 #Colorset 7 RootTransparent, fg Black, bg average, sh Black, \
@@ -298,7 +297,7 @@ MenuStyle * VerticalItemSpacing 1 1, VerticalTitleSpacing 2 2
 MenuStyle * MenuColorset 7
 MenuStyle * ActiveFore, Hilight3DOff
 MenuStyle * ActiveColorset 8
-MenuStyle * Font "Shadow=2:xft:FantasqueSansMono Nerd Font:size=13:antialias=True"
+MenuStyle * Font "Shadow=2:xft:Tinos Nerd Font:size=13:antialias=True"
 
 PipeRead fvwm-menu-xlock
 PipeRead fvwm-menu-desktop --enable-mini-icons --desktop kde
@@ -342,8 +341,9 @@ AddToMenu FvwmOpsMenu
 DestroyMenu FvwmWallpaperMenu
 AddToMenu   FvwmWallpaperMenu
 + " Clannad " Exec exec feh --bg-fill $[fvwm_wallpaper]/clannad.jpg
-+ " Red Dots " Exec exec feh --bg-fill $[fvwm_wallpaper]/dots.jpg
++ " Red Dots " Exec exec feh --bg-fill $[fvwm_wallpaper]/dots.png
 + " Asuka 98 " Exec exec feh --bg-fill $[fvwm_wallpaper]/asuka98.jpg
++ " Eugen " Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen.png
 + " Mountain " Exec exec feh --bg-fill $[fvwm_wallpaper]/mountain.jpg
 + " Mountain 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/mountain2.jpg
 + " Trees " Exec exec feh --bg-fill $[fvwm_wallpaper]/trees.jpg
@@ -410,21 +410,20 @@ Colorset 10 fg rgb:00/00/00, hi rgb:dd/00/00, sh rgb:dd/00/00, bg rgb:fb/fc/ec
 
 DestroyModuleConfig FvwmIdent: *
 *FvwmIdent: Colorset 9
-*FvwmIdent: Font "xft:FantasqueSansMono Nerd Font:size=14:antialias=True"
+*FvwmIdent: Font "xft:Tinos Nerd Font:size=14:antialias=True"
 
 Style "FvwmPager" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 # StaysOnTop
 DestroyModuleConfig FvwmPager: *
-#*FvwmPager: Geometry 640x200+0-0
-*FvwmPager: Geometry 320x100+0-0
+*FvwmPager: Geometry 480x150+0-0
 *FvwmPager: Colorset * 9
 *FvwmPager: HilightColorset * 10
 *FvwmPager: BalloonColorset * 9
 *FvwmPager: WindowColorsets 9 10
-*FvwmPager: Font "xft:FantasqueSansMono Nerd Font:pixelsize=14:minspace=True:antialias=True"
+*FvwmPager: Font "xft:Tinos Nerd Font:pixelsize=21:minspace=True:antialias=True"
 *FvwmPager: Balloons All
-*FvwmPager: BalloonFont "xft:FantasqueSansMono Nerd Font:pixelsize=14:minspace=True:antialias=True"
+*FvwmPager: BalloonFont "xft:Tinos Nerd Font:pixelsize=21:minspace=True:antialias=True"
 *FvwmPager: BallonYOffset +2
 *FvwmPager: Window3dBorders
 *FvwmPager: MiniIcons
@@ -438,15 +437,13 @@ Style "MyButtons" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
 
 DestroyModuleConfig MyButtons: *
-#*MyButtons: Geometry 840x120+640-0
-#*MyButtons: Geometry 840x120+1500-0
-*MyButtons: Geometry 3250x60+320-0
+*MyButtons: Geometry 2860x60+480-0
 *MyButtons: Colorset 9
 *MyButtons: Rows 1
 #*MyButtons: Columns 38
 *MyButtons: Columns 294
 *MyButtons: Frame 0
-*MyButtons: Font "Shadow=3:xft:FantasqueSansMono Nerd Font:pixelsize=16:minspace=True:antialias=True"
+*MyButtons: Font "Shadow=3:xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
 *MyButtons: (2x1, Frame 0, Title(Center) "")
 *MyButtons: (5x1, Frame 0, Icon 48x48/terminal.png, \
   Action(Mouse 1) "FvwmTerm", \
@@ -593,8 +590,8 @@ AddToFunc InitFunction
 # + I Exec exec xcompmgr -c -t-5 -l-5 -r4.2 -o.55 &
 + I Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls.jpg
 + I Exec exec xclock -digital -bg "#f0f0f0" -fg "#0f0f0f" -face \
-  "Sans:Bold:antialias=false:Regular::size=10" -strftime "%I:%M:%S %p" \
-  -p 13 -geometry 270x60-0-0 -update 1
+  "Tinos Nerd Font:size=14" -strftime "%I:%M:%S %p  %a, %b %d, %Y" \
+  -p 13 -geometry 500x60-0-0 -update 1
 + I FvwmTerm
 + I FvwmMusicPlayer
 + I FvwmBrowser

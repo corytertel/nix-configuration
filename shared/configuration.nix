@@ -190,7 +190,7 @@
   # Mouse settings
   services.xserver.libinput.mouse.accelProfile = "flat";
   services.xserver.libinput.mouse.accelSpeed = null;
-  #services.xserver.libinput.mouse.transformationMatrix = "1 0 0 0 1 0 0 0 1";
+  services.xserver.libinput.mouse.transformationMatrix = "1.2 0 0 0 1.2 0 0 0 1";
 
   # Bash
   programs.bash.enableCompletion = true;

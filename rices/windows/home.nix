@@ -24,6 +24,9 @@
     fade = true;
     fadeDelta = 5;
     shadow = true;
+    shadowExclude = [
+      "class_g   *?= 'Xclock'"
+    ];
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
@@ -58,7 +61,7 @@
 
     font = {
       package = null;
-      name = "FantasqueSansMono Nerd Font 11";
+      name = "Tinos Nerd Font 11";
     };
 
     theme = {

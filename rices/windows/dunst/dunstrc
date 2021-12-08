@@ -17,7 +17,7 @@
 
     ### Text ###
 
-    font = FantasqueSansMono Nerd Font 11
+    font = Tinos Nerd Font 11
     line_height = 3
     markup = full
     format = "%s\n%b"

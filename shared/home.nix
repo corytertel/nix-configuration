@@ -7,7 +7,7 @@
       ./apps/layout_switch
       ./apps/neofetch
       ./apps/nu
-      ./apps/pcmanfm
+      #./apps/pcmanfm
       ./apps/powershell
       ./apps/ungoogled-chromium
       ./apps/urxvt

@@ -10,7 +10,7 @@
   # Set DPI to the scale you want your applications at
   # 175 for desktop, 250 for laptop typically
   xresources.extraConfig = ''
-    Xft.dpi: 175
+    Xft.dpi: 150
     Xft.antialias: 1
     Xft.hinting: 1
     Xft.autohint: 0

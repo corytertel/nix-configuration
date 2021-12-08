@@ -197,11 +197,9 @@ Silent Key Tab      A    M        WindowList (CurrentDesk) Root c c CurrentAtEnd
 Silent Key 1        A    4        GotoDesk 0 0
 Silent Key 2        A    4        GotoDesk 0 1
 Silent Key 3        A    4        GotoDesk 0 2
-Silent Key 4        A    4        GotoDesk 0 3
 Silent Key 1        A    S4       MoveAndGotoDesk 0 0
 Silent Key 2        A    S4       MoveAndGotoDesk 0 1
 Silent Key 3        A    S4       MoveAndGotoDesk 0 2
-Silent Key 4        A    S4       MoveAndGotoDesk 0 3
 Silent Key K        A    M        GotoPage 0p -1p
 Silent Key J        A    M        GotoPage 0p +1p
 Silent Key H        A    M        GotoPage -1p 0p
