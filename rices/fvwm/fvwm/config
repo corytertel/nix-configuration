@@ -20,6 +20,16 @@
 #
 #################################
 
+# InfoStoreAdd can be used to store variable data internal to fvwm.
+# The variable can then be used in the configuration as $[infostore.name].
+#
+# You can also use environment variables but for data internal to fvwm
+# use InfoStore variables instead.
+#
+# The following is used in various menus and also sets the terminal
+# that FvwmConsole uses. Change this to your terminal of choice
+InfoStoreAdd terminal xfce4-terminal
+
 SetEnv img_home $[HOME]/Pictures
 SetEnv fvwm_home $[HOME]/.fvwm
 SetEnv fvwm_img $[fvwm_home]/images
@@ -33,26 +43,81 @@ SetEnv fvwm_ss flameshot
 
 ImagePath $[fvwm_icon]:$[fvwm_icon];.png:$[fvwm_wallpaper]:+
 
-DesktopSize 3x3
-DesktopName 0 Main
-DesktopName 1 Code
-DesktopName 2 Read
+#############
+# 1: Styles #
+#############
 
+# Desktops and Pages
+#
+# Fvwm has both Virtual Desktops and Pages. Each Desktop is built from
+# a grid of Pages. The following sets the name of four Desktops and then
+# divides each Desktop into a 2x2 grid of Pages that are positioned as
+#
+#   +---+---+
+#   |   |   |
+#   +---+---+
+#   |   |   |
+#   +---+---+
+#
+#DesktopName 0 Main
+#DesktopName 1 Code
+#DesktopName 2 Read
+DesktopSize 3x3
+
+# EdgeScroll will move the view port between the Pages when the mouse
+# moves to the edge of the screen. This set the amount of distance to
+# scroll at 100% (full page) and the EdgeResistance which is a timer
+# for how long the mouse as at the edge before it scrolls.
+#
+# Set EdgeScroll 0 0 and/or EdgeResistance -1 to disable.
 EdgeScroll 100 100
 EdgeResistance 450
 EdgeThickness 5
+Style * EdgeMoveDelay 350, EdgeMoveResistance 350
 
+# EwmhBaseStruts [left] [right] [top] [bottom]
+# Reserves space along the edge(s) of the Screen that will not
+# be covered when maximizing or placing windows.
+EwmhBaseStruts 0 0 0 70
+
+# This sets the ClickTime and MoveThreshold used to determine
+# Double Clicks, Hold and Move for the mouse.
 ClickTime 250
 MoveThreshold 3
+
+# Sets the focus style to SloppyFocus and a mouse click
+# in a window will Raise it.
 Style * SloppyFocus, MouseFocusClickRaises
 
-# Left, Right, Top, Bottom
-#EwmhBaseStruts 124 324 0 96
-#EwmhBaseStruts 124 124 0 96
-EwmhBaseStruts 0 0 0 70
-IgnoreModifiers L25
-SnapGrid 20 20
+# Default Font
+#DefaultFont "xft:Serif:Bold:size=8:antialias=True"
+DefaultFont "xft:Tinos Nerd Font:Bold:size=10:antialias=True"
 
+# Window Placement
+Style * MinOverlapPlacement, GrabFocusOff, !UsePPosition
+
+# Sets all windows to OpaqueMove (vs a wired frame) and  windows will
+# snap to each other and the edge of the screen.
+OpaqueMoveSize unlimited
+Style * ResizeOpaque, SnapAttraction 15 SameType ScreenAll, SnapGrid
+
+# Transient Windows (such as open file windows)
+Style * DecorateTransient, StackTransientParent
+Style * !FPGrabFocusTransient, FPReleaseFocusTransient
+
+# WindowShade
+Style * WindowShadeScrolls, WindowShadeSteps 10
+
+# Ignore Numlock and other modifiers for bindings
+# See http://fvwm.org/documentation/faq/#why-do-numlock-capslock-and-scrolllock-interfere-with-clicktofocus-andor-my-mouse-bindings
+IgnoreModifiers L25
+
+# Disable Icons from appearing on desktop.
+# Comment this out or use Style * Icon to get the icons back.
+#Style * !Icon
+
+# Snaps each windows movements to a grid
+SnapGrid 20 20
 
 #####
 # 4: Mouse and Key bindings
@@ -81,7 +146,7 @@ SnapGrid 20 20
 #   2 - Close on single click, Destory on double click.
 #   4 - Maximize (right/middle button will only maximize vertical/horizontal)
 #   6 - Iconify (minimize)
-#Mouse 1 1 A Menu MenuWindowOps Delete
+Mouse 1 1 A Menu MenuWindowOps Delete
 Mouse 1 2 A FvwmDeleteOrDestroy
 Mouse 1 4 A FvwmMaximize 100 100
 Mouse 2 4 A FvwmMaximize 0 100
@@ -178,8 +243,14 @@ Silent Key K        A     4C      Maximize 0 growup
 Silent Key Q        A     4       Close
 Silent Key Escape   A     4       Exec exec xkill
 Silent Key C        A     4       AnimatedMove 50-50w 50-50w
-Silent Key C        A     S4      AnimatedMove 0w 50-50w
-Silent Key C        A     C4      AnimatedMove 50-50w 0w
+#Silent Key C        A     S4      AnimatedMove 0w 50-50w
+#Silent Key C        A     C4      AnimatedMove 50-50w 0w
+Silent Key C        A     S4      AnimatedMove w 50-50w
+Silent Key C        A     C4      AnimatedMove 50-50w w
+Silent Key M        A     4       AnimatedMove m-50w m-50w
+SIlent Key backslash A    4       ResizeBig
+SIlent Key backslash A    S4      ResizeTall
+SIlent Key backslash A    C4      ResizeWide
 Silent Key F        A     4       Maximize toggle 100 100
 #Silent Key F        A     4       Maximize-and-SetFloating 100 100
 Silent Key T        A     4       Toggle-Title
@@ -206,12 +277,24 @@ Silent Key Tab      A    M        WindowList (CurrentDesk) Root c c CurrentAtEnd
                      NoCurrentDeskTitle SelectOnRelease Meta_L
 
 # Desktop Controls
-Silent Key 1        A    4        GotoDesk 0 0
-Silent Key 2        A    4        GotoDesk 0 1
-Silent Key 3        A    4        GotoDesk 0 2
-Silent Key 1        A    S4       MoveAndGotoDesk 0 0
-Silent Key 2        A    S4       MoveAndGotoDesk 0 1
-Silent Key 3        A    S4       MoveAndGotoDesk 0 2
+Silent Key 1        A    4        GotoPage 0 0
+Silent Key 2        A    4        GotoPage 1 0
+Silent Key 3        A    4        GotoPage 2 0
+Silent Key 4        A    4        GotoPage 0 1
+Silent Key 5        A    4        GotoPage 1 1
+Silent Key 6        A    4        GotoPage 2 1
+Silent Key 7        A    4        GotoPage 0 2
+Silent Key 8        A    4        GotoPage 1 2
+Silent Key 9        A    4        GotoPage 2 2
+Silent Key 1        A    S4       MoveAndGotoPage 0 0
+Silent Key 2        A    S4       MoveAndGotoPage 1 0
+Silent Key 3        A    S4       MoveAndGotoPage 2 0
+Silent Key 4        A    S4       MoveAndGotoPage 0 1
+Silent Key 5        A    S4       MoveAndGotoPage 1 1
+Silent Key 6        A    S4       MoveAndGotoPage 2 1
+Silent Key 7        A    S4       MoveAndGotoPage 0 2
+Silent Key 8        A    S4       MoveAndGotoPage 1 2
+Silent Key 9        A    S4       MoveAndGotoPage 2 2
 Silent Key K        A    M        GotoPage 0p -1p
 Silent Key J        A    M        GotoPage 0p +1p
 Silent Key H        A    M        GotoPage -1p 0p
@@ -234,10 +317,14 @@ Silent Key Tab      A    4        GotoPage prev
 Silent Key Print    A    4        Exec exec flameshot full -p ~/Pictures
 Silent Key Print    A    4S       Exec exec flameshot gui
 
-# Volume Buttons
+# Audio Controls
 Silent Key XF86AudioLowerVolume A A Exec exec pamixer --unmute --decrease 2
 Silent Key XF86AudioRaiseVolume A A Exec exec pamixer --unmute --increase 2
 Silent Key XF86AudioMute A A Exec exec pamixer --toggle-mute
+Silent Key XF86AudioNext A A Exec exec audacious --fwd
+Silent Key XF86AudioPrev A A Exec exec audacious --rew
+Silent Key XF86AudioPlay A A Exec exec audacious --play-pause
+Silent Key XF86AudioStop A A Exec exec audacious --stop
 
 # Brightness Buttons
 Silent Key XF86MonBrightnessUp A A Exec exec xbrightness +5000
@@ -255,33 +342,36 @@ Silent Key XF86MonBrightnessDown A A Exec exec xbrightness -5000
 # Colorset 5 fg White, bg Black
 
 #Colorset 3 fg #101060, bg #f8f8f8       # fg: darkblue, bg: milk white
-Colorset 3 fg #f0f0f0, bg #0f0f0f
+Colorset 3 fg #f0f0f0, bg #110b3a
 Colorset 4 fg #0f0f0f, bg #f0f0f0
 Colorset 5 fg #f0f0f0, bg #0f0f0f
 
-
 DestroyDecor FlatDecor
 AddToDecor   FlatDecor
-+ TitleStyle LeftJustified Height 40
++ TitleStyle Centered Height 48 -- Flat
++ ButtonStyle 1 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/menu-activeup.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/menu-activedown.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/inactive.png -- Flat)
 + ButtonStyle 2 \
         ActiveUp     (Pixmap $[fvwm_img]/button/close-activeup.png -- Flat) \
         ActiveDown   (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/close-inactive.png -- Flat)
+        Inactive     (Pixmap $[fvwm_img]/button/inactive.png -- Flat)
 + ButtonStyle 4 \
         ActiveUp     (Pixmap $[fvwm_img]/button/maximize-activeup.png -- Flat) \
         ActiveDown   (Pixmap $[fvwm_img]/button/maximize-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/maximize-inactive.png -- Flat)
+        Inactive     (Pixmap $[fvwm_img]/button/inactive.png -- Flat)
 + ButtonStyle 6 \
         ActiveUp     (Pixmap $[fvwm_img]/button/iconify-activeup.png -- Flat) \
         ActiveDown   (Pixmap $[fvwm_img]/button/iconify-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/iconify-inactive.png -- Flat)
-+ ButtonStyle 2 - Clear
-+ ButtonStyle 4 - Clear MwmDecorMax
-+ ButtonStyle 6 - Clear MwmDecorMin
+        Inactive     (Pixmap $[fvwm_img]/button/inactive.png -- Flat)
++ ButtonStyle All - Clear
++ ButtonStyle 1 - MwmDecorMenu
++ ButtonStyle 4 - MwmDecorMax
++ ButtonStyle 6 - MwmDecorMin
 + TitleStyle -- Flat
 + BorderStyle Simple -- NoInset Flat
 + ButtonStyle All -- UseTitleStyle
-
 
 Style "*" UseDecor FlatDecor
 Style "*" Font "xft:Tinos Nerd Font:size=11:minspace=False:antialias=True"
@@ -291,6 +381,11 @@ Style "*" Colorset 4
 Style "*" HilightColorset 3
 Style "*" BorderColorset 4
 Style "*" HilightBorderColorset 5
+
+# Decor Styles
+#Style * BorderWidth 10, HandleWidth 10, MWMButtons, FvwmBorder, FirmBorder
+#Style * Colorset 1, HilightColorset 2
+#Style * BorderColorset 3, HilightBorderColorset 4
 
 # Colorset 7 fg Black, bg #e6e7d7, sh Black, hi #202070
 #Colorset 7 RootTransparent, fg Black, bg average, sh Black, \
@@ -360,6 +455,9 @@ AddToMenu   FvwmWallpaperMenu
 + " Mountain 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/mountain2.jpg
 + " Trees " Exec exec feh --bg-fill $[fvwm_wallpaper]/trees.jpg
 + " Swirls " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls.jpg
++ " Swirls 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls2.jpg
++ " Swirls 3 " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls3.jpg
++ " Swirls 4 " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls4.jpg
 
 DestroyMenu FvwmVolumeMenu
 AddToMenu FvwmVolumeMenu
@@ -428,7 +526,7 @@ Style "FvwmPager" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 # StaysOnTop
 DestroyModuleConfig FvwmPager: *
-*FvwmPager: Geometry 480x150+0-0
+*FvwmPager: Geometry 160x150+0-0
 *FvwmPager: Colorset * 9
 *FvwmPager: HilightColorset * 10
 *FvwmPager: BalloonColorset * 9
@@ -441,7 +539,7 @@ DestroyModuleConfig FvwmPager: *
 *FvwmPager: MiniIcons
 *FvwmPager: UseSkipList
 *FvwmPager: Rows 1
-*FvwmPager: Columns 3
+*FvwmPager: Columns 1
 # *FvwmPager: DeskHilight Black
 # *FvwmPager: Hilight Black
 
@@ -449,11 +547,12 @@ Style "MyButtons" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
 
 DestroyModuleConfig MyButtons: *
-*MyButtons: Geometry 2860x60+480-0
+*MyButtons: Geometry 476x60+1682-0
+#*MyButtons: Geometry 2860x60+480-0
 *MyButtons: Colorset 9
 *MyButtons: Rows 1
-#*MyButtons: Columns 38
-*MyButtons: Columns 258
+*MyButtons: Columns 43
+#*MyButtons: Columns 258
 *MyButtons: Frame 0
 *MyButtons: Font "Shadow=3:xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
 *MyButtons: (2x1, Frame 0, Title(Center) "")
@@ -507,7 +606,7 @@ Style ConfirmQuit !Title, PositionPlacement Center, WindowListSkip, Layer 6
 # actions that are run after a restart.
 DestroyFunc StartFunction
 AddToFunc   StartFunction
-+ I Module FvwmPager 0 2
++ I Module FvwmPager 0 0
 + I Module FvwmButtons MyButtons
 
 DestroyFunc FvwmTerm
@@ -600,7 +699,7 @@ DestroyFunc InitFunction
 AddToFunc InitFunction
 # will cause problems when move windows across pages
 # + I Exec exec xcompmgr -c -t-5 -l-5 -r4.2 -o.55 &
-+ I Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls.jpg
++ I Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls2.jpg
 + I Exec exec xclock -digital -bg "#f0f0f0" -fg "#0f0f0f" -face \
   "Tinos Nerd Font:size=14" -strftime "%I:%M:%S %p  %a, %b %d, %Y" \
   -p 13 -geometry 500x60-0-0 -update 1
@@ -1043,3 +1142,18 @@ AddToFunc SwapWindows
 + I UnsetEnv FvwmCoord_current
 + I UnsetEnv FvwmId_dest
 + I UnsetEnv FvwmCoord_dest
+
+DestroyFunc ResizeBig
+AddToFunc ResizeBig
++ I Resize 85 85
++ I Move 50-50w 50-50w
+
+DestroyFunc ResizeTall
+AddToFunc ResizeTall
++ I Resize 45 84
++ I Move 50-50w 50-50w
+
+DestroyFunc ResizeWide
+AddToFunc ResizeWide
++ I Resize 40 49
++ I Move 50-50w 50-50w

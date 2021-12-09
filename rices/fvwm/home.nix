@@ -15,11 +15,19 @@
   services.picom = {
     enable = true;
     #inactiveDim = "0.01";
+    inactiveOpacity = "0.93";
+    activeOpacity = "0.98";
     blur = true;
     experimentalBackends = true;
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 4;
+      corner-radius = 10;
+      round-borders = 1;
+
+      rounded-corners-exclude = [
+        "class_g = 'dmenu'",
+      ];
     '';
     fade = true;
     fadeDelta = 5;
