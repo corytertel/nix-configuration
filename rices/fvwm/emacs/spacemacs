@@ -622,7 +622,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                                      (cblk-ln-bg . "#b2b2b2")
                                      (cursor . "#0f0f0f")
                                      (const . "#541015")
-                                     (comment . "#b2b2b2")
+                                     (comment . "#707070")
                                      (comment-bg . "#f0f0f0")
                                      (comp . "#1a1054")
                                      (err . "#3a0b0d")

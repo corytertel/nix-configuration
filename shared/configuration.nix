@@ -193,10 +193,15 @@
   services.xserver.libinput.mouse.transformationMatrix = "1.2 0 0 0 1.2 0 0 0 1";
 
   # Bash
-  programs.bash.enableCompletion = true;
+  #programs.bash.enableCompletion = true;
 
   # Nushell
   #users.users.cory.shell = pkgs.nushell;
+
+  # Ksh
+  #programs.bash.enable = false;
+  environment.shells = [ pkgs.ksh ];
+  users.users.cory.shell = pkgs.ksh;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.cory = {
@@ -297,8 +302,8 @@
 
   # Fonts
   fonts.fonts = with pkgs; [
-    roboto-mono
-    iosevka
+    #roboto-mono
+    #iosevka
     nerdfonts
     source-code-pro
     font-awesome
@@ -334,7 +339,7 @@
   programs.dconf.enable = true;
 
   # Enable steam
-  #programs.steam.enable = true;
+  programs.steam.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

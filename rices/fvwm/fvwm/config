@@ -28,7 +28,7 @@
 #
 # The following is used in various menus and also sets the terminal
 # that FvwmConsole uses. Change this to your terminal of choice
-InfoStoreAdd terminal xfce4-terminal
+InfoStoreAdd terminal urxvtc
 
 SetEnv img_home $[HOME]/Pictures
 SetEnv fvwm_home $[HOME]/.fvwm
@@ -88,6 +88,7 @@ MoveThreshold 3
 # Sets the focus style to SloppyFocus and a mouse click
 # in a window will Raise it.
 Style * SloppyFocus, MouseFocusClickRaises
+#Style * MouseFocusClickRaises
 
 # Default Font
 #DefaultFont "xft:Serif:Bold:size=8:antialias=True"
@@ -277,6 +278,10 @@ Silent Key Tab      A    M        WindowList (CurrentDesk) Root c c CurrentAtEnd
                      NoCurrentDeskTitle SelectOnRelease Meta_L
 
 # Desktop Controls
+Silent Key 1        A    C4       GotoDesk 0 0
+Silent Key 2        A    C4       GotoDesk 0 1
+Silent Key 1        A    SC4      MoveAndGotoDesk 0 0
+Silent Key 2        A    SC4      MoveAndGotoDesk 0 1
 Silent Key 1        A    4        GotoPage 0 0
 Silent Key 2        A    4        GotoPage 1 0
 Silent Key 3        A    4        GotoPage 2 0
@@ -342,13 +347,16 @@ Silent Key XF86MonBrightnessDown A A Exec exec xbrightness -5000
 # Colorset 5 fg White, bg Black
 
 #Colorset 3 fg #101060, bg #f8f8f8       # fg: darkblue, bg: milk white
-Colorset 3 fg #f0f0f0, bg #110b3a
-Colorset 4 fg #0f0f0f, bg #f0f0f0
+#Colorset 3 fg #f0f0f0, bg #110b3a  # bg: dark blue
+#Colorset 3 fg #0f0f0f, bg #f0f0f0
+Colorset 3 fg #0f0f0f, bg #b2b2b2
+#Colorset 4 fg #0f0f0f, bg #f0f0f0
+Colorset 4 fg #0f0f0f, bg #d9d9d9
 Colorset 5 fg #f0f0f0, bg #0f0f0f
 
 DestroyDecor FlatDecor
 AddToDecor   FlatDecor
-+ TitleStyle Centered Height 48 -- Flat
++ TitleStyle Centered Height 35 -- Flat
 + ButtonStyle 1 \
         ActiveUp     (Pixmap $[fvwm_img]/button/menu-activeup.png -- Flat) \
         ActiveDown   (Pixmap $[fvwm_img]/button/menu-activedown.png -- Flat) \
@@ -373,8 +381,36 @@ AddToDecor   FlatDecor
 + BorderStyle Simple -- NoInset Flat
 + ButtonStyle All -- UseTitleStyle
 
-Style "*" UseDecor FlatDecor
-Style "*" Font "xft:Tinos Nerd Font:size=11:minspace=False:antialias=True"
+DestroyDecor PlainDecor
+AddToDecor   PlainDecor
++ TitleStyle Centered Height 50 -- Flat
++ ButtonStyle 1 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/blank.png -- Flat)
++ ButtonStyle 2 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/blank.png -- Flat)
++ ButtonStyle 4 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/blank.png -- Flat)
++ ButtonStyle 6 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/blank.png -- Flat)
++ ButtonStyle All - Clear
++ ButtonStyle 1 - MwmDecorMenu
++ ButtonStyle 4 - MwmDecorMax
++ ButtonStyle 6 - MwmDecorMin
++ TitleStyle -- Flat
++ BorderStyle Simple -- NoInset Flat
++ ButtonStyle All -- UseTitleStyle
+
+Style "*" UseDecor PlainDecor
+#Style "*" Font "xft:Tinos Nerd Font:size=11:minspace=False:antialias=True"
+Style "*" Font "xft:Tinos Nerd Font:pixelsize=0:minspace=False"
 Style "*" BorderWidth 1, HandleWidth 1
 Style "*" MWMBorder, FirmBorder
 Style "*" Colorset 4
@@ -458,6 +494,7 @@ AddToMenu   FvwmWallpaperMenu
 + " Swirls 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls2.jpg
 + " Swirls 3 " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls3.jpg
 + " Swirls 4 " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls4.jpg
++ " Flower " Exec exec feh --bg-fill $[fvwm_wallpaper]/flower.jpg
 
 DestroyMenu FvwmVolumeMenu
 AddToMenu FvwmVolumeMenu
@@ -526,12 +563,14 @@ Style "FvwmPager" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 # StaysOnTop
 DestroyModuleConfig FvwmPager: *
-*FvwmPager: Geometry 160x150+0-0
+#*FvwmPager: Geometry 160x150+10-10
+*FvwmPager: Geometry 200x187+10-10
 *FvwmPager: Colorset * 9
 *FvwmPager: HilightColorset * 10
 *FvwmPager: BalloonColorset * 9
 *FvwmPager: WindowColorsets 9 10
-*FvwmPager: Font "xft:Tinos Nerd Font:pixelsize=21:minspace=True:antialias=True"
+#*FvwmPager: Font "xft:Tinos Nerd Font:pixelsize=21:minspace=True:antialias=True"
+*FvwmPager: Font "xft:Tinos Nerd Font:pixelsize=0:minspace=True:antialias=True"
 *FvwmPager: Balloons All
 *FvwmPager: BalloonFont "xft:Tinos Nerd Font:pixelsize=21:minspace=True:antialias=True"
 *FvwmPager: BallonYOffset +2
@@ -547,18 +586,24 @@ Style "MyButtons" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
 
 DestroyModuleConfig MyButtons: *
-*MyButtons: Geometry 476x60+1682-0
+#*MyButtons: Geometry 476x60+1682-10
 #*MyButtons: Geometry 2860x60+480-0
+*MyButtons: Geometry 530x60+1655-10
 *MyButtons: Colorset 9
 *MyButtons: Rows 1
-*MyButtons: Columns 43
+#*MyButtons: Columns 43
+*MyButtons: Columns 48
 #*MyButtons: Columns 258
 *MyButtons: Frame 0
 *MyButtons: Font "Shadow=3:xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
 *MyButtons: (2x1, Frame 0, Title(Center) "")
+*MyButtons: (5x1, Frame 0, Icon 48x48/nixos.png, \
+  Action(Mouse 1) "FvwmLaunch")
 *MyButtons: (5x1, Frame 0, Icon 48x48/terminal.png, \
   Action(Mouse 1) "FvwmTerm", \
   Action(Mouse 3) "FvwmTerm")
+*MyButtons: (5x1, Frame 0, Icon 48x48/Thunar.png, \
+  Action(Mosue 1) "FvwmFileManager")
 *MyButtons: (5x1, Frame 0, Icon 48x48/firefox.png, \
   Action(Mosue 1) "FvwmBrowser")
 *MyButtons: (5x1, Frame 0, Icon 48x48/emacs.png, \
@@ -571,8 +616,6 @@ DestroyModuleConfig MyButtons: *
   Action(Mouse 1) "FvwmGimp")
 *MyButtons: (5x1, Frame 0, Icon 48x48/steam.png, \
   Action(Mouse 1) "FvwmSteam")
-*MyButtons: (5x1, Frame 0, Icon 48x48/tux.png, \
-  Action(Mouse 1) "FvwmLaunch")
 *MyButtons: (1x1, Frame 0)
 
 Style "xclock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
@@ -611,7 +654,7 @@ AddToFunc   StartFunction
 
 DestroyFunc FvwmTerm
 AddToFunc FvwmTerm
-+ I Exec exec xfce4-terminal
++ I Exec exec urxvtc --geometry 85x33
 
 DestroyFunc FvwmBrowser
 AddToFunc FvwmBrowser
@@ -699,11 +742,13 @@ DestroyFunc InitFunction
 AddToFunc InitFunction
 # will cause problems when move windows across pages
 # + I Exec exec xcompmgr -c -t-5 -l-5 -r4.2 -o.55 &
-+ I Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls2.jpg
++ I Exec exec urxvtd -q
++ I Exec exec feh --bg-fill $[fvwm_wallpaper]/flower.jpg
 + I Exec exec xclock -digital -bg "#f0f0f0" -fg "#0f0f0f" -face \
   "Tinos Nerd Font:size=14" -strftime "%I:%M:%S %p  %a, %b %d, %Y" \
-  -p 13 -geometry 500x60-0-0 -update 1
+  -p 13 -geometry 420x60-10-10 -update 1
 + I FvwmTerm
++ I FvwmEditor
 + I FvwmMusicPlayer
 + I FvwmBrowser
 + I Exec exec xscreensaver
@@ -748,7 +793,7 @@ AddToFunc MoveToCurrent
 # and is used with the help menu.
 DestroyFunc ViewManPage
 AddToFunc   ViewManPage
-+ I Exec exec xfce4-terminal --geometry=80x40 \
++ I Exec exec urxvtc --geometry 80x40 \
   --title="Manual Page - $0" --execute man "$0"
 
 # Function: SetBG $0
@@ -1150,10 +1195,10 @@ AddToFunc ResizeBig
 
 DestroyFunc ResizeTall
 AddToFunc ResizeTall
-+ I Resize 45 84
-+ I Move 50-50w 50-50w
++ I Resize 36 72
++ I Move w 50-50w
 
 DestroyFunc ResizeWide
 AddToFunc ResizeWide
 + I Resize 40 49
-+ I Move 50-50w 50-50w
++ I Move w 50-50w

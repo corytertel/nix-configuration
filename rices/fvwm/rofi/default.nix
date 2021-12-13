@@ -3,7 +3,7 @@
 {
   programs.rofi = {
     enable = true;
-    terminal = "${pkgs.xfce.xfce4-terminal}/bin/xfce4-terminal";
+    terminal = "${pkgs.rxvt-unicode}/bin/urxvtc";
     theme = ./light-mountain.rasi;
   };
 }

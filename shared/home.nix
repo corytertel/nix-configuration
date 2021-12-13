@@ -5,6 +5,7 @@
     [
       ./apps/bash
       ./apps/layout_switch
+      ./apps/ksh
       ./apps/neofetch
       ./apps/nu
       #./apps/pcmanfm
@@ -36,6 +37,14 @@
   # Direnv
   programs.direnv.enable = true;
   programs.direnv.nix-direnv.enable = true;
+
+  # Java
+  programs.java = {
+    enable = true;
+    #jdk11 #openjdk11 for java
+    #jdk #openjdk17 for java
+    package = pkgs.jdk;
+  };
 
   home.packages = with pkgs; [
    # linux basics
@@ -78,8 +87,6 @@
     yarn
 
   # other programing languages
-    #jdk11 #openjdk11 for java
-    jdk #openjdk17 for java
     python39Full
     python39Packages.pip
     rustc

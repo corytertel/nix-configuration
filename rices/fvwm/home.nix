@@ -22,19 +22,19 @@
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 4;
-      corner-radius = 10;
-      round-borders = 1;
-
-      rounded-corners-exclude = [
-        "class_g = 'dmenu'",
-      ];
     '';
+      # corner-radius = 10;
+      # round-borders = 1;
+
+      # rounded-corners-exclude = [
+      #   "class_g = 'dmenu'",
+      # ];
     fade = true;
     fadeDelta = 5;
     shadow = true;
-    shadowExclude = [
-      "class_g   *?= 'Xclock'"
-    ];
+    #shadowExclude = [
+    #  "class_g   *?= 'Xclock'"
+    #];
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
