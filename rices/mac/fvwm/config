@@ -1,12 +1,34 @@
-# Date   : Tue Nov 28 22:23:25 CST 2017
-# Author : abel-abel
+##################################
+#  ____________________________
+# (   _________________________)
+#  ) (__  _  _  _    _
+# (   __)( \/ )( \/\/ )/\/\
+#  ) (    \  /  \    //    \
+# (___)    \/    \/\/(_/\/\_) 2.6
+#
+#
+#  This config file is organized as follows:
+#
+#    1: Global Variables
+#    1: Styles
+#    2: Colorsets
+#    3: Menus
+#    4: Bindings
+#    5: Decor
+#    6: Modules
+#    7: Functions
+#
+#################################
 
-# Most of the configuration are copied from:
-# http://zensites.net/fvwm/guide/
-# I only changed/added/remove some configurations.
-
-# ==================================================
-#           $HOME/.fvwm/config
+# InfoStoreAdd can be used to store variable data internal to fvwm.
+# The variable can then be used in the configuration as $[infostore.name].
+#
+# You can also use environment variables but for data internal to fvwm
+# use InfoStore variables instead.
+#
+# The following is used in various menus and also sets the terminal
+# that FvwmConsole uses. Change this to your terminal of choice
+InfoStoreAdd terminal urxvtc
 
 SetEnv img_home $[HOME]/Pictures
 SetEnv fvwm_home $[HOME]/.fvwm
@@ -21,26 +43,80 @@ SetEnv fvwm_ss flameshot
 
 ImagePath $[fvwm_icon]:$[fvwm_icon];.png:$[fvwm_wallpaper]:+
 
-DesktopSize 2x2
-DesktopName 0 Main
-DesktopName 1 Code
-DesktopName 2 Read
+#############
+# 1: Styles #
+#############
 
+# Desktops and Pages
+#
+# Fvwm has both Virtual Desktops and Pages. Each Desktop is built from
+# a grid of Pages. The following sets the name of four Desktops and then
+# divides each Desktop into a 2x2 grid of Pages that are positioned as
+#
+#   +---+---+
+#   |   |   |
+#   +---+---+
+#   |   |   |
+#   +---+---+
+#
+DesktopName 0 Desks
+DesktopSize 3x3
+
+# EdgeScroll will move the view port between the Pages when the mouse
+# moves to the edge of the screen. This set the amount of distance to
+# scroll at 100% (full page) and the EdgeResistance which is a timer
+# for how long the mouse as at the edge before it scrolls.
+#
+# Set EdgeScroll 0 0 and/or EdgeResistance -1 to disable.
 EdgeScroll 100 100
 EdgeResistance 450
 EdgeThickness 5
+Style * EdgeMoveDelay 350, EdgeMoveResistance 350
 
+# EwmhBaseStruts [left] [right] [top] [bottom]
+# Reserves space along the edge(s) of the Screen that will not
+# be covered when maximizing or placing windows.
+EwmhBaseStruts 0 0 0 96
+
+# This sets the ClickTime and MoveThreshold used to determine
+# Double Clicks, Hold and Move for the mouse.
 ClickTime 250
 MoveThreshold 3
+
+# Sets the focus style to SloppyFocus and a mouse click
+# in a window will Raise it.
 Style * SloppyFocus, MouseFocusClickRaises
+#Style * MouseFocusClickRaises
 
-# Left, Right, Top, Bottom
-#EwmhBaseStruts 124 324 0 96
-#EwmhBaseStruts 124 124 0 96
-EwmhBaseStruts 0 0 0 96
+# Default Font
+#DefaultFont "xft:Serif:Bold:size=8:antialias=True"
+DefaultFont "xft:Tinos Nerd Font:Bold:size=10:antialias=True"
+
+# Window Placement
+Style * MinOverlapPlacement, GrabFocusOff, !UsePPosition
+
+# Sets all windows to OpaqueMove (vs a wired frame) and  windows will
+# snap to each other and the edge of the screen.
+OpaqueMoveSize unlimited
+Style * ResizeOpaque, SnapAttraction 15 SameType ScreenAll, SnapGrid
+
+# Transient Windows (such as open file windows)
+Style * DecorateTransient, StackTransientParent
+Style * !FPGrabFocusTransient, FPReleaseFocusTransient
+
+# WindowShade
+Style * WindowShadeScrolls, WindowShadeSteps 10
+
+# Ignore Numlock and other modifiers for bindings
+# See http://fvwm.org/documentation/faq/#why-do-numlock-capslock-and-scrolllock-interfere-with-clicktofocus-andor-my-mouse-bindings
 IgnoreModifiers L25
-SnapGrid 20 20
 
+# Disable Icons from appearing on desktop.
+# Comment this out or use Style * Icon to get the icons back.
+#Style * !Icon
+
+# Snaps each windows movements to a grid
+SnapGrid 20 20
 
 #####
 # 4: Mouse and Key bindings
@@ -135,7 +211,7 @@ Silent Key K        A     S4      SwapWindowsDir NorthEast NorthWest
 #Silent Key K        A     MC      Tile 49 48 -1 +2
 Silent Key H        A     MC      Tile 45 90 +3 +4
 Silent Key L        A     MC      Tile 45 90 -3 +4
-Silent Key J        A     MC      Tile 45 38 -3 -6
+Silent Key J        A     MC      Tile 45 40 -3 -4
 Silent Key K        A     MC      Tile 45 50 -3 +4
 
 # Super+J/H/K/L - move window, etc
@@ -143,10 +219,10 @@ Silent Key H        A     4MC     AnimatedMove +0 w0px
 Silent Key L        A     4MC     AnimatedMove -0 w0px
 Silent Key J        A     4MC     AnimatedMove w0px -0
 Silent Key K        A     4MC     AnimatedMove w0px +0
-Silent Key H        A     4M      Move w-40px w0px
-Silent Key L        A     4M      Move w40px w0px
-Silent Key J        A     4M      Move w0px w40px
-Silent Key K        A     4M      Move w0px w-40px
+Silent Key H        A     4M      Move w-80px w0px
+Silent Key L        A     4M      Move w80px w0px
+Silent Key J        A     4M      Move w0px w80px
+Silent Key K        A     4M      Move w0px w-80px
 
 # Maximize in direction until we hit another window.
 Silent Key H        A     4C      Maximize growleft 0
@@ -166,8 +242,14 @@ Silent Key K        A     4C      Maximize 0 growup
 Silent Key Q        A     4       Close
 Silent Key Escape   A     4       Exec exec xkill
 Silent Key C        A     4       AnimatedMove 50-50w 50-50w
-Silent Key C        A     S4      AnimatedMove 0w 50-50w
-Silent Key C        A     C4      AnimatedMove 50-50w 0w
+#Silent Key C        A     S4      AnimatedMove 0w 50-50w
+#Silent Key C        A     C4      AnimatedMove 50-50w 0w
+Silent Key C        A     S4      AnimatedMove w 50-50w
+Silent Key C        A     C4      AnimatedMove 50-50w w
+Silent Key M        A     4       AnimatedMove m-50w m-50w
+SIlent Key backslash A    4       ResizeBig
+SIlent Key backslash A    S4      ResizeTall
+SIlent Key backslash A    C4      ResizeWide
 Silent Key F        A     4       Maximize toggle 100 100
 #Silent Key F        A     4       Maximize-and-SetFloating 100 100
 Silent Key T        A     4       Toggle-Title
@@ -194,12 +276,28 @@ Silent Key Tab      A    M        WindowList (CurrentDesk) Root c c CurrentAtEnd
                      NoCurrentDeskTitle SelectOnRelease Meta_L
 
 # Desktop Controls
-Silent Key 1        A    4        GotoDesk 0 0
-Silent Key 2        A    4        GotoDesk 0 1
-Silent Key 3        A    4        GotoDesk 0 2
-Silent Key 1        A    S4       MoveAndGotoDesk 0 0
-Silent Key 2        A    S4       MoveAndGotoDesk 0 1
-Silent Key 3        A    S4       MoveAndGotoDesk 0 2
+Silent Key 1        A    C4       GotoDesk 0 0
+Silent Key 2        A    C4       GotoDesk 0 1
+Silent Key 1        A    SC4      MoveAndGotoDesk 0 0
+Silent Key 2        A    SC4      MoveAndGotoDesk 0 1
+Silent Key 1        A    4        GotoPage 0 0
+Silent Key 2        A    4        GotoPage 1 0
+Silent Key 3        A    4        GotoPage 2 0
+Silent Key 4        A    4        GotoPage 0 1
+Silent Key 5        A    4        GotoPage 1 1
+Silent Key 6        A    4        GotoPage 2 1
+Silent Key 7        A    4        GotoPage 0 2
+Silent Key 8        A    4        GotoPage 1 2
+Silent Key 9        A    4        GotoPage 2 2
+Silent Key 1        A    S4       MoveAndGotoPage 0 0
+Silent Key 2        A    S4       MoveAndGotoPage 1 0
+Silent Key 3        A    S4       MoveAndGotoPage 2 0
+Silent Key 4        A    S4       MoveAndGotoPage 0 1
+Silent Key 5        A    S4       MoveAndGotoPage 1 1
+Silent Key 6        A    S4       MoveAndGotoPage 2 1
+Silent Key 7        A    S4       MoveAndGotoPage 0 2
+Silent Key 8        A    S4       MoveAndGotoPage 1 2
+Silent Key 9        A    S4       MoveAndGotoPage 2 2
 Silent Key K        A    M        GotoPage 0p -1p
 Silent Key J        A    M        GotoPage 0p +1p
 Silent Key H        A    M        GotoPage -1p 0p
@@ -222,10 +320,14 @@ Silent Key Tab      A    4        GotoPage prev
 Silent Key Print    A    4        Exec exec flameshot full -p ~/Pictures
 Silent Key Print    A    4S       Exec exec flameshot gui
 
-# Volume Buttons
+# Audio Controls
 Silent Key XF86AudioLowerVolume A A Exec exec pamixer --unmute --decrease 2
 Silent Key XF86AudioRaiseVolume A A Exec exec pamixer --unmute --increase 2
 Silent Key XF86AudioMute A A Exec exec pamixer --toggle-mute
+Silent Key XF86AudioNext A A Exec exec audacious --fwd
+Silent Key XF86AudioPrev A A Exec exec audacious --rew
+Silent Key XF86AudioPlay A A Exec exec audacious --play-pause
+Silent Key XF86AudioStop A A Exec exec audacious --stop
 
 # Brightness Buttons
 Silent Key XF86MonBrightnessUp A A Exec exec xbrightness +5000
@@ -438,7 +540,8 @@ Style "FvwmPager" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 # StaysOnTop
 DestroyModuleConfig FvwmPager: *
-*FvwmPager: Geometry 640x200+0-0
+#*FvwmPager: Geometry 214x200+0-0
+*FvwmPager: Geometry 268x250+0-0
 *FvwmPager: Colorset * 9
 *FvwmPager: HilightColorset * 10
 *FvwmPager: BalloonColorset * 9
@@ -451,7 +554,7 @@ DestroyModuleConfig FvwmPager: *
 *FvwmPager: MiniIcons
 *FvwmPager: UseSkipList
 *FvwmPager: Rows 1
-*FvwmPager: Columns 3
+*FvwmPager: Columns 1
 # *FvwmPager: DeskHilight Black
 # *FvwmPager: Hilight Black
 
@@ -460,13 +563,13 @@ Style "MyButtons" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
 
 DestroyModuleConfig MyButtons: *
 #*MyButtons: Geometry 840x120+640-0
-*MyButtons: Geometry 840x120+1500-0
+*MyButtons: Geometry 818x120+1511-0
 *MyButtons: Colorset 9
 *MyButtons: Rows 1
-*MyButtons: Columns 38
+*MyButtons: Columns 37
 *MyButtons: Frame 0
 *MyButtons: Font "Shadow=3:xft:Sans:Bold:pixelsize=28:minspace=True:antialias=True"
-*MyButtons: (2x1, Frame 0, Title(Center) "")
+*MyButtons: (1x1, Frame 0, Title(Center) "")
 *MyButtons: (5x1, Frame 0, Icon 96x96/terminal.png, \
   Action(Mouse 1) "FvwmTerm", \
   Action(Mouse 3) "FvwmTerm")
@@ -513,12 +616,12 @@ Style ConfirmQuit !Title, PositionPlacement Center, WindowListSkip, Layer 6
 # actions that are run after a restart.
 DestroyFunc StartFunction
 AddToFunc   StartFunction
-+ I Module FvwmPager 0 2
++ I Module FvwmPager 0 0
 + I Module FvwmButtons MyButtons
 
 DestroyFunc FvwmTerm
 AddToFunc FvwmTerm
-+ I Exec exec xfce4-terminal
++ I Exec exec urxvtc --geometry 85x33
 
 DestroyFunc FvwmBrowser
 AddToFunc FvwmBrowser
@@ -558,7 +661,11 @@ AddToFunc FvwmChat
 
 DestroyFunc FvwmGimp
 AddToFunc FvwmGimp
-+ I Exec exec /usr/bin/gimp
++ I Exec exec gimp
+
+DestroyFunc FvwmSteam
+AddToFunc FvwmSteam
++ I Exec exec steam
 
 DestroyFunc FvwmShutdown
 AddToFunc FvwmShutdown
@@ -602,11 +709,13 @@ DestroyFunc InitFunction
 AddToFunc InitFunction
 # will cause problems when move windows across pages
 # + I Exec exec xcompmgr -c -t-5 -l-5 -r4.2 -o.55 &
++ I Exec exec urxvtd -q
 + I Exec exec feh --bg-fill $[fvwm_wallpaper]/mountain2.jpg
 + I Exec exec xclock -digital -bg "#ffffff" -fg "#000000" -face \
   "Sans:Bold:antialias=false:Regular::size=12" -strftime "%I:%M:%S %p" \
   -p 16 -geometry 290x70-0-0 -update 1
 + I FvwmTerm
++ I FvwmEditor
 + I FvwmMusicPlayer
 + I FvwmBrowser
 + I Exec exec xscreensaver
@@ -651,7 +760,7 @@ AddToFunc MoveToCurrent
 # and is used with the help menu.
 DestroyFunc ViewManPage
 AddToFunc   ViewManPage
-+ I Exec exec xfce4-terminal --geometry=80x40 \
++ I Exec exec urxvtc --geometry 80x40 \
   --title="Manual Page - $0" --execute man "$0"
 
 # Function: SetBG $0
@@ -1045,3 +1154,18 @@ AddToFunc SwapWindows
 + I UnsetEnv FvwmCoord_current
 + I UnsetEnv FvwmId_dest
 + I UnsetEnv FvwmCoord_dest
+
+DestroyFunc ResizeBig
+AddToFunc ResizeBig
++ I Resize 85 85
++ I Move 50-50w 50-50w
+
+DestroyFunc ResizeTall
+AddToFunc ResizeTall
++ I Resize 36 72
++ I Move w 50-50w
+
+DestroyFunc ResizeWide
+AddToFunc ResizeWide
++ I Resize 40 49
++ I Move w 50-50w

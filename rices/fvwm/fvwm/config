@@ -588,15 +588,15 @@ Style "MyButtons" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
 DestroyModuleConfig MyButtons: *
 #*MyButtons: Geometry 476x60+1682-10
 #*MyButtons: Geometry 2860x60+480-0
-*MyButtons: Geometry 530x60+1655-10
+*MyButtons: Geometry 520x60+1660-10
 *MyButtons: Colorset 9
 *MyButtons: Rows 1
 #*MyButtons: Columns 43
-*MyButtons: Columns 48
+*MyButtons: Columns 47
 #*MyButtons: Columns 258
 *MyButtons: Frame 0
 *MyButtons: Font "Shadow=3:xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
-*MyButtons: (2x1, Frame 0, Title(Center) "")
+*MyButtons: (1x1, Frame 0, Title(Center) "")
 *MyButtons: (5x1, Frame 0, Icon 48x48/nixos.png, \
   Action(Mouse 1) "FvwmLaunch")
 *MyButtons: (5x1, Frame 0, Icon 48x48/terminal.png, \
