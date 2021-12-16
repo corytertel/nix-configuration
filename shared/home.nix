@@ -199,6 +199,7 @@
     stalonetray
     imagemagick
     audacious
+    xarchiver
 
     discord
     betterdiscord-installer
