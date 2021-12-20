@@ -16,22 +16,28 @@
     enable = true;
     #inactiveDim = "0.01";
     inactiveOpacity = "0.93";
-    activeOpacity = "0.98";
+    activeOpacity = "1.00";
     blur = true;
     experimentalBackends = true;
+    opacityRule = [
+      "100:class_g   *?= 'XClock'"
+      "100:class_g   *?= 'FvwmButtons'"
+      "100:class_g   *?= 'FvwmPager'"
+      "100:class_g   *?= 'FvwmScript'"
+    ];
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 4;
-    '';
-      # corner-radius = 10;
-      # round-borders = 1;
+      corner-radius = 10;
+      round-borders = 1;
 
-      # rounded-corners-exclude = [
-      #   "class_g = 'dmenu'",
-      # ];
+      rounded-corners-exclude = [
+        "class_g = 'dmenu'",
+      ];
+    '';
     fade = true;
     fadeDelta = 5;
-    shadow = true;
+    shadow = false;
     #shadowExclude = [
     #  "class_g   *?= 'Xclock'"
     #];

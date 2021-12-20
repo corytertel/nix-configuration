@@ -35,6 +35,8 @@ SetEnv fvwm_home $[HOME]/.fvwm
 SetEnv fvwm_img $[fvwm_home]/images
 SetEnv fvwm_icon $[fvwm_img]/icons
 SetEnv fvwm_wallpaper $[fvwm_img]/wallpaper
+SetEnv fvwm_cache $[fvwm_home]/cache
+SetEnv fvwm_scripts $[fvwm_home]/scripts
 
 SetEnv fvwm_music_player audacious
 SetEnv fvwm_video_player celluloid
@@ -78,7 +80,7 @@ Style * EdgeMoveDelay 350, EdgeMoveResistance 350
 # EwmhBaseStruts [left] [right] [top] [bottom]
 # Reserves space along the edge(s) of the Screen that will not
 # be covered when maximizing or placing windows.
-EwmhBaseStruts 0 0 0 70
+EwmhBaseStruts 0 0 0 80
 
 # This sets the ClickTime and MoveThreshold used to determine
 # Double Clicks, Hold and Move for the mouse.
@@ -183,7 +185,8 @@ Mouse 1 A C4 Scroll reverse
 # Simple Commands
 Silent Key Return   A     4       FvwmTerm
 Silent Key Return   A     4S      FvwmEditor
-Silent Key apostrophe A   4       Exec exec xfce4-terminal --drop-down
+#Silent Key apostrophe A   4       Exec exec xfce4-terminal --drop-down
+Silent Key apostrophe A   4       Exec exec urxvtc -geometry 120x40+1190+525 -icon $[fvwm_icon]/96x96/terminal.png
 Silent Key Space    A     4       FvwmLaunch
 Silent Key E        A     4       FvwmFileManager
 Silent Key Space    A     4C      Exec exec /home/cory/.nix-configuration/shared/apps/layout_switch/layout_switch.sh
@@ -232,7 +235,6 @@ Silent Key L        A     4C      Maximize growright 0
 Silent Key J        A     4C      Maximize 0 growdown
 Silent Key K        A     4C      Maximize 0 growup
 
-
 # Needs Work
 #Key Space  A    4    ToggleTiling 
 #Key Space  A    C4   WindowToggleTiling
@@ -248,7 +250,7 @@ Silent Key C        A     4       AnimatedMove 50-50w 50-50w
 #Silent Key C        A     C4      AnimatedMove 50-50w 0w
 Silent Key C        A     S4      AnimatedMove w 50-50w
 Silent Key C        A     C4      AnimatedMove 50-50w w
-Silent Key M        A     4       AnimatedMove m-50w m-50w
+Silent Key M        A     4       AnimatedMove m-50w m-50w # move to mouse pointer
 SIlent Key backslash A    4       ResizeBig
 SIlent Key backslash A    S4      ResizeTall
 SIlent Key backslash A    C4      ResizeWide
@@ -258,7 +260,8 @@ Silent Key T        A     4       Toggle-Title
 Silent Key S        A     S4      Stick
 Silent Key S        A     4       Warp-and-Resize
 Silent Key A        A     4       Warp-and-Move
-Silent Key X	      A     4       Iconify true
+Silent Key I	      A     4       Iconify true
+Silent Key I	      A     S4      Thumbnail
 Silent Key R	      A     S4      RefreshWindow
 Silent Key R	      A     C4      Restart
 
@@ -323,9 +326,9 @@ Silent Key Print    A    4        Exec exec flameshot full -p ~/Pictures
 Silent Key Print    A    4S       Exec exec flameshot gui
 
 # Audio Controls
-Silent Key XF86AudioLowerVolume A A Exec exec pamixer --unmute --decrease 2
-Silent Key XF86AudioRaiseVolume A A Exec exec pamixer --unmute --increase 2
-Silent Key XF86AudioMute A A Exec exec pamixer --toggle-mute
+Silent Key XF86AudioLowerVolume A A Exec exec amixer -q set Master unmute 2%-
+Silent Key XF86AudioRaiseVolume A A Exec exec amixer -q set Master unmute 2%+
+Silent Key XF86AudioMute A A Exec exec amixer -q set Master toggle
 Silent Key XF86AudioNext A A Exec exec audacious --fwd
 Silent Key XF86AudioPrev A A Exec exec audacious --rew
 Silent Key XF86AudioPlay A A Exec exec audacious --play-pause
@@ -349,9 +352,9 @@ Silent Key XF86MonBrightnessDown A A Exec exec xbrightness -5000
 #Colorset 3 fg #101060, bg #f8f8f8       # fg: darkblue, bg: milk white
 #Colorset 3 fg #f0f0f0, bg #110b3a  # bg: dark blue
 #Colorset 3 fg #0f0f0f, bg #f0f0f0
-Colorset 3 fg #0f0f0f, bg #b2b2b2
+Colorset 3 fg #ac8a8c, bg #ac8a8c
 #Colorset 4 fg #0f0f0f, bg #f0f0f0
-Colorset 4 fg #0f0f0f, bg #d9d9d9
+Colorset 4 fg #f0f0f0, bg #f0f0f0
 Colorset 5 fg #f0f0f0, bg #0f0f0f
 
 DestroyDecor FlatDecor
@@ -381,8 +384,8 @@ AddToDecor   FlatDecor
 + BorderStyle Simple -- NoInset Flat
 + ButtonStyle All -- UseTitleStyle
 
-DestroyDecor PlainDecor
-AddToDecor   PlainDecor
+DestroyDecor BlankDecor
+AddToDecor   BlankDecor
 + TitleStyle Centered Height 50 -- Flat
 + ButtonStyle 1 \
         ActiveUp     (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
@@ -408,15 +411,46 @@ AddToDecor   PlainDecor
 + BorderStyle Simple -- NoInset Flat
 + ButtonStyle All -- UseTitleStyle
 
-Style "*" UseDecor PlainDecor
+DestroyDecor NewDecor
+AddToDecor   NewDecor
++ TitleStyle Centered Height 50 -- Flat
++ ButtonStyle 1 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/menu-activeup.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/menu-activedown.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/menu-activedown.png -- Flat)
++ ButtonStyle 2 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/close-activeup.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat)
++ ButtonStyle 4 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/maximize-activeup.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/maximize-activedown.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/maximize-activedown.png -- Flat)
++ ButtonStyle 6 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/iconify-activeup.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/iconify-activedown.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/iconify-activedown.png -- Flat)
++ ButtonStyle All - Clear
++ ButtonStyle 1 - MwmDecorMenu
++ ButtonStyle 4 - MwmDecorMax
++ ButtonStyle 6 - MwmDecorMin
++ TitleStyle -- Flat
++ BorderStyle Simple -- NoInset Flat
++ ButtonStyle All -- UseTitleStyle
+
+Style "*" UseDecor NewDecor
 #Style "*" Font "xft:Tinos Nerd Font:size=11:minspace=False:antialias=True"
-Style "*" Font "xft:Tinos Nerd Font:pixelsize=0:minspace=False"
+Style "*" Font "xft:Tinos Nerd Font:pixelsize=0:minspace=False:antialias=True"
 Style "*" BorderWidth 1, HandleWidth 1
 Style "*" MWMBorder, FirmBorder
+Style "*" PositionPlacement Center
 Style "*" Colorset 4
 Style "*" HilightColorset 3
 Style "*" BorderColorset 4
-Style "*" HilightBorderColorset 5
+Style "*" HilightBorderColorset 3
+## Minimize to Thumbnail Placeholder
+Style "*" IconBox 960x540+24+24, IconGrid 15 15, \
+IconFill top left, !IconTitle, IconBackgroundRelief 0
 
 # Decor Styles
 #Style * BorderWidth 10, HandleWidth 10, MWMButtons, FvwmBorder, FirmBorder
@@ -440,15 +474,18 @@ MenuStyle * VerticalItemSpacing 1 1, VerticalTitleSpacing 2 2
 MenuStyle * MenuColorset 7
 MenuStyle * ActiveFore, Hilight3DOff
 MenuStyle * ActiveColorset 8
-MenuStyle * Font "Shadow=2:xft:Tinos Nerd Font:size=13:antialias=True"
+#MenuStyle * Font "Shadow=2:xft:Tinos Nerd Font:size=13:antialias=True"
+MenuStyle * Font "xft:Tinos Nerd Font:size=13:antialias=True"
 
 PipeRead fvwm-menu-xlock
 PipeRead fvwm-menu-desktop --enable-mini-icons --desktop kde
 
 DestroyMenu FvwmRootMenu
 AddToMenu FvwmRootMenu
-+ "Run%menu/find.svg%" FvwmLaunch
-+ "Applications%menu/applications.svg%" Popup FvwmProgramsMenu
+#+ "Run%menu/find.svg%" FvwmLaunch
++ "Run%menu/find.png%" FvwmLaunch
+#+ "Applications%menu/applications.svg%" Popup FvwmProgramsMenu
++ "Applications%menu/applications.png%" Popup FvwmProgramsMenu
 + "Terminal%menu/terminal.png%" FvwmTerm
 + "" Nop
 + "Wallpaper%menu/wallpaper.png%" Popup FvwmWallpaperMenu
@@ -477,9 +514,12 @@ AddToMenu FvwmOpsMenu
 + "" Nop
 + "Stick%menu/window-stick.xpm%"  Stick
 + "Identify%menu/window-identify.xpm%"  Module FvwmIdent
-+ "%menu/display.xpm%Screenshot" FvwmDesktopScreenshot
-+ "%menu/window.xpm%Selection Screenshot"  FvwmSelectionScreenshot
-+ "Shutdown%menu/shutdown.svg%" FvwmShutdown
+#+ "%menu/display.xpm%Screenshot" FvwmDesktopScreenshot
++ "%menu/display.png%Screenshot" FvwmDesktopScreenshot
+#+ "%menu/window.xpm%Selection Screenshot"  FvwmSelectionScreenshot
++ "%menu/window.png%Selection Screenshot"  FvwmSelectionScreenshot
+#+ "Shutdown%menu/shutdown.svg%" FvwmShutdown
++ "Shutdown%menu/shutdown.png%" FvwmShutdown
 
 DestroyMenu FvwmWallpaperMenu
 AddToMenu   FvwmWallpaperMenu
@@ -487,6 +527,8 @@ AddToMenu   FvwmWallpaperMenu
 + " Red Dots " Exec exec feh --bg-fill $[fvwm_wallpaper]/dots.png
 + " Asuka 98 " Exec exec feh --bg-fill $[fvwm_wallpaper]/asuka98.jpg
 + " Eugen " Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen.png
++ " Eugen 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen2.jpg
++ " Eugen Beach " Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen-beach.jpg
 + " Mountain " Exec exec feh --bg-fill $[fvwm_wallpaper]/mountain.jpg
 + " Mountain 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/mountain2.jpg
 + " Trees " Exec exec feh --bg-fill $[fvwm_wallpaper]/trees.jpg
@@ -495,6 +537,7 @@ AddToMenu   FvwmWallpaperMenu
 + " Swirls 3 " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls3.jpg
 + " Swirls 4 " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls4.jpg
 + " Flower " Exec exec feh --bg-fill $[fvwm_wallpaper]/flower.jpg
++ " Christmas " Exec exec feh --bg-fill $[fvwm_wallpaper]/christmas.jpg
 
 DestroyMenu FvwmVolumeMenu
 AddToMenu FvwmVolumeMenu
@@ -550,9 +593,9 @@ AddToMenu   MenuWindowOpsLong
 + "Identify"            Module FvwmIdent
 
 # Colorset 9 fg rgb:00/00/00, hi rgb:00/00/00, sh rgb:00/00/00, bg rgb:e9/e9/d9
-#Colorset 9 RootTransparent, fg Black, bg average, sh Black, \
-# hi #202070, Tint White 30, bgTint White 60
-Colorset 9 fg #0f0f0f, bg #f0f0f0, sh Black, hi #202070
+Colorset 9 RootTransparent, fg #0f0f0f, bg average, sh #0f0f0f, \
+ hi #202070, Tint #f0f0f0 30, bgTint #f0f0f0 70
+#Colorset 9 fg #0f0f0f, bg #f0f0f0, sh Black, hi #202070
 Colorset 10 fg rgb:00/00/00, hi rgb:dd/00/00, sh rgb:dd/00/00, bg rgb:fb/fc/ec
 
 DestroyModuleConfig FvwmIdent: *
@@ -570,7 +613,7 @@ DestroyModuleConfig FvwmPager: *
 *FvwmPager: BalloonColorset * 9
 *FvwmPager: WindowColorsets 9 10
 #*FvwmPager: Font "xft:Tinos Nerd Font:pixelsize=21:minspace=True:antialias=True"
-*FvwmPager: Font "xft:Tinos Nerd Font:pixelsize=0:minspace=True:antialias=True"
+*FvwmPager: Font none
 *FvwmPager: Balloons All
 *FvwmPager: BalloonFont "xft:Tinos Nerd Font:pixelsize=21:minspace=True:antialias=True"
 *FvwmPager: BallonYOffset +2
@@ -595,7 +638,8 @@ DestroyModuleConfig MyButtons: *
 *MyButtons: Columns 47
 #*MyButtons: Columns 258
 *MyButtons: Frame 0
-*MyButtons: Font "Shadow=3:xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
+#*MyButtons: Font "Shadow=3:xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
+*MyButtons: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
 *MyButtons: (1x1, Frame 0, Title(Center) "")
 *MyButtons: (5x1, Frame 0, Icon 48x48/nixos.png, \
   Action(Mouse 1) "FvwmLaunch")
@@ -621,9 +665,15 @@ DestroyModuleConfig MyButtons: *
 Style "xclock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 
+Style DateTime NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+  CirculateSkip, FixedPosition, FixedSize, !Iconifiable
+Style DateTime PositionPlacement -10p +2090p
+
 Style "Steam" NoTitle, !Handles, !Borders, FixedPosition
 
-Style "Firefox" NoTitle
+#Style "Firefox" NoTitle
+
+Style "Io.github.celluloid_player.Celluloid" NoTitle
 
 Style ConfirmQuit !Title, PositionPlacement Center, WindowListSkip, Layer 6
 
@@ -651,10 +701,11 @@ DestroyFunc StartFunction
 AddToFunc   StartFunction
 + I Module FvwmPager 0 0
 + I Module FvwmButtons MyButtons
++ I Module FvwmScript FvwmScript-DateTime
 
 DestroyFunc FvwmTerm
 AddToFunc FvwmTerm
-+ I Exec exec urxvtc --geometry 85x33
++ I Exec exec urxvtc --geometry 85x33 -icon $[fvwm_icon]/96x96/terminal.png
 
 DestroyFunc FvwmBrowser
 AddToFunc FvwmBrowser
@@ -743,7 +794,7 @@ AddToFunc InitFunction
 # will cause problems when move windows across pages
 # + I Exec exec xcompmgr -c -t-5 -l-5 -r4.2 -o.55 &
 + I Exec exec urxvtd -q
-+ I Exec exec feh --bg-fill $[fvwm_wallpaper]/flower.jpg
++ I Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen-beach.jpg
 + I Exec exec xclock -digital -bg "#f0f0f0" -fg "#0f0f0f" -face \
   "Tinos Nerd Font:size=14" -strftime "%I:%M:%S %p  %a, %b %d, %Y" \
   -p 13 -geometry 420x60-10-10 -update 1
@@ -793,7 +844,7 @@ AddToFunc MoveToCurrent
 # and is used with the help menu.
 DestroyFunc ViewManPage
 AddToFunc   ViewManPage
-+ I Exec exec urxvtc --geometry 80x40 \
++ I Exec exec urxvtc --geometry 80x40 -icon $[fvwm_icon]/96x96/terminal.png \
   --title="Manual Page - $0" --execute man "$0"
 
 # Function: SetBG $0
@@ -1202,3 +1253,15 @@ DestroyFunc ResizeWide
 AddToFunc ResizeWide
 + I Resize 40 49
 + I Move w 50-50w
+
+## To Create a Thumbnail on Minimize
+# Call the script to create a thumbnail using ImageMagick & xwd
+DestroyFunc Thumbnail
+AddToFunc Thumbnail
++ I ThisWindow (Shaded) WindowShade
++ I PipeRead 'bash $[fvwm_scripts]/crthumb "$[w.id]" "$[fvwm_cache]"'
+# Restore the window
+DestroyFunc DeThumbnail
+AddToFunc DeThumbnail
++ I PipeRead 'bash $[fvwm_scripts]/dethumb "$[w.id]" "$[fvwm_cache]"'
+*FvwmEvent: deiconify DeThumbnail

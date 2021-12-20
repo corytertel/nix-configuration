@@ -46,15 +46,15 @@
     highlight:     underline bold #0f0f0f;
 
     transparent: rgba(0,0,0,0);
-    font: "Tinos Nerd Font 22";
+    font: "Tinos Nerd Font 16";
 }
 window {
     location: center;
     anchor:   center;
     transparency: "screenshot";
-   padding: 20px;
+   padding: 15px;
     border:  0px;
-    border-radius: 20px;
+    border-radius: 15px;
     color: @magenta;
     background-color: @black;
     spacing: 0;
@@ -67,9 +67,9 @@ mainbox {
 }
 message {
     border-color: @background-color;
-    border:  0px 4px 4px 4px;
-//    border-radius: 20px;
-    padding: 10;
+    border:  0px 3px 3px 3px;
+//    border-radius: 15px;
+    padding: 7;
     background-color: @tcyan;
 }
 message {
@@ -78,34 +78,34 @@ message {
 }
 inputbar {
     color: @white;
-    padding: 22px;
+    padding: 17px;
     background-color: @black;
-    border: 4px 4px 4px 4px;
-    border-radius:  30px 30px 0px 0px;
+    border: 3px 3px 3px 3px;
+    border-radius:  23px 23px 0px 0px;
     border-color: @background-color;
-    font: "Tinos Nerd Font 22";
+    font: "Tinos Nerd Font 16";
 }
 entry,prompt,case-indicator {
     text-font: inherit;
     text-color:inherit;
 }
 prompt {
-    margin:     0px 0.6em 0em 0em ;
+    margin:     0px 0.4em 0em 0em ;
 }
 listview {
-    padding: 16px;
-    border-radius: 0px 0px 30px 30px;
+    padding: 12px;
+    border-radius: 0px 0px 23px 23px;
     border-color: @background-color;
-    border: 4px 4px 4px 4px;
+    border: 3px 3px 3px 3px;
     background-color: #f0f0f0;
     dynamic: false;
     lines: 10;
 }
 element {
-    padding: 6px;
+    padding: 4px;
     vertical-align: 0.5;
-//    border: 4px;
-    border-radius: 8px;
+//    border: 3px;
+    border-radius: 6px;
     background-color: transparent;
     color: @foreground;
     font:inherit;
@@ -116,6 +116,7 @@ element-text {
 }
 element selected.normal {
     background-color: @blue;
+    foreground-color: @black;
 }
 element normal active {
     foreground: @lightblue;
@@ -133,11 +134,11 @@ element alternate urgent {
 }
 element selected active {
     background-color: @lightblue;
-    foreground: @dark;
+    foreground: @black;
 }
 element selected urgent {
     background-color: @lightred;
-    foreground: @dark;
+    foreground: @black;
 }
 element normal normal {
 
@@ -156,10 +157,10 @@ mode-switcher {
     border: 0px 0px 0px 0px;
 }
 button {
-    font: "FontAwesome 44";
-    padding: 12px;
-    border: 4px 0px 4px 4px;
-    border-radius: 8px 0px 0px 8px;
+    font: "FontAwesome 33";
+    padding: 9px;
+    border: 3px 0px 3px 3px;
+    border-radius: 6px 0px 0px 6px;
     background-color: @tlightblack;
     border-color: @background-color;
     color: @foreground;
@@ -167,7 +168,7 @@ button {
 }
 button selected normal {
     color: @dark;
-    border: 4px 0px 4px 4px;
+    border: 3px 0px 3px 3px;
     background-color: @backlight;
     border-color: @background-color;
 }
@@ -175,6 +176,6 @@ error-message {
     expand: true;
     background-color: red;
     border-color: darkred;
-    border: 4px;
+    border: 3px;
     padding: 2em;
 }

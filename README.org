@@ -66,6 +66,11 @@
 + Sort through and remove unnecessary files in `old`
 + Add ksh dotfiles to nix
 + Add firefox home-manager configuration
+  + old firefox ui user.js
+  + privacy features
+    + history, cookies, etc
+  + extensions
+  + themes
 + Default applications
 
 ** Bugs

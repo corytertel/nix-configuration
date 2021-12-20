@@ -200,6 +200,7 @@
     imagemagick
     audacious
     xarchiver
+    xbanish
 
     discord
     betterdiscord-installer
