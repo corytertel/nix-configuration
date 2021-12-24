@@ -302,7 +302,8 @@
 
   # Fonts
   fonts.fonts = with pkgs; [
-    #roboto-mono
+    #roboto
+    roboto-mono
     #iosevka
     nerdfonts
     source-code-pro

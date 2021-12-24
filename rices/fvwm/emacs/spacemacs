@@ -66,7 +66,9 @@ This function should only modify configuration layer settings."
      rust
      java
      (clojure :variables
-              clojure-enable-fancify-symbols t)
+              clojure-enable-fancify-symbols t
+              clojure-backend 'lsp
+              clojure-enable-linters '(clj-kondo joker))
      javascript
      vimscript
      latex

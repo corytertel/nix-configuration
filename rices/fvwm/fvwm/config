@@ -523,6 +523,7 @@ AddToMenu FvwmOpsMenu
 
 DestroyMenu FvwmWallpaperMenu
 AddToMenu   FvwmWallpaperMenu
++ " NixOS " Exec exec feh --bg-fill $[fvwm_wallpaper]/nixos.png
 + " Clannad " Exec exec feh --bg-fill $[fvwm_wallpaper]/clannad.jpg
 + " Red Dots " Exec exec feh --bg-fill $[fvwm_wallpaper]/dots.png
 + " Asuka 98 " Exec exec feh --bg-fill $[fvwm_wallpaper]/asuka98.jpg
@@ -625,42 +626,74 @@ DestroyModuleConfig FvwmPager: *
 # *FvwmPager: DeskHilight Black
 # *FvwmPager: Hilight Black
 
-Style "MyButtons" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+Style "BottomDock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
 
-DestroyModuleConfig MyButtons: *
-#*MyButtons: Geometry 476x60+1682-10
-#*MyButtons: Geometry 2860x60+480-0
-*MyButtons: Geometry 520x60+1660-10
-*MyButtons: Colorset 9
-*MyButtons: Rows 1
-#*MyButtons: Columns 43
-*MyButtons: Columns 47
-#*MyButtons: Columns 258
-*MyButtons: Frame 0
-#*MyButtons: Font "Shadow=3:xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
-*MyButtons: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
-*MyButtons: (1x1, Frame 0, Title(Center) "")
-*MyButtons: (5x1, Frame 0, Icon 48x48/nixos.png, \
+DestroyModuleConfig BottomDock: *
+#*BottomDock: Geometry 476x60+1682-10
+#*BottomDock: Geometry 2860x60+480-0
+*BottomDock: Geometry 520x60+1660-10
+*BottomDock: Colorset 9
+*BottomDock: Rows 1
+#*BottomDock: Columns 43
+*BottomDock: Columns 47
+#*BottomDock: Columns 258
+*BottomDock: Frame 0
+#*BottomDock: Font "Shadow=3:xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
+*BottomDock: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
+*BottomDock: (1x1, Frame 0, Title(Center) "")
+*BottomDock: (5x1, Frame 0, Icon 48x48/nixos.png, \
   Action(Mouse 1) "FvwmLaunch")
-*MyButtons: (5x1, Frame 0, Icon 48x48/terminal.png, \
+*BottomDock: (5x1, Frame 0, Icon 48x48/terminal.png, \
   Action(Mouse 1) "FvwmTerm", \
   Action(Mouse 3) "FvwmTerm")
-*MyButtons: (5x1, Frame 0, Icon 48x48/Thunar.png, \
+*BottomDock: (5x1, Frame 0, Icon 48x48/Thunar.png, \
   Action(Mosue 1) "FvwmFileManager")
-*MyButtons: (5x1, Frame 0, Icon 48x48/firefox.png, \
+*BottomDock: (5x1, Frame 0, Icon 48x48/firefox.png, \
   Action(Mosue 1) "FvwmBrowser")
-*MyButtons: (5x1, Frame 0, Icon 48x48/emacs.png, \
+*BottomDock: (5x1, Frame 0, Icon 48x48/emacs.png, \
   Action(Mouse 1) "FvwmEditor")
-*MyButtons: (5x1, Frame 0, Icon 48x48/discord.png, \
+*BottomDock: (5x1, Frame 0, Icon 48x48/discord.png, \
   Action(Mouse 1) "FvwmChat")
-*MyButtons: (5x1, Frame 0, Icon 48x48/audacious.png, \
+*BottomDock: (5x1, Frame 0, Icon 48x48/audacious.png, \
   Action(Mouse 1) "FvwmMusicPlayer")
-*MyButtons: (5x1, Frame 0, Icon 48x48/gimp.png, \
+*BottomDock: (5x1, Frame 0, Icon 48x48/gimp.png, \
   Action(Mouse 1) "FvwmGimp")
-*MyButtons: (5x1, Frame 0, Icon 48x48/steam.png, \
+*BottomDock: (5x1, Frame 0, Icon 48x48/steam.png, \
   Action(Mouse 1) "FvwmSteam")
-*MyButtons: (1x1, Frame 0)
+*BottomDock: (1x1, Frame 0)
+
+Style "LeftDock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+  CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
+
+DestroyModuleConfig LeftDock: *
+*LeftDock: Geometry 60x520+10+820
+*LeftDock: Colorset 9
+*LeftDock: Rows 47
+*LeftDock: Columns 1
+*LeftDock: Frame 0
+*LeftDock: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
+*LeftDock: (1x1, Frame 0, Title(Center) "")
+*LeftDock: (1x5, Frame 0, Icon 48x48/nixos.png, \
+  Action(Mouse 1) "FvwmLaunch")
+*LeftDock: (1x5, Frame 0, Icon 48x48/terminal.png, \
+  Action(Mouse 1) "FvwmTerm", \
+  Action(Mouse 3) "FvwmTerm")
+*LeftDock: (1x5, Frame 0, Icon 48x48/Thunar.png, \
+  Action(Mosue 1) "FvwmFileManager")
+*LeftDock: (1x5, Frame 0, Icon 48x48/firefox.png, \
+  Action(Mosue 1) "FvwmBrowser")
+*LeftDock: (1x5, Frame 0, Icon 48x48/emacs.png, \
+  Action(Mouse 1) "FvwmEditor")
+*LeftDock: (1x5, Frame 0, Icon 48x48/discord.png, \
+  Action(Mouse 1) "FvwmChat")
+*LeftDock: (1x5, Frame 0, Icon 48x48/audacious.png, \
+  Action(Mouse 1) "FvwmMusicPlayer")
+*LeftDock: (1x5, Frame 0, Icon 48x48/gimp.png, \
+  Action(Mouse 1) "FvwmGimp")
+*LeftDock: (1x5, Frame 0, Icon 48x48/steam.png, \
+  Action(Mouse 1) "FvwmSteam")
+*LeftDock: (1x1, Frame 0)
 
 Style "xclock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
@@ -700,7 +733,7 @@ Style ConfirmQuit !Title, PositionPlacement Center, WindowListSkip, Layer 6
 DestroyFunc StartFunction
 AddToFunc   StartFunction
 + I Module FvwmPager 0 0
-+ I Module FvwmButtons MyButtons
++ I Module FvwmButtons BottomDock
 + I Module FvwmScript FvwmScript-DateTime
 
 DestroyFunc FvwmTerm
@@ -795,9 +828,9 @@ AddToFunc InitFunction
 # + I Exec exec xcompmgr -c -t-5 -l-5 -r4.2 -o.55 &
 + I Exec exec urxvtd -q
 + I Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen-beach.jpg
-+ I Exec exec xclock -digital -bg "#f0f0f0" -fg "#0f0f0f" -face \
-  "Tinos Nerd Font:size=14" -strftime "%I:%M:%S %p  %a, %b %d, %Y" \
-  -p 13 -geometry 420x60-10-10 -update 1
+# + I Exec exec xclock -digital -bg "#f0f0f0" -fg "#0f0f0f" -face \
+#   "Tinos Nerd Font:size=14" -strftime "%I:%M:%S %p  %a, %b %d, %Y" \
+#   -p 13 -geometry 420x60-10-10 -update 1
 + I FvwmTerm
 + I FvwmEditor
 + I FvwmMusicPlayer

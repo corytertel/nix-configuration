@@ -86,13 +86,19 @@
     nodejs
     yarn
 
+  # clojure
+    clisp
+    clojure
+    clojure-lsp
+    leiningen
+    joker
+    clj-kondo
+
   # other programing languages
     python39Full
     python39Packages.pip
     rustc
     rust-analyzer
-    clisp
-    leiningen
 
    # essential user apps
     tdesktop
