@@ -164,33 +164,43 @@
   hardware.pulseaudio.enable = true;
   sound.mediaKeys.enable = true;
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  services.xserver.libinput.enable = true;
-  services.xserver.libinput.touchpad.accelProfile = "adaptive";
-  #services.xserver.libinput.touchpad.accelProfile = "flat";
-  services.xserver.libinput.touchpad.accelSpeed = null;
-  services.xserver.libinput.touchpad.additionalOptions = "";
-  services.xserver.libinput.touchpad.buttonMapping = null;
-  services.xserver.libinput.touchpad.calibrationMatrix = null;
-  services.xserver.libinput.touchpad.clickMethod = "clickfinger"; #sets trackpad to two-finger rightclick instead of button areas
-  services.xserver.libinput.touchpad.dev = null;
-  services.xserver.libinput.touchpad.disableWhileTyping = false;
-  services.xserver.libinput.touchpad.horizontalScrolling = true;
-  services.xserver.libinput.touchpad.leftHanded = false;
-  services.xserver.libinput.touchpad.middleEmulation = false;
-  services.xserver.libinput.touchpad.naturalScrolling = true;
-  services.xserver.libinput.touchpad.scrollButton = null;
-  services.xserver.libinput.touchpad.scrollMethod = "twofinger";
-  services.xserver.libinput.touchpad.sendEventsMode = "enabled";
-  services.xserver.libinput.touchpad.tapping = false;
-  services.xserver.libinput.touchpad.tappingDragLock = false;
-  #services.xserver.libinput.touchpad.transformationMatrix = "14 0 0 0 14 0 0 0 1";
-  services.xserver.libinput.touchpad.transformationMatrix = "3 0 0 0 3 0 0 0 1";
+  services.xserver.libinput = {
+    enable = true; # enable touchpad support
+    touchpad = {
+      accelProfile = "adaptive";
+      #accelProfile = "flat";
+      accelSpeed = null;
+      additionalOptions = "";
+      buttonMapping = null;
+      calibrationMatrix = null;
+      clickMethod = "clickfinger"; #sets trackpad to two-finger rightclick instead of button areas
+      dev = null;
+      disableWhileTyping = true;
+      horizontalScrolling = true;
+      leftHanded = false;
+      middleEmulation = false;
+      naturalScrolling = true;
+      scrollButton = null;
+      scrollMethod = "twofinger";
+      sendEventsMode = "enabled";
+      tapping = false;
+      tappingDragLock = false;
+      #transformationMatrix = "14 0 0 0 14 0 0 0 1";
+      transformationMatrix = "3 0 0 0 3 0 0 0 1";
+    };
+    mouse = {
+      # Mouse settings
+      #accelProfile = "flat";
+      #accelSpeed = null;
+      #disableWhileTyping = true;
 
-  # Mouse settings
-  services.xserver.libinput.mouse.accelProfile = "flat";
-  services.xserver.libinput.mouse.accelSpeed = null;
-  #services.xserver.libinput.mouse.transformationMatrix = "1.2 0 0 0 1.2 0 0 0 1";
+      # Trackball settings
+      accelProfile = "adaptive";
+      accelSpeed = null;
+      disableWhileTyping = true;
+      transformationMatrix = "3 0 0 0 3 0 0 0 1";
+    };
+  };
 
   # Bash
   #programs.bash.enableCompletion = true;

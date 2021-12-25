@@ -207,6 +207,7 @@
     audacious
     xarchiver
     xbanish
+    xorg.xwd
 
     discord
     betterdiscord-installer
