@@ -9,26 +9,20 @@
 #
 #  This config file is organized as follows:
 #
-#    1: Global Variables
-#    1: Styles
-#    2: Colorsets
-#    3: Menus
-#    4: Bindings
-#    5: Decor
-#    6: Modules
-#    7: Functions
+#    1: Environment Setup
+#    2: Styles
+#    3: Colorsets
+#    4: Menus
+#    5: Bindings
+#    6: Decor
+#    7: Modules
+#    8: Functions
 #
 #################################
 
-# InfoStoreAdd can be used to store variable data internal to fvwm.
-# The variable can then be used in the configuration as $[infostore.name].
-#
-# You can also use environment variables but for data internal to fvwm
-# use InfoStore variables instead.
-#
-# The following is used in various menus and also sets the terminal
-# that FvwmConsole uses. Change this to your terminal of choice
-InfoStoreAdd terminal urxvtc
+########################
+# 1: Environment Setup #
+########################
 
 SetEnv img_home $[HOME]/Pictures
 SetEnv fvwm_home $[HOME]/.fvwm
@@ -45,10 +39,6 @@ SetEnv fvwm_ss flameshot
 
 ImagePath $[fvwm_icon]:$[fvwm_icon];.png:$[fvwm_wallpaper]:+
 
-#############
-# 1: Styles #
-#############
-
 # Desktops and Pages
 #
 # Fvwm has both Virtual Desktops and Pages. Each Desktop is built from
@@ -61,21 +51,8 @@ ImagePath $[fvwm_icon]:$[fvwm_icon];.png:$[fvwm_wallpaper]:+
 #   |   |   |
 #   +---+---+
 #
-#DesktopName 0 Main
-#DesktopName 1 Code
-#DesktopName 2 Read
+DesktopName 0 Desktops
 DesktopSize 3x3
-
-# EdgeScroll will move the view port between the Pages when the mouse
-# moves to the edge of the screen. This set the amount of distance to
-# scroll at 100% (full page) and the EdgeResistance which is a timer
-# for how long the mouse as at the edge before it scrolls.
-#
-# Set EdgeScroll 0 0 and/or EdgeResistance -1 to disable.
-EdgeScroll 100 100
-EdgeResistance 450
-EdgeThickness 5
-Style * EdgeMoveDelay 350, EdgeMoveResistance 350
 
 # EwmhBaseStruts [left] [right] [top] [bottom]
 # Reserves space along the edge(s) of the Screen that will not
@@ -87,14 +64,36 @@ EwmhBaseStruts 0 0 0 80
 ClickTime 250
 MoveThreshold 3
 
-# Sets the focus style to SloppyFocus and a mouse click
-# in a window will Raise it.
-Style * SloppyFocus, MouseFocusClickRaises
-#Style * MouseFocusClickRaises
+# EdgeScroll will move the view port between the Pages when the mouse
+# moves to the edge of the screen. This set the amount of distance to
+# scroll at 100% (full page) and the EdgeResistance which is a timer
+# for how long the mouse as at the edge before it scrolls.
+#
+# Set EdgeScroll 0 0 and/or EdgeResistance -1 to disable.
+EdgeScroll 100 100
+EdgeResistance 450
+EdgeThickness 5
+
+# Ignore Numlock and other modifiers for bindings
+# See http://fvwm.org/documentation/faq/#why-do-numlock-capslock-and-scrolllock-interfere-with-clicktofocus-andor-my-mouse-bindings
+IgnoreModifiers L25
+
+# Snaps each windows movements to a grid
+SnapGrid 20 20
+
+#############
+# 2: Styles #
+#############
 
 # Default Font
 #DefaultFont "xft:Serif:Bold:size=8:antialias=True"
 DefaultFont "xft:Tinos Nerd Font:Bold:size=10:antialias=True"
+
+Style * EdgeMoveDelay 350, EdgeMoveResistance 350
+
+# Sets the focus style to SloppyFocus and a mouse click
+# in a window will Raise it.
+Style * SloppyFocus, MouseFocusClickRaises
 
 # Window Placement
 Style * MinOverlapPlacement, GrabFocusOff, !UsePPosition
@@ -111,16 +110,54 @@ Style * !FPGrabFocusTransient, FPReleaseFocusTransient
 # WindowShade
 Style * WindowShadeScrolls, WindowShadeSteps 10
 
-# Ignore Numlock and other modifiers for bindings
-# See http://fvwm.org/documentation/faq/#why-do-numlock-capslock-and-scrolllock-interfere-with-clicktofocus-andor-my-mouse-bindings
-IgnoreModifiers L25
-
 # Disable Icons from appearing on desktop.
 # Comment this out or use Style * Icon to get the icons back.
 #Style * !Icon
 
-# Snaps each windows movements to a grid
-SnapGrid 20 20
+DestroyDecor WindowDecor
+AddToDecor   WindowDecor
++ TitleStyle Centered Height 50 -- Flat
++ ButtonStyle 1 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/menu-activeup.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/menu-activedown.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/menu-activedown.png -- Flat)
++ ButtonStyle 2 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/close-activeup.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat)
++ ButtonStyle 4 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/maximize-activeup.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/maximize-activedown.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/maximize-activedown.png -- Flat)
++ ButtonStyle 6 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/iconify-activeup.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/iconify-activedown.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/iconify-activedown.png -- Flat)
++ ButtonStyle All - Clear
++ ButtonStyle 1 - MwmDecorMenu
++ ButtonStyle 4 - MwmDecorMax
++ ButtonStyle 6 - MwmDecorMin
++ TitleStyle -- Flat
++ BorderStyle Simple -- NoInset Flat
++ ButtonStyle All -- UseTitleStyle
+
+Style "*" UseDecor WindowDecor
+Style "*" Font "xft:Tinos Nerd Font:pixelsize=0:minspace=False:antialias=True"
+Style "*" BorderWidth 1, HandleWidth 1
+Style "*" MWMBorder, FirmBorder
+Style "*" PositionPlacement Center
+Style "*" Colorset 4
+Style "*" HilightColorset 3
+Style "*" BorderColorset 4
+Style "*" HilightBorderColorset 3
+## Minimize to Thumbnail Placeholder
+Style "*" IconBox 960x540+24+24, IconGrid 15 15, \
+IconFill top left, !IconTitle, IconBackgroundRelief 0
+
+# Decor Styles
+#Style * BorderWidth 10, HandleWidth 10, MWMButtons, FvwmBorder, FirmBorder
+#Style * Colorset 1, HilightColorset 2
+#Style * BorderColorset 3, HilightBorderColorset 4
 
 #####
 # 4: Mouse and Key bindings
@@ -150,11 +187,13 @@ SnapGrid 20 20
 #   4 - Maximize (right/middle button will only maximize vertical/horizontal)
 #   6 - Iconify (minimize)
 Mouse 1 1 A Menu MenuWindowOps Delete
-Mouse 1 2 A FvwmDeleteOrDestroy
+#Mouse 1 2 A FvwmDeleteOrDestroy
+Mouse 1 2 A Delete
 Mouse 1 4 A FvwmMaximize 100 100
 Mouse 2 4 A FvwmMaximize 0 100
 Mouse 3 4 A FvwmMaximize 100 0
-Mouse 1 6 A FvwmIconifyOrShade
+#Mouse 1 6 A FvwmIconifyOrShade
+Mouse 1 6 A Thumbnail
 
 #   TitleBar: Click to Raise, Move, Double Click to Maximize
 #             Mouse Wheel Up/Down to WindowShade On/Off
@@ -172,8 +211,6 @@ Mouse 2	R    A WindowList
 Mouse 3 R    A Menu FvwmOpsMenu
 Mouse 1	I    A RaiseMoveX Move "Iconify off"
 Mouse 3	T    A Menu MenuWindowOps
-#Mouse 3 I A FvwmIconify
-#Mouse 3 T A FvwmIconify
 
 # Move window when pressing mouse 1 and 'meta (win)'
 Mouse 1 WT 4 FvwmMove
@@ -260,8 +297,7 @@ Silent Key T        A     4       Toggle-Title
 Silent Key S        A     S4      Stick
 Silent Key S        A     4       Warp-and-Resize
 Silent Key A        A     4       Warp-and-Move
-Silent Key I	      A     4       Iconify true
-Silent Key I	      A     S4      Thumbnail
+Silent Key I	      A     4       Thumbnail
 Silent Key R	      A     S4      RefreshWindow
 Silent Key R	      A     C4      Restart
 
@@ -270,7 +306,7 @@ Silent Key F1       A     M        Menu FvwmRootMenu
 Silent Key Menu     A     A        Menu FvwmRootMenu
 Silent Key F6       A     4       WindowShadeFunc
 Silent Key F9	      A     4       All (AcceptsFocus, CurrentPage, !Iconic, !Shaded) \
-                     Iconify on
+                     Thumbnail
 Silent Key F10      A     4       WindowList (CurrentPage) Root c c CurrentDesk OnlyIcons \
                      NoGeometry MaxLabelWidth 40 NoCurrentDeskTitle \
                      SelectOnRelease 
@@ -357,105 +393,6 @@ Colorset 3 fg #ac8a8c, bg #ac8a8c
 Colorset 4 fg #f0f0f0, bg #f0f0f0
 Colorset 5 fg #f0f0f0, bg #0f0f0f
 
-DestroyDecor FlatDecor
-AddToDecor   FlatDecor
-+ TitleStyle Centered Height 35 -- Flat
-+ ButtonStyle 1 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/menu-activeup.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/menu-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/inactive.png -- Flat)
-+ ButtonStyle 2 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/close-activeup.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/inactive.png -- Flat)
-+ ButtonStyle 4 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/maximize-activeup.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/maximize-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/inactive.png -- Flat)
-+ ButtonStyle 6 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/iconify-activeup.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/iconify-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/inactive.png -- Flat)
-+ ButtonStyle All - Clear
-+ ButtonStyle 1 - MwmDecorMenu
-+ ButtonStyle 4 - MwmDecorMax
-+ ButtonStyle 6 - MwmDecorMin
-+ TitleStyle -- Flat
-+ BorderStyle Simple -- NoInset Flat
-+ ButtonStyle All -- UseTitleStyle
-
-DestroyDecor BlankDecor
-AddToDecor   BlankDecor
-+ TitleStyle Centered Height 50 -- Flat
-+ ButtonStyle 1 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/blank.png -- Flat)
-+ ButtonStyle 2 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/blank.png -- Flat)
-+ ButtonStyle 4 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/blank.png -- Flat)
-+ ButtonStyle 6 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/blank.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/blank.png -- Flat)
-+ ButtonStyle All - Clear
-+ ButtonStyle 1 - MwmDecorMenu
-+ ButtonStyle 4 - MwmDecorMax
-+ ButtonStyle 6 - MwmDecorMin
-+ TitleStyle -- Flat
-+ BorderStyle Simple -- NoInset Flat
-+ ButtonStyle All -- UseTitleStyle
-
-DestroyDecor NewDecor
-AddToDecor   NewDecor
-+ TitleStyle Centered Height 50 -- Flat
-+ ButtonStyle 1 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/menu-activeup.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/menu-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/menu-activedown.png -- Flat)
-+ ButtonStyle 2 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/close-activeup.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat)
-+ ButtonStyle 4 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/maximize-activeup.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/maximize-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/maximize-activedown.png -- Flat)
-+ ButtonStyle 6 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/iconify-activeup.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/iconify-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/iconify-activedown.png -- Flat)
-+ ButtonStyle All - Clear
-+ ButtonStyle 1 - MwmDecorMenu
-+ ButtonStyle 4 - MwmDecorMax
-+ ButtonStyle 6 - MwmDecorMin
-+ TitleStyle -- Flat
-+ BorderStyle Simple -- NoInset Flat
-+ ButtonStyle All -- UseTitleStyle
-
-Style "*" UseDecor NewDecor
-#Style "*" Font "xft:Tinos Nerd Font:size=11:minspace=False:antialias=True"
-Style "*" Font "xft:Tinos Nerd Font:pixelsize=0:minspace=False:antialias=True"
-Style "*" BorderWidth 1, HandleWidth 1
-Style "*" MWMBorder, FirmBorder
-Style "*" PositionPlacement Center
-Style "*" Colorset 4
-Style "*" HilightColorset 3
-Style "*" BorderColorset 4
-Style "*" HilightBorderColorset 3
-## Minimize to Thumbnail Placeholder
-Style "*" IconBox 960x540+24+24, IconGrid 15 15, \
-IconFill top left, !IconTitle, IconBackgroundRelief 0
-
-# Decor Styles
-#Style * BorderWidth 10, HandleWidth 10, MWMButtons, FvwmBorder, FirmBorder
-#Style * Colorset 1, HilightColorset 2
-#Style * BorderColorset 3, HilightBorderColorset 4
 
 # Colorset 7 fg Black, bg #e6e7d7, sh Black, hi #202070
 #Colorset 7 RootTransparent, fg Black, bg average, sh Black, \
@@ -563,7 +500,7 @@ AddToMenu   MenuWindowOps
 + "" Nop
 + "Move"           Move
 + "Resize"         Resize
-+ "Iconify"        Iconify
++ "Minimize"       Thumbnail
 + "Shade"          WindowShade
 + "Stick"          Stick
 + "" Nop
@@ -574,7 +511,7 @@ DestroyMenu MenuWindowOpsLong
 AddToMenu   MenuWindowOpsLong
 + "Move"                Move
 + "Resize"              Resize
-+ "(De)Iconify"         Iconify
++ "Minimize"            Thumbnail
 + "(Un)Maximize"        Maximize
 + "(Un)Shade"           WindowShade
 + "(Un)Sticky"		Stick
@@ -799,12 +736,12 @@ AddToFunc FvwmFileManager
 
 DestroyFunc FvwmIconifyOrShade
 AddToFunc FvwmIconifyOrShade
-+ C Iconify
++ C Thumbnail
 + D WindowShade
 
 DestroyFunc FvwmIconify
 AddToFunc FvwmIconify
-+ C Iconify
++ C Thumbnail
 
 DestroyFunc FvwmMove
 AddToFunc FvwmMove
@@ -897,19 +834,6 @@ AddToFunc   SetBG
 + I Exec exec fvwm-root $[FVWM_DATADIR]/default-config/images/background/$0
 + I Exec exec ln -fs $[FVWM_DATADIR]/default-config/images/background/$0 \
     $[FVWM_USERDIR]/.BGdefault
-
-
-# Function: IconManClick
-#
-# This function is run from FvwmIconMan when the button is clicked.
-DestroyFunc IconManClick
-AddToFunc   IconManClick
-+ I ThisWindow (Raised, !Shaded, !Iconic, CurrentPage) Iconify
-+ I TestRc (Match) Break
-+ I ThisWindow WindowShade off
-+ I ThisWindow Iconify off
-+ I ThisWindow Raise
-+ I ThisWindow (AcceptsFocus) FlipFocus
 
 # Function: ToggleTitle
 #
@@ -1029,7 +953,7 @@ AddToFunc 		LockScreen
 DestroyFunc 	Maintenance
 AddToFunc 		Maintenance
 + I SendToModule FvwmAnimate pause
-+ I All (!Visible, CurrentPage, !Iconic, !Sticky, !Focused) Iconify on
++ I All (!Visible, CurrentPage, !Iconic, !Sticky, !Focused) Thumbnail
 + I SendToModule FvwmAnimate play
 
 #----- Tiling Functions
