@@ -369,6 +369,12 @@ Silent Key XF86AudioNext A A Exec exec audacious --fwd
 Silent Key XF86AudioPrev A A Exec exec audacious --rew
 Silent Key XF86AudioPlay A A Exec exec audacious --play-pause
 Silent Key XF86AudioStop A A Exec exec audacious --stop
+Silent Key F5 A A Exec exec amixer -q set Master unmute 2%-
+Silent Key F6 A A Exec exec amixer -q set Master unmute 2%+
+Silent Key F7 A A Exec exec amixer -q set Master toggle
+Silent Key F8 A A Exec exec audacious --play-pause
+Silent Key F9 A A Exec exec audacious --fwd
+Silent Key F10 A A Exec exec audacious --rew
 
 # Brightness Buttons
 Silent Key XF86MonBrightnessUp A A Exec exec xbrightness +5000
@@ -467,6 +473,7 @@ AddToMenu   FvwmWallpaperMenu
 + " Eugen " Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen.png
 + " Eugen 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen2.jpg
 + " Eugen Beach " Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen-beach.jpg
++ " Beach " Exec exec feh --bg-fill $[fvwm_wallpaper]/beach.jpg
 + " Mountain " Exec exec feh --bg-fill $[fvwm_wallpaper]/mountain.jpg
 + " Mountain 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/mountain2.jpg
 + " Trees " Exec exec feh --bg-fill $[fvwm_wallpaper]/trees.jpg
@@ -1204,12 +1211,12 @@ AddToFunc ResizeBig
 DestroyFunc ResizeTall
 AddToFunc ResizeTall
 + I Resize 36 72
-+ I Move w 50-50w
++ I Move 50-50w 50-50w
 
 DestroyFunc ResizeWide
 AddToFunc ResizeWide
 + I Resize 40 49
-+ I Move w 50-50w
++ I Move 50-50w 50-50w
 
 ## To Create a Thumbnail on Minimize
 # Call the script to create a thumbnail using ImageMagick & xwd

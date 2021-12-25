@@ -1,18 +1,24 @@
 .PHONY: pc laptop update
 
 pc:
-	pushd ~/.nix-configuration && \
-	nix build .#homeManagerConfigurations.pc.activationPackage --show-trace && \
-	./result/activate && \
-	doas nixos-rebuild switch --flake .#pc && \
-	popd
+	if [ "$(git diff --shortstat)" == "" ]; then \
+		nix build .#homeManagerConfigurations.pc.activationPackage --show-trace; \
+		./result/activate; \
+		doas nixos-rebuild switch --flake .#pc; \
+	else \
+		echo ""; \
+		echo "Please commit your changes, then rebuild."; \
+	fi
 
 laptop:
-	pushd ~/.nix-configuration && \
-	nix build .#homeManagerConfigurations.laptop.activationPackage --show-trace && \
-	./result/activate && \
-	doas nixos-rebuild switch --flake .#laptop && \
-	popd
+	if [ "$(git diff --shortstat)" == "" ]
+	then
+	nix build .#homeManagerConfigurations.laptop.activationPackage --show-trace
+		./result/activate
+		doas nixos-rebuild switch --flake .#laptop
+	else
+		echo "Please commit your changes, then rebuild."
+	fi
 
 # Will update the packages for both the system and the user (home-manager)
 update:

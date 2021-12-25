@@ -190,15 +190,15 @@
     };
     mouse = {
       # Mouse settings
-      #accelProfile = "flat";
-      #accelSpeed = null;
-      #disableWhileTyping = true;
-
-      # Trackball settings
-      accelProfile = "adaptive";
+      accelProfile = "flat";
       accelSpeed = null;
       disableWhileTyping = true;
-      transformationMatrix = "3 0 0 0 3 0 0 0 1";
+
+      # Trackball settings
+      #accelProfile = "adaptive";
+      #accelSpeed = null;
+      #disableWhileTyping = true;
+      #transformationMatrix = "2 0 0 0 2 0 0 0 1";
     };
   };
 
