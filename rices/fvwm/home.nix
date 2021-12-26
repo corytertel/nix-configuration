@@ -17,7 +17,7 @@
     #inactiveDim = "0.01";
     inactiveOpacity = "0.93";
     activeOpacity = "1.00";
-    blur = true;
+    blur = false;
     experimentalBackends = true;
     opacityRule = [
       "100:class_g   *?= 'XClock'"
@@ -25,9 +25,9 @@
       "100:class_g   *?= 'FvwmPager'"
       "100:class_g   *?= 'FvwmScript'"
     ];
+      #blur-method = "dual_kawase";
+      #blur-strength = 4;
     extraOptions = ''
-      blur-method = "dual_kawase";
-      blur-strength = 4;
       corner-radius = 10;
       round-borders = 1;
 
@@ -37,17 +37,21 @@
     '';
     fade = true;
     fadeDelta = 5;
-    shadow = false;
+    shadow = true;
     #shadowExclude = [
     #  "class_g   *?= 'Xclock'"
     #];
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
-          owner = "jonaburg";
-          repo = "picom";
-          rev = "a8445684fe18946604848efb73ace9457b29bf80";
-          sha256 = "R+YUGBrLst6CpUgG9VCwaZ+LiBSDWTp0TLt1Ou4xmpQ=";
+          # owner = "jonaburg";
+          # repo = "picom";
+          # rev = "a8445684fe18946604848efb73ace9457b29bf80";
+          # sha256 = "R+YUGBrLst6CpUgG9VCwaZ+LiBSDWTp0TLt1Ou4xmpQ=";
+          owner = "Arian8j2";
+          repo = "picom-jonaburg-fix";
+          rev = "31d25da22b44f37cbb9be49fe5c239ef8d00df12";
+          sha256 = "1z4bKDoNgmG40y2DKTSSh1NCafrE1rkHkCB3ob8ibm4=";
         };
       }
     );

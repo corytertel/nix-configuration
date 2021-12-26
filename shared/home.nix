@@ -208,6 +208,8 @@
     xarchiver
     xbanish
     xorg.xwd
+    ledger-live-desktop
+    #ledger-udev-rules
 
     discord
     betterdiscord-installer

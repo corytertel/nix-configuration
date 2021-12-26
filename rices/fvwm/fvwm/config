@@ -373,8 +373,8 @@ Silent Key F5 A A Exec exec amixer -q set Master unmute 2%-
 Silent Key F6 A A Exec exec amixer -q set Master unmute 2%+
 Silent Key F7 A A Exec exec amixer -q set Master toggle
 Silent Key F8 A A Exec exec audacious --play-pause
-Silent Key F9 A A Exec exec audacious --fwd
-Silent Key F10 A A Exec exec audacious --rew
+Silent Key F9 A A Exec exec audacious --rew
+Silent Key F10 A A Exec exec audacious --fwd
 
 # Brightness Buttons
 Silent Key XF86MonBrightnessUp A A Exec exec xbrightness +5000
@@ -399,11 +399,10 @@ Colorset 3 fg #ac8a8c, bg #ac8a8c
 Colorset 4 fg #f0f0f0, bg #f0f0f0
 Colorset 5 fg #f0f0f0, bg #0f0f0f
 
-
-# Colorset 7 fg Black, bg #e6e7d7, sh Black, hi #202070
-#Colorset 7 RootTransparent, fg Black, bg average, sh Black, \
-# hi #202070, Tint White 60, bgTint White 60
-Colorset 7 fg #0f0f0f, bg #f0f0f0, sh Black, hi #202070
+# Menu Colorset
+Colorset 7 RootTransparent, fg Black, bg average, sh Black, \
+ hi #202070, Tint White 60, bgTint White 60
+# Menu Active Colorset
 Colorset 8 fg DarkRed, bg #e6e7d7, sh Black, hi #202070
 
 MenuStyle * PopupDelayed, PopupDelay 300, PopdownImmediately
@@ -421,13 +420,12 @@ MenuStyle * ActiveColorset 8
 MenuStyle * Font "xft:Tinos Nerd Font:size=13:antialias=True"
 
 PipeRead fvwm-menu-xlock
-PipeRead fvwm-menu-desktop --enable-mini-icons --desktop kde
+#PipeRead fvwm-menu-desktop --enable-mini-icons --desktop kde
+PipeRead fvwm-menu-desktop
 
 DestroyMenu FvwmRootMenu
 AddToMenu FvwmRootMenu
-#+ "Run%menu/find.svg%" FvwmLaunch
 + "Run%menu/find.png%" FvwmLaunch
-#+ "Applications%menu/applications.svg%" Popup FvwmProgramsMenu
 + "Applications%menu/applications.png%" Popup FvwmProgramsMenu
 + "Terminal%menu/terminal.png%" FvwmTerm
 + "" Nop
@@ -436,7 +434,6 @@ AddToMenu FvwmRootMenu
 + "" Nop
 + "Restart Fvwm%menu/restart.png%" Restart
 + "Lock%menu/lock.png%" Popup XLockMenu
-#+ "Quit Fvwm%menu/quit.png%" Quit
 + "Quit Fvwm%menu/quit.png%" Module FvwmScript FvwmScript-ConfirmQuit
 
 DestroyMenu FvwmProgramsMenu
@@ -457,11 +454,8 @@ AddToMenu FvwmOpsMenu
 + "" Nop
 + "Stick%menu/window-stick.xpm%"  Stick
 + "Identify%menu/window-identify.xpm%"  Module FvwmIdent
-#+ "%menu/display.xpm%Screenshot" FvwmDesktopScreenshot
 + "%menu/display.png%Screenshot" FvwmDesktopScreenshot
-#+ "%menu/window.xpm%Selection Screenshot"  FvwmSelectionScreenshot
 + "%menu/window.png%Selection Screenshot"  FvwmSelectionScreenshot
-#+ "Shutdown%menu/shutdown.svg%" FvwmShutdown
 + "Shutdown%menu/shutdown.png%" FvwmShutdown
 
 DestroyMenu FvwmWallpaperMenu
@@ -682,7 +676,7 @@ AddToFunc   StartFunction
 
 DestroyFunc FvwmTerm
 AddToFunc FvwmTerm
-+ I Exec exec urxvtc --geometry 85x33 -icon $[fvwm_icon]/96x96/terminal.png
++ I Exec exec urxvtc --geometry 85x33 -icon $[fvwm_icon]/48x48/terminal.png
 
 DestroyFunc FvwmBrowser
 AddToFunc FvwmBrowser

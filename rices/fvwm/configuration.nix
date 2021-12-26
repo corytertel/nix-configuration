@@ -10,14 +10,14 @@
         user = "cory";
         extraConfig = ''
           [greeter-theme]
-          background-image = "/usr/share/wallpaper.jpg"
+          background-image = "/etc/wallpaper.jpg"
           background-color = "#f0f0f0"
           text-color = "#0f0f0f"
           error-color = "#0f0f0f"
           password-color = "#0f0f0f"
           password-background-color = "#f0f0f0"
           window-color = "#f0f0f0"
-          border-color = "#0f0f0f"
+          border-color = "#ac8a8c"
         '';
       };
     };
@@ -25,4 +25,6 @@
     # fvwm
     windowManager.fvwm.enable = true;
   };
+
+  environment.etc."wallpaper.jpg".source = ./fvwm/images/wallpaper/beach.jpg;
 }
