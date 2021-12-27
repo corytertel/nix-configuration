@@ -81,6 +81,10 @@ IgnoreModifiers L25
 # Snaps each windows movements to a grid
 SnapGrid 20 20
 
+PipeRead fvwm-menu-xlock
+#PipeRead fvwm-menu-desktop --enable-mini-icons --desktop kde
+PipeRead fvwm-menu-desktop
+
 #############
 # 2: Styles #
 #############
@@ -114,33 +118,6 @@ Style * WindowShadeScrolls, WindowShadeSteps 10
 # Comment this out or use Style * Icon to get the icons back.
 #Style * !Icon
 
-DestroyDecor WindowDecor
-AddToDecor   WindowDecor
-+ TitleStyle Centered Height 50 -- Flat
-+ ButtonStyle 1 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/menu-activeup.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/menu-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/menu-activedown.png -- Flat)
-+ ButtonStyle 2 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/close-activeup.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat)
-+ ButtonStyle 4 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/maximize-activeup.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/maximize-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/maximize-activedown.png -- Flat)
-+ ButtonStyle 6 \
-        ActiveUp     (Pixmap $[fvwm_img]/button/iconify-activeup.png -- Flat) \
-        ActiveDown   (Pixmap $[fvwm_img]/button/iconify-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/iconify-activedown.png -- Flat)
-+ ButtonStyle All - Clear
-+ ButtonStyle 1 - MwmDecorMenu
-+ ButtonStyle 4 - MwmDecorMax
-+ ButtonStyle 6 - MwmDecorMin
-+ TitleStyle -- Flat
-+ BorderStyle Simple -- NoInset Flat
-+ ButtonStyle All -- UseTitleStyle
-
 Style "*" UseDecor WindowDecor
 Style "*" Font "xft:Tinos Nerd Font:pixelsize=0:minspace=False:antialias=True"
 Style "*" BorderWidth 1, HandleWidth 1
@@ -149,18 +126,180 @@ Style "*" PositionPlacement Center
 Style "*" Colorset 4
 Style "*" HilightColorset 3
 Style "*" BorderColorset 4
-Style "*" HilightBorderColorset 3
+Style "*" HilightBorderColorset 5
 ## Minimize to Thumbnail Placeholder
 Style "*" IconBox 960x540+24+24, IconGrid 15 15, \
 IconFill top left, !IconTitle, IconBackgroundRelief 0
 
-# Decor Styles
-#Style * BorderWidth 10, HandleWidth 10, MWMButtons, FvwmBorder, FirmBorder
-#Style * Colorset 1, HilightColorset 2
-#Style * BorderColorset 3, HilightBorderColorset 4
+Style "FvwmPager" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+  CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 
-#####
-# 4: Mouse and Key bindings
+Style "BottomDock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+  CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
+
+Style "LeftDock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+  CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
+
+Style "xclock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+  CirculateSkip, FixedPosition, FixedSize, !Iconifiable
+
+Style DateTime NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+  CirculateSkip, FixedPosition, FixedSize, !Iconifiable
+Style DateTime PositionPlacement -10p +2090p
+
+Style "Steam" NoTitle, !Handles, !Borders, FixedPosition
+
+Style "Io.github.celluloid_player.Celluloid" NoTitle
+
+Style ConfirmQuit !Title, PositionPlacement Center, WindowListSkip, Layer 6
+
+################
+# 3: Colorsets #
+################
+Colorset 3 fg #ac8a8c, bg #ac8a8c
+Colorset 4 fg #f0f0f0, bg #f0f0f0
+Colorset 5 fg #f0f0f0, bg #0f0f0f
+
+# Menu Colorset
+#Colorset 7 RootTransparent, fg Black, bg average, sh Black, \
+# hi #202070, Tint White 60, bgTint White 60
+Colorset 7 fg #0f0f0f, bg #f0f0f0, sh Black, hi #202070
+# Menu Active Colorset
+Colorset 8 fg #f0f0f0, bg #0f0f0f, sh Black, hi #202070
+
+# Colorset 9 fg rgb:00/00/00, hi rgb:00/00/00, sh rgb:00/00/00, bg rgb:e9/e9/d9
+Colorset 9 RootTransparent, fg #0f0f0f, bg average, sh #0f0f0f, \
+ hi #202070, Tint #f0f0f0 30, bgTint #f0f0f0 70
+#Colorset 9 fg #0f0f0f, bg #f0f0f0, sh Black, hi #202070
+Colorset 10 fg rgb:00/00/00, hi rgb:dd/00/00, sh rgb:dd/00/00, bg rgb:fb/fc/ec
+
+############
+# 4: Menus #
+############
+MenuStyle * PopupDelayed, PopupDelay 300, PopdownImmediately
+MenuStyle * PopupOffset -5 100, TitleWarpOff
+MenuStyle * TitleUnderlines2, SeparatorsLong, TrianglesSolid
+MenuStyle * AnimationOff, AutomaticHotkeysOff
+MenuStyle * BorderWidth 2
+MenuStyle * PopupAsSubmenu, HoldSubmenus, SubmenusRight
+MenuStyle * ItemFormat "%|%5.5i%1.3l%2.3>%|"
+MenuStyle * VerticalItemSpacing 1 1, VerticalTitleSpacing 2 2
+MenuStyle * MenuColorset 7
+MenuStyle * ActiveFore, Hilight3DOff
+MenuStyle * ActiveColorset 8
+#MenuStyle * Font "Shadow=2:xft:Tinos Nerd Font:size=13:antialias=True"
+MenuStyle * Font "xft:Tinos Nerd Font:size=13:antialias=True"
+
+DestroyMenu FvwmRootMenu
+AddToMenu FvwmRootMenu
++ "Run%menu/find.png%" FvwmLaunch
++ "Applications%menu/applications.png%" Popup FvwmProgramsMenu
++ "Terminal%menu/terminal.png%" FvwmTerm
++ "" Nop
++ "Wallpaper%menu/wallpaper.png%" Popup FvwmWallpaperMenu
++ "Volume" Popup FvwmVolumeMenu
++ "" Nop
++ "Restart Fvwm%menu/restart.png%" Restart
++ "Lock%menu/lock.png%" Popup XLockMenu
++ "Quit Fvwm%menu/quit.png%" Module FvwmScript FvwmScript-ConfirmQuit
+
+DestroyMenu FvwmProgramsMenu
+AddToMenu   FvwmProgramsMenu
++ "Files%menu/Thunar.png%" FvwmFileManager
++ "Editor%menu/emacs.png%" FvwmEditor
++ "Browser%menu/firefox.png%" FvwmBrowser
++ "Discord%menu/discord.png%" FvwmChat
++ "Audacious%menu/audacious.png%" FvwmMusicPlayer
++ "Gimp%menu/gimp.png%"  FvwmGimp
++ "Steam%menu/steam.png%"  FvwmSteam
+
+DestroyMenu FvwmOpsMenu
+AddToMenu FvwmOpsMenu
++ "Maximize" FvwmMaximize
++ "Tile (Left)"  Tile 50 100 +0 +0
++ "Tile (Right)" Tile 50 100 -0 +0
++ "" Nop
++ "Stick%menu/window-stick.xpm%"  Stick
++ "Identify%menu/window-identify.xpm%"  Module FvwmIdent
++ "%menu/display.png%Screenshot" FvwmDesktopScreenshot
++ "%menu/window.png%Selection Screenshot"  FvwmSelectionScreenshot
++ "Shutdown%menu/shutdown.png%" FvwmShutdown
+
+DestroyMenu FvwmWallpaperMenu
+AddToMenu   FvwmWallpaperMenu
++ " NixOS " Exec exec feh --bg-fill $[fvwm_wallpaper]/nixos.png
++ " Clannad " Exec exec feh --bg-fill $[fvwm_wallpaper]/clannad.jpg
++ " Red Dots " Exec exec feh --bg-fill $[fvwm_wallpaper]/dots.png
++ " Asuka 98 " Exec exec feh --bg-fill $[fvwm_wallpaper]/asuka98.jpg
++ " Eugen " Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen.png
++ " Eugen 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen2.jpg
++ " Eugen Beach " Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen-beach.jpg
++ " Beach " Exec exec feh --bg-fill $[fvwm_wallpaper]/beach.jpg
++ " Mountain " Exec exec feh --bg-fill $[fvwm_wallpaper]/mountain.jpg
++ " Mountain 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/mountain2.jpg
++ " Trees " Exec exec feh --bg-fill $[fvwm_wallpaper]/trees.jpg
++ " Swirls " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls.jpg
++ " Swirls 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls2.jpg
++ " Swirls 3 " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls3.jpg
++ " Swirls 4 " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls4.jpg
++ " Flower " Exec exec feh --bg-fill $[fvwm_wallpaper]/flower.jpg
++ " Christmas " Exec exec feh --bg-fill $[fvwm_wallpaper]/christmas.jpg
+
+DestroyMenu FvwmVolumeMenu
+AddToMenu FvwmVolumeMenu
++ " 100%% "    exec pamixer --set-volume 100
++ "  90%% "    exec pamixer --set-volume 90
++ "  80%% "    exec pamixer --set-volume 80
++ "  70%% "    exec pamixer --set-volume 70
++ "  60%% "    exec pamixer --set-volume 60
++ "  50%% "    exec pamixer --set-volume 50
++ "  40%% "    exec pamixer --set-volume 40
++ "  30%% "    exec pamixer --set-volume 30
++ "  20%% "    exec pamixer --set-volume 20
++ "  10%% "    exec pamixer --set-volume 10
++ "   0%% "    exec pamixer --set-volume 0
+
+# Window Operations Menus
+DestroyMenu MenuWindowOps
+AddToMenu   MenuWindowOps
++ "Tile (Left)"  Tile 50 100 +0 +0
++ "Tile (Right)" Tile 50 100 -0 +0
++ "Maximize"       Maximize
++ "" Nop
++ "Move"           Move
++ "Resize"         Resize
++ "Minimize"       Thumbnail
++ "Shade"          WindowShade
++ "Stick"          Stick
++ "" Nop
++ "Close"          Close
++ "More..."        Menu MenuWindowOpsLong This 0 0
+
+DestroyMenu MenuWindowOpsLong
+AddToMenu   MenuWindowOpsLong
++ "Move"                Move
++ "Resize"              Resize
++ "Minimize"            Thumbnail
++ "(Un)Maximize"        Maximize
++ "(Un)Shade"           WindowShade
++ "(Un)Sticky"		Stick
++ "(No)TitleBar"	Pick (CirculateHit) ToggleTitle
++ "Send To"             Popup MenuSendTo
++ "" Nop
++ "Close"               Close
++ "Destroy"             Destroy
++ "" Nop
++ "Raise"		Raise
++ "Lower"		Lower
++ "" Nop
++ "StaysOnTop"          Pick (CirculateHit) Layer 0 6
++ "StaysPut"            Pick (CirculateHit) Layer 0 4
++ "StaysOnBottom"       Pick (CirculateHit) Layer 0 2
++ "" Nop
++ "Identify"            Module FvwmIdent
+
+####################
+# 5: Mouse and Key bindings
 #
 # Contexts:
 #     R = Root Window                 rrrrrrrrrrrrrrrrrrrrrr
@@ -226,7 +365,7 @@ Silent Key Return   A     4S      FvwmEditor
 Silent Key apostrophe A   4       Exec exec urxvtc -geometry 120x40+1190+525 -icon $[fvwm_icon]/96x96/terminal.png
 Silent Key Space    A     4       FvwmLaunch
 Silent Key E        A     4       FvwmFileManager
-Silent Key Space    A     4C      Exec exec /home/cory/.nix-configuration/shared/apps/layout_switch/layout_switch.sh
+Silent Key Space    A     4C      Exec exec /home/cory/manual_installs/layout_switch.sh
 
 # Window Management Controls
 Silent Key J        A     4       PrevWindow 
@@ -380,169 +519,43 @@ Silent Key F10 A A Exec exec audacious --fwd
 Silent Key XF86MonBrightnessUp A A Exec exec xbrightness +5000
 Silent Key XF86MonBrightnessDown A A Exec exec xbrightness -5000
 
+############
+# 6: Decor #
+############
+DestroyDecor WindowDecor
+AddToDecor   WindowDecor
++ TitleStyle Centered Height 50 -- Flat
++ ButtonStyle 1 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/menu-activeup.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/menu-activedown.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/menu-activedown.png -- Flat)
++ ButtonStyle 2 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/close-activeup.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat)
++ ButtonStyle 4 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/maximize-activeup.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/maximize-activedown.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/maximize-activedown.png -- Flat)
++ ButtonStyle 6 \
+        ActiveUp     (Pixmap $[fvwm_img]/button/iconify-activeup.png -- Flat) \
+        ActiveDown   (Pixmap $[fvwm_img]/button/iconify-activedown.png -- Flat) \
+        Inactive     (Pixmap $[fvwm_img]/button/iconify-activedown.png -- Flat)
++ ButtonStyle All - Clear
++ ButtonStyle 1 - MwmDecorMenu
++ ButtonStyle 4 - MwmDecorMax
++ ButtonStyle 6 - MwmDecorMin
++ TitleStyle -- Flat
++ BorderStyle Simple -- NoInset Flat
++ ButtonStyle All -- UseTitleStyle
 
-######
-# Colorset 6 fg #343434, bg #ebebeb	# title
-# Colorset 3 fg #400c04, bg #d16952	# red
-# Colorset 4 fg #ad8529, bg #e5bf45	# yellow
-# Colorset 5 fg #2a520d, bg #76c24c	# green
-
-# Colorset 3 fg #101060, bg #e6e7d7       # fg: darkblue, bg: milk white
-# Colorset 4 fg Black, bg #a6a797  	# fg: black, bg: gray
-# Colorset 5 fg White, bg Black
-
-#Colorset 3 fg #101060, bg #f8f8f8       # fg: darkblue, bg: milk white
-#Colorset 3 fg #f0f0f0, bg #110b3a  # bg: dark blue
-#Colorset 3 fg #0f0f0f, bg #f0f0f0
-Colorset 3 fg #ac8a8c, bg #ac8a8c
-#Colorset 4 fg #0f0f0f, bg #f0f0f0
-Colorset 4 fg #f0f0f0, bg #f0f0f0
-Colorset 5 fg #f0f0f0, bg #0f0f0f
-
-# Menu Colorset
-Colorset 7 RootTransparent, fg Black, bg average, sh Black, \
- hi #202070, Tint White 60, bgTint White 60
-# Menu Active Colorset
-Colorset 8 fg DarkRed, bg #e6e7d7, sh Black, hi #202070
-
-MenuStyle * PopupDelayed, PopupDelay 300, PopdownImmediately
-MenuStyle * PopupOffset -5 100, TitleWarpOff
-MenuStyle * TitleUnderlines2, SeparatorsLong, TrianglesSolid
-MenuStyle * AnimationOff, AutomaticHotkeysOff
-MenuStyle * BorderWidth 2
-MenuStyle * PopupAsSubmenu, HoldSubmenus, SubmenusRight
-MenuStyle * ItemFormat "%|%5.5i%1.3l%2.3>%|"
-MenuStyle * VerticalItemSpacing 1 1, VerticalTitleSpacing 2 2
-MenuStyle * MenuColorset 7
-MenuStyle * ActiveFore, Hilight3DOff
-MenuStyle * ActiveColorset 8
-#MenuStyle * Font "Shadow=2:xft:Tinos Nerd Font:size=13:antialias=True"
-MenuStyle * Font "xft:Tinos Nerd Font:size=13:antialias=True"
-
-PipeRead fvwm-menu-xlock
-#PipeRead fvwm-menu-desktop --enable-mini-icons --desktop kde
-PipeRead fvwm-menu-desktop
-
-DestroyMenu FvwmRootMenu
-AddToMenu FvwmRootMenu
-+ "Run%menu/find.png%" FvwmLaunch
-+ "Applications%menu/applications.png%" Popup FvwmProgramsMenu
-+ "Terminal%menu/terminal.png%" FvwmTerm
-+ "" Nop
-+ "Wallpaper%menu/wallpaper.png%" Popup FvwmWallpaperMenu
-+ "Volume" Popup FvwmVolumeMenu
-+ "" Nop
-+ "Restart Fvwm%menu/restart.png%" Restart
-+ "Lock%menu/lock.png%" Popup XLockMenu
-+ "Quit Fvwm%menu/quit.png%" Module FvwmScript FvwmScript-ConfirmQuit
-
-DestroyMenu FvwmProgramsMenu
-AddToMenu   FvwmProgramsMenu
-+ "Files%menu/Thunar.png%" FvwmFileManager
-+ "Editor%menu/emacs.png%" FvwmEditor
-+ "Browser%menu/firefox.png%" FvwmBrowser
-+ "Discord%menu/discord.png%" FvwmChat
-+ "Audacious%menu/audacious.png%" FvwmMusicPlayer
-+ "Gimp%menu/gimp.png%"  FvwmGimp
-+ "Steam%menu/steam.png%"  FvwmSteam
-
-DestroyMenu FvwmOpsMenu
-AddToMenu FvwmOpsMenu
-+ "Maximize" FvwmMaximize
-+ "Tile (Left)"  Tile 50 100 +0 +0
-+ "Tile (Right)" Tile 50 100 -0 +0
-+ "" Nop
-+ "Stick%menu/window-stick.xpm%"  Stick
-+ "Identify%menu/window-identify.xpm%"  Module FvwmIdent
-+ "%menu/display.png%Screenshot" FvwmDesktopScreenshot
-+ "%menu/window.png%Selection Screenshot"  FvwmSelectionScreenshot
-+ "Shutdown%menu/shutdown.png%" FvwmShutdown
-
-DestroyMenu FvwmWallpaperMenu
-AddToMenu   FvwmWallpaperMenu
-+ " NixOS " Exec exec feh --bg-fill $[fvwm_wallpaper]/nixos.png
-+ " Clannad " Exec exec feh --bg-fill $[fvwm_wallpaper]/clannad.jpg
-+ " Red Dots " Exec exec feh --bg-fill $[fvwm_wallpaper]/dots.png
-+ " Asuka 98 " Exec exec feh --bg-fill $[fvwm_wallpaper]/asuka98.jpg
-+ " Eugen " Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen.png
-+ " Eugen 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen2.jpg
-+ " Eugen Beach " Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen-beach.jpg
-+ " Beach " Exec exec feh --bg-fill $[fvwm_wallpaper]/beach.jpg
-+ " Mountain " Exec exec feh --bg-fill $[fvwm_wallpaper]/mountain.jpg
-+ " Mountain 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/mountain2.jpg
-+ " Trees " Exec exec feh --bg-fill $[fvwm_wallpaper]/trees.jpg
-+ " Swirls " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls.jpg
-+ " Swirls 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls2.jpg
-+ " Swirls 3 " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls3.jpg
-+ " Swirls 4 " Exec exec feh --bg-fill $[fvwm_wallpaper]/swirls4.jpg
-+ " Flower " Exec exec feh --bg-fill $[fvwm_wallpaper]/flower.jpg
-+ " Christmas " Exec exec feh --bg-fill $[fvwm_wallpaper]/christmas.jpg
-
-DestroyMenu FvwmVolumeMenu
-AddToMenu FvwmVolumeMenu
-+ " 100%% "    exec pamixer --set-volume 100
-+ "  90%% "    exec pamixer --set-volume 90
-+ "  80%% "    exec pamixer --set-volume 80
-+ "  70%% "    exec pamixer --set-volume 70
-+ "  60%% "    exec pamixer --set-volume 60
-+ "  50%% "    exec pamixer --set-volume 50
-+ "  40%% "    exec pamixer --set-volume 40
-+ "  30%% "    exec pamixer --set-volume 30
-+ "  20%% "    exec pamixer --set-volume 20
-+ "  10%% "    exec pamixer --set-volume 10
-+ "   0%% "    exec pamixer --set-volume 0
-
-# Window Operations Menus
-DestroyMenu MenuWindowOps
-AddToMenu   MenuWindowOps
-+ "Tile (Left)"  Tile 50 100 +0 +0
-+ "Tile (Right)" Tile 50 100 -0 +0
-+ "Maximize"       Maximize
-+ "" Nop
-+ "Move"           Move
-+ "Resize"         Resize
-+ "Minimize"       Thumbnail
-+ "Shade"          WindowShade
-+ "Stick"          Stick
-+ "" Nop
-+ "Close"          Close
-+ "More..."        Menu MenuWindowOpsLong This 0 0
-
-DestroyMenu MenuWindowOpsLong
-AddToMenu   MenuWindowOpsLong
-+ "Move"                Move
-+ "Resize"              Resize
-+ "Minimize"            Thumbnail
-+ "(Un)Maximize"        Maximize
-+ "(Un)Shade"           WindowShade
-+ "(Un)Sticky"		Stick
-+ "(No)TitleBar"	Pick (CirculateHit) ToggleTitle
-+ "Send To"             Popup MenuSendTo
-+ "" Nop
-+ "Close"               Close
-+ "Destroy"             Destroy
-+ "" Nop
-+ "Raise"		Raise
-+ "Lower"		Lower
-+ "" Nop
-+ "StaysOnTop"          Pick (CirculateHit) Layer 0 6
-+ "StaysPut"            Pick (CirculateHit) Layer 0 4
-+ "StaysOnBottom"       Pick (CirculateHit) Layer 0 2
-+ "" Nop
-+ "Identify"            Module FvwmIdent
-
-# Colorset 9 fg rgb:00/00/00, hi rgb:00/00/00, sh rgb:00/00/00, bg rgb:e9/e9/d9
-Colorset 9 RootTransparent, fg #0f0f0f, bg average, sh #0f0f0f, \
- hi #202070, Tint #f0f0f0 30, bgTint #f0f0f0 70
-#Colorset 9 fg #0f0f0f, bg #f0f0f0, sh Black, hi #202070
-Colorset 10 fg rgb:00/00/00, hi rgb:dd/00/00, sh rgb:dd/00/00, bg rgb:fb/fc/ec
-
+##############
+# 7: Modules #
+##############
 DestroyModuleConfig FvwmIdent: *
 *FvwmIdent: Colorset 9
 *FvwmIdent: Font "xft:Tinos Nerd Font:size=14:antialias=True"
 
-Style "FvwmPager" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
-  CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 # StaysOnTop
 DestroyModuleConfig FvwmPager: *
 #*FvwmPager: Geometry 160x150+10-10
@@ -563,9 +576,6 @@ DestroyModuleConfig FvwmPager: *
 *FvwmPager: Columns 1
 # *FvwmPager: DeskHilight Black
 # *FvwmPager: Hilight Black
-
-Style "BottomDock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
-  CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
 
 DestroyModuleConfig BottomDock: *
 #*BottomDock: Geometry 476x60+1682-10
@@ -601,9 +611,6 @@ DestroyModuleConfig BottomDock: *
   Action(Mouse 1) "FvwmSteam")
 *BottomDock: (1x1, Frame 0)
 
-Style "LeftDock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
-  CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
-
 DestroyModuleConfig LeftDock: *
 *LeftDock: Geometry 60x520+10+820
 *LeftDock: Colorset 9
@@ -632,21 +639,6 @@ DestroyModuleConfig LeftDock: *
 *LeftDock: (1x5, Frame 0, Icon 48x48/steam.png, \
   Action(Mouse 1) "FvwmSteam")
 *LeftDock: (1x1, Frame 0)
-
-Style "xclock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
-  CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-
-Style DateTime NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
-  CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style DateTime PositionPlacement -10p +2090p
-
-Style "Steam" NoTitle, !Handles, !Borders, FixedPosition
-
-#Style "Firefox" NoTitle
-
-Style "Io.github.celluloid_player.Celluloid" NoTitle
-
-Style ConfirmQuit !Title, PositionPlacement Center, WindowListSkip, Layer 6
 
 ###########
 # Functions
