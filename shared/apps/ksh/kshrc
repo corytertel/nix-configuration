@@ -22,7 +22,7 @@ alias settings='xfce4-settings-manager'
 alias bat='bat --theme base16'
 alias n='cd $HOME/.nix-configuration'
 alias fm='pcmanfm -n'
-alias directory='if [ $PWD == $HOME ]; then; echo \'~'; else; basename $PWD; fi'
+alias directory='if [ "$PWD" == "$HOME" ]; then echo \'~'; else; basename "$PWD"; fi'
 
 HISTFILE="$HOME/.ksh_history"
 HISTSIZE=500
