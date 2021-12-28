@@ -38,7 +38,7 @@
           imports = [
             ./pc/home.nix
             ./shared/home.nix
-            ./rices/fvwm/home.nix
+            ./rices/beach/home.nix
           ];
         };
       };
@@ -52,7 +52,7 @@
           imports = [
             ./laptop/home.nix
             ./shared/home.nix
-            ./rices/fvwm-tree/home.nix
+            ./rices/tree/home.nix
           ];
         };
       };
@@ -66,7 +66,7 @@
         modules = [
           ./pc/configuration.nix
           ./shared/configuration.nix
-          ./rices/fvwm/configuration.nix
+          ./rices/beach/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
@@ -80,7 +80,7 @@
         modules = [
           ./laptop/configuration.nix
           ./shared/configuration.nix
-          ./rices/fvwm-tree/configuration.nix
+          ./rices/tree/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;

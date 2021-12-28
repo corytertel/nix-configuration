@@ -6,24 +6,20 @@
       ./discord
       ./dunst
       ./emacs
+      ./kitty
       ./nvim
-      ./rofi
-      ./urxvt
       ./zathura
     ];
 
   services.picom = {
     enable = true;
-    #inactiveDim = "0.01";
     inactiveOpacity = "0.93";
     activeOpacity = "0.98";
     blur = true;
     experimentalBackends = true;
     opacityRule = [
-      "100:class_g   *?= 'XClock'"
-      "100:class_g   *?= 'FvwmButtons'"
-      "100:class_g   *?= 'FvwmPager'"
-      "100:class_g   *?= 'FvwmScript'"
+      #"98:class_g   *?= 'emacs'"
+      #"98:class_g   *?= 'discord'"
     ];
     extraOptions = ''
       blur-method = "dual_kawase";
@@ -37,36 +33,30 @@
     '';
     fade = true;
     fadeDelta = 5;
-    shadow = true;
-    #shadowExclude = [
-    #  "class_g   *?= 'Xclock'"
-    #];
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
-          # owner = "jonaburg";
-          # repo = "picom";
-          # rev = "a8445684fe18946604848efb73ace9457b29bf80";
-          # sha256 = "R+YUGBrLst6CpUgG9VCwaZ+LiBSDWTp0TLt1Ou4xmpQ=";
-          owner = "Arian8j2";
-          repo = "picom-jonaburg-fix";
-          rev = "31d25da22b44f37cbb9be49fe5c239ef8d00df12";
-          sha256 = "1z4bKDoNgmG40y2DKTSSh1NCafrE1rkHkCB3ob8ibm4=";
+          owner = "jonaburg";
+          repo = "picom";
+          rev = "a8445684fe18946604848efb73ace9457b29bf80";
+          sha256 = "R+YUGBrLst6CpUgG9VCwaZ+LiBSDWTp0TLt1Ou4xmpQ=";
         };
       }
     );
   };
 
   home.file = {
-    ".fvwm" = {
-      recursive = true;
-      source = ./fvwm;
-    };
+    ".config/xmobar/xmobarrc0".text = builtins.readFile ./xmobar/xmobarrc0;
+    ".config/xmobar/xmobarrc1".text = builtins.readFile ./xmobar/xmobarrc1;
+    ".config/xmobar/xmobarrc2".text = builtins.readFile ./xmobar/xmobarrc2;
+    "Pictures/wallpaper.jpg".source = ./wallpapers/tree3.jpg;
   };
 
   home.packages = with pkgs; [
-    orchis-theme
+    arc-theme
     tela-icon-theme
+    orchis-theme
+    whitesur-icon-theme
     libsForQt5.qtstyleplugins
     gnome3.dconf
     gsettings-desktop-schemas

@@ -11,13 +11,13 @@ pc:
 	fi
 
 laptop:
-	if [ "$(git diff --shortstat)" == "" ]
-	then
-	nix build .#homeManagerConfigurations.laptop.activationPackage --show-trace
-		./result/activate
-		doas nixos-rebuild switch --flake .#laptop
-	else
-		echo "Please commit your changes, then rebuild."
+	if [ "$(git diff --shortstat)" == "" ]; then \
+		nix build .#homeManagerConfigurations.laptop.activationPackage --show-trace; \
+		./result/activate; \
+		doas nixos-rebuild switch --flake .#laptop; \
+	else \
+		echo ""; \
+		echo "Please commit your changes, then rebuild."; \
 	fi
 
 # Will update the packages for both the system and the user (home-manager)

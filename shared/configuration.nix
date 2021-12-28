@@ -186,7 +186,8 @@
       tapping = false;
       tappingDragLock = false;
       #transformationMatrix = "14 0 0 0 14 0 0 0 1";
-      transformationMatrix = "3 0 0 0 3 0 0 0 1";
+      #transformationMatrix = "3 0 0 0 3 0 0 0 1";
+      transformationMatrix = "2.5 0 0 0 2.5 0 0 0 1";
     };
     mouse = {
       # Mouse settings

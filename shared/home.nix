@@ -11,7 +11,6 @@
       #./apps/pcmanfm
       ./apps/powershell
       ./apps/ungoogled-chromium
-      ./apps/urxvt
       ./apps/vscode
       ./apps/xfce4-terminal
     ];
@@ -210,6 +209,7 @@
     xorg.xwd
     ledger-live-desktop
     #ledger-udev-rules
+    acpi
 
     discord
     betterdiscord-installer

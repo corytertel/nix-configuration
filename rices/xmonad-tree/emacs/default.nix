@@ -15,6 +15,10 @@
 
   home.file = {
     ".spacemacs".text = builtins.readFile ./spacemacs;
+    ".emacs.d/core/banners/005-banner.txt".text = builtins.readFile ./005-banner.txt;
+    ".emacs.d/core/banners/006-banner.txt".text = builtins.readFile ./006-banner.txt;
+    ".emacs.d/core/banners/007-banner.txt".text = builtins.readFile ./007-banner.txt;
     ".emacs.d/core/banners/img/emacs-logo-mountain.png".source = ./emacs-logo-mountain.png;
+    ".emacs.d/private/themes/mountain-theme/mountain.el".text = builtins.readFile ./mountain.el;
   };
 }

@@ -1,0 +1,51 @@
+WindowTitle {Battery}
+WindowSize  90 120
+Colorset 9
+Font "xft:FantasqueSansMono Nerd Font:size=12" 
+
+Init
+ Begin
+  Set $Title = (GetOutput {exec echo " "} 1 -1)
+  Set $Battery = (GetOutput {exec acpi --battery | tr "," "\n" | grep % | tr -d % | xargs} 1 -1)
+  ChangeTitle 1 $Title
+  ChangeTitle 2 $Battery
+End
+
+PeriodicTasks
+ Begin 
+  If (RemainderOfDiv (GetTime) 15)==0 Then
+  Begin
+    Set $Battery = (GetOutput {exec acpi --battery | tr "," "\n" | grep % | tr -d % | xargs} 1 -1)
+    ChangeTitle 2 $Battery
+  End
+End
+
+Widget 1
+Property
+ Position 0 10
+ Size 90 50
+ Font "xft:FantasqueSansMono Nerd Font:size=12"
+ Type ItemDraw
+ Flags NoReliefString
+ Title {}
+Main
+ Case message of
+  SingleClic :
+  Begin
+  End
+End
+
+Widget 2
+Property
+ Position 0 60
+ Size 90 50
+ Font "xft:FantasqueSansMono Nerd Font:size=12"
+ Type ItemDraw
+ Flags NoReliefString
+ Title {}
+Main
+ Case message of
+  SingleClic :
+  Begin
+  End
+End
