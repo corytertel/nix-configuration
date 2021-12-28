@@ -23,7 +23,10 @@
     };
 
     # fvwm
-    windowManager.fvwm.enable = true;
+    windowManager.fvwm = {
+      enable = true;
+      gestures = false;
+    };
   };
 
   environment.etc."wallpaper.jpg".source = ./fvwm/images/wallpaper/beach.jpg;

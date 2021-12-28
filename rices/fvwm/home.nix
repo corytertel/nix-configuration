@@ -6,9 +6,9 @@
       ./discord
       ./dunst
       ./emacs
-      ./kitty
       ./nvim
       ./rofi
+      ./urxvt
       ./zathura
     ];
 

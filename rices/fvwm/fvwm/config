@@ -40,17 +40,6 @@ SetEnv fvwm_ss flameshot
 ImagePath $[fvwm_icon]:$[fvwm_icon];.png:$[fvwm_wallpaper]:+
 
 # Desktops and Pages
-#
-# Fvwm has both Virtual Desktops and Pages. Each Desktop is built from
-# a grid of Pages. The following sets the name of four Desktops and then
-# divides each Desktop into a 2x2 grid of Pages that are positioned as
-#
-#   +---+---+
-#   |   |   |
-#   +---+---+
-#   |   |   |
-#   +---+---+
-#
 DesktopName 0 Desktops
 DesktopSize 3x3
 
@@ -82,7 +71,6 @@ IgnoreModifiers L25
 SnapGrid 20 20
 
 PipeRead fvwm-menu-xlock
-#PipeRead fvwm-menu-desktop --enable-mini-icons --desktop kde
 PipeRead fvwm-menu-desktop
 
 #############
@@ -90,7 +78,6 @@ PipeRead fvwm-menu-desktop
 #############
 
 # Default Font
-#DefaultFont "xft:Serif:Bold:size=8:antialias=True"
 DefaultFont "xft:Tinos Nerd Font:Bold:size=10:antialias=True"
 
 Style * EdgeMoveDelay 350, EdgeMoveResistance 350
@@ -113,10 +100,6 @@ Style * !FPGrabFocusTransient, FPReleaseFocusTransient
 
 # WindowShade
 Style * WindowShadeScrolls, WindowShadeSteps 10
-
-# Disable Icons from appearing on desktop.
-# Comment this out or use Style * Icon to get the icons back.
-#Style * !Icon
 
 Style "*" UseDecor WindowDecor
 Style "*" Font "xft:Tinos Nerd Font:pixelsize=0:minspace=False:antialias=True"
@@ -156,21 +139,17 @@ Style ConfirmQuit !Title, PositionPlacement Center, WindowListSkip, Layer 6
 ################
 # 3: Colorsets #
 ################
-Colorset 3 fg #ac8a8c, bg #ac8a8c
-Colorset 4 fg #f0f0f0, bg #f0f0f0
-Colorset 5 fg #f0f0f0, bg #0f0f0f
+Colorset 3 fg #ac8a8c, bg #ac8a8c, hi, sh, Plain, NoShape
+Colorset 4 fg #f0f0f0, bg #f0f0f0, hi, sh, Plain, NoShape
+Colorset 5 fg #f0f0f0, bg #0f0f0f, hi, sh, Plain, NoShape
 
 # Menu Colorset
-#Colorset 7 RootTransparent, fg Black, bg average, sh Black, \
-# hi #202070, Tint White 60, bgTint White 60
-Colorset 7 fg #0f0f0f, bg #f0f0f0, sh Black, hi #202070
+Colorset 7  fg #0f0f0f, bg #f0f0f0, hi, sh, Plain, NoShape
 # Menu Active Colorset
-Colorset 8 fg #f0f0f0, bg #0f0f0f, sh Black, hi #202070
+Colorset 8  fg DarkRed, bg #f0f0f0, hi, sh, Plain, NoShape
 
-# Colorset 9 fg rgb:00/00/00, hi rgb:00/00/00, sh rgb:00/00/00, bg rgb:e9/e9/d9
 Colorset 9 RootTransparent, fg #0f0f0f, bg average, sh #0f0f0f, \
  hi #202070, Tint #f0f0f0 30, bgTint #f0f0f0 70
-#Colorset 9 fg #0f0f0f, bg #f0f0f0, sh Black, hi #202070
 Colorset 10 fg rgb:00/00/00, hi rgb:dd/00/00, sh rgb:dd/00/00, bg rgb:fb/fc/ec
 
 ############
@@ -187,7 +166,6 @@ MenuStyle * VerticalItemSpacing 1 1, VerticalTitleSpacing 2 2
 MenuStyle * MenuColorset 7
 MenuStyle * ActiveFore, Hilight3DOff
 MenuStyle * ActiveColorset 8
-#MenuStyle * Font "Shadow=2:xft:Tinos Nerd Font:size=13:antialias=True"
 MenuStyle * Font "xft:Tinos Nerd Font:size=13:antialias=True"
 
 DestroyMenu FvwmRootMenu
@@ -325,13 +303,11 @@ AddToMenu   MenuWindowOpsLong
 #   2 - Close on single click, Destory on double click.
 #   4 - Maximize (right/middle button will only maximize vertical/horizontal)
 #   6 - Iconify (minimize)
-Mouse 1 1 A Menu MenuWindowOps Delete
-#Mouse 1 2 A FvwmDeleteOrDestroy
+Mouse 1 1 A Menu MenuWindowOps
 Mouse 1 2 A Delete
 Mouse 1 4 A FvwmMaximize 100 100
 Mouse 2 4 A FvwmMaximize 0 100
 Mouse 3 4 A FvwmMaximize 100 0
-#Mouse 1 6 A FvwmIconifyOrShade
 Mouse 1 6 A Thumbnail
 
 #   TitleBar: Click to Raise, Move, Double Click to Maximize
@@ -350,18 +326,13 @@ Mouse 2	R    A WindowList
 Mouse 3 R    A Menu FvwmOpsMenu
 Mouse 1	I    A RaiseMoveX Move "Iconify off"
 Mouse 3	T    A Menu MenuWindowOps
-
-# Move window when pressing mouse 1 and 'meta (win)'
 Mouse 1 WT 4 FvwmMove
-# Resize window when pressing mouse 3 and 'meta (win)'
 Mouse 3 WT 4 FvwmResize
-# Pan window
 Mouse 1 A C4 Scroll reverse
 
 # Simple Commands
 Silent Key Return   A     4       FvwmTerm
 Silent Key Return   A     4S      FvwmEditor
-#Silent Key apostrophe A   4       Exec exec xfce4-terminal --drop-down
 Silent Key apostrophe A   4       Exec exec urxvtc -geometry 120x40+1190+525 -icon $[fvwm_icon]/96x96/terminal.png
 Silent Key Space    A     4       FvwmLaunch
 Silent Key E        A     4       FvwmFileManager
@@ -372,24 +343,8 @@ Silent Key J        A     4       PrevWindow
 Silent Key K        A     4       NextWindow 
 Silent Key J        A     S4      SwapWindowsDir SouthEast SouthWest 
 Silent Key K        A     S4      SwapWindowsDir NorthEast NorthWest 
-#Silent Key H        A     4       Direction West (CurrentDesk, AcceptsFocus, Visible) Raise
-#Silent Key L        A     4       Direction East (CurrentDesk, AcceptsFocus, Visible) Raise
-#Silent Key K        A     4       Direction North (CurrentDesk, AcceptsFocus, Visible) Raise
-#Silent Key J        A     4       Direction South (CurrentDesk, AcceptsFocus, Visible) Raise
 
 # Alt+Shift hjkl to tile left, bottom-right, top-right, full-right respectively
-#Silent Key H        A     MC      Tile 60 100 +0 +0
-#Silent Key L        A     MC      Tile 40 100 -0 +0
-#Silent Key J        A     MC      Tile 40 40 -0 -0
-#Silent Key K        A     MC      Tile 40 60 -0 +0
-#Silent Key H        A     MC      Tile 44 90 +4 +5
-#Silent Key L        A     MC      Tile 44 90 -4 +5
-#Silent Key J        A     MC      Tile 44 42 -4 -5
-#Silent Key K        A     MC      Tile 44 42 -4 +5
-#Silent Key H        A     MC      Tile 49 96 +1 +2
-#Silent Key L        A     MC      Tile 49 96 -1 +2
-#Silent Key J        A     MC      Tile 49 48 -1 -2
-#Silent Key K        A     MC      Tile 49 48 -1 +2
 Silent Key H        A     MC      Tile 45 90 +3 +4
 Silent Key L        A     MC      Tile 45 90 -3 +4
 Silent Key J        A     MC      Tile 45 40 -3 -4
@@ -411,19 +366,10 @@ Silent Key L        A     4C      Maximize growright 0
 Silent Key J        A     4C      Maximize 0 growdown
 Silent Key K        A     4C      Maximize 0 growup
 
-# Needs Work
-#Key Space  A    4    ToggleTiling 
-#Key Space  A    C4   WindowToggleTiling
-#Key Space  A    S4   WindowToggleTiling # alternate shortcut when running under vmware
-#Key Return A    C4   SetCurrentMaster 
-#Key Return A    S4   SetCurrentMaster  # alternate shortcut when running under vmware
-
 # Window Controls
 Silent Key Q        A     4       Close
 Silent Key Escape   A     4       Exec exec xkill
 Silent Key C        A     4       AnimatedMove 50-50w 50-50w
-#Silent Key C        A     S4      AnimatedMove 0w 50-50w
-#Silent Key C        A     C4      AnimatedMove 50-50w 0w
 Silent Key C        A     S4      AnimatedMove w 50-50w
 Silent Key C        A     C4      AnimatedMove 50-50w w
 Silent Key M        A     4       AnimatedMove m-50w m-50w # move to mouse pointer
@@ -578,16 +524,11 @@ DestroyModuleConfig FvwmPager: *
 # *FvwmPager: Hilight Black
 
 DestroyModuleConfig BottomDock: *
-#*BottomDock: Geometry 476x60+1682-10
-#*BottomDock: Geometry 2860x60+480-0
 *BottomDock: Geometry 520x60+1660-10
 *BottomDock: Colorset 9
 *BottomDock: Rows 1
-#*BottomDock: Columns 43
 *BottomDock: Columns 47
-#*BottomDock: Columns 258
 *BottomDock: Frame 0
-#*BottomDock: Font "Shadow=3:xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
 *BottomDock: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
 *BottomDock: (1x1, Frame 0, Title(Center) "")
 *BottomDock: (5x1, Frame 0, Icon 48x48/nixos.png, \
@@ -727,11 +668,6 @@ DestroyFunc FvwmFileManager
 AddToFunc FvwmFileManager
 + I Exec exec pcmanfm
 
-DestroyFunc FvwmIconifyOrShade
-AddToFunc FvwmIconifyOrShade
-+ C Thumbnail
-+ D WindowShade
-
 DestroyFunc FvwmIconify
 AddToFunc FvwmIconify
 + C Thumbnail
@@ -754,13 +690,8 @@ AddToFunc   FvwmDesktopScreenshot
 
 DestroyFunc InitFunction
 AddToFunc InitFunction
-# will cause problems when move windows across pages
-# + I Exec exec xcompmgr -c -t-5 -l-5 -r4.2 -o.55 &
 + I Exec exec urxvtd -q
 + I Exec exec feh --bg-fill $[fvwm_wallpaper]/eugen-beach.jpg
-# + I Exec exec xclock -digital -bg "#f0f0f0" -fg "#0f0f0f" -face \
-#   "Tinos Nerd Font:size=14" -strftime "%I:%M:%S %p  %a, %b %d, %Y" \
-#   -p 13 -geometry 420x60-10-10 -update 1
 + I FvwmTerm
 + I FvwmEditor
 + I FvwmMusicPlayer
@@ -778,11 +709,6 @@ AddToFunc FvwmWindowShade
 DestroyFunc FvwmMaximize
 AddToFunc FvwmMaximize
 + I Maximize $0 $1
-
-DestroyFunc FvwmDeleteOrDestroy
-AddToFunc FvwmDeleteOrDestroy
-+ C Delete
-+ D Destroy
 
 # Mouse Bindings Functions
 DestroyFunc RaiseMoveX
@@ -875,26 +801,6 @@ AddToFunc 		PrevWindow
 + I Current Raise
 #+ I Current WarpToWindow 5 5
 
-# DestroyFunc 	LeftWindow
-# AddToFunc 		LeftWindow
-# + I ScanForWindow West North (CurrentPage, !Iconic, AcceptsFocus) FlipFocus
-# + I Current Raise
-
-# DestroyFunc 	RightWindow
-# AddToFunc 		RightWindow
-# + I ScanForWindow East North (CurrentPage, !Iconic, AcceptsFocus) FlipFocus
-# + I Current Raise
-
-# DestroyFunc 	AboveWindow
-# AddToFunc 		AboveWindow
-# + I ScanForWindow North West (CurrentPage, !Iconic, AcceptsFocus) FlipFocus
-# + I Current Raise
-
-# DestroyFunc 	BelowWindow
-# AddToFunc 		BelowWindow
-# + I ScanForWindow South West (CurrentPage, !Iconic, AcceptsFocus) FlipFocus
-# + I Current Raise
-
 DestroyFunc     Warp-and-Move
 AddToFunc 		Warp-and-Move
 + I WarpToWindow 50 50
@@ -948,205 +854,6 @@ AddToFunc 		Maintenance
 + I SendToModule FvwmAnimate pause
 + I All (!Visible, CurrentPage, !Iconic, !Sticky, !Focused) Thumbnail
 + I SendToModule FvwmAnimate play
-
-#----- Tiling Functions
-
-Style * ResizeHintOverride
-
-DestroyModuleConfig FvwmEvent: *
-*FvwmEvent: Cmd
-*FvwmEvent: add_window "NewWindow"
-*FvwmEvent: destroy_window "DestroyWindow"
-*FvwmEvent: deiconify "NewWindow"
-*FvwmEvent: iconify "DestroyWindow"
-#*FvwmEvent: windowshade "DestroyWindow"
-#*FvwmEvent: dewindowshade "NewWindow"
-*FvwmEvent: new_page "NewPageFunc"
-*FvwmEvent: new_desk "NewPageFunc"
-
-### Executed on page/desk change
-DestroyFunc NewPageFunc
-AddToFunc NewPageFunc
-+ I None (CurrentPage, Focused) Prev (CurrentPage, !iconic, AcceptsFocus) FlipFocus
-+ I FixSticky
-+ I SendToModule FvwmButtons ChangeButton Layout Icon floating18.png
-+ I Test (!EnvMatch FVWM_TILING_$[desk.n]-$[page.nx]-$[page.ny] 1) Break
-+ I SendToModule FvwmButtons ChangeButton Layout Icon tile18.png
-+ I None (CurrentPage, !State 1, !State 2, !iconic, AcceptsFocus) Break
-+ I Refresh
-+ I All (CurrentPage, !iconic, AcceptsFocus, State 1) \
-    Resize frame $[FVWM_MASTER_PIXWIDTH]p keep
-+ I All (CurrentPage, !iconic, AcceptsFocus, !State 1, !State 2) \
-    PipeRead 'echo ResizeMove frame \
-    $(( $[vp.width] - $[FVWM_MASTER_PIXWIDTH] ))p keep $[FVWM_MASTER_PIXWIDTH]p keep'
-
-SetEnv Fvwm_CurrentPage $[desk.n]-$[page.nx]-$[page.ny]
-
-### Nicely fit sticky windows into current page when in tiling mode
-DestroyFunc FixSticky
-AddToFunc FixSticky
-+ I SetEnv Fvwm_PrevPage $[Fvwm_CurrentPage]
-+ I SetEnv Fvwm_CurrentPage $[desk.n]-$[page.nx]-$[page.ny]
-+ I All (sticky, !iconic, !State 2) SetEnv Fvwm_SavePage_$[Fvwm_PrevPage]
-+ I TestRc (Match) KeepRc None (sticky, !iconic, state 1) \
-    KeepRc Next (CurrentPage, state 1) Schedule 5 FlipFocus
-+ I TestRc (Match) KeepRc Next (sticky, !iconic, !State 2, State 1) Schedule 5 FlipFocus
-+ I TestRc (Match) Schedule 10 NewWindow
-+ I TestRc (Match) UnsetEnv Fvwm_SavePage_$[Fvwm_CurrentPage]
-+ I TestRc (Match) Break 1
-+ I Test (EnvIsSet Fvwm_SavePage_$[Fvwm_CurrentPage]) Schedule 10 DestroyWindow
-+ I UnsetEnv Fvwm_SavePage_$[Fvwm_CurrentPage]
-
-#--------- Toggle floating for individual windows {{{3
-
-### Toggles tiling/floating for current window
-DestroyFunc WindowToggleTiling
-AddToFunc WindowToggleTiling 
-+ I Test (!EnvMatch FVWM_TILING_$[desk.n]-$[page.nx]-$[page.ny] 1) Break 1
-+ I Current State 2 Toggle
-+ I Current (State 2) Piperead 'echo Move 50-50w 50-50w+$(( $[FVWM_TB_HEIGHT] / 2 ))p'
-+ I TestRC (Match) Raise
-+ I TestRC (Match) WarpToWindow 50 50
-+ I PostToggleTiling
-
-### Move window and set to floating mode
-DestroyFunc Move-and-SetFloating
-AddToFunc Move-and-SetFloating
-+ I Move
-+ I Test (!EnvMatch FVWM_TILING_$[desk.n]-$[page.nx]-$[page.ny] 1) Break 1
-+ I Current State 2 True
-+ I PostToggleTiling
-
-### Resize window and set to floating mode
-DestroyFunc Resize-and-SetFloating
-AddToFunc Resize-and-SetFloating
-+ I Resize Direction SE warptoborder
-+ I Test (!EnvMatch FVWM_TILING_$[desk.n]-$[page.nx]-$[page.ny] 1) Break 1
-+ I Current State 2 True
-+ I PostToggleTiling
-
-### Maximize window and set to floating/tiling mode
-DestroyFunc Maximize-and-SetFloating
-AddToFunc Maximize-and-SetFloating
-+ I Maximize $0 $1
-+ I Test (!EnvMatch FVWM_TILING_$[desk.n]-$[page.nx]-$[page.ny] 1) Break 1
-#---Use 1st line to push window into tiling mode when unmaximizing,
-#   use 2nd line to leave it floating (when needed, use CM+Space)  ---
-#+ I Current (!Maximized) State 2 False
-+ I Current (!Maximized) Break 1
-#---------------------------------------------------------------------
-+ I Current (Maximized) State 2 True
-+ I PostToggleTiling
-+ I Current Raise
-
-### Rearrange remaining windows when in tiling mode
-DestroyFunc PostToggleTiling
-AddToFunc PostToggleTiling
-+ I Current (State 2) State 1 False
-+ I TestRC (Match) DestroyWindow
-#+ I TestRC (Match) WindowStyle Title
-#+ I Current (!State 2) WindowStyle !Title
-+ I Current (!State 2) NewWindow 
-# TODO: Mark floating window in IconMan
-
-#--------- New Windows / Toggle Tiling / WMIArrange {{{3
-
-### Executed when new window enters tiling mode
-DestroyFunc NewWindow
-AddToFunc NewWindow
-+ I Test (!EnvMatch FVWM_TILING_$[desk.n]-$[page.nx]-$[page.ny] 1) Break 1
-+ I Current (State 2|Transient) NoWindow Break 1
-#---Comment the next 2 lines for new windows to start in slave area---
-+ I Current (CurrentPage, !State 2, !iconic, AcceptsFocus) \
-    KeepRc All (CurrentPage, State 1) State 1 false
-+ I TestRc (Match) Current State 1 true
-#---------------------------------------------------------------------
-+ I None (CurrentPage, State 1) Prev (CurrentPage, !State 2, !iconic, AcceptsFocus) \
-    State 1 True 
-+ I WMIArrange
-+ I Next (FvwmButtons, !HasPointer) Next (CurrentPage, State 1) WarpToWindow -5 5
-#+ I Next (CurrentPage, State 1) Schedule 120 $[w.id] FlipFocus
-
-### Executed when window leaves tiling mode
-DestroyFunc DestroyWindow
-AddToFunc DestroyWindow
-+ I Test (!EnvMatch FVWM_TILING_$[desk.n]-$[page.nx]-$[page.ny] 1) Break
-+ I All (iconic) State 1 False
-+ I None (CurrentPage, State 1) Current (CurrentPage, !State 2, !iconic, AcceptsFocus) \
-    State 1 True 
-+ I None (CurrentPage, State 1) Prev (CurrentPage, !State 2, !iconic, AcceptsFocus) \
-    State 1 True 
-+ I WMIArrange
-
-### Toggle tiling mode for current workspace
-DestroyFunc ToggleTiling
-AddToFunc ToggleTiling
-+ I Test (EnvMatch FVWM_TILING_$[desk.n]-$[page.nx]-$[page.ny] 1) \
-    SetEnv FVWM_TILING_$[desk.n]-$[page.nx]-$[page.ny] 0
-+ I TestRc (Match) All (CurrentPage) State 1 False
-+ I TestRc (Match) SendToModule FvwmButtons ChangeButton Layout Icon floating18.png
-#+ I TestRc (Match) KeepRc All (CurrentPage, AcceptsFocus) WindowStyle Title
-+ I TestRc (Match) Break
-+ I SetEnv FVWM_TILING_$[desk.n]-$[page.nx]-$[page.ny] 1
-+ I All (CurrentPage) State 1 False
-#+ I All (CurrentPage, AcceptsFocus) WindowStyle !Title
-#+ I UpdateStyles
-+ I Current (State 2|Transient) Prev Focus
-+ I Current State 1 True
-+ I WMIArrange
-+ I SendToModule FvwmButtons ChangeButton Layout Icon tile18.png
-
-
-PipeRead 'echo SetEnv vp.width_1 $(( $[vp.width] - 1 ))'
-PipeRead 'echo SetEnv vp.height_1 $(( $[vp.height] - 1 ))'
-
-### Does the rearranging when in tiling mode
-DestroyFunc WMIArrange
-AddToFunc WMIArrange
-+ I Next (CurrentPage, State 1) \
-    ResizeMove frame $[FVWM_MASTER_PIXWIDTH]p -$[FVWM_TB_HEIGHT]p \
-    0 $[FVWM_TB_HEIGHT]p
-+ I None (CurrentPage, !State 1, !State 2, !iconic, AcceptsFocus) \
-    Next (CurrentPage, State 1) \
-    ResizeMove frame 100 -$[FVWM_TB_HEIGHT]p 0 $[FVWM_TB_HEIGHT]p
-+ I All (CurrentPage, State 1) WindowStyle WindowListSkip
-+ I All (CurrentPage, State 2) WindowStyle WindowListSkip
-+ I UpdateStyles
-+ I ModuleSynchronous FvwmRearrange -tile -u -m -s -r -h -noraise \
-    $[FVWM_MASTER_PIXWIDTH]p $[FVWM_TB_HEIGHT]p $[vp.width_1]p $[vp.height_1]p
-+ I All (CurrentPage, State 1) WindowStyle WindowListHit
-+ I All (CurrentPage, State 2) WindowStyle WindowListHit
-+ I All (FvwmButtons|FvwmPager) WindowStyle WindowListSkip
-
-### Does the rearranging when in horizontal tiling mode
-DestroyFunc WMIArrangeH
-AddToFunc WMIArrangeH
-+ I Next (CurrentPage, State 1) \
-    PipeRead 'echo ResizeMove frame 100 $(( $[FVWM_MASTER_PIXWIDTH] - $[FVWM_TB_HEIGHT] ))p \
-    0 $[FVWM_TB_HEIGHT]p'
-+ I None (CurrentPage, !State 1, !State 2, !iconic, AcceptsFocus) \
-    Next (CurrentPage, State 1) \
-    ResizeMove frame 100 -$[FVWM_TB_HEIGHT]p 0 $[FVWM_TB_HEIGHT]p
-+ I All (CurrentPage, State 1) WindowStyle WindowListSkip
-+ I All (CurrentPage, State 2) WindowStyle WindowListSkip
-+ I UpdateStyles
-+ I ModuleSynchronous FvwmRearrange -tile -u -m -s -r -noraise \
-    0 $[FVWM_MASTER_PIXWIDTH]p $[vp.width_1]p $[vp.height_1]p
-+ I All (CurrentPage, State 1) WindowStyle WindowListHit
-+ I All (CurrentPage, State 2) WindowStyle WindowListHit
-+ I All (FvwmButtons|FvwmPager) WindowStyle WindowListSkip
-
-#--------- SetCurrentMaster / SwapWindows {{{3
-
-### Set the current window to master
-DestroyFunc SetCurrentMaster
-AddToFunc SetCurrentMaster
-+ I Test (!EnvMatch FVWM_TILING_$[desk.n]-$[page.nx]-$[page.ny] 1) Break
-+ I Current (State 2|Transient) NoWindow Break
-+ I Current SetEnv FvwmId_current $$$$[w.id]
-+ I Next (CurrentPage, State 1) SetEnv FvwmId_dest $$$$[w.id]
-+ I SwapWindowsToggleState
-+ I SwapWindows
 
 ### Swap window with next window in specified direction
 DestroyFunc SwapWindowsDir
