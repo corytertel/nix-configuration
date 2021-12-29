@@ -1,25 +1,21 @@
-WindowTitle {DateTime}
-WindowSize  90 400
+WindowTitle {Time}
+WindowSize  90 270
 Colorset 9
 Font "xft:FantasqueSansMono Nerd Font:size=12" 
 
 Init
  Begin
+  Set $Title = (GetOutput {exec echo " "} 1 -1)
   Set $Hour = (GetOutput {exec date "+%I"} 1 -1)
   Set $Minute = (GetOutput {exec date "+%M"} 1 -1)
   Set $Second = (GetOutput {exec date "+%S"} 1 -1)
   Set $AmPm = (GetOutput {exec date "+%p"} 1 -1)
-  Set $Month = (GetOutput {exec date "+%m"} 1 -1)
-  Set $Day = (GetOutput {exec date "+%d"} 1 -1)
-  Set $Year = (GetOutput {exec date "+%y"} 1 -1)
 
-  ChangeTitle 1 $Hour
-  ChangeTitle 2 $Minute
-  ChangeTitle 3 $Second
-  ChangeTitle 4 $AmPm
-  ChangeTitle 5 $Month
-  ChangeTitle 6 $Day
-  ChangeTitle 7 $Year
+  ChangeTitle 1 $Title
+  ChangeTitle 2 $Hour
+  ChangeTitle 3 $Minute
+  ChangeTitle 4 $Second
+  ChangeTitle 5 $AmPm
 End
 
 PeriodicTasks
@@ -30,17 +26,11 @@ PeriodicTasks
     Set $Minute = (GetOutput {exec date "+%M"} 1 -1)
     Set $Second = (GetOutput {exec date "+%S"} 1 -1)
     Set $AmPm = (GetOutput {exec date "+%p"} 1 -1)
-    Set $Month = (GetOutput {exec date "+%m"} 1 -1)
-    Set $Day = (GetOutput {exec date "+%d"} 1 -1)
-    Set $Year = (GetOutput {exec date "+%y"} 1 -1)
 
-    ChangeTitle 1 $Hour
-    ChangeTitle 2 $Minute
-    ChangeTitle 3 $Second
-    ChangeTitle 4 $AmPm
-    ChangeTitle 5 $Month
-    ChangeTitle 6 $Day
-    ChangeTitle 7 $Year
+    ChangeTitle 2 $Hour
+    ChangeTitle 3 $Minute
+    ChangeTitle 4 $Second
+    ChangeTitle 5 $AmPm
   End
 End
 
@@ -106,37 +96,7 @@ End
 
 Widget 5
 Property
- Position 0 240
- Size 90 50
- Font "xft:FantasqueSansMono Nerd Font:size=12"
- Type ItemDraw
- Flags NoReliefString
- Title {}
-Main
- Case message of
-  SingleClic :
-  Begin
-  End
-End
-
-Widget 6
-Property
- Position 0 290
- Size 90 50
- Font "xft:FantasqueSansMono Nerd Font:size=12"
- Type ItemDraw
- Flags NoReliefString
- Title {}
-Main
- Case message of
-  SingleClic :
-  Begin
-  End
-End
-
-Widget 7
-Property
- Position 0 340
+ Position 0 210
  Size 90 50
  Font "xft:FantasqueSansMono Nerd Font:size=12"
  Type ItemDraw

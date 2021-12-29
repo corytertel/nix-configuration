@@ -124,19 +124,20 @@ Style "LeftDock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
 Style "ControlButtons" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 
-Style DateTime NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+Style Time NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-#Style DateTime PositionPlacement +10p -448p
-Style DateTime PositionPlacement +10p +10p
+Style Time PositionPlacement +10p +10p
+
+Style Date NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+  CirculateSkip, FixedPosition, FixedSize, !Iconifiable
+Style Date PositionPlacement +10p +300p
 
 Style Battery NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-#Style Battery PositionPlacement +10p -948p
 Style Battery PositionPlacement +10p -146p
 
 Style Volume NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-#Style Volume PositionPlacement +10p -1168p
 Style Volume PositionPlacement +10p -286p
 
 Style "Steam" NoTitle, !Handles, !Borders, FixedPosition
@@ -516,7 +517,6 @@ DestroyModuleConfig FvwmPager: *
 *FvwmPager: Columns 1
 
 DestroyModuleConfig LeftDock: *
-#*LeftDock: Geometry 90x780+10+232
 *LeftDock: Geometry 90x780+10+810
 *LeftDock: Colorset 9
 *LeftDock: Rows 47
@@ -546,7 +546,6 @@ DestroyModuleConfig LeftDock: *
 *LeftDock: (1x1, Frame 0)
 
 DestroyModuleConfig ControlButtons: *
-#*ControlButtons: Geometry 90x116+10-232
 *ControlButtons: Geometry 90x116+10-10
 *ControlButtons: Colorset 9
 *ControlButtons: Rows 7
@@ -584,7 +583,8 @@ AddToFunc   StartFunction
 #+ I Module FvwmPager 0 0
 + I Module FvwmButtons LeftDock
 + I Module FvwmButtons ControlButtons
-+ I Module FvwmScript FvwmScript-DateTime
++ I Module FvwmScript FvwmScript-Date
++ I Module FvwmScript FvwmScript-Time
 + I Module FvwmScript FvwmScript-Battery
 + I Module FvwmScript FvwmScript-Volume
 
