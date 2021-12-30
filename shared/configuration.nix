@@ -1,12 +1,23 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [
-      ./overlays.nix
-      ../secrets/secrets.nix
-      ./udev.nix
-    ];
+  imports = let
+    commit = "1514ac9fd54363a24c513de43dd0b963e2d17cb7";
+  in [
+    "${builtins.fetchTarball {
+      url = "https://github.com/Mic92/sops-nix/archive/${commit}.tar.gz";
+      sha256 = "0dfgg0mysjhlfr3vjklcshlvywzm6kk9qx5bbjmbz6c5p10wi8g2";
+    }}/modules/sops"
+
+    ./overlays.nix
+    ./udev.nix
+  ];
+
+  sops.defaultSopsFile = ../secrets/secrets.yaml;
+  sops.age.keyFile = "/home/cory/.config/sops/age/keys.txt";
+  sops.age.generateKey = true;
+  sops.secrets.root.neededForUsers = true;
+  sops.secrets.cory.neededForUsers = true;
 
   boot = {
     cleanTmpDir = true;
@@ -27,6 +38,8 @@
     useDHCP = false;
     networkmanager.enable = true;
   };
+
+  time.timeZone = "America/Phoenix";
 
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
@@ -66,7 +79,8 @@
   hardware.pulseaudio.enable = true;
 
   users = {
-    mutableUsers = false;
+    #mutableUsers = false;
+    mutableUsers = true;
     users.cory = {
       isNormalUser = true;
       uid = 1000;
@@ -76,6 +90,9 @@
       shell = pkgs.ksh;
     };
     extraGroups.vboxusers.members = [ "cory" ];
+
+    users.root.passwordFile = config.sops.secrets.root.path;
+    users.cory.passwordFile = config.sops.secrets.cory.path;
   };
 
   security = {

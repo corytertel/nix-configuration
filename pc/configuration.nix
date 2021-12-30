@@ -14,8 +14,8 @@
   nix.buildCores = 4;
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_zen;
-    #kernelPackages = pkgs.linuxPackages_latest;
+    #kernelPackages = pkgs.linuxPackages_zen;
+    kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [
       "pcie_aspm.policy=performance"
       "mitigations=off"
