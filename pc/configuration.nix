@@ -13,25 +13,36 @@
   # Nix
   nix.buildCores = 4;
 
-  # Latest Kernel
-  #boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot = {
+    kernelPackages = pkgs.linuxPackages_zen;
+    #kernelPackages = pkgs.linuxPackages_latest;
+    kernelParams = [
+      "pcie_aspm.policy=performance"
+      "mitigations=off"
+      "intel_iommu=on"
+      "iommu=pt"
+      "nohibernate"
+    ];
+  };
 
-  # Zen Kernel
-  boot.kernelPackages = pkgs.linuxPackages_zen;
-  boot.kernelParams = [ "pcie_aspm.policy=performance" "mitigations=off" "intel_iommu=on" "iommu=pt" ];
-
-  # Network Devices
-  #networking.interfaces.enp0s20u1.useDHCP = true;
-  networking.interfaces.enp3s0.useDHCP = true;
-  networking.interfaces.wlp6s0.useDHCP = true;
+  networking.interfaces = {
+    #enp0s20u1.useDHCP = true;
+    enp3s0.useDHCP = true;
+    wlp6s0.useDHCP = true;
+  };
 
   # Xserver
   services.xserver = {
     videoDrivers = [ "nvidia" ];
+    libinput.touchpad = {
+      # Trackball settings
+      accelProfile = "adaptive";
+      accelSpeed = null;
+      disableWhileTyping = true;
+      transformationMatrix = "2 0 0 0 2 0 0 0 1";
+      dev = "/dev/input/by-id/usb-047d_Kensington_Expert_Mouse-event-mouse";
+    };
   };
-
-  # Allow for Unfree Packages
-  nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
 

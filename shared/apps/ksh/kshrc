@@ -6,8 +6,9 @@
 alias ls='ls --color=auto'
 PS1='[\u@\h \W]\$ '
 
-# Neovim config
-export EDITOR='emacsclient -nw'
+set -o emacs
+
+# Aliases
 alias ls='exa'
 #alias l='exa --icons --long --all --no-permissions --no-filesize --no-user --no-time'
 alias l='exa --icons --all --oneline'

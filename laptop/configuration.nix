@@ -13,30 +13,48 @@
   # Nix
   nix.buildCores = 6;
 
-  # Libre Kernel
- # boot.kernelPackages = pkgs.linuxPackages_latest-libre;
-  #boot.kernelPackages = pkgs.linuxPackages-libre;
+  boot = {
+    kernelPackages = pkgs.linuxPackages_zen;
+    kernelParams = [
+      "pcie_aspm.policy=performance"
+      "mitigations=off"
+      "nohibernate"
+    ];
+  };
 
-  # Zen Kernel
-  boot.kernelPackages = pkgs.linuxPackages_zen;
-  boot.kernelParams = [ "pcie_aspm.policy=performance" "mitigations=off" ];
+  powerManagement = {
+    cpuFreqGovernor = "powersave";
+    enable = true;
+    powertop.enable = true;
+  };
 
-  # Power
-  powerManagement.cpuFreqGovernor = "powersave";
-  powerManagement.enable = true;
-  powerManagement.powertop.enable = true;
-  services.tlp.enable = true;
-  services.thermald.enable = true;
-  #services.undervolt = {
-  #  enable = true;
-  #  coreOffset = -50;
-  #};
+  services = {
+    tlp.enable = true;
+    thermald.enable = true;
+    gnome.gnome-keyring.enable = true;
+    xserver.libinput.touchpad = {
+      accelProfile = "adaptive";
+      accelSpeed = null;
+      additionalOptions = "";
+      buttonMapping = null;
+      calibrationMatrix = null;
+      clickMethod = "clickfinger"; #sets trackpad to two-finger rightclick instead of button areas
+      dev = null;
+      disableWhileTyping = true;
+      horizontalScrolling = true;
+      leftHanded = false;
+      middleEmulation = false;
+      naturalScrolling = true;
+      scrollButton = null;
+      scrollMethod = "twofinger";
+      sendEventsMode = "enabled";
+      tapping = false;
+      tappingDragLock = false;
+      transformationMatrix = "2.5 0 0 0 2.5 0 0 0 1";
+    };
+  };
 
-  # Network Devices
   networking.interfaces.wlp0s20f3.useDHCP = true;
-
-  # Allow Unfree Packages
-  nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
 
