@@ -183,7 +183,17 @@ $ nix-channel --update
 $ nix-shell '<home-manager>' -A install
 
 * Pull Down Nix Config in Git Repo
+** Pull down git repo
+$ git clone https://github.com/corytertel/nix-configuration
+$ mv nix-configuration .nix-configuration
+
+** If creating a new device, then create a new folder
+
+** If using an existing device, go to that folder and replace the hardware-configuration.nix with the new hardware-configuration.nix. Then update the configuration.nix for the new computer.
+
 ** REPLACE YOUR hardware-configuration.nix!!!
+
+** Rebuild. You're done.
  
 
 * BROKEN!!!

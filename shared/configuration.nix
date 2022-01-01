@@ -1,23 +1,10 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
-  imports = let
-    commit = "1514ac9fd54363a24c513de43dd0b963e2d17cb7";
-  in [
-    "${builtins.fetchTarball {
-      url = "https://github.com/Mic92/sops-nix/archive/${commit}.tar.gz";
-      sha256 = "0dfgg0mysjhlfr3vjklcshlvywzm6kk9qx5bbjmbz6c5p10wi8g2";
-    }}/modules/sops"
-
+  imports = [
     ./overlays.nix
     ./udev.nix
   ];
-
-  sops.defaultSopsFile = ../secrets/secrets.yaml;
-  sops.age.keyFile = "/home/cory/.config/sops/age/keys.txt";
-  sops.age.generateKey = true;
-  sops.secrets.root.neededForUsers = true;
-  sops.secrets.cory.neededForUsers = true;
 
   boot = {
     cleanTmpDir = true;
@@ -31,6 +18,25 @@
       };
     };
   };
+
+  # Zfs
+  boot.supportedFilesystems = [ "zfs" ];
+  boot.initrd.postDeviceCommands = lib.mkAfter ''
+    zfs rollback -r rpool/local/root@blank
+  '';
+  boot.zfs.enableUnstable = true;
+  boot.loader.grub.copyKernels = true;
+
+  #services.zfs.autoScrub.enable = true;
+  #services.zfs.autoScrub.interval = "weekly";
+  #systemd.services.zfs-scrub.unitConfig.ConditionACPower = true;
+
+  # Erase on every boot fix
+  environment.etc = {
+    "NetworkManager/system-connections".source = "/persist/etc/NetworkManager/system-connections/";
+    "nixos".source = "/persist/etc/nixos/";
+  };
+  fileSystems."/persist".neededForBoot = true;
 
   networking = {
     hostName = "nixos";
@@ -48,7 +54,6 @@
   };
 
   services = {
-    emacs.enable = true;
     openssh.enable = true;
     pcscd.enable = true;
     printing.enable = true;
@@ -71,7 +76,6 @@
   };
 
   systemd = {
-    user.services.emacs.unitConfig.ConditionGroup = "users"; # only start emacs for actual users
     services.nix-gc.unitConfig.ConditionACPower = true;
   };
 
@@ -80,18 +84,19 @@
 
   users = {
     mutableUsers = false;
-    users.cory = {
-      isNormalUser = true;
-      uid = 1000;
-      extraGroups = [ "wheel" "network" "audio" "libvirtd" ];
-      createHome = true;
-      home = "/home/cory";
-      shell = pkgs.ksh;
+    users = {
+      root.passwordFile = "/persist/secrets/root";
+      cory = {
+        isNormalUser = true;
+        uid = 1000;
+        extraGroups = [ "wheel" "network" "audio" "libvirtd" ];
+        createHome = true;
+        home = "/home/cory";
+        shell = pkgs.ksh;
+        passwordFile = "/persist/secrets/cory";
+      };
     };
     extraGroups.vboxusers.members = [ "cory" ];
-
-    users.root.passwordFile = config.sops.secrets.root.path;
-    users.cory.passwordFile = config.sops.secrets.cory.path;
   };
 
   security = {
@@ -99,8 +104,8 @@
     doas = {
       enable = true;
       extraRules = [{
-	      users = [ "cory" ];
-	      keepEnv = true;
+        users = [ "cory" ];
+        keepEnv = true;
         persist = true;
       }];
     };
@@ -127,6 +132,7 @@
     variables.EDITOR = "emacsclient -nw";
     systemPackages = with pkgs; [
       vim
+      emacs
       wget
       curl
       firefox

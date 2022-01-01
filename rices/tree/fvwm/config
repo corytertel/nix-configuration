@@ -671,6 +671,7 @@ AddToFunc   FvwmDesktopScreenshot
 
 DestroyFunc InitFunction
 AddToFunc InitFunction
++ I Exec exec emacs --daemon
 + I Exec exec urxvtd -q
 + I Exec exec feh --bg-fill $[fvwm_wallpaper]/tree.jpg
 + I FvwmTerm

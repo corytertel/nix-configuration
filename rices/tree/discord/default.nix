@@ -2,6 +2,6 @@
 
 {
   home.file = {
-    ".config/BetterDiscord/themes/cory-mountain.theme.css".text = builtins.readFile ./themes/cory-mountain.theme.css;
+    ".config/BetterDiscord/themes/mountain.theme.css".source = ./mountain.theme.css;
   };
 }

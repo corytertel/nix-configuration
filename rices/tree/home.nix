@@ -14,7 +14,6 @@
 
   services.picom = {
     enable = true;
-    #inactiveDim = "0.01";
     inactiveOpacity = "0.93";
     activeOpacity = "0.98";
     blur = true;

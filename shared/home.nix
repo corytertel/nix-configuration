@@ -195,6 +195,7 @@
       acpi
       dunst
       xorg.xkill
+      gparted
 
       discord
       betterdiscord-installer
