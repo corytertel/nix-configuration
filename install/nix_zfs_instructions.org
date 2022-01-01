@@ -1,0 +1,253 @@
+
+** Set DISK to be what drive your are using.
+`# DISK=/dev/disk/by-id/...`
+
+*** The following guide uses:
+$DISK-part1 as the root partition
+$DISK-part3 as the efi boot partition
+$DISK-part4 as the swap partition
+**** change these accordingly
+
+* Partitions
+** We create two partitions, one for boot and one for the zfs pool.
+
+** Destroys your partition tables. Erases your entire disk.
+`# sgdisk --zap-all $DISK`
+
+** Creates a 512mb EFI boot partition.
+`# sgdisk -n3:1M:+512M -t3:EF00 $DISK`
+`# mkfs.vfat $DISK-part3`
+
+** Swap partition
+`# sgdisk -n4:-4G:0 -t4:8200 $DISK`
+`# mkswap -L swap $DISK-part4`
+
+** Creates a partition for the ZFS pool using the rest of the disk.
+`# sgdisk -n1:0:0 -t1:BF01 $DISK`
+
+** If creating an encrypted disk:
+*** After creating the partitions:
+`# cryptsetup luksFormat $DISK-part1`
+*** Before creating the pool:
+`# cryptsetup open --type luks $DISK-part1 crypt`
+
+** Create the pool. If you want to tweak this a bit and you're feeling adventurous, you might try adding one or more of the following additional options:
+*** To disable writing access times:
+  -O atime=off
+*** To enable filesystem compression:
+  -O compression=lz4
+*** To improve performance of certain extended attributes:
+  -O xattr=sa
+*** For systemd-journald posixacls are required
+  -O  acltype=posixacl 
+*** To specify that your drive uses 4K sectors instead of relying on the size reported by the hardware (note small 'o'):
+  -o ashift=12
+
+** The 'mountpoint=none' option disables ZFS's automount machinery; we'll use the normal fstab-based mounting machinery in Linux.
+** '-R /mnt' is not a persistent property of the FS, it'll just be used while we're installing.
+
+** Default:
+`# zpool create -O mountpoint=none rpool $DISK-part1`
+** With Options:
+`# zpool create -O mountpoint=none -O atime=off -O compression=lz4 -O xattr=sa -O acltype=posixacl -o ashift=12 -R /mnt rpool $DISK-part1`
+** If encrypting disk:
+`# zpool create -O mountpoint=none -O atime=off -O compression=lz4 -O xattr=sa -O acltype=posixacl -o ashift=12 -R /mnt rpool /dev/mapper/crypt`
+*** with Modern SSD use ashift=13
+
+* Opting Out with ZFS
+** Before you can opt in, you must opt out of saving data by default.
+
+** Root dataset:
+`# zfs create -p -o mountpoint=legacy rpool/local/root`
+
+** Before mounting it, create a snapshot while it is totally blank:
+`# zfs snapshot rpool/local/root@blank`
+
+** And then mount it:
+`# mount -t zfs rpool/local/root /mnt`
+
+** Then mount the partition created for the /boot:
+`# mkdir /mnt/boot`
+`# mount $DISK-part3 /mnt/boot`
+
+** Mount the swap partition
+`# swapon $DISK-part4`
+
+** Create and mount a dataset for /nix:
+`# zfs create -p -o mountpoint=legacy rpool/local/nix`
+`# mkdir /mnt/nix`
+`# mount -t zfs rpool/local/nix /mnt/nix`
+
+** And a dataset for /home:
+`# zfs create -p -o mountpoint=legacy rpool/safe/home`
+`# mkdir /mnt/home`
+`# mount -t zfs rpool/safe/home /mnt/home`
+
+** And finally, a dataset explicitly for state to persist between boots:
+`# zfs create -p -o mountpoint=legacy rpool/safe/persist`
+`# mkdir /mnt/persist`
+`# mount -t zfs rpool/safe/persist /mnt/persist`
+*** Note: in my systems, datasets under rpool/local are never backed up, and datasets under rpool/safe are.
+    
+* NixOS ZFS Configuration
+** Generate the NixOS configuration, as per the NixOS manual.
+`# nixos-generate-config --root /mnt`
+
+** Edit /mnt/etc/nixos/configuration.nix and add the following line:
+  boot.supportedFilesystems = [ "zfs" ];
+
+** Also, make sure you set the networking.hostId option, which ZFS requires:
+  networking.hostId = "<random 8-digit hex string>";
+*** See https://nixos.org/nixos/manual/options.html#opt-networking.hostId for more.
+*** To generate a random unique id:
+`$ head -c 8 /etc/machine-id`
+  
+** Add the following line to configuration.nix which rollbacks to the blank snapshot after devices are made avaliable to erase the root dataset on each boot.
+  boot.initrd.postDeviceCommands = lib.mkAfter ''
+    zfs rollback -r rpool/local/root@blank
+  '';
+  
+** To enable support for the latest kernel:
+  boot.zfs.enableUnstable = true;
+  
+** To pervent errors when /nix becomes extremely large:
+  boot.loader.grub.copyKernels = true;
+  
+** To prevent zfs corruption:
+  boot.kernelParams = [ "nohibernate" ];
+  
+** If your disk is partitioned beyond a boot partition, it's wise to add
+  boot.kernelParams = [ "elevator=none" ];
+  
+** If using an encrypted disk add:
+  boot.loader.grub = {
+    version = 2;
+    enableCryptodisk = true;
+  };
+  boot.initrd.luks.devices = {
+   root = {
+     device = "/dev/disk/by-id/ata-VENDOR-ID-OF-THE-DRIVE-part1";
+     preLVM = true;
+   };
+  };
+  
+* User Account Creation Fix
+** Generate a hashed password for your user and root
+$ mkpasswd -m sha-512
+
+** Create separate files for your user and root hashed passwords
+*** each file should only contain the hashed password on one line
+`# mkdir /mnt/persist/secrets`
+`# echo ROOT_HASHED_PASSWORD > /mnt/persist/secrets/root`
+`# echo USER_HASHED_PASSWORD > /mnt/persist/secrets/<name>`
+*** To fix persist being mounted after user creation
+*** To ensure /persist is mounted before user creation
+fileSystems."/persist".neededForBoot = true;
+
+*** To make passwords declarative with sops
+  users.mutableUsers = false;
+  user.user.root.passwordFile = "/persist/secrets/root";
+  user.user.<name>.passwordFile = "/persist/secrets/<name>";
+  user.user.<name>.createHome = true;
+  user.user.<name>.home = "/home/<name>";
+
+* Opting In
+** To fix the "erase on every boot" networking problems:
+*** Create a directory under /persist, mirroring the /etc structure:
+`# mkdir -p /mnt/persist/etc/NetworkManager/system-connections`
+
+*** And use Nix’s etc module to set up the symlink:
+  environment.etc."NetworkManager/system-connections".source = "/persist/etc/NetworkManager/system-connections/";
+  
+** To fix no configuration file:
+`# cp -r /mnt/etc/nixos /mnt/persist/etc`
+*** Add the following line to configuration.nix
+  environment.etc."nixos".source = "/persist/etc/nixos/";
+
+* Finish the Installation
+** Tip to make sure that your network interfaces are the correct ones.
+  
+** Finish the installation.
+`# nixos-install`
+
+** Reboot.
+
+ 
+
+* BROKEN!!!
+*** The below works very very well for password encryption and keeping your passwords in a super safe and encrypted file in your git repo. However, this is currently broken with the guide above. To possibly make this work you could create a dataset of rpool/local/run mounted on /mnt/run. This would ensure that /run does not get erased every boot. However, this has not been tested.
+*** Overall there is nothing wrong with sops. This works for normal immutable user methods. It just is currently broken with erasing every boot.
+* Password Encryption
+** To fix passwords not existing you must declare passwords declaratively.
+
+** 1. Install sops-nix
+*** Add this to your imports to install sops-nix:
+  imports = let
+    commit = "1514ac9fd54363a24c513de43dd0b963e2d17cb7"; # replace this with an actual commit id or tag
+  in [
+    "${builtins.fetchTarball {
+      url = "https://github.com/Mic92/sops-nix/archive/${commit}.tar.gz";
+      sha256 = "0dfgg0mysjhlfr3vjklcshlvywzm6kk9qx5bbjmbz6c5p10wi8g2"; # replace this with an actual hash
+    }}/modules/sops"
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
+
+** 2. Generate a key for yourself
+*** for generating a key with age
+$ nix-shell -p age
+$ mkdir -p ~/.config/sops/age
+$ age-keygen -o ~/.config/sops/age/keys.txt
+$ mkdir -p /mnt/persist/sops/age
+$ cp ~/.config/sops/age/keys.txt /mnt/persist/sops/age/keys.txt
+$ exit
+
+** 3. Create a sops file
+*** Create a .sops.yaml file
+`# touch /mnt/etc/nixos/.sops.yaml`
+*** With the contents:
+keys:
+  - &admin_alice 2504791468b153b8a3963cc97ba53d1919c5dfd4
+  - &admin_bob age12zlz6lvcdk6eqaewfylg35w0syh58sm7gh53q5vvn7hd7c6nngyseftjxl
+creation_rules:
+  - path_regex: secrets/[^/]+\.yaml$
+    key_groups:
+    - pgp:
+      - *admin_alice
+    - age:
+      - *admin_bob
+
+*** After configuring .sops.yaml you can open a new file with sops
+$ nix-shell -p sops --run "sops secrets/example.yaml"
+*** This new directory and file will be managed by sops
+
+*** To create a file containing your passwords
+$ nix-shell -p sops
+$ cd /mnt/etc/nixos
+$ mkdir /mnt/etc/nixos/secrets
+$ EDITOR=vim
+$ sops secrets/secrets.yaml
+*** The contents within:
+root: passwordHere
+cory: passwordHere
+*** Generate these hashed passwords with
+$ mkpasswd -m sha-512
+*** Don't worry this file will be encrypted upon saving
+$ exit
+
+** 4. Configuration.nix
+*** Add these to setup basic sops
+sops.defaultSopsFile = ./secrets/secrets.yaml;
+sops.age.keyFile = "/persist/sops/age/keys.txt";
+sops.age.generateKey = true;
+
+*** To allow secrets to be created before user creation:
+sops.secrets.root_password_secret_name.neededForUsers = true;
+sops.secrets.cory_password_secret_name.neededForUsers = true;
+
+*** To make passwords declarative with sops
+  users.mutableUsers = false;
+  user.user.root.password = "";
+  user.user.<name>.password = "";
+  user.user.<name>.createHome = true;
+  user.user.<name>.home = "/home/<name>";

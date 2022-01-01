@@ -79,8 +79,7 @@
   hardware.pulseaudio.enable = true;
 
   users = {
-    #mutableUsers = false;
-    mutableUsers = true;
+    mutableUsers = false;
     users.cory = {
       isNormalUser = true;
       uid = 1000;
@@ -143,6 +142,8 @@
       git-crypt
       gnupg
       pinentry-gtk2
+      age
+      sops
     ];
   };
 

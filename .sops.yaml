@@ -1,7 +1,0 @@
-keys:
-  - &cory age1yh72lkrmt2jes9eumzj89jm6z6ysqmlua40qh0dxmrj7n3wrja0qj0hr29
-creation_rules:
-  - path_regex: secrets/[^/]+\.yaml$
-    key_groups:
-    - age:
-      - *cory
