@@ -25,6 +25,12 @@
       enable = true;
       package = pkgs.jdk;
     };
+
+    git = {
+      enable = true;
+      userName  = "corytertel";
+      userEmail = "ctertel@comcast.net";
+    };
   };
 
   home = {
@@ -34,25 +40,17 @@
     packages = with pkgs; [
       # linux basics
       killall
-      #chezmoi
       kitty
-      #vlc
       gwenview
       neofetch
       cmus
-      #youtube-dl
       feh
       cmatrix
-      #pipes
       dmenu
       networkmanager_dmenu
-      #alacritty
-      #slock
-      #ranger
       bpytop
       atool
       libsForQt5.ark
-      #tree-sitter
 
       # development basics
       ccls
@@ -93,7 +91,6 @@
       #wpgtk
       blender
       zathura
-      #joplin
       joplin-desktop
 
       # modern unix

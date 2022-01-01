@@ -172,6 +172,18 @@ fileSystems."/persist".neededForBoot = true;
 
 ** Reboot.
 
+* Install Home Manager
+** To follow nixpkgs master:
+$ nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+$ nix-channel --update
+
+** Logout and login or reboot
+
+** Run to install to your environment
+$ nix-shell '<home-manager>' -A install
+
+* Pull Down Nix Config in Git Repo
+** REPLACE YOUR hardware-configuration.nix!!!
  
 
 * BROKEN!!!
