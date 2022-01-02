@@ -59,11 +59,12 @@
     printing.enable = true;
     xserver = {
       enable = true;
-      exportConfiguration = true;
-      xkbModel = "microsoft";
-      layout = "us,ru";
-      xkbOptions = "grp:toggle"; # ralt toggle keyboard
-      xkbVariant = "winkeys";
+      layout = "us";
+      #exportConfiguration = true;
+      #xkbModel = "microsoft";
+      #layout = "us,ru";
+      #xkbOptions = "grp:toggle"; # ralt toggle keyboard
+      #xkbVariant = "winkeys";
       libinput = {
         enable = true;
         mouse = {
@@ -143,6 +144,7 @@
       cmake
       which
       fd
+      htop
       pamixer
       ntfs3g
       git-crypt

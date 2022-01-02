@@ -14,29 +14,75 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/6a94195e-acb7-48ca-baf9-a10de23a94c3";
-      fsType = "ext4";
+    { device = "rpool/local/root";
+      fsType = "zfs";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/B01C-41F7";
+    { device = "/dev/disk/by-uuid/9025-5FC6";
       fsType = "vfat";
     };
 
-  fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/942cfece-28a9-4eca-b925-b6358eed4653";
-      fsType = "ext4";
+  fileSystems."/nix" =
+    { device = "rpool/local/nix";
+      fsType = "zfs";
     };
 
-  fileSystems."/nix/store" =
-    { device = "/dev/disk/by-uuid/f513571d-ac03-472b-b279-7904570140fe";
-      fsType = "ext4";
+  fileSystems."/home" =
+    { device = "rpool/safe/home";
+      fsType = "zfs";
+    };
+
+  fileSystems."/persist" =
+    { device = "rpool/safe/persist";
+      fsType = "zfs";
+    };
+
+  fileSystems."/storage/personal" =
+    { device = "storagepool/safe/personal";
+      fsType = "zfs";
+    };
+
+  fileSystems."/storage/media" =
+    { device = "storagepool/safe/media";
+      fsType = "zfs";
+    };
+
+  fileSystems."/storage/misc" =
+    { device = "storagepool/safe/misc";
+      fsType = "zfs";
+    };
+
+  fileSystems."/storage/games" =
+    { device = "storagepool/unsafe/games";
+      fsType = "zfs";
+    };
+
+  fileSystems."/storage/unsafe" =
+    { device = "storagepool/unsafe/misc";
+      fsType = "zfs";
+    };
+
+  fileSystems."/backup/personal" =
+    { device = "backuppool/safe/personal";
+      fsType = "zfs";
+    };
+
+  fileSystems."/backup/media" =
+    { device = "backuppool/safe/media";
+      fsType = "zfs";
+    };
+
+  fileSystems."/backup/misc" =
+    { device = "backuppool/safe/misc";
+      fsType = "zfs";
     };
 
   swapDevices =
     [ { device = "/dev/disk/by-uuid/f011c833-42f5-4354-a6a7-e2ab34b45fd9"; }
     ];
 
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   # high-resolution display
   hardware.video.hidpi.enable = lib.mkDefault true;
 }

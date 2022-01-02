@@ -48,7 +48,6 @@ This function should only modify configuration layer settings."
      markdown
      multiple-cursors
      org
-     calendar
      tabs
      ;; (shell :variables
      ;;        shell-default-height 30
@@ -562,51 +561,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (defun spacemacs-buffer//insert-buttons ())
   (defun spacemacs-buffer//insert-startup-lists ())
   (defconst spacemacs-buffer-logo-title "" "")
-  (defun spacemacs-buffer/goto-buffer (&optional refresh)
-    (interactive)
-    (let ((buffer-exists (buffer-live-p (get-buffer spacemacs-buffer-name)))
-          (save-line nil))
-      (when (not buffer-exists)
-        (setq spacemacs-buffer--note-widgets nil))
-      (when (or (not (eq spacemacs-buffer--last-width (window-width)))
-                (not buffer-exists)
-                refresh)
-        (setq spacemacs-buffer--window-width (if dotspacemacs-startup-buffer-responsive
-                                                 (window-width)
-                                               80)
-              spacemacs-buffer--last-width spacemacs-buffer--window-width)
-        (with-current-buffer (get-buffer-create spacemacs-buffer-name)
-          (page-break-lines-mode)
-          (save-excursion
-            (when (> (buffer-size) 0)
-              (set 'save-line (line-number-at-pos))
-              (let ((inhibit-read-only t))
-                (erase-buffer)))
-            (spacemacs-buffer/set-mode-line "")
-            (if dotspacemacs-startup-buffer-show-version
-                (spacemacs-buffer//insert-version)
-              (let ((inhibit-read-only t))
-                (insert "\n")))
-            ;(insert "\n\n\n\n\n\n\n\n\n\n")
-            (spacemacs-buffer/insert-banner-and-buttons)
-            (when (bound-and-true-p spacemacs-initialized)
-              (spacemacs-buffer//notes-redisplay-current-note)
-              (configuration-layer/display-summary emacs-start-time)
-              (when dotspacemacs-startup-lists
-                (spacemacs-buffer/insert-startup-lists))
-              (spacemacs-buffer//insert-footer)
-              (spacemacs-buffer/set-mode-line spacemacs--default-mode-line)
-              (force-mode-line-update)
-              (spacemacs-buffer-mode)))
-          (if save-line
-              (progn (goto-char (point-min))
-                     (forward-line (1- save-line))
-                     (forward-to-indentation 0))
-            (spacemacs-buffer/goto-link-line)))
-        (if current-prefix-arg
-            (switch-to-buffer-other-window spacemacs-buffer-name)
-          (switch-to-buffer spacemacs-buffer-name))
-        (spacemacs//redisplay))))
   (custom-set-variables
    ;; mountain color scheme, based off dracula format
    '(spacemacs-theme-custom-colors '(

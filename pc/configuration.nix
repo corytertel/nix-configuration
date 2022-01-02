@@ -14,7 +14,6 @@
   nix.buildCores = 4;
 
   boot = {
-    #kernelPackages = pkgs.linuxPackages_zen;
     kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [
       "pcie_aspm.policy=performance"
@@ -25,10 +24,13 @@
     ];
   };
 
-  networking.interfaces = {
-    #enp0s20u1.useDHCP = true;
-    enp3s0.useDHCP = true;
-    wlp6s0.useDHCP = true;
+  networking = {
+    hostId = "271e42cf";
+    interfaces = {
+      #enp0s20u1.useDHCP = true;
+      enp3s0.useDHCP = true;
+      wlp6s0.useDHCP = true;
+    };
   };
 
   # Xserver
