@@ -36,7 +36,7 @@
   home = {
     username = "cory";
     homeDirectory = "/home/cory";
-    stateVersion = "21.05";
+    stateVersion = "21.11";
     packages = with pkgs; [
       # linux basics
       killall
@@ -196,6 +196,7 @@
       dunst
       xorg.xkill
       gparted
+      nushell
 
       discord
       betterdiscord-installer

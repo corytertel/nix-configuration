@@ -10,26 +10,26 @@ let
     print_info() {
       info title
       prin ""
-      prin "$(color 6)Eat  , Sleep  , Nixify  ."
+      prin "$(color 6)Eat , Sleep , Nixify ."
       prin ""
 
       prin "$(color 6)╭──────────── $(color 4)Software$(color 6) ────────────"
-      info "$(color 6)│ $(color 4) " distro
-      info "$(color 6)│ $(color 4) " kernel
-      info "$(color 6)│ $(color 4) " de
-      info "$(color 6)│ $(color 4) " wm
-      info "$(color 6)│ $(color 4) " term
-      info "$(color 6)│ $(color 4) " shell
-      info "$(color 6)│ $(color 4) " packages
+      info "$(color 6)│ $(color 4)" distro
+      info "$(color 6)│ $(color 4)" kernel
+      info "$(color 6)│ $(color 4)" de
+      info "$(color 6)│ $(color 4)" wm
+      info "$(color 6)│ $(color 4)" term
+      info "$(color 6)│ $(color 4)" shell
+      info "$(color 6)│ $(color 4)" packages
       prin "$(color 6)├──────────── $(color 4)Hardware$(color 6) ────────────"
-      info "$(color 6)│ $(color 4) " model
-      info "$(color 6)│ $(color 4) " cpu
-      info "$(color 6)│ $(color 4)﬙ " gpu
-      info "$(color 6)│ $(color 4)ﳔ " memory
-      info "$(color 6)│ $(color 4) " resolution
-      info "$(color 6)│ $(color 4) " battery
+      info "$(color 6)│ $(color 4)" model
+      info "$(color 6)│ $(color 4)" cpu
+      info "$(color 6)│ $(color 4)﬙" gpu
+      info "$(color 6)│ $(color 4)ﳔ" memory
+      info "$(color 6)│ $(color 4)" resolution
+      info "$(color 6)│ $(color 4)" battery
       prin "$(color 6)├───────────── $(color 4)Uptime$(color 6) ─────────────"
-      info "$(color 6)│ $(color 4) " uptime
+      info "$(color 6)│ $(color 4)" uptime
       prin "$(color 6)╰──────────────────────────────────"
     }
 
@@ -124,7 +124,7 @@ let
 
     # Text Options
     # Toggle bold text
-    bold="on"
+    bold="off"
     # Enable/Disable Underline
     underline_enabled="on"
     # Underline character

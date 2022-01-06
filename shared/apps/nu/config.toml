@@ -9,13 +9,15 @@ startup = [
     #"alias l = (ls | each { if $it.type == "Dir" { echo $"(ansi cb) ($it.name)" } { echo $" ($it.name)" } })"
     #exa --icons --all --oneline | lines
 
-
-    "alias l = exa --icons --long --all --no-permissions --no-filesize --no-user --no-time",
+    "alias l = (ls -a | select name | sort-by name -i)",
     "alias ll = (ls -a | sort-by name -i)",
     "alias c = clear",
+    "alias cl = c; l",
     "alias f = neofetch",
     "alias e = emacsclient -nw",
-    "alias bat = bat --theme base16"
+    "alias bat = bat --theme base16",
+    "alias n = cd ~/.nix-configuration",
+    "alias fm = pcmanfm -n"
     ]
 table_mode = "light" # basic, compact, compact_double, light, thin, with_love, rounded, reinforced, heavy, none, other
 pivot_mode = "auto" # auto, always, never
@@ -23,7 +25,7 @@ ctrlc_exit = false
 complete_from_path = true
 rm_always_trash = false
 #prompt = "build-string (ansi gb) (pwd) (ansi reset) '(' (ansi cb) (do -i { git rev-parse --abbrev-ref HEAD } | str trim ) (ansi reset) ')' (char newline) (ansi yb) (date format '%m/%d/%Y %I:%M:%S%.3f %p') (ansi reset) '> ' "
-prompt = "build-string '╭╴' (ansi c) ' ' (ansi reset) (ansi yb) (basename (pwd) | str trim) (ansi reset) ' ' (ansi gu) (do -i { git rev-parse --abbrev-ref HEAD } | str trim) (ansi reset) (char newline) '╰─λ ' "
+prompt = "build-string '╭╴' (ansi c) ' ' (ansi reset) (ansi yb) (if (pwd) == $nu.env.HOME { echo '~' } { basename (pwd) } | str trim) (ansi reset) ' ' (ansi gu) (do -i { git rev-parse --abbrev-ref HEAD } | str trim) (ansi reset) (char newline) '╰─λ ' "
 
 # for each of the options in the color_config section, you are able to set
 # the color alone or with one of the following attributes.

@@ -129,7 +129,7 @@
   };
 
   environment = {
-    shells = [ pkgs.ksh ];
+    shells = [ pkgs.ksh pkgs.nushell ];
     variables.EDITOR = "emacsclient -nw";
     systemPackages = with pkgs; [
       vim
@@ -152,6 +152,7 @@
       pinentry-gtk2
       age
       sops
+      cachix
     ];
   };
 
@@ -174,6 +175,59 @@
    };
   };
 
-  system.stateVersion = "21.05";
+  xdg.mime.defaultApplications = {
+    "application/pdf" = "org.pwmt.zathura.desktop";
+    "x-scheme-handler/tg" = "telegramdesktop.desktop";
+    "application/x-sh" = "rxvt-unicode.desktop";
+    "text/plain" = "leafpad.desktop";
+
+    "application/zip" = "org.kde.ark.desktop";
+    "application/x-7z-compressed" = "org.kde.ark.desktop";
+    "application/vnd.rar" = "org.kde.ark.desktop";
+    "application/gzip" = "org.kde.ark.desktop";
+
+    "application/msword" = "onlyoffice-desktopeditors.desktop";
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = "onlyoffice-desktopeditors.desktop";
+    "application/vnd.ms-powerpoint" = "onlyoffice-desktopeditors.desktop";
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation" = "onlyoffice-desktopeditors.desktop";
+
+    "application/x-extension-htm" = "firefox.desktop";
+    "application/x-extension-html" = "firefox.desktop";
+    "application/x-extension-shtml" = "firefox.desktop";
+    "application/x-extension-xht" = "firefox.desktop";
+    "application/x-extension-xhtml" = "firefox.desktop";
+    "application/xhtml+xml" = "firefox.desktop";
+    "text/html" = "firefox.desktop";
+    "x-scheme-handler/about" = "firefox.desktop";
+    "x-scheme-handler/chrome" = "firefox.desktop";
+    "x-scheme-handler/http" = "firefox.desktop";
+    "x-scheme-handler/https" = "firefox.desktop";
+    "x-scheme-handler/unknown" = "firefox.desktop";
+
+    "audio/aac" = "audacious.desktop";
+    "audio/mpeg" = "audacious.desktop";
+    "audio/ogg" = "audacious.desktop";
+    "audio/opus" = "audacious.desktop";
+    "audio/wav" = "audacious.desktop";
+    "audio/weba" = "audacious.desktop";
+
+    "mage/bmp" = "sxiv.desktop";
+    "image/gif" = "org.kde.gwenview.desktop";
+    "image/ico" = "sxiv.desktop";
+    "image/jpeg" = "sxiv.desktop";
+    "image/png" = "sxiv.desktop";
+    "image/svg" = "sxiv.desktop";
+    "image/webp" = "sxiv.desktop";
+
+    "video/mp4" = "io.github.celluloid_player.Celluloid.desktop";
+    "video/mpeg" = "io.github.celluloid_player.Celluloid.desktop";
+    "video/ogg" = "io.github.celluloid_player.Celluloid.desktop";
+    "video/webm" = "io.github.celluloid_player.Celluloid.desktop";
+    "video/x-msvideo" = "io.github.celluloid_player.Celluloid.desktop";
+    "video/quicktime" = "io.github.celluloid_player.Celluloid.desktop";
+    "video/x-matroska" = "io.github.celluloid_player.Celluloid.desktop";
+  };
+
+  system.stateVersion = "21.11";
 }
 
