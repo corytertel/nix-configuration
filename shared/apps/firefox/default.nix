@@ -3,26 +3,18 @@
 {
   programs.firefox = {
     enable = true;
-    package = pkgs.ungoogled-chromium;
-    extensions = [
-      { id = "jhnleheckmknfcgijgkadoemagpecfol"; } # Auto-Tab-Discard
-      { id = "nngceckbapebfimnlniiiahkandclblb"; } # Bitwarden
-      { id = "eimadpbcbfnmbkopoojfekhnkhdbieeh"; } # Dark-Reader
-      { id = "ldpochfccmkkmhdbclfhpagapcfdljkj"; } # Decentraleyes
-      { id = "bkdgflcldnnnapblkhphbgpggdiikppg"; } # DuckDuckGo
-      { id = "gphhapmejobijbbhgpjhcjognlahblep"; } # Gnome-Shell-Integration
-      { id = "iaiomicjabeggjcfkbimgmglanimpnae"; } # Tab-Session-Manager
-      { id = "hipekcciheckooncpjeljhnekcoolahp"; } # Tabliss
-      { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # Ublock-Origin
-      {
-        id = "dcpihecpambacapedldabdbpakmachpb";
-        updateUrl =
-          "https://raw.githubusercontent.com/iamadamdev/bypass-paywalls-chrome/master/updates.xml";
-      }
-      { id = "aghfnjkcakhmadgdomlmlhhaocbkloab"; } # Just Black
-      #{ id = "kioklelcojgbjoljlilalgdcppkiioge"; } # Void Theme - Black and Minimal
-      { id = "dbepggeogbaibhgnhhndojpepiihcmeb"; } # Vimium
-      { id = "hompjdfbfmmmgflfjdlnkohcplmboaeo"; } # Allow Right Click
-    ];
+    profiles.cory = {
+      bookmarks = {
+        youtube.url = "https://www.youtube.com/";
+        tiktok.url = "https://www.tiktok.com/";
+        nixpkgs = "https://search.nixos.org/";
+        home-manager = "https://nix-community.github.io/home-manager/options.html";
+        myasu = "https://my.asu.edu";
+        printing = "https://printanywhere.asu.edu/myprintcenter/";
+        slashG.url = "https://boards.4channel.org/g/";
+        unixporn = "https://www.reddit.com/r/unixporn";
+      };
+      isDefault = true;
+    };
   };
 }

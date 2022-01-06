@@ -22,11 +22,11 @@
     })
 
     # EmacsGcc
-    (import (builtins.fetchGit {
-      url = "https://github.com/nix-community/emacs-overlay.git";
-      ref = "master";
-      rev = "c75b7c047cc4635b0ecdedfd4ad78e1ac76e41c5";
-    }))
+    #(import (builtins.fetchGit {
+    #  url = "https://github.com/nix-community/emacs-overlay.git";
+    #  ref = "master";
+    #  rev = "c75b7c047cc4635b0ecdedfd4ad78e1ac76e41c5";
+    #}))
 
     (final: prev: {
       ungoogled-chromium = prev.ungoogled-chromium.override {

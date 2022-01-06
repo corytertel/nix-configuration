@@ -152,7 +152,6 @@
       pinentry-gtk2
       age
       sops
-      cachix
     ];
   };
 
@@ -180,6 +179,7 @@
     "x-scheme-handler/tg" = "telegramdesktop.desktop";
     "application/x-sh" = "rxvt-unicode.desktop";
     "text/plain" = "leafpad.desktop";
+    "inode/directory" = "pcmanfm.desktop";
 
     "application/zip" = "org.kde.ark.desktop";
     "application/x-7z-compressed" = "org.kde.ark.desktop";
