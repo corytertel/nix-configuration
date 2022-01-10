@@ -40,6 +40,7 @@
     #shadowExclude = [
     #  "class_g   *?= 'Xclock'"
     #];
+    vSync = true;
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {

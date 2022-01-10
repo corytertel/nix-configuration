@@ -59,5 +59,11 @@
         ];
       };
     })
+
+    (final: prev: {
+      sxiv = prev.sxiv.override {
+        commandLineArgs = "-g 1200x1600 -r -t *";
+      };
+    })
   ];
 }

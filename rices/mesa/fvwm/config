@@ -123,12 +123,16 @@ Style "BottomDock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
 Style "LeftDock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
 
-Style "xclock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+Style "ControlButtons" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 
 Style DateTime NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style DateTime PositionPlacement -10p +2090p
+Style DateTime PositionPlacement -97p +2090p
+
+Style Volume NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+  CirculateSkip, FixedPosition, FixedSize, !Iconifiable
+Style Volume PositionPlacement -367p +2090p
 
 Style "Steam" NoTitle, !Handles, !Borders, FixedPosition
 
@@ -148,12 +152,16 @@ Colorset 4 fg #f0f0f0, bg #f0f0f0, hi, sh, Plain, NoShape
 Colorset 5 fg #f0f0f0, bg #0f0f0f, hi, sh, Plain, NoShape
 
 # Menu Colorset
-Colorset 7  fg #0f0f0f, bg #f0f0f0, hi, sh, Plain, NoShape
+#Colorset 7  fg #0f0f0f, bg #f0f0f0, hi, sh, Plain, NoShape
+Colorset 7 RootTransparent, fg #f0f0f0, bg average, sh #0f0f0f, \
+ hi #707070, Tint #0f0f0f 80, bgTint #0f0f0f 80
 # Menu Active Colorset
-Colorset 8  fg DarkRed, bg #f0f0f0, hi, sh, Plain, NoShape
+#Colorset 8  fg DarkRed, bg #f0f0f0, hi, sh, Plain, NoShape
+Colorset 8 RootTransparent, fg #ac8aac, bg average, sh #0f0f0f, \
+ hi #707070, Tint #0f0f0f 80, bgTint #0f0f0f 80
 
 Colorset 9 RootTransparent, fg #f0f0f0, bg average, sh #0f0f0f, \
- hi #202070, Tint #0f0f0f 70, bgTint #0f0f0f 70
+ hi #202070, Tint #0f0f0f 80, bgTint #0f0f0f 80
 Colorset 10 fg rgb:00/00/00, hi rgb:dd/00/00, sh rgb:dd/00/00, bg rgb:fb/fc/ec
 
 ############
@@ -166,7 +174,7 @@ MenuStyle * AnimationOff, AutomaticHotkeysOff
 MenuStyle * BorderWidth 2
 MenuStyle * PopupAsSubmenu, HoldSubmenus, SubmenusRight
 MenuStyle * ItemFormat "%|%5.5i%1.3l%2.3>%|"
-MenuStyle * VerticalItemSpacing 1 1, VerticalTitleSpacing 2 2
+MenuStyle * VerticalItemSpacing 5 5, VerticalTitleSpacing 10 10
 MenuStyle * MenuColorset 7
 MenuStyle * ActiveFore, Hilight3DOff
 MenuStyle * ActiveColorset 8
@@ -230,17 +238,17 @@ AddToMenu   FvwmWallpaperMenu
 
 DestroyMenu FvwmVolumeMenu
 AddToMenu FvwmVolumeMenu
-+ " 100%% "    exec pamixer --set-volume 100
-+ "  90%% "    exec pamixer --set-volume 90
-+ "  80%% "    exec pamixer --set-volume 80
-+ "  70%% "    exec pamixer --set-volume 70
-+ "  60%% "    exec pamixer --set-volume 60
-+ "  50%% "    exec pamixer --set-volume 50
-+ "  40%% "    exec pamixer --set-volume 40
-+ "  30%% "    exec pamixer --set-volume 30
-+ "  20%% "    exec pamixer --set-volume 20
-+ "  10%% "    exec pamixer --set-volume 10
-+ "   0%% "    exec pamixer --set-volume 0
++ " 100%% "    exec amixer -q set Master unmute 100%
++ "  90%% "    exec amixer -q set Master unmute 90%
++ "  80%% "    exec amixer -q set Master unmute 80%
++ "  70%% "    exec amixer -q set Master unmute 70%
++ "  60%% "    exec amixer -q set Master unmute 60%
++ "  50%% "    exec amixer -q set Master unmute 50%
++ "  40%% "    exec amixer -q set Master unmute 40%
++ "  30%% "    exec amixer -q set Master unmute 30%
++ "  20%% "    exec amixer -q set Master unmute 20%
++ "  10%% "    exec amixer -q set Master unmute 10%
++ "   0%% "    exec amixer -q set Master unmute 0%
 
 # Window Operations Menus
 DestroyMenu MenuWindowOps
@@ -393,7 +401,7 @@ Silent Key R	      A     C4      Restart
 
 ### Other
 Silent Key F1       A     M        Menu FvwmRootMenu
-Silent Key Menu     A     A        Menu FvwmRootMenu
+Silent Key Menu     A     A        FvwmLaunch
 Silent Key F6       A     4       WindowShadeFunc
 Silent Key F9	      A     4       All (AcceptsFocus, CurrentPage, !Iconic, !Shaded) \
                      Thumbnail
@@ -525,6 +533,8 @@ DestroyModuleConfig FvwmPager: *
 *FvwmPager: UseSkipList
 *FvwmPager: Rows 1
 *FvwmPager: Columns 1
+*FvwmPager: SolidSeparators
+#*FvwmPager: NoSeparators
 # *FvwmPager: DeskHilight Black
 # *FvwmPager: Hilight Black
 
@@ -536,7 +546,7 @@ DestroyModuleConfig BottomDock: *
 *BottomDock: Frame 0
 *BottomDock: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
 *BottomDock: (1x1, Frame 0, Title(Center) "")
-*BottomDock: (5x1, Frame 0, Icon 48x48/nixos.png, \
+*BottomDock: (5x1, Frame 0, Icon 48x48/nixos-dark.png, \
   Action(Mouse 1) "FvwmLaunch")
 *BottomDock: (5x1, Frame 0, Icon 48x48/terminal.png, \
   Action(Mouse 1) "FvwmTerm", \
@@ -565,7 +575,7 @@ DestroyModuleConfig LeftDock: *
 *LeftDock: Frame 0
 *LeftDock: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
 *LeftDock: (1x1, Frame 0, Title(Center) "")
-*LeftDock: (1x5, Frame 0, Icon 48x48/nixos.png, \
+*LeftDock: (1x5, Frame 0, Icon 48x48/nixos-dark.png, \
   Action(Mouse 1) "FvwmLaunch")
 *LeftDock: (1x5, Frame 0, Icon 48x48/terminal.png, \
   Action(Mouse 1) "FvwmTerm", \
@@ -585,6 +595,19 @@ DestroyModuleConfig LeftDock: *
 *LeftDock: (1x5, Frame 0, Icon 48x48/steam.png, \
   Action(Mouse 1) "FvwmSteam")
 *LeftDock: (1x1, Frame 0)
+
+DestroyModuleConfig ControlButtons: *
+*ControlButtons: Geometry 77x60-10-10
+*ControlButtons: Colorset 9
+*ControlButtons: Rows 1
+*ControlButtons: Columns 7
+*ControlButtons: Frame 0
+*ControlButtons: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
+*ControlButtons: (1x1, Frame 0)
+*ControlButtons: (5x1, Frame 0, Icon 48x48/quit.png, \
+  Action(Mouse 1) "Module FvwmScript FvwmScript-ConfirmQuit", \
+  Action(Mouse 3) "FvwmShutdown")
+*ControlButtons: (1x1, Frame 0)
 
 ###########
 # Functions
@@ -610,7 +633,9 @@ DestroyFunc StartFunction
 AddToFunc   StartFunction
 + I Module FvwmPager 0 0
 + I Module FvwmButtons BottomDock
++ I Module FvwmButtons ControlButtons
 + I Module FvwmScript FvwmScript-DateTime
++ I Module FvwmScript FvwmScript-Volume
 
 DestroyFunc FvwmTerm
 AddToFunc FvwmTerm
@@ -666,7 +691,7 @@ AddToFunc FvwmShutdown
 
 DestroyFunc FvwmLaunch
 AddToFunc FvwmLaunch
-+ I Exec exec rofi -show run
++ I Exec exec rofi -show drun
 
 DestroyFunc FvwmFileManager
 AddToFunc FvwmFileManager

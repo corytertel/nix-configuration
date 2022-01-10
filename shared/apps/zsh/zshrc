@@ -1,0 +1,34 @@
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.histfile
+HISTSIZE=500
+SAVEHIST=500
+bindkey -e
+# End of lines configured by zsh-newuser-install
+# The following lines were added by compinstall
+zstyle :compinstall filename '/home/cory/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+
+# Aliases
+alias ls='exa'
+alias l='exa --icons --all --oneline'
+alias ll='exa --icons --long --all --header --git'
+alias c='clear'
+alias cl='c; l'
+alias f='pfetch && df -h'
+alias pf='pfetch'
+alias nf='neofetch'
+alias e='emacsclient -nw'
+alias settings='xfce4-settings-manager'
+alias bat='bat --theme base16'
+alias n='cd $HOME/.nix-configuration'
+alias fm='pcmanfm -n'
+alias i='sxiv -g 1200x1600 -r -t *'
+alias nd='nix develop'
+alias directory='if [ "$PWD" = "$HOME" ]; then echo \'~'; else; basename "$PWD"; fi'
+
+setopt promptsubst
+PROMPT="╭╴%F{cyan} %f%F{yellow}%B\$(directory)%b%f %F{green}%U\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)%u%f
+╰─λ "

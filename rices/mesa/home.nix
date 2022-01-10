@@ -14,20 +14,18 @@
 
   services.picom = {
     enable = true;
-    #inactiveDim = "0.01";
     inactiveOpacity = "0.93";
     activeOpacity = "1.00";
-    blur = false;
+    blur = true;
     experimentalBackends = true;
     opacityRule = [
-      "100:class_g   *?= 'XClock'"
       "100:class_g   *?= 'FvwmButtons'"
       "100:class_g   *?= 'FvwmPager'"
       "100:class_g   *?= 'FvwmScript'"
     ];
     extraOptions = ''
       blur-method = "dual_kawase";
-      blur-strength = 4;
+      blur-strength = 8;
       corner-radius = 10;
       round-borders = 1;
 
@@ -35,19 +33,16 @@
         "class_g = 'dmenu'",
       ];
     '';
-    fade = true;
+    fade = false;
     fadeDelta = 5;
     shadow = true;
     shadowExclude = [
       "focused = 0"
     ];
+    vSync = true;
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
-          # owner = "jonaburg";
-          # repo = "picom";
-          # rev = "a8445684fe18946604848efb73ace9457b29bf80";
-          # sha256 = "R+YUGBrLst6CpUgG9VCwaZ+LiBSDWTp0TLt1Ou4xmpQ=";
           owner = "Arian8j2";
           repo = "picom-jonaburg-fix";
           rev = "31d25da22b44f37cbb9be49fe5c239ef8d00df12";

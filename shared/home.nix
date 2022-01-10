@@ -4,6 +4,7 @@
   imports =
     [
       ./apps/bash
+      ./apps/firefox
       ./apps/layout_switch
       ./apps/ksh
       ./apps/neofetch
@@ -13,6 +14,7 @@
       ./apps/ungoogled-chromium
       ./apps/vscode
       ./apps/xfce4-terminal
+      ./apps/zsh
     ];
 
   programs = {

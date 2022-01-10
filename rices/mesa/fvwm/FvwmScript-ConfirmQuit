@@ -1,6 +1,7 @@
 WindowTitle {ConfirmQuit}
-WindowSize  700 160
-Font "xft:FantasqueSansMono Nerd Font:size=12"
+WindowSize  500 160
+Colorset 7
+Font "xft:Tinos Nerd Font:pixelsize=30:minspace=True:antialias=True"
 Init
  Begin
  End
@@ -8,8 +9,8 @@ Init
 Widget 1
 Property
  Title {Do you really want to quit Fvwm?}
- Size  400 60
- Position 50 0
+ Size  500 80
+ Position 0 0
  Type ItemDraw
  Flags NoReliefString
 Main
@@ -23,7 +24,7 @@ Widget 2
 Property
  Title {Quit}
  Size 120 56
- Position 190 80
+ Position 90 80
  Flags NoReliefString
  Type PushButton
  Value 1
@@ -39,7 +40,7 @@ Widget 3
 Property
  Title {Cancel}
  Size 120 56
- Position 390 80
+ Position 290 80
  Flags NoReliefString
  Type PushButton
  Value 1

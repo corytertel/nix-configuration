@@ -93,7 +93,7 @@
         extraGroups = [ "wheel" "network" "audio" "libvirtd" ];
         createHome = true;
         home = "/home/cory";
-        shell = pkgs.ksh;
+        shell = pkgs.zsh;
         passwordFile = "/persist/secrets/cory";
       };
     };
@@ -136,7 +136,7 @@
       emacs
       wget
       curl
-      firefox
+      #firefox
       git
       networkmanager
       gcc
@@ -172,6 +172,15 @@
      enableSSHSupport = true;
      pinentryFlavor = "gtk2";
    };
+    zsh = {
+      enable = true;
+      enableCompletion = true;
+      enableGlobalCompInit = true;
+      autosuggestions.enable = true;
+      setOptions = [];
+      shellAliases = {};
+      syntaxHighlighting.enable = true;
+    };
   };
 
   xdg.mime.defaultApplications = {
