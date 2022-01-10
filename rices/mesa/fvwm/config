@@ -142,7 +142,7 @@ Style "TelegramDesktop" NoTitle
 
 Style "DesktopEditors" NoTitle
 
-Style ConfirmQuit !Title, PositionPlacement Center, WindowListSkip, Layer 6
+Style ConfirmQuit !Title, PositionPlacement -10p -0p, WindowListSkip, Layer 6
 
 ################
 # 3: Colorsets #
@@ -160,8 +160,8 @@ Colorset 7 RootTransparent, fg #f0f0f0, bg average, sh #0f0f0f, \
 Colorset 8 RootTransparent, fg #ac8aac, bg average, sh #0f0f0f, \
  hi #707070, Tint #0f0f0f 80, bgTint #0f0f0f 80
 
-Colorset 9 RootTransparent, fg #f0f0f0, bg average, sh #0f0f0f, \
- hi #202070, Tint #0f0f0f 80, bgTint #0f0f0f 80
+Colorset 9 RootTransparent, fg #f0f0f0, bg #0f0f0f, sh #0f0f0f, \
+ hi #f0f0f0, Tint #0f0f0f 80, bgTint #0f0f0f 80
 Colorset 10 fg rgb:00/00/00, hi rgb:dd/00/00, sh rgb:dd/00/00, bg rgb:fb/fc/ec
 
 ############
@@ -517,7 +517,6 @@ DestroyModuleConfig FvwmIdent: *
 
 # StaysOnTop
 DestroyModuleConfig FvwmPager: *
-#*FvwmPager: Geometry 160x150+10-10
 *FvwmPager: Geometry 200x187+10-10
 *FvwmPager: Colorset * 9
 *FvwmPager: HilightColorset * 10
@@ -533,8 +532,8 @@ DestroyModuleConfig FvwmPager: *
 *FvwmPager: UseSkipList
 *FvwmPager: Rows 1
 *FvwmPager: Columns 1
-*FvwmPager: SolidSeparators
-#*FvwmPager: NoSeparators
+#*FvwmPager: SolidSeparators
+*FvwmPager: NoSeparators
 # *FvwmPager: DeskHilight Black
 # *FvwmPager: Hilight Black
 

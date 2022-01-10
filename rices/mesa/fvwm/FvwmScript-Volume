@@ -1,7 +1,7 @@
 WindowTitle {Volume}
 WindowSize  45 60
 Colorset 9
-Font "xft:FantasqueSansMono Nerd Font:size=12" 
+Font "xft:Tinos Nerd Font:size=12" 
 
 Init
  Begin
@@ -24,7 +24,7 @@ Widget 1
 Property
  Position 0 5
  Size 45 25
- Font "xft:FantasqueSansMono Nerd Font:size=11"
+ Font "xft:Tinos Nerd Font:size=11"
  Type ItemDraw
  Flags NoReliefString
  Title {}
@@ -39,7 +39,7 @@ Widget 2
 Property
  Position 0 30
  Size 45 25
- Font "xft:FantasqueSansMono Nerd Font:size=11"
+ Font "xft:Tinos Nerd Font:size=11"
  Type ItemDraw
  Flags NoReliefString
  Title {}
