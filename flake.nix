@@ -6,15 +6,10 @@
     nixpkgs-unstable.url = "nixpkgs/master";
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    #emacs-overlay.url = "github:nix-community/emacs-overlay";
     neovim-git.url = "github:neovim/neovim?dir=contrib";
-    nixpkgs-wayland  = { url = "github:nix-community/nixpkgs-wayland"; };
-    nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs";
-    nixpkgs-wayland.inputs.master.follows = "nixpkgs/master";
   };
 
-  #outputs = { nixpkgs, home-manager, emacs-overlay, neovim-git, nixpkgs-wayland, ... }:
-  outputs = { nixpkgs, home-manager, neovim-git, nixpkgs-wayland, ... }:
+  outputs = { nixpkgs, home-manager, neovim-git, ... }:
   let
     system = "x86_64-linux";
 
@@ -22,7 +17,6 @@
       inherit system;
       config = { allowUnfree = true; };
       overlays = [
-          #emacs-overlay.overlay
           neovim-git.overlay
           #(import ./overlays)
         ];
