@@ -128,7 +128,7 @@ Style "ControlButtons" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
 
 Style DateTime NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style DateTime PositionPlacement -97p +2090p
+Style DateTime PositionPlacement -92p +2070p
 
 Style "Steam" NoTitle, !Handles, !Borders, FixedPosition
 
@@ -513,7 +513,7 @@ DestroyModuleConfig FvwmIdent: *
 
 # StaysOnTop
 DestroyModuleConfig FvwmPager: *
-*FvwmPager: Geometry 200x187+10-10
+*FvwmPager: Geometry 200x187+5-5
 *FvwmPager: Colorset * 9
 *FvwmPager: HilightColorset * 10
 *FvwmPager: BalloonColorset * 9
@@ -528,37 +528,36 @@ DestroyModuleConfig FvwmPager: *
 *FvwmPager: UseSkipList
 *FvwmPager: Rows 1
 *FvwmPager: Columns 1
-#*FvwmPager: SolidSeparators
-*FvwmPager: NoSeparators
+*FvwmPager: SolidSeparators
 # *FvwmPager: DeskHilight Black
 # *FvwmPager: Hilight Black
 
 DestroyModuleConfig BottomDock: *
-*BottomDock: Geometry 520x60+1660-10
+*BottomDock: Geometry 694x80+1573-5
 *BottomDock: Colorset 9
 *BottomDock: Rows 1
 *BottomDock: Columns 47
 *BottomDock: Frame 0
 *BottomDock: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
 *BottomDock: (1x1, Frame 0, Title(Center) "")
-*BottomDock: (5x1, Frame 0, Icon 48x48/nixos-dark.png, \
+*BottomDock: (5x1, Frame 0, Icon 64x64/nixos-dark.png, \
   Action(Mouse 1) "FvwmLaunch")
-*BottomDock: (5x1, Frame 0, Icon 48x48/terminal.png, \
+*BottomDock: (5x1, Frame 0, Icon 64x64/terminal.png, \
   Action(Mouse 1) "FvwmTerm", \
   Action(Mouse 3) "FvwmTerm")
-*BottomDock: (5x1, Frame 0, Icon 48x48/Thunar.png, \
+*BottomDock: (5x1, Frame 0, Icon 64x64/Thunar.png, \
   Action(Mosue 1) "FvwmFileManager")
-*BottomDock: (5x1, Frame 0, Icon 48x48/firefox.png, \
+*BottomDock: (5x1, Frame 0, Icon 64x64/firefox.png, \
   Action(Mosue 1) "FvwmBrowser")
-*BottomDock: (5x1, Frame 0, Icon 48x48/emacs.png, \
+*BottomDock: (5x1, Frame 0, Icon 64x64/emacs.png, \
   Action(Mouse 1) "FvwmEditor")
-*BottomDock: (5x1, Frame 0, Icon 48x48/discord.png, \
+*BottomDock: (5x1, Frame 0, Icon 64x64/discord.png, \
   Action(Mouse 1) "FvwmChat")
-*BottomDock: (5x1, Frame 0, Icon 48x48/audacious.png, \
+*BottomDock: (5x1, Frame 0, Icon 64x64/audacious.png, \
   Action(Mouse 1) "FvwmMusicPlayer")
-*BottomDock: (5x1, Frame 0, Icon 48x48/gimp.png, \
+*BottomDock: (5x1, Frame 0, Icon 64x64/gimp.png, \
   Action(Mouse 1) "FvwmGimp")
-*BottomDock: (5x1, Frame 0, Icon 48x48/steam.png, \
+*BottomDock: (5x1, Frame 0, Icon 64x64/steam.png, \
   Action(Mouse 1) "FvwmSteam")
 *BottomDock: (1x1, Frame 0)
 
@@ -592,7 +591,7 @@ DestroyModuleConfig LeftDock: *
 *LeftDock: (1x1, Frame 0)
 
 DestroyModuleConfig ControlButtons: *
-*ControlButtons: Geometry 77x60-10-10
+*ControlButtons: Geometry 77x80-5-5
 *ControlButtons: Colorset 9
 *ControlButtons: Rows 1
 *ControlButtons: Columns 7

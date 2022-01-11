@@ -1,5 +1,5 @@
 WindowTitle {DateTime}
-WindowSize  315 60
+WindowSize  315 80
 Colorset 9
 Font "xft:Tinos Nerd Font:size=10" 
 
@@ -37,7 +37,7 @@ End
 
 Widget 1
 Property
- Position 115 0
+ Position 115 10
  Size 200 60
  Font "xft:Tinos Nerd Font:size=16"
  Type ItemDraw
@@ -52,7 +52,7 @@ End
 
 Widget 2
 Property
- Position 65 5
+ Position 65 15
  Size 50 25
  Font "xft:Tinos Nerd Font:size=11"
  Type ItemDraw
@@ -67,7 +67,7 @@ End
 
 Widget 3
 Property
- Position 65 30
+ Position 65 40
  Size 50 25
  Font "xft:Tinos Nerd Font:size=11"
  Type ItemDraw
@@ -82,7 +82,7 @@ End
 
 Widget 4
 Property
- Position 12 5
+ Position 12 15
  Size 45 25
  Font "xft:Tinos Nerd Font:size=11"
  Type ItemDraw
@@ -97,7 +97,7 @@ End
 
 Widget 5
 Property
- Position 10 30
+ Position 10 40
  Size 45 25
  Font "xft:Tinos Nerd Font:size=11"
  Type ItemDraw
