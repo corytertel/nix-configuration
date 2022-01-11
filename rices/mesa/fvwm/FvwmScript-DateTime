@@ -1,5 +1,5 @@
 WindowTitle {DateTime}
-WindowSize  260 60
+WindowSize  315 60
 Colorset 9
 Font "xft:Tinos Nerd Font:size=10" 
 
@@ -8,10 +8,14 @@ Init
   Set $Time = (GetOutput {exec date "+%I:%M:%S %p"} 1 -1)
   Set $Day = (GetOutput {exec date "+%a"} 1 -1)
   Set $Date = (GetOutput {exec date "+%d"} 1 -1)
+  Set $VolIcon = (GetOutput {exec echo " "} 1 -1)
+  Set $Volume = (GetOutput {exec amixer get Master | grep "Left" | grep "%" | tr " " "\n" | grep "%" | tr -d %[]} 1 -1)
 
   ChangeTitle 1 $Time
   ChangeTitle 2 $Day
   ChangeTitle 3 $Date
+  ChangeTitle 4 $VolIcon
+  ChangeTitle 5 $Volume
 End
 
 PeriodicTasks
@@ -21,16 +25,19 @@ PeriodicTasks
    Set $Time = (GetOutput {exec date "+%I:%M:%S %p"} 1 -1)
    Set $Day = (GetOutput {exec date "+%a"} 1 -1)
    Set $Date = (GetOutput {exec date "+%d"} 1 -1)
+   Set $Volume = (GetOutput {exec amixer get Master | grep "Left" | grep "%" | tr " " "\n" | grep "%" | tr -d %[]} 1 -1)
+
 
    ChangeTitle 1 $Time
    ChangeTitle 2 $Day
    ChangeTitle 3 $Date
+   ChangeTitle 5 $Volume
   End
 End
 
 Widget 1
 Property
- Position 60 0
+ Position 115 0
  Size 200 60
  Font "xft:Tinos Nerd Font:size=16"
  Type ItemDraw
@@ -45,7 +52,7 @@ End
 
 Widget 2
 Property
- Position 10 5
+ Position 65 5
  Size 50 25
  Font "xft:Tinos Nerd Font:size=11"
  Type ItemDraw
@@ -60,8 +67,38 @@ End
 
 Widget 3
 Property
- Position 10 30
+ Position 65 30
  Size 50 25
+ Font "xft:Tinos Nerd Font:size=11"
+ Type ItemDraw
+ Flags NoReliefString
+ Title {}
+Main
+ Case message of
+  SingleClic :
+  Begin
+  End
+End
+
+Widget 4
+Property
+ Position 12 5
+ Size 45 25
+ Font "xft:Tinos Nerd Font:size=11"
+ Type ItemDraw
+ Flags NoReliefString
+ Title {}
+Main
+ Case message of
+  SingleClic :
+  Begin
+  End
+End
+
+Widget 5
+Property
+ Position 10 30
+ Size 45 25
  Font "xft:Tinos Nerd Font:size=11"
  Type ItemDraw
  Flags NoReliefString

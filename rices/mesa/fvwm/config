@@ -130,10 +130,6 @@ Style DateTime NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 Style DateTime PositionPlacement -97p +2090p
 
-Style Volume NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
-  CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style Volume PositionPlacement -367p +2090p
-
 Style "Steam" NoTitle, !Handles, !Borders, FixedPosition
 
 Style "Io.github.celluloid_player.Celluloid" NoTitle
@@ -634,7 +630,6 @@ AddToFunc   StartFunction
 + I Module FvwmButtons BottomDock
 + I Module FvwmButtons ControlButtons
 + I Module FvwmScript FvwmScript-DateTime
-+ I Module FvwmScript FvwmScript-Volume
 
 DestroyFunc FvwmTerm
 AddToFunc FvwmTerm
