@@ -161,13 +161,18 @@ Colorset 5 fg #fbf1c7, bg #3c3836, hi, sh, Plain, NoShape
 Colorset 6 fg #3c3836, bg #3c3836, hi, sh, Plain, NoShape
 
 # Menu Colorset
-Colorset 7 RootTransparent, fg #fbf1c7, bg average, sh #3c3836, \
- hi #665c54, Tint #3c3836 80, bgTint #3c3836 80
+#Colorset 7 RootTransparent, fg #fbf1c7, bg average, sh #3c3836, \
+# hi #665c54, Tint #3c3836 80, bgTint #3c3836 80
+Colorset 7 RootTransparent, fg #3c3836, bg average, sh #fbf1c7, \
+ hi #665c54, Tint #fbf1c7 80, bgTint #fbf1c7 80
 # Menu Active Colorset
-Colorset 8 RootTransparent, fg #b16286, bg average, sh #3c3836, \
- hi #665c54, Tint #3c3836 80, bgTint #3c3836 80
+#Colorset 8 RootTransparent, fg #b16286, bg average, sh #3c3836, \
+# hi #665c54, Tint #3c3836 80, bgTint #3c3836 80
+Colorset 8 RootTransparent, fg #b16286, bg average, sh #fbf1c7, \
+ hi #665c54, Tint #fbf1c7 80, bgTint #fbf1c7 80
 
-Colorset 9 fg #fbf1c7, bg #504945, hi, sh, Plain, NoShape
+#Colorset 9 fg #fbf1c7, bg #504945, hi, sh, Plain, NoShape
+Colorset 9 fg #3c3836, bg #fbf1c7, hi, sh, Plain, NoShape
 Colorset 10 fg rgb:00/00/00, hi rgb:dd/00/00, sh rgb:dd/00/00, bg rgb:fb/fc/ec
 
 ############
@@ -375,7 +380,7 @@ Silent Key J        A     4M      Move w0px w80px
 Silent Key K        A     4M      Move w0px w-80px
 
 # Maximize in direction until we hit another window.
-Silent Key H        A     MC      Move 52-100w 50-50w
+Silent Key H        A     MC      Move 51-100w 50-50w
 Silent Key L        A     MC      Move 54 50-50w
 Silent Key J        A     MC      Move 54 51
 Silent Key K        A     MC      Move 54 49-100w

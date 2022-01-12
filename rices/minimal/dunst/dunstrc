@@ -1,7 +1,7 @@
 [global]
     monitor = 0
     follow = keyboard
-    geometry = "700x800-244+120"
+    geometry = "1400x800-20+20"
     indicate_hidden = no
     shrink = no
     transparency = 0
@@ -32,7 +32,7 @@
 
     ### Icons ###
     icon_position = left
-    max_icon_size = 128
+    max_icon_size = 64
     sticky_history = yes
 
     # Maximum amount of notifications kept in history

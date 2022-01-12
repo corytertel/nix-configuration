@@ -58,7 +58,7 @@
 .da-messagesWrapper .da-scroller::-webkit-scrollbar,
 .da-messagesWrapper .da-scroller::-webkit-scrollbar-track-piece {
     background-color: var(--background-tertiary) !important;
-    border-color: rgba(255,255,255,0) !important;
+    border-color: rgba(0,0,0,0) !important;
 }
 
 /* Recolor scrollbar thumbs. */

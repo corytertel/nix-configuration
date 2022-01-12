@@ -16,17 +16,18 @@
     enable = true;
     inactiveOpacity = "0.93";
     activeOpacity = "1.00";
-    blur = true;
+    blur = false;
     experimentalBackends = true;
     opacityRule = [
       "100:class_g   *?= 'FvwmButtons'"
       "100:class_g   *?= 'FvwmPager'"
       "100:class_g   *?= 'FvwmScript'"
+      "100:class_g   *?= 'Rofi'"
     ];
-    extraOptions = ''
-      blur-method = "dual_kawase";
-      blur-strength = 8;
-    '';
+    #extraOptions = ''
+    #  blur-method = "dual_kawase";
+    #  blur-strength = 8;
+    #'';
     shadow = true;
     #shadowExclude = [
     #  "class_g   *?= 'Xclock'"
