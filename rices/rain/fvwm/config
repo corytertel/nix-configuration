@@ -110,7 +110,7 @@ Style "*" PositionPlacement 52-50w 50-50w
 Style "*" Colorset 4
 Style "*" HilightColorset 4
 Style "*" BorderColorset 4
-Style "*" HilightBorderColorset 4
+Style "*" HilightBorderColorset 3
 ## Minimize to Thumbnail Placeholder
 Style "*" IconBox 960x540+134+24, IconGrid 15 15, \
 IconFill top left, !IconTitle, IconBackgroundRelief 0
@@ -119,26 +119,30 @@ Style "FvwmPager" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 
 Style "LeftDock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
-  CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
+  CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 
 Style "ControlButtons" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 
 Style Time NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style Time PositionPlacement +10p +10p
+Style Time PositionPlacement +20p +20p
 
 Style Date NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style Date PositionPlacement +10p +300p
+Style Date PositionPlacement +20p +310p
 
 Style Battery NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style Battery PositionPlacement +10p -146p
+Style Battery PositionPlacement +20p -156p
 
 Style Volume NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style Volume PositionPlacement +10p -286p
+Style Volume PositionPlacement +20p -296p
+
+Style Panel NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+  CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
+Style Panel PositionPlacement +0p +0p
 
 Style "Steam" NoTitle, !Handles, !Borders, FixedPosition
 
@@ -149,7 +153,7 @@ Style ConfirmQuit !Title, PositionPlacement 52-50w 50-50w, WindowListSkip, Layer
 ################
 # 3: Colorsets #
 ################
-Colorset 3 fg #ac8a8c, bg #ac8a8c, hi, sh, Plain, NoShape
+Colorset 3 fg #ff5555, bg #ff5555, hi, sh, Plain, NoShape
 Colorset 4 fg #f0f0f0, bg #f0f0f0, hi, sh, Plain, NoShape
 Colorset 5 fg #f0f0f0, bg #0f0f0f, hi, sh, Plain, NoShape
 
@@ -163,9 +167,7 @@ Colorset 7 RootTransparent, fg #f0f0f0, bg average, sh #0f0f0f, \
 Colorset 8 RootTransparent, fg #ac8aac, bg average, sh #0f0f0f, \
  hi #707070, Tint #0f0f0f 80, bgTint #0f0f0f 80
 
-#Colorset 9 RootTransparent, fg #f0f0f0, bg average, sh #f0f0f0, \
-# hi #202070, Tint #0f0f0f 70, bgTint #0f0f0f 70
-Colorset 9 fg #262626, bg #262626, hi, sh, Plain, NoShape
+Colorset 9 fg #f0f0f0, bg #4c4c4c, hi, sh, Plain, NoShape
 Colorset 10 fg rgb:00/00/00, hi rgb:dd/00/00, sh rgb:dd/00/00, bg rgb:fb/fc/ec
 
 ############
@@ -175,7 +177,7 @@ MenuStyle * PopupDelayed, PopupDelay 300, PopdownImmediately
 MenuStyle * PopupOffset -5 100, TitleWarpOff
 MenuStyle * TitleUnderlines2, SeparatorsLong, TrianglesSolid
 MenuStyle * AnimationOff, AutomaticHotkeysOff
-MenuStyle * BorderWidth 2
+MenuStyle * BorderWidth 4
 MenuStyle * PopupAsSubmenu, HoldSubmenus, SubmenusRight
 MenuStyle * ItemFormat "%|%5.5i%1.3l%2.3>%|"
 MenuStyle * VerticalItemSpacing 5 5, VerticalTitleSpacing 10 10
@@ -478,19 +480,19 @@ AddToDecor   WindowDecor
 + ButtonStyle 1 \
         ActiveUp     (Pixmap $[fvwm_img]/button/menu-activeup.png -- Flat) \
         ActiveDown   (Pixmap $[fvwm_img]/button/menu-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/menu-activedown.png -- Flat)
+        Inactive     (Pixmap $[fvwm_img]/button/blank.png -- Flat)
 + ButtonStyle 2 \
         ActiveUp     (Pixmap $[fvwm_img]/button/close-activeup.png -- Flat) \
         ActiveDown   (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat)
+        Inactive     (Pixmap $[fvwm_img]/button/blank.png -- Flat)
 + ButtonStyle 4 \
         ActiveUp     (Pixmap $[fvwm_img]/button/maximize-activeup.png -- Flat) \
         ActiveDown   (Pixmap $[fvwm_img]/button/maximize-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/maximize-activedown.png -- Flat)
+        Inactive     (Pixmap $[fvwm_img]/button/blank.png -- Flat)
 + ButtonStyle 6 \
         ActiveUp     (Pixmap $[fvwm_img]/button/iconify-activeup.png -- Flat) \
         ActiveDown   (Pixmap $[fvwm_img]/button/iconify-activedown.png -- Flat) \
-        Inactive     (Pixmap $[fvwm_img]/button/iconify-activedown.png -- Flat)
+        Inactive     (Pixmap $[fvwm_img]/button/blank.png -- Flat)
 + ButtonStyle All - Clear
 + ButtonStyle 1 - MwmDecorMenu
 + ButtonStyle 4 - MwmDecorMax
@@ -524,14 +526,14 @@ DestroyModuleConfig FvwmPager: *
 *FvwmPager: Columns 1
 
 DestroyModuleConfig LeftDock: *
-*LeftDock: Geometry 90x780+10+810
+*LeftDock: Geometry 90x780+20+810
 *LeftDock: Colorset 9
 *LeftDock: Rows 47
 *LeftDock: Columns 1
 *LeftDock: Frame 0
 *LeftDock: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
 *LeftDock: (1x1, Frame 0, Title(Center) "")
-*LeftDock: (1x5, Frame 0, Icon 72x72/nixos.png, \
+*LeftDock: (1x5, Frame 0, Icon 72x72/nixos-dark.png, \
   Action(Mouse 1) "FvwmLaunch")
 *LeftDock: (1x5, Frame 0, Icon 72x72/terminal.png, \
   Action(Mouse 1) "FvwmTerm", \
@@ -553,7 +555,7 @@ DestroyModuleConfig LeftDock: *
 *LeftDock: (1x1, Frame 0)
 
 DestroyModuleConfig ControlButtons: *
-*ControlButtons: Geometry 90x116+10-10
+*ControlButtons: Geometry 90x116+20-10
 *ControlButtons: Colorset 9
 *ControlButtons: Rows 7
 *ControlButtons: Columns 1

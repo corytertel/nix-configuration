@@ -71,7 +71,7 @@
 
     theme = {
       package = pkgs.orchis-theme;
-      name = "Orchis-dark";
+      name = "Orchis-light";
     };
 
     iconTheme = {
@@ -81,8 +81,8 @@
 
     gtk3.extraConfig = {
       gtk-icon-theme-name = "Tela";
-      gtk-theme-name = "Orchis-dark";
-      gtk-application-prefer-dark-theme = 1;
+      gtk-theme-name = "Orchis-light";
+      gtk-application-prefer-dark-theme = 0;
     };
   };
 
