@@ -171,8 +171,8 @@ Colorset 7 RootTransparent, fg #3c3836, bg average, sh #fbf1c7, \
 Colorset 8 RootTransparent, fg #b16286, bg average, sh #fbf1c7, \
  hi #665c54, Tint #fbf1c7 80, bgTint #fbf1c7 80
 
-#Colorset 9 fg #fbf1c7, bg #504945, hi, sh, Plain, NoShape
-Colorset 9 fg #3c3836, bg #fbf1c7, hi, sh, Plain, NoShape
+Colorset 9 fg #fbf1c7, bg #504945, hi, sh, Plain, NoShape
+#Colorset 9 fg #3c3836, bg #fbf1c7, hi, sh, Plain, NoShape
 Colorset 10 fg rgb:00/00/00, hi rgb:dd/00/00, sh rgb:dd/00/00, bg rgb:fb/fc/ec
 
 ############

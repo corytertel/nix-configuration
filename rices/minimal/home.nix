@@ -24,14 +24,22 @@
       "100:class_g   *?= 'FvwmScript'"
       "100:class_g   *?= 'Rofi'"
     ];
-    #extraOptions = ''
     #  blur-method = "dual_kawase";
     #  blur-strength = 8;
-    #'';
+    extraOptions = ''
+      corner-radius = 45;
+      round-borders = 1;
+
+      rounded-corners-exclude = [
+        "name != 'LeftDock' && name != 'Time' && name != 'Date' && name != 'Volume' && name != 'Battery' && name != 'ControlButtons'",
+      ];
+    '';
     shadow = true;
-    #shadowExclude = [
-    #  "class_g   *?= 'Xclock'"
-    #];
+    shadowExclude = [
+      "class_g *?= 'FvwmPager'"
+      "class_g *?= 'FvwmScript'"
+      "class_g *?= 'FvwmButtons'"
+    ];
     vSync = true;
     package = pkgs.picom.overrideAttrs (
       o: {
@@ -46,10 +54,10 @@
   };
 
   home.file = {
-    ".fvwm" = {
-      recursive = true;
-      source = ./fvwm;
-    };
+    #".fvwm" = {
+    #  recursive = true;
+    #  source = ./fvwm;
+    #};
   };
 
   home.packages = with pkgs; [
