@@ -348,10 +348,10 @@ Silent Key J        A     S4      SwapWindowsDir SouthEast SouthWest
 Silent Key K        A     S4      SwapWindowsDir NorthEast NorthWest 
 
 # Alt+Shift hjkl to tile left, bottom-right, top-right, full-right respectively
-Silent Key H        A     MC      Tile 45 90 +5 +5
-Silent Key L        A     MC      Tile 45 90 -3 +5
-Silent Key J        A     MC      Tile 45 40 -3 -5
-Silent Key K        A     MC      Tile 45 50 -3 +5
+Silent Key H        A     4C      Tile 45 90 +5 +5
+Silent Key L        A     4C      Tile 45 90 -3 +5
+Silent Key J        A     4C      Tile 45 40 -3 -5
+Silent Key K        A     4C      Tile 45 50 -3 +5
 
 # Super+J/H/K/L - move window, etc
 Silent Key H        A     4MC     AnimatedMove +0 w0px
@@ -364,10 +364,10 @@ Silent Key J        A     4M      Move w0px w80px
 Silent Key K        A     4M      Move w0px w-80px
 
 # Maximize in direction until we hit another window.
-Silent Key H        A     4C      Maximize growleft 0
-Silent Key L        A     4C      Maximize growright 0
-Silent Key J        A     4C      Maximize 0 growdown
-Silent Key K        A     4C      Maximize 0 growup
+Silent Key H        A     MC      Move 52-100w 50-50w
+Silent Key L        A     MC      Move 54 50-50w
+Silent Key J        A     MC      Move 54 51
+Silent Key K        A     MC      Move 54 49-100w
 
 # Window Controls
 Silent Key Q        A     4       Close
