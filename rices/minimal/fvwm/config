@@ -104,7 +104,7 @@ Style * WindowShadeScrolls, WindowShadeSteps 10
 
 Style "*" UseDecor WindowDecor
 Style "*" Font "xft:Tinos Nerd Font:pixelsize=0:minspace=False:antialias=True"
-Style "*" BorderWidth 1, HandleWidth 1
+Style "*" BorderWidth 4, HandleWidth 4
 Style "*" MWMBorder, FirmBorder
 Style "*" PositionPlacement 52-50w 50-50w
 Style "*" Colorset 4
@@ -177,7 +177,7 @@ MenuStyle * PopupDelayed, PopupDelay 300, PopdownImmediately
 MenuStyle * PopupOffset -5 100, TitleWarpOff
 MenuStyle * TitleUnderlines2, SeparatorsLong, TrianglesSolid
 MenuStyle * AnimationOff, AutomaticHotkeysOff
-MenuStyle * BorderWidth 8
+MenuStyle * BorderWidth 4
 MenuStyle * PopupAsSubmenu, HoldSubmenus, SubmenusRight
 MenuStyle * ItemFormat "%|%5.5i%1.3l%2.3>%|"
 MenuStyle * VerticalItemSpacing 5 5, VerticalTitleSpacing 10 10

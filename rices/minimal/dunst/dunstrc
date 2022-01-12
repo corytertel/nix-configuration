@@ -9,7 +9,7 @@
     separator_height = 8
     padding = 20
     horizontal_padding = 20
-    frame_width = 8
+    frame_width = 4
     frame_color = "#d65d0e"
     separator_color = auto
     sort = no
