@@ -224,6 +224,7 @@ AddToMenu FvwmOpsMenu
 DestroyMenu FvwmWallpaperMenu
 AddToMenu   FvwmWallpaperMenu
 + " NixOS " Exec exec feh --bg-fill $[fvwm_wallpaper]/nixos-gruvbox.jpg
++ " Kallen " Exec exec feh --bg-fill $[fvwm_wallpaper]/kallen.jpg
 + " NixOS 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/nixos.png
 + " Tree " Exec exec feh --bg-fill $[fvwm_wallpaper]/tree.jpg
 + " Rain " Exec exec feh --bg-fill $[fvwm_wallpaper]/rain.jpg
@@ -590,7 +591,7 @@ DestroyModuleConfig ControlButtons: *
 # actions that are run after a restart.
 DestroyFunc StartFunction
 AddToFunc   StartFunction
-+ I Module FvwmScript FvwmScript-Panel
+#+ I Module FvwmScript FvwmScript-Panel
 + I Module FvwmButtons LeftDock
 + I Module FvwmButtons ControlButtons
 + I Module FvwmScript FvwmScript-Date
