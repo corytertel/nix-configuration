@@ -47,7 +47,7 @@ DesktopSize 3x3
 # Reserves space along the edge(s) of the Screen that will not
 # be covered when maximizing or placing windows.
 #EwmhBaseStruts 110 0 0 0
-EwmhBaseStruts 0 0 0 0
+EwmhBaseStruts 0 0 0 130
 
 # This sets the ClickTime and MoveThreshold used to determine
 # Double Clicks, Hold and Move for the mouse.
@@ -106,19 +106,19 @@ Style "*" UseDecor WindowDecor
 Style "*" Font "xft:Tinos Nerd Font:pixelsize=0:minspace=False:antialias=True"
 Style "*" BorderWidth 4, HandleWidth 4
 Style "*" MWMBorder, FirmBorder
-Style "*" PositionPlacement 52-50w 50-50w
+Style "*" PositionPlacement 50-50w 50-50w
 Style "*" Colorset 4
 Style "*" HilightColorset 4
 Style "*" BorderColorset 4
 Style "*" HilightBorderColorset 3
 ## Minimize to Thumbnail Placeholder
-Style "*" IconBox 960x540+134+24, IconGrid 15 15, \
+Style "*" IconBox 960x540+24+24, IconGrid 15 15, \
 IconFill top left, !IconTitle, IconBackgroundRelief 0
 
 Style "FvwmPager" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 
-Style "LeftDock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+Style "BottomDock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 
 Style "ControlButtons" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
@@ -126,19 +126,19 @@ Style "ControlButtons" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
 
 Style Time NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style Time PositionPlacement +20p +20p
+Style Time PositionPlacement +20p +2290p
 
 Style Date NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style Date PositionPlacement +20p +310p
+Style Date PositionPlacement +330p +2290p
 
 Style Battery NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style Battery PositionPlacement +20p -156p
+Style Battery PositionPlacement -156p +2290p
 
 Style Volume NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style Volume PositionPlacement +20p -296p
+Style Volume PositionPlacement -336p +2290p
 
 Style Panel NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
@@ -148,7 +148,7 @@ Style "Steam" NoTitle, !Handles, !Borders, FixedPosition
 
 Style "Io.github.celluloid_player.Celluloid" NoTitle
 
-Style ConfirmQuit !Title, PositionPlacement 52-50w 50-50w, WindowListSkip, Layer 6
+Style ConfirmQuit !Title, PositionPlacement 50-50w 50-50w, WindowListSkip, Layer 6
 
 ################
 # 3: Colorsets #
@@ -171,8 +171,8 @@ Colorset 7 RootTransparent, fg #3c3836, bg average, sh #fbf1c7, \
 Colorset 8 RootTransparent, fg #b16286, bg average, sh #fbf1c7, \
  hi #665c54, Tint #fbf1c7 80, bgTint #fbf1c7 80
 
-Colorset 9 fg #fbf1c7, bg #504945, hi, sh, Plain, NoShape
-#Colorset 9 fg #3c3836, bg #fbf1c7, hi, sh, Plain, NoShape
+#Colorset 9 fg #fbf1c7, bg #504945, hi, sh, Plain, NoShape
+Colorset 9 fg #3c3836, bg #ebdbb2, hi, sh, Plain, NoShape
 Colorset 10 fg rgb:00/00/00, hi rgb:dd/00/00, sh rgb:dd/00/00, bg rgb:fb/fc/ec
 
 ############
@@ -229,8 +229,10 @@ AddToMenu FvwmOpsMenu
 DestroyMenu FvwmWallpaperMenu
 AddToMenu   FvwmWallpaperMenu
 + " NixOS " Exec exec feh --bg-fill $[fvwm_wallpaper]/nixos-gruvbox.jpg
++ " NixOS 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/nixos-gruvbox2.jpg
++ " NixOS 3 " Exec exec feh --bg-fill $[fvwm_wallpaper]/nixos-gruvbox3.jpg
 + " Kallen " Exec exec feh --bg-fill $[fvwm_wallpaper]/kallen.jpg
-+ " NixOS 2 " Exec exec feh --bg-fill $[fvwm_wallpaper]/nixos.png
++ " NixOS 4 " Exec exec feh --bg-fill $[fvwm_wallpaper]/nixos.png
 + " Tree " Exec exec feh --bg-fill $[fvwm_wallpaper]/tree.jpg
 + " Rain " Exec exec feh --bg-fill $[fvwm_wallpaper]/rain.jpg
 + " Red Dots " Exec exec feh --bg-fill $[fvwm_wallpaper]/dots.png
@@ -380,17 +382,17 @@ Silent Key J        A     4M      Move w0px w80px
 Silent Key K        A     4M      Move w0px w-80px
 
 # Maximize in direction until we hit another window.
-Silent Key H        A     MC      Move 51-100w 50-50w
-Silent Key L        A     MC      Move 54 50-50w
-Silent Key J        A     MC      Move 54 51
-Silent Key K        A     MC      Move 54 49-100w
+Silent Key H        A     MC      Move 48-100w 50-50w
+Silent Key L        A     MC      Move 52 50-50w
+Silent Key J        A     MC      Move 52 51
+Silent Key K        A     MC      Move 52 49-100w
 
 # Window Controls
 Silent Key Q        A     4       Close
 Silent Key Escape   A     4       Exec exec xkill
-Silent Key C        A     4       AnimatedMove 52-50w 50-50w
+Silent Key C        A     4       AnimatedMove 50-50w 50-50w
 Silent Key C        A     S4      AnimatedMove w 50-50w
-Silent Key C        A     C4      AnimatedMove 52-50w w
+Silent Key C        A     C4      AnimatedMove 50-50w w
 Silent Key M        A     4       AnimatedMove m-50w m-50w # move to mouse pointer
 SIlent Key backslash A    4       ResizeBig
 SIlent Key backslash A    S4      ResizeTall
@@ -532,44 +534,44 @@ DestroyModuleConfig FvwmPager: *
 *FvwmPager: Rows 1
 *FvwmPager: Columns 1
 
-DestroyModuleConfig LeftDock: *
-*LeftDock: Geometry 90x780+20+810
-*LeftDock: Colorset 9
-*LeftDock: Rows 47
-*LeftDock: Columns 1
-*LeftDock: Frame 0
-*LeftDock: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
-*LeftDock: (1x1, Frame 0, Title(Center) "")
-*LeftDock: (1x5, Frame 0, Icon 72x72/nixos-dark.png, \
+DestroyModuleConfig BottomDock: *
+*BottomDock: Geometry 780x90+1530-20
+*BottomDock: Colorset 9
+*BottomDock: Rows 1
+*BottomDock: Columns 47
+*BottomDock: Frame 0
+*BottomDock: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
+*BottomDock: (1x1, Frame 0, Title(Center) "")
+*BottomDock: (5x1, Frame 0, Icon 72x72/nixos-gruvbox.png, \
   Action(Mouse 1) "FvwmLaunch")
-*LeftDock: (1x5, Frame 0, Icon 72x72/terminal.png, \
+*BottomDock: (5x1, Frame 0, Icon 72x72/terminal.png, \
   Action(Mouse 1) "FvwmTerm", \
   Action(Mouse 3) "FvwmTerm")
-*LeftDock: (1x5, Frame 0, Icon 72x72/Thunar.png, \
+*BottomDock: (5x1, Frame 0, Icon 72x72/Thunar.png, \
   Action(Mosue 1) "FvwmFileManager")
-*LeftDock: (1x5, Frame 0, Icon 72x72/firefox.png, \
+*BottomDock: (5x1, Frame 0, Icon 72x72/firefox.png, \
   Action(Mosue 1) "FvwmBrowser")
-*LeftDock: (1x5, Frame 0, Icon 72x72/emacs.png, \
+*BottomDock: (5x1, Frame 0, Icon 72x72/emacs.png, \
   Action(Mouse 1) "FvwmEditor")
-*LeftDock: (1x5, Frame 0, Icon 72x72/discord.png, \
+*BottomDock: (5x1, Frame 0, Icon 72x72/discord.png, \
   Action(Mouse 1) "FvwmChat")
-*LeftDock: (1x5, Frame 0, Icon 72x72/audacious.png, \
+*BottomDock: (5x1, Frame 0, Icon 72x72/audacious.png, \
   Action(Mouse 1) "FvwmMusicPlayer")
-*LeftDock: (1x5, Frame 0, Icon 72x72/gimp.png, \
+*BottomDock: (5x1, Frame 0, Icon 72x72/gimp.png, \
   Action(Mouse 1) "FvwmGimp")
-*LeftDock: (1x5, Frame 0, Icon 72x72/steam.png, \
+*BottomDock: (5x1, Frame 0, Icon 72x72/steam.png, \
   Action(Mouse 1) "FvwmSteam")
-*LeftDock: (1x1, Frame 0)
+*BottomDock: (1x1, Frame 0)
 
 DestroyModuleConfig ControlButtons: *
-*ControlButtons: Geometry 90x116+20-10
+*ControlButtons: Geometry 116x90-20-20
 *ControlButtons: Colorset 9
-*ControlButtons: Rows 7
-*ControlButtons: Columns 1
+*ControlButtons: Rows 1
+*ControlButtons: Columns 7
 *ControlButtons: Frame 0
 *ControlButtons: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
 *ControlButtons: (1x1, Frame 0, Title(Center) "")
-*ControlButtons: (1x5, Frame 0, Icon 72x72/shutdown.png, \
+*ControlButtons: (5x1, Frame 0, Icon 72x72/shutdown.png, \
   Action(Mouse 1) "Module FvwmScript FvwmScript-ConfirmQuit", \
   Action(Mouse 3) "FvwmShutdown")
 *ControlButtons: (1x1, Frame 0)
@@ -597,12 +599,13 @@ DestroyModuleConfig ControlButtons: *
 DestroyFunc StartFunction
 AddToFunc   StartFunction
 #+ I Module FvwmScript FvwmScript-Panel
-+ I Module FvwmButtons LeftDock
++ I Module FvwmButtons BottomDock
 + I Module FvwmButtons ControlButtons
 + I Module FvwmScript FvwmScript-Date
 + I Module FvwmScript FvwmScript-Time
 + I Module FvwmScript FvwmScript-Battery
 + I Module FvwmScript FvwmScript-Volume
++ I Exec exec systemctl --user restart picom.service
 
 DestroyFunc FvwmTerm
 AddToFunc FvwmTerm
@@ -688,7 +691,7 @@ DestroyFunc InitFunction
 AddToFunc InitFunction
 + I Exec exec emacs --daemon
 + I Exec exec urxvtd -q
-+ I Exec exec feh --bg-fill $[fvwm_wallpaper]/nixos-gruvbox.jpg
++ I Exec exec feh --bg-fill $[fvwm_wallpaper]/nixos-gruvbox3.jpg
 + I FvwmTerm
 + I FvwmEditor
 + I FvwmMusicPlayer
@@ -895,18 +898,18 @@ AddToFunc SwapWindows
 
 DestroyFunc ResizeBig
 AddToFunc ResizeBig
-+ I Resize 90 90
-+ I Move 52-50w 50-50w
++ I Resize 90 86
++ I Move 50-50w 50-50w
 
 DestroyFunc ResizeTall
 AddToFunc ResizeTall
-+ I Resize 45 90
-+ I Move 52-50w 50-50w
++ I Resize 45 86
++ I Move 50-50w 50-50w
 
 DestroyFunc ResizeWide
 AddToFunc ResizeWide
 + I Resize 40 49
-+ I Move 52-50w 50-50w
++ I Move 50-50w 50-50w
 
 ## To Create a Thumbnail on Minimize
 # Call the script to create a thumbnail using ImageMagick & xwd

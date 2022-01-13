@@ -1,0 +1,91 @@
+WindowTitle {Date}
+WindowSize  90 220
+Colorset 9
+Font "xft:Tinos Nerd Font:size=12" 
+
+Init
+ Begin
+  Set $Title = (GetOutput {exec echo " "} 1 -1)
+  Set $Month = (GetOutput {exec date "+%m"} 1 -1)
+  Set $Day = (GetOutput {exec date "+%d"} 1 -1)
+  Set $Year = (GetOutput {exec date "+%y"} 1 -1)
+
+  ChangeTitle 1 $Title
+  ChangeTitle 2 $Month
+  ChangeTitle 3 $Day
+  ChangeTitle 4 $Year
+End
+
+PeriodicTasks
+ Begin 
+  If (RemainderOfDiv (GetTime) 60)==0 Then
+  Begin
+    Set $Month = (GetOutput {exec date "+%m"} 1 -1)
+    Set $Day = (GetOutput {exec date "+%d"} 1 -1)
+    Set $Year = (GetOutput {exec date "+%y"} 1 -1)
+
+    ChangeTitle 2 $Month
+    ChangeTitle 3 $Day
+    ChangeTitle 4 $Year
+  End
+End
+
+Widget 1
+Property
+ Position 20 10
+ Size 50 50
+ Font "xft:Tinos Nerd Font:size=12"
+ Type ItemDraw
+ Flags NoReliefString
+ Title {}
+Main
+ Case message of
+  SingleClic :
+  Begin
+  End
+End
+
+Widget 2
+Property
+ Position 0 60
+ Size 90 50
+ Font "xft:Tinos Nerd Font:size=12"
+ Type ItemDraw
+ Flags NoReliefString
+ Title {}
+Main
+ Case message of
+  SingleClic :
+  Begin
+  End
+End
+
+Widget 3
+Property
+ Position 0 110
+ Size 90 50
+ Font "xft:Tinos Nerd Font:size=12"
+ Type ItemDraw
+ Flags NoReliefString
+ Title {}
+Main
+ Case message of
+  SingleClic :
+  Begin
+  End
+End
+
+Widget 4
+Property
+ Position 0 160
+ Size 90 50
+ Font "xft:Tinos Nerd Font:size=12"
+ Type ItemDraw
+ Flags NoReliefString
+ Title {}
+Main
+ Case message of
+  SingleClic :
+  Begin
+  End
+End

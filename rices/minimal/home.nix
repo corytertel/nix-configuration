@@ -31,7 +31,7 @@
       round-borders = 1;
 
       rounded-corners-exclude = [
-        "name != 'LeftDock' && name != 'Time' && name != 'Date' && name != 'Volume' && name != 'Battery' && name != 'ControlButtons'",
+        "name != 'BottomDock' && name != 'Time' && name != 'Date' && name != 'Volume' && name != 'Battery' && name != 'ControlButtons'",
       ];
     '';
     shadow = true;
@@ -54,10 +54,10 @@
   };
 
   home.file = {
-    #".fvwm" = {
-    #  recursive = true;
-    #  source = ./fvwm;
-    #};
+    ".fvwm" = {
+      recursive = true;
+      source = ./fvwm;
+    };
   };
 
   home.packages = with pkgs; [

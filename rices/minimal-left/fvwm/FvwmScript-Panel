@@ -1,0 +1,11 @@
+WindowTitle {Panel}
+WindowSize  130 2400
+Colorset 6
+
+Init
+ Begin
+End
+
+PeriodicTasks
+ Begin 
+End

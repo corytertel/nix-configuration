@@ -1,0 +1,50 @@
+set selection-clipboard clipboard
+set window-title-home-tilde true
+set statusbar-home-tilde true
+set adjust-open "best-fit"
+
+set font "Tinos Nerd Font 11"
+# Light/Default mode settings:
+# 
+#
+set notification-error-bg       "#cc241d" # Red
+set notification-error-fg       "#3c3836" # Foreground
+set notification-warning-bg     "#d65d0e" # Orange
+set notification-warning-fg     "#ebdbb2" # Selection
+set notification-bg             "#fbf1c7" # Background
+set notification-fg             "#3c3836" # Foreground
+
+set completion-bg               "#fbf1c7" # Background
+set completion-fg               "#bdae93" # Comment
+set completion-group-bg         "#fbf1c7" # Background
+set completion-group-fg         "#bdae93" # Comment
+set completion-highlight-bg     "#ebdbb2" # Selection
+set completion-highlight-fg     "#3c3836" # Foreground
+
+set index-bg                    "#fbf1c7" # Background
+set index-fg                    "#3c3836" # Foreground
+set index-active-bg             "#ebdbb2" # Current Line
+set index-active-fg             "#3c3836" # Foreground
+
+set inputbar-bg                 "#fbf1c7" # Background
+set inputbar-fg                 "#3c3836" # Foreground
+set statusbar-bg                "#fbf1c7" # Background
+set statusbar-fg                "#3c3836" # Foreground
+
+set highlight-color             "#d65d0e" # Orange
+set highlight-active-color      "#b16286" # Pink
+
+set default-bg                  "#fbf1c7" # Background
+set default-fg                  "#3c3836" # Foreground
+
+set render-loading              true
+set render-loading-fg           "#fbf1c7" # Background
+set render-loading-bg           "#3c3836" # Foreground
+
+# Startup options
+#
+#
+set adjust-open width
+set recolor false
+map <C-Tab> toggle_statusbar
+set guioptions ""

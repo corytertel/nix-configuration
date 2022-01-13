@@ -157,6 +157,7 @@
 
   fonts.fonts = with pkgs; [
     nerdfonts
+    julia-mono
   ];
 
   virtualisation = {
