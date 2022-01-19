@@ -1,6 +1,6 @@
 WindowTitle {ConfirmQuit}
 WindowSize  250 320
-Colorset 7
+Colorset 1
 Font "xft:TerminessTTF Nerd Font:pixelsize=24:minspace=True:antialias=True"
 Init
  Begin

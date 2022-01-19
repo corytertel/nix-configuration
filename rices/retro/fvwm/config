@@ -139,7 +139,7 @@ Style "TelegramDesktop" NoTitle
 
 Style "DesktopEditors" NoTitle
 
-Style ConfirmQuit !Title, PositionPlacement -10p -0p, WindowListSkip, Layer 6
+Style ConfirmQuit !Title, PositionPlacement -5p -10p, WindowListSkip, Layer 6
 
 ################
 # 3: Colorsets #

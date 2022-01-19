@@ -24,7 +24,8 @@
       preLVM = true;
     };
 
-    kernelPackages = pkgs.linuxPackages_latest;
+    #kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_5_15;
     kernelParams = [
       "pcie_aspm.policy=performance"
       "mitigations=off"

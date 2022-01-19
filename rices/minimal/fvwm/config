@@ -148,6 +148,10 @@ Style "Steam" NoTitle, !Handles, !Borders, FixedPosition
 
 Style "Io.github.celluloid_player.Celluloid" NoTitle
 
+Style "TelegramDesktop" NoTitle
+
+Style "DesktopEditors" NoTitle
+
 Style ConfirmQuit !Title, PositionPlacement 50-50w 50-50w, WindowListSkip, Layer 6
 
 ################
