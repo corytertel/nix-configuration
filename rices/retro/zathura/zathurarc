@@ -1,0 +1,50 @@
+set selection-clipboard clipboard
+set window-title-home-tilde true
+set statusbar-home-tilde true
+set adjust-open "best-fit"
+
+set font "TerminessTTF Nerd Font 11"
+# Light/Default mode settings:
+# 
+#
+set notification-error-bg       "#541015" # Red
+set notification-error-fg       "#0f0f0f" # Foreground
+set notification-warning-bg     "#544e10" # Orange
+set notification-warning-fg     "#e7e7e7" # Selection
+set notification-bg             "#f0f0f0" # Background
+set notification-fg             "#0f0f0f" # Foreground
+
+set completion-bg               "#f0f0f0" # Background
+set completion-fg               "#b2b2b2" # Comment
+set completion-group-bg         "#f0f0f0" # Background
+set completion-group-fg         "#b2b2b2" # Comment
+set completion-highlight-bg     "#e7e7e7" # Selection
+set completion-highlight-fg     "#0f0f0f" # Foreground
+
+set index-bg                    "#f0f0f0" # Background
+set index-fg                    "#0f0f0f" # Foreground
+set index-active-bg             "#e7e7e7" # Current Line
+set index-active-fg             "#0f0f0f" # Foreground
+
+set inputbar-bg                 "#f0f0f0" # Background
+set inputbar-fg                 "#0f0f0f" # Foreground
+set statusbar-bg                "#f0f0f0" # Background
+set statusbar-fg                "#0f0f0f" # Foreground
+
+set highlight-color             "#8aac8b" # Orange
+set highlight-active-color      "#aca98a" # Pink
+
+set default-bg                  "#f0f0f0" # Background
+set default-fg                  "#0f0f0f" # Foreground
+
+set render-loading              true
+set render-loading-fg           "#f0f0f0" # Background
+set render-loading-bg           "#0f0f0f" # Foreground
+
+# Startup options
+#
+#
+set adjust-open width
+set recolor false
+map <C-Tab> toggle_statusbar
+set guioptions ""

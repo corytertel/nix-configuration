@@ -143,7 +143,7 @@
       libsForQt5.polkit-qt
       brave
       celluloid
-      gnome.gnome-disk-utility
+      #gnome.gnome-disk-utility
       mpv
       pywal
       airshipper
@@ -179,7 +179,7 @@
       sxiv
       leafpad
       onlyoffice-bin
-      xfce.xfce4-terminal
+      # xfce.xfce4-terminal
       xfce.orage #simple calendar
       xfce.parole #media player
       xfce.ristretto #image viewer

@@ -20,7 +20,7 @@
 
     Sxiv.background: #f0f0f0
     Sxiv.foreground: #0f0f0f
-    Sxiv.font:Tinos Nerd Font:size=11
+    Sxiv.font:TerminessTTF Nerd Font:size=11
   '';
 
   # Fix pointer cursor
