@@ -1047,3 +1047,13 @@ DestroyFunc DeThumbnail
 AddToFunc DeThumbnail
 + I PipeRead 'bash $[fvwm_scripts]/dethumb "$[w.id]" "$[fvwm_cache]"'
 *FvwmEvent: deiconify DeThumbnail
+
+#
+# For Click 1 action
+#
+
+DestroyFunc DeiconifyRaiseAndFocus
+AddToFunc DeiconifyRaiseAndFocus
++ I Iconify off
++ I Raise
++ I Focus

@@ -66,7 +66,6 @@
     gruvbox-dark-gtk
     gruvbox-dark-icons-gtk
     libsForQt5.qtstyleplugins
-    gnome3.dconf
     gsettings-desktop-schemas
     gnome.gnome-themes-extra
   ];

@@ -199,6 +199,7 @@
       xorg.xkill
       gparted
       nushell
+      libnotify
 
       discord
       betterdiscord-installer
