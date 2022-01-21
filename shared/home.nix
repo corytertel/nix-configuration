@@ -200,6 +200,7 @@
       gparted
       nushell
       libnotify
+      deadd-notification-center
 
       discord
       betterdiscord-installer
