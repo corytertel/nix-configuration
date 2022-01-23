@@ -556,7 +556,7 @@ DestroyModuleConfig BottomDock: *
 *BottomDock: Frame 0
 *BottomDock: Font "xft:JetBrainsMono Nerd Font:pixelsize=15:minspace=True:antialias=True"
 *BottomDock: (1x1, Frame 0, Title(Center) "")
-*BottomDock: (5x1, Frame 0, Icon 54x54/nixos-gruvbox.png, \
+*BottomDock: (5x1, Frame 0, Icon 54x54/nixos.png, \
   Action(Mouse 1) "FvwmLaunch")
 *BottomDock: (5x1, Frame 0, Icon 54x54/terminal.png, \
   Action(Mouse 1) "FvwmTerm", \

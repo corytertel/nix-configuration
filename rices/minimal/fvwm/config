@@ -546,7 +546,7 @@ DestroyModuleConfig BottomDock: *
 *BottomDock: Frame 0
 *BottomDock: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
 *BottomDock: (1x1, Frame 0, Title(Center) "")
-*BottomDock: (5x1, Frame 0, Icon 72x72/nixos-gruvbox.png, \
+*BottomDock: (5x1, Frame 0, Icon 72x72/nixos.png, \
   Action(Mouse 1) "FvwmLaunch")
 *BottomDock: (5x1, Frame 0, Icon 72x72/terminal.png, \
   Action(Mouse 1) "FvwmTerm", \
@@ -575,7 +575,7 @@ DestroyModuleConfig ControlButtons: *
 *ControlButtons: Frame 0
 *ControlButtons: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
 *ControlButtons: (1x1, Frame 0, Title(Center) "")
-*ControlButtons: (5x1, Frame 0, Icon 72x72/nixos-gruvbox.png, \
+*ControlButtons: (5x1, Frame 0, Icon 72x72/nixos.png, \
   Action(Mouse 1) "FvwmLaunch", \
   Action(Mouse 3) "Module FvwmScript FvwmScript-ConfirmQuit")
 *ControlButtons: (1x1, Frame 0)
