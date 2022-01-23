@@ -1,0 +1,57 @@
+[global]
+    monitor = 0
+    follow = keyboard
+    geometry = "1400x800-20+20"
+    indicate_hidden = no
+    shrink = no
+    transparency = 0
+    notification_height = 0
+    separator_height = 8
+    padding = 20
+    horizontal_padding = 20
+    frame_width = 4
+    frame_color = "#d65d0e"
+    separator_color = auto
+    sort = no
+    idle_threshold = 0
+
+    ### Text ###
+
+    font = JetBrainsMono Nerd Font 11
+    line_height = 3
+    markup = full
+    format = "%s\n%b"
+    alignment = left
+    show_age_threshold = -1
+    word_wrap = no
+    ellipsize = middle
+    ignore_newline = no
+    stack_duplicates = true
+    hide_duplicate_count = true
+    show_indicators = no
+
+    ### Icons ###
+    icon_position = left
+    max_icon_size = 64
+    sticky_history = yes
+
+    # Maximum amount of notifications kept in history
+    history_length = 1
+    title = Dunst
+    class = Dunst
+    startup_notification = false
+
+[urgency_low]
+    background = "#fbf1c7"
+    foreground = "#3c3836"
+    timeout = 4
+
+[urgency_normal]
+    background = "#fbf1c7"
+    foreground = "#3c3836"
+    timeout = 4
+
+[urgency_critical]
+    background = "#ebdbb2"
+    foreground = "#3c3836"
+    timeout = 4

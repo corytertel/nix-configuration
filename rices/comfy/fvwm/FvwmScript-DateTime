@@ -39,7 +39,7 @@ Widget 1
 Property
  Position 110 4
  Size 230 60
- Font "xft:JetBrainsMono Nerd Font:size=15"
+ Font "xft:JetBrainsMonoMedium Nerd Font:size=15"
  Type ItemDraw
  Flags NoReliefString
  Title {}

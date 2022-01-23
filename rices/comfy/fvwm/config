@@ -109,7 +109,7 @@ Style "*" PositionPlacement Center
 Style "*" Colorset 2
 Style "*" HilightColorset 2
 Style "*" BorderColorset 2
-Style "*" HilightBorderColorset 4
+Style "*" HilightBorderColorset 3
 ## Minimize to Thumbnail Placeholder
 Style "*" IconBox 960x540+24+24, IconGrid 15 15, \
 IconFill top left, !IconTitle, IconBackgroundRelief 0
@@ -120,22 +120,25 @@ Style "FvwmPager" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
 Style "BottomDock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
 
-Style "LeftDock" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
-  CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
-
 Style "ControlButtons" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
 
 Style DateTime NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style DateTime PositionPlacement -97p +2082p
+Style DateTime PositionPlacement -137p +2062p
 
-Style "URxvt" Colorset 1, HilightColorset 1, BorderColorset 1, HilightBorderColorset 4
-Style "Emacs" Colorset 1, HilightColorset 1, BorderColorset 1, HilightBorderColorset 4
-Style "discord" Colorset 1, HilightColorset 1, BorderColorset 1, HilightBorderColorset 4
-Style "Firefox" Colorset 1, HilightColorset 1, BorderColorset 1, HilightBorderColorset 4
-Style "Sxiv" Colorset 1, HilightColorset 1, BorderColorset 1, HilightBorderColorset 4
-Style "Zathura" Colorset 1, HilightColorset 1, BorderColorset 1, HilightBorderColorset 4
+Style "tint2" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+  CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable, \
+  PositionPlacement +1344p +2062p
+  #PositionPlacement +960p +2082p
+  #PositionPlacement +0p +2106p
+
+Style "URxvt" Colorset 1, HilightColorset 1, BorderColorset 1, HilightBorderColorset 3
+Style "Emacs" Colorset 1, HilightColorset 1, BorderColorset 1, HilightBorderColorset 3
+Style "discord" Colorset 1, HilightColorset 1, BorderColorset 1, HilightBorderColorset 3
+Style "Firefox" Colorset 1, HilightColorset 1, BorderColorset 1, HilightBorderColorset 3
+Style "Sxiv" Colorset 1, HilightColorset 1, BorderColorset 1, HilightBorderColorset 3
+Style "Zathura" Colorset 1, HilightColorset 1, BorderColorset 1, HilightBorderColorset 3
 
 Style "Steam" NoTitle, !Handles, !Borders, FixedPosition
 
@@ -157,9 +160,10 @@ Colorset 2 fg #ebdbb2, bg #1d2021, hi, sh, Plain, NoShape
 # Highlight
 Colorset 3 fg #cc241d, bg #cc241d, hi, sh, Plain, NoShape
 
-# Transparent
-Colorset 6 RootTransparent, fg #fbf1c7, bg average, sh #3c3836, \
- hi #665c54, Tint #fbf1c7 50, bgTint #fbf1c7 50
+# Dock
+Colorset 6 RootTransparent, fg #fbf1c7, bg #fbf1c7, sh #3c3836, \
+ hi #665c54, Tint #fbf1c7 0, bgTint #fbf1c7 0, Pixmap dock-bg.png
+#Colorset 6 fg #3c3836, bg #d5c4a1, hi, sh, Plain, Shape dock-mask.xpm
 
 # Menu Colorset
 #Colorset 7 RootTransparent, fg #fbf1c7, bg average, sh #3c3836, \
@@ -172,8 +176,8 @@ Colorset 7 RootTransparent, fg #3c3836, bg average, sh #fbf1c7, \
 Colorset 8 RootTransparent, fg #b16286, bg average, sh #fbf1c7, \
  hi #665c54, Tint #fbf1c7 80, bgTint #fbf1c7 80
 
-Colorset 9 fg #3c3836, bg #d5c4a1, hi, sh, Plain, NoShape
-#Colorset 9 fg #fbf1c7, bg #3c3836, hi, sh, Plain, NoShape
+#Colorset 9 fg #3c3836, bg #d5c4a1, hi, sh, Plain, NoShape
+Colorset 9 fg #3c3836, bg #fbf1c7, hi, sh, Plain, NoShape
 Colorset 10 fg rgb:00/00/00, hi rgb:dd/00/00, sh rgb:dd/00/00, bg rgb:fb/fc/ec
 
 ############
@@ -495,7 +499,7 @@ Silent Key XF86MonBrightnessDown A A Exec exec xbrightness -5000
 ############
 DestroyDecor WindowDecor
 AddToDecor   WindowDecor
-+ TitleStyle Centered Height 40 -- Flat
++ TitleStyle Centered Height 44 -- Flat
 + ButtonStyle 2 \
         ActiveUp     (Pixmap $[fvwm_img]/button/close-activeup.png -- Flat) \
         ActiveDown   (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat) \
@@ -524,7 +528,7 @@ DestroyModuleConfig FvwmIdent: *
 
 # StaysOnTop
 DestroyModuleConfig FvwmPager: *
-*FvwmPager: Geometry 200x187+10-10
+*FvwmPager: Geometry 200x187+30-30
 *FvwmPager: Colorset * 9
 *FvwmPager: HilightColorset * 10
 *FvwmPager: BalloonColorset * 9
@@ -546,6 +550,7 @@ DestroyModuleConfig FvwmPager: *
 DestroyModuleConfig BottomDock: *
 *BottomDock: Geometry 586x68+1627-10
 *BottomDock: Colorset 9
+#*BottomDock: Pixmap dock-bg.png
 *BottomDock: Rows 1
 *BottomDock: Columns 47
 *BottomDock: Frame 0
@@ -573,7 +578,7 @@ DestroyModuleConfig BottomDock: *
 *BottomDock: (1x1, Frame 0)
 
 DestroyModuleConfig ControlButtons: *
-*ControlButtons: Geometry 77x68-10-10
+*ControlButtons: Geometry 77x68-30-30
 *ControlButtons: Colorset 9
 *ControlButtons: Rows 1
 *ControlButtons: Columns 7
@@ -608,9 +613,11 @@ DestroyModuleConfig ControlButtons: *
 DestroyFunc StartFunction
 AddToFunc   StartFunction
 + I Module FvwmPager 0 0
-+ I Module FvwmButtons BottomDock
+#+ I Module FvwmButtons BottomDock
 + I Module FvwmButtons ControlButtons
 + I Module FvwmScript FvwmScript-DateTime
+#+ I Exec pkill tint2
++ I Exec exec tint2
 
 DestroyFunc FvwmTerm
 AddToFunc FvwmTerm
@@ -698,6 +705,7 @@ AddToFunc InitFunction
 + I Exec exec urxvtd -q
 + I Exec exec pcmanfm --daemon-mode
 + I Exec exec feh --bg-fill $[fvwm_wallpaper]/anime_code.jpg
+#+ I Exec exec tint2
 + I FvwmTerm
 + I FvwmEditor
 + I FvwmMusicPlayer

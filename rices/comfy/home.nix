@@ -14,7 +14,7 @@
 
   services.picom = {
     enable = true;
-    inactiveOpacity = "0.93";
+    inactiveOpacity = "0.90";
     activeOpacity = "1.00";
     blur = true;
     experimentalBackends = true;
@@ -27,22 +27,33 @@
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 2;
-      corner-radius = 20;
-      round-borders = 1;
 
       shadow-red = 0.8;
       shadow-green = 0.1412;
       shadow-blue = 0.1137;
 
+      corner-radius = 20;
+      round-borders = 1;
       rounded-corners-exclude = [
-        "class_g = 'dmenu'",
+        "name *?= 'tint2'",
       ];
     '';
+        # "widthb > 3830 && heightb > 2150",
+      # blur-kern = "3x3box";
+      # blur-background-exclude = [
+      # ];
+      # blur-background = true;
+      # blur-background-frame = true;
+      # blur-background-fixed = true;
+      # shadow-radius = 12;
     fade = true;
-    fadeDelta = 3;
+    fadeDelta = 2;
     shadow = true;
     shadowExclude = [
       "focused = 0"
+      "class_g *?= 'FvwmButtons'"
+      "class_g *?= 'FvwmPager'"
+      "class_g *?= 'FvwmScript'"
     ];
     vSync = true;
     package = pkgs.picom.overrideAttrs (
@@ -66,6 +77,7 @@
 
   home.packages = with pkgs; [
     luna-icons
+    zafiro-icons
     gruvbox-dark-gtk
     gruvbox-dark-icons-gtk
     libsForQt5.qtstyleplugins
@@ -88,12 +100,12 @@
     };
 
     iconTheme = {
-      package = pkgs.luna-icons;
-      name = "Luna Dark";
+      package = pkgs.gruvbox-dark-icons-gtk;
+      name = "oomox-gruvbox-dark";
     };
 
     gtk3.extraConfig = {
-      gtk-icon-theme-name = "Luna Dark";
+      gtk-icon-theme-name = "oomox-gruvbox-dark";
       gtk-theme-name = "gruvbox-dark";
       gtk-application-prefer-dark-theme = 1;
     };

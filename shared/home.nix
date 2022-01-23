@@ -17,6 +17,10 @@
       ./apps/zsh
     ];
 
+  services = {
+    dunst.enable = true;
+  };
+
   programs = {
     home-manager.enable = true;
 
@@ -195,12 +199,13 @@
       ledger-live-desktop
       #ledger-udev-rules
       acpi
-      dunst
+      #dunst
       xorg.xkill
       gparted
       nushell
       libnotify
       deadd-notification-center
+      tint2
 
       discord
       betterdiscord-installer
