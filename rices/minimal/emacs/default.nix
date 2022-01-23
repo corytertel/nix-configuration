@@ -8,8 +8,8 @@
     source = pkgs.fetchFromGitHub {
       owner = "syl20bnr";
       repo = "spacemacs";
-      rev = "9f92b47ce63c32a074471041f35b9383c3488e3d";
-      sha256 = "4upBcpg0lh+VyLD9rZEoo3rEEYtBzKoojILRYFwgjn0=";
+      rev = "2a668ab90d92421dc5c14bb6440d1bb1a1f99e9a";
+      sha256 = "9ez5bkEMBy+Z2LVFmyTBHVvL+Py4QbAW+UfIx9ILyrE=";
     };
   };
 
