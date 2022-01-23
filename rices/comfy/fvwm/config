@@ -148,7 +148,7 @@ Style "TelegramDesktop" NoTitle
 
 Style "DesktopEditors" NoTitle
 
-Style ConfirmQuit !Title, PositionPlacement -10p -10p, WindowListSkip, Layer 6
+Style ConfirmQuit !Title, PositionPlacement -30p -30p, WindowListSkip, Layer 6
 
 ################
 # 3: Colorsets #
@@ -585,7 +585,7 @@ DestroyModuleConfig ControlButtons: *
 *ControlButtons: Frame 0
 *ControlButtons: Font "xft:JetBrainsMono Nerd Font:pixelsize=15:minspace=True:antialias=True"
 *ControlButtons: (1x1, Frame 0)
-*ControlButtons: (5x1, Frame 0, Icon 48x48/quit.png, \
+*ControlButtons: (5x1, Frame 0, Icon 48x48/nixos.png, \
   Action(Mouse 1) "Module FvwmScript FvwmScript-ConfirmQuit", \
   Action(Mouse 3) "FvwmShutdown")
 *ControlButtons: (1x1, Frame 0)

@@ -63,7 +63,7 @@
     orchis-theme
     tela-icon-theme
     gruvbox-dark-gtk
-    gruvbox-dark-icons-gtk
+    zafiro-icons
     libsForQt5.qtstyleplugins
     gsettings-desktop-schemas
     gnome.gnome-themes-extra
@@ -84,13 +84,13 @@
     };
 
     iconTheme = {
-      package = pkgs.tela-icon-theme;
-      name = "Tela";
+      package = pkgs.zafiro-icons;
+      name = "Zafiro-icons";
     };
 
     gtk3.extraConfig = {
       gtk-icon-theme-name = "Tela";
-      gtk-theme-name = "Orchis-light";
+      gtk-theme-name = "Zafiro-icons";
       gtk-application-prefer-dark-theme = 0;
     };
   };

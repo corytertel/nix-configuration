@@ -100,12 +100,12 @@
     };
 
     iconTheme = {
-      package = pkgs.gruvbox-dark-icons-gtk;
-      name = "oomox-gruvbox-dark";
+      package = pkgs.zafiro-icons;
+      name = "Zafiro-icons";
     };
 
     gtk3.extraConfig = {
-      gtk-icon-theme-name = "oomox-gruvbox-dark";
+      gtk-icon-theme-name = "Zafiro-icons";
       gtk-theme-name = "gruvbox-dark";
       gtk-application-prefer-dark-theme = 1;
     };

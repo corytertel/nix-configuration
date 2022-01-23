@@ -123,13 +123,13 @@
         icon_position = "left";
 
         # Scale small icons up to this size, set to 0 to disable.
-        min_icon_size = 120;
+        min_icon_size = 60;
 
         # Scale larger icons down to this size, set to 0 to disable
-        max_icon_size = 120;
+        max_icon_size = 60;
 
         # Icon theme
-        icon_theme = "oomox-gruvbox-dark";
+        icon_theme = "Zafiro-icons";
 
         # --- History --- #
 
