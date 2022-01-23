@@ -126,23 +126,23 @@ Style "ControlButtons" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
 
 Style Time NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style Time PositionPlacement +20p +2290p
+Style Time PositionPlacement -20p +2290p
 
 Style Date NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style Date PositionPlacement +330p +2290p
+Style Date PositionPlacement -330p +2290p
 
 Style Battery NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style Battery PositionPlacement -156p +2290p
+Style Battery PositionPlacement +156p +2290p
 
 Style Volume NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable
-Style Volume PositionPlacement -336p +2290p
+Style Volume PositionPlacement +336p +2290p
 
-Style Panel NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
-  CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
-Style Panel PositionPlacement +0p +0p
+Style "tint2" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+  CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable, \
+  PositionPlacement +1344p +2290p
 
 Style "Steam" NoTitle, !Handles, !Borders, FixedPosition
 
@@ -568,16 +568,16 @@ DestroyModuleConfig BottomDock: *
 *BottomDock: (1x1, Frame 0)
 
 DestroyModuleConfig ControlButtons: *
-*ControlButtons: Geometry 116x90-20-20
+*ControlButtons: Geometry 116x90+20-20
 *ControlButtons: Colorset 9
 *ControlButtons: Rows 1
 *ControlButtons: Columns 7
 *ControlButtons: Frame 0
 *ControlButtons: Font "xft:Tinos Nerd Font:pixelsize=16:minspace=True:antialias=True"
 *ControlButtons: (1x1, Frame 0, Title(Center) "")
-*ControlButtons: (5x1, Frame 0, Icon 72x72/shutdown.png, \
-  Action(Mouse 1) "Module FvwmScript FvwmScript-ConfirmQuit", \
-  Action(Mouse 3) "FvwmShutdown")
+*ControlButtons: (5x1, Frame 0, Icon 72x72/nixos-gruvbox.png, \
+  Action(Mouse 1) "FvwmLaunch", \
+  Action(Mouse 3) "Module FvwmScript FvwmScript-ConfirmQuit")
 *ControlButtons: (1x1, Frame 0)
 
 ###########
@@ -603,13 +603,15 @@ DestroyModuleConfig ControlButtons: *
 DestroyFunc StartFunction
 AddToFunc   StartFunction
 #+ I Module FvwmScript FvwmScript-Panel
-+ I Module FvwmButtons BottomDock
+#+ I Module FvwmButtons BottomDock
 + I Module FvwmButtons ControlButtons
 + I Module FvwmScript FvwmScript-Date
 + I Module FvwmScript FvwmScript-Time
 + I Module FvwmScript FvwmScript-Battery
 + I Module FvwmScript FvwmScript-Volume
 + I Exec exec systemctl --user restart picom.service
+#+ I Exec pkill tint2
++ I Exec exec tint2
 
 DestroyFunc FvwmTerm
 AddToFunc FvwmTerm

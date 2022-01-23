@@ -29,7 +29,6 @@
     extraOptions = ''
       corner-radius = 45;
       round-borders = 1;
-
       rounded-corners-exclude = [
         "name != 'BottomDock' && name != 'Time' && name != 'Date' && name != 'Volume' && name != 'Battery' && name != 'ControlButtons'",
       ];
