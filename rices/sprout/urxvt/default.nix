@@ -1,0 +1,82 @@
+{ pkgs, config, ... }:
+
+{
+  programs.urxvt = {
+    enable = true;
+    extraConfig = {
+      "termName" = "rxvt";
+      "visualBell" = "false";
+      "loginShell" = "true";
+
+      "colorMode" = "true";
+      "pointerColor" = "#d8dee9";
+      "pointerColor2" = "#000507";
+
+      "foreground"  = "#d8dee9";
+      #"background"  = "[98]#d8dee9";
+      "background"  = "#000507";
+      "cursorColor" = "#d8dee9";
+      "color0"      = "#3b4252";
+      "color8"      = "#373e4d";
+      "color1"      = "#bf616a";
+      "color9"      = "#94545d";
+      "color2"      = "#a3be8c";
+      "color10"     = "#809575";
+      "color3"      = "#ebcb8b";
+      "color11"     = "#b29e75";
+      "color4"      = "#81a1c1";
+      "color12"     = "#68809a";
+      "color5"      = "#b48ead";
+      "color13"     = "#8c738c";
+      "color6"      = "#88c0d0";
+      "color14"     = "#6d96a5";
+      "color7"      = "#e5e9f0";
+      "color15"     = "#aeb3bb";
+
+      "internalBorder" = "10";
+      "cursorBlink" = "true";
+      "cursorUnderline" = "false";
+      "urgentOnBell" = "true";
+      "depth" = "32";
+      #"perl-ext-common" = "default,tabbedex,keyboard-select,url-select";
+      "perl-ext-common" = "default";
+      #"perl-lib" = "${config.home.profileDirectory}/lib/urxvt/perl";
+
+      "urlLauncher" = "firefox";
+      "underlineURLs" = "true";
+      "urlButton" = "1";
+    };
+    fonts = [
+      "xft:JetBrainsMono Nerd Font Mono:style=Regular:size=10:antialias=true"
+    ];
+    iso14755 = false;
+    keybindings = {
+      #"Shift-Up" = "command:\033]720;1\007";
+      #"Shift-Down" = "command:\033]721;1\007";
+      #"Control-Up" = "\033[1;5A";
+      #"Control-Down" = "\033[1;5B";
+      #"Control-Right" = "\033[1;5C";
+      #"Control-Left" = "\033[1;5D";
+      "Shift-Control-V" = "eval:paste_clipboard";
+      "Shift-Control-C" = "eval:selection_to_clipboard";
+
+      #"Control-Escape" = "perl:keyboard-select:activate";
+      #"Control-S" = "perl:keyboard-select:search";
+      #"Control-U" = "perl:url-select:select_next";
+    };
+    scroll = {
+      bar.enable = false;
+      keepPosition = true;
+      lines = 5000;
+      scrollOnKeystroke = true;
+      scrollOnOutput = false;
+    };
+  };
+
+  home.file = {
+    ".urxvt/ext/tabbedex".text = builtins.readFile ./tabbedex;
+    ".urxvt/ext/keyboard-select".text = builtins.readFile ./keyboard-select;
+    ".urxvt/ext/url-select".text = builtins.readFile ./url-select;
+    ".urxvt/ext/clipboard".text = builtins.readFile ./clipboard;
+  };
+}

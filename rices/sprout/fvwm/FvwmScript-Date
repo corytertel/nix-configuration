@@ -1,0 +1,34 @@
+WindowTitle {Date}
+WindowSize  225 90
+Colorset 9
+Font "xft:Tinos Nerd Font:size=12" 
+
+Init
+ Begin
+  Set $Date = (GetOutput {exec echo " " $(date "+%m/%d/%y")} 1 -1)
+  ChangeTitle 1 $Date
+End
+
+PeriodicTasks
+ Begin 
+  If (RemainderOfDiv (GetTime) 60)==0 Then
+  Begin
+    Set $Date = (GetOutput {exec echo " " $(date "+%m/%d/%y")} 1 -1)
+    ChangeTitle 1 $Date
+  End
+End
+
+Widget 1
+Property
+ Position 20 20
+ Size 185 50
+ Font "xft:Tinos Nerd Font:size=12"
+ Type ItemDraw
+ Flags NoReliefString
+ Title {}
+Main
+ Case message of
+  SingleClic :
+  Begin
+  End
+End
