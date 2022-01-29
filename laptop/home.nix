@@ -18,8 +18,8 @@
     Xft.rgba: rgb
     Xft.lcdfilter: lcddefault
 
-    Sxiv.background: #f0f0f0
-    Sxiv.foreground: #0f0f0f
+    Sxiv.background: #000507
+    Sxiv.foreground: #d8dee9
     Sxiv.font:Tinos Nerd Font:size=11
   '';
 
@@ -34,5 +34,8 @@
   };
 
   home.packages = with pkgs; [
+    touchegg
+
+    zoom-us
   ];
 }

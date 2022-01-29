@@ -206,6 +206,8 @@
       libnotify
       deadd-notification-center
       tint2
+      dos2unix
+      xdotool
 
       discord
       betterdiscord-installer
