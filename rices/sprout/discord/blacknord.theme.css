@@ -30,14 +30,13 @@
     --accent-color : 94,  129, 172;
 	  --link-color   : 136, 192, 208;
 	  --mention-color: 136, 192, 208;
-	  
+
 	  --text-brightest: 236, 239, 244;
 	  --text-brighter : 229, 233, 240;
 	  --text-bright   : 216, 222, 233;
 	  --text-dark     : 216, 222, 233;
 	  --text-darker   : 130, 148, 182;
 	  --text-darkest  : 76,  86,  106;
-
 }
 
 /* Popout / menu colors. */
@@ -184,5 +183,5 @@
 }
 
 ::placeholder, body, button, input, select, textarea {
-    font-family: 'Tinos Nerd Font' ;
+    font-family: 'Overpass Nerd Font' ;
 }
