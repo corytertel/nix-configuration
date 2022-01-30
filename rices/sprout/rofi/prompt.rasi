@@ -8,7 +8,7 @@
  */
 
 configuration {
-  font: "Tinos Nerd Font 36";
+  font: "JetBrainsMono Nerd Font 35";
 
   drun {
     display-name: " ";
@@ -35,12 +35,12 @@ configuration {
   spacing: 0;
 
   bg: #0d1319;
-  white: #000507;
-  black: #d8dee9;
+  black: #000507;
+  white: #d8dee9;
   purple: #b48ead;
 
   background-color: @bg;
-  text-color: @black;
+  text-color: @white;
 }
 
 window {
@@ -53,7 +53,7 @@ mainbox {
 }
 
 inputbar {
-  background-color: @white;
+  background-color: @black;
   children: [prompt, entry];
 }
 
@@ -73,7 +73,7 @@ listview {
 
 element {
   children: [element-icon, element-text];
-  text-color: @black;
+  text-color: @white;
 }
 
 element-icon {

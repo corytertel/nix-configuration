@@ -2,6 +2,7 @@ import XMonad
 
 import Data.Monoid (mappend)
 import Data.Map (fromList)
+import Data.Maybe (fromJust)
 import Data.Ratio ((%)) -- for video
 
 import Graphics.X11.ExtraTypes.XF86
@@ -51,14 +52,15 @@ myFocusFollowsMouse = True
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
 
-myBorderWidth   = 0
+myBorderWidth   = 2
 
-myNormalBorderColor  = "#000507"
+myNormalBorderColor  = "#1e2731"
 myFocusedBorderColor = "#d8dee9"
 
 myModMask       = mod4Mask
 
 myWorkspaces    = ["\61728 ", "\62057 ", "\62074 ", "\61729 ", "\61564 ", "\61878 ", "\61441 ", "\61704 ", "\61612 "]
+--myWorkspaces    = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1..] -- (,) == \x y -> (x,y)
 
 clickable ws = "<action=xdotool key super+"++show i++">"++ws++"</action>"
@@ -84,9 +86,11 @@ myAdditionalKeys =
     -- launch emacs
     , ("M-S-<Return>", spawn "emacsclient -c")
     -- Xmonad prompt
-    , ("M-<Space>", shellPrompt myXPConfig)
-    -- Pcmanfm
-    , ("M-e", spawn "pcmanfm --new-win")
+    --, ("M-<Space>", shellPrompt myXPConfig)
+    , ("M-<Space>", spawn "rofi -show drun")
+    -- File Manager
+    --, ("M-e", spawn "pcmanfm --new-win")
+    , ("M-e", spawn "nemo")
     -- close focused window
     , ("M-q", kill)
      -- Rotate through the available layout algorithms
@@ -99,9 +103,9 @@ myAdditionalKeys =
     -- Restart xmonad
     , ("M-C-r", spawn "xmonad --recompile; xmonad --restart")
     -- Audio Controls
-    , ("<XF86AudioLowerVolume>", spawn "amixer -q set Master unmute 2%-")
-    , ("<XF86AudioRaiseVolume>", spawn "amixer -q set Master unmute 2%+")
-    , ("<XF86AudioMute>", spawn "amixer -q set Master toggle")
+    , ("<XF86AudioLowerVolume>", spawn "pamixer --decrease 2")
+    , ("<XF86AudioRaiseVolume>", spawn "pamixer --increase 2")
+    , ("<XF86AudioMute>", spawn "pamixer --toggle-mute")
     , ("<XF86AudioNext>", spawn "audacious --fwd")
     , ("<XF86AudioPrev>", spawn "audacious --rew")
     , ("<XF86AudioPlay>", spawn "audacious --play-pause")
@@ -116,60 +120,60 @@ myAdditionalKeys =
     -- Lock Screen
     , ("M-S-z", spawn "xscreensaver-command -lock")
     -- Screenshot
-    , ("M-<Print>", spawn "flameshot full -p ~/Screenshots")
+    , ("M-<Print>", spawn "flameshot full -p ~/Screenshots/")
     , ("M-S-<Print>", spawn "flameshot gui")
     -- Fullscreen
     , ("M-f", sendMessage (Toggle NBFULL))
     -- Scratchpads
     , ("M-'", namedScratchpadAction myScratchpads "terminal")
     , ("M-0", namedScratchpadAction myScratchpads "audacious")
-    -- -- Master and Stack Controls
-    -- , ("M-r", refresh)
-    -- , ("M-m", windows W.focusMaster  )
-    -- , ("M-<Tab>", windows W.focusDown)
-    -- , ("M-j", windows W.focusDown)
-    -- , ("M-k", windows W.focusUp  )
-    -- , ("M-<Return>", windows W.swapMaster)
-    -- , ("M-S-j", windows W.swapDown  )
-    -- , ("M-S-k", windows W.swapUp    )
-    -- , ("M-h", sendMessage Shrink)
-    -- , ("M-l", sendMessage Expand)
-    -- , ("M-m", sendMessage MirrorExpand)
-    -- , ("M-n", sendMessage MirrorShrink)
-    -- , ("M-,", sendMessage (IncMasterN 1))
-    -- , ("M-.", sendMessage (IncMasterN (-1)))
-    -- Binary Space Partition Controls
-    , ("M-M1-l", sendMessage $ ExpandTowards WN.R)
-    , ("M-M1-h", sendMessage $ ExpandTowards WN.L)
-    , ("M-M1-j", sendMessage $ ExpandTowards WN.D)
-    , ("M-M1-k", sendMessage $ ExpandTowards WN.U)
-    , ("M-M1-C-l", sendMessage $ ShrinkFrom WN.R)
-    , ("M-M1-C-h", sendMessage $ ShrinkFrom WN.L)
-    , ("M-M1-C-j", sendMessage $ ShrinkFrom WN.D)
-    , ("M-M1-C-k", sendMessage $ ShrinkFrom WN.U)
-    , ("M-r", sendMessage Rotate)
-    , ("M-s", sendMessage Swap)
-    , ("M-,", sendMessage FocusParent)
-    , ("M-C-,", sendMessage SelectNode)
-    , ("M-S-,", sendMessage MoveNode)
-    , ("M-S-C-j", sendMessage $ SplitShift Prev)
-    , ("M-S-C-k", sendMessage $ SplitShift Next)
-    , ("M-v",     sendMessage Balance)
-    , ("M-S-v",     sendMessage Equalize)
-    -- Switch between layers
-    , ("M-S-<Space>", switchLayer)
-    -- Directional navigation of windows
-    , ("M-h", sendMessage $ WN.Go WN.L)
-    , ("M-j", sendMessage $ WN.Go WN.D)
-    , ("M-k", sendMessage $ WN.Go WN.U)
-    , ("M-l", sendMessage $ WN.Go WN.R)
-    , ("M-m", windows W.focusUp)
-    , ("M-n", windows W.focusDown)
-    -- Swap adjacent windows
-    , ("M-C-l", sendMessage $ WN.Swap WN.R)
-    , ("M-C-h", sendMessage $ WN.Swap WN.L)
-    , ("M-C-k", sendMessage $ WN.Swap WN.U)
-    , ("M-C-j", sendMessage $ WN.Swap WN.D)
+    -- Master and Stack Controls
+    , ("M-r", refresh)
+    --, ("M-m", windows W.focusMaster  )
+    , ("M-<Tab>", windows W.focusDown)
+    , ("M-j", windows W.focusDown)
+    , ("M-k", windows W.focusUp  )
+    --, ("M-<Return>", windows W.swapMaster)
+    , ("M-S-j", windows W.swapDown  )
+    , ("M-S-k", windows W.swapUp    )
+    , ("M-h", sendMessage Shrink)
+    , ("M-l", sendMessage Expand)
+    , ("M-m", sendMessage MirrorExpand)
+    , ("M-n", sendMessage MirrorShrink)
+    , ("M-,", sendMessage (IncMasterN 1))
+    , ("M-.", sendMessage (IncMasterN (-1)))
+    -- -- Binary Space Partition Controls
+    -- , ("M-M1-l", sendMessage $ ExpandTowards WN.R)
+    -- , ("M-M1-h", sendMessage $ ExpandTowards WN.L)
+    -- , ("M-M1-j", sendMessage $ ExpandTowards WN.D)
+    -- , ("M-M1-k", sendMessage $ ExpandTowards WN.U)
+    -- , ("M-M1-C-l", sendMessage $ ShrinkFrom WN.R)
+    -- , ("M-M1-C-h", sendMessage $ ShrinkFrom WN.L)
+    -- , ("M-M1-C-j", sendMessage $ ShrinkFrom WN.D)
+    -- , ("M-M1-C-k", sendMessage $ ShrinkFrom WN.U)
+    -- , ("M-r", sendMessage Rotate)
+    -- , ("M-s", sendMessage Swap)
+    -- , ("M-,", sendMessage FocusParent)
+    -- , ("M-C-,", sendMessage SelectNode)
+    -- , ("M-S-,", sendMessage MoveNode)
+    -- , ("M-S-C-j", sendMessage $ SplitShift Prev)
+    -- , ("M-S-C-k", sendMessage $ SplitShift Next)
+    -- , ("M-v",     sendMessage Balance)
+    -- , ("M-S-v",     sendMessage Equalize)
+    -- -- Switch between layers
+    -- , ("M-S-<Space>", switchLayer)
+    -- -- Directional navigation of windows
+    -- , ("M-h", sendMessage $ WN.Go WN.L)
+    -- , ("M-j", sendMessage $ WN.Go WN.D)
+    -- , ("M-k", sendMessage $ WN.Go WN.U)
+    -- , ("M-l", sendMessage $ WN.Go WN.R)
+    -- , ("M-m", windows W.focusUp)
+    -- , ("M-n", windows W.focusDown)
+    -- -- Swap adjacent windows
+    -- , ("M-C-l", sendMessage $ WN.Swap WN.R)
+    -- , ("M-C-h", sendMessage $ WN.Swap WN.L)
+    -- , ("M-C-k", sendMessage $ WN.Swap WN.U)
+    -- , ("M-C-j", sendMessage $ WN.Swap WN.D)
     -- Float keys
     , ("M-M1-<U>", withFocused (keysMoveWindow (0,-80)))
     , ("M-M1-<D>", withFocused (keysMoveWindow (0, 80)))
@@ -200,6 +204,7 @@ myAdditionalKeys =
     , ("M-S-<R>", withFocused $ snapGrow R Nothing)
     , ("M-S-<U>", withFocused $ snapShrink D Nothing)
     , ("m-S-<D>", withFocused $ snapGrow D Nothing)
+    ]
 
 ------------------------------------------------------------------------
 
@@ -234,11 +239,9 @@ myLayout = avoidStruts
          . WN.windowNavigation
          . smartBorders
          . fullScreenToggle $
-           (ifMax 1 (vertGaps $ Full) (bigGaps $ binarySpacePartition))
-       ||| (bigGaps   $ binarySpacePartition)
-       ||| (smallGaps $ binarySpacePartition)
-       ||| (paperGaps $ Full)
-       ||| (musicGaps $ binarySpacePartition)
+           (ifMax 2 (ifMax 1 (musicGaps $ Full) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
+       ||| (ifMax 2 (ifMax 1 (musicGaps $ Full) (bigGaps $ threeColumnMid)) (smallGaps $ threeColumnMid))
+       ||| (bigGaps $ resizableTile)
        ||| (simpleFloat)
   where
      -- default tiling algorithm partitions the screen into two panes
@@ -248,7 +251,7 @@ myLayout = avoidStruts
      twoPane = TwoPane (3/100) (1/2)
      resizableTile = ResizableTall 1 (3/100) (1/2) []
      binarySpacePartition = emptyBSP
-     -- The defaulWN.t number of windows in the master pane
+     -- The default number of windows in the master pane
      nmaster = 1
      -- Default proportion of screen occupied by master pane
      ratio   = 1/2
@@ -257,22 +260,28 @@ myLayout = avoidStruts
      -- Fullscreen
      fullScreenToggle = mkToggle (single NBFULL)
      -- Spacing
-     bigGaps   = spacingRaw False (Border 100 74 230 204)    True (Border 0 26 0 26) True
+     -- top, bottom, right, left
+     bigGaps   = spacingRaw False (Border 100 74 180 154)    True (Border 0 26 0 26) True
      vertGaps  = spacingRaw False (Border 100 74 1080 1054)  True (Border 0 26 0 26) True
      smallGaps = spacingRaw False (Border 26 0 26 0)         True (Border 0 26 0 26) True
      paperGaps = spacingRaw False (Border 150 124 1050 1024) True (Border 0 26 0 26) True
      musicGaps = spacingRaw False (Border 300 274 860 834)   True (Border 0 26 0 26) True
+     noGaps    = spacingRaw False (Border 0 0 0 0)           True (Border 0  0 0  0) True
+     threeGapsAlone = spacingRaw False (Border 100 90 1100 1050)    True (Border 0 10 0 50) True
+     threeGaps = spacingRaw False (Border 100 90 100 50)    True (Border 0 10 0 50) True
 
 ------------------------------------------------------------------------
 
 myManageHook = composeAll
-    [ insertPosition Above Newer -- open new windows above current window
+    [ insertPosition Above Newer -- open new windows below current window
     , className =? "MPlayer"                                          --> myRectFloat
     , className =? "mpv"                                              --> myRectFloat
     , className =? "vlc"                                              --> myRectFloat
     , className =? "Io.github.celluloid_player.Celluloid"             --> myRectFloat
     , className =? "gwenview"                                         --> myRectFloat
+    , className =? "Sxiv"                                             --> doFloat
     , className =? "Pcmanfm"                                          --> doFloat
+    , className =? "Nemo"                                             --> myRectFloat
     , className =? "discord"                                          --> doFloat
     , className =? "Gimp"                                             --> doFloat
     , className =? "Firefox" <&&> resource =? "Toolkit"               --> myRectFloat
@@ -305,7 +314,7 @@ myLogHook = return ()
 
 myStartupHook = do
         spawnOnce "emacs --daemon"
-        spawnOnce "urxvtd -quiet &"
+        spawnOnce "urxvtd --quiet &"
         spawnOnce "pcmanfm --daemon-mode &"
         spawnOnce "tint2 &"
         spawnOnce "feh --bg-fill /etc/wallpaper.jpg"
@@ -315,8 +324,9 @@ myStartupHook = do
 myBar0 = "xmobar $HOME/.config/xmobar/xmobarrc0"
 myBar1 = "xmobar $HOME/.config/xmobar/xmobarrc1"
 myBar2 = "xmobar $HOME/.config/xmobar/xmobarrc2"
+myBar3 = "xmobar $HOME/.config/xmobar/xmobarrc3"
 
-myPP = xmobarPP { ppCurrent = xmobarColor "#d8dee9" "" . wrap "[" "]" --current selected desktop
+myPP = xmobarPP { ppCurrent = xmobarColor "#bf616a" "" . wrap "" "" --current selected desktop
                 , ppHidden = xmobarColor "#d8dee9" "" . wrap "" "" . clickable
                 , ppHiddenNoWindows = xmobarColor "#707577" "" . wrap "" "" . clickable --desktops with no windows
                 , ppVisible = xmobarColor "#d8dee9" "" . wrap "" "" . clickable
@@ -386,19 +396,19 @@ myXPConfig = def { font = "xft:JetBrainsMono Nerd Font:size=11"
 ------------------------------------------------------------------------
 
 myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
-                , NS "cmus" spawnCmus findCmus manageCmus
+                , NS "audacious" spawnAudacious findAudacious manageAudacious
                 ]
   where
-    spawnTerm  = myTerminal ++ " --name=scratchpad"
+    spawnTerm  = myTerminal ++ " -name scratchpad"
     findTerm   = resource =? "scratchpad"
     manageTerm = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
-    spawnCmus  = myTerminal ++ " --name=cmus 'cmus'"
-    findCmus   = resource =? "cmus"
-    manageCmus = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
+    spawnAudacious  = "audacious"
+    findAudacious   = resource =? "audacious"
+    manageAudacious = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
 
 ------------------------------------------------------------------------
 
-main = xmonad . ewmh =<< statusBar myBar0 myPP toggleStrutsKey =<< statusBar myBar1 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey defaults
+main = xmonad . ewmh =<< statusBar myBar1 myPP toggleStrutsKey =<< statusBar myBar0 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey =<< statusBar myBar3 myPP2 toggleStrutsKey defaults
 
 defaults = def {
       -- simple stuff

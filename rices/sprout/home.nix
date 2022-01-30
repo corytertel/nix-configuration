@@ -14,15 +14,15 @@
 
   services.picom = {
     enable = true;
-    inactiveOpacity = "0.93";
+    inactiveOpacity = "0.90";
     activeOpacity = "1.00";
-    blur = false;
+    blur = true;
     experimentalBackends = true;
     opacityRule = [
-      "100:class_g   *?= 'FvwmButtons'"
-      "100:class_g   *?= 'FvwmPager'"
-      "100:class_g   *?= 'FvwmScript'"
-      "100:class_g   *?= 'Rofi'"
+      "100:class_g  *?= 'urxvt'"
+      "90:class_g   *?= 'Emacs'"
+      "80:class_g   *?= 'discord'"
+      "80:class_g   *?= 'Rofi'"
     ];
     extraOptions = ''
       blur-method = "dual_kawase";
@@ -34,11 +34,10 @@
         "name *?= 'tint2'",
       ];
     '';
-    shadow = true;
+    fade = true;
+    fadeDelta = 3;
+    shadow = false;
     shadowExclude = [
-      "class_g *?= 'FvwmPager'"
-      "class_g *?= 'FvwmScript'"
-      "class_g *?= 'FvwmButtons'"
     ];
     vSync = true;
     package = pkgs.picom.overrideAttrs (
@@ -57,6 +56,7 @@
     ".config/xmobar/xmobarrc0".text = builtins.readFile ./xmobar/xmobarrc0;
     ".config/xmobar/xmobarrc1".text = builtins.readFile ./xmobar/xmobarrc1;
     ".config/xmobar/xmobarrc2".text = builtins.readFile ./xmobar/xmobarrc2;
+    ".config/xmobar/xmobarrc3".text = builtins.readFile ./xmobar/xmobarrc3;
     ".icons/icons" = {
       recursive = true;
       source = ./icons;
@@ -79,7 +79,7 @@
 
     font = {
       package = null;
-      name = "JetBrainsMono Nerd Font 10";
+      name = "mplus Nerd Font 10";
     };
 
     theme = {

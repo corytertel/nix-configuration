@@ -13,8 +13,8 @@
       "pointerColor2" = "#000507";
 
       "foreground"  = "#d8dee9";
-      #"background"  = "[98]#d8dee9";
-      "background"  = "#000507";
+      "background"  = "[80]#000507";
+      #"background"  = "#000507";
       "cursorColor" = "#d8dee9";
       "color0"      = "#3b4252";
       "color8"      = "#373e4d";

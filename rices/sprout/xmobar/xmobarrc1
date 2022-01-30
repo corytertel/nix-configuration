@@ -1,19 +1,21 @@
 Config { 
 
    -- appearance
-     font =         "xft:Fantasque Sans Mono Nerd Font:size=12:antialias=true"
-   , bgColor =      "#0f0f0f"
+     font =         "xft:JetBrainsMono Nerd Font:size=14:antialias=true"
+   , bgColor =      "#000507"
    , alpha =        255
-   , fgColor =      "#f0f0f0"
-   , position =     Static { xpos = 1665 , ypos = 2292, width = 490 , height = 81 }
+   , fgColor =      "#d8dee9"
+   --, position =     Static { xpos = 160 , ypos = 2290, width = 475 , height = 90 }
+   --, position =     Static { xpos = 160 , ypos = 2290, width = 610 , height = 90 }
+   , position =     Static { xpos = 210 , ypos = 2290, width = 760 , height = 90 }
    , border =       TopB
-   , borderWidth =  8
-   , borderColor =  "#444444"
+   , borderWidth =  2
+   , borderColor =  "#707577"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = " %date% "
+   , template = "  %UnsafeStdinReader%  "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -40,8 +42,6 @@ Config {
    , commands = 
 
         [
-        -- time and date indicator 
-        --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
-        Run Date           "%m/%d/%y %I:%M:%S %p" "date" 10
+        Run UnsafeStdinReader
         ]
    }

@@ -14,5 +14,11 @@
     };
   };
 
-  environment.etc."wallpaper.jpg".source = ./wallpapers/sprout.jpg;
+  environment = {
+    etc."wallpaper.jpg".source = ./wallpapers/sprout.jpg;
+    systemPackages = with pkgs; [
+      xmobar
+      xdotool
+    ];
+  };
 }

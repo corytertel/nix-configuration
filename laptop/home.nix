@@ -20,14 +20,14 @@
 
     Sxiv.background: #000507
     Sxiv.foreground: #d8dee9
-    Sxiv.font:Tinos Nerd Font:size=11
+    Sxiv.font:JetBrainsMono Nerd Font:size=10
   '';
 
   xsession = {
     enable = true;
     pointerCursor = {
-      name = "Vanilla-DMZ";
-      package = pkgs.vanilla-dmz;
+      name = "Numix-Cursor";
+      package = pkgs.numix-cursor-theme;
       defaultCursor = "left_ptr";
       size = 48;
     };
