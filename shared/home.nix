@@ -78,7 +78,7 @@
       # clojure
       clisp
       clojure
-      clojure-lsp
+      #clojure-lsp
       leiningen
       joker
       clj-kondo

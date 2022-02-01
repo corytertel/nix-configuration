@@ -23,7 +23,14 @@ import XMonad.Layout.TwoPane
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.BinarySpacePartition
 import XMonad.Layout.IfMax
-import XMonad.Layout.SimpleFloat
+import XMonad.Layout.SimplestFloat
+import XMonad.Layout.Simplest
+import XMonad.Layout.NoFrillsDecoration
+import XMonad.Layout.Tabbed
+import XMonad.Layout.ImageButtonDecoration
+import XMonad.Layout.PerWorkspace (onWorkspace)
+import XMonad.Layout.Minimize
+import XMonad.Layout.Maximize
 
 import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End), Position(Above))
 import XMonad.Hooks.ManageDocks
@@ -36,6 +43,7 @@ import XMonad.Actions.Navigation2D (switchLayer)
 import XMonad.Actions.FloatKeys
 import XMonad.Actions.FloatSnap
 import XMonad.Actions.Search
+import XMonad.Actions.WindowMenu
 
 import XMonad.Prompt
 import XMonad.Prompt.Shell (shellPrompt)
@@ -44,7 +52,8 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 import qualified XMonad.Layout.WindowNavigation as WN
 
-myTerminal      = "urxvtc --geometry 85x33 -icon $HOME/.icons/icons/48x48/terminal.png"
+--myTerminal      = "urxvtc --geometry 85x33 -icon $HOME/.icons/icons/48x48/terminal.png"
+myTerminal      = "urxvtc -icon $HOME/.icons/icons/48x48/terminal.png"
 
 myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = True
@@ -59,8 +68,17 @@ myFocusedBorderColor = "#d8dee9"
 
 myModMask       = mod4Mask
 
-myWorkspaces    = ["\61728 ", "\62057 ", "\62074 ", "\61729 ", "\61564 ", "\61878 ", "\61441 ", "\61704 ", "\61612 "]
---myWorkspaces    = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+ws1 = "\61728 "
+ws2 = "\62057 "
+ws3 = "\62074 "
+ws4 = "\61729 "
+ws5 = "\61564 "
+ws6 = "\61878 "
+ws7 = "\61441 "
+ws8 = "\61704 "
+ws9 = "\61612 "
+
+myWorkspaces    = [ws1, ws2, ws3, ws4, ws5, ws6, ws7, ws8, ws9]
 myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1..] -- (,) == \x y -> (x,y)
 
 clickable ws = "<action=xdotool key super+"++show i++">"++ws++"</action>"
@@ -87,7 +105,8 @@ myAdditionalKeys =
     , ("M-S-<Return>", spawn "emacsclient -c")
     -- Xmonad prompt
     --, ("M-<Space>", shellPrompt myXPConfig)
-    , ("M-<Space>", spawn "rofi -show drun")
+    , ("M-<Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run -show-icons")
+    , ("M-S-<Space>", shellPrompt myXPConfig)
     -- File Manager
     --, ("M-e", spawn "pcmanfm --new-win")
     , ("M-e", spawn "nemo")
@@ -114,7 +133,7 @@ myAdditionalKeys =
     , ("<XF86MonBrightnessUp>", spawn "xbrightness +5000")
     , ("<XF86MonBrightnessDown>", spawn "xbrightness -5000")
     -- Keyboard Layout
-    , ("M-C-<Space>", spawn " /home/cory/manual_installs/layout_switch.sh")
+    , ("M-C-<Space>", spawn "/home/cory/manual_installs/layout_switch.sh")
     -- Kill App
     , ("M-<Escape>", spawn "xkill")
     -- Lock Screen
@@ -124,6 +143,10 @@ myAdditionalKeys =
     , ("M-S-<Print>", spawn "flameshot gui")
     -- Fullscreen
     , ("M-f", sendMessage (Toggle NBFULL))
+    -- Maximize
+    , ("M-S-i", withFocused (sendMessage . maximizeRestore))
+    -- Window Menu
+    , ("M-o", windowMenu)
     -- Scratchpads
     , ("M-'", namedScratchpadAction myScratchpads "terminal")
     , ("M-0", namedScratchpadAction myScratchpads "audacious")
@@ -179,6 +202,10 @@ myAdditionalKeys =
     , ("M-M1-<D>", withFocused (keysMoveWindow (0, 80)))
     , ("M-M1-<L>", withFocused (keysMoveWindow (-80,0)))
     , ("M-M1-<R>", withFocused (keysMoveWindow (80, 0)))
+    , ("M-M1-k", withFocused (keysMoveWindow (0,-80)))
+    , ("M-M1-j", withFocused (keysMoveWindow (0, 80)))
+    , ("M-M1-h", withFocused (keysMoveWindow (-80,0)))
+    , ("M-M1-l", withFocused (keysMoveWindow (80, 0)))
     -- , ("M-<U>-<L>", withFocused (keysMoveWindow (-40,-40)))
     -- , ("M-<U>-<R>", withFocused (keysMoveWindow ( 40,-40)))
     -- , ("M-<D>-<L>", withFocused (keysMoveWindow (-40, 40)))
@@ -196,14 +223,22 @@ myAdditionalKeys =
     -- Center the window
     , ("M-c", withFocused (keysMoveWindowTo (1920,1080) (1%2, 1%2)))
     -- Float Snapping Keys
-    , ("M-<L>", withFocused $ snapMove L Nothing)
-    , ("M-<R>", withFocused $ snapMove R Nothing)
-    , ("M-<U>", withFocused $ snapMove U Nothing)
-    , ("M-<D>", withFocused $ snapMove D Nothing)
-    , ("M-S-<L>", withFocused $ snapShrink R Nothing)
-    , ("M-S-<R>", withFocused $ snapGrow R Nothing)
-    , ("M-S-<U>", withFocused $ snapShrink D Nothing)
-    , ("m-S-<D>", withFocused $ snapGrow D Nothing)
+    , ("C-M-<L>", withFocused $ snapMove L Nothing)
+    , ("C-M-<R>", withFocused $ snapMove R Nothing)
+    , ("C-M-<U>", withFocused $ snapMove U Nothing)
+    , ("C-M-<D>", withFocused $ snapMove D Nothing)
+    , ("C-M1-h", withFocused $ snapMove L Nothing)
+    , ("C-M1-l", withFocused $ snapMove R Nothing)
+    , ("C-M1-k", withFocused $ snapMove U Nothing)
+    , ("C-M1-j", withFocused $ snapMove D Nothing)
+    , ("C-M-<L>", withFocused $ snapShrink R Nothing)
+    , ("C-M-<R>", withFocused $ snapGrow R Nothing)
+    , ("C-M-<U>", withFocused $ snapShrink D Nothing)
+    , ("C-M-<D>", withFocused $ snapGrow D Nothing)
+    , ("C-M-h", withFocused $ snapShrink R Nothing)
+    , ("C-M-l", withFocused $ snapGrow R Nothing)
+    , ("C-M-k", withFocused $ snapShrink D Nothing)
+    , ("C-M-j", withFocused $ snapGrow D Nothing)
     ]
 
 ------------------------------------------------------------------------
@@ -228,9 +263,9 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((mod1Mask .|. shiftMask, button1), (\w -> focus w >> mouseMoveWindow w >> ifClick (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)))
     , ((mod1Mask, button3), (\w -> focus w >> mouseResizeWindow w >> ifClick (snapMagicResize [R,D] (Just 50) (Just 50) w)))
     -- alternative mouse bindings
-    --, ((modm,               button1), (\w -> focus w >> mouseMoveWindow w >> afterDrag (snapMagicMove (Just 50) (Just 50) w)))
-    --, ((modm .|. shiftMask, button1), (\w -> focus w >> mouseMoveWindow w >> afterDrag (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)))
-    --, ((modm,               button3), (\w -> focus w >> mouseResizeWindow w >> afterDrag (snapMagicResize [R,D] (Just 50) (Just 50) w)))
+    --, ((mod1Mask,               button1), (\w -> focus w >> mouseMoveWindow w >> afterDrag (snapMagicMove (Just 50) (Just 50) w)))
+    --, ((mod1Mask .|. shiftMask, button1), (\w -> focus w >> mouseMoveWindow w >> afterDrag (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)))
+    --, ((mod1Mask,               button3), (\w -> focus w >> mouseResizeWindow w >> afterDrag (snapMagicResize [R,D] (Just 50) (Just 50) w)))
     ]
 
 ------------------------------------------------------------------------
@@ -238,11 +273,17 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 myLayout = avoidStruts
          . WN.windowNavigation
          . smartBorders
-         . fullScreenToggle $
-           (ifMax 2 (ifMax 1 (musicGaps $ Full) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
-       ||| (ifMax 2 (ifMax 1 (musicGaps $ Full) (bigGaps $ threeColumnMid)) (smallGaps $ threeColumnMid))
+         . fullScreenToggle
+         . minimize
+         . maximizeWithPadding 26
+         . ws1Layout
+         . ws2Layout
+         . ws3Layout
+         . ws4Layout
+         $ (ifMax 2 (ifMax 1 (terminalGaps $ Simplest) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
+       ||| (ifMax 2 (ifMax 1 (terminalGaps $ Simplest) (bigGaps $ threeColumnMid)) (smallGaps $ threeColumnMid))
        ||| (bigGaps $ resizableTile)
-       ||| (simpleFloat)
+       ||| (windowDeco $ simplestFloat)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -265,10 +306,82 @@ myLayout = avoidStruts
      vertGaps  = spacingRaw False (Border 100 74 1080 1054)  True (Border 0 26 0 26) True
      smallGaps = spacingRaw False (Border 26 0 26 0)         True (Border 0 26 0 26) True
      paperGaps = spacingRaw False (Border 150 124 1050 1024) True (Border 0 26 0 26) True
-     musicGaps = spacingRaw False (Border 300 274 860 834)   True (Border 0 26 0 26) True
+     terminalGaps = spacingRaw False (Border 300 274 860 834)   True (Border 0 26 0 26) True
      noGaps    = spacingRaw False (Border 0 0 0 0)           True (Border 0  0 0  0) True
      threeGapsAlone = spacingRaw False (Border 100 90 1100 1050)    True (Border 0 10 0 50) True
      threeGaps = spacingRaw False (Border 100 90 100 50)    True (Border 0 10 0 50) True
+     discordGaps = spacingRaw False (Border 300 274 450 424)   True (Border 0 26 0 26) True
+     ws1Layout = onWorkspace ws1
+       ((ifMax 2 (ifMax 1 (terminalGaps $ Simplest) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
+       ||| (ifMax 2 (ifMax 1 (terminalGaps $ Simplest) (bigGaps $ threeColumnMid)) (smallGaps $ threeColumnMid))
+       ||| (windowDeco $ simplestFloat))
+     ws2Layout = onWorkspace ws2
+       ((ifMax 2 (bigGaps $ resizableTile) (smallGaps $ resizableTile))
+       ||| (ifMax 2 (bigGaps $ threeColumnMid) (smallGaps $ threeColumnMid))
+       ||| (windowDeco $ simplestFloat))
+     ws3Layout = onWorkspace ws3
+       ((ifMax 2 (ifMax 1 (discordGaps $ Simplest) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
+       ||| (ifMax 2 (ifMax 1 (discordGaps $ Simplest) (bigGaps $ threeColumnMid)) (smallGaps $ threeColumnMid))
+       ||| (windowDeco $ simplestFloat))
+     ws4Layout = onWorkspace ws4
+       ((ifMax 2 (ifMax 1 (terminalGaps $ Simplest) (bigGaps $ threeColumnMid)) (smallGaps $ threeColumnMid))
+       ||| (ifMax 2 (ifMax 1 (terminalGaps $ Simplest) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
+       ||| (windowDeco $ simplestFloat))
+     windowDeco = imageButtonDeco shrinkText myTheme
+     myTheme = defaultThemeWithImageButtons
+       { fontName = "xft:mplus Nerd Font:size=11"
+       , inactiveBorderColor = "#1e2731"
+       , inactiveColor = "#000507"
+       , inactiveTextColor = "#1e2731"
+       , activeBorderColor = "#d8dee9"
+       , activeColor = "#000507"
+       , activeTextColor = "#d8dee9"
+       , urgentTextColor = "#bf616a"
+       , urgentBorderColor = "#bf616a"
+       , decoHeight = 45
+       }
+           -- def
+           --   { fontName = "xft:mplus Nerd Font:size=11"
+           --   , inactiveBorderColor = "#1e2731"
+           --   , inactiveColor = "#000507"
+           --   , inactiveTextColor = "#1e2731"
+           --   , activeBorderColor = "#d8dee9"
+           --   , activeColor = "#000507"
+           --   , activeTextColor = "#d8dee9"
+           --   , urgentTextColor = "#bf616a"
+           --   , urgentBorderColor = "#bf616a"
+           --   , decoHeight = 90
+           --   }
+     -- windowDeco =
+     --   noFrillsDeco
+     --     shrinkText
+     --       def
+     --         { fontName = "xft:JetBrainsMono Nerd Font:size=10"
+     --         , inactiveBorderColor = "#000507"
+     --         , inactiveColor = "#000507"
+     --         , inactiveTextColor = "#d8dee9"
+     --         , activeBorderColor = "#b48ead"
+     --         , activeColor = "#b48ead"
+     --         , activeTextColor = "#d8dee9"
+     --         , urgentTextColor = "#bf616a"
+     --         , urgentBorderColor = "#bf616a"
+     --         , decoHeight = 90
+     --         }
+     -- addTopBar =
+     --   noFrillsDeco
+     --     shrinkText
+     --       def
+     --         { fontName = "xft:JetBrainsMono Nerd Font:size=10"
+     --         , inactiveBorderColor = "#000507"
+     --         , inactiveColor = "#000507"
+     --         , inactiveTextColor = "#000507"
+     --         , activeBorderColor = "#b48ead"
+     --         , activeColor = "#b48ead"
+     --         , activeTextColor = "#b48ead"
+     --         , urgentTextColor = "#bf616a"
+     --         , urgentBorderColor = "#bf616a"
+     --         , decoHeight = 10
+     --         }
 
 ------------------------------------------------------------------------
 
@@ -280,9 +393,9 @@ myManageHook = composeAll
     , className =? "Io.github.celluloid_player.Celluloid"             --> myRectFloat
     , className =? "gwenview"                                         --> myRectFloat
     , className =? "Sxiv"                                             --> doFloat
+    , className =? "Orage"                                            --> doFloat
     , className =? "Pcmanfm"                                          --> doFloat
     , className =? "Nemo"                                             --> myRectFloat
-    , className =? "discord"                                          --> doFloat
     , className =? "Gimp"                                             --> doFloat
     , className =? "Firefox" <&&> resource =? "Toolkit"               --> myRectFloat
     , className =? "chromium-browser" <&&> isDialog                   --> myRectFloat
@@ -373,7 +486,7 @@ myXPKeymap  = M.fromList
   , ((0, xK_Escape), quit)
   ]
 
-myXPConfig = def { font = "xft:JetBrainsMono Nerd Font:size=11"
+myXPConfig = def { font = "xft:mplus Nerd Font:size=12"
                  , bgColor = "#000507"
                  , fgColor = "#d8dee9"
                  , bgHLight = "#0d1319"

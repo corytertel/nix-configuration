@@ -29,34 +29,37 @@
         width = 400;
         # height = 520;
         origin = "top-right";
-        offset = "70x170";
+        offset = "52x128";
 
         progress_bar = "true";
-        progress_bar_height = 20;
+        progress_bar_height = 15;
         progress_bar_frame_width = 1;
-        progress_bar_min_width = 300;
-        progress_bar_max_width = 600;
+        progress_bar_min_width = 225;
+        progress_bar_max_width = 450;
 
         # Show how many messages are hidden
         indicate_hidden = "yes";
 
         # Shrink window if it's smaller than the width.
-        shrink = "no";
+        #shrink = "no";
+        shrink = "yes";
 
         # The transparency of the window.
         transparency = 1;
 
         # Draw a line between multiple notifications
-        separator_height = 8;
+        separator_height = 1;
 
-        separator_color = "#fbf1c7aa";
+        separator_color = "#d8dee9aa";
 
         # Set notification padding
-        padding = 32;
-        horizontal_padding = 32;
+        padding = 24;
+        horizontal_padding = 24;
 
-        # Disable frame (border)
-        frame_width = 0;
+        # Frame (border)
+        frame_width = 1;
+
+        frame_color = "#d8dee9";
 
         # Sort messages by urgency.
         sort = "no";
@@ -67,7 +70,7 @@
         # --- Text --- #
 
         # Set the font
-        font = "JetBrainsMono Nerd Font 11";
+        font = "mplus Nerd Font 10";
 
         # Set line height to font height
         line_height = 0;
@@ -123,10 +126,10 @@
         icon_position = "left";
 
         # Scale small icons up to this size, set to 0 to disable.
-        min_icon_size = 60;
+        min_icon_size = 45;
 
         # Scale larger icons down to this size, set to 0 to disable
-        max_icon_size = 60;
+        max_icon_size = 45;
 
         # Icon theme
         icon_theme = "Zafiro-icons";
@@ -141,7 +144,7 @@
 
         # --- Misc/Advanced --- #
 
-        dmenu = "/usr/bin/dmenu -p dunst:";
+        dmenu = "dmenu -p dunst:";
 
         # Browser for opening urls in context menu.
         browser = "firefox -new-tab";
@@ -167,8 +170,8 @@
         force_xinerama = "false";
 
         # --- Mouse --- #
-        mouse_left_click = "close_current";
-        mouse_middle_click = "do_action, close_current";
+        mouse_left_click = "do_action, close_current";
+        mouse_middle_click = "close_current";
         mouse_right_click = "close_all";
       };
 
@@ -177,22 +180,22 @@
       };
 
       urgency_low = {
-        background = "#fbf1c7";
+        background = "#000507";
         highlight = "#fe6c5a";
         frame_color = "#52426e";
-        foreground = "#3c3836";
+        foreground = "#d8dee9";
         timeout = 8;
       };
 
       urgency_normal = {
-        background = "#fbf1c7";
-        foreground = "#3c3836";
+        background = "#000507";
+        foreground = "#d8dee9";
         timeout = 8;
       };
 
       urgency_critical = {
-        background = "#fbf1c7";
-        foreground = "#3c3836";
+        background = "#000507";
+        foreground = "#d8dee9";
         timeout = 0;
         icon = "abrt";
       };

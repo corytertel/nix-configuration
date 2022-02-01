@@ -7,7 +7,7 @@
     ];
 
   # Nix
-  nix.buildCores = 4;
+  nix.settings.cores = 4;
 
   boot = {
     #kernelPackages = pkgs.linuxPackages_latest;

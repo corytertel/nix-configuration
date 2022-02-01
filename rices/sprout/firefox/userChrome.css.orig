@@ -53,7 +53,7 @@
 
     /* Theme Colour */
      --window-colour:               #000507;
-     --secondary-colour:            #151d25;
+     --secondary-colour:            #0d1319;
      --inverted-colour:             #d8dee9;
 
 
@@ -81,11 +81,11 @@
     --uc-border-radius: 0;
 
     /* dynamic url bar width settings */
-    --uc-urlbar-width: clamp(400px, 40vw, 1000px);
+    --uc-urlbar-width: clamp(200px, 40vw, 500px);
 
     /* dynamic tab width settings */
-    --uc-active-tab-width:   clamp(200px, 20vw, 600px);
-    --uc-inactive-tab-width: clamp(100px, 15vw, 400px);
+    --uc-active-tab-width:   clamp(100px, 20vw, 300px);
+    --uc-inactive-tab-width: clamp( 50px, 15vw, 200px);
 
     /* if active always shows the tab close button */
     --show-tab-close-button: none; /* DEFAULT: -moz-inline-box; */ 
@@ -94,7 +94,7 @@
     --show-tab-close-button-hover: none; /* DEFAULT: -moz-inline-box; */
 
     /* adds left and right margin to the container-tabs indicator */
-    --container-tabs-indicator-margin: 20px;
+    --container-tabs-indicator-margin: 10px;
 
 }
 
@@ -112,18 +112,18 @@
      #urlbar-zoom-button { display: none !important; }
 
      /* Make button small as Possible, hidden out of sight */
-     #PanelUI-button { margin-top: -10px; margin-bottom: 88px; }
+     #PanelUI-button { margin-top: -5px; margin-bottom: 44px; }
 
      #PanelUI-menu-button {
 
         padding: 0px !important;
-        max-height: 2px;
+        max-height: 1px;
 
         list-style-image: none !important;
 
      }
 
-     #PanelUI-menu-button .toolbarbutton-icon { width: 2px !important; }
+     #PanelUI-menu-button .toolbarbutton-icon { width: 1px !important; }
      #PanelUI-menu-button .toolbarbutton-badge-stack { padding: 0px !important; }
 
      #reader-mode-button{ display: none !important; }
@@ -174,7 +174,7 @@
 
     --arrowpanel-border-radius:                 var(--uc-border-radius)   !important;
 
-    --tab-block-margin: 4px !important;
+    --tab-block-margin: 2px !important;
 
 }
 
@@ -264,7 +264,7 @@ window,
     > .tab-background
     > .tab-context-line {
 
-        margin: -2px var(--container-tabs-indicator-margin) 0 var(--container-tabs-indicator-margin) !important;
+        margin: -1px var(--container-tabs-indicator-margin) 0 var(--container-tabs-indicator-margin) !important;
 
         border-radius: var(--tab-border-radius) !important;
 
@@ -279,14 +279,14 @@ window,
 .tab-icon-overlay:not([crashed]),
 .tab-icon-overlay[pinned][crashed][selected] {
 
-  top: 10px !important;
+  top: 5px !important;
   z-index: 1 !important;
 
-  padding: 3px !important;
-  inset-inline-end: -16px !important;
-  width: 32px !important; height: 32px !important;
+  padding: 1.5px !important;
+  inset-inline-end: -8px !important;
+  width: 16px !important; height: 16px !important;
 
-  border-radius: 20px !important;
+  border-radius: 10px !important;
 
 }
 
@@ -315,7 +315,7 @@ window,
 }
 
 
-.tab-icon-overlay:not([pinned], [sharing], [crashed]):is([soundplaying], [muted], [activemedia-blocked]) { margin-inline-end: 19px !important; }
+.tab-icon-overlay:not([pinned], [sharing], [crashed]):is([soundplaying], [muted], [activemedia-blocked]) { margin-inline-end: 9.5px !important; }
 
 
 .tabbrowser-tab:not([image]) .tab-icon-overlay:not([pinned], [sharing], [crashed]) {
@@ -323,7 +323,7 @@ window,
   top: 0 !important;
 
   padding: 0 !important;
-  margin-inline-end: 11px !important; 
+  margin-inline-end: 5.5px !important; 
   inset-inline-end: 0 !important;
 
 }
@@ -421,7 +421,7 @@ window,
 
 
     /* move entire nav bar  */
-    #nav-bar { margin: calc((var(--urlbar-min-height) * -1) - 16px) calc(100vw - var(--uc-urlbar-width)) 0 0 !important; }
+    #nav-bar { margin: calc((var(--urlbar-min-height) * -1) - 8px) calc(100vw - var(--uc-urlbar-width)) 0 0 !important; }
 
 
 } /* end media query */

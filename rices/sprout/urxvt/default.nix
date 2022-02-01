@@ -4,9 +4,11 @@
   programs.urxvt = {
     enable = true;
     extraConfig = {
+      #"termName" = "rxvt-256color";
       "termName" = "rxvt";
       "visualBell" = "false";
       "loginShell" = "true";
+      "geometry" = "85x33";
 
       "colorMode" = "true";
       "pointerColor" = "#d8dee9";
@@ -33,13 +35,15 @@
       "color7"      = "#e5e9f0";
       "color15"     = "#aeb3bb";
 
-      "internalBorder" = "10";
+      #"internalBorder" = "72";
+      "internalBorder" = "60";
+      "externalBorder" = "0";
       "cursorBlink" = "true";
       "cursorUnderline" = "false";
       "urgentOnBell" = "true";
       "depth" = "32";
-      #"perl-ext-common" = "default,tabbedex,keyboard-select,url-select";
-      "perl-ext-common" = "default";
+      "perl-ext-common" = "default,tabbedex,keyboard-select,url-select";
+      #"perl-ext-common" = "default";
       #"perl-lib" = "${config.home.profileDirectory}/lib/urxvt/perl";
 
       "urlLauncher" = "firefox";
@@ -51,18 +55,19 @@
     ];
     iso14755 = false;
     keybindings = {
-      #"Shift-Up" = "command:\033]720;1\007";
-      #"Shift-Down" = "command:\033]721;1\007";
-      #"Control-Up" = "\033[1;5A";
-      #"Control-Down" = "\033[1;5B";
-      #"Control-Right" = "\033[1;5C";
-      #"Control-Left" = "\033[1;5D";
+      "Shift-Up" = "command:\033]720;1\007";
+      "Shift-Down" = "command:\033]721;1\007";
+      "Control-Up" = "command:\033[1;5A";
+      "Control-Down" = "command:\033[1;5B";
+      "Control-Right" = "command:\033[1;5C";
+      "Control-Left" = "command:\033[1;5D";
+
       "Shift-Control-V" = "eval:paste_clipboard";
       "Shift-Control-C" = "eval:selection_to_clipboard";
 
-      #"Control-Escape" = "perl:keyboard-select:activate";
-      #"Control-S" = "perl:keyboard-select:search";
-      #"Control-U" = "perl:url-select:select_next";
+      "Control-Escape" = "perl:keyboard-select:activate";
+      "Control-S" = "perl:keyboard-select:search";
+      "Control-U" = "perl:url-select:select_next";
     };
     scroll = {
       bar.enable = false;

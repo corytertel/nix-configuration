@@ -14,7 +14,7 @@ Config {
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
    --, template = " <action=xdotool key super+space><icon=/home/cory/.icons/icons/72x72/nixos.xpm/></action> "
-   , template = "<action=xdotool key super+space>   </action>"
+   , template = "<action=rofi -matching fuzzy -show drun -modi drun,run -show-icons>   </action>"
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start

@@ -2,10 +2,12 @@ Config {
 
    -- appearance
      font =         "xft:Iosevka Nerd Font:style=Light:size=11:antialias=true"
+     --font =         "xft:mplus Nerd Font:size=11:antialias=true"
    , bgColor =      "#000507"
    , alpha =        255
    , fgColor =      "#d8dee9"
-   , position =     Static { xpos = 2860 , ypos = 2290, width = 430 , height = 90 }
+   , position =     Static { xpos = 2855 , ypos = 2290, width = 435 , height = 90 }
+   --, position =     Static { xpos = 2810 , ypos = 2290, width = 460 , height = 90 }
    , border =       TopB
    , borderWidth =  2
    , borderColor =  "#707577"
@@ -13,7 +15,8 @@ Config {
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "  %battery%    %volume%}{<action=xdotool key super+control+space>  %kbd%</action>  "
+   , template = "  %battery%    %volume%}{<action=/home/cory/manual_installs/layout_switch.sh>  %kbd%</action>  "
+   --, template = "    %battery%     %volume%}{<action=/home/cory/manual_installs/layout_switch.sh>  %kbd%</action>    "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
