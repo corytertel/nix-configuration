@@ -335,12 +335,12 @@ myLayout = avoidStruts
 
 myManageHook = composeAll
     [ insertPosition Below Newer -- open new windows below current window
-    , className =? "MPlayer"                                          --> myRectFloat
-    , className =? "mpv"                                              --> myRectFloat
-    , className =? "vlc"                                              --> myRectFloat
-    , className =? "Io.github.celluloid_player.Celluloid"             --> myRectFloat
-    , className =? "gwenview"                                         --> myRectFloat
-    , className =? "Sxiv"                                             --> doFloat
+    , className =? "MPlayer"                                          --> mediaFloat
+    , className =? "mpv"                                              --> mediaFloat
+    , className =? "vlc"                                              --> mediaFloat
+    , className =? "Io.github.celluloid_player.Celluloid"             --> mediaFloat
+    , className =? "gwenview"                                         --> mediaFloat
+    , className =? "Sxiv"                                             --> mediaFloat
     , className =? "Orage"                                            --> doFloat
     , className =? "Pcmanfm"                                          --> doFloat
     , className =? "Nemo"                                             --> myRectFloat
@@ -362,8 +362,9 @@ myManageHook = composeAll
     ] <+> namedScratchpadManageHook myScratchpads
   where
     unfloat = ask >>= doF . W.sink
-    myRectFloat = doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
     -- xpos, ypos, width, height
+    myRectFloat = doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
+    mediaFloat = doRectFloat (W.RationalRect (3 % 10) (3 % 20) (2 % 5) (7 % 10))
     calculatorFloat = doRectFloat (W.RationalRect (7 % 16) (2 % 6) (1 % 8) (1 % 3))
 
 ------------------------------------------------------------------------
