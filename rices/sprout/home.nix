@@ -24,6 +24,12 @@
       "80:class_g   *?= 'discord'"
       "80:class_g   *?= 'Rofi'"
     ];
+      # transition-length = 300
+      # transition-pow-x = 0.1
+      # transition-pow-y = 0.1
+      # transition-pow-w = 0.1
+      # transition-pow-h = 0.1
+      # size-transition = true
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 8;
@@ -33,12 +39,14 @@
       rounded-corners-exclude = [
         "name *?= 'tint2'",
       ];
+
+      shadow = true;
+      shadow-radius = 60;
+      shadow-offset-x = -50;
+      shadow-offset-y = -46;
     '';
     fade = true;
     fadeDelta = 3;
-    shadow = false;
-    shadowExclude = [
-    ];
     vSync = true;
     package = pkgs.picom.overrideAttrs (
       o: {

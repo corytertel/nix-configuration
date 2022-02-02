@@ -19,20 +19,18 @@ import XMonad.Layout.ThreeColumns
 import XMonad.Layout.MultiToggle.Instances (StdTransformers (NBFULL))
 import XMonad.Layout.MultiToggle (mkToggle, single, Toggle (..))
 import XMonad.Layout.NoBorders (noBorders, smartBorders)
-import XMonad.Layout.TwoPane
 import XMonad.Layout.ResizableTile
-import XMonad.Layout.BinarySpacePartition
 import XMonad.Layout.IfMax
 import XMonad.Layout.SimplestFloat
-import XMonad.Layout.Simplest
 import XMonad.Layout.NoFrillsDecoration
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ImageButtonDecoration
 import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.Minimize
 import XMonad.Layout.Maximize
+import XMonad.Layout.Reflect (reflectHoriz)
 
-import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End), Position(Above))
+import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End), Position(Below))
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
@@ -106,7 +104,7 @@ myAdditionalKeys =
     -- Xmonad prompt
     --, ("M-<Space>", shellPrompt myXPConfig)
     , ("M-<Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run -show-icons")
-    , ("M-S-<Space>", shellPrompt myXPConfig)
+    --, ("M-S-<Space>", shellPrompt myXPConfig)
     -- File Manager
     --, ("M-e", spawn "pcmanfm --new-win")
     , ("M-e", spawn "nemo")
@@ -280,18 +278,16 @@ myLayout = avoidStruts
          . ws2Layout
          . ws3Layout
          . ws4Layout
-         $ (ifMax 2 (ifMax 1 (terminalGaps $ Simplest) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
-       ||| (ifMax 2 (ifMax 1 (terminalGaps $ Simplest) (bigGaps $ threeColumnMid)) (smallGaps $ threeColumnMid))
+         $ (ifMax 2 (ifMax 1 (terminalGaps $ Full) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
+       ||| (ifMax 2 (ifMax 1 (terminalGaps $ Full) (bigGaps $ threeColumnMid)) (smallGaps $ threeColumnMid))
        ||| (bigGaps $ resizableTile)
        ||| (windowDeco $ simplestFloat)
   where
      -- default tiling algorithm partitions the screen into two panes
-     tiled   = Tall nmaster delta ratio
      threeColumn = ThreeCol nmaster delta ratio
      threeColumnMid = ThreeColMid nmaster delta ratio
-     twoPane = TwoPane (3/100) (1/2)
+     threeColumnMidDouble = reflectHoriz $ (ThreeColMid nmaster delta (1877/2801))
      resizableTile = ResizableTall 1 (3/100) (1/2) []
-     binarySpacePartition = emptyBSP
      -- The default number of windows in the master pane
      nmaster = 1
      -- Default proportion of screen occupied by master pane
@@ -303,30 +299,24 @@ myLayout = avoidStruts
      -- Spacing
      -- top, bottom, right, left
      bigGaps   = spacingRaw False (Border 100 74 180 154)    True (Border 0 26 0 26) True
-     vertGaps  = spacingRaw False (Border 100 74 1080 1054)  True (Border 0 26 0 26) True
      smallGaps = spacingRaw False (Border 26 0 26 0)         True (Border 0 26 0 26) True
-     paperGaps = spacingRaw False (Border 150 124 1050 1024) True (Border 0 26 0 26) True
      terminalGaps = spacingRaw False (Border 300 274 860 834)   True (Border 0 26 0 26) True
-     noGaps    = spacingRaw False (Border 0 0 0 0)           True (Border 0  0 0  0) True
-     threeGapsAlone = spacingRaw False (Border 100 90 1100 1050)    True (Border 0 10 0 50) True
-     threeGaps = spacingRaw False (Border 100 90 100 50)    True (Border 0 10 0 50) True
+     threeGapsSingle = spacingRaw False (Border 26 26 981 981)         True (Border 0 0 0 0) True
+     threeGapsDouble = spacingRaw False (Border 26 0 981 0)         True (Border 0 26 0 26) True
+     threeGaps = spacingRaw False (Border 26 0 26 0)         True (Border 0 26 0 26) True
      discordGaps = spacingRaw False (Border 300 274 450 424)   True (Border 0 26 0 26) True
      ws1Layout = onWorkspace ws1
-       ((ifMax 2 (ifMax 1 (terminalGaps $ Simplest) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
-       ||| (ifMax 2 (ifMax 1 (terminalGaps $ Simplest) (bigGaps $ threeColumnMid)) (smallGaps $ threeColumnMid))
-       ||| (windowDeco $ simplestFloat))
+       ((ifMax 2 (ifMax 1 (terminalGaps $ Full) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
+       ||| (bigGaps $ Full))
      ws2Layout = onWorkspace ws2
        ((ifMax 2 (bigGaps $ resizableTile) (smallGaps $ resizableTile))
-       ||| (ifMax 2 (bigGaps $ threeColumnMid) (smallGaps $ threeColumnMid))
        ||| (windowDeco $ simplestFloat))
      ws3Layout = onWorkspace ws3
-       ((ifMax 2 (ifMax 1 (discordGaps $ Simplest) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
-       ||| (ifMax 2 (ifMax 1 (discordGaps $ Simplest) (bigGaps $ threeColumnMid)) (smallGaps $ threeColumnMid))
+       ((ifMax 2 (ifMax 1 (discordGaps $ Full) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
        ||| (windowDeco $ simplestFloat))
      ws4Layout = onWorkspace ws4
-       ((ifMax 2 (ifMax 1 (terminalGaps $ Simplest) (bigGaps $ threeColumnMid)) (smallGaps $ threeColumnMid))
-       ||| (ifMax 2 (ifMax 1 (terminalGaps $ Simplest) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
-       ||| (windowDeco $ simplestFloat))
+       ((ifMax 2 (ifMax 1 (threeGapsSingle $ Full) (threeGapsDouble $ threeColumnMidDouble)) (threeGaps $ threeColumnMid))
+       ||| (threeGaps $ Full))
      windowDeco = imageButtonDeco shrinkText myTheme
      myTheme = defaultThemeWithImageButtons
        { fontName = "xft:mplus Nerd Font:size=11"
@@ -340,53 +330,11 @@ myLayout = avoidStruts
        , urgentBorderColor = "#bf616a"
        , decoHeight = 45
        }
-           -- def
-           --   { fontName = "xft:mplus Nerd Font:size=11"
-           --   , inactiveBorderColor = "#1e2731"
-           --   , inactiveColor = "#000507"
-           --   , inactiveTextColor = "#1e2731"
-           --   , activeBorderColor = "#d8dee9"
-           --   , activeColor = "#000507"
-           --   , activeTextColor = "#d8dee9"
-           --   , urgentTextColor = "#bf616a"
-           --   , urgentBorderColor = "#bf616a"
-           --   , decoHeight = 90
-           --   }
-     -- windowDeco =
-     --   noFrillsDeco
-     --     shrinkText
-     --       def
-     --         { fontName = "xft:JetBrainsMono Nerd Font:size=10"
-     --         , inactiveBorderColor = "#000507"
-     --         , inactiveColor = "#000507"
-     --         , inactiveTextColor = "#d8dee9"
-     --         , activeBorderColor = "#b48ead"
-     --         , activeColor = "#b48ead"
-     --         , activeTextColor = "#d8dee9"
-     --         , urgentTextColor = "#bf616a"
-     --         , urgentBorderColor = "#bf616a"
-     --         , decoHeight = 90
-     --         }
-     -- addTopBar =
-     --   noFrillsDeco
-     --     shrinkText
-     --       def
-     --         { fontName = "xft:JetBrainsMono Nerd Font:size=10"
-     --         , inactiveBorderColor = "#000507"
-     --         , inactiveColor = "#000507"
-     --         , inactiveTextColor = "#000507"
-     --         , activeBorderColor = "#b48ead"
-     --         , activeColor = "#b48ead"
-     --         , activeTextColor = "#b48ead"
-     --         , urgentTextColor = "#bf616a"
-     --         , urgentBorderColor = "#bf616a"
-     --         , decoHeight = 10
-     --         }
 
 ------------------------------------------------------------------------
 
 myManageHook = composeAll
-    [ insertPosition Above Newer -- open new windows below current window
+    [ insertPosition Below Newer -- open new windows below current window
     , className =? "MPlayer"                                          --> myRectFloat
     , className =? "mpv"                                              --> myRectFloat
     , className =? "vlc"                                              --> myRectFloat
@@ -397,6 +345,7 @@ myManageHook = composeAll
     , className =? "Pcmanfm"                                          --> doFloat
     , className =? "Nemo"                                             --> myRectFloat
     , className =? "Gimp"                                             --> doFloat
+    , className =? "Galculator"                                       --> calculatorFloat
     , className =? "Firefox" <&&> resource =? "Toolkit"               --> myRectFloat
     , className =? "chromium-browser" <&&> isDialog                   --> myRectFloat
     , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog"       --> myRectFloat
@@ -414,6 +363,8 @@ myManageHook = composeAll
   where
     unfloat = ask >>= doF . W.sink
     myRectFloat = doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
+    -- xpos, ypos, width, height
+    calculatorFloat = doRectFloat (W.RationalRect (7 % 16) (2 % 6) (1 % 8) (1 % 3))
 
 ------------------------------------------------------------------------
 
