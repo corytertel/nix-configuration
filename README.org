@@ -3,7 +3,13 @@
 [[https://builtwithnix.org][https://builtwithnix.org/badge.svg]]
 [[https://develop.spacemacs.org][https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
 
-* PC
+* I run a ZFS "Erase my Darlings" Setup
+My nix config is setup in such a way that all system files except those in /nix
+and /boot will be wiped every boot for a stateless machine that results in higher reproducibly. More info can be found here: https://grahamc.com/blog/erase-your-darlings    
+There are instructions as to how to replicate my install in the install directory.
+** Please do NOT simply clone these dotfiles and expect them to work on your machine. You're more than welcome to copy bits and pieces but a clone and rebuild will not work unless you have a near identical ZFS setup as mine.
+
+ * PC
 
 [[Screenshot][img/mesa1.png]]
 [[Screenshot][img/mesa2.png]]
@@ -21,18 +27,18 @@
 
 * Laptop
 
-[[Screenshot][img/tree1.png]]
+[[Screenshot][img/laptop.png]]
 
 #+ATTR_HTML: :border 2 :rules all :frame border
 |---------------+---------------------|
 | *OS*          | NixOS               |
-| *Shell*       | ksh                 |
+| *Shell*       | zsh                 |
 | *Terminal*    | urxvt               |
-| *Colorscheme* | Mountain            |
-| *WM*          | fvwm                |
-| *Font*        | Fantasque Sans Mono |
+| *Colorscheme* | Black Nord          |
+| *WM*          | xmonad              |
+| *Font*        | mplus & JetBrains   |
 | *Editor*      | Spacemacs           |
-| *Fetch*       | neofetch            |
+| *Fetch*       | pfetch && df -h     |
 
 * TO DO
   + russian keyboard
