@@ -3,7 +3,7 @@ set window-title-home-tilde true
 set statusbar-home-tilde true
 set adjust-open "best-fit"
 
-set font "JetBrainsMono Nerd Font 10"
+set font "M+ 1c 10"
 # Light/Default mode settings:
 # 
 #

@@ -103,7 +103,7 @@ myAdditionalKeys =
     , ("M-S-<Return>", spawn "emacsclient -c")
     -- Xmonad prompt
     --, ("M-<Space>", shellPrompt myXPConfig)
-    , ("M-<Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run -show-icons")
+    , ("M-<Space>", spawn "rofi -matching normal -show drun -modi drun,run -show-icons")
     --, ("M-S-<Space>", shellPrompt myXPConfig)
     -- File Manager
     --, ("M-e", spawn "pcmanfm --new-win")
@@ -286,7 +286,7 @@ myLayout = avoidStruts
      -- default tiling algorithm partitions the screen into two panes
      threeColumn = ThreeCol nmaster delta ratio
      threeColumnMid = ThreeColMid nmaster delta ratio
-     threeColumnMidDouble = reflectHoriz $ (ThreeColMid nmaster delta (1877/2801))
+     threeColumnMidDouble = reflectHoriz $ (ThreeColMid nmaster delta (2/3))
      resizableTile = ResizableTall 1 (3/100) (1/2) []
      -- The default number of windows in the master pane
      nmaster = 1
@@ -319,7 +319,7 @@ myLayout = avoidStruts
        ||| (threeGaps $ Full))
      windowDeco = imageButtonDeco shrinkText myTheme
      myTheme = defaultThemeWithImageButtons
-       { fontName = "xft:mplus Nerd Font:size=11"
+       { fontName = "xft:M+ 1c:size=11"
        , inactiveBorderColor = "#1e2731"
        , inactiveColor = "#000507"
        , inactiveTextColor = "#1e2731"
@@ -438,7 +438,7 @@ myXPKeymap  = M.fromList
   , ((0, xK_Escape), quit)
   ]
 
-myXPConfig = def { font = "xft:mplus Nerd Font:size=12"
+myXPConfig = def { font = "xft:M+ 1c:size=12"
                  , bgColor = "#000507"
                  , fgColor = "#d8dee9"
                  , bgHLight = "#0d1319"

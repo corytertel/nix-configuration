@@ -158,6 +158,10 @@
   fonts.fonts = with pkgs; [
     nerdfonts
     julia-mono
+    jetbrains-mono
+    mplus-outline-fonts
+    overpass
+    iosevka
   ];
 
   virtualisation = {

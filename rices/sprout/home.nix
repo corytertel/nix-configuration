@@ -87,7 +87,7 @@
 
     font = {
       package = null;
-      name = "mplus Nerd Font 10";
+      name = "M+ 1c 10";
     };
 
     theme = {
