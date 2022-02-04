@@ -1,0 +1,26 @@
+Config { 
+
+   -- appearance
+     font =         "xft:JetBrainsMono Nerd Font:size=20:antialias=true"
+   , bgColor =      "#000507"
+   , alpha =        255
+   , fgColor =      "#88c0d0"
+   , position =     Static { xpos = 50 , ypos = 2290, width = 140 , height = 90 }
+   , border =       TopB
+   , borderWidth =  2
+   , borderColor =  "#707577"
+
+   -- layout
+   , sepChar =  "%"   -- delineator between plugin names and straight text
+   , alignSep = "}{"  -- separator between left-right alignment
+   --, template = " <action=xdotool key super+space><icon=/home/cory/.icons/icons/72x72/nixos.xpm/></action> "
+   , template = "<action=rofi -matching fuzzy -show drun -modi drun,run -show-icons>   </action>"
+
+   -- general behavior
+   , lowerOnStart =     True    -- send to bottom of window stack on start
+   , hideOnStart =      False   -- start with window unmapped (hidden)
+   , allDesktops =      True    -- show on all desktops
+   , overrideRedirect = True    -- set the Override Redirect flag (Xlib)
+   , pickBroadest =     False   -- choose widest display (multi-monitor)
+   , persistent =       True    -- enable/disable hiding (True = disabled)
+   }

@@ -1,0 +1,71 @@
+Config { 
+
+   -- appearance
+     font =         "xft:Iosevka Nerd Font:style=Light:size=11:antialias=true"
+     --font =         "xft:mplus Nerd Font:size=11:antialias=true"
+   , bgColor =      "#000507"
+   , alpha =        255
+   , fgColor =      "#d8dee9"
+   , position =     Static { xpos = 2855 , ypos = 2290, width = 435 , height = 90 }
+   --, position =     Static { xpos = 2810 , ypos = 2290, width = 460 , height = 90 }
+   , border =       TopB
+   , borderWidth =  2
+   , borderColor =  "#707577"
+
+   -- layout
+   , sepChar =  "%"   -- delineator between plugin names and straight text
+   , alignSep = "}{"  -- separator between left-right alignment
+   , template = "  %battery%    %volume%}{<action=/home/cory/manual_installs/layout_switch.sh>  %kbd%</action>  "
+   --, template = "    %battery%     %volume%}{<action=/home/cory/manual_installs/layout_switch.sh>  %kbd%</action>    "
+
+   -- general behavior
+   , lowerOnStart =     True    -- send to bottom of window stack on start
+   , hideOnStart =      False   -- start with window unmapped (hidden)
+   , allDesktops =      True    -- show on all desktops
+   , overrideRedirect = True    -- set the Override Redirect flag (Xlib)
+   , pickBroadest =     False   -- choose widest display (multi-monitor)
+   , persistent =       True    -- enable/disable hiding (True = disabled)
+
+   -- plugins
+   --   Numbers can be automatically colored according to their value. xmobar
+   --   decides color based on a three-tier/two-cutoff system, controlled by
+   --   command options:
+   --     --Low sets the low cutoff
+   --     --High sets the high cutoff
+   --
+   --     --low sets the color below --Low cutoff
+   --     --normal sets the color between --Low and --High cutoffs
+   --     --High sets the color above --High cutoff
+   --
+   --   The --template option controls how the plugin is displayed. Text
+   --   color can be set by enclosing in <fc></fc> tags. For more details
+   --   see http://projects.haskell.org/xmobar/#system-monitor-plugins.
+   , commands = 
+
+        -- Volume
+        [ Run Com "pamixer" ["--get-volume-human"] "volume" 1
+
+        -- battery monitor
+        , Run Battery        [ "--template" , "<acstatus>"
+                             , "--Low"      , "30"        -- units: %
+                             , "--High"     , "60"        -- units: %
+                             , "--low"      , "#e02453"
+                             , "--normal"   , "#beb86b"
+                             , "--high"     , "#f0f0f0"
+
+                             , "--" -- battery specific options
+                                       -- discharging status
+                                       --, "-o"	, " <left>% (<timeleft>)"
+                                       , "-o"	, "  <left>%"
+                                       -- AC "on" status
+                                       , "-O"	, "  <left>%"
+                                       -- charged status
+                                       , "-i"	, "  <left>%"
+                             ] 50
+
+        -- keyboard layout indicator
+        , Run Kbd            [ ("ru(winkeys)" , "ru")
+                             , ("us"         , "us")
+                             ]
+        ]
+   }
