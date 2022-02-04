@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleInstances, MultiParamTypeClasses #-}
+
 import XMonad
 
 import Data.Monoid (mappend)
@@ -13,10 +15,11 @@ import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.EZConfig
+import XMonad.Util.Image
 
 import XMonad.Layout.Spacing
 import XMonad.Layout.ThreeColumns
-import XMonad.Layout.MultiToggle.Instances (StdTransformers (NBFULL))
+--import XMonad.Layout.MultiToggle.Instances (StdTransformers (NBFULL))
 import XMonad.Layout.MultiToggle (mkToggle, single, Toggle (..))
 import XMonad.Layout.NoBorders (noBorders, smartBorders)
 import XMonad.Layout.ResizableTile
@@ -24,7 +27,8 @@ import XMonad.Layout.IfMax
 import XMonad.Layout.SimplestFloat
 import XMonad.Layout.NoFrillsDecoration
 import XMonad.Layout.Tabbed
-import XMonad.Layout.ImageButtonDecoration
+import XMonad.Layout.Decoration
+import XMonad.Layout.DecorationAddons
 import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.Minimize
 import XMonad.Layout.Maximize
@@ -42,6 +46,7 @@ import XMonad.Actions.FloatKeys
 import XMonad.Actions.FloatSnap
 import XMonad.Actions.Search
 import XMonad.Actions.WindowMenu
+import XMonad.Actions.Minimize
 
 import XMonad.Prompt
 import XMonad.Prompt.Shell (shellPrompt)
@@ -49,6 +54,7 @@ import XMonad.Prompt.Shell (shellPrompt)
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 import qualified XMonad.Layout.WindowNavigation as WN
+import qualified XMonad.Layout.BoringWindows as BW
 
 --myTerminal      = "urxvtc --geometry 85x33 -icon $HOME/.icons/icons/48x48/terminal.png"
 myTerminal      = "urxvtc -icon $HOME/.icons/icons/48x48/terminal.png"
@@ -140,9 +146,12 @@ myAdditionalKeys =
     , ("M-<Print>", spawn "flameshot full -p ~/Screenshots/")
     , ("M-S-<Print>", spawn "flameshot gui")
     -- Fullscreen
-    , ("M-f", sendMessage (Toggle NBFULL))
+    --, ("M-f", sendMessage (Toggle NBFULL))
+    -- Minimize
+    , ("M-i", withFocused minimizeWindow)
+    , ("M-S-i", withLastMinimized maximizeWindowAndFocus)
     -- Maximize
-    , ("M-S-i", withFocused (sendMessage . maximizeRestore))
+    , ("M-f", withFocused (sendMessage . maximizeRestore))
     -- Window Menu
     , ("M-o", windowMenu)
     -- Scratchpads
@@ -268,11 +277,184 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
 ------------------------------------------------------------------------
 
+convertToBool' :: [Int] -> [Bool]
+convertToBool' = map (== 1)
+
+convertToBool :: [[Int]] -> [[Bool]]
+convertToBool = map convertToBool'
+
+menuButton' :: [[Int]]
+menuButton' = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+
+menuButton :: [[Bool]]
+menuButton = convertToBool menuButton'
+
+miniButton' :: [[Int]]
+miniButton' = [[0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0],
+               [0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0],
+               [0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0],
+               [1,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1],
+               [1,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1],
+               [1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1],
+               [1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1],
+               [0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0],
+               [0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0],
+               [0,0,1,1,1,0,0,0,0,1,1,0,0,0,0,1,1,1,0,0],
+               [0,0,1,1,1,1,0,0,0,1,1,0,0,0,1,1,1,1,0,0],
+               [0,0,0,1,1,1,1,0,0,1,1,0,0,1,1,1,1,0,0,0],
+               [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
+               [0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0]]
+
+miniButton :: [[Bool]]
+miniButton = convertToBool miniButton'
+
+maxiButton' :: [[Int]]
+maxiButton' = [[0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],
+               [0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1],
+               [0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1],
+               [1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1],
+               [1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1],
+               [1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1],
+               [1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,1],
+               [1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0],
+               [1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,1,1,0,0,0],
+               [1,1,1,0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0],
+               [1,1,1,0,0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0],
+               [1,1,1,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,0],
+               [1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,1,0,0,0],
+               [1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
+               [1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
+               [1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
+               [1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0]]
+
+maxiButton :: [[Bool]]
+maxiButton = convertToBool maxiButton'
+
+closeButton' :: [[Int]]
+closeButton' = [[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],
+                [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],
+                [1,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1],
+                [1,1,1,0,0,1,1,1,0,0,0,0,1,1,1,0,0,1,1,1],
+                [1,1,1,0,0,0,1,1,1,0,0,1,1,1,0,0,0,1,1,1],
+                [1,1,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,1,1],
+                [1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1],
+                [1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1],
+                [1,1,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,1,1],
+                [1,1,1,0,0,0,1,1,1,0,0,1,1,1,0,0,0,1,1,1],
+                [1,1,1,0,0,1,1,1,0,0,0,0,1,1,1,0,0,1,1,1],
+                [1,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1],
+                [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],
+                [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],
+                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0]]
+
+
+closeButton :: [[Bool]]
+closeButton = convertToBool closeButton'
+
+buttonSize :: Int
+buttonSize = 20
+
+menuButtonOffset :: Int
+menuButtonOffset = 20
+
+maximizeButtonOffset :: Int
+maximizeButtonOffset = 60
+
+minimizeButtonOffset :: Int
+minimizeButtonOffset = 100
+
+closeButtonOffset :: Int
+closeButtonOffset = 20
+
+imageTitleBarButtonHandler :: Window -> Int -> Int -> X Bool
+imageTitleBarButtonHandler mainw distFromLeft distFromRight = do
+    let action
+          | fi distFromLeft >= menuButtonOffset &&
+             fi distFromLeft <= menuButtonOffset + buttonSize = focus mainw >> windowMenu >> return True
+          | fi distFromRight >= closeButtonOffset &&
+            fi distFromRight <= closeButtonOffset + buttonSize = focus mainw >> kill >> return True
+          | fi distFromRight >= maximizeButtonOffset &&
+            fi distFromRight <= maximizeButtonOffset + buttonSize = focus mainw >> sendMessage (maximizeRestore mainw) >> return True
+          | fi distFromRight >= minimizeButtonOffset &&
+            fi distFromRight <= minimizeButtonOffset + buttonSize = focus mainw >> minimizeWindow mainw >> return True
+          | otherwise = return False
+    action
+
+defaultThemeWithImageButtons :: Theme
+defaultThemeWithImageButtons = def
+                               { fontName = "xft:M+ 1c:size=11"
+                               , inactiveBorderColor = "#1e2731"
+                               , inactiveColor = "#000507"
+                               , inactiveTextColor = "#1e2731"
+                               , inactiveBorderWidth = 2
+                               , activeBorderColor = "#d8dee9"
+                               , activeColor = "#000507"
+                               , activeTextColor = "#d8dee9"
+                               , activeBorderWidth = 2
+                               , urgentBorderColor = "#bf616a"
+                               , urgentColor = "#000507"
+                               , urgentTextColor = "#bf616a"
+                               , urgentBorderWidth = 2
+                               , decoHeight = 60
+                               , windowTitleIcons = [ (menuButton, CenterLeft 20),
+                                                      (closeButton, CenterRight 20),
+                                                      (maxiButton, CenterRight 60),
+                                                      (miniButton, CenterRight 100) ]
+                               }
+
+imageButtonDeco :: (Eq a, Shrinker s) => s -> Theme
+                   -> l a -> ModifiedLayout (Decoration ImageButtonDecoration s) l a
+imageButtonDeco s c = decoration s c $ NFD True
+
+newtype ImageButtonDecoration a = NFD Bool deriving (Show, Read)
+
+instance Eq a => DecorationStyle ImageButtonDecoration a where
+    describeDeco _ = "ImageButtonDeco"
+    decorationCatchClicksHook _ mainw dFL dFR = imageTitleBarButtonHandler mainw dFL dFR
+    decorationAfterDraggingHook _ (mainw, _) decoWin = focus mainw >> handleScreenCrossing mainw decoWin >> return ()
+
+------------------------------------------------------------------------
+
 myLayout = avoidStruts
          . WN.windowNavigation
          . smartBorders
-         . fullScreenToggle
+         -- . fullScreenToggle
          . minimize
+         . BW.boringWindows
          . maximizeWithPadding 26
          . ws1Layout
          . ws2Layout
@@ -295,7 +477,7 @@ myLayout = avoidStruts
      -- Percent of screen to increment by when resizing panes
      delta   = 3/100
      -- Fullscreen
-     fullScreenToggle = mkToggle (single NBFULL)
+     -- fullScreenToggle = mkToggle (single NBFULL)
      -- Spacing
      -- top, bottom, right, left
      bigGaps   = spacingRaw False (Border 100 74 180 154)    True (Border 0 26 0 26) True
@@ -317,18 +499,26 @@ myLayout = avoidStruts
      ws4Layout = onWorkspace ws4
        ((ifMax 2 (ifMax 1 (threeGapsSingle $ Full) (threeGapsDouble $ threeColumnMidDouble)) (threeGaps $ threeColumnMid))
        ||| (threeGaps $ Full))
-     windowDeco = imageButtonDeco shrinkText myTheme
-     myTheme = defaultThemeWithImageButtons
+     windowDeco = imageButtonDeco shrinkText defaultThemeWithImageButtons
+     myTheme = def
        { fontName = "xft:M+ 1c:size=11"
        , inactiveBorderColor = "#1e2731"
        , inactiveColor = "#000507"
        , inactiveTextColor = "#1e2731"
+       , inactiveBorderWidth = 2
        , activeBorderColor = "#d8dee9"
        , activeColor = "#000507"
        , activeTextColor = "#d8dee9"
-       , urgentTextColor = "#bf616a"
+       , activeBorderWidth = 2
        , urgentBorderColor = "#bf616a"
-       , decoHeight = 45
+       , urgentColor = "#000507"
+       , urgentTextColor = "#bf616a"
+       , urgentBorderWidth = 2
+       , decoHeight = 60
+       , windowTitleIcons = [ (menuButton, CenterLeft 20),
+                              (closeButton, CenterRight 20),
+                              (maxiButton, CenterRight 50),
+                              (miniButton, CenterRight 80) ]
        }
 
 ------------------------------------------------------------------------

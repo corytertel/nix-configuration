@@ -162,6 +162,8 @@
     mplus-outline-fonts
     overpass
     iosevka
+    roboto-mono
+    victor-mono
   ];
 
   virtualisation = {

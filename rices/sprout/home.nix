@@ -23,6 +23,7 @@
       "90:class_g   *?= 'Emacs'"
       "80:class_g   *?= 'discord'"
       "80:class_g   *?= 'Rofi'"
+      "90:!name      ~= ''"
     ];
       # transition-length = 300
       # transition-pow-x = 0.1
@@ -30,13 +31,16 @@
       # transition-pow-w = 0.1
       # transition-pow-h = 0.1
       # size-transition = true
-    extraOptions = ''
+    extraOptions = let
+      decorations = "!name~=''";
+    in ''
       blur-method = "dual_kawase";
       blur-strength = 8;
 
       corner-radius = 45;
       round-borders = 1;
       rounded-corners-exclude = [
+        "${decorations}",
         "name *?= 'tint2'",
       ];
 

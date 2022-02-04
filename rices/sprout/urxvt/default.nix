@@ -35,6 +35,11 @@
       "color7"      = "#e5e9f0";
       "color15"     = "#aeb3bb";
 
+      "font" = "xft:JetBrainsMono Nerd Font Mono:style=Regular:size=10:antialias=true";
+      "boldFont" = "xft:JetBrainsMono Nerd Font Mono:style=Bold:size=10:antialias=true";
+      "italicFont" = "xft:VictorMono Nerd Font Mono:style=Italic:size=10:antialias=true";
+      "boldItalicFont" = "xft:VictorMono Nerd Font Mono:style=Bold Italic:size=10:antialias=true";
+
       #"internalBorder" = "72";
       "internalBorder" = "60";
       "externalBorder" = "0";
@@ -50,9 +55,9 @@
       "underlineURLs" = "true";
       "urlButton" = "1";
     };
-    fonts = [
-      "xft:JetBrainsMono Nerd Font Mono:style=Regular:size=10:antialias=true"
-    ];
+    #fonts = [
+    #  "xft:JetBrainsMono Nerd Font Mono:style=Regular:size=10:antialias=true"
+    #];
     iso14755 = false;
     keybindings = {
       "Shift-Up" = "command:\033]720;1\007";
