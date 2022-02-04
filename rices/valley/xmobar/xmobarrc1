@@ -5,9 +5,9 @@ Config {
    , bgColor =      "#000507"
    , alpha =        255
    , fgColor =      "#d8dee9"
-   --, position =     Static { xpos = 160 , ypos = 2290, width = 475 , height = 90 }
-   --, position =     Static { xpos = 160 , ypos = 2290, width = 610 , height = 90 }
-   , position =     Static { xpos = 210 , ypos = 2290, width = 760 , height = 90 }
+   --, position =     Static { xpos = 160 , ypos = 2050, width = 475 , height = 90 }
+   --, position =     Static { xpos = 160 , ypos = 2050, width = 610 , height = 90 }
+   , position =     Static { xpos = 210 , ypos = 2050, width = 760 , height = 90 }
    , border =       TopB
    , borderWidth =  2
    , borderColor =  "#707577"

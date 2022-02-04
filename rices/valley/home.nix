@@ -30,21 +30,13 @@
       # transition-pow-w = 0.1
       # transition-pow-h = 0.1
       # size-transition = true
-    extraOptions = let
-      decorations = "!name~=''";
-    in ''
+    extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 8;
 
-      corner-radius = 45;
-      round-borders = 1;
-      rounded-corners-exclude = [
-        "${decorations}",
-        "name *?= 'tint2'",
-      ];
-
       shadow = true;
       shadow-radius = 60;
+      shadow-opacity = 0.95;
       shadow-offset-x = -50;
       shadow-offset-y = -46;
     '';

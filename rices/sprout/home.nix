@@ -45,6 +45,7 @@
 
       shadow = true;
       shadow-radius = 60;
+      shadow-opacity = 0.95;
       shadow-offset-x = -50;
       shadow-offset-y = -46;
     '';

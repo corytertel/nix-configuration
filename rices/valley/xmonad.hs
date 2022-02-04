@@ -133,6 +133,12 @@ myAdditionalKeys =
     , ("<XF86AudioPrev>", spawn "audacious --rew")
     , ("<XF86AudioPlay>", spawn "audacious --play-pause")
     , ("<XF86AudioStop>", spawn "audacious --stop")
+    , ("F5", spawn "pamixer --decrease 2")
+    , ("F6", spawn "pamixer --increase 2")
+    , ("F7", spawn "pamixer --toggle-mute")
+    , ("F10", spawn "audacious --fwd")
+    , ("F9", spawn "audacious --rew")
+    , ("F8", spawn "audacious --play-pause")
     -- Brightness
     , ("<XF86MonBrightnessUp>", spawn "xbrightness +5000")
     , ("<XF86MonBrightnessDown>", spawn "xbrightness -5000")
@@ -460,10 +466,11 @@ myLayout = avoidStruts
          . ws2Layout
          . ws3Layout
          . ws4Layout
+         . windowDeco
          $ (ifMax 2 (ifMax 1 (terminalGaps $ Full) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
        ||| (ifMax 2 (ifMax 1 (terminalGaps $ Full) (bigGaps $ threeColumnMid)) (smallGaps $ threeColumnMid))
        ||| (bigGaps $ resizableTile)
-       ||| (windowDeco $ simplestFloat)
+       ||| (simplestFloat)
   where
      -- default tiling algorithm partitions the screen into two panes
      threeColumn = ThreeCol nmaster delta ratio
@@ -492,10 +499,10 @@ myLayout = avoidStruts
        ||| (bigGaps $ Full))
      ws2Layout = onWorkspace ws2
        ((ifMax 2 (bigGaps $ resizableTile) (smallGaps $ resizableTile))
-       ||| (windowDeco $ simplestFloat))
+       ||| (simplestFloat))
      ws3Layout = onWorkspace ws3
        ((ifMax 2 (ifMax 1 (discordGaps $ Full) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
-       ||| (windowDeco $ simplestFloat))
+       ||| (simplestFloat))
      ws4Layout = onWorkspace ws4
        ((ifMax 2 (ifMax 1 (threeGapsSingle $ Full) (threeGapsDouble $ threeColumnMidDouble)) (threeGaps $ threeColumnMid))
        ||| (threeGaps $ Full))

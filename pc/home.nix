@@ -18,9 +18,9 @@
     Xft.rgba: rgb
     Xft.lcdfilter: lcddefault
 
-    Sxiv.background: #fbf1c7
-    Sxiv.foreground: #3c3836
-    Sxiv.font:JetBrainsMono Nerd Font:size=10
+    Sxiv.background: #000507
+    Sxiv.foreground: #d8dee9
+    Sxiv.font:M+ 1c:size=10
   '';
 
   # Fix pointer cursor
@@ -35,8 +35,12 @@
       #package = pkgs.gnome3.adwaita-icon-theme;
       #defaultCursor = "left_ptr";
       #size = 32;
-      name = "Vanilla-DMZ";
-      package = pkgs.vanilla-dmz;
+      #name = "Vanilla-DMZ";
+      #package = pkgs.vanilla-dmz;
+      #defaultCursor = "left_ptr";
+      #size = 32;
+      name = "Numix-Cursor";
+      package = pkgs.numix-cursor-theme;
       defaultCursor = "left_ptr";
       size = 32;
     };

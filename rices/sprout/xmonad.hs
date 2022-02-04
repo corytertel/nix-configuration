@@ -536,6 +536,7 @@ myManageHook = composeAll
     , className =? "Nemo"                                             --> myRectFloat
     , className =? "Gimp"                                             --> doFloat
     , className =? "Galculator"                                       --> calculatorFloat
+    , className =? "zoom"                                             --> doFloat
     , className =? "Firefox" <&&> resource =? "Toolkit"               --> myRectFloat
     , className =? "chromium-browser" <&&> isDialog                   --> myRectFloat
     , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog"       --> myRectFloat
