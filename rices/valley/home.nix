@@ -3,7 +3,6 @@
 {
   imports =
     [
-      ./discord
       ./dunst
       ./emacs
       ./nvim

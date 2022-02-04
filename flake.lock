@@ -22,11 +22,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1643411645,
-        "narHash": "sha256-q1TjWmK1MeGNfcU8ud11v9ZTqq2UI8YiCVKCD2MeAEk=",
+        "lastModified": 1643933104,
+        "narHash": "sha256-NZPuFxRsZKN8pjRuHPpzlMyt6JQhcjiduBG8bMghSjE=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "acf824c9ed70f623b424c2ca41d0f6821014c67c",
+        "rev": "63dccc4e60422c1db2c3929b2fd1541f36b7e664",
         "type": "github"
       },
       "original": {
@@ -43,11 +43,11 @@
       },
       "locked": {
         "dir": "contrib",
-        "lastModified": 1643498122,
-        "narHash": "sha256-4TFsf3rF0ShDqclHV5/Npq9FgnKk7sSj+3/DwUIbU/0=",
+        "lastModified": 1643926278,
+        "narHash": "sha256-UbwPo7kgi2fqUnwIe4bx2MEmZEtMWzuoGcdzKKt7UpE=",
         "owner": "neovim",
         "repo": "neovim",
-        "rev": "4a96e7809f4d9f6ce21869817eb95ff6dcaa1693",
+        "rev": "b667bb355d882fa3a801972c11038112d146a39f",
         "type": "github"
       },
       "original": {
@@ -75,11 +75,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1643515845,
-        "narHash": "sha256-DUkmXyDJxt0MGJhOFT4ffCX6xSr2+qZg95RfhNaS8mA=",
+        "lastModified": 1643932320,
+        "narHash": "sha256-oPa//AqFkzvP0KNnAyCfnb8i4IGdW2s9nEIghbx++DI=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "376934f4b7ca6910b243be5fabcf3f4228043725",
+        "rev": "f80278219f00b38762847049f6d482898051c2ca",
         "type": "github"
       },
       "original": {
@@ -90,11 +90,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1643347846,
-        "narHash": "sha256-O0tyXF//ppRpe9yT1Uu5n34yI2MWDyY6ZiJ4Qn5zIkE=",
+        "lastModified": 1643805626,
+        "narHash": "sha256-AXLDVMG+UaAGsGSpOtQHPIKB+IZ0KSd9WS77aanGzgc=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "5bb20f9dc70e9ee16e21cc404b6508654931ce41",
+        "rev": "554d2d8aa25b6e583575459c297ec23750adb6cb",
         "type": "github"
       },
       "original": {
