@@ -1,13 +1,11 @@
 Config { 
 
    -- appearance
-     font =         "xft:JetBrainsMono Nerd Font:size=14:antialias=true"
-   , bgColor =      "#000507"
+     font =         "xft:JetBrainsMono Nerd Font:size=16:antialias=true"
+   , bgColor =      "#fefefe"
    , alpha =        255
-   , fgColor =      "#d8dee9"
-   --, position =     Static { xpos = 160 , ypos = 2050, width = 475 , height = 90 }
-   --, position =     Static { xpos = 160 , ypos = 2050, width = 610 , height = 90 }
-   , position =     Static { xpos = 210 , ypos = 2050, width = 760 , height = 90 }
+   , fgColor =      "#30343f"
+   , position =     Static { xpos = 190 , ypos = 2065, width = 580 , height = 75 }
    , border =       TopB
    , borderWidth =  2
    , borderColor =  "#707577"

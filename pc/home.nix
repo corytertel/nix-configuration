@@ -35,12 +35,8 @@
       #package = pkgs.gnome3.adwaita-icon-theme;
       #defaultCursor = "left_ptr";
       #size = 32;
-      #name = "Vanilla-DMZ";
-      #package = pkgs.vanilla-dmz;
-      #defaultCursor = "left_ptr";
-      #size = 32;
-      name = "Numix-Cursor";
-      package = pkgs.numix-cursor-theme;
+      name = "Vanilla-DMZ";
+      package = pkgs.vanilla-dmz;
       defaultCursor = "left_ptr";
       size = 32;
     };

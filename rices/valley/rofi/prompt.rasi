@@ -8,7 +8,7 @@
  */
 
 configuration {
-  font: "M+ 1c 35";
+  font: "M+ 1c 21";
 
   drun {
     display-name: " ";
@@ -34,10 +34,10 @@ configuration {
   padding: 0;
   spacing: 0;
 
-  bg: #0d1319;
-  black: #000507;
-  white: #d8dee9;
-  purple: #b48ead;
+  bg: #dddddd;
+  black: #fefefe;
+  white: #30343f;
+  red: #e96179;
 
   background-color: @bg;
   text-color: @white;
@@ -45,7 +45,7 @@ configuration {
 
 window {
   transparency: "real";
-  width: 40%;
+  width: 22.5%;
 }
 
 mainbox {
@@ -59,12 +59,12 @@ inputbar {
 
 entry {
   background-color: inherit;
-  padding: 36px 8px;
+  padding: 21px 4.5px;
 }
 
 prompt {
   background-color: inherit;
-  padding: 36px;
+  padding: 21px;
 }
 
 listview {
@@ -77,14 +77,14 @@ element {
 }
 
 element-icon {
-  padding: 30px 30px;
+  padding: 17.5px 17.5px;
 }
 
 element-text {
-  padding: 30px 0;
+  padding: 17.5px 0;
   text-color: inherit;
 }
 
 element-text selected {
-  text-color: @purple;
+  text-color: @red;
 }

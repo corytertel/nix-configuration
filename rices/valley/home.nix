@@ -13,16 +13,16 @@
 
   services.picom = {
     enable = true;
-    inactiveOpacity = "0.90";
+    inactiveOpacity = "1.00";
     activeOpacity = "1.00";
     blur = true;
     experimentalBackends = true;
     opacityRule = [
-      "100:class_g  *?= 'urxvt'"
-      "90:class_g   *?= 'Emacs'"
-      "80:class_g   *?= 'discord'"
-      "80:class_g   *?= 'Rofi'"
-      "90:!name      ~= ''"
+      # "100:class_g  *?= 'urxvt'"
+      # "90:class_g   *?= 'Emacs'"
+      # "80:class_g   *?= 'discord'"
+      # "80:class_g   *?= 'Rofi'"
+      # "90:!name      ~= ''"
     ];
       # transition-length = 300
       # transition-pow-x = 0.1
@@ -34,14 +34,22 @@
       blur-method = "dual_kawase";
       blur-strength = 8;
 
-      shadow = true;
-      shadow-radius = 60;
-      shadow-opacity = 0.95;
-      shadow-offset-x = -50;
-      shadow-offset-y = -46;
+      corner-radius = 30;
+      round-borders = 1;
+      rounded-corners-exclude = [
+        "name != 'xmobar'",
+      ];
+
+      shadow-radius = 30;
     '';
     fade = true;
     fadeDelta = 3;
+    shadow = true;
+    shadowOpacity = "0.90";
+    noDockShadow = false;
+    shadowExclude = [
+      "!name ~= ''"
+    ];
     vSync = true;
     package = pkgs.picom.overrideAttrs (
       o: {
@@ -87,7 +95,7 @@
 
     theme = {
       package = pkgs.orchis-theme;
-      name = "Orchis-green-dark";
+      name = "Orchis-red-light";
     };
 
     iconTheme = {
@@ -97,8 +105,8 @@
 
     gtk3.extraConfig = {
       gtk-icon-theme-name = "Zafiro-icons";
-      gtk-theme-name = "Orchis-green-dark";
-      gtk-application-prefer-dark-theme = 1;
+      gtk-theme-name = "Orchis-red-light";
+      gtk-application-prefer-dark-theme = 0;
     };
   };
 

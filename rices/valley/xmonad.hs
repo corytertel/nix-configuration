@@ -33,8 +33,10 @@ import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.Minimize
 import XMonad.Layout.Maximize
 import XMonad.Layout.Reflect (reflectHoriz)
+import XMonad.Layout.LayoutCombinators ((*|*))
+import XMonad.Layout.ComboP
 
-import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End), Position(Below))
+import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
@@ -56,7 +58,6 @@ import qualified Data.Map        as M
 import qualified XMonad.Layout.WindowNavigation as WN
 import qualified XMonad.Layout.BoringWindows as BW
 
---myTerminal      = "urxvtc --geometry 85x33 -icon $HOME/.icons/icons/48x48/terminal.png"
 myTerminal      = "urxvtc -icon $HOME/.icons/icons/48x48/terminal.png"
 
 myFocusFollowsMouse :: Bool
@@ -65,10 +66,10 @@ myFocusFollowsMouse = True
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
 
-myBorderWidth   = 2
+myBorderWidth   = 0
 
-myNormalBorderColor  = "#1e2731"
-myFocusedBorderColor = "#d8dee9"
+myNormalBorderColor  = "#999999"
+myFocusedBorderColor = "#30343f"
 
 myModMask       = mod4Mask
 
@@ -112,8 +113,8 @@ myAdditionalKeys =
     , ("M-<Space>", spawn "rofi -matching normal -show drun -modi drun,run -show-icons")
     --, ("M-S-<Space>", shellPrompt myXPConfig)
     -- File Manager
-    --, ("M-e", spawn "pcmanfm --new-win")
-    , ("M-e", spawn "nemo")
+    , ("M-e", spawn "pcmanfm --new-win")
+    --, ("M-e", spawn "nemo")
     -- close focused window
     , ("M-q", kill)
      -- Rotate through the available layout algorithms
@@ -133,12 +134,12 @@ myAdditionalKeys =
     , ("<XF86AudioPrev>", spawn "audacious --rew")
     , ("<XF86AudioPlay>", spawn "audacious --play-pause")
     , ("<XF86AudioStop>", spawn "audacious --stop")
-    , ("F5", spawn "pamixer --decrease 2")
-    , ("F6", spawn "pamixer --increase 2")
-    , ("F7", spawn "pamixer --toggle-mute")
-    , ("F10", spawn "audacious --fwd")
-    , ("F9", spawn "audacious --rew")
-    , ("F8", spawn "audacious --play-pause")
+    , ("<F5>", spawn "pamixer --decrease 2")
+    , ("<F6>", spawn "pamixer --increase 2")
+    , ("<F7>", spawn "pamixer --toggle-mute")
+    , ("<F10>", spawn "audacious --fwd")
+    , ("<F9>", spawn "audacious --rew")
+    , ("<F8>", spawn "audacious --play-pause")
     -- Brightness
     , ("<XF86MonBrightnessUp>", spawn "xbrightness +5000")
     , ("<XF86MonBrightnessDown>", spawn "xbrightness -5000")
@@ -172,6 +173,7 @@ myAdditionalKeys =
     --, ("M-<Return>", windows W.swapMaster)
     , ("M-S-j", windows W.swapDown  )
     , ("M-S-k", windows W.swapUp    )
+    , ("M-S-g", sendMessage $ SwapWindow)
     , ("M-h", sendMessage Shrink)
     , ("M-l", sendMessage Expand)
     , ("M-m", sendMessage MirrorExpand)
@@ -315,24 +317,24 @@ menuButton :: [[Bool]]
 menuButton = convertToBool menuButton'
 
 miniButton' :: [[Int]]
-miniButton' = [[0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0],
-               [0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0],
-               [0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0],
+miniButton' = [[0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
+               [0,0,0,0,0,1,1,1,1,0,0,1,1,1,1,0,0,0,0,0],
+               [0,0,0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0],
+               [0,0,0,0,0,1,1,1,1,0,0,1,1,1,1,0,0,0,0,0],
+               [0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
                [0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0],
                [0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0],
-               [1,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1],
-               [1,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1],
-               [1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1],
-               [1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1],
-               [0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0],
-               [0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0],
-               [0,0,1,1,1,0,0,0,0,1,1,0,0,0,0,1,1,1,0,0],
-               [0,0,1,1,1,1,0,0,0,1,1,0,0,0,1,1,1,1,0,0],
-               [0,0,0,1,1,1,1,0,0,1,1,0,0,1,1,1,1,0,0,0],
+               [0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0],
+               [1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1],
+               [1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1],
+               [1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1],
+               [1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1],
+               [0,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,0],
+               [0,1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1,1,1,0],
+               [0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0],
+               [0,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,0,0],
+               [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
                [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
                [0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0]]
 
@@ -423,18 +425,18 @@ imageTitleBarButtonHandler mainw distFromLeft distFromRight = do
 defaultThemeWithImageButtons :: Theme
 defaultThemeWithImageButtons = def
                                { fontName = "xft:M+ 1c:size=11"
-                               , inactiveBorderColor = "#1e2731"
-                               , inactiveColor = "#000507"
-                               , inactiveTextColor = "#1e2731"
-                               , inactiveBorderWidth = 2
-                               , activeBorderColor = "#d8dee9"
-                               , activeColor = "#000507"
-                               , activeTextColor = "#d8dee9"
-                               , activeBorderWidth = 2
-                               , urgentBorderColor = "#bf616a"
-                               , urgentColor = "#000507"
-                               , urgentTextColor = "#bf616a"
-                               , urgentBorderWidth = 2
+                               , inactiveBorderColor = "#aaaaaa"
+                               , inactiveColor = "#30343f"
+                               , inactiveTextColor = "#aaaaaa"
+                               , inactiveBorderWidth = 0
+                               , activeBorderColor = "#30343f"
+                               , activeColor = "#e96179"
+                               , activeTextColor = "#30343f"
+                               , activeBorderWidth = 0
+                               , urgentBorderColor = "#30343f"
+                               , urgentColor = "#99cd61"
+                               , urgentTextColor = "#30343f"
+                               , urgentBorderWidth = 0
                                , decoHeight = 60
                                , windowTitleIcons = [ (menuButton, CenterLeft 20),
                                                       (closeButton, CenterRight 20),
@@ -461,7 +463,7 @@ myLayout = avoidStruts
          -- . fullScreenToggle
          . minimize
          . BW.boringWindows
-         . maximizeWithPadding 26
+         . maximizeWithPadding 50
          . ws1Layout
          . ws2Layout
          . ws3Layout
@@ -487,46 +489,31 @@ myLayout = avoidStruts
      -- fullScreenToggle = mkToggle (single NBFULL)
      -- Spacing
      -- top, bottom, right, left
-     bigGaps   = spacingRaw False (Border 100 74 180 154)    True (Border 0 26 0 26) True
-     smallGaps = spacingRaw False (Border 26 0 26 0)         True (Border 0 26 0 26) True
-     terminalGaps = spacingRaw False (Border 300 274 860 834)   True (Border 0 26 0 26) True
-     threeGapsSingle = spacingRaw False (Border 26 26 981 981)         True (Border 0 0 0 0) True
-     threeGapsDouble = spacingRaw False (Border 26 0 981 0)         True (Border 0 26 0 26) True
-     threeGaps = spacingRaw False (Border 26 0 26 0)         True (Border 0 26 0 26) True
-     discordGaps = spacingRaw False (Border 300 274 450 424)   True (Border 0 26 0 26) True
+     bigGaps = spacingRaw False (Border 100 50 180 130) True (Border 0 50 0 50) True
+     smallGaps = spacingRaw False (Border 50 0 50 0) True (Border 0 50 0 50) True
+     terminalGaps = spacingRaw False (Border 300 250 860 810) True (Border 0 50 0 50) True
+     terminal2GapsLeft = spacingRaw False (Border 150 150 50 300) True (Border 0 0 0 0) True
+     terminal2GapsRight = spacingRaw False (Border 500 500 300 50) True (Border 0 0 0 0) True
+     terminal3Gaps = spacingRaw False (Border 150 50 300 200) True (Border 0 100 0 100) True
+     threeGapsSingle = spacingRaw False (Border 26 26 981 981) True (Border 0 0 0 0) True
+     threeGapsDouble = spacingRaw False (Border 26 0 981 0) True (Border 0 26 0 26) True
+     threeGaps = spacingRaw False (Border 26 0 26 0) True (Border 0 26 0 26) True
+     discordGaps = spacingRaw False (Border 350 300 800 750) True (Border 0 50 0 50) True
      ws1Layout = onWorkspace ws1
-       ((ifMax 2 (ifMax 1 (terminalGaps $ Full) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
+       --(windowDeco $ (ifMax 2 (ifMax 1 (terminalGaps $ Full) ((terminal2GapsLeft $ Full) *|* (terminal2GapsRight $ Full))) (terminal3Gaps $ resizableTile))
+       --(windowDeco $ (ifMax 2 (ifMax 1 (terminalGaps $ Full) (combineTwo resizableTile (terminal2GapsLeft $ Full) (terminal2GapsRight $ Full))) (terminal3Gaps $ resizableTile))
+       (windowDeco $ (ifMax 2 (ifMax 1 (terminalGaps $ Full) (combineTwoP resizableTile (terminal2GapsLeft $ Full) (terminal2GapsRight $ Full) (ClassName "Emacs"))) (terminal3Gaps $ resizableTile))
        ||| (bigGaps $ Full))
      ws2Layout = onWorkspace ws2
-       ((ifMax 2 (bigGaps $ resizableTile) (smallGaps $ resizableTile))
+       (windowDeco $ (ifMax 2 (bigGaps $ resizableTile) (smallGaps $ resizableTile))
        ||| (simplestFloat))
      ws3Layout = onWorkspace ws3
-       ((ifMax 2 (ifMax 1 (discordGaps $ Full) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
+       (windowDeco $ (ifMax 2 (ifMax 1 (discordGaps $ Full) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
        ||| (simplestFloat))
      ws4Layout = onWorkspace ws4
-       ((ifMax 2 (ifMax 1 (threeGapsSingle $ Full) (threeGapsDouble $ threeColumnMidDouble)) (threeGaps $ threeColumnMid))
+       (windowDeco $ (ifMax 2 (ifMax 1 (threeGapsSingle $ Full) (threeGapsDouble $ threeColumnMidDouble)) (threeGaps $ threeColumnMid))
        ||| (threeGaps $ Full))
      windowDeco = imageButtonDeco shrinkText defaultThemeWithImageButtons
-     myTheme = def
-       { fontName = "xft:M+ 1c:size=11"
-       , inactiveBorderColor = "#1e2731"
-       , inactiveColor = "#000507"
-       , inactiveTextColor = "#1e2731"
-       , inactiveBorderWidth = 2
-       , activeBorderColor = "#d8dee9"
-       , activeColor = "#000507"
-       , activeTextColor = "#d8dee9"
-       , activeBorderWidth = 2
-       , urgentBorderColor = "#bf616a"
-       , urgentColor = "#000507"
-       , urgentTextColor = "#bf616a"
-       , urgentBorderWidth = 2
-       , decoHeight = 60
-       , windowTitleIcons = [ (menuButton, CenterLeft 20),
-                              (closeButton, CenterRight 20),
-                              (maxiButton, CenterRight 50),
-                              (miniButton, CenterRight 80) ]
-       }
 
 ------------------------------------------------------------------------
 
@@ -539,7 +526,7 @@ myManageHook = composeAll
     , className =? "gwenview"                                         --> mediaFloat
     , className =? "Sxiv"                                             --> mediaFloat
     , className =? "Orage"                                            --> doFloat
-    , className =? "Pcmanfm"                                          --> doFloat
+    --, className =? "Pcmanfm"                                          --> doFloat
     , className =? "Nemo"                                             --> myRectFloat
     , className =? "Gimp"                                             --> doFloat
     , className =? "Galculator"                                       --> calculatorFloat
@@ -560,7 +547,7 @@ myManageHook = composeAll
   where
     unfloat = ask >>= doF . W.sink
     -- xpos, ypos, width, height
-    myRectFloat = doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
+    myRectFloat = doRectFloat (W.RationalRect (1 % 3) (3 % 10) (1 % 3) (2 % 5))
     mediaFloat = doRectFloat (W.RationalRect (3 % 10) (3 % 20) (2 % 5) (7 % 10))
     calculatorFloat = doRectFloat (W.RationalRect (7 % 16) (2 % 6) (1 % 8) (1 % 3))
 
@@ -588,11 +575,11 @@ myBar1 = "xmobar $HOME/.config/xmobar/xmobarrc1"
 myBar2 = "xmobar $HOME/.config/xmobar/xmobarrc2"
 myBar3 = "xmobar $HOME/.config/xmobar/xmobarrc3"
 
-myPP = xmobarPP { ppCurrent = xmobarColor "#bf616a" "" . wrap "" "" --current selected desktop
-                , ppHidden = xmobarColor "#d8dee9" "" . wrap "" "" . clickable
+myPP = xmobarPP { ppCurrent = xmobarColor "#e96179" "" . wrap "" "" --current selected desktop
+                , ppHidden = xmobarColor "#30343f" "" . wrap "" "" . clickable
                 , ppHiddenNoWindows = xmobarColor "#707577" "" . wrap "" "" . clickable --desktops with no windows
-                , ppVisible = xmobarColor "#d8dee9" "" . wrap "" "" . clickable
-                , ppTitle = xmobarColor "#d8dee9" "" . shorten 40
+                , ppVisible = xmobarColor "#30343f" "" . wrap "" "" . clickable
+                , ppTitle = xmobarColor "#30343f" "" . shorten 40
                 , ppOrder = \(ws:_:_:_) -> [ws]
                 }
 
@@ -636,11 +623,11 @@ myXPKeymap  = M.fromList
   ]
 
 myXPConfig = def { font = "xft:M+ 1c:size=12"
-                 , bgColor = "#000507"
-                 , fgColor = "#d8dee9"
-                 , bgHLight = "#0d1319"
-                 , fgHLight = "#b48ead"
-                 , borderColor = "#d8dee9"
+                 , bgColor = "#fefefe"
+                 , fgColor = "#30343f"
+                 , bgHLight = "#dddddd"
+                 , fgHLight = "#fec7cd"
+                 , borderColor = "#30343f"
                  , promptBorderWidth = 0
                  , promptKeymap = myXPKeymap
                  , position = CenteredAt (1 % 2) (1 % 4)
@@ -663,10 +650,10 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
   where
     spawnTerm  = myTerminal ++ " -name scratchpad"
     findTerm   = resource =? "scratchpad"
-    manageTerm = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
+    manageTerm = customFloating $ W.RationalRect (1 % 3) (1 % 4) (1 % 3) (1 % 2)
     spawnAudacious  = "audacious"
     findAudacious   = resource =? "audacious"
-    manageAudacious = customFloating $ W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2)
+    manageAudacious = customFloating $ W.RationalRect (1 % 3) (1 % 4) (1 % 3) (1 % 2)
 
 ------------------------------------------------------------------------
 
