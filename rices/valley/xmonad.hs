@@ -563,7 +563,6 @@ myStartupHook = do
         spawnOnce "emacs --daemon"
         spawnOnce "urxvtd --quiet &"
         spawnOnce "pcmanfm --daemon-mode &"
-        spawnOnce "tint2 &"
         spawnOnce "feh --bg-fill /etc/wallpaper.jpg"
 
 ------------------------------------------------------------------------
