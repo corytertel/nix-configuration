@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleInstances, MultiParamTypeClasses #-}
+{-# OPTIONS_GHC -Wunused-imports #-}
 
 import XMonad
 
@@ -491,7 +492,7 @@ myLayout = avoidStruts
      -- top, bottom, right, left
      bigGaps = spacingRaw False (Border 100 50 180 130) True (Border 0 50 0 50) True
      smallGaps = spacingRaw False (Border 50 0 50 0) True (Border 0 50 0 50) True
-     terminalGaps = spacingRaw False (Border 300 250 860 810) True (Border 0 50 0 50) True
+     terminalGaps = spacingRaw False (Border 500 450 1135 1085) True (Border 0 50 0 50) True
      terminal2GapsLeft = spacingRaw False (Border 150 150 50 300) True (Border 0 0 0 0) True
      terminal2GapsRight = spacingRaw False (Border 500 500 300 50) True (Border 0 0 0 0) True
      terminal3Gaps = spacingRaw False (Border 150 50 300 200) True (Border 0 100 0 100) True
@@ -500,13 +501,11 @@ myLayout = avoidStruts
      threeGaps = spacingRaw False (Border 26 0 26 0) True (Border 0 26 0 26) True
      discordGaps = spacingRaw False (Border 350 300 800 750) True (Border 0 50 0 50) True
      ws1Layout = onWorkspace ws1
-       --(windowDeco $ (ifMax 2 (ifMax 1 (terminalGaps $ Full) ((terminal2GapsLeft $ Full) *|* (terminal2GapsRight $ Full))) (terminal3Gaps $ resizableTile))
-       --(windowDeco $ (ifMax 2 (ifMax 1 (terminalGaps $ Full) (combineTwo resizableTile (terminal2GapsLeft $ Full) (terminal2GapsRight $ Full))) (terminal3Gaps $ resizableTile))
        (windowDeco $ (ifMax 2 (ifMax 1 (terminalGaps $ Full) (combineTwoP resizableTile (terminal2GapsLeft $ Full) (terminal2GapsRight $ Full) (ClassName "Emacs"))) (terminal3Gaps $ resizableTile))
        ||| (bigGaps $ Full))
      ws2Layout = onWorkspace ws2
        (windowDeco $ (ifMax 2 (bigGaps $ resizableTile) (smallGaps $ resizableTile))
-       ||| (simplestFloat))
+       ||| Full)
      ws3Layout = onWorkspace ws3
        (windowDeco $ (ifMax 2 (ifMax 1 (discordGaps $ Full) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
        ||| (simplestFloat))
@@ -526,7 +525,6 @@ myManageHook = composeAll
     , className =? "gwenview"                                         --> mediaFloat
     , className =? "Sxiv"                                             --> mediaFloat
     , className =? "Orage"                                            --> doFloat
-    --, className =? "Pcmanfm"                                          --> doFloat
     , className =? "Nemo"                                             --> myRectFloat
     , className =? "Gimp"                                             --> doFloat
     , className =? "Galculator"                                       --> calculatorFloat
@@ -570,20 +568,21 @@ myStartupHook = do
 
 ------------------------------------------------------------------------
 
-myBar0 = "xmobar $HOME/.config/xmobar/xmobarrc0"
-myBar1 = "xmobar $HOME/.config/xmobar/xmobarrc1"
-myBar2 = "xmobar $HOME/.config/xmobar/xmobarrc2"
-myBar3 = "xmobar $HOME/.config/xmobar/xmobarrc3"
+barLauncher = "xmobar $HOME/.config/xmobar/launcher"
+barWorkspaces = "xmobar $HOME/.config/xmobar/workspaces"
+barDock = "xmobar $HOME/.config/xmobar/dock"
+barWidgets = "xmobar $HOME/.config/xmobar/widgets"
+barClock = "xmobar $HOME/.config/xmobar/clock"
 
-myPP = xmobarPP { ppCurrent = xmobarColor "#e96179" "" . wrap "" "" --current selected desktop
-                , ppHidden = xmobarColor "#30343f" "" . wrap "" "" . clickable
-                , ppHiddenNoWindows = xmobarColor "#707577" "" . wrap "" "" . clickable --desktops with no windows
-                , ppVisible = xmobarColor "#30343f" "" . wrap "" "" . clickable
-                , ppTitle = xmobarColor "#30343f" "" . shorten 40
-                , ppOrder = \(ws:_:_:_) -> [ws]
-                }
+ppWorkspaces = xmobarPP { ppCurrent = xmobarColor "#e96179" "" --current selected desktop
+                        , ppHidden = xmobarColor "#fefefe" "" . clickable
+                        , ppHiddenNoWindows = xmobarColor "#707577" "" . clickable --desktops with no windows
+                        , ppVisible = xmobarColor "#fefefe" "" . clickable
+                        , ppTitle = xmobarColor "#fefefe" "" . shorten 40
+                        , ppOrder = \(ws:_:_:_) -> [ws]
+                        }
 
-myPP2 = xmobarPP { ppOrder = \(_:_:_:_) -> [] }
+ppNormal = xmobarPP { ppOrder = \(_:_:_:_) -> [] }
 
 -- Key binding to toggle the gap from the bar.
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
@@ -657,7 +656,14 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
 
 ------------------------------------------------------------------------
 
-main = xmonad . ewmh =<< statusBar myBar1 myPP toggleStrutsKey =<< statusBar myBar0 myPP2 toggleStrutsKey =<< statusBar myBar2 myPP2 toggleStrutsKey =<< statusBar myBar3 myPP2 toggleStrutsKey defaults
+main = xmonad
+       . ewmh
+       . docks
+       =<< statusBar barLauncher ppNormal toggleStrutsKey
+       =<< statusBar barWorkspaces ppWorkspaces toggleStrutsKey
+       =<< statusBar barDock ppNormal toggleStrutsKey
+       =<< statusBar barWidgets ppNormal toggleStrutsKey
+       =<< statusBar barClock ppNormal toggleStrutsKey defaults
 
 defaults = def {
       -- simple stuff

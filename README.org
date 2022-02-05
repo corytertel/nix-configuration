@@ -11,39 +11,36 @@ There are instructions as to how to replicate my install in the install director
 
  * PC
 
-[[Screenshot][img/mesa1.png]]
-[[Screenshot][img/mesa2.png]]
+[[Screenshot][img/desktop.png]]
 
 #+ATTR_HTML: :border 2 :rules all :frame border
-|---------------+---------------------|
-| *OS*          | NixOS               |
-| *Shell*       | ksh                 |
-| *Terminal*    | urxvt               |
-| *Colorscheme* | Custom Light Theme  |
-| *WM*          | fvwm                |
-| *Font*        | Fantasque Sans Mono |
-| *Editor*      | Spacemacs           |
-| *Fetch*       | pfetch              |
+|---------------+--------------------|
+| *OS*          | NixOS              |
+| *Shell*       | zsh                |
+| *Terminal*    | urxvt              |
+| *Colorscheme* | Custom Light Theme |
+| *WM*          | xmonad             |
+| *Bar/Dock*    | xmobar             |
+| *Font*        | mplus & JetBrains  |
+| *Editor*      | Spacemacs          |
 
 * Laptop
 
 [[Screenshot][img/laptop.png]]
 
 #+ATTR_HTML: :border 2 :rules all :frame border
-|---------------+---------------------|
-| *OS*          | NixOS               |
-| *Shell*       | zsh                 |
-| *Terminal*    | urxvt               |
-| *Colorscheme* | Black Nord          |
-| *WM*          | xmonad              |
-| *Font*        | mplus & JetBrains   |
-| *Editor*      | Spacemacs           |
-| *Fetch*       | pfetch && df -h     |
+|---------------+-------------------|
+| *OS*          | NixOS             |
+| *Shell*       | zsh               |
+| *Terminal*    | urxvt             |
+| *Colorscheme* | Black Nord        |
+| *WM*          | xmonad            |
+| *Bar*         | xmobar            |
+| *Font*        | mplus & JetBrains |
+| *Editor*      | Spacemacs         |
+| *Fetch*       | pfetch && df -h   |
 
 * TO DO
-  + russian keyboard
-    + package layout switch as a derivation
-    + Package 'layout_switch.sh' in a nix derivation for reproducability
   + Reorganize file structure
     + Clean up files too
   + Sort through and remove unnecessary files in `old`

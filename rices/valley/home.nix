@@ -30,15 +30,14 @@
       # transition-pow-w = 0.1
       # transition-pow-h = 0.1
       # size-transition = true
+      # corner-radius = 30;
+      # round-borders = 1;
+      # rounded-corners-exclude = [
+      #   "name != 'xmobar'",
+      # ];
     extraOptions = ''
       blur-method = "dual_kawase";
       blur-strength = 8;
-
-      corner-radius = 30;
-      round-borders = 1;
-      rounded-corners-exclude = [
-        "name != 'xmobar'",
-      ];
 
       shadow-radius = 30;
     '';
@@ -46,9 +45,9 @@
     fadeDelta = 3;
     shadow = true;
     shadowOpacity = "0.90";
-    noDockShadow = false;
+    noDockShadow = true;
     shadowExclude = [
-      "!name ~= ''"
+      #"!name ~= ''"
     ];
     vSync = true;
     package = pkgs.picom.overrideAttrs (
@@ -64,10 +63,11 @@
   };
 
   home.file = {
-    ".config/xmobar/xmobarrc0".text = builtins.readFile ./xmobar/xmobarrc0;
-    ".config/xmobar/xmobarrc1".text = builtins.readFile ./xmobar/xmobarrc1;
-    ".config/xmobar/xmobarrc2".text = builtins.readFile ./xmobar/xmobarrc2;
-    ".config/xmobar/xmobarrc3".text = builtins.readFile ./xmobar/xmobarrc3;
+    ".config/xmobar/launcher".text = builtins.readFile ./xmobar/launcher;
+    ".config/xmobar/workspaces".text = builtins.readFile ./xmobar/workspaces;
+    ".config/xmobar/dock".text = builtins.readFile ./xmobar/dock;
+    ".config/xmobar/widgets".text = builtins.readFile ./xmobar/widgets;
+    ".config/xmobar/clock".text = builtins.readFile ./xmobar/clock;
     ".icons/icons" = {
       recursive = true;
       source = ./icons;

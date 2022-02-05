@@ -40,7 +40,7 @@
       "italicFont" = "xft:VictorMono Nerd Font Mono:style=Italic:size=10:antialias=true";
       "boldItalicFont" = "xft:VictorMono Nerd Font Mono:style=Bold Italic:size=10:antialias=true";
 
-      "internalBorder" = "45";
+      "internalBorder" = "30";
       "externalBorder" = "0";
       "cursorBlink" = "true";
       "cursorUnderline" = "false";
