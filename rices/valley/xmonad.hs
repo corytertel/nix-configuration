@@ -14,7 +14,7 @@ import System.Exit
 
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
-import XMonad.Util.NamedScratchpad
+--import XMonad.Util.NamedScratchpad
 import XMonad.Util.EZConfig
 import XMonad.Util.Image
 
@@ -163,8 +163,10 @@ myAdditionalKeys =
     -- Window Menu
     , ("M-o", windowMenu)
     -- Scratchpads
-    , ("M-'", namedScratchpadAction myScratchpads "terminal")
-    , ("M-0", namedScratchpadAction myScratchpads "audacious")
+    --, ("M-'", namedScratchpadAction myScratchpads "terminal")
+    --, ("M-0", namedScratchpadAction myScratchpads "audacious")
+    , ("M-'", spawn $ (myTerminal ++ " -name scratchpad"))
+    , ("M-0", spawn "audacious")
     -- Master and Stack Controls
     , ("M-r", refresh)
     --, ("M-m", windows W.focusMaster  )
@@ -438,7 +440,7 @@ defaultThemeWithImageButtons = def
                                , urgentColor = "#99cd61"
                                , urgentTextColor = "#30343f"
                                , urgentBorderWidth = 0
-                               , decoHeight = 60
+                               , decoHeight = 55
                                , windowTitleIcons = [ (menuButton, CenterLeft 20),
                                                       (closeButton, CenterRight 20),
                                                       (maxiButton, CenterRight 60),
@@ -521,7 +523,7 @@ myManageHook = composeAll
     , className =? "MPlayer"                                          --> mediaFloat
     , className =? "mpv"                                              --> mediaFloat
     , className =? "vlc"                                              --> mediaFloat
-    , className =? "Io.github.celluloid_player.Celluloid"             --> mediaFloat
+    , className =? "io.github.celluloid_player.Celluloid"             --> mediaFloat
     , className =? "gwenview"                                         --> mediaFloat
     , className =? "Sxiv"                                             --> mediaFloat
     , className =? "Orage"                                            --> doFloat
@@ -538,16 +540,19 @@ myManageHook = composeAll
     , title     =? "Save File"                                        --> myRectFloat
     , title     =? "Open"                                             --> myRectFloat
     , title     =? "Open Files"                                       --> myRectFloat
+    , resource  =? "scratchpad"                                       --> scratchpadFloat
+    , resource  =? "audacious"                                        --> scratchpadFloat
     , resource  =? "desktop_window"                                   --> doIgnore
     , resource  =? "kdesktop"                                         --> doIgnore
     , isFullscreen                                                    --> doFullFloat
-    ] <+> namedScratchpadManageHook myScratchpads
+    ] -- <+> namedScratchpadManageHook myScratchpads
   where
     unfloat = ask >>= doF . W.sink
     -- xpos, ypos, width, height
     myRectFloat = doRectFloat (W.RationalRect (1 % 3) (3 % 10) (1 % 3) (2 % 5))
     mediaFloat = doRectFloat (W.RationalRect (3 % 10) (3 % 20) (2 % 5) (7 % 10))
     calculatorFloat = doRectFloat (W.RationalRect (7 % 16) (2 % 6) (1 % 8) (1 % 3))
+    scratchpadFloat = doRectFloat (W.RationalRect (1 % 3) (1 % 4) (1 % 3) (1 % 2))
 
 ------------------------------------------------------------------------
 
@@ -642,16 +647,16 @@ myXPConfig = def { font = "xft:M+ 1c:size=12"
 
 ------------------------------------------------------------------------
 
-myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
-                , NS "audacious" spawnAudacious findAudacious manageAudacious
-                ]
-  where
-    spawnTerm  = myTerminal ++ " -name scratchpad"
-    findTerm   = resource =? "scratchpad"
-    manageTerm = customFloating $ W.RationalRect (1 % 3) (1 % 4) (1 % 3) (1 % 2)
-    spawnAudacious  = "audacious"
-    findAudacious   = resource =? "audacious"
-    manageAudacious = customFloating $ W.RationalRect (1 % 3) (1 % 4) (1 % 3) (1 % 2)
+-- myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
+--                 , NS "audacious" spawnAudacious findAudacious manageAudacious
+--                 ]
+--   where
+--     spawnTerm  = myTerminal ++ " -name scratchpad"
+--     findTerm   = resource =? "scratchpad"
+--     manageTerm = customFloating $ W.RationalRect (1 % 3) (1 % 4) (1 % 3) (1 % 2)
+--     spawnAudacious  = "audacious"
+--     findAudacious   = resource =? "audacious"
+--     manageAudacious = customFloating $ W.RationalRect (1 % 3) (1 % 4) (1 % 3) (1 % 2)
 
 ------------------------------------------------------------------------
 
