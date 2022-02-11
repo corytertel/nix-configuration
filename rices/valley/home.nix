@@ -4,7 +4,6 @@
   imports =
     [
       ./dunst
-      ./emacs
       ./nvim
       ./rofi
       ./urxvt
