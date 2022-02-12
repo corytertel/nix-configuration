@@ -158,6 +158,7 @@
       tint2
       dos2unix
       galculator
+      unzip
 
       discord
       betterdiscord-installer
