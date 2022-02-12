@@ -33,6 +33,8 @@
 (set-fontset-font t '(#xe000 . #xffdd)
 		  (font-spec :name "JetBrainsMono NF" :size 12) nil)
 
+(setq custom-safe-themes t) ; Treat all themes as safe
+
 (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
 
 (load-theme 'vibrant)

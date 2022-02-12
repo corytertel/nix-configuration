@@ -33,6 +33,8 @@
 (set-fontset-font t '(#xe000 . #xffdd)
 		  (font-spec :name "JetBrainsMono NF" :size 12) nil)
 
+(setq custom-safe-themes t) ; Treat all themes as safe
+
 (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
 
 (load-theme 'black-nord)
@@ -359,7 +361,7 @@
  '(ansi-color-names-vector
    ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
  '(custom-safe-themes
-   '("56ff3c4a6065f5006b16384c0aac6bcdc5084194d3d23463778776588cbabc1e" "42c0370f0d2e1c4776f372e91fc514977d0b0c14077954a1f229e6a630e08fe6" "c8cd8b9393a75a99556a2bb1b5dda053973b93a53ba7f6cf4fbad6b28ed1d039" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default))
+   '("56ff3c4a6065f5006b16384c0aac6bcdc5084194d3d23463778776588cbabc1e" default))
  '(hl-todo-keyword-faces
    '(("TODO" . "#dc752f")
      ("NEXT" . "#dc752f")
