@@ -130,6 +130,10 @@
    "t"  '(:ignore t :which-key "toggles")
    "ts" '(hydra-text-scale/body :which-key ":scale-text")
    "tt" '(counsel-load-theme :which-key "choose theme")
+
+   ;; Windows
+   "w"  '(:ignore t :which-key "windows")
+   "wd" '(evil-window-delete :which-key "delete window")
    ))
 
 (defun cory/evil-hook ()
