@@ -40,7 +40,7 @@ import XMonad.Layout.ComboP
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
+import XMonad.Hooks.EwmhDesktops (ewmh, ewmhFullscreen)
 import XMonad.Hooks.ManageHelpers
   (isFullscreen, isDialog,  doFullFloat, doCenterFloat, doRectFloat, composeOne, isInProperty)
 
@@ -556,7 +556,7 @@ myManageHook = composeAll
 
 ------------------------------------------------------------------------
 
-myEventHook = fullscreenEventHook
+myEventHook = mempty
 
 ------------------------------------------------------------------------
 
@@ -661,6 +661,7 @@ myXPConfig = def { font = "xft:M+ 1c:size=12"
 ------------------------------------------------------------------------
 
 main = xmonad
+       . ewmhFullscreen
        . ewmh
        . docks
        =<< statusBar barLauncher ppNormal toggleStrutsKey
