@@ -1,0 +1,50 @@
+set selection-clipboard clipboard
+set window-title-home-tilde true
+set statusbar-home-tilde true
+set adjust-open "best-fit"
+
+set font "M+ 1c 10"
+# Light/Default mode settings:
+# 
+#
+set notification-error-bg       "#e96179" # Red
+set notification-error-fg       "#30343f" # Foreground
+set notification-warning-bg     "#d5dae0" # Orange
+set notification-warning-fg     "#dddddd" # Selection
+set notification-bg             "#fefefe" # Background
+set notification-fg             "#30343f" # Foreground
+
+set completion-bg               "#fefefe" # Background
+set completion-fg               "#999999" # Comment
+set completion-group-bg         "#fefefe" # Background
+set completion-group-fg         "#999999" # Comment
+set completion-highlight-bg     "#dddddd" # Selection
+set completion-highlight-fg     "#30343f" # Foreground
+
+set index-bg                    "#fefefe" # Background
+set index-fg                    "#30343f" # Foreground
+set index-active-bg             "#dddddd" # Current Line
+set index-active-fg             "#30343f" # Foreground
+
+set inputbar-bg                 "#fefefe" # Background
+set inputbar-fg                 "#30343f" # Foreground
+set statusbar-bg                "#fefefe" # Background
+set statusbar-fg                "#30343f" # Foreground
+
+set highlight-color             "#d5dae0" # Orange
+set highlight-active-color      "#f6bfc5" # Pink
+
+set default-bg                  "#fefefe" # Background
+set default-fg                  "#30343f" # Foreground
+
+set render-loading              true
+set render-loading-fg           "#fefefe" # Background
+set render-loading-bg           "#30343f" # Foreground
+
+# Startup options
+#
+#
+set adjust-open width
+set recolor false
+map <C-Tab> toggle_statusbar
+set guioptions ""

@@ -36,6 +36,7 @@ import XMonad.Layout.Maximize
 import XMonad.Layout.Reflect (reflectHoriz)
 import XMonad.Layout.LayoutCombinators ((*|*))
 import XMonad.Layout.ComboP
+import XMonad.Layout.TwoPane
 
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
@@ -50,6 +51,8 @@ import XMonad.Actions.FloatSnap
 import XMonad.Actions.Search
 import XMonad.Actions.WindowMenu
 import XMonad.Actions.Minimize
+import XMonad.Actions.TiledWindowDragging
+import XMonad.Layout.DraggingVisualizer
 
 import XMonad.Prompt
 import XMonad.Prompt.Shell (shellPrompt)
@@ -267,6 +270,8 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
                                        >> windows W.shiftMaster))
 
+    , ((modm .|. shiftMask, button1), dragWindow)
+
     -- mod-button2, Raise the window to the top of the stack
     , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
 
@@ -277,9 +282,10 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
 
     -- Float Snapping Mouse Bindings
-    , ((mod1Mask, button1), (\w -> focus w >> mouseMoveWindow w >> ifClick (snapMagicMove (Just 50) (Just 50) w)))
-    , ((mod1Mask .|. shiftMask, button1), (\w -> focus w >> mouseMoveWindow w >> ifClick (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)))
-    , ((mod1Mask, button3), (\w -> focus w >> mouseResizeWindow w >> ifClick (snapMagicResize [R,D] (Just 50) (Just 50) w)))
+    -- , ((mod1Mask, button1), (\w -> focus w >> mouseMoveWindow w >> ifClick (snapMagicMove (Just 50) (Just 50) w)))
+    -- , ((mod1Mask .|. shiftMask, button1), (\w -> focus w >> mouseMoveWindow w >> ifClick (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)))
+    -- , ((mod1Mask, button3), (\w -> focus w >> mouseResizeWindow w >> ifClick (snapMagicResize [R,D] (Just 50) (Just 50) w)))
+
     -- alternative mouse bindings
     --, ((mod1Mask,               button1), (\w -> focus w >> mouseMoveWindow w >> afterDrag (snapMagicMove (Just 50) (Just 50) w)))
     --, ((mod1Mask .|. shiftMask, button1), (\w -> focus w >> mouseMoveWindow w >> afterDrag (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)))
@@ -472,7 +478,9 @@ myLayout = avoidStruts
          . ws3Layout
          . ws4Layout
          . windowDeco
+         . draggingVisualizer
          $ (ifMax 2 (ifMax 1 (terminalGaps $ Full) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
+   --  ||| (combineTwoP (TwoPane 0.00 0.0) simplestFloat (bigGaps $ resizableTile) (ClassName "URxvt"))
        ||| (ifMax 2 (ifMax 1 (terminalGaps $ Full) (bigGaps $ threeColumnMid)) (smallGaps $ threeColumnMid))
        ||| (bigGaps $ resizableTile)
        ||| (simplestFloat)

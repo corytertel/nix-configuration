@@ -18,9 +18,9 @@
     Xft.rgba: rgb
     Xft.lcdfilter: lcddefault
 
-    Sxiv.background: #000507
-    Sxiv.foreground: #d8dee9
-    Sxiv.font:M+ 1c:size=10
+    Sxiv.background: #ffffea
+    Sxiv.foreground: #000000
+    Sxiv.font:Iosevka Nerd Font:size=11
   '';
 
   # Fix pointer cursor

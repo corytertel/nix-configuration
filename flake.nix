@@ -6,10 +6,9 @@
     nixpkgs-unstable.url = "nixpkgs/master";
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    neovim-git.url = "github:neovim/neovim?dir=contrib";
   };
 
-  outputs = { nixpkgs, home-manager, neovim-git, ... }:
+  outputs = { nixpkgs, home-manager, ... }:
   let
     system = "x86_64-linux";
 
@@ -17,7 +16,6 @@
       inherit system;
       config = { allowUnfree = true; };
       overlays = [
-          neovim-git.overlay
           #(import ./overlays)
         ];
     };
@@ -35,7 +33,7 @@
           imports = [
             ./pc/home.nix
             ./shared/home.nix
-            ./rices/valley/home.nix
+            ./rices/xmomacs/home.nix
           ];
         };
       };
@@ -61,7 +59,7 @@
         modules = [
           ./pc/configuration.nix
           ./shared/configuration.nix
-          ./rices/valley/configuration.nix
+          ./rices/xmomacs/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;

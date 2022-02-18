@@ -149,7 +149,7 @@
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump nil)
-  ;(setq evil-undo-system 'undo-tree)
+  (setq evil-undo-system 'undo-tree)
   :hook (evil-mode . cory/evil-hook)
   :config
   (evil-mode 1)
@@ -173,8 +173,8 @@
 
 (evil-mode)
 
-;(use-package undo-tree)
-;(global-undo-tree-mode)
+(use-package undo-tree)
+(global-undo-tree-mode)
 
 (use-package all-the-icons)
 

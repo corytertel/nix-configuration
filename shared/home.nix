@@ -46,7 +46,7 @@
     packages = with pkgs; [
       # linux basics
       killall
-      kitty
+      #kitty
       gwenview
       neofetch
       cmus
@@ -132,7 +132,7 @@
       winetricks
       grapejuice
       pciutils
-      virt-manager
+      #virt-manager
       pcmanfm
       #xclip
       powershell
@@ -160,7 +160,7 @@
       galculator
       unzip
 
-      discord
+      #discord
       betterdiscord-installer
       betterdiscordctl
       steamPackages.steamcmd

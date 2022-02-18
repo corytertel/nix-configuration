@@ -2,31 +2,22 @@
 
 {
   nixpkgs.overlays = [
-    # Use custom DWM build
-    (final: prev: {
-      dwm = prev.dwm.overrideAttrs (old: {
-        src = pkgs.fetchFromGitHub {
-          owner = "corytertel";
-          repo = "dwm";
-          rev = "c66265a89867d684200370f8ce88226551b19b44";
-          sha256 = "Jw2mUT7ZmpTJbMLZvvXeCdj1OppVp2yE7mqJo4jKByw=";
+    # Discord
+    (self: super: {
+      discord = super.discord.overrideAttrs (_: {
+        src = builtins.fetchTarball {
+          url = "https://discord.com/api/download?platform=linux&format=tar.gz";
+          sha256 = "0hdgif8jpp5pz2c8lxas88ix7mywghdf9c9fn95n0dwf8g1c1xbb"; 
         };
       });
     })
 
-    # Discord
-    (self: super: {
-      discord = super.discord.overrideAttrs (_: {
-        src = builtins.fetchTarball "https://discord.com/api/download?platform=linux&format=tar.gz";
-      });
-    })
-
     # EmacsGcc
-    #(import (builtins.fetchGit {
-    #  url = "https://github.com/nix-community/emacs-overlay.git";
-    #  ref = "master";
-    #  rev = "c75b7c047cc4635b0ecdedfd4ad78e1ac76e41c5";
-    #}))
+    (import (builtins.fetchGit {
+      url = "https://github.com/nix-community/emacs-overlay.git";
+      ref = "master";
+      rev = "9fb18d58b0072db9ef1d2488401bf69c66d4376d";
+    }))
 
     (final: prev: {
       ungoogled-chromium = prev.ungoogled-chromium.override {

@@ -132,8 +132,8 @@
     shells = [ pkgs.ksh pkgs.nushell ];
     variables.EDITOR = "emacsclient -nw";
     systemPackages = with pkgs; [
+      emacsGcc
       vim
-      emacs
       wget
       curl
       #firefox
@@ -146,12 +146,7 @@
       fd
       htop
       pamixer
-      ntfs3g
-      git-crypt
-      gnupg
-      pinentry-gtk2
-      age
-      sops
+      discord
     ];
   };
 
@@ -161,9 +156,10 @@
     jetbrains-mono
     mplus-outline-fonts
     overpass
-    iosevka
+    #iosevka
     roboto-mono
     victor-mono
+    junicode
   ];
 
   virtualisation = {

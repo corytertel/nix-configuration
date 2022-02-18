@@ -1,0 +1,26 @@
+Config { 
+
+   -- appearance
+     font =         "xft:JetBrainsMono Nerd Font:size=29:antialias=true"
+   , bgColor =      "#fefefe"
+   , alpha =        0
+   , fgColor =      "#8db9b8"
+   , position =     Static { xpos = 1413 , ypos = 2060, width = 1014 , height = 80 }
+   , border =       BottomB
+   , borderWidth =  2
+   , borderColor =  "#fefefe"
+   , iconRoot = "/home/cory/.icons/icons/72x72/"
+
+   -- layout
+   , sepChar =  "%"   -- delineator between plugin names and straight text
+   , alignSep = "}{"  -- separator between left-right alignment
+   , template = " <action=pcmanfm --new-win><icon=/home/cory/.icons/icons/72x72/file-manager.xpm/>  </action><icon=/home/cory/.icons/icons/72x72/terminal.xpm/>  <action=urxvtc -icon /home/cory/.icons/icons/48x48/terminal.png><icon=/home/cory/.icons/icons/72x72/firefox.xpm/>  </action><icon=/home/cory/.icons/icons/72x72/emacs.xpm/>  <action=firefox><icon=/home/cory/.icons/icons/72x72/discord.xpm/>  </action><icon=/home/cory/.icons/icons/72x72/audacious.xpm/>  <action=emacsclient -c><icon=/home/cory/.icons/icons/72x72/steam.xpm/>  </action>  <action=discord>  </action>  <action=audacious>  </action>  <action=steam>  </action> "
+
+   -- general behavior
+   , lowerOnStart =     True    -- send to bottom of window stack on start
+   , hideOnStart =      False   -- start with window unmapped (hidden)
+   , allDesktops =      True    -- show on all desktops
+   , overrideRedirect = True    -- set the Override Redirect flag (Xlib)
+   , pickBroadest =     False   -- choose widest display (multi-monitor)
+   , persistent =       True    -- enable/disable hiding (True = disabled)
+   }
