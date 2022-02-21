@@ -17,7 +17,7 @@ Config {
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "  <fc=#7da998><fn=1><action=rofi -matching fuzzy -show drun -modi drun,run -show-icons> </action></fn></fc>  <fn=2>%UnsafeStdinReader%</fn> }{ %memory%  %cpu%    %volume%  <action=/home/cory/manual_installs/layout_switch.sh>  %kbd%</action>   <action=orage>%date%</action>  "
+   , template = "  <fc=#6a9fb5><fn=1><action=xdotool key super+x> </action></fn></fc>  <fn=2>%UnsafeStdinReader%</fn> }{ %memory%  %cpu%  <fc=#004488>  </fc>%volume%  <action=/home/cory/manual_installs/layout_switch.sh><fc=#004488>  </fc>%kbd%</action>   <action=orage>%date%</action>  "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start

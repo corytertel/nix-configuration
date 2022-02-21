@@ -36,6 +36,8 @@
 
   home.file = {
     ".config/xmobar/bar".text = builtins.readFile ./xmobar/bar;
+    ".config/xmobar/vol_free.sh".source = ./xmobar/vol_free.sh;
+    ".config/xmobar/vol_used.sh".source = ./xmobar/vol_used.sh;
     ".icons/icons" = {
       recursive = true;
       source = ./icons;

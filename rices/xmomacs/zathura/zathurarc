@@ -5,46 +5,52 @@ set adjust-open "best-fit"
 
 set font "Iosevka Nerd Font 11"
 # Light/Default mode settings:
-# 
 #
-set notification-error-bg       "#e96179" # Red
-set notification-error-fg       "#30343f" # Foreground
-set notification-warning-bg     "#d5dae0" # Orange
-set notification-warning-fg     "#dddddd" # Selection
-set notification-bg             "#fefefe" # Background
-set notification-fg             "#30343f" # Foreground
+#
+set notification-error-bg       "#880000" # Red
+set notification-error-fg       "#ffffea" # Foreground
+set notification-warning-bg     "#663311" # Orange
+set notification-warning-fg     "#ffffea" # Selection
+set notification-bg             "#eaeaea" # Background
+set notification-fg             "#000000" # Foreground
 
-set completion-bg               "#fefefe" # Background
-set completion-fg               "#999999" # Comment
-set completion-group-bg         "#fefefe" # Background
-set completion-group-fg         "#999999" # Comment
-set completion-highlight-bg     "#dddddd" # Selection
-set completion-highlight-fg     "#30343f" # Foreground
+set completion-bg               "#ffffea" # Background
+set completion-fg               "#000000" # Comment
+set completion-group-bg         "#ffffea" # Background
+set completion-group-fg         "#000000" # Comment
+set completion-highlight-bg     "#eeee9e" # Selection
+set completion-highlight-fg     "#000000" # Foreground
 
-set index-bg                    "#fefefe" # Background
-set index-fg                    "#30343f" # Foreground
-set index-active-bg             "#dddddd" # Current Line
-set index-active-fg             "#30343f" # Foreground
+set index-bg                    "#ffffea" # Background
+set index-fg                    "#000000" # Foreground
+set index-active-bg             "#eeee9e" # Current Line
+set index-active-fg             "#000000" # Foreground
 
-set inputbar-bg                 "#fefefe" # Background
-set inputbar-fg                 "#30343f" # Foreground
-set statusbar-bg                "#fefefe" # Background
-set statusbar-fg                "#30343f" # Foreground
+set inputbar-bg                 "#ffffea" # Background
+set inputbar-fg                 "#000000" # Foreground
+set statusbar-bg                "#ffffea" # Background
+set statusbar-fg                "#000000" # Foreground
 
-set highlight-color             "#d5dae0" # Orange
-set highlight-active-color      "#f6bfc5" # Pink
+set highlight-color             "#eaffff" # Teal
+set highlight-active-color      "#ffeaff" # Pink
 
-set default-bg                  "#fefefe" # Background
-set default-fg                  "#30343f" # Foreground
+set default-bg                  "#ffffea" # Background
+set default-fg                  "#000000" # Foreground
+
+set recolor-lightcolor          "#ffffea" # Background
+set recolor-darkcolor           "#000000" # Foreground
 
 set render-loading              true
-set render-loading-fg           "#fefefe" # Background
-set render-loading-bg           "#30343f" # Foreground
+set render-loading-bg           "#ffffea" # Background
+set render-loading-fg           "#000000" # Foreground
 
 # Startup options
 #
 #
-set adjust-open width
-set recolor false
+#set adjust-open width
+set recolor true
+set recolor-keephue
 map <C-Tab> toggle_statusbar
+map u scroll half-up
+map d scroll half-down
 set guioptions ""

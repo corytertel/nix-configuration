@@ -20,7 +20,7 @@ import XMonad.Util.Image
 
 import XMonad.Layout.Spacing
 import XMonad.Layout.ThreeColumns
---import XMonad.Layout.MultiToggle.Instances (StdTransformers (NBFULL))
+import XMonad.Layout.MultiToggle.Instances (StdTransformers (NBFULL))
 import XMonad.Layout.MultiToggle (mkToggle, single, Toggle (..))
 import XMonad.Layout.NoBorders (noBorders, smartBorders)
 import XMonad.Layout.ResizableTile
@@ -60,6 +60,7 @@ import XMonad.Prompt.Shell (shellPrompt)
 import XMonad.Prompt.Input
 import XMonad.Prompt.FuzzyMatch
 import XMonad.Prompt.Window
+import XMonad.Prompt.Workspace
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -81,15 +82,6 @@ myFocusedBorderColor = "#000000"
 
 myModMask       = mod4Mask
 
---ws1 = "\61728 "
---ws2 = "\62057 "
---ws3 = "\62074 "
---ws4 = "\61729 "
---ws5 = "\61564 "
---ws6 = "\61878 "
---ws7 = "\61441 "
---ws8 = "\61704 "
---ws9 = "\61612 "
 ws1 = "α"
 ws2 = "β"
 ws3 = "γ"
@@ -126,13 +118,12 @@ myAdditionalKeys =
     -- launch emacs
     --, ("M-S-<Return>", spawn "emacsclient -c")
     -- Xmonad prompt
-    --, ("M-<Space>", shellPrompt myXPConfig)
+    [ ("M-x", shellPrompt launcherXPConfig)
     --, ("M-<Space>", spawn "rofi -matching normal -show drun -modi drun,run -show-icons")
-    --, ("M-S-<Space>", shellPrompt myXPConfig)
     -- Xmonad prefix prompt
-    [ ("M-z", prefixPrompt)
+    , ("M-z", prefixPrompt)
     -- Xmonad command prompt
-    , ("M-x", commandPrompt)
+    --, ("M-x", commandPrompt)
     -- File Manager
     --, ("M-e", spawn "pcmanfm --new-win")
     -- close focused window
@@ -173,12 +164,12 @@ myAdditionalKeys =
     --, ("M-<Print>", spawn "flameshot full -p ~/Screenshots/")
     --, ("M-S-<Print>", spawn "flameshot gui")
     -- Fullscreen
-    --, ("M-f", sendMessage (Toggle NBFULL))
+    , ("M-f", sendMessage (Toggle NBFULL))
     -- Minimize
     , ("M-i", withFocused minimizeWindow)
     , ("M-S-i", withLastMinimized maximizeWindowAndFocus)
     -- Maximize
-    , ("M-f", withFocused (sendMessage . maximizeRestore))
+    --, ("M-f", withFocused (sendMessage . maximizeRestore))
     -- Window Menu
     , ("M-o", windowMenu)
     -- Scratchpads
@@ -510,13 +501,13 @@ instance Eq a => DecorationStyle ImageButtonDecoration a where
 myLayout = avoidStruts
          -- . WN.windowNavigation
          . smartBorders
-         -- . fullScreenToggle
+         . fullScreenToggle
          . minimize
          . BW.boringWindows
-         . maximizeWithPadding 50
+         -- . maximizeWithPadding 50
          $ (borderGaps $ resizableTile)
-       ||| (borderGaps $ threeColumnMid)
        ||| ifMax 2 (ifMax 1 (threeGapsSingle $ Full) (threeGapsDouble $ threeColumnMidDouble)) (threeGaps $ threeColumnMid)
+       ||| (borderGaps $ Full)
   where
      threeColumn = ThreeCol nmaster delta ratio
      threeColumnMid = ThreeColMid nmaster delta ratio
@@ -532,7 +523,7 @@ myLayout = avoidStruts
      threeGapsDouble = spacingRaw False (Border 200 70 1060 200) True (Border 0 0 0 0) True
      threeGaps = spacingRaw False (Border 200 70 200 200) True (Border 0 0 0 0) True
      -- Fullscreen
-     -- fullScreenToggle = mkToggle (single NBFULL)
+     fullScreenToggle = mkToggle (single NBFULL)
 
 ------------------------------------------------------------------------
 
@@ -608,8 +599,8 @@ toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
 ------------------------------------------------------------------------
 
-myXPKeymap :: M.Map (KeyMask,KeySym) (XP ())
-myXPKeymap  = M.fromList
+launcherXPKeymap :: M.Map (KeyMask,KeySym) (XP ())
+launcherXPKeymap  = M.fromList
   [ ((controlMask, xK_z), killBefore)
   , ((controlMask, xK_k), killAfter)
   , ((controlMask, xK_a), startOfLine)
@@ -640,25 +631,26 @@ myXPKeymap  = M.fromList
   , ((0, xK_Escape), quit)
   ]
 
-myXPConfig = def { font = "xft:Iosevka Nerd Font:size=12"
-                 , bgColor = "#fefefe"
-                 , fgColor = "#30343f"
-                 , bgHLight = "#dddddd"
-                 , fgHLight = "#fec7cd"
-                 , borderColor = "#30343f"
-                 , promptBorderWidth = 0
-                 , promptKeymap = myXPKeymap
-                 , position = CenteredAt (1 % 2) (1 % 4)
-                 , height = 160
-                 , historySize = 256
-                 , historyFilter = id
-                 , defaultText = []
-                 , autoComplete = Nothing
-                 , showCompletionOnTab = True
-                 , searchPredicate = isPrefixOf
-                 , alwaysHighlight = True
-                 , maxComplRows = Nothing
-                 }
+launcherXPConfig = def { font               = "xft:Iosevka Nerd Font:size=12"
+                       , bgColor             = "#d7d7d7"
+                       , fgColor             = "#880000"
+                       , bgHLight            = "#004488"
+                       , fgHLight            = "#d7d7d7"
+                       , borderColor         = "#880000"
+                       , promptBorderWidth   = 2
+                       , position            = CenteredAt (103 % 108) (1 % 2)
+                       , alwaysHighlight     = True
+                       , height              = 60
+                       , maxComplRows        = Just 14
+                       , historySize         = 256
+                       , historyFilter       = id
+                       , promptKeymap        = launcherXPKeymap
+                       , defaultText         = []
+                       , autoComplete        = Nothing
+                       , showCompletionOnTab = True
+                       , searchPredicate     = fuzzyMatch
+                       , sorter              = fuzzySort
+                       }
 
 ------------------------------------------------------------------------
 
@@ -666,7 +658,7 @@ myXPConfig = def { font = "xft:Iosevka Nerd Font:size=12"
 
 -- Keybinds
 prefixXPKeymap :: M.Map (KeyMask,KeySym) (XP ())
-prefixXPKeymap  = M.fromList
+prefixXPKeymap = M.fromList
   [ ((controlMask, xK_g), quit)
   , ((controlMask, xK_bracketleft), quit)
   , ((0, xK_Escape), quit)
@@ -674,27 +666,9 @@ prefixXPKeymap  = M.fromList
   , ((0, xK_KP_Enter), setSuccess True >> setDone True)
   , ((0, xK_BackSpace), deleteString Prev)
   , ((0, xK_Delete), deleteString Next)
-
-  -- Custom keybindings
   , ((controlMask, xK_h), setSuccess True >> setDone True >> spawn "urxvtc -name xmomacs-help -e man xmonad")
-  --, ((controlMask, xK_m), setSuccess True >> setDone True >> sendMessage ToggleStruts)
-  , ((controlMask, xK_q), io (exitWith ExitSuccess))
-  , ((controlMask, xK_f), setSuccess True >> setDone True >> spawn "pcmanfm --new-win")
   , ((controlMask, xK_r), setSuccess True >> setDone True >> spawn "xmonad --recompile; xmonad --restart")
-
-  -- Tags
-  --, ((mod1Mask,                 xK_f), addTag "abc")
-  -- , ((mod1Mask .|. controlMask, xK_f), setSuccess True >> setDone True >> withFocused (delTag "abc"))
-  -- , ((mod1Mask .|. shiftMask,   xK_f), setSuccess True >> setDone True >> withTaggedGlobalP "abc" W.sink)
-  -- , ((mod1Mask,                 xK_d), setSuccess True >> setDone True >> withTaggedP "abc" (W.shiftWin "2"))
-  -- , ((mod1Mask .|. shiftMask,   xK_d), setSuccess True >> setDone True >> withTaggedGlobalP "abc" shiftHere)
-  -- , ((mod1Mask .|. controlMask, xK_d), setSuccess True >> setDone True >> focusUpTaggedGlobal "abc")
-  -- , ((mod1Mask,                 xK_g), setSuccess True >> setDone True >> tagPrompt def (\s -> withFocused (addTag s)))
-  -- , ((mod1Mask .|. controlMask, xK_g), setSuccess True >> setDone True >> tagDelPrompt def)
-  -- , ((mod1Mask .|. shiftMask,   xK_g), setSuccess True >> setDone True >> tagPrompt def (\s -> withTaggedGlobal s float))
-  -- , ((mod4Mask,                 xK_g), setSuccess True >> setDone True >> tagPrompt def (\s -> withTaggedP s (W.shiftWin "2")))
-  -- , ((mod4Mask .|. shiftMask,   xK_g), setSuccess True >> setDone True >> tagPrompt def (\s -> withTaggedGlobalP s shiftHere))
-  -- , ((mod4Mask .|. controlMask, xK_g), setSuccess True >> setDone True >> tagPrompt def (\s -> focusUpTaggedGlobal s))
+  , ((controlMask, xK_q), io (exitWith ExitSuccess))
   ]
 
 prefixXPConfig = def { font = "xft:Iosevka Nerd Font:size=12"
@@ -721,26 +695,35 @@ prefixCommands :: M.Map String (X ())
 prefixCommands = fromList [
                           -- Launch
                             ("a", spawn "audacious")
-                          , ("f", spawn "firefox")
                           , ("d", spawn "discord")
                           , ("e", spawn "emacsclient -c")
                           , ("E", spawn "emacs")
+                          , ("f", spawn "firefox")
                           , ("F", spawn "pcmanfm --new-win")
                           , ("g", spawn "steam")
+                          , ("G", spawn "flatpak --user run com.valvesoftware.Steam")
                           , ("t", spawn "urxvtc")
 
                           -- Commands
                           , ("k", kill)
                           , ("K", spawn "xkill")
-                          , ("F", withFocused (sendMessage . maximizeRestore))
                           , ("l", sendMessage NextLayout)
                           , ("L", sendMessage FirstLayout)
+                          , ("m", withFocused (sendMessage . maximizeRestore))
+                          , ("o", windows W.focusDown)
+                          , ("Q", io (exitWith ExitSuccess))
+                          , ("R", spawn "xmonad --recompile; xmonad --restart")
                           , ("s", spawn "flameshot full -p ~/Screenshots/")
                           , ("S", spawn "flameshot gui")
+                          , ("M", sendMessage ToggleStruts)
 
                           -- Windows
                           , ("b", windowPrompt prefixXPConfig Goto allWindows)
                           , ("B", windowPrompt prefixXPConfig Bring allWindows)
+
+                          -- Workspaces
+                          , ("w", workspacePrompt prefixXPConfig (windows . W.greedyView))
+                          , ("W", workspacePrompt prefixXPConfig (windows . W.shift))
                           ]
 
 runCommand :: String -> X ()
