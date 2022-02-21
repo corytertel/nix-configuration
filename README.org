@@ -1,7 +1,6 @@
 #+TITLE:Nix Configuration
 
 [[https://builtwithnix.org][https://builtwithnix.org/badge.svg]]
-[[https://develop.spacemacs.org][https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg]]
 
 * I run a ZFS "Erase my Darlings" Setup
 My nix config is setup in such a way that all system files except those in /nix
@@ -9,20 +8,20 @@ and /boot will be wiped every boot for a stateless machine that results in highe
 There are instructions as to how to replicate my install in the install directory.
 ** Please do NOT simply clone these dotfiles and expect them to work on your machine. You're more than welcome to copy bits and pieces but a clone and rebuild will not work unless you have a near identical ZFS setup as mine.
 
- * PC
+* PC
 
-[[Screenshot][img/desktop.png]]
+[[Screenshot][img/xmomacs.png]]
 
 #+ATTR_HTML: :border 2 :rules all :frame border
-|---------------+--------------------|
-| *OS*          | NixOS              |
-| *Shell*       | zsh                |
-| *Terminal*    | urxvt              |
-| *Colorscheme* | Custom Light Theme |
-| *WM*          | xmonad             |
-| *Bar/Dock*    | xmobar             |
-| *Font*        | mplus & JetBrains  |
-| *Editor*      | Spacemacs          |
+|---------------+-----------|
+| *OS*          | NixOS     |
+| *Shell*       | zsh       |
+| *Terminal*    | urxvt     |
+| *Colorscheme* | Parchment |
+| *WM*          | xmonad    |
+| *Bar/Dock*    | xmobar    |
+| *Font*        | Iosevka   |
+| *Editor*      | Emacs     |
 
 * Laptop
 
@@ -35,9 +34,9 @@ There are instructions as to how to replicate my install in the install director
 | *Terminal*    | urxvt             |
 | *Colorscheme* | Black Nord        |
 | *WM*          | xmonad            |
-| *Bar*         | xmobar            |
+| *Bar*         | xmobar & tint2    |
 | *Font*        | mplus & JetBrains |
-| *Editor*      | Spacemacs         |
+| *Editor*      | Emacs             |
 | *Fetch*       | pfetch && df -h   |
 
 * TO DO
