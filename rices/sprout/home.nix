@@ -19,6 +19,7 @@
     opacityRule = [
       "100:class_g  *?= 'urxvt'"
       "90:class_g   *?= 'Emacs'"
+      "90:class_g   *?= 'Zathura'"
       "80:class_g   *?= 'discord'"
       "80:class_g   *?= 'Rofi'"
       "90:!name      ~= ''"

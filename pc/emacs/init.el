@@ -6,7 +6,7 @@
 (tool-bar-mode -1)   ; Disables the toolbar
 (menu-bar-mode -1)   ; Disables the menubar
 (tooltip-mode -1)    ; Disables tooltips
-(set-fringe-mode 20) ; Gives some breathing room
+(set-fringe-mode 10) ; Gives some breathing room
 
 (setq visible-bell nil) ; Disables the visible bell
 
@@ -23,22 +23,15 @@
 ;; (set-fontset-font t '(#xe000 . #xffdd)
 ;; 		  (font-spec :name "RobotoMono Nerd Font" :size 12) nil)
 (set-face-attribute 'default nil
-		    :family "JetBrains Mono" :weight 'light :height 100)
+		    :family "Iosevka Nerd Font" :weight 'semilight :height 105)
 (set-face-attribute 'bold nil
-		    :family "JetBrains Mono" :weight 'regular)
+		    :family "Iosevka Nerd Font" :weight 'regular :height 105)
 (set-face-attribute 'italic nil
-		    :family "Victor Mono" :weight 'semilight :slant 'italic :height 100)
+		    :family "Victor Mono" :weight 'semilight :slant 'italic)
 (set-fontset-font t 'unicode
-		  (font-spec :name "JetBrainsMono NF" :size 16) nil)
+		  (font-spec :name "Iosevka Nerd Font" :size 16) nil)
 (set-fontset-font t '(#xe000 . #xffdd)
-		  (font-spec :name "JetBrainsMono NF" :size 12) nil)
-
-(setq custom-safe-themes t) ; Treat all themes as safe
-
-(add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
-
-(load-theme 'vibrant)
-;;(counsel-load-theme 'nord)
+		  (font-spec :name "Iosevka Nerd Font" :size 12) nil)
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -67,8 +60,19 @@
 (dolist (mode '(org-mode-hook
 		term-mode-hook
 		shell-mode-hook
-		eshell-mode-hook))
+		eshell-mode-hook
+		cider-repl-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+;; Auto pairs
+(electric-pair-mode)
+
+;; Scroll conservatively
+;;(setq scroll-conservatively 101)
+
+;; Show empty whitespace
+(global-whitespace-mode)
+(setq whitespace-style '(face trailing tabs lines empty big-indent))
 
 (use-package command-log-mode)
 
@@ -115,8 +119,8 @@
     "bb" '(counsel-switch-buffer :which-key "switch buffer")
     "bd" '(kill-buffer :which-key "kill-buffer")
     "be" '(eval-buffer :which-key "eval buffer")
-    "bn" '(centaur-tabs-forward :which-key "next buffer")
-    "bp" '(centaur-tabs-backward :which-key "previous buffer")
+    ;;"bn" '(centaur-tabs-forward :which-key "next buffer")
+    ;;"bp" '(centaur-tabs-backward :which-key "previous buffer")
     "bg" '(centaur-tabs-counsel-switch-group :which-key "switch group")
 
     ;; Files
@@ -125,22 +129,35 @@
 
     ;; Git
     "g"  '(:ignore t :which-key "git")
+    "gs" '(magit-status :which-key "git status")
+
+    ;; Language
+    "l"  '(:ignore t :which-key "language")
+
+    ;; Operations
+    "o"  '(:ignore t :which-key "operations")
+    "or" '(replace-string :which-key "replace string")
+    "oc" '(comment-or-uncomment-region :which-key "comment region")
+
+    ;; Projects
+    "p" '(projectile-command-map :which-key "projects")
 
     ;; Toggles
-   "t"  '(:ignore t :which-key "toggles")
-   "ts" '(hydra-text-scale/body :which-key ":scale-text")
-   "tt" '(counsel-load-theme :which-key "choose theme")
+    "t"  '(:ignore t :which-key "toggles")
+    "ts" '(hydra-text-scale/body :which-key ":scale-text")
+    "tt" '(counsel-load-theme :which-key "choose theme")
 
-   ;; Windows
-   "w"  '(:ignore t :which-key "windows")
-   "wd" '(evil-window-delete :which-key "delete window")
-   ))
+    ;; Windows
+    "w"  '(:ignore t :which-key "windows")
+    "wd" '(evil-window-delete :which-key "delete window")
+    ))
 
 (defun cory/evil-hook ()
   (dolist (mode '(custom-mode
 		  eshell-mode
 		  special-mode
-		  term-mode))
+		  term-mode
+		  cider-repl-mode))
     (add-to-list 'evil-emacs-state-modes mode)))
 
 (use-package evil
@@ -224,6 +241,28 @@
   ("k" text-scale-decrease "out")
   ("f" nil "finished" :exit t))
 
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'ivy))
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :init
+  (when (file-directory-p "~/Code")
+    (setq projectile-project-search-path '("~/Code")))
+  (setq projectile-switch-project-action #'projectile-dired))
+
+(use-package counsel-projectile
+  :config (counsel-projectile-mode))
+
+;; (use-package magit
+;;   :commands (magit-status magit-get-current-branch)
+;;   :custom
+;;   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+;; (use-package evil-magit
+;;   :after magit)
+
 (use-package centaur-tabs
   :demand
   :config
@@ -241,7 +280,7 @@
   (setq centaur-tabs-label-fixed-length 10) ; 0 is dynamic
   (setq centaur-tabs-cycle-scope 'tabs)
   (centaur-tabs-headline-match)
-  (centaur-tabs-change-fonts "JetBrains Mono" 100)
+  (centaur-tabs-change-fonts "Iosevka Nerd Font" 105)
   (centaur-tabs-enable-buffer-reordering)
   (centaur-tabs-mode t)
   :init
@@ -257,8 +296,66 @@
 
 ;;; Clojure
 (use-package clojure-mode)
-(use-package lsp-mode)
 (use-package cider)
+(use-package clojure-mode-extra-font-locking)
+(use-package paredit)
+
+;; Enable paredit for Clojure
+(add-hook 'clojure-mode-hook 'enable-paredit-mode)
+
+;; This is useful for working with camel-case tokens, like names of
+;; Java classes (e.g. JavaClassName)
+(add-hook 'clojure-mode-hook 'subword-mode)
+
+;; syntax hilighting for midje
+(add-hook 'clojure-mode-hook
+          (lambda ()
+            (setq inferior-lisp-program "lein repl")
+            (font-lock-add-keywords
+             nil
+             '(("(\\(facts?\\)"
+                (1 font-lock-keyword-face))
+               ("(\\(background?\\)"
+                (1 font-lock-keyword-face))))
+            (define-clojure-indent (fact 1))
+            (define-clojure-indent (facts 1))
+            (rainbow-delimiters-mode)))
+
+;; provides minibuffer documentation for the code you're typing into the repl
+(add-hook 'cider-mode-hook 'eldoc-mode)
+
+;; go right to the REPL buffer when it's finished connecting
+(setq cider-repl-pop-to-buffer-on-connect t)
+
+;; When there's a cider error, show its buffer and switch to it
+(setq cider-show-error-buffer t)
+(setq cider-auto-select-error-buffer t)
+
+;; Where to store the cider history.
+(setq cider-repl-history-file "~/.emacs.d/cider-history")
+
+;; Wrap when navigating history.
+(setq cider-repl-wrap-history t)
+
+;; enable paredit in your REPL
+(add-hook 'cider-repl-mode-hook 'paredit-mode)
+
+;; Use clojure mode for other extensions
+(add-to-list 'auto-mode-alist '("\\.edn$" . clojure-mode))
+(add-to-list 'auto-mode-alist '("\\.boot$" . clojure-mode))
+(add-to-list 'auto-mode-alist '("\\.cljs.*$" . clojure-mode))
+(add-to-list 'auto-mode-alist '("lein-env" . enh-ruby-mode))
+
+;; Define keybindings just for clojure-mode
+;; (define-key clojure-mode-map (kbd "SPC l c") 'cider-jack-in)
+
+;; Clojure-mode specific keybindings
+;; (add-hook 'clojure-mode-hook
+;; 	  '(cory/leader-keys
+;; 	     "lc" '(cider-jack-in-clj :which-key "cider jack in")
+;; 	     "lk" '(cider-load-buffer :which-key "load buffer")))
+
+(use-package lsp-mode)
 (use-package lsp-treemacs)
 (use-package company)
 (use-package flycheck
@@ -317,9 +414,6 @@
       ;; lsp-enable-completion-at-point-nil ; uncomment to use cider completion instead of lsp
       )
 
-;; Define keybindings just for clojure-mode
-;;(define-key clojure-mode-map (kbd "SPC cc") 'cider-jack-in)
-
 ;;; C++
 (use-package yasnippet)
 (yas-global-mode 1)
@@ -354,36 +448,74 @@
 (use-package haskell-mode)
 (use-package nix-mode)
 
+;; Theme
+;; (use-package modus-themes
+;;   :ensure
+;;   :init
+;;   ;; Add all your customizations prior to loading the themes
+;;   (setq modus-themes-italic-constructs t
+;;         modus-themes-bold-constructs nil
+;;         modus-themes-region '(bg-only no-extend))
+
+;;   ;; Load the theme files before enabling a theme
+;;   (modus-themes-load-themes)
+;;   :config
+;;   ;; Load the theme of your choice:
+;;   (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
+;;   :bind ("<f11>" . modus-themes-toggle))
+
+(setq custom-safe-themes t) ; Treat all themes as safe
+(add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
+;;(load-theme 'parchment t)
+
+;; (custom-set-variables
+;;  ;; custom-set-variables was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(ansi-color-names-vector
+;;    ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+;;  '(custom-safe-themes
+;;    '("42c0370f0d2e1c4776f372e91fc514977d0b0c14077954a1f229e6a630e08fe6" "c8cd8b9393a75a99556a2bb1b5dda053973b93a53ba7f6cf4fbad6b28ed1d039" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default))
+;;  '(hl-todo-keyword-faces
+;;    '(("TODO" . "#dc752f")
+;;      ("NEXT" . "#dc752f")
+;;      ("THEM" . "#2d9574")
+;;      ("PROG" . "#4f97d7")
+;;      ("OKAY" . "#4f97d7")
+;;      ("DONT" . "#f2241f")
+;;      ("FAIL" . "#f2241f")
+;;      ("DONE" . "#86dc2f")
+;;      ("NOTE" . "#b1951d")
+;;      ("KLUDGE" . "#b1951d")
+;;      ("HACK" . "#b1951d")
+;;      ("TEMP" . "#b1951d")
+;;      ("FIXME" . "#dc752f")
+;;      ("XXX+" . "#dc752f")
+;;      ("\\?\\?\\?+" . "#dc752f")))
+;;  '(org-fontify-done-headline nil)
+;;  '(org-fontify-todo-headline nil)
+;;  '(package-selected-packages
+;;    '(nix-mode haskell-mode company flycheck lsp-treemacs cider lsp-mode clojure-mode undo-tree evil-collection which-key use-package rainbow-delimiters ivy-rich hydra helpful general evil doom-modeline counsel command-log-mode centaur-tabs annalist))
+;;  '(pdf-view-midnight-colors '("#b2b2b2" . "#292b2e")))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  )
+
+(use-package parchment-theme
+  :ensure t
+  :config (load-theme 'parchment t))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
- '(custom-safe-themes
-   '("42c0370f0d2e1c4776f372e91fc514977d0b0c14077954a1f229e6a630e08fe6" "c8cd8b9393a75a99556a2bb1b5dda053973b93a53ba7f6cf4fbad6b28ed1d039" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default))
- '(hl-todo-keyword-faces
-   '(("TODO" . "#dc752f")
-     ("NEXT" . "#dc752f")
-     ("THEM" . "#2d9574")
-     ("PROG" . "#4f97d7")
-     ("OKAY" . "#4f97d7")
-     ("DONT" . "#f2241f")
-     ("FAIL" . "#f2241f")
-     ("DONE" . "#86dc2f")
-     ("NOTE" . "#b1951d")
-     ("KLUDGE" . "#b1951d")
-     ("HACK" . "#b1951d")
-     ("TEMP" . "#b1951d")
-     ("FIXME" . "#dc752f")
-     ("XXX+" . "#dc752f")
-     ("\\?\\?\\?+" . "#dc752f")))
- '(org-fontify-done-headline nil)
- '(org-fontify-todo-headline nil)
  '(package-selected-packages
-   '(nix-mode haskell-mode company flycheck lsp-treemacs cider lsp-mode clojure-mode undo-tree evil-collection which-key use-package rainbow-delimiters ivy-rich hydra helpful general evil doom-modeline counsel command-log-mode centaur-tabs annalist))
- '(pdf-view-midnight-colors '("#b2b2b2" . "#292b2e")))
+   '(evil-magit magit paredit clojure-mode-extra-font-locking counsel-projectile projectile yasnippet which-key use-package undo-tree rainbow-delimiters parchment-theme nix-mode modern-cpp-font-lock lsp-treemacs ivy-rich helpful haskell-mode general flycheck evil doom-modeline cpp-auto-include counsel company command-log-mode cider centaur-tabs auto-complete))
+ '(warning-suppress-types '((comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
