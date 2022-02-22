@@ -2,9 +2,12 @@
   description = "Cory's system configuration";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-unstable";
-    nixpkgs-unstable.url = "nixpkgs/master";
-    home-manager.url = "github:nix-community/home-manager/master";
+    # nixpkgs.url = "nixpkgs/nixos-unstable";
+    # nixpkgs-unstable.url = "nixpkgs/master";
+    # home-manager.url = "github:nix-community/home-manager/master";
+    nixpkgs.url = "nixpkgs/nixos-21.11";
+    nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
+    home-manager.url = "github:nix-community/home-manager/release-21.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 

@@ -498,9 +498,9 @@ instance Eq a => DecorationStyle ImageButtonDecoration a where
 --        ||| (threeGaps $ Full))
 --      win(dowDeco = imageButtonDeco shrinkText defaultThemeWithImageButtons
 
-myLayout = avoidStruts
+myLayout =  avoidStruts
          -- . WN.windowNavigation
-         . smartBorders
+         .  smartBorders
          . fullScreenToggle
          . minimize
          . BW.boringWindows
@@ -528,7 +528,7 @@ myLayout = avoidStruts
 ------------------------------------------------------------------------
 
 myManageHook = composeAll
-    [ insertPosition Below Newer -- open new windows below current window
+    [ insertPosition Master Newer -- open new windows below current window
     , className =? "MPlayer"                                          --> mediaFloat
     , className =? "mpv"                                              --> mediaFloat
     , className =? "vlc"                                              --> mediaFloat

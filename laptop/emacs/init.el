@@ -252,6 +252,8 @@
 ;; (use-package evil-magit
 ;;   :after magit)
 
+(use-package forge)
+
 (use-package centaur-tabs
   :demand
   :config

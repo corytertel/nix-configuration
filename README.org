@@ -6,7 +6,7 @@
 My nix config is setup in such a way that all system files except those in /nix
 and /boot will be wiped every boot for a stateless machine that results in higher reproducibly. More info can be found here: https://grahamc.com/blog/erase-your-darlings    
 There are instructions as to how to replicate my install in the install directory.
-** Please do NOT simply clone these dotfiles and expect them to work on your machine. You're more than welcome to copy bits and pieces but a clone and rebuild will not work unless you have a near identical ZFS setup as mine.
+*Please do NOT simply clone these dotfiles and expect them to work on your machine. You're more than welcome to copy bits and pieces but a clone and rebuild will not work unless you have a near identical ZFS setup as mine.*
 
 * PC
 

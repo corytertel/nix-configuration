@@ -452,7 +452,7 @@ instance Eq a => DecorationStyle ImageButtonDecoration a where
 ------------------------------------------------------------------------
 
 myLayout = avoidStruts
-         . WN.windowNavigation
+         -- . WN.windowNavigation
          . smartBorders
          -- . fullScreenToggle
          . minimize

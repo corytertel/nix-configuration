@@ -171,7 +171,8 @@ let
 
     # Ascii distro
     # Which distro's ascii art to display.
-    ascii_distro="auto"
+    #ascii_distro="auto"
+    ascii_distro="gnu"
     # Ascii Colors
     ascii_colors=(distro)
     # Bold ascii logo
