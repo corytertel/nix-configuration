@@ -34,10 +34,10 @@ import XMonad.Layout.Minimize
 import XMonad.Layout.Maximize
 import XMonad.Layout.Reflect (reflectHoriz)
 
-import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End), Position(Below))
+import XMonad.Hooks.InsertPosition (insertPosition, Focus(Newer), Position(End), Position(Master))
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.EwmhDesktops (ewmh, ewmhFullscreen)
+import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.ManageHelpers
   (isFullscreen, isDialog,  doFullFloat, doCenterFloat, doRectFloat, composeOne, isInProperty)
 
@@ -108,8 +108,8 @@ myAdditionalKeys =
     -- launch emacs
     , ("M-S-<Return>", spawn "emacsclient -c")
     -- Xmonad prompt
-    --, ("M-<Space>", shellPrompt myXPConfig)
-    , ("M-<Space>", spawn "rofi -matching normal -show drun -modi drun,run -show-icons")
+    , ("M-<Space>", shellPrompt myXPConfig)
+    --, ("M-<Space>", spawn "rofi -matching normal -show drun -modi drun,run -show-icons")
     --, ("M-S-<Space>", shellPrompt myXPConfig)
     -- File Manager
     , ("M-e", spawn "pcmanfm --new-win")
@@ -526,7 +526,7 @@ myLayout = avoidStruts
 ------------------------------------------------------------------------
 
 myManageHook = composeAll
-    [ insertPosition Below Newer -- open new windows below current window
+    [ insertPosition Master Newer -- open new windows below current window
     , className =? "MPlayer"                                          --> mediaFloat
     , className =? "mpv"                                              --> mediaFloat
     , className =? "vlc"                                              --> mediaFloat
@@ -564,7 +564,7 @@ myManageHook = composeAll
 
 ------------------------------------------------------------------------
 
-myEventHook = mempty
+myEventHook = fullscreenEventHook
 
 ------------------------------------------------------------------------
 
@@ -633,7 +633,7 @@ myXPKeymap  = M.fromList
   , ((0, xK_Escape), quit)
   ]
 
-myXPConfig = def { font = "xft:M+ 1c:size=12"
+myXPConfig = def { font = "xft:M+ 1c:size=17"
                  , bgColor = "#000507"
                  , fgColor = "#d8dee9"
                  , bgHLight = "#0d1319"
@@ -669,7 +669,6 @@ myXPConfig = def { font = "xft:M+ 1c:size=12"
 ------------------------------------------------------------------------
 
 main = xmonad
-       . ewmhFullscreen
        . ewmh
        . docks
        =<< statusBar myBar1 myPP toggleStrutsKey

@@ -11,7 +11,8 @@
     ];
 
   # Nix
-  nix.settings.cores = 6;
+  #nix.settings.cores = 6;
+  nix.buildCores = 6;
 
   boot = {
     loader.grub = {

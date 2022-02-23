@@ -4,7 +4,7 @@
   imports =
     [
       ./dunst
-      ./nvim
+      #./nvim
       ./rofi
       ./urxvt
       ./zathura
