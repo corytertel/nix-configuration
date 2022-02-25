@@ -1,6 +1,0 @@
-#+title:Xmomacs
-
-This rice/setup is designed to be a merge between xmonad and exwm.
-
-Essentially it is xmonad but you use it like emacs. The window management is xmonad but the user interaction with the wm is like emacs.
-This makes for a uniform interaction between the system and the emacs program.

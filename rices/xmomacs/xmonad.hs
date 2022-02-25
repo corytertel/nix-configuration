@@ -37,6 +37,7 @@ import XMonad.Layout.Reflect (reflectHoriz)
 import XMonad.Layout.LayoutCombinators ((*|*))
 import XMonad.Layout.ComboP
 import XMonad.Layout.TwoPane
+import XMonad.Layout.BinarySpacePartition
 
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
@@ -124,6 +125,8 @@ myAdditionalKeys =
     , ("M-z", prefixPrompt)
     -- Xmonad command prompt
     --, ("M-x", commandPrompt)
+    -- Emacs launcher
+    , ("M-c", spawn "emacsclient -e emacs-run-launcher")
     -- File Manager
     --, ("M-e", spawn "pcmanfm --new-win")
     -- close focused window
@@ -177,22 +180,56 @@ myAdditionalKeys =
     --, ("M-0", namedScratchpadAction myScratchpads "audacious")
     --, ("M-'", spawn $ (myTerminal ++ " -name scratchpad"))
     --, ("M-0", spawn "audacious")
-    -- Master and Stack Controls
-    --, ("M-r", refresh)
-    --, ("M-m", windows W.focusMaster  )
-    , ("M-<Tab>", windows W.focusDown)
-    , ("M-j", windows W.focusDown)
-    , ("M-k", windows W.focusUp  )
-    --, ("M-<Return>", windows W.swapMaster)
-    , ("M-S-j", windows W.swapDown  )
-    , ("M-S-k", windows W.swapUp    )
-    , ("M-S-g", sendMessage $ SwapWindow)
-    , ("M-h", sendMessage Shrink)
-    , ("M-l", sendMessage Expand)
-    , ("M-m", sendMessage MirrorExpand)
-    , ("M-n", sendMessage MirrorShrink)
-    , ("M-,", sendMessage (IncMasterN 1))
-    , ("M-.", sendMessage (IncMasterN (-1)))
+    -- -- Master and Stack Controls
+    -- --, ("M-r", refresh)
+    -- --, ("M-m", windows W.focusMaster  )
+    -- , ("M-<Tab>", windows W.focusDown)
+    -- , ("M-j", windows W.focusDown)
+    -- , ("M-k", windows W.focusUp  )
+    -- --, ("M-<Return>", windows W.swapMaster)
+    -- , ("M-S-j", windows W.swapDown  )
+    -- , ("M-S-k", windows W.swapUp    )
+    -- , ("M-S-g", sendMessage $ SwapWindow)
+    -- , ("M-h", sendMessage Shrink)
+    -- , ("M-l", sendMessage Expand)
+    -- , ("M-m", sendMessage MirrorExpand)
+    -- , ("M-n", sendMessage MirrorShrink)
+    -- , ("M-,", sendMessage (IncMasterN 1))
+    -- , ("M-.", sendMessage (IncMasterN (-1)))
+    -- Directional Movement Controls
+    , ("M-M1-l", sendMessage $ ExpandTowards WN.R)
+    , ("M-M1-h", sendMessage $ ExpandTowards WN.L)
+    , ("M-M1-j", sendMessage $ ExpandTowards WN.D)
+    , ("M-M1-k", sendMessage $ ExpandTowards WN.U)
+    , ("M-M1-C-l", sendMessage $ ShrinkFrom WN.R)
+    , ("M-M1-C-h", sendMessage $ ShrinkFrom WN.L)
+    , ("M-M1-C-j", sendMessage $ ShrinkFrom WN.D)
+    , ("M-M1-C-k", sendMessage $ ShrinkFrom WN.U)
+    --, ("M-r", sendMessage RotateL)
+    --, ("M-S-r", sendMessage RotateR)
+    , ("M-r", sendMessage Rotate)
+    , ("M-s", sendMessage Swap)
+    --, ("M-n", sendMessage FocusParent)
+    --, ("M-C-n", sendMessage SelectNode)
+    --, ("M-S-n", sendMessage MoveNode)
+    , ("M-S-C-j", sendMessage $ SplitShift Prev)
+    , ("M-S-C-k", sendMessage $ SplitShift Next)
+    , ("M-b",     sendMessage Balance)
+    , ("M-S-b",     sendMessage Equalize)
+    -- Switch between layers
+    , ("M-S-<Space>", switchLayer)
+    -- Directional navigation of windows
+    , ("M-h", sendMessage $ WN.Go WN.L)
+    , ("M-j", sendMessage $ WN.Go WN.D)
+    , ("M-k", sendMessage $ WN.Go WN.U)
+    , ("M-l", sendMessage $ WN.Go WN.R)
+    , ("M-m", windows W.focusUp)
+    , ("M-n", windows W.focusDown)
+    -- Swap adjacent windows
+    , ("M-C-l", sendMessage $ WN.Swap WN.R)
+    , ("M-C-h", sendMessage $ WN.Swap WN.L)
+    , ("M-C-k", sendMessage $ WN.Swap WN.U)
+    , ("M-C-j", sendMessage $ WN.Swap WN.D)
     -- Float keys
     , ("M-M1-<U>", withFocused (keysMoveWindow (0,-80)))
     , ("M-M1-<D>", withFocused (keysMoveWindow (0, 80)))
@@ -203,7 +240,7 @@ myAdditionalKeys =
     , ("M-M1-h", withFocused (keysMoveWindow (-80,0)))
     , ("M-M1-l", withFocused (keysMoveWindow (80, 0)))
     -- Center the window
-    , ("M-c", withFocused (keysMoveWindowTo (1920,1080) (1%2, 1%2)))
+    --, ("M-c", withFocused (keysMoveWindowTo (1920,1080) (1%2, 1%2)))
     -- Float Snapping Keys
     , ("C-M-<L>", withFocused $ snapMove L Nothing)
     , ("C-M-<R>", withFocused $ snapMove R Nothing)
@@ -500,7 +537,9 @@ instance Eq a => DecorationStyle ImageButtonDecoration a where
 
 myLayout =  avoidStruts
          -- . WN.windowNavigation
-         .  smartBorders
+         -- . (WN.configurableNavigation (WN.navigateColor myNormalBorderColor))
+         . (WN.configurableNavigation WN.noNavigateBorders)
+         . smartBorders
          . fullScreenToggle
          . minimize
          . BW.boringWindows
@@ -552,6 +591,7 @@ myManageHook = composeAll
     , resource  =? "scratchpad"                                       --> scratchpadFloat
     , resource  =? "audacious"                                        --> scratchpadFloat
     , resource  =? "xmomacs-help"                                     --> helpFloat
+    , resource  =? "emacs-run-launcher"                                     --> scratchpadFloat
     , resource  =? "desktop_window"                                   --> doIgnore
     , resource  =? "kdesktop"                                         --> doIgnore
     , isFullscreen                                                    --> doFullFloat
