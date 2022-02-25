@@ -102,15 +102,15 @@
   };
 
   security = {
-    sudo.enable = false;
-    doas = {
-      enable = true;
-      extraRules = [{
-        users = [ "cory" ];
-        keepEnv = true;
-        persist = true;
-      }];
-    };
+    sudo.enable = true;
+    # doas = {
+    #   enable = true;
+    #   extraRules = [{
+    #     users = [ "cory" ];
+    #     keepEnv = true;
+    #     persist = true;
+    #   }];
+    # };
   };
 
   nix = {
