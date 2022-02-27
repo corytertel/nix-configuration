@@ -102,7 +102,10 @@
   };
 
   security = {
-    sudo.enable = true;
+    sudo = {
+      enable = true;
+      extraConfig = "Defaults lecture=never";
+    };
     # doas = {
     #   enable = true;
     #   extraRules = [{

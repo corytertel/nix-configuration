@@ -10,20 +10,41 @@
 
 (setq visible-bell nil) ; Disables the visible bell
 
-;; Sets the font. Height is a percentage
-(set-face-attribute 'default nil
-		    :family "JetBrains Mono" :weight 'light :height 100)
-(set-face-attribute 'bold nil
-		    :family "JetBrains Mono" :weight 'regular)
-(set-face-attribute 'italic nil
-		    :family "Victor Mono" :weight 'semilight :slant 'italic :height 100)
-(set-fontset-font t 'unicode
-		  (font-spec :name "JetBrainsMono NF" :size 16) nil)
-(set-fontset-font t '(#xe000 . #xffdd)
-		  (font-spec :name "JetBrainsMono NF" :size 12) nil)
+;; ;; Byte compile on first run
+;; (defun cory-init/compile-user-emacs-directory ()
+;;   "Recompile all files in `user-emacs-directory'."
+;;   (byte-recompile-directory user-emacs-directory 0))
 
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+;; (unless (file-exists-p (locate-user-emacs-file "init.elc"))
+;;   (add-hook 'after-init-hook #'cory-init/compile-user-emacs-directory))
+
+;; ;; Prefer the newest files
+;; (setq load-prefer-newer t)
+
+;; ;; File name handling setup (for some reason makes emacs start faster)
+;; (defvar startup/file-name-handler-alist file-name-handler-alist
+;;   "Temporary storage for `file-name-handler-alist' during startup.")
+
+;; (defun startup/revert-file-name-handler-alist ()
+;;   "Revert `file-name-handler-alist' to its default value after startup."
+;;   (setq file-name-handler-alist startup/file-name-handler-alist))
+
+;; (setq file-name-handler-alist nil)
+;; (add-hook 'emacs-startup-hook #'startup/revert-file-name-handler-alist)
+
+;; ;; Garbage collection setup
+;; (defun garbage-collect-defer ()
+;;   "Defer garbage collection."
+;;   (setq gc-cons-threshold most-positive-fixnum
+;; 	gc-cons-percentage 0.6))
+
+;; (defun garbage-collect-restore ()
+;;   "Return garbage collection to normal parameters."
+;;   (setq gc-cons-threshold 16777216
+;; 	gc-cons-percentage 0.1))
+
+;; (garbage-collect-defer)
+;; (add-hook 'emacs-startup-hook #'garbage-collect-restore)
 
 ;; Initialize package sources
 (require 'package)
@@ -42,6 +63,69 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;; Asynchronous execution
+;; (use-package async
+;;   :ensure t
+;;   :defer t
+;;   :init
+;;   (dired-async-mode 1)
+;;   (async-bytecomp-package-mode 1)
+;;   :custom (async-bytecomp-allowed-packages '(all)))
+
+;; Automatic Package Updates (every 2 days)
+;; (use-package auto-package-update
+;;   :ensure t
+;;   :defer t
+;;   :custom ((auto-package-update-interval 2)
+;; 	   (auto-package-update-hide-results t)
+;; 	   (auto-package-update-delete-old-versions t))
+;;   :hook (after-init . auto-package-update-maybe))
+
+;; Use UTF-8 Encoding
+(prefer-coding-system 'utf-8)
+(setq locale-coding-system 'utf-8)
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+
+;; Setting the font
+(set-face-attribute 'default nil
+		    :family "JetBrains Mono" :weight 'light :height 100)
+(set-face-attribute 'bold nil
+		    :family "JetBrains Mono" :weight 'regular)
+(set-face-attribute 'italic nil
+		    :family "Victor Mono" :weight 'semilight :slant 'italic :height 100)
+(set-fontset-font t 'unicode
+		  (font-spec :name "JetBrainsMono NF" :size 16) nil)
+(set-fontset-font t '(#xe000 . #xffdd)
+		  (font-spec :name "JetBrainsMono NF" :size 12) nil)
+
+;; Don't unload fonts when not in use
+(setq inhibit-compacting-font-caches t)
+
+;; Theme
+;; (use-package modus-themes
+;;   :ensure
+;;   :init
+;;   ;; Add all your customizations prior to loading the themes
+;;   (setq modus-themes-italic-constructs t
+;;         modus-themes-bold-constructs nil
+;;         modus-themes-region '(bg-only no-extend))
+
+;;   ;; Load the theme files before enabling a theme
+;;   (modus-themes-load-themes)
+;;   :config
+;;   ;; Load the theme of your choice:
+;;   (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
+;;   :bind ("<f11>" . modus-themes-toggle))
+
+(setq custom-safe-themes t) ; Treat all themes as safe
+(add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
+(load-theme 'black-nord t)
+
+;; Display Line numbers
 (column-number-mode)
 (global-display-line-numbers-mode t)
 
@@ -53,15 +137,138 @@
 		cider-repl-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
+;; Window dividers
+(setq window-divider-default-right-width 3)
+(let ((color (face-background 'mode-line)))
+  (dolist (face '(window-divider-first-pixel
+		  window-divider-last-pixel
+		  window-divider))
+    (set-face-foreground face color)))
+(window-divider-mode 1)
+
+;; Transparent frames
+;; (dolist (frame (frame-list))
+;;   (set-frame-parameter frame 'alpha 90))
+;; (add-to-list 'default-frame-alist '(alpha . 90))
+
+;; Better Org-mode headers
+;; (set-face-attribute 'org-document-title nil
+;; 		    :weight 'extra-bold
+;; 		    :height 1.8)
+;; (set-face-attribute 'org-level-1 nil
+;; 		    :height 1.3)
+;; (set-face-attribute 'org-level-2 nil
+;; 		    :height 1.1)
+;; (set-face-attribute 'org-level-3 nil
+;; 		    :height 1.0)
+;; (set-face-attribute 'org-code nil
+;; 		    :inherit 'font-lock-string-face)
+
+;; Doom Modeline
+(use-package all-the-icons)
+
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 40)))
+
+;; Show line/column numbers on the mode line
+;; (line-number-mode 1)
+;; (column-number-mode 1)
+
+;; Show clock and battery level on the mode line
+;; (display-time-mode 1)
+;; (display-battery-mode 1)
+;; :custom ((display-time-format "%a %m/%d %H:%M")
+;; 	 (display-time-day-and-date t)
+;; 	 (display-time-24hr-format t))
+
+;; Start screen
+(use-package dashboard
+  :ensure t
+  :defer t
+  :init
+  ;; <<dashboard-init>>
+  (dashboard-setup-startup-hook)
+  :custom ((inhibit-start-screen t)
+	   (dashboard-set-footer nil)
+	   (dashboard-startup-banner (locate-user-emacs-file "logo.png"))
+	   (dashboard-items '((recents . 10)))
+	   (initial-buffer-choice #'dashboard-or-scratch)
+	   (dashboard-banner-logo-title
+	    "Welcome to GNU Emacs!"))
+  :hook (dashboard-mode . dashboard-immortal))
+
+;; Show dashboard or scratch initially
+(defun dashboard-or-scratch ()
+  "Open either dashboard or the scratch buffer."
+  (or (get-buffer "*dashboard*")
+      (get-buffer "*scratch*")))
+
+;; Make the dashboard buffer immortal
+(defun dashboard-immortal ()
+  "Make the dashboard buffer immortal."
+  (emacs-lock-mode 'kill))
+
+;; Word wrapping
+(global-visual-line-mode 1)
+(setq-default fill-column 80)
+(add-hook 'text-mode-hook #'turn-on-auto-fill)
+
+;; Make the cursor a bar
+(setq-default cursor-type 'bar)
+
+;; Turn ^L into pretty lines
+(use-package page-break-lines
+  :ensure t
+  :defer t
+  :hook (after-init . global-page-break-lines-mode))
+
+;; Highlight matching parentheses
+(use-package paren
+  :defer t
+  :init
+  (show-paren-mode 1)
+  :custom-face (show-paren-match
+		((t (:weight extra-bold
+			     :underline t))))
+  :custom ((show-paren-style 'parentheses)
+	   (show-paren-delay 0.00000001)))
+
+;; Rainbow delimiters
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
 ;; Auto pairs
 (electric-pair-mode)
 
 ;; Scroll conservatively
 ;;(setq scroll-conservatively 101)
 
+;; Make scrolling a little less crazy
+(setq scroll-margin 0
+      auto-window-vscroll nil
+      scroll-preserve-screen-position 1
+      scroll-conservatively most-positive-fixnum
+      mouse-wheel-scroll-amount '(1 ((shift) . 1))
+      mouse-wheel-progressive-speed nil
+      mouse-wheel-follow-mouse t)
+
 ;; Show empty whitespace
 (global-whitespace-mode)
 (setq whitespace-style '(face trailing tabs lines empty big-indent))
+
+;; Make ESC quit prompts
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+;; Always confirm closing Emacs
+(setq confirm-kill-emacs #'yes-or-no-p)
+
+;; Replace "yes or no" prompts with "y or n" prompts
+(defalias 'yes-or-no-p #'y-or-n-p
+  "Use `y-or-n-p' instead of a yes/no prompt.")
+
+;;; Packages
 
 (use-package command-log-mode)
 
@@ -87,6 +294,7 @@
 
 ;; Basic Keybind
 (global-set-key (kbd "C-M-j") 'counsel-switch-buffer)
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
 
 ;; Define a binding just for a certain mode
 ;;(define-key emacs-lisp-mode-map (kbd "C-x M-t") 'counsel-load-theme)
@@ -106,7 +314,7 @@
     ;; Buffers
     "b"  '(:ignore t :which-key "buffers")
     "bb" '(counsel-switch-buffer :which-key "switch buffer")
-    "bd" '(kill-buffer :which-key "kill-buffer")
+    "bd" '(kill-this-buffer :which-key "kill buffer")
     "be" '(eval-buffer :which-key "eval buffer")
     ;;"bn" '(centaur-tabs-forward :which-key "next buffer")
     ;;"bp" '(centaur-tabs-backward :which-key "previous buffer")
@@ -140,6 +348,65 @@
     "w"  '(:ignore t :which-key "windows")
     "wd" '(evil-window-delete :which-key "delete window")
     ))
+
+;; Window management
+(use-package buffer-move
+  :ensure t
+  :defer t
+  ;; :init
+  ;; <<window-management-init>>
+  ;; <<window-management-vars>>
+  :bind (("C-x o" . nil)
+	 ("C-x o k" . windmove-up)
+	 ("C-x o j" . windmove-down)
+	 ("C-x o h" . windmove-left)
+	 ("C-x o l" . windmove-right)
+	 ("C-x o C-k" . buf-move-up)
+	 ("C-x o C-j" . buf-move-down)
+	 ("C-x o C-h" . buf-move-left)
+	 ("C-x o C-l" . buf-move-right))
+  :custom ((focus-follows-mouse t)
+	   (mouse-autoselect-window t)))
+
+(defun split-and-follow-below ()
+  "Open a new window vertically."
+  (interactive)
+  (split-window-below)
+  (other-window 1)
+  (counsel-ibuffer))
+
+(defun split-and-follow-right ()
+  "Open a new window horizontally."
+  (interactive)
+  (split-window-right)
+  (other-window 1)
+  (counsel-ibuffer))
+
+(defun kill-all-buffers-and-windows ()
+  "Kill all buffers and windows."
+  (interactive)
+  (when (yes-or-no-p "Really kill all buffers and windows? ")
+    (save-some-buffers)
+    (mapc 'kill-buffer (buffer-list))
+    (delete-other-windows)))
+
+(global-set-key (kbd "C-x 2") 'split-and-follow-below)
+(global-set-key (kbd "C-x 3") 'split-and-follow-right)
+(global-set-key (kbd "C-x 4 q") 'kill-all-buffers-and-windows)
+(global-set-key (kbd "C-c b") 'balance-windows)
+
+;; Emacs run launcher
+(defun emacs-run-launcher ()
+  "A frame to launch desktop applications."
+  (interactive)
+  (with-selected-frame
+      (make-frame '((name . "emacs-run-launcher")
+		    (minibuffer . only)
+		    (width . 240)
+		    (height . 22)))
+    (unwind-protect
+	(counsel-linux-app)
+      (delete-frame))))
 
 (defun cory/evil-hook ()
   (dolist (mode '(custom-mode
@@ -182,21 +449,11 @@
 (use-package undo-tree)
 (global-undo-tree-mode)
 
-(use-package all-the-icons)
-
-(use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 40)))
-
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
   :config
-  (setq which-key-idle-delay 0.0))
+  (setq which-key-idle-delay 0.00000001))
 
 (use-package ivy-rich
   :init
@@ -244,10 +501,10 @@
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
 
-;; (use-package magit
-;;   :commands (magit-status magit-get-current-branch)
-;;   :custom
-;;   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+(use-package magit
+  :commands (magit-status magit-get-current-branch)
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 ;; (use-package evil-magit
 ;;   :after magit)
@@ -259,7 +516,7 @@
   :config
   (centaur-tabs-mode t)
   (setq centaur-tabs-style "bar")
-  (setq centaur-tabs-height 48)
+  (setq centaur-tabs-height 72)
   (setq centaur-tabs-set-icons t)
   (setq centaur-tabs-plain-icons nil)
   (setq centaur-tabs-gray-out-icons 'buffer)
@@ -283,6 +540,63 @@
 	("g T" . centaur-tabs-backward))
   ("C-<prior>" . centaur-tabs-backward)
   ("C-<next>" . centaur-tabs-forward))
+
+(use-package lsp-mode)
+(use-package lsp-treemacs)
+
+(use-package company
+  :ensure t
+  :defer t
+  :custom ((company-idle-delay 0.75)
+	   (company-minimum-prefix-length 3))
+  :hook (after-init . global-company-mode)
+  :bind (:map company-active-map
+	      ("M-n" . nil)
+	      ("M-p" . nil)
+	      ("C-n" . company-select-next)
+	      ("C-p" . company-select-previous)))
+
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode t)
+  (progn
+    (define-fringe-bitmap 'my-flycheck-fringe-indicator
+      (vector #b00000000
+              #b00000000
+              #b00000000
+              #b00000000
+              #b00000000
+              #b00000000
+              #b00000000
+              #b00011100
+              #b00111110
+              #b00111110
+              #b00111110
+              #b00011100
+              #b00000000
+              #b00000000
+              #b00000000
+              #b00000000
+              #b00000000))
+
+    (flycheck-define-error-level 'error
+      :severity 2
+      :overlay-category 'flycheck-error-overlay
+      :fringe-bitmap 'my-flycheck-fringe-indicator
+      :fringe-face 'flycheck-fringe-error)
+
+    (flycheck-define-error-level 'warning
+      :severity 1
+      :overlay-category 'flycheck-warning-overlay
+      :fringe-bitmap 'my-flycheck-fringe-indicator
+      :fringe-face 'flycheck-fringe-warning)
+
+    (flycheck-define-error-level 'info
+      :severity 0
+      :overlay-category 'flycheck-info-overlay
+      :fringe-bitmap 'my-flycheck-fringe-indicator
+      :fringe-face 'flycheck-fringe-info)))
 
 
 ;;; Clojure
@@ -346,51 +660,6 @@
 ;; 	     "lc" '(cider-jack-in-clj :which-key "cider jack in")
 ;; 	     "lk" '(cider-load-buffer :which-key "load buffer")))
 
-(use-package lsp-mode)
-(use-package lsp-treemacs)
-(use-package company)
-(use-package flycheck
-  :ensure t
-  :init
-  (global-flycheck-mode t)
-  (progn
-    (define-fringe-bitmap 'my-flycheck-fringe-indicator
-      (vector #b00000000
-              #b00000000
-              #b00000000
-              #b00000000
-              #b00000000
-              #b00000000
-              #b00000000
-              #b00011100
-              #b00111110
-              #b00111110
-              #b00111110
-              #b00011100
-              #b00000000
-              #b00000000
-              #b00000000
-              #b00000000
-              #b00000000))
-
-    (flycheck-define-error-level 'error
-      :severity 2
-      :overlay-category 'flycheck-error-overlay
-      :fringe-bitmap 'my-flycheck-fringe-indicator
-      :fringe-face 'flycheck-fringe-error)
-
-    (flycheck-define-error-level 'warning
-      :severity 1
-      :overlay-category 'flycheck-warning-overlay
-      :fringe-bitmap 'my-flycheck-fringe-indicator
-      :fringe-face 'flycheck-fringe-warning)
-
-    (flycheck-define-error-level 'info
-      :severity 0
-      :overlay-category 'flycheck-info-overlay
-      :fringe-bitmap 'my-flycheck-fringe-indicator
-      :fringe-face 'flycheck-fringe-info)))
-
 (add-hook 'clojure-mode-hook 'lsp)
 (add-hook 'clojurescript-mode-hook 'lsp)
 (add-hook 'clojurec-mode-hook 'lsp)
@@ -439,39 +708,66 @@
 (use-package haskell-mode)
 (use-package nix-mode)
 
-;; Theme
-;; (use-package modus-themes
-;;   :ensure
-;;   :init
-;;   ;; Add all your customizations prior to loading the themes
-;;   (setq modus-themes-italic-constructs t
-;;         modus-themes-bold-constructs nil
-;;         modus-themes-region '(bg-only no-extend))
+;;; Terminal
 
-;;   ;; Load the theme files before enabling a theme
-;;   (modus-themes-load-themes)
-;;   :config
-;;   ;; Load the theme of your choice:
-;;   (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
-;;   :bind ("<f11>" . modus-themes-toggle))
+(use-package term
+  :config
+  (setq explicit-shell-file-name "zsh")
+  ;;(setq explicit-zsh-args '())
+  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *"))
 
-(setq custom-safe-themes t) ; Treat all themes as safe
-(add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
-(load-theme 'black-nord)
+;; (custom-set-variables
+;;  ;; custom-set-variables was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(ansi-color-names-vector
+;;    ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+;;  '(custom-safe-themes
+;;    '("42c0370f0d2e1c4776f372e91fc514977d0b0c14077954a1f229e6a630e08fe6" "c8cd8b9393a75a99556a2bb1b5dda053973b93a53ba7f6cf4fbad6b28ed1d039" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default))
+;;  '(hl-todo-keyword-faces
+;;    '(("TODO" . "#dc752f")
+;;      ("NEXT" . "#dc752f")
+;;      ("THEM" . "#2d9574")
+;;      ("PROG" . "#4f97d7")
+;;      ("OKAY" . "#4f97d7")
+;;      ("DONT" . "#f2241f")
+;;      ("FAIL" . "#f2241f")
+;;      ("DONE" . "#86dc2f")
+;;      ("NOTE" . "#b1951d")
+;;      ("KLUDGE" . "#b1951d")
+;;      ("HACK" . "#b1951d")
+;;      ("TEMP" . "#b1951d")
+;;      ("FIXME" . "#dc752f")
+;;      ("XXX+" . "#dc752f")
+;;      ("\\?\\?\\?+" . "#dc752f")))
+;;  '(org-fontify-done-headline nil)
+;;  '(org-fontify-todo-headline nil)
+;;  '(package-selected-packages
+;;    '(nix-mode haskell-mode company flycheck lsp-treemacs cider lsp-mode clojure-mode undo-tree evil-collection which-key use-package rainbow-delimiters ivy-rich hydra helpful general evil doom-modeline counsel command-log-mode centaur-tabs annalist))
+;;  '(pdf-view-midnight-colors '("#b2b2b2" . "#292b2e")))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  )
+
+;; (use-package parchment-theme
+;;   :ensure t
+;;   :config (load-theme 'parchment t))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("42c0370f0d2e1c4776f372e91fc514977d0b0c14077954a1f229e6a630e08fe6" "c8cd8b9393a75a99556a2bb1b5dda053973b93a53ba7f6cf4fbad6b28ed1d039" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default))
  '(package-selected-packages
-   '(evil-magit magit paredit clojure-mode-extra-font-locking counsel-projectile projectile yasnippet which-key use-package undo-tree rainbow-delimiters parchment-theme nix-mode modern-cpp-font-lock lsp-treemacs ivy-rich helpful haskell-mode general flycheck evil doom-modeline cpp-auto-include counsel company command-log-mode cider centaur-tabs auto-complete))
+   '(forge evil-magit magit paredit clojure-mode-extra-font-locking counsel-projectile projectile yasnippet which-key use-package undo-tree rainbow-delimiters parchment-theme nix-mode modern-cpp-font-lock lsp-treemacs ivy-rich helpful haskell-mode general flycheck evil doom-modeline cpp-auto-include counsel company command-log-mode cider centaur-tabs auto-complete))
  '(warning-suppress-types '((comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(show-paren-match ((t (:weight extra-bold :underline t)))))

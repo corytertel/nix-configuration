@@ -110,7 +110,7 @@ to 'auto, tags may not be properly aligned. "
         (bg3           (if (eq variant 'dark) (if (true-color-p) "#151d25" "#121212") (if (true-color-p) "#e3dedd" "#d0d0d0")))
         (bg4           (if (eq variant 'dark) (if (true-color-p) "#1e2731" "#080808") (if (true-color-p) "#d2ceda" "#bcbcbc")))
         (bg-alt        (if (eq variant 'dark) (if (true-color-p) "#373e4d" "#353535") (if (true-color-p) "#efeae9" "#e4e4e4")))
-        (border        (if (eq variant 'dark) (if (true-color-p) "#ebcb8b" "#111111") (if (true-color-p) "#b3b9be" "#b3b9be")))
+        (border        (if (eq variant 'dark) (if (true-color-p) "#000507" "#111111") (if (true-color-p) "#b3b9be" "#b3b9be")))
         (cblk          (if (eq variant 'dark) (if (true-color-p) "#000507" "#b2b2b2") (if (true-color-p) "#655370" "#5f5f87")))
         (cblk-bg       (if (eq variant 'dark) (if (true-color-p) "#151d25" "#262626") (if (true-color-p) "#e8e3f0" "#ffffff")))
         (cblk-ln       (if (eq variant 'dark) (if (true-color-p) "#b48ead" "#af5faf") (if (true-color-p) "#9380b2" "#af5fdf")))
