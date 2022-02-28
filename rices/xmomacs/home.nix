@@ -65,7 +65,8 @@
 
     theme = {
       package = pkgs.orchis-theme;
-      name = "Orchis-green-light";
+      #name = "Orchis-green-light";
+      name = "Orchis-light";
     };
 
     iconTheme = {
@@ -75,7 +76,8 @@
 
     gtk3.extraConfig = {
       gtk-icon-theme-name = "Zafiro-icons";
-      gtk-theme-name = "Orchis-green-light";
+      #gtk-theme-name = "Orchis-green-light";
+      gtk-theme-name = "Orchis-light";
       gtk-application-prefer-dark-theme = 0;
     };
   };
