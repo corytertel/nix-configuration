@@ -16,7 +16,7 @@ Config {
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "      <fc=#88c0d0><fn=1><action=xdotool key super+x> </action></fn></fc>    <fn=2>%UnsafeStdinReader%</fn> }{ <fc=#81a1c1>  </fc>%volume%      <action=/home/cory/manual_installs/layout_switch.sh><fc=#81a1c1>  </fc>%kbd%</action>      <action=orage>%date%</action>      "
+   , template = "      <fc=#88c0d0><fn=1><action=xdotool key super+x> </action></fn></fc>    <fn=2>%UnsafeStdinReader%</fn> }{ %battery%      <fc=#81a1c1>  </fc>%volume%      <action=/home/cory/manual_installs/layout_switch.sh><fc=#81a1c1>  </fc>%kbd%</action>      <action=orage>%date%</action>      "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start
@@ -73,5 +73,22 @@ Config {
                              , "--normal"   , "#ebcb8b"
                              , "--high"     , "#bf616a"
                              ] 10
+
+        -- battery monitor
+        , Run Battery        [ "--template" , "<acstatus>"
+                             , "--Low"      , "30"        -- units: %
+                             , "--High"     , "60"        -- units: %
+                             , "--low"      , "#bf616a"
+                             , "--normal"   , "#ebcb8b"
+                             , "--high"     , "#d8dee9"
+
+                             , "--" -- battery specific options
+                                       -- discharging status
+                                       , "-o"	, "<fc=#81a1c1> </fc> <left>%"
+                                       -- AC "on" status
+                                       , "-O"	, "<fc=#81a1c1> </fc> <left>%"
+                                       -- charged status
+                                       , "-i"	, "<fc=#81a1c1> </fc> <left>%"
+                             ] 50
         ]
    }
