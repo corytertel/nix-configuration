@@ -4,8 +4,6 @@
   imports =
     [
       ./dunst
-      ./nvim
-      ./rofi
       ./urxvt
       ./zathura
     ];
@@ -18,36 +16,31 @@
     experimentalBackends = true;
     opacityRule = [
       # "100:class_g  *?= 'urxvt'"
-      "90:class_g   *?= 'Emacs'"
+      # "90:class_g   *?= 'Emacs'"
+      # "90:class_g   *?= 'Zathura'"
       # "80:class_g   *?= 'discord'"
       # "80:class_g   *?= 'Rofi'"
       # "90:!name      ~= ''"
     ];
-      # transition-length = 300
-      # transition-pow-x = 0.1
-      # transition-pow-y = 0.1
-      # transition-pow-w = 0.1
-      # transition-pow-h = 0.1
-      # size-transition = true
-      # corner-radius = 30;
-      # round-borders = 1;
-      # rounded-corners-exclude = [
-      #   "name != 'xmobar'",
-      # ];
-    extraOptions = ''
+    extraOptions = let
+      decorations = "!name~=''";
+    in ''
       blur-method = "dual_kawase";
       blur-strength = 8;
 
-      shadow-radius = 30;
+      corner-radius = 45;
+      round-borders = 1;
+      rounded-corners-exclude = [
+        "${decorations}",
+        "name = 'xmobar'",
+      ];
+
+      shadow = true;
+      shadow-radius = 60;
+      shadow-opacity = 0.95;
+      shadow-offset-x = -50;
+      shadow-offset-y = -46;
     '';
-    fade = false;
-    #fadeDelta = 3;
-    shadow = true;
-    shadowOpacity = "0.90";
-    noDockShadow = true;
-    shadowExclude = [
-      #"!name ~= ''"
-    ];
     vSync = true;
     package = pkgs.picom.overrideAttrs (
       o: {
@@ -62,11 +55,9 @@
   };
 
   home.file = {
-    ".config/xmobar/launcher".text = builtins.readFile ./xmobar/launcher;
-    ".config/xmobar/workspaces".text = builtins.readFile ./xmobar/workspaces;
-    ".config/xmobar/dock".text = builtins.readFile ./xmobar/dock;
-    ".config/xmobar/widgets".text = builtins.readFile ./xmobar/widgets;
-    ".config/xmobar/clock".text = builtins.readFile ./xmobar/clock;
+    ".config/xmobar/bar".text = builtins.readFile ./xmobar/bar;
+    ".config/xmobar/vol_free.sh".source = ./xmobar/vol_free.sh;
+    ".config/xmobar/vol_used.sh".source = ./xmobar/vol_used.sh;
     ".icons/icons" = {
       recursive = true;
       source = ./icons;
@@ -75,12 +66,8 @@
 
   home.packages = with pkgs; [
     orchis-theme
-    #tela-icon-theme
-    #gruvbox-dark-gtk
     zafiro-icons
     libsForQt5.qtstyleplugins
-    #gsettings-desktop-schemas
-    #gnome.gnome-themes-extra
   ];
 
   dconf.enable = true;
@@ -94,7 +81,8 @@
 
     theme = {
       package = pkgs.orchis-theme;
-      name = "Orchis-red-light";
+      #name = "Orchis-green-dark";
+      name = "Orchis-dark";
     };
 
     iconTheme = {
@@ -104,8 +92,9 @@
 
     gtk3.extraConfig = {
       gtk-icon-theme-name = "Zafiro-icons";
-      gtk-theme-name = "Orchis-red-light";
-      gtk-application-prefer-dark-theme = 0;
+      #gtk-theme-name = "Orchis-green-dark";
+      gtk-theme-name = "Orchis-dark";
+      gtk-application-prefer-dark-theme = 1;
     };
   };
 

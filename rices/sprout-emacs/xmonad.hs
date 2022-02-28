@@ -125,7 +125,7 @@ myAdditionalKeys =
     -- Xmonad command prompt
     --, ("M-x", commandPrompt)
     -- Emacs launcher
-    , ("M-c", spawn "emacsclient -e emacs-run-launcher")
+    , ("M-c", spawn "emacsclient -c --eval '(emacs-run-launcher)'")
     -- File Manager
     --, ("M-e", spawn "pcmanfm --new-win")
     -- close focused window
@@ -513,8 +513,8 @@ myLayout = avoidStruts
      discordGaps = spacingRaw False (Border 300 274 450 424)   True (Border 0 26 0 26) True
 
      ws1Layout = onWorkspace ws1
-       ((bigGaps $ resizableTile)
-       ||| (bigGaps $ Full))
+       ((bigGaps $ Full)
+       ||| (bigGaps $ resizableTile))
      ws2Layout = onWorkspace ws2
        ((bigGaps $ Full)
        ||| (bigGaps $ resizableTile))
@@ -598,8 +598,8 @@ myManageHook = composeAll
     , title     =? "Save File"                                        --> myRectFloat
     , title     =? "Open"                                             --> myRectFloat
     , title     =? "Open Files"                                       --> myRectFloat
+    , title     =? "emacs-run-launcher"                               --> scratchpadFloat
     , resource  =? "xmomacs-help"                                     --> helpFloat
-    , resource  =? "emacs-run-launcher"                               --> scratchpadFloat
     , resource  =? "desktop_window"                                   --> doIgnore
     , resource  =? "kdesktop"                                         --> doIgnore
     , isFullscreen                                                    --> doFullFloat

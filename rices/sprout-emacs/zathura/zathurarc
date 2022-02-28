@@ -48,7 +48,7 @@ set render-loading-bg           "#d8dee9" # Foreground
 #
 #
 #set adjust-open width
-#set recolor true
+set recolor true
 set recolor-keephue
 map <C-Tab> toggle_statusbar
 map u scroll half-up

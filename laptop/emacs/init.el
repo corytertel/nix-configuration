@@ -92,15 +92,26 @@
 
 ;; Setting the font
 (set-face-attribute 'default nil
-		    :family "JetBrains Mono" :weight 'light :height 100)
+		    :family "RobotoMono Nerd Font" :weight 'light :height 100)
 (set-face-attribute 'bold nil
-		    :family "JetBrains Mono" :weight 'regular)
+		    :family "RobotoMono Nerd Font" :weight 'regular)
 (set-face-attribute 'italic nil
-		    :family "Victor Mono" :weight 'semilight :slant 'italic :height 100)
+		    :family "Victor Mono" :weight 'semilight :slant 'italic :height 95)
 (set-fontset-font t 'unicode
-		  (font-spec :name "JetBrainsMono NF" :size 16) nil)
+		  (font-spec :name "RobotoMono Nerd Font" :size 16) nil)
 (set-fontset-font t '(#xe000 . #xffdd)
-		  (font-spec :name "JetBrainsMono NF" :size 12) nil)
+		  (font-spec :name "RobotoMono Nerd Font" :size 12) nil)
+;; (set-face-attribute 'default nil
+;; 		    :family "Iosevka Nerd Font" :weight 'semilight :height 105)
+;; (set-face-attribute 'bold nil
+;; 		    :family "Iosevka Nerd Font" :weight 'regular :height 105)
+;; (set-face-attribute 'italic nil
+;; 		    :family "Victor Mono" :weight 'semilight :slant 'italic)
+;; (set-fontset-font t 'unicode
+;; 		  (font-spec :name "Iosevka Nerd Font" :size 16) nil)
+;; (set-fontset-font t '(#xe000 . #xffdd)
+;; 		  (font-spec :name "Iosevka Nerd Font" :size 12) nil)
+
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
@@ -501,15 +512,15 @@
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
 
-(use-package magit
-  :commands (magit-status magit-get-current-branch)
-  :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+;; (use-package magit
+;;   :commands (magit-status magit-get-current-branch)
+;;   :custom
+;;   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 ;; (use-package evil-magit
 ;;   :after magit)
 
-(use-package forge)
+;; (use-package forge)
 
 (use-package centaur-tabs
   :demand
@@ -528,7 +539,7 @@
   (setq centaur-tabs-label-fixed-length 10) ; 0 is dynamic
   (setq centaur-tabs-cycle-scope 'tabs)
   (centaur-tabs-headline-match)
-  (centaur-tabs-change-fonts "JetBrains Mono" 100)
+  (centaur-tabs-change-fonts "RobotoMono Nerd Font" 100)
   (centaur-tabs-enable-buffer-reordering)
   (centaur-tabs-mode t)
   :init

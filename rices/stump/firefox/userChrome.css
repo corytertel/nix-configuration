@@ -52,9 +52,9 @@
     /* This will also work with custom colours from color.firefox.com. */
 
     /* Theme Colour */
-     --window-colour:               #fefefe;
-     --secondary-colour:            #bbbbbb;
-     --inverted-colour:             #30343f;
+     --window-colour:               #000507;
+     --secondary-colour:            #151d25;
+     --inverted-colour:             #d8dee9;
 
 
     /* Containter Tab Colours */

@@ -10,17 +10,17 @@
 
   services.picom = {
     enable = true;
-    inactiveOpacity = "0.90";
+    inactiveOpacity = "1.00";
     activeOpacity = "1.00";
     blur = true;
     experimentalBackends = true;
     opacityRule = [
-      "100:class_g  *?= 'urxvt'"
-      "90:class_g   *?= 'Emacs'"
-      "90:class_g   *?= 'Zathura'"
-      "80:class_g   *?= 'discord'"
-      "80:class_g   *?= 'Rofi'"
-      "90:!name      ~= ''"
+      # "100:class_g  *?= 'urxvt'"
+      # "90:class_g   *?= 'Emacs'"
+      # "90:class_g   *?= 'Zathura'"
+      # "80:class_g   *?= 'discord'"
+      # "80:class_g   *?= 'Rofi'"
+      # "90:!name      ~= ''"
     ];
     extraOptions = let
       decorations = "!name~=''";

@@ -50,16 +50,16 @@
         # Draw a line between multiple notifications
         separator_height = 1;
 
-        separator_color = "#30343faa";
+        separator_color = "#d8dee9aa";
 
         # Set notification padding
         padding = 24;
         horizontal_padding = 24;
 
         # Frame (border)
-        frame_width = 0;
+        frame_width = 1;
 
-        frame_color = "#30343f";
+        frame_color = "#d8dee9";
 
         # Sort messages by urgency.
         sort = "no";
@@ -159,7 +159,7 @@
         class = "Dunst";
 
         # Define the corner radius of the notification window
-        corner_radius = 0;
+        corner_radius = 20;
 
         # Don't gnore the dbus closeNotification message.
         ignore_dbusclose = "false";
@@ -180,22 +180,22 @@
       };
 
       urgency_low = {
-        background = "#fefefe";
+        background = "#000507";
         highlight = "#fe6c5a";
         frame_color = "#52426e";
-        foreground = "#30343f";
+        foreground = "#d8dee9";
         timeout = 8;
       };
 
       urgency_normal = {
-        background = "#fefefe";
-        foreground = "#30343f";
+        background = "#000507";
+        foreground = "#d8dee9";
         timeout = 8;
       };
 
       urgency_critical = {
-        background = "#fefefe";
-        foreground = "#30343f";
+        background = "#000507";
+        foreground = "#d8dee9";
         timeout = 0;
         icon = "abrt";
       };
