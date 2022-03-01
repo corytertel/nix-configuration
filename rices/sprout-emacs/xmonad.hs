@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleInstances, MultiParamTypeClasses #-}
 {-# OPTIONS_GHC -Wunused-imports #-}
 
-import XMonad
+import XMonad hiding ((|||))
 
 import Data.Monoid (mappend)
 import Data.Map (fromList, lookup)
@@ -33,7 +33,7 @@ import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.Minimize
 import XMonad.Layout.Maximize
 import XMonad.Layout.Reflect (reflectHoriz)
-import XMonad.Layout.LayoutCombinators ((*|*))
+import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.ComboP
 import XMonad.Layout.TwoPane
 import XMonad.Layout.BinarySpacePartition
