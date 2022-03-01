@@ -52,6 +52,7 @@ import XMonad.Actions.Search
 import XMonad.Actions.WindowMenu
 import XMonad.Actions.Minimize
 import XMonad.Actions.TagWindows
+import XMonad.Actions.CycleWS (nextWS, prevWS)
 --import XMonad.Actions.TiledWindowDragging
 --import XMonad.Layout.DraggingVisualizer
 
