@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleInstances, MultiParamTypeClasses #-}
 {-# OPTIONS_GHC -Wunused-imports #-}
 
-import XMonad
+import XMonad hiding ((|||))
 
 import Data.Monoid (mappend)
 import Data.Map (fromList, lookup)
@@ -34,7 +34,7 @@ import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.Minimize
 import XMonad.Layout.Maximize
 import XMonad.Layout.Reflect (reflectHoriz)
-import XMonad.Layout.LayoutCombinators ((*|*))
+import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.ComboP
 import XMonad.Layout.TwoPane
 import XMonad.Layout.BinarySpacePartition
@@ -53,6 +53,7 @@ import XMonad.Actions.Search
 import XMonad.Actions.WindowMenu
 import XMonad.Actions.Minimize
 import XMonad.Actions.TagWindows
+import XMonad.Actions.CycleWS (nextWS, prevWS)
 --import XMonad.Actions.TiledWindowDragging
 --import XMonad.Layout.DraggingVisualizer
 
@@ -123,10 +124,12 @@ myAdditionalKeys =
     --, ("M-<Space>", spawn "rofi -matching normal -show drun -modi drun,run -show-icons")
     -- Xmonad prefix prompt
     , ("M-z", prefixPrompt)
+    , ("M-<Space>", prefixPrompt)
+    , ("M1-<Space>", prefixPrompt)
     -- Xmonad command prompt
     --, ("M-x", commandPrompt)
     -- Emacs launcher
-    , ("M-c", spawn "emacsclient -e emacs-run-launcher")
+    , ("M-c", spawn "emacsclient --eval '(emacs-run-launcher)'")
     -- File Manager
     --, ("M-e", spawn "pcmanfm --new-win")
     -- close focused window
@@ -197,25 +200,6 @@ myAdditionalKeys =
     -- , ("M-,", sendMessage (IncMasterN 1))
     -- , ("M-.", sendMessage (IncMasterN (-1)))
     -- Directional Movement Controls
-    , ("M-M1-l", sendMessage $ ExpandTowards WN.R)
-    , ("M-M1-h", sendMessage $ ExpandTowards WN.L)
-    , ("M-M1-j", sendMessage $ ExpandTowards WN.D)
-    , ("M-M1-k", sendMessage $ ExpandTowards WN.U)
-    , ("M-M1-C-l", sendMessage $ ShrinkFrom WN.R)
-    , ("M-M1-C-h", sendMessage $ ShrinkFrom WN.L)
-    , ("M-M1-C-j", sendMessage $ ShrinkFrom WN.D)
-    , ("M-M1-C-k", sendMessage $ ShrinkFrom WN.U)
-    --, ("M-r", sendMessage RotateL)
-    --, ("M-S-r", sendMessage RotateR)
-    , ("M-r", sendMessage Rotate)
-    , ("M-s", sendMessage Swap)
-    --, ("M-n", sendMessage FocusParent)
-    --, ("M-C-n", sendMessage SelectNode)
-    --, ("M-S-n", sendMessage MoveNode)
-    , ("M-S-C-j", sendMessage $ SplitShift Prev)
-    , ("M-S-C-k", sendMessage $ SplitShift Next)
-    , ("M-b",     sendMessage Balance)
-    , ("M-S-b",     sendMessage Equalize)
     -- Switch between layers
     , ("M-S-<Space>", switchLayer)
     -- Directional navigation of windows
@@ -225,39 +209,44 @@ myAdditionalKeys =
     , ("M-l", sendMessage $ WN.Go WN.R)
     , ("M-m", windows W.focusUp)
     , ("M-n", windows W.focusDown)
+    -- Size controls
+    , ("M-M1-h", sendMessage Shrink)
+    , ("M-M1-l", sendMessage Expand)
+    , ("M-M1-j", sendMessage MirrorExpand)
+    , ("M-M1-k", sendMessage MirrorShrink)
     -- Swap adjacent windows
     , ("M-C-l", sendMessage $ WN.Swap WN.R)
     , ("M-C-h", sendMessage $ WN.Swap WN.L)
     , ("M-C-k", sendMessage $ WN.Swap WN.U)
     , ("M-C-j", sendMessage $ WN.Swap WN.D)
-    -- Float keys
-    , ("M-M1-<U>", withFocused (keysMoveWindow (0,-80)))
-    , ("M-M1-<D>", withFocused (keysMoveWindow (0, 80)))
-    , ("M-M1-<L>", withFocused (keysMoveWindow (-80,0)))
-    , ("M-M1-<R>", withFocused (keysMoveWindow (80, 0)))
-    , ("M-M1-k", withFocused (keysMoveWindow (0,-80)))
-    , ("M-M1-j", withFocused (keysMoveWindow (0, 80)))
-    , ("M-M1-h", withFocused (keysMoveWindow (-80,0)))
-    , ("M-M1-l", withFocused (keysMoveWindow (80, 0)))
-    -- Center the window
-    --, ("M-c", withFocused (keysMoveWindowTo (1920,1080) (1%2, 1%2)))
-    -- Float Snapping Keys
-    , ("C-M-<L>", withFocused $ snapMove L Nothing)
-    , ("C-M-<R>", withFocused $ snapMove R Nothing)
-    , ("C-M-<U>", withFocused $ snapMove U Nothing)
-    , ("C-M-<D>", withFocused $ snapMove D Nothing)
-    , ("C-M1-h", withFocused $ snapMove L Nothing)
-    , ("C-M1-l", withFocused $ snapMove R Nothing)
-    , ("C-M1-k", withFocused $ snapMove U Nothing)
-    , ("C-M1-j", withFocused $ snapMove D Nothing)
-    , ("C-M-<L>", withFocused $ snapShrink R Nothing)
-    , ("C-M-<R>", withFocused $ snapGrow R Nothing)
-    , ("C-M-<U>", withFocused $ snapShrink D Nothing)
-    , ("C-M-<D>", withFocused $ snapGrow D Nothing)
-    , ("C-M-h", withFocused $ snapShrink R Nothing)
-    , ("C-M-l", withFocused $ snapGrow R Nothing)
-    , ("C-M-k", withFocused $ snapShrink D Nothing)
-    , ("C-M-j", withFocused $ snapGrow D Nothing)
+    -- -- Float keys
+    -- , ("M-M1-<U>", withFocused (keysMoveWindow (0,-80)))
+    -- , ("M-M1-<D>", withFocused (keysMoveWindow (0, 80)))
+    -- , ("M-M1-<L>", withFocused (keysMoveWindow (-80,0)))
+    -- , ("M-M1-<R>", withFocused (keysMoveWindow (80, 0)))
+    -- , ("M-M1-k", withFocused (keysMoveWindow (0,-80)))
+    -- , ("M-M1-j", withFocused (keysMoveWindow (0, 80)))
+    -- , ("M-M1-h", withFocused (keysMoveWindow (-80,0)))
+    -- , ("M-M1-l", withFocused (keysMoveWindow (80, 0)))
+    -- -- Center the window
+    -- --, ("M-c", withFocused (keysMoveWindowTo (1920,1080) (1%2, 1%2)))
+    -- -- Float Snapping Keys
+    -- , ("C-M-<L>", withFocused $ snapMove L Nothing)
+    -- , ("C-M-<R>", withFocused $ snapMove R Nothing)
+    -- , ("C-M-<U>", withFocused $ snapMove U Nothing)
+    -- , ("C-M-<D>", withFocused $ snapMove D Nothing)
+    -- , ("C-M1-h", withFocused $ snapMove L Nothing)
+    -- , ("C-M1-l", withFocused $ snapMove R Nothing)
+    -- , ("C-M1-k", withFocused $ snapMove U Nothing)
+    -- , ("C-M1-j", withFocused $ snapMove D Nothing)
+    -- , ("C-M-<L>", withFocused $ snapShrink R Nothing)
+    -- , ("C-M-<R>", withFocused $ snapGrow R Nothing)
+    -- , ("C-M-<U>", withFocused $ snapShrink D Nothing)
+    -- , ("C-M-<D>", withFocused $ snapGrow D Nothing)
+    -- , ("C-M-h", withFocused $ snapShrink R Nothing)
+    -- , ("C-M-l", withFocused $ snapGrow R Nothing)
+    -- , ("C-M-k", withFocused $ snapShrink D Nothing)
+    -- , ("C-M-j", withFocused $ snapGrow D Nothing)
     -- Tags
     -- , ("M-f", withFocused (addTag "abc"))
     -- , ("C-M-f", withFocused (delTag "abc"))
@@ -536,8 +525,6 @@ instance Eq a => DecorationStyle ImageButtonDecoration a where
 --      win(dowDeco = imageButtonDeco shrinkText defaultThemeWithImageButtons
 
 myLayout =  avoidStruts
-         -- . WN.windowNavigation
-         -- . (WN.configurableNavigation (WN.navigateColor myNormalBorderColor))
          . (WN.configurableNavigation WN.noNavigateBorders)
          . smartBorders
          . fullScreenToggle
@@ -588,10 +575,10 @@ myManageHook = composeAll
     , title     =? "Save File"                                        --> myRectFloat
     , title     =? "Open"                                             --> myRectFloat
     , title     =? "Open Files"                                       --> myRectFloat
+    , title     =? "emacs-run-launcher"                               --> scratchpadFloat
     , resource  =? "scratchpad"                                       --> scratchpadFloat
     , resource  =? "audacious"                                        --> scratchpadFloat
     , resource  =? "xmomacs-help"                                     --> helpFloat
-    , resource  =? "emacs-run-launcher"                                     --> scratchpadFloat
     , resource  =? "desktop_window"                                   --> doIgnore
     , resource  =? "kdesktop"                                         --> doIgnore
     , isFullscreen                                                    --> doFullFloat
@@ -706,6 +693,9 @@ prefixXPKeymap = M.fromList
   , ((0, xK_KP_Enter), setSuccess True >> setDone True)
   , ((0, xK_BackSpace), deleteString Prev)
   , ((0, xK_Delete), deleteString Next)
+  --, ((0, xK_space), (shellPrompt launcherXPConfig))
+  , ((0, xK_space), setSuccess True >> setDone True >> spawn "xdotool key super+x")
+  , ((mod1Mask, xK_space), setSuccess True >> setDone True >> spawn "xdotool key super+x")
   , ((controlMask, xK_h), setSuccess True >> setDone True >> spawn "urxvtc -name xmomacs-help -e man xmonad")
   , ((controlMask, xK_r), setSuccess True >> setDone True >> spawn "xmonad --recompile; xmonad --restart")
   , ((controlMask, xK_q), io (exitWith ExitSuccess))
@@ -733,37 +723,62 @@ prefixXPConfig = def { font = "xft:Iosevka Nerd Font:size=12"
 
 prefixCommands :: M.Map String (X ())
 prefixCommands = fromList [
+                          -- Search
+                            (" ", shellPrompt launcherXPConfig)
+
                           -- Launch
-                            ("a", spawn "audacious")
+                          , ("a", spawn "audacious")
                           , ("d", spawn "discord")
                           , ("e", spawn "emacsclient -c")
                           , ("E", spawn "emacs")
                           , ("f", spawn "firefox")
                           , ("F", spawn "pcmanfm --new-win")
                           , ("g", spawn "steam")
-                          , ("G", spawn "flatpak --user run com.valvesoftware.Steam")
                           , ("t", spawn "urxvtc")
 
                           -- Commands
-                          , ("k", kill)
-                          , ("K", spawn "xkill")
-                          , ("l", sendMessage NextLayout)
-                          , ("L", sendMessage FirstLayout)
+                          , ("q", kill)
+                          , ("Q", spawn "xkill")
+                          , ("c", sendMessage NextLayout)
+                          , ("C", sendMessage FirstLayout)
                           , ("m", withFocused (sendMessage . maximizeRestore))
-                          , ("o", windows W.focusDown)
-                          , ("Q", io (exitWith ExitSuccess))
-                          , ("R", spawn "xmonad --recompile; xmonad --restart")
                           , ("s", spawn "flameshot full -p ~/Screenshots/")
                           , ("S", spawn "flameshot gui")
                           , ("M", sendMessage ToggleStruts)
+
+                          -- Window management
+                          -- , ("o", windows W.focusDown)
+                          , ("h", sendMessage $ WN.Go WN.L)
+                          , ("j", sendMessage $ WN.Go WN.D)
+                          , ("k", sendMessage $ WN.Go WN.U)
+                          , ("l", sendMessage $ WN.Go WN.R)
+                          , ("n", sendMessage Shrink)
+                          , ("m", sendMessage Expand)
+                          , ("L", sendMessage $ WN.Swap WN.R)
+                          , ("H", sendMessage $ WN.Swap WN.L)
+                          , ("K", sendMessage $ WN.Swap WN.U)
+                          , ("J", sendMessage $ WN.Swap WN.D)
 
                           -- Windows
                           , ("b", windowPrompt prefixXPConfig Goto allWindows)
                           , ("B", windowPrompt prefixXPConfig Bring allWindows)
 
                           -- Workspaces
-                          , ("w", workspacePrompt prefixXPConfig (windows . W.greedyView))
-                          , ("W", workspacePrompt prefixXPConfig (windows . W.shift))
+                          -- , ("w", workspacePrompt prefixXPConfig (windows . W.greedyView))
+                          -- , ("W", workspacePrompt prefixXPConfig (windows . W.shift))
+                          , ("wt", sendMessage $ JumpToLayout "Tall")
+                          , ("wn", nextWS)
+                          , ("wp", prevWS)
+
+                          , ("1", spawn "xdotool key super+1")
+                          , ("2", spawn "xdotool key super+2")
+                          , ("3", spawn "xdotool key super+3")
+                          , ("4", spawn "xdotool key super+4")
+                          , ("5", spawn "xdotool key super+5")
+                          , ("6", spawn "xdotool key super+6")
+                          , ("7", spawn "xdotool key super+7")
+                          , ("8", spawn "xdotool key super+8")
+                          , ("9", spawn "xdotool key super+9")
                           ]
 
 runCommand :: String -> X ()
@@ -773,7 +788,7 @@ runCommand requestedCmd =
     Just (commandToExec) -> commandToExec
 
 prefixPrompt :: X ()
-prefixPrompt = inputPromptWithCompl prefixXPConfig "m-z" (mkComplFunFromList (M.keys prefixCommands)) ?+ runCommand
+prefixPrompt = inputPromptWithCompl prefixXPConfig "M-SPC" (mkComplFunFromList (M.keys prefixCommands)) ?+ runCommand
 
 ------------------------------------------------------------------------
 
