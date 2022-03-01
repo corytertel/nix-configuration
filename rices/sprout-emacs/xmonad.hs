@@ -76,7 +76,7 @@ myFocusFollowsMouse = True
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
 
-myBorderWidth   = 1
+myBorderWidth   = 0
 
 myNormalBorderColor  = "#1e2731"
 myFocusedBorderColor = "#81a1c1"
@@ -169,12 +169,12 @@ myAdditionalKeys =
     --, ("M-<Print>", spawn "flameshot full -p ~/Screenshots/")
     --, ("M-S-<Print>", spawn "flameshot gui")
     -- Fullscreen
-    , ("M-f", sendMessage (Toggle NBFULL))
+    --, ("M-f", sendMessage (Toggle NBFULL))
     -- Minimize
     , ("M-i", withFocused minimizeWindow)
     , ("M-S-i", withLastMinimized maximizeWindowAndFocus)
     -- Maximize
-    --, ("M-f", withFocused (sendMessage . maximizeRestore))
+    , ("M-f", withFocused (sendMessage . maximizeRestore))
     -- Window Menu
     , ("M-o", windowMenu)
     -- Scratchpads
@@ -447,7 +447,7 @@ menuButtonOffset :: Int
 menuButtonOffset = 40
 
 maximizeButtonOffset :: Int
-maximizeButtonOffset = 60
+maximizeButtonOffset = 120
 
 minimizeButtonOffset :: Int
 minimizeButtonOffset = 200
@@ -475,15 +475,15 @@ defaultThemeWithImageButtons = def
                                , inactiveBorderColor = "#1e2731"
                                , inactiveColor = "#000507"
                                , inactiveTextColor = "#1e2731"
-                               , inactiveBorderWidth = 1
+                               , inactiveBorderWidth = 0
                                , activeBorderColor = "#81a1c1"
                                , activeColor = "#000507"
                                , activeTextColor = "#81a1c1"
-                               , activeBorderWidth = 1
+                               , activeBorderWidth = 0
                                , urgentBorderColor = "#bf616a"
                                , urgentColor = "#000507"
                                , urgentTextColor = "#bf616a"
-                               , urgentBorderWidth = 1
+                               , urgentBorderWidth = 0
                                , decoHeight = 70
                                , windowTitleIcons = [ (menuButton, CenterLeft 40),
                                                       (closeButton, CenterRight 40),
@@ -511,11 +511,11 @@ myLayout = avoidStruts
          . minimize
          . BW.boringWindows
          . maximize
+         . windowDeco
          . ws1Layout
          . ws2Layout
          . ws3Layout
          . ws4Layout
-         . windowDeco
          $ (bigGaps $ resizableTile)
        ||| (ifMax 2 (ifMax 1 (threeGapsSingle $ Full) (threeGapsDouble $ threeColumnMidDouble)) (threeGaps $ threeColumnMid))
        ||| (bigGaps $ Full)

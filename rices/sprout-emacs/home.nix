@@ -28,7 +28,7 @@
       blur-method = "dual_kawase";
       blur-strength = 8;
 
-      corner-radius = 10;
+      corner-radius = 0;
       round-borders = 1;
       rounded-corners-exclude = [
         "${decorations}",
