@@ -3,7 +3,6 @@ Config {
    -- appearance
      font =         "xft:Iosevka Nerd Font:size=12:antialias=true"
    , additionalFonts = [ "xft:Iosevka Nerd Font:size=18:antialias=true"
-     		       , "xft:M+ 1c:size=12:antialias=true"
 		       , "xft:Iosevka Nerd Font:style=bold:size=12:antialias=true"
 		       ]
    , bgColor =      "#d7d7d7"
@@ -17,7 +16,7 @@ Config {
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
-   , template = "  <fc=#6a9fb5><fn=1><action=xdotool key super+x> </action></fn></fc>  <fn=2>%UnsafeStdinReader%</fn> }{ %memory%  %cpu%  <fc=#004488>  </fc>%volume%  <action=/home/cory/manual_installs/layout_switch.sh><fc=#004488>  </fc>%kbd%</action>   <action=orage>%date%</action>  "
+   , template = "  <fc=#6a9fb5><fn=1><action=xdotool key super+x> </action></fn></fc>  %UnsafeStdinReader% }{ %memory%  %cpu%  <fc=#004488>  </fc>%volume%  <action=/home/cory/manual_installs/layout_switch.sh><fc=#004488>  </fc>%kbd%</action>   <action=orage>%date%</action>  "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start

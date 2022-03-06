@@ -83,14 +83,14 @@ myFocusedBorderColor = "#000000"
 
 myModMask       = mod4Mask
 
-workspaceEmacs   = " \61729 "
-workspaceFirefox = " \62057 "
-workspaceBrave   = " \61612 "
-workspaceDiscord = " \62074 "
-workspaceSteam   = " \61878 "
-workspaceMusic   = " \61441 "
-workspaceGimp    = " \61948 "
-workspaceMisc    = " \61704 "
+workspaceEmacs   = "\61729 "
+workspaceFirefox = "\62057 "
+workspaceBrave   = "\61612 "
+workspaceDiscord = "\62074 "
+workspaceSteam   = "\61878 "
+workspaceMusic   = "\61441 "
+workspaceGimp    = "\61948 "
+workspaceMisc    = "\61704 "
 
 myWorkspaces = [ workspaceEmacs
                , workspaceFirefox
@@ -661,8 +661,8 @@ ppWorkspaces = xmobarPP { ppCurrent = xmobarColor "#004488" "" . wrap "<fc=#8800
                         , ppHidden = xmobarColor "#000000" "" . wrap " " " " . clickable
                         -- , ppHiddenNoWindows = xmobarColor "#b7b7b7" "" . wrap " " " " . clickable
                         , ppVisible = xmobarColor "#000000" "" . wrap " " " " . clickable
-                        --, ppTitle = xmobarColor "#0f0f0f" "" . shorten 40 . wrap "<fn=3>" "</fn>"
-                        , ppTitle = xmobarColor "#0f0f0f" "" . wrap "<fn=3>" "</fn>"
+                        --, ppTitle = xmobarColor "#0f0f0f" "" . shorten 40 . wrap "<fn=2>" "</fn>"
+                        , ppTitle = xmobarColor "#0f0f0f" "" . wrap "<fn=2>" "</fn>"
                         , ppOrder = \(ws:_:t:_) -> [ws,t]
                         }
 
