@@ -14,7 +14,6 @@ import System.Exit
 
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
---import XMonad.Util.NamedScratchpad
 import XMonad.Util.EZConfig
 import XMonad.Util.Image
 
@@ -54,8 +53,8 @@ import XMonad.Actions.WindowMenu
 import XMonad.Actions.Minimize
 import XMonad.Actions.TagWindows
 import XMonad.Actions.CycleWS (nextWS, prevWS)
---import XMonad.Actions.TiledWindowDragging
---import XMonad.Layout.DraggingVisualizer
+import XMonad.Actions.WindowGo (runOrRaise)
+import XMonad.Actions.WithAll (killAll)
 
 import XMonad.Prompt
 import XMonad.Prompt.Shell (shellPrompt)
@@ -84,34 +83,35 @@ myFocusedBorderColor = "#000000"
 
 myModMask       = mod4Mask
 
-ws1 = "α"
-ws2 = "β"
-ws3 = "γ"
-ws4 = "δ"
-ws5 = "ε"
-ws6 = "ζ"
-ws7 = "η"
-ws8 = "θ"
-ws9 = "ι"
+workspaceEmacs   = " \61729 "
+workspaceFirefox = " \62057 "
+workspaceBrave   = " \61612 "
+workspaceDiscord = " \62074 "
+workspaceSteam   = " \61878 "
+workspaceMusic   = " \61441 "
+workspaceGimp    = " \61948 "
+workspaceMisc    = " \61704 "
 
-myWorkspaces    = [ws1, ws2, ws3, ws4, ws5, ws6, ws7, ws8, ws9]
-myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1..] -- (,) == \x y -> (x,y)
+myWorkspaces = [ workspaceEmacs
+               , workspaceFirefox
+               , workspaceBrave
+               , workspaceDiscord
+               , workspaceSteam
+               , workspaceMusic
+               , workspaceGimp
+               , workspaceMisc
+               ]
 
-clickable ws = "<action=xdotool key super+"++show i++">"++ws++"</action>"
+myWorkspaceIndices = M.fromList
+  $ zipWith (,) myWorkspaces [1..] -- (,) == \x y -> (x,y)
+
+clickable ws = "<action=xdotool key super+F"++show i++">"++ws++"</action>"
   where i = fromJust $ M.lookup ws myWorkspaceIndices
 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
-    -- mod-[1..9], Switch to workspace N
-    -- mod-shift-[1..9], Move client to workspace N
     [((m .|. modm, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+        | (i, k) <- zip (XMonad.workspaces conf) [xK_F1 .. xK_F8]
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-    ++
-    -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
-    -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
-    [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-        , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
@@ -123,13 +123,13 @@ myAdditionalKeys =
     [ ("M-x", shellPrompt launcherXPConfig)
     --, ("M-<Space>", spawn "rofi -matching normal -show drun -modi drun,run -show-icons")
     -- Xmonad prefix prompt
-    , ("M-z", prefixPrompt)
+    --, ("M-z", prefixPrompt)
     , ("M-<Space>", prefixPrompt)
     , ("M1-<Space>", prefixPrompt)
     -- Xmonad command prompt
     --, ("M-x", commandPrompt)
     -- Emacs launcher
-    , ("M-c", spawn "emacsclient --eval '(emacs-run-launcher)'")
+    --, ("M-c", spawn "emacsclient --eval '(emacs-run-launcher)'")
     -- File Manager
     --, ("M-e", spawn "pcmanfm --new-win")
     -- close focused window
@@ -219,6 +219,8 @@ myAdditionalKeys =
     , ("M-C-h", sendMessage $ WN.Swap WN.L)
     , ("M-C-k", sendMessage $ WN.Swap WN.U)
     , ("M-C-j", sendMessage $ WN.Swap WN.D)
+    , ("M-C-m", windows W.swapUp)
+    , ("M-C-n", windows W.swapDown)
     -- -- Float keys
     -- , ("M-M1-<U>", withFocused (keysMoveWindow (0,-80)))
     -- , ("M-M1-<D>", withFocused (keysMoveWindow (0, 80)))
@@ -553,8 +555,16 @@ myLayout =  avoidStruts
 
 ------------------------------------------------------------------------
 
+infix 0 -!>
+
+-- | @p -!> x@.  If @p@ returns 'False', execute the 'ManageHook'.
+--
+-- > (-!>) :: Monoid m => Query Bool -> Query m -> Query m -- a simpler type
+(-!>) :: (Monad m, Monoid a) => m Bool -> m a -> m a
+p -!> f = p >>= \b -> if b then return mempty else f
+
 myManageHook = composeAll
-    [ insertPosition Master Newer -- open new windows below current window
+    [ insertPosition Master Newer
     , className =? "MPlayer"                                          --> mediaFloat
     , className =? "mpv"                                              --> mediaFloat
     , className =? "vlc"                                              --> mediaFloat
@@ -562,8 +572,8 @@ myManageHook = composeAll
     , className =? "gwenview"                                         --> mediaFloat
     , className =? "Sxiv"                                             --> mediaFloat
     , className =? "Orage"                                            --> doFloat
-    , className =? "Nemo"                                             --> myRectFloat
-    , className =? "Gimp"                                             --> doFloat
+    , className =? "Gimp"                                             --> doCenterFloat
+    , className =? "krita"                                            --> doCenterFloat
     , className =? "Galculator"                                       --> calculatorFloat
     , className =? "Firefox" <&&> resource =? "Toolkit"               --> myRectFloat
     , className =? "chromium-browser" <&&> isDialog                   --> myRectFloat
@@ -576,13 +586,47 @@ myManageHook = composeAll
     , title     =? "Open"                                             --> myRectFloat
     , title     =? "Open Files"                                       --> myRectFloat
     , title     =? "emacs-run-launcher"                               --> scratchpadFloat
-    , resource  =? "scratchpad"                                       --> scratchpadFloat
     , resource  =? "audacious"                                        --> scratchpadFloat
     , resource  =? "xmomacs-help"                                     --> helpFloat
     , resource  =? "desktop_window"                                   --> doIgnore
     , resource  =? "kdesktop"                                         --> doIgnore
-    , isFullscreen                                                    --> doFullFloat
-    ] -- <+> namedScratchpadManageHook myScratchpads
+    , className =? "Emacs"                                            --> doShift (myWorkspaces !! 0)
+    , className =? "Firefox"                                          --> doShift (myWorkspaces !! 1)
+    , className =? "Brave-browser"                                    --> doShift (myWorkspaces !! 2)
+    , className =? "discord"                                          --> doShift (myWorkspaces !! 3)
+    , className =? "Steam"                                            --> doShift (myWorkspaces !! 4)
+    , className =? "Audacious"                                        --> doShift (myWorkspaces !! 5)
+    , className =? "Gimp"                                             --> doShift (myWorkspaces !! 6)
+    , className =? "krita"                                            --> doShift (myWorkspaces !! 6)
+    , className =? "Emacs" <||>
+      className =? "URxvt" <||>
+      className =? "Galculator" <||>
+      className =? "Orage" <||>
+      className =? "Sxiv" <||>
+      className =? "gwenview" <||>
+      className =? "MPlayer" <||>
+      className =? "mpv" <||>
+      className =? "vlc" <||>
+      className =? "io.github.celluloid_player.Celluloid" <||>
+      className =? "Firefox" <||>
+      className =? "discord" <||>
+      className =? "Pcmanfm" <||>
+      className =? "Steam" <||>
+      resource  =? "audacious" <||>
+      className =? "Brave-browser" <||>
+      stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog" <||>
+      stringProperty "WM_WINDOW_ROLE" =? "pop-up" <||>
+      isDialog <||>
+      isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH" <||>
+      title     =? "Save Image" <||>
+      title     =? "Save File" <||>
+      title     =? "Open" <||>
+      title     =? "Open Files" <||>
+      resource  =? "desktop_window" <||>
+      resource  =? "kdesktop"
+      -!> doShift (myWorkspaces !! 7)
+    , isFullscreen --> doFullFloat
+    ]
   where
     unfloat = ask >>= doF . W.sink
     -- xpos, ypos, width, height
@@ -603,18 +647,19 @@ myLogHook = return ()
 ------------------------------------------------------------------------
 
 myStartupHook = do
-        spawnOnce "emacs --daemon"
+        -- spawnOnce "emacs --daemon"
         spawnOnce "urxvtd --quiet &"
         spawnOnce "pcmanfm --daemon-mode &"
         spawnOnce "feh --bg-fill /etc/wallpaper.jpg"
+        -- spawnOnce "sleep 2 && emacsclient -c"
 
 ------------------------------------------------------------------------
 
 bar = "xmobar $HOME/.config/xmobar/bar"
 
-ppWorkspaces = xmobarPP { ppCurrent = xmobarColor "#004488" "" . wrap "<fc=#880000>*</fc>" "<fc=#880000>*</fc>" --current selected desktop
+ppWorkspaces = xmobarPP { ppCurrent = xmobarColor "#004488" "" . wrap "<fc=#880000>*</fc>" "<fc=#880000>*</fc>"
                         , ppHidden = xmobarColor "#000000" "" . wrap " " " " . clickable
-                        , ppHiddenNoWindows = xmobarColor "#b7b7b7" "" . wrap " " " " . clickable --desktops with no windows
+                        -- , ppHiddenNoWindows = xmobarColor "#b7b7b7" "" . wrap " " " " . clickable
                         , ppVisible = xmobarColor "#000000" "" . wrap " " " " . clickable
                         --, ppTitle = xmobarColor "#0f0f0f" "" . shorten 40 . wrap "<fn=3>" "</fn>"
                         , ppTitle = xmobarColor "#0f0f0f" "" . wrap "<fn=3>" "</fn>"
@@ -693,9 +738,20 @@ prefixXPKeymap = M.fromList
   , ((0, xK_KP_Enter), setSuccess True >> setDone True)
   , ((0, xK_BackSpace), deleteString Prev)
   , ((0, xK_Delete), deleteString Next)
+
   --, ((0, xK_space), (shellPrompt launcherXPConfig))
   , ((0, xK_space), setSuccess True >> setDone True >> spawn "xdotool key super+x")
-  , ((mod1Mask, xK_space), setSuccess True >> setDone True >> spawn "xdotool key super+x")
+  -- , ((mod1Mask, xK_space), setSuccess True >> setDone True >> spawn "xdotool key super+x")
+
+  , ((0, xK_F1), setSuccess True >> setDone True >> spawn "xdotool key super+F1")
+  , ((0, xK_F2), setSuccess True >> setDone True >> spawn "xdotool key super+F2")
+  , ((0, xK_F3), setSuccess True >> setDone True >> spawn "xdotool key super+F3")
+  , ((0, xK_F4), setSuccess True >> setDone True >> spawn "xdotool key super+F4")
+  , ((0, xK_F5), setSuccess True >> setDone True >> spawn "xdotool key super+F5")
+  , ((0, xK_F6), setSuccess True >> setDone True >> spawn "xdotool key super+F6")
+  , ((0, xK_F7), setSuccess True >> setDone True >> spawn "xdotool key super+F7")
+  , ((0, xK_F8), setSuccess True >> setDone True >> spawn "xdotool key super+F8")
+
   , ((controlMask, xK_h), setSuccess True >> setDone True >> spawn "urxvtc -name xmomacs-help -e man xmonad")
   , ((controlMask, xK_r), setSuccess True >> setDone True >> spawn "xmonad --recompile; xmonad --restart")
   , ((controlMask, xK_q), io (exitWith ExitSuccess))
@@ -723,22 +779,21 @@ prefixXPConfig = def { font = "xft:Iosevka Nerd Font:size=12"
 
 prefixCommands :: M.Map String (X ())
 prefixCommands = fromList [
-                          -- Search
-                            (" ", shellPrompt launcherXPConfig)
-
                           -- Launch
-                          , ("a", spawn "audacious")
-                          , ("d", spawn "discord")
-                          , ("e", spawn "emacsclient -c")
+                            ("a", runOrRaise "audacious" (className =? "Audacious"))
+                          , ("d", runOrRaise "discord" (className =? "discord"))
+                          -- , ("e", runOrRaise "emacsclient -c" (className =? "Emacs"))
+                          -- , ("E", spawn "emacsclient -c")
+                          , ("e", runOrRaise "emacs" (className =? "Emacs"))
                           , ("E", spawn "emacs")
-                          , ("f", spawn "firefox")
+                          , ("f", runOrRaise "firefox" (className =? "Firefox"))
                           , ("F", spawn "pcmanfm --new-win")
-                          , ("g", spawn "steam")
-                          , ("t", spawn "urxvtc")
+                          , ("g", runOrRaise "steam" (className =? "Steam"))
+                          , ("t", spawn $ myTerminal)
 
                           -- Commands
                           , ("q", kill)
-                          , ("Q", spawn "xkill")
+                          , ("Q", killAll)
                           , ("c", sendMessage NextLayout)
                           , ("C", sendMessage FirstLayout)
                           , ("m", withFocused (sendMessage . maximizeRestore))
@@ -752,8 +807,10 @@ prefixCommands = fromList [
                           , ("j", sendMessage $ WN.Go WN.D)
                           , ("k", sendMessage $ WN.Go WN.U)
                           , ("l", sendMessage $ WN.Go WN.R)
-                          , ("n", sendMessage Shrink)
-                          , ("m", sendMessage Expand)
+                          -- , ("n", sendMessage Shrink)
+                          -- , ("m", sendMessage Expand)
+                          , ("m", windows W.focusUp)
+                          , ("n", windows W.focusDown)
                           , ("L", sendMessage $ WN.Swap WN.R)
                           , ("H", sendMessage $ WN.Swap WN.L)
                           , ("K", sendMessage $ WN.Swap WN.U)
@@ -769,16 +826,6 @@ prefixCommands = fromList [
                           , ("wt", sendMessage $ JumpToLayout "Tall")
                           , ("wn", nextWS)
                           , ("wp", prevWS)
-
-                          , ("1", spawn "xdotool key super+1")
-                          , ("2", spawn "xdotool key super+2")
-                          , ("3", spawn "xdotool key super+3")
-                          , ("4", spawn "xdotool key super+4")
-                          , ("5", spawn "xdotool key super+5")
-                          , ("6", spawn "xdotool key super+6")
-                          , ("7", spawn "xdotool key super+7")
-                          , ("8", spawn "xdotool key super+8")
-                          , ("9", spawn "xdotool key super+9")
                           ]
 
 runCommand :: String -> X ()

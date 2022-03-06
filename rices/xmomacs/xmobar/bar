@@ -50,7 +50,7 @@ Config {
         --Run Date           "%a %b %d  %I:%M:%S %p" "date" 10
         , Run Date           "%b %d %I:%M:%S" "date" 10
 
-        , Run Com "pamixer" ["--get-volume-human"] "volume" 1
+        , Run Com "/home/cory/.config/xmobar/volume.sh" [] "volume" 1
 
         -- keyboard layout indicator
         , Run Kbd            [ ("ru(winkeys)" , "ru")

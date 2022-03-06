@@ -109,17 +109,9 @@ clickable ws = "<action=xdotool key super+F"++show i++">"++ws++"</action>"
   where i = fromJust $ M.lookup ws myWorkspaceIndices
 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
-    -- mod-[1..9], Switch to workspace N
-    -- mod-shift-[1..9], Move client to workspace N
     [((m .|. modm, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) [xK_F1 .. xK_F8]
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-    ++
-    -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
-    -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
-    [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-        , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
@@ -227,6 +219,8 @@ myAdditionalKeys =
     , ("M-C-h", sendMessage $ WN.Swap WN.L)
     , ("M-C-k", sendMessage $ WN.Swap WN.U)
     , ("M-C-j", sendMessage $ WN.Swap WN.D)
+    , ("M-C-m", windows W.swapUp)
+    , ("M-C-n", windows W.swapDown)
     -- -- Float keys
     -- , ("M-M1-<U>", withFocused (keysMoveWindow (0,-80)))
     -- , ("M-M1-<D>", withFocused (keysMoveWindow (0, 80)))
