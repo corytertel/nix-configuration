@@ -7,7 +7,7 @@
       discord = super.discord.overrideAttrs (_: {
         src = builtins.fetchTarball {
           url = "https://discord.com/api/download?platform=linux&format=tar.gz";
-          sha256 = "0hdgif8jpp5pz2c8lxas88ix7mywghdf9c9fn95n0dwf8g1c1xbb"; 
+          sha256 = "0hdgif8jpp5pz2c8lxas88ix7mywghdf9c9fn95n0dwf8g1c1xbb";
         };
         commandLineArgs = toString [
           "--enable-accelerated-mjpeg-decode"
@@ -67,5 +67,12 @@
         commandLineArgs = "-g 1200x1600 -r -t *";
       };
     })
+
+    # (final: prev: {
+    #   victor-mono = prev.victor-mono.override {
+    #     url = "https://github.com/corytertel/victor-mono-italic-fixed/archive/refs/tags/v1.5.2.zip";
+    #     sha256 = "0000000000000000000000000000000000000000000000000000";
+    #   };
+    # })
   ];
 }

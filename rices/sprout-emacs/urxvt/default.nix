@@ -35,8 +35,8 @@
       "color7"      = "#e5e9f0";
       "color15"     = "#aeb3bb";
 
-      "font" = "xft:FiraCode Nerd Font Mono:style=Light:size=10:antialias=true";
-      "boldFont" = "xft:FiraCode Nerd Font Mono:style=Regular:size=10:antialias=true";
+      "font" = "xft:VictorMono Nerd Font Mono:style=Light:size=10:antialias=true";
+      "boldFont" = "xft:VictorMono Nerd Font Mono:style=Regular:size=10:antialias=true";
       "italicFont" = "xft:VictorMono Nerd Font Mono:style=Italic:size=10:antialias=true";
       "boldItalicFont" = "xft:VictorMono Nerd Font Mono:style=Bold Italic:size=10:antialias=true";
 

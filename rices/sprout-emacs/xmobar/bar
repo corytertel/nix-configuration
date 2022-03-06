@@ -49,7 +49,7 @@ Config {
         --Run Date           "%a %b %d  %I:%M:%S %p" "date" 10
         , Run Date           "%a, %b %d %_I:%M:%S %P" "date" 10
 
-        , Run Com "pamixer" ["--get-volume-human"] "volume" 1
+        , Run Com "/home/cory/.config/xmobar/volume.sh" [] "volume" 1
 
         -- keyboard layout indicator
         , Run Kbd            [ ("ru(winkeys)" , "ru")
@@ -83,12 +83,12 @@ Config {
                              , "--high"     , "#d8dee9"
 
                              , "--" -- battery specific options
-                                       -- discharging status
-                                       , "-o"	, "<fc=#81a1c1> </fc> <left>%"
-                                       -- AC "on" status
-                                       , "-O"	, "<fc=#81a1c1> </fc> <left>%"
-                                       -- charged status
-                                       , "-i"	, "<fc=#81a1c1> </fc> <left>%"
+                             -- discharging status
+                             , "-o"	, "<fc=#81a1c1> </fc> <left>%"
+                             -- AC "on" status
+                             , "-O"	, "<fc=#81a1c1> </fc> <left>%"
+                             -- charged status
+                             , "-i"	, "<fc=#81a1c1> </fc> <left>%"
                              ] 50
         ]
    }
