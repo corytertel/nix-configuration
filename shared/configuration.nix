@@ -151,6 +151,11 @@
       htop
       pamixer
       ripgrep
+      git-crypt
+      gnupg
+      pinentry-gtk2
+      age
+      sops
       discord
     ];
   };
