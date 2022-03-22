@@ -34,8 +34,8 @@ alias nd='nix develop'
 alias directory='if [ "$PWD" = "$HOME" ]; then echo \'~'; else; basename "$PWD"; fi'
 
 setopt promptsubst
-PROMPT="╭╴%F{cyan} %f%F{yellow}%B\$(directory)%b%f %F{green}%U\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)%u%f
-╰─λ "
+PROMPT="%F{cyan} %f%F{yellow}%B\$(directory)%b%f %F{green}%U\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)%u%f
+λ "
 
 # Send to emacsclient
 function emacssend() {

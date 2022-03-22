@@ -41,14 +41,14 @@ set recolor-lightcolor          "#000507" # Background
 set recolor-darkcolor           "#d8dee9" # Foreground
 
 set render-loading              true
-set render-loading-fg           "#000507" # Background
-set render-loading-bg           "#d8dee9" # Foreground
+set render-loading-bg           "#000507" # Background
+set render-loading-fg           "#d8dee9" # Foreground
 
 # Startup options
 #
 #
 #set adjust-open width
-#set recolor true
+set recolor true
 set recolor-keephue
 map <C-Tab> toggle_statusbar
 map u scroll half-up

@@ -134,7 +134,7 @@
 
   environment = {
     shells = [ pkgs.ksh pkgs.nushell ];
-    variables.EDITOR = "emacsclient -nw";
+    variables.EDITOR = "emacs -nw";
     systemPackages = with pkgs; [
       emacsGcc
       vim
@@ -153,7 +153,7 @@
       ripgrep
       git-crypt
       gnupg
-      pinentry-gtk2
+      pinentry
       age
       sops
       discord
@@ -183,7 +183,7 @@
     gnupg.agent = {
      enable = true;
      enableSSHSupport = true;
-     pinentryFlavor = "gtk2";
+     pinentryFlavor = "tty";
    };
     zsh = {
       enable = true;

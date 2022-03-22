@@ -6,38 +6,37 @@
 :root {
     --interactive-normal: #d8dee9;
     --text-normal: #d8dee9;
-		--text-link: #aeb3bb;
+    --text-link: #81a1c1;
 
-		--header-primary: #d8dee9;
-    --background-accent: #151d25;
+    --header-primary: #d8dee9;
+    --background-accent: #0d1319;
     --background-primary: #000507;
-    --background-secondary: #0d1319;
-    --background-secondary-alt: #0d1319;
-    --background-tertiary: #151d25;
-    --background-floating: #151d25;
+    --background-secondary: #070c10;
+    --background-secondary-alt: #070c10;
+    --background-tertiary: #0d1319;
+    --background-floating: #0d1319;
 
-    --channels-default: #e5e9f0;
-    --deprecated-panel-background: #0d1319;
-    --channeltextarea-background: #151d25;
+    --channels-default: #d8dee9;
+    --deprecated-panel-background: #000507;
+    --channeltextarea-background: #0d1319;
 
-    --scrollbar-thin-thumb                : #151d25;
-	  --scrollbar-thin-track                : transparent;
-	  --scrollbar-auto-thumb                : #151d25;
-	  --scrollbar-auto-track                : transparent;
-	  --scrollbar-auto-scrollbar-color-thumb: #151d25;
-	  --scrollbar-auto-scrollbar-color-track: transparent;
+    --scrollbar-thin-thumb                : #0d1319;
+    --scrollbar-thin-track                : transparent;
+    --scrollbar-auto-thumb                : #0d1319;
+    --scrollbar-auto-track                : transparent;
+    --scrollbar-auto-scrollbar-color-thumb: #0d1319;
+    --scrollbar-auto-scrollbar-color-track: transparent;
 
     --accent-color : 94,  129, 172;
-	  --link-color   : 136, 192, 208;
-	  --mention-color: 136, 192, 208;
-	  
-	  --text-brightest: 236, 239, 244;
-	  --text-brighter : 229, 233, 240;
-	  --text-bright   : 216, 222, 233;
-	  --text-dark     : 216, 222, 233;
-	  --text-darker   : 130, 148, 182;
-	  --text-darkest  : 76,  86,  106;
+    --link-color   : 136, 192, 208;
+    --mention-color: 136, 192, 208;
 
+    --text-brightest: 236, 239, 244;
+    --text-brighter : 229, 233, 240;
+    --text-bright   : 216, 222, 233;
+    --text-dark     : 216, 222, 233;
+    --text-darker   : 130, 148, 182;
+    --text-darkest  : 76,  86,  106;
 }
 
 /* Popout / menu colors. */

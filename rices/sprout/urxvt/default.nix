@@ -15,8 +15,8 @@
       "pointerColor2" = "#000507";
 
       "foreground"  = "#d8dee9";
-      "background"  = "[80]#000507";
-      #"background"  = "#000507";
+      #"background"  = "[80]#000507";
+      "background"  = "#000507";
       "cursorColor" = "#d8dee9";
       "color0"      = "#3b4252";
       "color8"      = "#373e4d";
@@ -35,8 +35,8 @@
       "color7"      = "#e5e9f0";
       "color15"     = "#aeb3bb";
 
-      "font" = "xft:JetBrainsMono Nerd Font Mono:style=Regular:size=10:antialias=true";
-      "boldFont" = "xft:JetBrainsMono Nerd Font Mono:style=Bold:size=10:antialias=true";
+      "font" = "xft:VictorMono Nerd Font Mono:style=Light:size=10:antialias=true";
+      "boldFont" = "xft:VictorMono Nerd Font Mono:style=Regular:size=10:antialias=true";
       "italicFont" = "xft:VictorMono Nerd Font Mono:style=Italic:size=10:antialias=true";
       "boldItalicFont" = "xft:VictorMono Nerd Font Mono:style=Bold Italic:size=10:antialias=true";
 

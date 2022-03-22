@@ -46,7 +46,6 @@
     packages = with pkgs; [
       # linux basics
       killall
-      #kitty
       gwenview
       neofetch
       cmus
@@ -104,7 +103,6 @@
 
       nix-prefetch-github
       git-crypt
-      gnupg
       #cool-retro-term
       bb
       #htop
@@ -159,6 +157,7 @@
       dos2unix
       galculator
       unzip
+      klavaro
 
       #discord
       betterdiscord-installer

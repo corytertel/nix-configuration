@@ -57,9 +57,9 @@
         horizontal_padding = 24;
 
         # Frame (border)
-        frame_width = 1;
+        frame_width = 0;
 
-        frame_color = "#d8dee9";
+        frame_color = "#81a1c1";
 
         # Sort messages by urgency.
         sort = "no";
@@ -159,7 +159,9 @@
         class = "Dunst";
 
         # Define the corner radius of the notification window
-        corner_radius = 20;
+        # causes dunst to not respect actual pixel length/radius
+        #corner_radius = 20; # roughly 45 pixel radius actually
+        corner_radius = 0;
 
         # Don't gnore the dbus closeNotification message.
         ignore_dbusclose = "false";
