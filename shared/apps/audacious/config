@@ -16,7 +16,5 @@ playlist_tabs_visible=FALSE
 statusbar_visible=FALSE
 
 [skins]
-mainwin_font=m+ 1c 10
-playlist_font=m+ 1c 10
 skin=/home/cory/.local/share/audacious/Skins/Classic
 vis_type=1

@@ -5,8 +5,11 @@ import XMonad hiding ((|||))
 
 import Data.Monoid (mappend)
 import Data.Map (fromList, lookup)
-import Data.Maybe (fromJust)
+import Data.Maybe (fromJust, isJust)
 import Data.Ratio ((%)) -- for video
+
+import Control.Monad
+import Foreign.C.Types(CInt)
 
 import Graphics.X11.ExtraTypes.XF86
 
@@ -31,12 +34,13 @@ import XMonad.Layout.Decoration
 import XMonad.Layout.DecorationAddons
 import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.Minimize
-import XMonad.Layout.Maximize
 import XMonad.Layout.Reflect (reflectHoriz)
 import XMonad.Layout.LayoutCombinators
-import XMonad.Layout.ComboP
-import XMonad.Layout.TwoPane
 import XMonad.Layout.BinarySpacePartition
+import XMonad.Layout.DraggingVisualizer
+import XMonad.Layout.SubLayouts
+import XMonad.Layout.StateFull
+import XMonad.Layout.Renamed (Rename (Replace), renamed)
 
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
@@ -44,6 +48,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
 import XMonad.Hooks.ManageHelpers
   (isFullscreen, isDialog,  doFullFloat, doCenterFloat, doRectFloat, composeOne, isInProperty)
+import XMonad.Hooks.SetWMName (setWMName)
 
 import XMonad.Actions.Navigation2D (switchLayer)
 import XMonad.Actions.FloatKeys
@@ -51,24 +56,25 @@ import XMonad.Actions.FloatSnap
 import XMonad.Actions.Search
 import XMonad.Actions.WindowMenu
 import XMonad.Actions.Minimize
-import XMonad.Actions.TagWindows
-import XMonad.Actions.CycleWS (nextWS, prevWS)
+import XMonad.Actions.CycleWS
 import XMonad.Actions.WindowGo (runOrRaise)
 import XMonad.Actions.WithAll (killAll)
+import XMonad.Actions.CycleWindows
 
 import XMonad.Prompt
 import XMonad.Prompt.Shell (shellPrompt)
 import XMonad.Prompt.Input
 import XMonad.Prompt.FuzzyMatch
 import XMonad.Prompt.Window
-import XMonad.Prompt.Workspace
+import XMonad.Prompt.XMonad
 
 import qualified XMonad.StackSet as W
-import qualified Data.Map        as M
+import qualified XMonad.Core as C
+import qualified Data.Map as M
 import qualified XMonad.Layout.WindowNavigation as WN
 import qualified XMonad.Layout.BoringWindows as BW
 
-myTerminal      = "urxvtc -icon $HOME/.icons/icons/48x48/terminal.png"
+myTerminal = "urxvtc -icon $HOME/.icons/icons/48x48/terminal.png"
 
 myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = True
@@ -76,84 +82,49 @@ myFocusFollowsMouse = True
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
 
-myBorderWidth   = 6
+myBorderWidth = 0
 
 myNormalBorderColor  = "#ffffea"
-myFocusedBorderColor = "#000000"
+myFocusedBorderColor = "#3d3c3d"
 
 myModMask       = mod4Mask
 
-workspaceEmacs   = "\61729 "
-workspaceFirefox = "\62057 "
-workspaceBrave   = "\61612 "
-workspaceDiscord = "\62074 "
-workspaceSteam   = "\61878 "
-workspaceMusic   = "\61441 "
-workspaceGimp    = "\61948 "
-workspaceMisc    = "\61704 "
-
-myWorkspaces = [ workspaceEmacs
-               , workspaceFirefox
-               , workspaceBrave
-               , workspaceDiscord
-               , workspaceSteam
-               , workspaceMusic
-               , workspaceGimp
-               , workspaceMisc
-               ]
+myWorkspaces = [ "dev", "web", "com", "mus", "etc" ]
 
 myWorkspaceIndices = M.fromList
   $ zipWith (,) myWorkspaces [1..] -- (,) == \x y -> (x,y)
 
-clickable ws = "<action=xdotool key super+F"++show i++">"++ws++"</action>"
+clickable ws = "<action=xdotool key super+"++show i++">"++ws++"</action>"
   where i = fromJust $ M.lookup ws myWorkspaceIndices
 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [((m .|. modm, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_F1 .. xK_F8]
-        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_5]
+        , (f, m) <- [(W.greedyView, 0), (W.shift, controlMask)]]
 
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
-    -- launch a terminal
-    --[ ("M-<Return>", spawn $ myTerminal)
-    -- launch emacs
-    --, ("M-S-<Return>", spawn "emacsclient -c")
     -- Xmonad prompt
     [ ("M-x", shellPrompt launcherXPConfig)
-    --, ("M-<Space>", spawn "rofi -matching normal -show drun -modi drun,run -show-icons")
-    -- Xmonad prefix prompt
-    --, ("M-z", prefixPrompt)
-    , ("M-<Space>", prefixPrompt)
+    , ("M-<Space>", shellPrompt launcherXPConfig)
     , ("M1-<Space>", prefixPrompt)
-    -- Xmonad command prompt
-    --, ("M-x", commandPrompt)
-    -- Emacs launcher
-    --, ("M-c", spawn "emacsclient --eval '(emacs-run-launcher)'")
-    -- File Manager
-    --, ("M-e", spawn "pcmanfm --new-win")
-    -- close focused window
-    --, ("M-q", kill)
-    -- Rotate through the available layout algorithms
-    --, ("M-\\", sendMessage NextLayout)
-    --, ("M-S-\\", sendMessage FirstLayout)
-    -- Push window back into tiling
-    , ("M-t", withFocused $ windows . W.sink)
-    -- Quit xmonad
-    --, ("M-S-q", io (exitWith ExitSuccess))
-    -- Restart xmonad
-    --, ("M-C-r", spawn "xmonad --recompile; xmonad --restart")
+    -- Resize prompt
+    , ("M-r", resizePrompt)
+    , ("M-S-r", resizePrompt)
+    -- Float prompt
+    , ("M-f", floatPrompt)
+    , ("M-S-f", floatPrompt)
     -- Audio Controls
-    , ("<XF86AudioLowerVolume>", spawn "pamixer --decrease 2")
-    , ("<XF86AudioRaiseVolume>", spawn "pamixer --increase 2")
-    , ("<XF86AudioMute>", spawn "pamixer --toggle-mute")
+    , ("<XF86AudioLowerVolume>", spawn "amixer -q set Master unmute 2%-")
+    , ("<XF86AudioRaiseVolume>", spawn "amixer -q set Master unmute 2%+")
+    , ("<XF86AudioMute>", spawn "amixer -q set Master toggle")
     , ("<XF86AudioNext>", spawn "audacious --fwd")
     , ("<XF86AudioPrev>", spawn "audacious --rew")
     , ("<XF86AudioPlay>", spawn "audacious --play-pause")
     , ("<XF86AudioStop>", spawn "audacious --stop")
-    , ("<F5>", spawn "pamixer --decrease 2")
-    , ("<F6>", spawn "pamixer --increase 2")
-    , ("<F7>", spawn "pamixer --toggle-mute")
+    , ("<F5>", spawn "amixer -q set Master unmute 2%-")
+    , ("<F6>", spawn "amixer -q set Master unmute 2%+")
+    , ("<F7>", spawn "amixer -q set Master toggle")
     , ("<F10>", spawn "audacious --fwd")
     , ("<F9>", spawn "audacious --rew")
     , ("<F8>", spawn "audacious --play-pause")
@@ -162,136 +133,16 @@ myAdditionalKeys =
     , ("<XF86MonBrightnessDown>", spawn "xbrightness -5000")
     -- Keyboard Layout
     , ("M-C-<Space>", spawn "/home/cory/manual_installs/layout_switch.sh")
-    -- Kill App
-    , ("M-<Escape>", spawn "xkill")
-    -- Lock Screen
-    --, ("M-S-z", spawn "xscreensaver-command -lock")
-    -- Screenshot
-    --, ("M-<Print>", spawn "flameshot full -p ~/Screenshots/")
-    --, ("M-S-<Print>", spawn "flameshot gui")
-    -- Fullscreen
-    , ("M-f", sendMessage (Toggle NBFULL))
-    -- Minimize
-    , ("M-i", withFocused minimizeWindow)
-    , ("M-S-i", withLastMinimized maximizeWindowAndFocus)
-    -- Maximize
-    --, ("M-f", withFocused (sendMessage . maximizeRestore))
-    -- Window Menu
-    , ("M-o", windowMenu)
-    -- Scratchpads
-    --, ("M-'", namedScratchpadAction myScratchpads "terminal")
-    --, ("M-0", namedScratchpadAction myScratchpads "audacious")
-    --, ("M-'", spawn $ (myTerminal ++ " -name scratchpad"))
-    --, ("M-0", spawn "audacious")
-    -- -- Master and Stack Controls
-    -- --, ("M-r", refresh)
-    -- --, ("M-m", windows W.focusMaster  )
-    -- , ("M-<Tab>", windows W.focusDown)
-    -- , ("M-j", windows W.focusDown)
-    -- , ("M-k", windows W.focusUp  )
-    -- --, ("M-<Return>", windows W.swapMaster)
-    -- , ("M-S-j", windows W.swapDown  )
-    -- , ("M-S-k", windows W.swapUp    )
-    -- , ("M-S-g", sendMessage $ SwapWindow)
-    -- , ("M-h", sendMessage Shrink)
-    -- , ("M-l", sendMessage Expand)
-    -- , ("M-m", sendMessage MirrorExpand)
-    -- , ("M-n", sendMessage MirrorShrink)
-    -- , ("M-,", sendMessage (IncMasterN 1))
-    -- , ("M-.", sendMessage (IncMasterN (-1)))
-    -- Directional Movement Controls
-    -- Switch between layers
-    , ("M-S-<Space>", switchLayer)
-    -- Directional navigation of windows
-    , ("M-h", sendMessage $ WN.Go WN.L)
-    , ("M-j", sendMessage $ WN.Go WN.D)
-    , ("M-k", sendMessage $ WN.Go WN.U)
-    , ("M-l", sendMessage $ WN.Go WN.R)
-    , ("M-m", windows W.focusUp)
-    , ("M-n", windows W.focusDown)
-    -- Size controls
-    , ("M-M1-h", sendMessage Shrink)
-    , ("M-M1-l", sendMessage Expand)
-    , ("M-M1-j", sendMessage MirrorExpand)
-    , ("M-M1-k", sendMessage MirrorShrink)
-    -- Swap adjacent windows
-    , ("M-C-l", sendMessage $ WN.Swap WN.R)
-    , ("M-C-h", sendMessage $ WN.Swap WN.L)
-    , ("M-C-k", sendMessage $ WN.Swap WN.U)
-    , ("M-C-j", sendMessage $ WN.Swap WN.D)
-    , ("M-C-m", windows W.swapUp)
-    , ("M-C-n", windows W.swapDown)
-    -- -- Float keys
-    -- , ("M-M1-<U>", withFocused (keysMoveWindow (0,-80)))
-    -- , ("M-M1-<D>", withFocused (keysMoveWindow (0, 80)))
-    -- , ("M-M1-<L>", withFocused (keysMoveWindow (-80,0)))
-    -- , ("M-M1-<R>", withFocused (keysMoveWindow (80, 0)))
-    -- , ("M-M1-k", withFocused (keysMoveWindow (0,-80)))
-    -- , ("M-M1-j", withFocused (keysMoveWindow (0, 80)))
-    -- , ("M-M1-h", withFocused (keysMoveWindow (-80,0)))
-    -- , ("M-M1-l", withFocused (keysMoveWindow (80, 0)))
-    -- -- Center the window
-    -- --, ("M-c", withFocused (keysMoveWindowTo (1920,1080) (1%2, 1%2)))
-    -- -- Float Snapping Keys
-    -- , ("C-M-<L>", withFocused $ snapMove L Nothing)
-    -- , ("C-M-<R>", withFocused $ snapMove R Nothing)
-    -- , ("C-M-<U>", withFocused $ snapMove U Nothing)
-    -- , ("C-M-<D>", withFocused $ snapMove D Nothing)
-    -- , ("C-M1-h", withFocused $ snapMove L Nothing)
-    -- , ("C-M1-l", withFocused $ snapMove R Nothing)
-    -- , ("C-M1-k", withFocused $ snapMove U Nothing)
-    -- , ("C-M1-j", withFocused $ snapMove D Nothing)
-    -- , ("C-M-<L>", withFocused $ snapShrink R Nothing)
-    -- , ("C-M-<R>", withFocused $ snapGrow R Nothing)
-    -- , ("C-M-<U>", withFocused $ snapShrink D Nothing)
-    -- , ("C-M-<D>", withFocused $ snapGrow D Nothing)
-    -- , ("C-M-h", withFocused $ snapShrink R Nothing)
-    -- , ("C-M-l", withFocused $ snapGrow R Nothing)
-    -- , ("C-M-k", withFocused $ snapShrink D Nothing)
-    -- , ("C-M-j", withFocused $ snapGrow D Nothing)
-    -- Tags
-    -- , ("M-f", withFocused (addTag "abc"))
-    -- , ("C-M-f", withFocused (delTag "abc"))
-    -- , ("S-M-f", withTaggedGlobalP "abc" W.sink)
-    -- , ("M-d", withTaggedP "abc" (W.shiftWin "2"))
-    -- , ("S-M-d", withTaggedGlobalP "abc" shiftHere)
-    -- , ("C-M-d", focusUpTaggedGlobal "abc")
-    -- , ("M-g", tagPrompt myXPConfig (\s -> withFocused (addTag s)))
-    -- , ("C-M-g", tagDelPrompt def)
-    -- , ("S-M-g", tagPrompt def (\s -> withTaggedGlobal s float))
-    -- , ("M1-g", tagPrompt def (\s -> withTaggedP s (W.shiftWin "2")))
-    -- , ("S-M1-g", tagPrompt def (\s -> withTaggedGlobalP s shiftHere))
-    -- , ("C-M1-g", tagPrompt def (\s -> focusUpTaggedGlobal s))
     ]
 
 ------------------------------------------------------------------------
 
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
-
-    -- mod-button1, Set the window to floating mode and move by dragging
     [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
-                                       >> windows W.shiftMaster))
-
---    , ((modm .|. shiftMask, button1), dragWindow)
-
-    -- mod-button2, Raise the window to the top of the stack
+                          >> windows W.shiftMaster))
     , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
-
-    -- mod-button3, Set the window to floating mode and resize by dragging
     , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
-                                       >> windows W.shiftMaster))
-
-    -- you may also bind events to the mouse scroll wheel (button4 and button5)
-
-    -- Float Snapping Mouse Bindings
-    -- , ((mod1Mask, button1), (\w -> focus w >> mouseMoveWindow w >> ifClick (snapMagicMove (Just 50) (Just 50) w)))
-    -- , ((mod1Mask .|. shiftMask, button1), (\w -> focus w >> mouseMoveWindow w >> ifClick (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)))
-    -- , ((mod1Mask, button3), (\w -> focus w >> mouseResizeWindow w >> ifClick (snapMagicResize [R,D] (Just 50) (Just 50) w)))
-
-    -- alternative mouse bindings
-    --, ((mod1Mask,               button1), (\w -> focus w >> mouseMoveWindow w >> afterDrag (snapMagicMove (Just 50) (Just 50) w)))
-    --, ((mod1Mask .|. shiftMask, button1), (\w -> focus w >> mouseMoveWindow w >> afterDrag (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)))
-    --, ((mod1Mask,               button3), (\w -> focus w >> mouseResizeWindow w >> afterDrag (snapMagicResize [R,D] (Just 50) (Just 50) w)))
+                          >> windows W.shiftMaster))
     ]
 
 ------------------------------------------------------------------------
@@ -304,102 +155,100 @@ convertToBool = map convertToBool'
 
 menuButton' :: [[Int]]
 menuButton' = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
 
 menuButton :: [[Bool]]
 menuButton = convertToBool menuButton'
 
 miniButton' :: [[Int]]
-miniButton' = [[0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
-               [0,0,0,0,0,1,1,1,1,0,0,1,1,1,1,0,0,0,0,0],
-               [0,0,0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0],
-               [0,0,0,0,0,1,1,1,1,0,0,1,1,1,1,0,0,0,0,0],
-               [0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0],
-               [1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1],
-               [1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1],
-               [1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1],
-               [1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1],
-               [0,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,0],
-               [0,1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1,1,1,0],
-               [0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0],
-               [0,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,1,0,0],
-               [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+miniButton' = [[0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0],
                [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
-               [0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0]]
+               [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+               [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+               [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+               [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+               [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+               [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0]]
 
 miniButton :: [[Bool]]
 miniButton = convertToBool miniButton'
 
 maxiButton' :: [[Int]]
-maxiButton' = [[0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],
-               [0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1],
-               [0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1],
-               [1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1],
-               [1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1],
-               [1,1,1,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1],
-               [1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,1],
-               [1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0],
-               [1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,1,1,0,0,0],
-               [1,1,1,0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,0,0],
-               [1,1,1,0,0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0],
-               [1,1,1,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0,0],
-               [1,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,1,0,0,0],
-               [1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-               [1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-               [1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-               [1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
-               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0]]
+maxiButton' = [[0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
+               [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+               [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+               [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+               [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+               [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+               [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0]]
 
 maxiButton :: [[Bool]]
 maxiButton = convertToBool maxiButton'
 
 closeButton' :: [[Int]]
-closeButton' = [[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],
-                [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],
-                [1,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1],
-                [1,1,1,0,0,1,1,1,0,0,0,0,1,1,1,0,0,1,1,1],
-                [1,1,1,0,0,0,1,1,1,0,0,1,1,1,0,0,0,1,1,1],
-                [1,1,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,1,1],
-                [1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1],
-                [1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1],
-                [1,1,1,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,1,1],
-                [1,1,1,0,0,0,1,1,1,0,0,1,1,1,0,0,0,1,1,1],
-                [1,1,1,0,0,1,1,1,0,0,0,0,1,1,1,0,0,1,1,1],
-                [1,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,1,1,1],
-                [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],
-                [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1],
-                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0]]
-
+closeButton' = [[0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
+                [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+                [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+                [0,1,1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,1,0],
+                [0,1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1,1,1,0],
+                [0,1,1,1,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,0],
+                [1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1],
+                [1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1],
+                [1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1],
+                [1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1],
+                [0,1,1,1,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,0],
+                [0,1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1,1,1,0],
+                [0,1,1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,1,0],
+                [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+                [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+                [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0]]
 
 closeButton :: [[Bool]]
 closeButton = convertToBool closeButton'
@@ -427,130 +276,134 @@ imageTitleBarButtonHandler mainw distFromLeft distFromRight = do
           | fi distFromRight >= closeButtonOffset &&
             fi distFromRight <= closeButtonOffset + buttonSize = focus mainw >> kill >> return True
           | fi distFromRight >= maximizeButtonOffset &&
-            fi distFromRight <= maximizeButtonOffset + buttonSize = focus mainw >> sendMessage (maximizeRestore mainw) >> return True
+            fi distFromRight <= maximizeButtonOffset + buttonSize = focus mainw >> sendMessage (Toggle NBFULL) >> return True
           | fi distFromRight >= minimizeButtonOffset &&
             fi distFromRight <= minimizeButtonOffset + buttonSize = focus mainw >> minimizeWindow mainw >> return True
           | otherwise = return False
     action
 
 defaultThemeWithImageButtons :: Theme
-defaultThemeWithImageButtons = def
-                               { fontName = "xft:Iosevka Nerd Font:size=12"
-                               , inactiveBorderColor = "#b2b2b2"
-                               , inactiveColor = "#d9d9d9"
-                               , inactiveTextColor = "#b2b2b2"
-                               , inactiveBorderWidth = 0
-                               , activeBorderColor = "#0f0f0f"
-                               , activeColor = "#b2b2b2"
-                               , activeTextColor = "#0f0f0f"
-                               , activeBorderWidth = 0
-                               , urgentBorderColor = "#0f0f0f"
-                               , urgentColor = "#541015"
-                               , urgentTextColor = "#0f0f0f"
-                               , urgentBorderWidth = 0
-                               , decoHeight = 45
-                               , windowTitleIcons = [ (menuButton, CenterLeft 20),
-                                                      (closeButton, CenterRight 20),
-                                                      (maxiButton, CenterRight 60),
-                                                      (miniButton, CenterRight 100) ]
-                               }
+defaultThemeWithImageButtons =
+  def { fontName = "xft:Iosevka Nerd Font:size=12"
+      , inactiveBorderColor = "#eaeaea"
+      , inactiveColor = "#3d3c3d"
+      , inactiveTextColor = "#eaeaea"
+      , inactiveBorderWidth = 0
+      , activeBorderColor = "#7eb7e1"
+      , activeColor = "#3d3c3d"
+      , activeTextColor = "#7eb7e1"
+      , activeBorderWidth = 0
+      , urgentBorderColor = "#000000"
+      , urgentColor = "#880000"
+      , urgentTextColor = "#000000"
+      , urgentBorderWidth = 0
+      , decoHeight = 50
+      , windowTitleIcons = [ (menuButton, CenterLeft 20),
+                             (closeButton, CenterRight 20),
+                             (maxiButton, CenterRight 60),
+                             (miniButton, CenterRight 100) ]
+      }
 
-imageButtonDeco :: (Eq a, Shrinker s) => s -> Theme
-                   -> l a -> ModifiedLayout (Decoration ImageButtonDecoration s) l a
-imageButtonDeco s c = decoration s c $ NFD True
+windowSwitcherDecorationWithImageButtons :: (Eq a, Shrinker s) => s -> Theme
+  -> l a -> ModifiedLayout (Decoration ImageWindowSwitcherDecoration s) l a
+windowSwitcherDecorationWithImageButtons s c = decoration s c $ IWSD True
 
-newtype ImageButtonDecoration a = NFD Bool deriving (Show, Read)
+data ImageWindowSwitcherDecoration a = IWSD Bool deriving (Show, Read)
 
-instance Eq a => DecorationStyle ImageButtonDecoration a where
-    describeDeco _ = "ImageButtonDeco"
-    decorationCatchClicksHook _ mainw dFL dFR = imageTitleBarButtonHandler mainw dFL dFR
-    decorationAfterDraggingHook _ (mainw, _) decoWin = focus mainw >> handleScreenCrossing mainw decoWin >> return ()
+instance Eq a => DecorationStyle ImageWindowSwitcherDecoration a where
+    describeDeco _ = "ImageWindowSwitcherDeco"
+
+    decorationCatchClicksHook (IWSD withButtons) mainw dFL dFR = if withButtons
+      then imageTitleBarButtonHandler mainw dFL dFR
+      else return False
+    decorationWhileDraggingHook _ ex ey (mainw, r) x y = handleTiledDraggingInProgress ex ey (mainw, r) x y
+    decorationAfterDraggingHook _ (mainw, _) decoWin =
+      do focus mainw
+         hasCrossed <- handleScreenCrossing mainw decoWin
+         unless hasCrossed $
+           do sendMessage $ DraggingStopped
+              performWindowSwitching mainw
+
+handleTiledDraggingInProgress ex ey (mainw, r) x y = do
+    let rect = Rectangle (x - (fi ex - rect_x r))
+                         (y - (fi ey - rect_y r))
+                         (rect_width  r)
+                         (rect_height r)
+    sendMessage $ DraggingWindow mainw rect
+
+performWindowSwitching :: Window -> X ()
+performWindowSwitching win =
+    withDisplay $ \d -> do
+       root <- asks theRoot
+       (_, _, selWin, _, _, _, _, _) <- io $ queryPointer d root
+       ws <- gets windowset
+       let allWindows = W.index ws
+       -- do a little double check to be sure
+       if (win `elem` allWindows) && (selWin `elem` allWindows)
+            then do
+                let allWindowsSwitched = map (switchEntries win selWin) allWindows
+                let (ls, t:rs) = break (win ==) allWindowsSwitched
+                let newStack = W.Stack t (reverse ls) rs
+                windows $ W.modify' $ \_ -> newStack
+            else return ()
+    where
+        switchEntries a b x
+            | x == a    = b
+            | x == b    = a
+            | otherwise = x
 
 ------------------------------------------------------------------------
 
--- myLayout = avoidStruts
---          . WN.windowNavigation
---          . smartBorders
---          -- . fullScreenToggle
---          . minimize
---          . BW.boringWindows
---          . maximizeWithPadding 50
---          . ws1Layout
---          . ws2Layout
---          . ws3Layout
---          . ws4Layout
---          . windowDeco
---          -- . draggingVisualizer
---          $ (ifMax 2 (ifMax 1 (terminalGaps $ Full) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
---    --  ||| (combineTwoP (TwoPane 0.00 0.0) simplestFloat (bigGaps $ resizableTile) (ClassName "URxvt"))
---        ||| (ifMax 2 (ifMax 1 (terminalGaps $ Full) (bigGaps $ threeColumnMid)) (smallGaps $ threeColumnMid))
---        ||| (bigGaps $ resizableTile)
---        ||| (simplestFloat)
---   where
---      -- default tiling algorithm partitions the screen into two panes
---      threeColumn = ThreeCol nmaster delta ratio
---      threeColumnMid = ThreeColMid nmaster delta ratio
---      threeColumnMidDouble = reflectHoriz $ (ThreeColMid nmaster delta (2/3))
---      resizableTile = ResizableTall 1 (3/100) (1/2) []
---      -- The default number of windows in the master pane
---      nmaster = 1
---      -- Default proportion of screen occupied by master pane
---      ratio   = 1/2
---      -- Percent of screen to increment by when resizing panes
---      delta   = 3/100
---      -- Fullscreen
---      -- fullScreenToggle = mkToggle (single NBFULL)
---      -- Spacing
---      -- top, bottom, right, left
---      bigGaps = spacingRaw False (Border 100 50 180 130) True (Border 0 50 0 50) True
---      smallGaps = spacingRaw False (Border 50 0 50 0) True (Border 0 50 0 50) True
---      terminalGaps = spacingRaw False (Border 500 450 1135 1085) True (Border 0 50 0 50) True
---      terminal2GapsLeft = spacingRaw False (Border 150 150 13 337) True (Border 0 0 0 0) True
---      terminal2GapsRight = spacingRaw False (Border 500 500 337 13) True (Border 0 0 0 0) True
---      terminal3Gaps = spacingRaw False (Border 150 124 337 311) True (Border 0 26 0 26) True
---      threeGapsSingle = spacingRaw False (Border 26 26 981 981) True (Border 0 0 0 0) True
---      threeGapsDouble = spacingRaw False (Border 26 0 981 0) True (Border 0 26 0 26) True
---      threeGaps = spacingRaw False (Border 26 0 26 0) True (Border 0 26 0 26) True
---      discordGaps = spacingRaw False (Border 350 300 800 750) True (Border 0 50 0 50) True
---      ws1Layout = onWorkspace ws1
---        (windowDeco $ (ifMax 2 (ifMax 1 (terminalGaps $ Full) (combineTwoP resizableTile (terminal2GapsLeft $ Full) (terminal2GapsRight $ Full) (ClassName "Emacs"))) (terminal3Gaps $ resizableTile))
---        ||| (bigGaps $ Full))
---      ws2Layout = onWorkspace ws2
---        (windowDeco $ (ifMax 2 (bigGaps $ resizableTile) (smallGaps $ resizableTile))
---        ||| Full)
---      ws3Layout = onWorkspace ws3
---        (windowDeco $ (ifMax 2 (ifMax 1 (discordGaps $ Full) (bigGaps $ resizableTile)) (smallGaps $ resizableTile))
---        ||| (simplestFloat))
---      ws4Layout = onWorkspace ws4
---        (windowDeco $ (ifMax 2 (ifMax 1 (threeGapsSingle $ Full) (threeGapsDouble $ threeColumnMidDouble)) (threeGaps $ threeColumnMid))
---        ||| (threeGaps $ Full))
---      win(dowDeco = imageButtonDeco shrinkText defaultThemeWithImageButtons
+-- for the future: want to spawn window within currently selected group,
+-- and then if you want it to be separate unmerge it from the group.
+-- the new window will already be selected so it will be easy to umerge it
 
-myLayout =  avoidStruts
+-- Spacing
+-- top, bottom, right, left
+-- bigGaps = spacingRaw False (Border 200 70 200 200)
+--   True (Border 0 0 0 0) True
+-- threeGapsSingle = spacingRaw False (Border 200 70 1060 1060)
+--   True (Border 0 0 0 0) True
+-- threeGapsDouble = spacingRaw False (Border 200 70 1060 200)
+--   True (Border 0 0 0 0) True
+-- threeGaps = spacingRaw False (Border 200 70 200 200)
+--   True (Border 0 0 0 0) True
+bigGaps = spacingRaw False (Border 200 115 200 175)
+  True (Border 0 25 0 25) True
+threeGapsSingle = spacingRaw False (Border 200 140 1060 1060)
+  True (Border 0 0 0 0) True
+threeGapsDouble = spacingRaw False (Border 200 140 1060 200)
+  True (Border 0 0 0 0) True
+threeGaps = spacingRaw False (Border 200 140 200 200)
+  True (Border 0 0 0 0) True
+
+emacs =
+  renamed [Replace "bsp"] $
+  (subLayout [] StateFull . bigGaps $ emptyBSP)
+
+full =
+  renamed [Replace "full"] $
+  (bigGaps $ StateFull)
+
+threeCol =
+  renamed [Replace "threeCol"] $
+  (subLayout [] StateFull $ (ifMax 2 (ifMax 1
+      (threeGapsSingle $ Full)
+      (threeGapsDouble $ reflectHoriz $ (ThreeColMid 1 (3/100) (2/3))))
+    (threeGaps $ ThreeColMid 1 (3/100) (1/2))))
+
+myLayout = avoidStruts
          . (WN.configurableNavigation WN.noNavigateBorders)
          . smartBorders
          . fullScreenToggle
          . minimize
          . BW.boringWindows
-         -- . maximizeWithPadding 50
-         $ (borderGaps $ resizableTile)
-       ||| ifMax 2 (ifMax 1 (threeGapsSingle $ Full) (threeGapsDouble $ threeColumnMidDouble)) (threeGaps $ threeColumnMid)
-       ||| (borderGaps $ Full)
+         . windowDeco
+         . draggingVisualizer
+         $ emacs ||| full ||| threeCol
   where
-     threeColumn = ThreeCol nmaster delta ratio
-     threeColumnMid = ThreeColMid nmaster delta ratio
-     threeColumnMidDouble = reflectHoriz $ (ThreeColMid nmaster delta (2/3))
-     resizableTile = ResizableTall 1 (3/100) (1/2) []
-
-     nmaster = 1
-     ratio   = 1/2
-     delta   = 3/100
-
-     borderGaps = spacingRaw False (Border 200 70 200 200) True (Border 0 0 0 0) True
-     threeGapsSingle = spacingRaw False (Border 200 70 1060 1060) True (Border 0 0 0 0) True
-     threeGapsDouble = spacingRaw False (Border 200 70 1060 200) True (Border 0 0 0 0) True
-     threeGaps = spacingRaw False (Border 200 70 200 200) True (Border 0 0 0 0) True
-     -- Fullscreen
+     windowDeco = windowSwitcherDecorationWithImageButtons
+                  shrinkText defaultThemeWithImageButtons
      fullScreenToggle = mkToggle (single NBFULL)
 
 ------------------------------------------------------------------------
@@ -563,69 +416,40 @@ infix 0 -!>
 (-!>) :: (Monad m, Monoid a) => m Bool -> m a -> m a
 p -!> f = p >>= \b -> if b then return mempty else f
 
+-- | @q =? x@. if the result of @q@ equals @x@, return 'False'.
+(=!?) :: Eq a => C.Query a -> a -> C.Query Bool
+q =!? x = fmap (/= x) q
+
 myManageHook = composeAll
-    [ insertPosition Master Newer
-    , className =? "MPlayer"                                          --> mediaFloat
-    , className =? "mpv"                                              --> mediaFloat
-    , className =? "vlc"                                              --> mediaFloat
-    , className =? "io.github.celluloid_player.Celluloid"             --> mediaFloat
-    , className =? "gwenview"                                         --> mediaFloat
-    , className =? "Sxiv"                                             --> mediaFloat
-    , className =? "Orage"                                            --> doFloat
-    , className =? "Gimp"                                             --> doCenterFloat
-    , className =? "krita"                                            --> doCenterFloat
-    , className =? "Galculator"                                       --> calculatorFloat
-    , className =? "Firefox" <&&> resource =? "Toolkit"               --> myRectFloat
-    , className =? "chromium-browser" <&&> isDialog                   --> myRectFloat
-    , stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog"       --> myRectFloat
-    , stringProperty "WM_WINDOW_ROLE" =? "pop-up"                     --> myRectFloat
-    , isDialog                                                        --> myRectFloat
-    , isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH" --> myRectFloat
-    , title     =? "Save Image"                                       --> myRectFloat
-    , title     =? "Save File"                                        --> myRectFloat
-    , title     =? "Open"                                             --> myRectFloat
-    , title     =? "Open Files"                                       --> myRectFloat
-    , title     =? "emacs-run-launcher"                               --> scratchpadFloat
-    , resource  =? "audacious"                                        --> scratchpadFloat
-    , resource  =? "xmomacs-help"                                     --> helpFloat
-    , resource  =? "desktop_window"                                   --> doIgnore
-    , resource  =? "kdesktop"                                         --> doIgnore
-    , className =? "Emacs"                                            --> doShift (myWorkspaces !! 0)
-    , className =? "Firefox"                                          --> doShift (myWorkspaces !! 1)
-    , className =? "Brave-browser"                                    --> doShift (myWorkspaces !! 2)
-    , className =? "discord"                                          --> doShift (myWorkspaces !! 3)
-    , className =? "Steam"                                            --> doShift (myWorkspaces !! 4)
-    , className =? "Audacious"                                        --> doShift (myWorkspaces !! 5)
-    , className =? "Gimp"                                             --> doShift (myWorkspaces !! 6)
-    , className =? "krita"                                            --> doShift (myWorkspaces !! 6)
-    , className =? "Emacs" <||>
-      className =? "URxvt" <||>
-      className =? "Galculator" <||>
-      className =? "Orage" <||>
-      className =? "Sxiv" <||>
-      className =? "gwenview" <||>
-      className =? "MPlayer" <||>
-      className =? "mpv" <||>
-      className =? "vlc" <||>
-      className =? "io.github.celluloid_player.Celluloid" <||>
-      className =? "Firefox" <||>
-      className =? "discord" <||>
-      className =? "Pcmanfm" <||>
-      className =? "Steam" <||>
-      resource  =? "audacious" <||>
-      className =? "Brave-browser" <||>
-      stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog" <||>
-      stringProperty "WM_WINDOW_ROLE" =? "pop-up" <||>
-      isDialog <||>
-      isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH" <||>
-      title     =? "Save Image" <||>
-      title     =? "Save File" <||>
-      title     =? "Open" <||>
-      title     =? "Open Files" <||>
-      resource  =? "desktop_window" <||>
-      resource  =? "kdesktop"
-      -!> doShift (myWorkspaces !! 7)
+    [ className =? "MPlayer"                              --> mediaFloat
+    , className =? "mpv"                                  --> mediaFloat
+    , className =? "vlc"                                  --> mediaFloat
+    , className =? "io.github.celluloid_player.Celluloid" --> mediaFloat
+    , className =? "gwenview"                             --> mediaFloat
+    , className =? "Sxiv"                                 --> mediaFloat
+    , className =? "Orage"                                --> doCenterFloat
+    , className =? "Galculator"                           --> calculatorFloat
+    , className =? "Firefox" <&&> resource =? "Toolkit"   --> myRectFloat
+    , stringProperty "WM_WINDOW_ROLE"
+      =? "GtkFileChooserDialog"                           --> myRectFloat
+    , stringProperty "WM_WINDOW_ROLE" =? "pop-up"         --> myRectFloat
+    , stringProperty "WM_WINDOW_ROLE" =!? "gimp-image-window-1"
+      <&&> className =? "Gimp"                            --> doCenterFloat
+    , stringProperty "WM_WINDOW_ROLE" =!? "MainWindow#1"
+      <&&> className =? "krita"                           --> doCenterFloat
+    , isDialog                                            --> myRectFloat
+    , isInProperty "_NET_WM_WINDOW_TYPE"
+      "_NET_WM_WINDOW_TYPE_SPLASH"                        --> myRectFloat
+    , title     =? "Save Image"                           --> myRectFloat
+    , title     =? "Save File"                            --> myRectFloat
+    , title     =? "Open"                                 --> myRectFloat
+    , title     =? "Open Files"                           --> myRectFloat
+    , resource  =? "xmomacs-help"                         --> helpFloat
+    , resource  =? "desktop_window"                       --> doIgnore
+    , resource  =? "kdesktop"                             --> doIgnore
     , isFullscreen --> doFullFloat
+    , fmap not willFloat --> insertPosition Below Newer
+    , fmap not willFloat -!> insertPosition Master Newer
     ]
   where
     unfloat = ask >>= doF . W.sink
@@ -633,8 +457,16 @@ myManageHook = composeAll
     myRectFloat = doRectFloat (W.RationalRect (1 % 3) (3 % 10) (1 % 3) (2 % 5))
     mediaFloat = doRectFloat (W.RationalRect (3 % 10) (3 % 20) (2 % 5) (7 % 10))
     calculatorFloat = doRectFloat (W.RationalRect (7 % 16) (2 % 6) (1 % 8) (1 % 3))
-    scratchpadFloat = doRectFloat (W.RationalRect (1 % 3) (1 % 4) (1 % 3) (1 % 2))
     helpFloat = doRectFloat (W.RationalRect (7 % 8) (0 % 1) (1 % 8) (1 % 2))
+
+willFloat :: C.Query Bool
+willFloat =
+  ask >>= \w -> liftX $
+    withDisplay $ \d -> do
+      sh <- io $ getWMNormalHints d w
+      let isFixedSize = isJust (sh_min_size sh) && sh_min_size sh == sh_max_size sh
+      isTransient <- isJust <$> io (getTransientForHint d w)
+      return (isFixedSize || isTransient)
 
 ------------------------------------------------------------------------
 
@@ -647,24 +479,28 @@ myLogHook = return ()
 ------------------------------------------------------------------------
 
 myStartupHook = do
-        -- spawnOnce "emacs --daemon"
+        spawnOnce "emacs --daemon"
         spawnOnce "urxvtd --quiet &"
         spawnOnce "pcmanfm --daemon-mode &"
         spawnOnce "feh --bg-fill /etc/wallpaper.jpg"
-        -- spawnOnce "sleep 2 && emacsclient -c"
+        setWMName "LG3D"
 
 ------------------------------------------------------------------------
 
-bar = "xmobar $HOME/.config/xmobar/bar"
+bar = "xmobar $HOME/.config/xmobar/xmobarrc"
 
-ppWorkspaces = xmobarPP { ppCurrent = xmobarColor "#004488" "" . wrap "<fc=#880000>*</fc>" "<fc=#880000>*</fc>"
-                        , ppHidden = xmobarColor "#000000" "" . wrap " " " " . clickable
-                        -- , ppHiddenNoWindows = xmobarColor "#b7b7b7" "" . wrap " " " " . clickable
-                        , ppVisible = xmobarColor "#000000" "" . wrap " " " " . clickable
-                        --, ppTitle = xmobarColor "#0f0f0f" "" . shorten 40 . wrap "<fn=2>" "</fn>"
-                        , ppTitle = xmobarColor "#0f0f0f" "" . wrap "<fn=2>" "</fn>"
-                        , ppOrder = \(ws:_:t:_) -> [ws,t]
-                        }
+ppWorkspaces = xmobarPP
+  { ppCurrent = xmobarColor "#004488" ""
+    . wrap "<fc=#880000>*</fc>" "<fc=#880000>*</fc>"
+  , ppHidden = xmobarColor "#000000" "" . wrap " " " " . clickable
+  , ppHiddenNoWindows = xmobarColor "#b7b7b7" "" . wrap " " " " . clickable
+  , ppVisible = xmobarColor "#000000" "" . wrap " " " " . clickable
+  , ppUrgent = xmobarColor "#880000" ""
+    . wrap "<fc=#880000>*</fc>" "<fc=#880000>*</fc>" . clickable
+  --, ppTitle = xmobarColor "#0f0f0f" "" . shorten 40 . wrap "<fn=2>" "</fn>"
+  , ppTitle = xmobarColor "#0f0f0f" "" . wrap "<fn=2>" "</fn>"
+  , ppOrder = \(ws:_:t:_) -> [ws,t]
+  }
 
 -- Key binding to toggle the gap from the bar.
 toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
@@ -710,7 +546,7 @@ launcherXPConfig = def { font               = "xft:Iosevka Nerd Font:size=12"
                        , fgHLight            = "#d7d7d7"
                        , borderColor         = "#880000"
                        , promptBorderWidth   = 2
-                       , position            = CenteredAt (103 % 108) (1 % 2)
+                       , position            = CenteredAt (71 % 72) (1 % 2)
                        , alwaysHighlight     = True
                        , height              = 60
                        , maxComplRows        = Just 14
@@ -726,9 +562,72 @@ launcherXPConfig = def { font               = "xft:Iosevka Nerd Font:size=12"
 
 ------------------------------------------------------------------------
 
--- Xmonad Prefix Mode
+floatCommands :: [(String, X ())]
+floatCommands =
+  -- Float keys
+  [ ("k", (withFocused (keysMoveWindow (0,-80))) >> spawn "xdotool key super+f")
+  , ("j", (withFocused (keysMoveWindow (0, 80))) >> spawn "xdotool key super+f")
+  , ("h", (withFocused (keysMoveWindow (-80,0))) >> spawn "xdotool key super+f")
+  , ("l", (withFocused (keysMoveWindow (80, 0))) >> spawn "xdotool key super+f")
+  -- Float Snapping Keys
+  , ("sh", (withFocused $ snapMove L Nothing) >> spawn "xdotool key super+f")
+  , ("sj", (withFocused $ snapMove D Nothing) >> spawn "xdotool key super+f")
+  , ("sk", (withFocused $ snapMove U Nothing) >> spawn "xdotool key super+f")
+  , ("sl", (withFocused $ snapMove R Nothing) >> spawn "xdotool key super+f")
+  , ("sH", (withFocused $ snapShrink R Nothing) >> spawn "xdotool key super+f")
+  , ("sJ", (withFocused $ snapGrow D Nothing) >> spawn "xdotool key super+f")
+  , ("sK", (withFocused $ snapShrink D Nothing) >> spawn "xdotool key super+f")
+  , ("sL", (withFocused $ snapGrow R Nothing) >> spawn "xdotool key super+f")
+  -- Push window back into tiling
+  , ("t", (withFocused $ windows . W.sink) >> spawn "xdotool key super+f")
+  -- Switch between layers
+  , ("L", (switchLayer) >> spawn "xdotool key super+f")
+  -- Center the window
+  , ("c", (withFocused (keysMoveWindowTo (1920,1080) (1%2, 1%2)))
+      >> spawn "xdotool key super+f")
+  , ("q", refresh)
+  ]
 
--- Keybinds
+floatPrompt :: X ()
+floatPrompt = xmonadPromptC floatCommands prefixXPConfig
+              { fgHLight            = "#770077"
+              , borderColor         = "#770077"
+              }
+
+------------------------------------------------------------------------
+
+resizeCommands :: [(String, X ())]
+resizeCommands =
+  [ ("h", (sendMessage $ ExpandTowards L) >> spawn "xdotool key super+r")
+  , ("j", (sendMessage $ ExpandTowards D) >> spawn "xdotool key super+r")
+  , ("k", (sendMessage $ ExpandTowards U) >> spawn "xdotool key super+r")
+  , ("l", (sendMessage $ ExpandTowards R) >> spawn "xdotool key super+r")
+  , ("H", (sendMessage $ ShrinkFrom L) >> spawn "xdotool key super+r")
+  , ("J", (sendMessage $ ShrinkFrom D) >> spawn "xdotool key super+r")
+  , ("K", (sendMessage $ ShrinkFrom U) >> spawn "xdotool key super+r")
+  , ("L", (sendMessage $ ShrinkFrom R) >> spawn "xdotool key super+r")
+  , ("q", refresh)
+  ]
+
+resizePrompt :: X ()
+resizePrompt = xmonadPromptC resizeCommands prefixXPConfig
+               { fgHLight            = "#663311"
+               , borderColor         = "#663311"
+               }
+
+------------------------------------------------------------------------
+
+swapUp' :: W.Stack a -> W.Stack a
+swapUp'  (W.Stack t (l:ls) rs) = W.Stack t ls (l:rs)
+swapUp'  (W.Stack t []     rs) = W.Stack t (reverse rs) []
+
+swapDown' :: W.Stack a -> W.Stack a
+swapDown' = reverseStack . swapUp' . reverseStack
+
+-- | reverse a stack: up becomes down and down becomes up.
+reverseStack :: W.Stack a -> W.Stack a
+reverseStack (W.Stack t ls rs) = W.Stack t rs ls
+
 prefixXPKeymap :: M.Map (KeyMask,KeySym) (XP ())
 prefixXPKeymap = M.fromList
   [ ((controlMask, xK_g), quit)
@@ -738,22 +637,12 @@ prefixXPKeymap = M.fromList
   , ((0, xK_KP_Enter), setSuccess True >> setDone True)
   , ((0, xK_BackSpace), deleteString Prev)
   , ((0, xK_Delete), deleteString Next)
-
-  --, ((0, xK_space), (shellPrompt launcherXPConfig))
-  , ((0, xK_space), setSuccess True >> setDone True >> spawn "xdotool key super+x")
-  -- , ((mod1Mask, xK_space), setSuccess True >> setDone True >> spawn "xdotool key super+x")
-
-  , ((0, xK_F1), setSuccess True >> setDone True >> spawn "xdotool key super+F1")
-  , ((0, xK_F2), setSuccess True >> setDone True >> spawn "xdotool key super+F2")
-  , ((0, xK_F3), setSuccess True >> setDone True >> spawn "xdotool key super+F3")
-  , ((0, xK_F4), setSuccess True >> setDone True >> spawn "xdotool key super+F4")
-  , ((0, xK_F5), setSuccess True >> setDone True >> spawn "xdotool key super+F5")
-  , ((0, xK_F6), setSuccess True >> setDone True >> spawn "xdotool key super+F6")
-  , ((0, xK_F7), setSuccess True >> setDone True >> spawn "xdotool key super+F7")
-  , ((0, xK_F8), setSuccess True >> setDone True >> spawn "xdotool key super+F8")
-
-  , ((controlMask, xK_h), setSuccess True >> setDone True >> spawn "urxvtc -name xmomacs-help -e man xmonad")
-  , ((controlMask, xK_r), setSuccess True >> setDone True >> spawn "xmonad --recompile; xmonad --restart")
+  , ((0, xK_space), setSuccess True >> setDone True
+      >> spawn "xdotool key super+x")
+  , ((controlMask, xK_h), setSuccess True >> setDone True
+      >> spawn "urxvtc -name xmomacs-help -e man xmonad")
+  , ((controlMask, xK_r), setSuccess True >> setDone True
+      >> spawn "xmonad --recompile; xmonad --restart")
   , ((controlMask, xK_q), io (exitWith ExitSuccess))
   ]
 
@@ -764,7 +653,7 @@ prefixXPConfig = def { font = "xft:Iosevka Nerd Font:size=12"
                      , fgHLight = "#d7d7d7"
                      , borderColor = "#005500"
                      , promptBorderWidth = 2
-                     , position = CenteredAt (103 % 108) (1 % 2)
+                     , position = CenteredAt (71 % 72) (1 % 2)
                      , alwaysHighlight = False
                      , height = 60
                      , maxComplRows = Just 14
@@ -777,190 +666,114 @@ prefixXPConfig = def { font = "xft:Iosevka Nerd Font:size=12"
                      , searchPredicate = isPrefixOf
                      }
 
-prefixCommands :: M.Map String (X ())
-prefixCommands = fromList [
-                          -- Launch
-                            ("a", runOrRaise "audacious" (className =? "Audacious"))
-                          , ("d", runOrRaise "discord" (className =? "discord"))
-                          -- , ("e", runOrRaise "emacsclient -c" (className =? "Emacs"))
-                          -- , ("E", spawn "emacsclient -c")
-                          , ("e", runOrRaise "emacs" (className =? "Emacs"))
-                          , ("E", spawn "emacs")
-                          , ("f", runOrRaise "firefox" (className =? "Firefox"))
-                          , ("F", spawn "pcmanfm --new-win")
-                          , ("g", runOrRaise "steam" (className =? "Steam"))
-                          , ("t", spawn $ myTerminal)
+windowXPConfig = prefixXPConfig
+  { promptKeymap        = launcherXPKeymap
+  , alwaysHighlight     = True
+  , autoComplete        = Nothing
+  , showCompletionOnTab = False
+  , searchPredicate     = fuzzyMatch
+  , sorter              = fuzzySort
+  }
 
-                          -- Commands
-                          , ("q", kill)
-                          , ("Q", killAll)
-                          , ("c", sendMessage NextLayout)
-                          , ("C", sendMessage FirstLayout)
-                          , ("m", withFocused (sendMessage . maximizeRestore))
-                          , ("s", spawn "flameshot full -p ~/Screenshots/")
-                          , ("S", spawn "flameshot gui")
-                          , ("M", sendMessage ToggleStruts)
+prefixCommands :: [(String, X ())]
+prefixCommands =
+  ----------------------------------------------------------------------
+  --                            Audio                                 --
+  ----------------------------------------------------------------------
+  [ ("aa", runOrRaise "audacious" (className =? "Audacious"))
+  , ("an", spawn "audacious --fwd")
+  , ("ap", spawn "audacious --rew")
+  , ("at", spawn "audacious --play-pause")
+  , ("as", spawn "audacious --stop")
 
-                          -- Window management
-                          -- , ("o", windows W.focusDown)
-                          , ("h", sendMessage $ WN.Go WN.L)
-                          , ("j", sendMessage $ WN.Go WN.D)
-                          , ("k", sendMessage $ WN.Go WN.U)
-                          , ("l", sendMessage $ WN.Go WN.R)
-                          -- , ("n", sendMessage Shrink)
-                          -- , ("m", sendMessage Expand)
-                          , ("m", windows W.focusUp)
-                          , ("n", windows W.focusDown)
-                          , ("L", sendMessage $ WN.Swap WN.R)
-                          , ("H", sendMessage $ WN.Swap WN.L)
-                          , ("K", sendMessage $ WN.Swap WN.U)
-                          , ("J", sendMessage $ WN.Swap WN.D)
+  ----------------------------------------------------------------------
+  --                            Launch                                --
+  ----------------------------------------------------------------------
+  , ("d", runOrRaise "discord" (className =? "discord"))
+  , ("e", spawn "emacsclient -c")
+  , ("E", spawn "emacs")
+  , ("f", spawn "firefox")
+  , ("F", spawn "pcmanfm --new-win")
+  , ("g", runOrRaise "steam" (className =? "Steam"))
+  , ("t", spawn $ myTerminal)
 
-                          -- Windows
-                          , ("b", windowPrompt prefixXPConfig Goto allWindows)
-                          , ("B", windowPrompt prefixXPConfig Bring allWindows)
+  ----------------------------------------------------------------------
+  --                           Commands                               --
+  ----------------------------------------------------------------------
+  , ("s", spawn "flameshot full -p ~/Screenshots/")
+  , ("S", spawn "flameshot gui")
+  , ("M", sendMessage ToggleStruts)
+  , ("u", sendMessage (Toggle NBFULL))
+  , ("i", withFocused minimizeWindow)
+  , ("I", withLastMinimized maximizeWindowAndFocus)
 
-                          -- Workspaces
-                          -- , ("w", workspacePrompt prefixXPConfig (windows . W.greedyView))
-                          -- , ("W", workspacePrompt prefixXPConfig (windows . W.shift))
-                          , ("wt", sendMessage $ JumpToLayout "Tall")
-                          , ("wn", nextWS)
-                          , ("wp", prevWS)
-                          ]
+  ----------------------------------------------------------------------
+  --                     Basic Window Management                      --
+  ----------------------------------------------------------------------
+  , ("h", sendMessage $ WN.Go WN.L)
+  , ("j", sendMessage $ WN.Go WN.D)
+  , ("k", sendMessage $ WN.Go WN.U)
+  , ("l", sendMessage $ WN.Go WN.R)
+  , ("H", sendMessage $ WN.Swap WN.L)
+  , ("J", sendMessage $ WN.Swap WN.D)
+  , ("K", sendMessage $ WN.Swap WN.U)
+  , ("L", sendMessage $ WN.Swap WN.R)
 
-runCommand :: String -> X ()
-runCommand requestedCmd =
-  case M.lookup requestedCmd prefixCommands of
-    Nothing -> refresh --in future add error message
-    Just (commandToExec) -> commandToExec
+  ----------------------------------------------------------------------
+  --                       Buffers (Windows)                          --
+  ----------------------------------------------------------------------
+  , ("bb", windowPrompt windowXPConfig Goto allWindows)  -- Goto buffers
+  , ("bB", windowPrompt windowXPConfig Bring allWindows) -- Bring buffer
+  , ("bd", kill)                                         -- Kill buffer
+  , ("bD", killAll)                                      -- Kill every buffer
+  , ("bn", onGroup W.focusDown')                         -- Next buffer
+  , ("bp", onGroup W.focusUp')                           -- Prev buffer
+  , ("bN", windows W.focusDown)                          -- Next buffer alt
+  , ("bP", windows W.focusUp)                            -- Prev buffer alt
+  -- , ("bsn", onGroup swapDown')                           -- Swap next buffer
+  -- , ("bsp", onGroup swapUp')                             -- Swap prev buffer
+  -- , ("bsN", windows W.swapDown)                          -- Swap next buffer alt
+  -- , ("bsP", windows W.swapUp)                            -- Swap prev buffer alt
+  , ("bs", sendMessage Swap)                             -- Swap groups
+  , ("mh", sendMessage $ pullGroup L)                    -- Merge left
+  , ("mj", sendMessage $ pullGroup D)                    -- Merge down
+  , ("mk", sendMessage $ pullGroup U)                    -- Merge up
+  , ("ml", sendMessage $ pullGroup R)                    -- Merge right
 
-prefixPrompt :: X ()
-prefixPrompt = inputPromptWithCompl prefixXPConfig "M-SPC" (mkComplFunFromList (M.keys prefixCommands)) ?+ runCommand
-
-------------------------------------------------------------------------
-
--- Xmonad Command Mode
-
--- Keybinds
-commandXPKeymap :: M.Map (KeyMask,KeySym) (XP ())
-commandXPKeymap  = M.fromList
-  [ -- Basic typing controls
-    ((controlMask, xK_z), killBefore)
-  , ((controlMask, xK_k), killAfter)
-  , ((controlMask, xK_a), startOfLine)
-  , ((controlMask, xK_e), endOfLine)
-  , ((controlMask, xK_m), deleteString Next)
-  , ((controlMask, xK_b), moveCursor Prev)
-  , ((controlMask, xK_f), moveCursor Next)
-  , ((controlMask, xK_BackSpace), killWord Prev)
-  , ((controlMask, xK_y), pasteString)
-  , ((controlMask, xK_g), quit)
-  , ((controlMask, xK_bracketleft), quit)
-  , ((mod1Mask, xK_BackSpace), killWord Prev)
-  , ((mod1Mask, xK_f), moveWord Next)
-  , ((mod1Mask, xK_b), moveWord Prev)
-  , ((mod1Mask, xK_d), killWord Next)
-  , ((mod1Mask, xK_n), moveHistory W.focusUp')
-  , ((mod1Mask, xK_p), moveHistory W.focusDown')
-  , ((0, xK_Return), setSuccess True >> setDone True)
-  , ((0, xK_KP_Enter), setSuccess True >> setDone True)
-  , ((0, xK_BackSpace), deleteString Prev)
-  , ((0, xK_Delete), deleteString Next)
-  , ((0, xK_Left), moveCursor Prev)
-  , ((0, xK_Right), moveCursor Next)
-  , ((0, xK_Home), startOfLine)
-  , ((0, xK_End), endOfLine)
-  , ((0, xK_Down), moveHistory W.focusUp')
-  , ((0, xK_Up), moveHistory W.focusDown')
-  , ((0, xK_Escape), quit)
+  ----------------------------------------------------------------------
+  --                           Workspaces                             --
+  ----------------------------------------------------------------------
+  , ("wb", sendMessage Balance)
+  , ("wB", sendMessage Equalize)
+  , ("wn", moveTo Next NonEmptyWS)
+  , ("wp", moveTo Prev NonEmptyWS)
+  , ("wN", nextWS)
+  , ("wP", prevWS)
+  , ("wf", withFocused (sendMessage . MergeAll)) -- Window focus
+  , ("wF", floatPrompt) -- Window float
+  , ("wr", resizePrompt) -- Window resize
+  , ("wR", sendMessage Rotate) -- Window rotate
+  , ("ws", withFocused (sendMessage . UnMerge)) -- Window split
+  , ("wS", withFocused (sendMessage . UnMerge) >>
+           sendMessage Rotate) -- Window split
+  , ("wlb", sendMessage $ JumpToLayout "bsp")
+  , ("wlf", sendMessage $ JumpToLayout "full")
+  , ("wlt", sendMessage $ JumpToLayout "threeCol")
+  -- , ("M-S-C-j",  sendMessage $ SplitShift Prev)
+  -- , ("M-S-C-k",  sendMessage $ SplitShift Next)
+  ]
+  ++
+  -- Workspace switching and buffer send to workspace
+  [ (otherModMasks ++ [key], action tag)
+  | (tag, key)  <- zip myWorkspaces "12345"
+  , (otherModMasks, action) <-
+      [ ("", windows . W.greedyView) , ("bS", windows . W.shift)]
   ]
 
-commandXPConfig = def { font = "xft:Iosevka Nerd Font:size=12"
-                      , bgColor = "#d7d7d7"
-                      , fgColor = "#880000"
-                      , bgHLight = "#004488"
-                      , fgHLight = "#d7d7d7"
-                      , borderColor = "#880000"
-                      , promptBorderWidth = 2
-                      , position = CenteredAt (103 % 108) (1 % 2)
-                      , alwaysHighlight = False
-                      , height = 60
-                      , maxComplRows = Just 14
-                      , historySize         = 256
-                      , historyFilter       = id
-                      , promptKeymap        = commandXPKeymap
-                      , defaultText         = []
-                      , autoComplete        = Nothing
-                      , showCompletionOnTab = True
-                      , searchPredicate     = fuzzyMatch
-                      , sorter              = fuzzySort
-                      }
-
-commandCommands :: M.Map String (X ())
--- Functions
-commandCommands = fromList [
-                    -- Audio
-                      ("audio-toggle-mute", spawn "pamixer --toggle-mute")
-                    , ("audio-music-forward", spawn "audacious --fwd")
-                    , ("audio-music-rewind", spawn "audacious --rew")
-                    , ("audio-music-toggle-pause", spawn "audacious --play-pause")
-                    , ("audio-music-stop", spawn "audacious --stop")
-
-                    -- Launch
-                    , ("audacious", spawn "audacious")
-                    , ("browser", spawn "firefox")
-                    , ("discord", spawn "discord")
-                    , ("emacs", spawn "emacsclient -c")
-                    , ("file-manager", spawn "pcmanfm --new-win")
-                    , ("steam", spawn "steam")
-                    , ("terminal", spawn "urxvtc")
-
-                    -- Commands
-                    , ("xmonad-kill", kill)
-                    , ("xkill", spawn "xkill")
-                    , ("xmonad-next-layout", sendMessage NextLayout)
-                    , ("xmonad-first-layout", sendMessage FirstLayout)
-                    , ("screenshot-full", spawn "flameshot full -p ~/Screenshots/")
-                    , ("screenshot-selection", spawn "flameshot gui")
-                    , ("xmonad-exit", io (exitWith ExitSuccess))
-                    ]
-
-commandRunCommand :: String -> X ()
-commandRunCommand requestedCmd =
-  case M.lookup requestedCmd commandCommands of
-    --Nothing -> refresh --in future add error message
-    Nothing -> spawn $ requestedCmd
-    Just (commandToExec) -> commandToExec
-
-commandPrompt :: X ()
-commandPrompt = inputPromptWithCompl commandXPConfig "m-x" (mkComplFunFromList (M.keys commandCommands)) ?+ commandRunCommand
+prefixPrompt :: X ()
+prefixPrompt = xmonadPromptC prefixCommands prefixXPConfig
 
 ------------------------------------------------------------------------
-
-
-------------------------------------------------------------------------
-
--- myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
---                 , NS "audacious" spawnAudacious findAudacious manageAudacious
---                 ]
---   where
---     spawnTerm  = myTerminal ++ " -name scratchpad"
---     findTerm   = resource =? "scratchpad"
---     manageTerm = customFloating $ W.RationalRect (1 % 3) (1 % 4) (1 % 3) (1 % 2)
---     spawnAudacious  = "audacious"
---     findAudacious   = resource =? "audacious"
---     manageAudacious = customFloating $ W.RationalRect (1 % 3) (1 % 4) (1 % 3) (1 % 2)
-
-------------------------------------------------------------------------
-
--- main = xmonad
---        . ewmh
---        . docks
---        =<< statusBar barLauncher ppNormal toggleStrutsKey
---        =<< statusBar barWorkspaces ppWorkspaces toggleStrutsKey
---        =<< statusBar barDock ppNormal toggleStrutsKey
---        =<< statusBar barWidgets ppNormal toggleStrutsKey
---        =<< statusBar barClock ppNormal toggleStrutsKey defaults
 
 main = xmonad
        . ewmh

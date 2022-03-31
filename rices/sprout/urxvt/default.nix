@@ -60,19 +60,8 @@
     #];
     iso14755 = false;
     keybindings = {
-      "Shift-Up" = "command:\033]720;1\007";
-      "Shift-Down" = "command:\033]721;1\007";
-      "Control-Up" = "command:\033[1;5A";
-      "Control-Down" = "command:\033[1;5B";
-      "Control-Right" = "command:\033[1;5C";
-      "Control-Left" = "command:\033[1;5D";
-
       "Shift-Control-V" = "eval:paste_clipboard";
       "Shift-Control-C" = "eval:selection_to_clipboard";
-
-      "Control-Escape" = "perl:keyboard-select:activate";
-      "Control-S" = "perl:keyboard-select:search";
-      "Control-U" = "perl:url-select:select_next";
     };
     scroll = {
       bar.enable = false;
@@ -81,12 +70,5 @@
       scrollOnKeystroke = true;
       scrollOnOutput = false;
     };
-  };
-
-  home.file = {
-    ".urxvt/ext/tabbedex".text = builtins.readFile ./tabbedex;
-    ".urxvt/ext/keyboard-select".text = builtins.readFile ./keyboard-select;
-    ".urxvt/ext/url-select".text = builtins.readFile ./url-select;
-    ".urxvt/ext/clipboard".text = builtins.readFile ./clipboard;
   };
 }

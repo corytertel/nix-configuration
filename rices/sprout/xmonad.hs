@@ -338,6 +338,17 @@ defaultThemeWithImageButtons =
                              (miniButton, CenterRight 150) ]
       }
 
+imageButtonDeco :: (Eq a, Shrinker s) => s -> Theme
+                   -> l a -> ModifiedLayout (Decoration ImageButtonDecoration s) l a
+imageButtonDeco s c = decoration s c $ NFD True
+
+newtype ImageButtonDecoration a = NFD Bool deriving (Show, Read)
+
+instance Eq a => DecorationStyle ImageButtonDecoration a where
+    describeDeco _ = "ImageButtonDeco"
+    decorationCatchClicksHook _ mainw dFL dFR = imageTitleBarButtonHandler mainw dFL dFR
+    decorationAfterDraggingHook _ (mainw, _) decoWin = focus mainw >> handleScreenCrossing mainw decoWin >> return ()
+
 windowSwitcherDecorationWithImageButtons :: (Eq a, Shrinker s) => s -> Theme
   -> l a -> ModifiedLayout (Decoration ImageWindowSwitcherDecoration s) l a
 windowSwitcherDecorationWithImageButtons s c = decoration s c $ IWSD True
@@ -431,6 +442,7 @@ myLayout = avoidStruts
   where
      windowDeco = windowSwitcherDecorationWithImageButtons
                   shrinkText defaultThemeWithImageButtons
+     -- windowDeco = imageButtonDeco shrinkText defaultThemeWithImageButtons
      fullScreenToggle = mkToggle (single NBFULL)
 
 ------------------------------------------------------------------------
@@ -762,10 +774,10 @@ prefixCommands =
   -- , ("bsN", windows W.swapDown)                          -- Swap next buffer alt
   -- , ("bsP", windows W.swapUp)                            -- Swap prev buffer alt
   , ("bs", sendMessage Swap)                             -- Swap groups
-  , ("bmh", sendMessage $ pullGroup L)                   -- Merge left
-  , ("bmj", sendMessage $ pullGroup D)                   -- Merge down
-  , ("bmk", sendMessage $ pullGroup U)                   -- Merge up
-  , ("bml", sendMessage $ pullGroup R)                   -- Merge right
+  , ("mh", sendMessage $ pullGroup L)                    -- Merge left
+  , ("mj", sendMessage $ pullGroup D)                    -- Merge down
+  , ("mk", sendMessage $ pullGroup U)                    -- Merge up
+  , ("ml", sendMessage $ pullGroup R)                    -- Merge right
 
   ----------------------------------------------------------------------
   --                           Workspaces                             --

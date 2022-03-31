@@ -34,8 +34,8 @@
       "color7"     = "#eeeecc";
       "color15"    = "#ffffea";
 
-      "font" = "xft:Iosevka Nerd Font Mono:style=Regular:size=11:antialias=true";
-      "boldFont" = "xft:Iosevka Nerd Font Mono:style=Bold:size=11:antialias=true";
+      "font" = "xft:VictorMono Nerd Font Mono:style=Regular:size=10:antialias=true";
+      "boldFont" = "xft:VictorMono Nerd Font Mono:style=Bold:size=10:antialias=true";
       "italicFont" = "xft:VictorMono Nerd Font Mono:style=Italic:size=10:antialias=true";
       "boldItalicFont" = "xft:VictorMono Nerd Font Mono:style=Bold Italic:size=10:antialias=true";
 
@@ -56,19 +56,8 @@
     #];
     iso14755 = false;
     keybindings = {
-      "Shift-Up" = "command:\033]720;1\007";
-      "Shift-Down" = "command:\033]721;1\007";
-      "Control-Up" = "command:\033[1;5A";
-      "Control-Down" = "command:\033[1;5B";
-      "Control-Right" = "command:\033[1;5C";
-      "Control-Left" = "command:\033[1;5D";
-
       "Shift-Control-V" = "eval:paste_clipboard";
       "Shift-Control-C" = "eval:selection_to_clipboard";
-
-      "Control-Escape" = "perl:keyboard-select:activate";
-      "Control-S" = "perl:keyboard-select:search";
-      "Control-U" = "perl:url-select:select_next";
     };
     scroll = {
       bar.enable = false;
@@ -77,12 +66,5 @@
       scrollOnKeystroke = true;
       scrollOnOutput = false;
     };
-  };
-
-  home.file = {
-    ".urxvt/ext/tabbedex".text = builtins.readFile ./tabbedex;
-    ".urxvt/ext/keyboard-select".text = builtins.readFile ./keyboard-select;
-    ".urxvt/ext/url-select".text = builtins.readFile ./url-select;
-    ".urxvt/ext/clipboard".text = builtins.readFile ./clipboard;
   };
 }

@@ -131,14 +131,3 @@ in self: super: {
     '';
   };
 }
-
-# _: pkgs: rec {
-#   materia-theme = pkgs.materia-theme.overrideAttrs (old: rec {
-#     src = pkgs.fetchFromGitHub {
-#       owner = "corytertel";
-#       repo = "materia-theme";
-#       rev = "296c8d10d6d42c288fbb4d190b041156bad6c3b4";
-#       sha256 = "RTrvjvEGtsNwZlo3olV6UHIec8FV79RqpftZkZdElqA=";
-#     };
-#   });
-# }

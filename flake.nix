@@ -2,12 +2,12 @@
   description = "Cory's system configuration";
 
   inputs = {
-    # nixpkgs.url = "nixpkgs/nixos-unstable";
-    # nixpkgs-unstable.url = "nixpkgs/master";
-    # home-manager.url = "github:nix-community/home-manager/master";
-    nixpkgs.url = "nixpkgs/nixos-21.11";
-    nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
-    home-manager.url = "github:nix-community/home-manager/release-21.11";
+    nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs-unstable.url = "nixpkgs/master";
+    home-manager.url = "github:nix-community/home-manager/master";
+    # nixpkgs.url = "nixpkgs/nixos-21.11";
+    # nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
+    # home-manager.url = "github:nix-community/home-manager/release-21.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -20,6 +20,9 @@
       config = { allowUnfree = true; };
       overlays = [
         (import ./overlays/blacknord-gtk.nix { inherit config pkgs lib; })
+        (import ./overlays/parchment-gtk.nix { inherit config pkgs lib; })
+        (import ./overlays/mountain-gtk.nix { inherit config pkgs lib; })
+        (import ./overlays/plainlight-gtk.nix { inherit config pkgs lib; })
       ];
     };
 
@@ -37,7 +40,7 @@
           imports = [
             ./pc/home.nix
             ./shared/home.nix
-            ./rices/xmomacs/home.nix
+            ./rices/light/home.nix
           ];
         };
       };
@@ -51,7 +54,7 @@
           imports = [
             ./laptop/home.nix
             ./shared/home.nix
-            ./rices/sprout-emacs/home.nix
+            ./rices/sprout/home.nix
           ];
         };
       };
@@ -63,7 +66,7 @@
         modules = [
           ./pc/configuration.nix
           ./shared/configuration.nix
-          ./rices/xmomacs/configuration.nix
+          ./rices/light/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
@@ -76,7 +79,7 @@
         modules = [
           ./laptop/configuration.nix
           ./shared/configuration.nix
-          ./rices/sprout-emacs/configuration.nix
+          ./rices/sprout/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;

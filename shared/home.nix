@@ -27,6 +27,11 @@
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
 
+    # eclipse = {
+    #   enable = true;
+    #   package = pkgs.eclipses.eclipse-java;
+    # };
+
     java = {
       enable = true;
       package = pkgs.jdk;
@@ -43,7 +48,16 @@
     username = "cory";
     homeDirectory = "/home/cory";
     stateVersion = "21.11";
-    packages = with pkgs; [
+
+    packages = let
+      tex = (pkgs.texlive.combine {
+        inherit (pkgs.texlive) scheme-basic
+          dvisvgm dvipng # for preview and export as html
+          wrapfig amsmath ulem hyperref capt-of;
+        #(setq org-latex-compiler "lualatex")
+        #(setq org-preview-latex-default-process 'dvisvgm)
+      });
+    in with pkgs; [
       # linux basics
       killall
       gwenview
@@ -70,6 +84,7 @@
       gdb
       nodejs
       yarn
+      tex
 
       # clojure
       clisp
@@ -84,6 +99,7 @@
       python39Packages.pip
       rustc
       rust-analyzer
+      racket
 
       # essential user apps
       tdesktop
