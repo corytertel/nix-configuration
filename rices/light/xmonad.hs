@@ -26,7 +26,7 @@ import XMonad.Layout.Spacing
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.MultiToggle.Instances (StdTransformers (NBFULL))
 import XMonad.Layout.MultiToggle (mkToggle, single, Toggle (..))
-import XMonad.Layout.NoBorders (noBorders, smartBorders)
+import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.IfMax
 import XMonad.Layout.NoFrillsDecoration
@@ -48,7 +48,7 @@ import XMonad.Layout.WindowArranger
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
+import XMonad.Hooks.EwmhDesktops (ewmh, ewmhFullscreen)
 import XMonad.Hooks.ManageHelpers
   (isFullscreen, isDialog,  doFullFloat, doCenterFloat, doRectFloat, composeOne, isInProperty)
 import XMonad.Hooks.SetWMName (setWMName)
@@ -86,7 +86,7 @@ myFocusFollowsMouse = True
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
 
-myBorderWidth = 6
+myBorderWidth = 4
 
 myNormalBorderColor  = "#ffffff"
 myFocusedBorderColor = "#3647d9"
@@ -154,6 +154,9 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
 ------------------------------------------------------------------------
 
+-- buttons have 2px offset on the top to account for
+-- the 4px border on the bottom of the decoration
+
 convertToBool' :: [Int] -> [Bool]
 convertToBool' = map (== 1)
 
@@ -161,119 +164,136 @@ convertToBool :: [[Int]] -> [[Bool]]
 convertToBool = map convertToBool'
 
 menuButton' :: [[Int]]
-menuButton' = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+menuButton' = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
 
 menuButton :: [[Bool]]
 menuButton = convertToBool menuButton'
 
 miniButton' :: [[Int]]
-miniButton' = [[0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
-               [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
-               [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
-               [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-               [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-               [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
-               [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
-               [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0]]
+miniButton' = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0]]
 
 miniButton :: [[Bool]]
 miniButton = convertToBool miniButton'
 
 maxiButton' :: [[Int]]
-maxiButton' = [[0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0],
-               [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
-               [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
-               [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
-               [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-               [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-               [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
-               [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
-               [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
-               [0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0]]
+maxiButton' = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+               [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0]]
 
 maxiButton :: [[Bool]]
 maxiButton = convertToBool maxiButton'
 
 closeButton' :: [[Int]]
-closeButton' = [[0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
-                [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
-                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
-                [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-                [0,1,1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,1,0],
-                [0,1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1,1,1,0],
-                [0,1,1,1,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,0],
-                [1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1],
-                [1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1],
-                [1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1],
-                [1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1],
-                [0,1,1,1,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,0],
-                [0,1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1,1,1,0],
-                [0,1,1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,1,0],
-                [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
-                [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
-                [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0]]
+closeButton' = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0],
+                [0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0],
+                [0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0],
+                [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
+                [0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0],
+                [0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0],
+                [0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0],
+                [0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0],
+                [0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0],
+                [0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0],
+                [0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0],
+                [0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0],
+                [0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0]]
+
 
 closeButton :: [[Bool]]
 closeButton = convertToBool closeButton'
 
 buttonSize :: Int
-buttonSize = 20
+buttonSize = 24
 
 menuButtonOffset :: Int
-menuButtonOffset = 20
+menuButtonOffset = 29
 
 maximizeButtonOffset :: Int
-maximizeButtonOffset = 60
+maximizeButtonOffset = 84
 
 minimizeButtonOffset :: Int
-minimizeButtonOffset = 100
+minimizeButtonOffset = 139
 
 closeButtonOffset :: Int
-closeButtonOffset = 20
+closeButtonOffset = 29
 
 imageTitleBarButtonHandler :: Window -> Int -> Int -> X Bool
 imageTitleBarButtonHandler mainw distFromLeft distFromRight = do
@@ -304,11 +324,11 @@ defaultThemeWithImageButtons =
       , urgentColor = "#e60909"
       , urgentTextColor = "#ffffff"
       , urgentBorderWidth = 0
-      , decoHeight = 70
-      , windowTitleIcons = [ (menuButton, CenterLeft 20),
-                             (closeButton, CenterRight 20),
-                             (maxiButton, CenterRight 60),
-                             (miniButton, CenterRight 100) ]
+      , decoHeight = 41 -- 45px high total, accounting for 4px bottom border
+      , windowTitleIcons = [ (menuButton, CenterLeft 29),
+                             (closeButton, CenterRight 29),
+                             (maxiButton, CenterRight 84),
+                             (miniButton, CenterRight 139) ]
       }
 
 imageButtonDeco :: (Eq a, Shrinker s) => s -> Theme
@@ -372,6 +392,28 @@ performWindowSwitching win =
 
 ------------------------------------------------------------------------
 
+newtype SimpleFloat a = SF Dimension deriving (Show, Read)
+instance LayoutClass SimpleFloat Window where
+    description _ = "Float"
+    doLayout (SF i) sc (W.Stack w l r) = do
+        wrs <- mapM (getSize i i sc) (w : reverse l ++ r)
+        return (wrs, Nothing)
+
+getSize :: Dimension -> Dimension -> Rectangle -> Window -> X (Window,Rectangle)
+getSize i j (Rectangle rx ry _ _) w = do
+  d  <- asks display
+  bw <- asks (borderWidth . config)
+  wa <- io $ getWindowAttributes d w
+  let nx = rx + fi j
+      ny = ry + fi i
+      x  =  max nx $ fi $ wa_x wa
+      y  =  max ny $ fi $ wa_y wa
+      wh = fi (wa_width  wa) + (bw * 2)
+      ht = fi (wa_height wa) + (bw * 2)
+  return (w, Rectangle x y wh ht)
+
+------------------------------------------------------------------------
+
 mouseResizeSE :: l a -> ModifiedLayout MouseResizeSE l a
 mouseResizeSE = ModifiedLayout (MR_SE [])
 
@@ -389,7 +431,7 @@ instance LayoutModifier MouseResizeSE Window where
           initState    = mapM createInputWindowSE wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowSE wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x + fi wh - 20) (y + fi ht - 20) 40 40
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x + fi wh - 10) (y + fi ht - 10) 20 20
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -421,7 +463,7 @@ instance LayoutModifier MouseResizeSW Window where
           initState    = mapM createInputWindowSW wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowSW wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x - 20) (y + fi ht - 20) 40 40
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x - 10) (y + fi ht - 10) 20 20
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -453,7 +495,7 @@ instance LayoutModifier MouseResizeNW Window where
           initState    = mapM createInputWindowNW wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowNW wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x - 20) (y - 20) 40 40
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x - 10) (y - 10) 20 20
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -485,7 +527,7 @@ instance LayoutModifier MouseResizeNE Window where
           initState    = mapM createInputWindowNE wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowNE wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x + fi wh - 20) (y - 20) 40 40
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x + fi wh - 10) (y - 10) 20 20
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -517,7 +559,7 @@ instance LayoutModifier MouseResizeS Window where
           initState    = mapM createInputWindowS wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowS wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x + 20) (y + fi ht - 20) (fi wh - 40) 40
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x + 10) (y + fi ht - 10) (fi wh - 20) 20
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -549,7 +591,7 @@ instance LayoutModifier MouseResizeN Window where
           initState    = mapM createInputWindowN wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowN wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x + 20) (y - 20) (fi wh - 40) 40
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x + 10) (y - 10) (fi wh - 20) 20
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -581,7 +623,7 @@ instance LayoutModifier MouseResizeE Window where
           initState    = mapM createInputWindowE wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowE wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x + fi wh - 20) (y + 20) 40 (fi ht - 40)
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x + fi wh - 10) (y + 10) 20 (fi ht - 20)
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -613,7 +655,7 @@ instance LayoutModifier MouseResizeW Window where
           initState    = mapM createInputWindowW wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowW wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x - 20) (y + 20) 40 (fi ht - 40)
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x - 10) (y + 10) 20 (fi ht - 20)
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -923,13 +965,13 @@ mkInputWindow d (Rectangle x y w h) = do
 
 -- Spacing
 -- top, bottom, right, left
-bigGaps = spacingRaw False (Border 200 45 200 175)
+bigGaps = spacingRaw False (Border 155 45 200 175)
   True (Border 0 25 0 25) True
-threeGapsSingle = spacingRaw False (Border 200 70 1060 1060)
+threeGapsSingle = spacingRaw False (Border 155 70 1060 1060)
   True (Border 0 0 0 0) True
-threeGapsDouble = spacingRaw False (Border 200 70 1060 200)
+threeGapsDouble = spacingRaw False (Border 155 70 1060 200)
   True (Border 0 0 0 0) True
-threeGaps = spacingRaw False (Border 200 70 200 200)
+threeGaps = spacingRaw False (Border 155 70 200 200)
   True (Border 0 0 0 0) True
 
 windowDeco = windowSwitcherDecorationWithImageButtons
@@ -938,15 +980,17 @@ floatingDeco = imageButtonDeco shrinkText defaultThemeWithImageButtons
 
 emacs =
   renamed [Replace "bsp"] $
-  (subLayout [] StateFull . bigGaps $ emptyBSP)
+  (windowDeco . draggingVisualizer
+   . subLayout [] StateFull . bigGaps $ emptyBSP)
 
 full =
   renamed [Replace "full"] $
-  (bigGaps $ StateFull)
+  (windowDeco . draggingVisualizer . bigGaps $ StateFull)
 
 threeCol =
   renamed [Replace "threeCol"] $
-  (subLayout [] StateFull $ (ifMax 2 (ifMax 1
+  (windowDeco . draggingVisualizer $ subLayout [] StateFull
+   $ (ifMax 2 (ifMax 1
       (threeGapsSingle $ Full)
       (threeGapsDouble $ reflectHoriz $ (ThreeColMid 1 (3/100) (2/3))))
     (threeGaps $ ThreeColMid 1 (3/100) (1/2))))
@@ -959,7 +1003,7 @@ floating =
 
 myLayout = avoidStruts
          . (WN.configurableNavigation WN.noNavigateBorders)
-         . smartBorders
+         . lessBorders OnlyScreenFloat
          . fullScreenToggle
          . minimize
          . BW.boringWindows
@@ -982,32 +1026,31 @@ p -!> f = p >>= \b -> if b then return mempty else f
 q =!? x = fmap (/= x) q
 
 myManageHook = composeAll
-    [ className =? "MPlayer"                              --> mediaFloat
-    , className =? "mpv"                                  --> mediaFloat
-    , className =? "vlc"                                  --> mediaFloat
-    , className =? "io.github.celluloid_player.Celluloid" --> mediaFloat
-    , className =? "gwenview"                             --> mediaFloat
-    , className =? "Sxiv"                                 --> mediaFloat
-    , className =? "Orage"                                --> doCenterFloat
-    , className =? "Galculator"                           --> calculatorFloat
-    , className =? "Firefox" <&&> resource =? "Toolkit"   --> myRectFloat
+    [ className =? "MPlayer"                      --> mediaFloat
+    , className =? "mpv"                          --> mediaFloat
+    , className =? "vlc"                          --> mediaFloat
+    , className =? "gwenview"                     --> mediaFloat
+    , className =? "Sxiv"                         --> mediaFloat
+    , className =? "Orage"                        --> doCenterFloat
+    , className =? "Galculator"                   --> calculatorFloat
+    , className =? "Firefox" <&&> resource =? "Toolkit" --> myRectFloat
     , stringProperty "WM_WINDOW_ROLE"
-      =? "GtkFileChooserDialog"                           --> myRectFloat
-    , stringProperty "WM_WINDOW_ROLE" =? "pop-up"         --> myRectFloat
+      =? "GtkFileChooserDialog"                   --> myRectFloat
+    , stringProperty "WM_WINDOW_ROLE" =? "pop-up" --> doCenterFloat
     , stringProperty "WM_WINDOW_ROLE" =!? "gimp-image-window-1"
-      <&&> className =? "Gimp"                            --> doCenterFloat
+      <&&> className =? "Gimp"                    --> doCenterFloat
     , stringProperty "WM_WINDOW_ROLE" =!? "MainWindow#1"
-      <&&> className =? "krita"                           --> doCenterFloat
-    , isDialog                                            --> myRectFloat
+      <&&> className =? "krita"                   --> doCenterFloat
+    , isDialog                                    --> doCenterFloat
     , isInProperty "_NET_WM_WINDOW_TYPE"
-      "_NET_WM_WINDOW_TYPE_SPLASH"                        --> myRectFloat
-    , title     =? "Save Image"                           --> myRectFloat
-    , title     =? "Save File"                            --> myRectFloat
-    , title     =? "Open"                                 --> myRectFloat
-    , title     =? "Open Files"                           --> myRectFloat
-    , resource  =? "xmomacs-help"                         --> helpFloat
-    , resource  =? "desktop_window"                       --> doIgnore
-    , resource  =? "kdesktop"                             --> doIgnore
+      "_NET_WM_WINDOW_TYPE_SPLASH"                --> myRectFloat
+    , title     =? "Save Image"                   --> myRectFloat
+    , title     =? "Save File"                    --> myRectFloat
+    , title     =? "Open"                         --> myRectFloat
+    , title     =? "Open Files"                   --> myRectFloat
+    , resource  =? "xmomacs-help"                 --> helpFloat
+    , resource  =? "desktop_window"               --> doIgnore
+    , resource  =? "kdesktop"                     --> doIgnore
     , isFullscreen --> doFullFloat
     , fmap not willFloat --> insertPosition Below Newer
     , fmap not willFloat -!> insertPosition Master Newer
@@ -1031,7 +1074,7 @@ willFloat =
 
 ------------------------------------------------------------------------
 
-myEventHook = fullscreenEventHook
+myEventHook = mempty
 
 ------------------------------------------------------------------------
 
@@ -1339,6 +1382,7 @@ prefixPrompt = xmonadPromptC prefixCommands prefixXPConfig
 ------------------------------------------------------------------------
 
 main = xmonad
+       . ewmhFullscreen
        . ewmh
        . docks
         =<< statusBar bar ppWorkspaces toggleStrutsKey defaults

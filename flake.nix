@@ -34,7 +34,7 @@
       pc = home-manager.lib.homeManagerConfiguration {
         inherit system pkgs;
         username = "cory";
-        stateVersion = "21.11";
+        stateVersion = "22.05";
         homeDirectory = "/home/cory";
         configuration = {
           imports = [
@@ -48,7 +48,7 @@
       laptop = home-manager.lib.homeManagerConfiguration {
         inherit system pkgs;
         username = "cory";
-        stateVersion = "21.11";
+        stateVersion = "22.05";
         homeDirectory = "/home/cory";
         configuration = {
           imports = [

@@ -33,8 +33,8 @@
       "color7"      = "#cccccc";
       "color15"     = "#cccccc";
 
-      "font" = "xft:VictorMono Nerd Font Mono:style=Light:size=10:antialias=true";
-      "boldFont" = "xft:VictorMono Nerd Font Mono:style=Regular:size=10:antialias=true";
+      "font" = "xft:VictorMono Nerd Font Mono:style=Regular:size=10:antialias=true";
+      "boldFont" = "xft:VictorMono Nerd Font Mono:style=Bold:size=10:antialias=true";
       "italicFont" = "xft:VictorMono Nerd Font Mono:style=Italic:size=10:antialias=true";
       "boldItalicFont" = "xft:VictorMono Nerd Font Mono:style=Bold Italic:size=10:antialias=true";
 

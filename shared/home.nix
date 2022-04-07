@@ -47,7 +47,6 @@
   home = {
     username = "cory";
     homeDirectory = "/home/cory";
-    stateVersion = "21.11";
 
     packages = let
       tex = (pkgs.texlive.combine {
@@ -107,7 +106,7 @@
       gimp
       #wpgtk
       blender
-      zathura
+      # zathura
       joplin-desktop
 
       # modern unix
@@ -126,7 +125,6 @@
       polkit
       libsForQt5.polkit-qt
       brave
-      celluloid
       mpv
       pywal
       airshipper

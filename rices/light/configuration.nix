@@ -11,9 +11,9 @@
       enable = true;
       enableContribAndExtras = true;
       extraPackages = haskellPackages: [
-        haskellPackages.xmonad_0_17_0
-        haskellPackages.xmonad-contrib_0_17_0
-        haskellPackages.xmonad-extras_0_17_0
+        haskellPackages.xmonad
+        haskellPackages.xmonad-contrib
+        haskellPackages.xmonad-extras
       ];
       config = ./xmonad.hs;
     };

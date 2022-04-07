@@ -164,7 +164,7 @@
     nerdfonts
     julia-mono
     jetbrains-mono
-    mplus-outline-fonts
+    # mplus-outline-fonts
     overpass
     #iosevka
     roboto-mono
@@ -246,13 +246,13 @@
       "image/svg" = "sxiv.desktop";
       "image/webp" = "sxiv.desktop";
 
-      "video/mp4" = "io.github.celluloid_player.Celluloid.desktop";
-      "video/mpeg" = "io.github.celluloid_player.Celluloid.desktop";
-      "video/ogg" = "io.github.celluloid_player.Celluloid.desktop";
-      "video/webm" = "io.github.celluloid_player.Celluloid.desktop";
-      "video/x-msvideo" = "io.github.celluloid_player.Celluloid.desktop";
-      "video/quicktime" = "io.github.celluloid_player.Celluloid.desktop";
-      "video/x-matroska" = "io.github.celluloid_player.Celluloid.desktop";
+      "video/mp4" = "mpv.desktop";
+      "video/mpeg" = "mpv.desktop";
+      "video/ogg" = "mpv.desktop";
+      "video/webm" = "mpv.desktop";
+      "video/x-msvideo" = "mpv.desktop";
+      "video/quicktime" = "mpv.desktop";
+      "video/x-matroska" = "mpv.desktop";
     };
   };
 
