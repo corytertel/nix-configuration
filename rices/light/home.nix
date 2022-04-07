@@ -57,12 +57,15 @@
     };
 
     iconTheme = {
-      package = pkgs.pop-icon-theme;
-      name = "Pop";
+      # package = pkgs.pop-icon-theme;
+      # name = "Pop";
+      package = pkgs.luna-icons;
+      name = "Luna";
     };
 
     gtk3.extraConfig = {
-      gtk-icon-theme-name = "Pop";
+      # gtk-icon-theme-name = "Pop";
+      gtk-icon-theme-name = "Luna";
       gtk-theme-name = "PlainLight";
       gtk-application-prefer-dark-theme = 0;
     };

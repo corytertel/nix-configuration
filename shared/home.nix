@@ -174,6 +174,7 @@
       galculator
       unzip
       klavaro
+      obs-studio
 
       #discord
       betterdiscord-installer
