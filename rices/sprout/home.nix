@@ -68,8 +68,10 @@
     enable = true;
 
     font = {
-      package = pkgs.mplus-outline-fonts;
-      name = "M+ 1c 10";
+      # package = pkgs.mplus-outline-fonts;
+      # name = "M+ 1c 10";
+      package = pkgs.nerdfonts;
+      name = "mplus Nerd Font,M+ 1c 10";
     };
 
     theme = {

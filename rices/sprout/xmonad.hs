@@ -322,7 +322,7 @@ imageTitleBarButtonHandler mainw distFromLeft distFromRight = do
 
 defaultThemeWithImageButtons :: Theme
 defaultThemeWithImageButtons =
-  def { fontName = "xft:M+ 1c:size=11"
+  def { fontName = "xft:mplus Nerd Font,M+ 1c:size=11"
       , inactiveBorderColor = "#1e2731"
       , inactiveColor = "#000507"
       , inactiveTextColor = "#1e2731"
@@ -1153,7 +1153,7 @@ launcherXPKeymap = M.fromList
   , ((0, xK_Escape), quit)
   ]
 
-launcherXPConfig = def { font                = "xft:M+ 1c:size=11"
+launcherXPConfig = def { font                = "xft:mplus Nerd Font,M+ 1c:size=11"
                        , bgColor             = "#000507"
                        , fgColor             = "#d8dee9"
                        , bgHLight            = "#0d1319"
@@ -1261,7 +1261,7 @@ prefixXPKeymap = M.fromList
   ]
 
 prefixXPConfig = def
-  { font                = "xft:M+ 1c:size=11"
+  { font                = "xft:mplus Nerd Font,M+ 1c:size=11"
   , bgColor             = "#000507"
   , fgColor             = "#d8dee9"
   , bgHLight            = "#0d1319"
