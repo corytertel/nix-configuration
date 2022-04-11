@@ -26,6 +26,8 @@ import XMonad.Util.XUtils
 
 import XMonad.Layout.Spacing
 import XMonad.Layout.ThreeColumns
+-- import XMonad.Layout.MultiToggle.Instances (StdTransformers (NBFULL))
+-- import XMonad.Layout.MultiToggle (mkToggle, single, Toggle (..))
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
@@ -45,6 +47,7 @@ import XMonad.Layout.SubLayouts
 import XMonad.Layout.StateFull
 import XMonad.Layout.Renamed (Rename (Replace), renamed)
 import XMonad.Layout.WindowArranger
+import XMonad.Layout.LayoutModifier
 
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
@@ -64,6 +67,7 @@ import XMonad.Actions.CycleWS
 import XMonad.Actions.WindowGo (runOrRaise)
 import XMonad.Actions.WithAll (killAll)
 import XMonad.Actions.CycleWindows
+import XMonad.Actions.PerWindowKeys (bindFirst)
 
 import XMonad.Prompt
 import XMonad.Prompt.Shell (shellPrompt)
@@ -315,7 +319,7 @@ imageTitleBarButtonHandler mainw distFromLeft distFromRight = do
           | fi distFromRight >= closeButtonOffset &&
             fi distFromRight <= closeButtonOffset + buttonSize = focus mainw >> kill >> return True
           | fi distFromRight >= maximizeButtonOffset &&
-            fi distFromRight <= maximizeButtonOffset + buttonSize = focus mainw >> sendMessage (Toggle DECOFULL) >> return True
+            fi distFromRight <= maximizeButtonOffset + buttonSize = focus mainw >> sendMessage (Toggle NBFULL) >> return True
           | fi distFromRight >= minimizeButtonOffset &&
             fi distFromRight <= minimizeButtonOffset + buttonSize = focus mainw >> minimizeWindow mainw >> return True
           | otherwise = return False
@@ -971,11 +975,19 @@ mkInputWindow d (Rectangle x y w h) = do
 
 ------------------------------------------------------------------------
 
-data StdTransformers = DECOFULL -- ^ switch to Full with window decoration
+data StdTransformers = FULL          -- ^ switch to Full layout
+                     | NBFULL        -- ^ switch to Full with no borders
+                     | MIRROR        -- ^ Mirror the current layout.
+                     | NOBORDERS     -- ^ Remove borders.
+                     | SMARTBORDERS  -- ^ Apply smart borders.
   deriving (Read, Show, Eq)
 
 instance Transformer StdTransformers Window where
-    transform DECOFULL     x k = k (windowDeco $ noBorders Full) (const x)
+    transform FULL         x k = k Full (const x)
+    transform NBFULL       x k = k (windowDeco $ noBorders Full) (const x)
+    transform MIRROR       x k = k (Mirror x) (\(Mirror x') -> x')
+    transform NOBORDERS    x k = k (noBorders x) (\(ModifiedLayout _ x') -> x')
+    transform SMARTBORDERS x k = k (smartBorders x) (\(ModifiedLayout _ x') -> x')
 
 ------------------------------------------------------------------------
 
@@ -985,8 +997,10 @@ instance Transformer StdTransformers Window where
 
 -- Spacing
 -- top, bottom, right, left
-gaps = spacingRaw False (Border 100 74 180 154)
-  True (Border 0 26 0 26) True
+-- gaps = spacingRaw False (Border 100 74 180 154)
+--   True (Border 0 26 0 26) True
+gaps = spacingRaw False (Border 100 100 180 180)
+  True (Border 0 0 0 0) True
 
 windowDeco = windowSwitcherDecorationWithImageButtons
              shrinkText defaultThemeWithImageButtons
@@ -1012,7 +1026,7 @@ myLayout = avoidStruts
          . BW.boringWindows
          $ emacs ||| floating
   where
-     fullScreenToggle = mkToggle (single DECOFULL)
+     fullScreenToggle = mkToggle (single NBFULL)
 
 ------------------------------------------------------------------------
 
@@ -1235,6 +1249,17 @@ swapDown' = reverseStack . swapUp' . reverseStack
 reverseStack :: W.Stack a -> W.Stack a
 reverseStack (W.Stack t ls rs) = W.Stack t rs ls
 
+emacsBind :: String -> X ()
+emacsBind x = bindFirst
+      [(className =? "Emacs", spawn
+         ("emacsclient -e '(" ++ x ++ ")'"))]
+
+emacsOrXBind :: String -> X () -> X ()
+emacsOrXBind x y = bindFirst
+      [(className =? "Emacs", spawn
+         ("emacsclient -c -e '(" ++ x ++ ")'")),
+       (pure True, y)]
+
 prefixXPKeymap :: M.Map (KeyMask,KeySym) (XP ())
 prefixXPKeymap = M.fromList
   [ ((controlMask, xK_g), quit)
@@ -1284,6 +1309,8 @@ windowXPConfig = prefixXPConfig
   , sorter              = fuzzySort
   }
 
+-- TODO duplicate binds to work with russian keymap
+-- TODO better integration with emacs
 prefixCommands :: [(String, X ())]
 prefixCommands =
   ----------------------------------------------------------------------
@@ -1296,25 +1323,50 @@ prefixCommands =
   , ("as", spawn "audacious --stop")
 
   ----------------------------------------------------------------------
-  --                            Launch                                --
+  --                             Run                                  --
   ----------------------------------------------------------------------
-  , ("d", runOrRaise "discord" (className =? "discord"))
-  , ("e", spawn "emacsclient -c")
-  , ("E", spawn "emacs")
-  , ("f", spawn "firefox")
-  , ("F", spawn "pcmanfm --new-win")
-  , ("g", runOrRaise "steam" (className =? "Steam"))
-  , ("t", spawn $ myTerminal)
+  , ("rd", runOrRaise "discord" (className =? "discord"))
+  , ("re", spawn "emacsclient -c")
+  , ("rE", spawn "emacs")
+  , ("rw", spawn "firefox")
+  , ("rf", spawn "pcmanfm --new-win")
+  , ("rg", runOrRaise "steam" (className =? "Steam"))
+  , ("rt", spawn $ myTerminal)
 
   ----------------------------------------------------------------------
   --                           Commands                               --
   ----------------------------------------------------------------------
-  , ("s", spawn "flameshot full -p ~/Screenshots/")
-  , ("S", spawn "flameshot gui")
+  , ("rs", spawn "flameshot full -p ~/Screenshots/")
+  , ("rS", spawn "flameshot gui")
   , ("M", sendMessage ToggleStruts)
-  , ("u", sendMessage (Toggle DECOFULL))
+  , ("u", sendMessage (Toggle NBFULL))
   , ("i", withFocused minimizeWindow)
   , ("I", withLastMinimized maximizeWindowAndFocus)
+
+  ----------------------------------------------------------------------
+  --                          Emacs Commands                          --
+  ----------------------------------------------------------------------
+  -- Buffers
+  , ("be", emacsBind "eval-last-sexp")
+  , ("bE", emacsBind "eval-buffer")
+
+  -- Copy
+  , ("cc", emacsBind "copy-as-format")
+  , ("cg", emacsBind "copy-as-format-github")
+  , ("ct", emacsBind "copy-as-format-markdown-table")
+  , ("cm", emacsBind "copy-as-format-markdown")
+  , ("co", emacsBind "copy-as-format-org-mode")
+  , ("cd", emacsBind "copy-as-format-slack")
+  , ("cv", emacsBind "org-copy-visible")
+
+  -- Files
+  , ("ff", emacsBind "counsel-find-file")
+  , ("fr", emacsBind "rename-file")
+
+  -- Toggles
+  , ("tf", emacsBind "treemacs")
+  , ("ts", emacsBind "hydra-text-scale/body")
+  , ("tt", emacsBind "counsel-load-theme")
 
   ----------------------------------------------------------------------
   --                     Basic Window Management                      --
@@ -1331,14 +1383,15 @@ prefixCommands =
   ----------------------------------------------------------------------
   --                       Buffers (Windows)                          --
   ----------------------------------------------------------------------
-  , ("bb", windowPrompt windowXPConfig Goto allWindows)  -- Goto buffers
+  , ("bb", emacsOrXBind "counsel-switch-buffer"
+      (windowPrompt windowXPConfig Goto allWindows))     -- Goto buffers
   , ("bB", windowPrompt windowXPConfig Bring allWindows) -- Bring buffer
   , ("bd", kill)                                         -- Kill buffer
   , ("bD", killAll)                                      -- Kill every buffer
   , ("bn", onGroup W.focusDown')                         -- Next buffer
   , ("bp", onGroup W.focusUp')                           -- Prev buffer
-  , ("bN", windows W.focusDown)                          -- Next buffer alt
-  , ("bP", windows W.focusUp)                            -- Prev buffer alt
+  , ("bN", onGroup W.focusDown')                         -- Force next x window
+  , ("bP", onGroup W.focusUp')                           -- Force prev x window
   -- , ("bsn", onGroup swapDown')                           -- Swap next buffer
   -- , ("bsp", onGroup swapUp')                             -- Swap prev buffer
   -- , ("bsN", windows W.swapDown)                          -- Swap next buffer alt
@@ -1362,10 +1415,14 @@ prefixCommands =
   , ("wF", floatPrompt) -- Window float
   , ("wr", resizePrompt) -- Window resize
   , ("wR", sendMessage Rotate) -- Window rotate
-  , ("ws", withFocused (sendMessage . UnMerge)) -- Window split
-  , ("wS", withFocused (sendMessage . UnMerge) >>
-           sendMessage Rotate) -- Window split
-  , ("wl", sendMessage NextLayout)
+  , ("ws", emacsOrXBind "counsel-ibuffer"
+           (windowPrompt windowXPConfig Goto wsWindows
+           >> withFocused (sendMessage . UnMerge)))
+  , ("wS", emacsOrXBind "counsel-ibuffer"
+           (windowPrompt windowXPConfig Goto wsWindows
+           >> withFocused (sendMessage . UnMerge))
+           >> sendMessage Rotate)
+  , ("tl", sendMessage NextLayout)
   -- , ("M-S-C-j",  sendMessage $ SplitShift Prev)
   -- , ("M-S-C-k",  sendMessage $ SplitShift Next)
   ]
