@@ -19,7 +19,7 @@
         updateUrl =
           "https://raw.githubusercontent.com/iamadamdev/bypass-paywalls-chrome/master/updates.xml";
       }
-      { id = "aghfnjkcakhmadgdomlmlhhaocbkloab"; } # Just Black
+      # { id = "aghfnjkcakhmadgdomlmlhhaocbkloab"; } # Just Black - good for dark mode
       #{ id = "kioklelcojgbjoljlilalgdcppkiioge"; } # Void Theme - Black and Minimal
       { id = "dbepggeogbaibhgnhhndojpepiihcmeb"; } # Vimium
       { id = "hompjdfbfmmmgflfjdlnkohcplmboaeo"; } # Allow Right Click

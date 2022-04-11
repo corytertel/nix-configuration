@@ -54,7 +54,7 @@
           imports = [
             ./laptop/home.nix
             ./shared/home.nix
-            ./rices/sprout/home.nix
+            ./rices/functional/home.nix
           ];
         };
       };
@@ -79,7 +79,7 @@
         modules = [
           ./laptop/configuration.nix
           ./shared/configuration.nix
-          ./rices/sprout/configuration.nix
+          ./rices/functional/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
