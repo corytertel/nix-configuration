@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleInstances, MultiParamTypeClasses #-}
+{-# LANGUAGE FlexibleInstances, MultiParamTypeClasses, TupleSections #-}
 {-# OPTIONS_GHC -Wunused-imports #-}
 
 import XMonad hiding ((|||))
@@ -8,14 +8,12 @@ import Data.Map (fromList, lookup)
 import Data.Maybe (fromJust, isJust)
 import Data.Ratio ((%)) -- for video
 
-import Control.Exception (IOException, catch)
 import Control.Monad
 import Foreign.C.Types(CInt)
 
 import Graphics.X11.ExtraTypes.XF86
 
 import System.Exit
-import System.Environment (getEnv, setEnv)
 
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
@@ -45,11 +43,12 @@ import XMonad.Layout.SubLayouts
 import XMonad.Layout.StateFull
 import XMonad.Layout.Renamed (Rename (Replace), renamed)
 import XMonad.Layout.WindowArranger
+import XMonad.Layout.LayoutModifier
 
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.EwmhDesktops (ewmh, fullscreenEventHook)
+import XMonad.Hooks.EwmhDesktops (ewmh, ewmhFullscreen)
 import XMonad.Hooks.ManageHelpers
   (isFullscreen, isDialog,  doFullFloat, doCenterFloat, doRectFloat, composeOne, isInProperty)
 import XMonad.Hooks.SetWMName (setWMName)
@@ -78,6 +77,7 @@ import qualified Data.Map as M
 import qualified XMonad.Layout.WindowNavigation as WN
 import qualified XMonad.Layout.BoringWindows as BW
 import qualified XMonad.Prelude as P
+import qualified XMonad.Util.ExtensibleState as XS
 
 myTerminal = "urxvtc"
 
@@ -142,6 +142,16 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
     , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
                           >> windows W.shiftMaster))
+
+    , ((mod1Mask, button1),
+       (\w -> focus w >> mouseMoveWindow w
+         >> afterDrag (snapMagicMove (Just 50) (Just 50) w)))
+    , ((mod1Mask .|. shiftMask, button1),
+       (\w -> focus w >> mouseMoveWindow w
+         >> afterDrag (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)))
+    , ((mod1Mask, button3),
+       (\w -> focus w >> mouseResizeWindow w
+         >> afterDrag (snapMagicResize [R,D] (Just 50) (Just 50) w)))
     ]
 
 ------------------------------------------------------------------------
@@ -257,6 +267,41 @@ maxiButton' = [[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],
 maxiButton :: [[Bool]]
 maxiButton = convertToBool maxiButton'
 
+unmaxiButton' :: [[Int]]
+unmaxiButton' = [[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
+                 [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+                 [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+                 [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+                 [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                 [1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                 [1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1],
+                 [1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1],
+                 [1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1],
+                 [1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1],
+                 [1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1],
+                 [1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1],
+                 [1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+                 [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+                 [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+                 [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+                 [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
+                 [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0]]
+
+unmaxiButton :: [[Bool]]
+unmaxiButton = convertToBool unmaxiButton'
+
 closeButton' :: [[Int]]
 closeButton' = [[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
@@ -301,6 +346,9 @@ menuButtonOffset = 30
 maximizeButtonOffset :: Int
 maximizeButtonOffset = 90
 
+unmaximizeButtonOffset :: Int
+unmaximizeButtonOffset = maximizeButtonOffset
+
 minimizeButtonOffset :: Int
 minimizeButtonOffset = 150
 
@@ -343,6 +391,15 @@ defaultThemeWithImageButtons =
                              (miniButton, CenterRight 150) ]
       }
 
+maximizedThemeWithImageButtons :: Theme
+maximizedThemeWithImageButtons = defaultThemeWithImageButtons
+  {
+    windowTitleIcons = [ (menuButton, CenterLeft 30),
+                         (closeButton, CenterRight 30),
+                         (unmaxiButton, CenterRight 90),
+                         (miniButton, CenterRight 150) ]
+  }
+
 imageButtonDeco :: (Eq a, Shrinker s) => s -> Theme
                    -> l a -> ModifiedLayout (Decoration ImageButtonDecoration s) l a
 imageButtonDeco s c = decoration s c $ NFD True
@@ -353,6 +410,9 @@ instance Eq a => DecorationStyle ImageButtonDecoration a where
     describeDeco _ = "ImageButtonDeco"
     decorationCatchClicksHook _ mainw dFL dFR = imageTitleBarButtonHandler mainw dFL dFR
     decorationAfterDraggingHook _ (mainw, _) decoWin = focus mainw >> handleScreenCrossing mainw decoWin >> return ()
+
+
+
 
 windowSwitcherDecorationWithImageButtons :: (Eq a, Shrinker s) => s -> Theme
   -> l a -> ModifiedLayout (Decoration ImageWindowSwitcherDecoration s) l a
@@ -426,6 +486,17 @@ getSize i j (Rectangle rx ry _ _) w = do
 
 ------------------------------------------------------------------------
 
+resizeWidth :: Dimension
+resizeWidth = 32
+
+-- TODO when mouse resize module is cleaned up, use these as local variables
+-- Resize Width
+rw :: Dimension
+rw = resizeWidth
+-- Offset Resize Width
+orw :: XMonad.Position
+orw = fromIntegral (rw `div` 2)
+
 mouseResizeSE :: l a -> ModifiedLayout MouseResizeSE l a
 mouseResizeSE = ModifiedLayout (MR_SE [])
 
@@ -443,7 +514,7 @@ instance LayoutModifier MouseResizeSE Window where
           initState    = mapM createInputWindowSE wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowSE wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x + fi wh - 20) (y + fi ht - 20) 40 40
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x + fi wh - orw) (y + fi ht - orw) rw rw
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -475,7 +546,7 @@ instance LayoutModifier MouseResizeSW Window where
           initState    = mapM createInputWindowSW wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowSW wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x - 20) (y + fi ht - 20) 40 40
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x - orw) (y + fi ht - orw) rw rw
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -507,7 +578,7 @@ instance LayoutModifier MouseResizeNW Window where
           initState    = mapM createInputWindowNW wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowNW wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x - 20) (y - 20) 40 40
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x - orw) (y - orw) rw rw
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -539,7 +610,7 @@ instance LayoutModifier MouseResizeNE Window where
           initState    = mapM createInputWindowNE wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowNE wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x + fi wh - 20) (y - 20) 40 40
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x + fi wh - orw) (y - orw) rw rw
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -571,7 +642,7 @@ instance LayoutModifier MouseResizeS Window where
           initState    = mapM createInputWindowS wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowS wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x + 20) (y + fi ht - 20) (fi wh - 40) 40
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x + orw) (y + fi ht - orw) (fi wh - rw) rw
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -603,7 +674,7 @@ instance LayoutModifier MouseResizeN Window where
           initState    = mapM createInputWindowN wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowN wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x + 20) (y - 20) (fi wh - 40) 40
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x + orw) (y - orw) (fi wh - rw) rw
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -635,7 +706,7 @@ instance LayoutModifier MouseResizeE Window where
           initState    = mapM createInputWindowE wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowE wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x + fi wh - 20) (y + 20) 40 (fi ht - 40)
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x + fi wh - orw) (y + orw) rw (fi ht - rw)
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -667,7 +738,7 @@ instance LayoutModifier MouseResizeW Window where
           initState    = mapM createInputWindowW wrs'
           processState = mapM_ (deleteInputWin . snd) st >> mapM createInputWindowW wrs'
 
-          inputRectangle (Rectangle x y wh ht) = Rectangle (x - 20) (y + 20) 40 (fi ht - 40)
+          inputRectangle (Rectangle x y wh ht) = Rectangle (x - orw) (y + orw) rw (fi ht - rw)
 
           wrs_to_state rs ((w,r):xs)
               | ir `isVisible` rs = ((w,r),Just ir) : wrs_to_state (r:ir:rs) xs
@@ -971,11 +1042,135 @@ mkInputWindow d (Rectangle x y w h) = do
 
 ------------------------------------------------------------------------
 
+data ScreenEdge = SEUpperLeft
+                | SEUpperRight
+                | SELowerLeft
+                | SELowerRight
+                | SETop
+                | SEBottom
+                deriving (Eq, Ord, Show)
+
+newtype ScreenEdgeState = ScreenEdgeState (M.Map Window (ScreenEdge, X ()))
+
+instance ExtensionClass ScreenEdgeState where
+    initialValue = ScreenEdgeState M.empty
+
+-- | Add one single @X ()@ action to a screen edge
+addScreenEdge :: ScreenEdge -> X () -> X ()
+addScreenEdge edge xF = do
+
+    ScreenEdgeState m <- XS.get
+    (win,xFunc) <- case P.find (\(_,(sc,_)) -> sc == edge) (M.toList m) of
+
+                        Just (w, (_,xF')) -> return (w, xF' >> xF) -- chain X actions
+                        Nothing           -> (, xF) <$> createWindowAt edge
+
+    XS.modify $ \(ScreenEdgeState m') -> ScreenEdgeState $ M.insert win (edge,xFunc) m'
+
+-- | Add a list of @(ScreenEdge, X ())@ tuples
+addScreenEdges :: [ (ScreenEdge, X ()) ] -> X ()
+addScreenEdges = mapM_ (uncurry addScreenEdge)
+
+-- "Translate" a ScreenEdge to real (x,y) Positions
+createWindowAt :: ScreenEdge -> X Window
+
+createWindowAt SEUpperLeft = withDisplay $ \dpy ->
+    let h = displayHeight dpy (defaultScreen dpy) - 1
+        rh = fromIntegral ((fi h) `div` 2)
+    in createWindowAt' 0 0 1 rh
+
+createWindowAt SEUpperRight = withDisplay $ \dpy ->
+    let w = displayWidth  dpy (defaultScreen dpy) - 1
+        h = displayHeight dpy (defaultScreen dpy) - 1
+        rh = fromIntegral ((fi h) `div` 2)
+    in createWindowAt' (fi w) 0 1 rh
+
+createWindowAt SELowerLeft = withDisplay $ \dpy ->
+    let h = displayHeight dpy (defaultScreen dpy) - 1
+        rh = fromIntegral ((fi h) `div` 2)
+    in createWindowAt' 0 ((fi h) `div` 2) 1 rh
+
+createWindowAt SELowerRight = withDisplay $ \dpy ->
+    let w = displayWidth  dpy (defaultScreen dpy) - 1
+        h = displayHeight dpy (defaultScreen dpy) - 1
+        rh = fromIntegral ((fi h) `div` 2)
+    in createWindowAt' (fi w) ((fi h) `div` 2) 1 rh
+
+createWindowAt SETop = withDisplay $ \dpy ->
+    let w = displayWidth  dpy (defaultScreen dpy) - 1
+    in createWindowAt' 0 0 (fromIntegral (fi w)) 1
+
+createWindowAt SEBottom = withDisplay $ \dpy ->
+    let w = displayWidth  dpy (defaultScreen dpy) - 1
+        h = displayHeight dpy (defaultScreen dpy) - 1
+    in createWindowAt' 0 (fi h) (fromIntegral (fi w)) 1
+
+-- Create a new X window at a (x,y) Position with wh width and ht height
+createWindowAt' :: XMonad.Position -> XMonad.Position ->
+                  XMonad.Dimension -> XMonad.Dimension -> X Window
+createWindowAt' x y wh ht = withDisplay $ \dpy -> io $ do
+
+    rootw <- rootWindow dpy (defaultScreen dpy)
+
+    let
+        visual   = defaultVisualOfScreen $ defaultScreenOfDisplay dpy
+        attrmask = cWOverrideRedirect
+
+    w <- allocaSetWindowAttributes $ \attributes -> do
+
+        set_override_redirect attributes True
+        createWindow dpy        -- display
+                     rootw      -- parent window
+                     x          -- x
+                     y          -- y
+                     wh         -- width
+                     ht         -- height
+                     0          -- border width
+                     0          -- depth
+                     inputOnly  -- class
+                     visual     -- visual
+                     attrmask   -- valuemask
+                     attributes -- attributes
+
+    -- we only need mouse entry events
+    selectInput dpy w enterWindowMask
+    mapWindow dpy w
+    sync dpy False
+    return w
+
+-- | Handle screen edge events
+screenEdgeEventHook :: Event -> X P.All
+screenEdgeEventHook CrossingEvent { ev_window = win } = do
+
+    ScreenEdgeState m <- XS.get
+
+    case M.lookup win m of
+         Just (_, xF) -> xF
+         Nothing      -> return ()
+
+    return (P.All True)
+
+screenEdgeEventHook _ = return (P.All True)
+
+data ScreenEdgeLayout a = ScreenEdgeLayout
+    deriving ( Read, Show )
+
+instance LayoutModifier ScreenEdgeLayout a where
+    hook ScreenEdgeLayout = withDisplay $ \dpy -> do
+        ScreenEdgeState m <- XS.get
+        io $ mapM_ (raiseWindow dpy) $ M.keys m
+    unhook = hook
+
+screenEdgeLayoutHook :: l a -> ModifiedLayout ScreenEdgeLayout l a
+screenEdgeLayoutHook = ModifiedLayout ScreenEdgeLayout
+
+------------------------------------------------------------------------
+
 data StdTransformers = DECOFULL -- ^ switch to Full with window decoration
   deriving (Read, Show, Eq)
 
 instance Transformer StdTransformers Window where
-    transform DECOFULL     x k = k (windowDeco $ noBorders Full) (const x)
+    transform DECOFULL     x k = k (maximizeDeco $ noBorders Full) (const x)
 
 ------------------------------------------------------------------------
 
@@ -993,6 +1188,8 @@ windowDeco = windowSwitcherDecorationWithImageButtons
 
 floatingDeco = imageButtonDeco shrinkText defaultThemeWithImageButtons
 
+maximizeDeco = imageButtonDeco shrinkText maximizedThemeWithImageButtons
+
 emacs =
   renamed [Replace "bsp"] $
   (windowDeco . draggingVisualizer
@@ -1000,9 +1197,10 @@ emacs =
 
 floating =
   renamed [Replace "float"] $
-  (floatingDeco $ mouseResizeSE $ mouseResizeSW $ mouseResizeNW
-   $ mouseResizeNE $ mouseResizeS $ mouseResizeN $ mouseResizeE
-   $ mouseResizeW $ windowArrangeAll $ SF 200)
+  (screenEdgeLayoutHook . floatingDeco
+   . mouseResizeSE . mouseResizeSW . mouseResizeNW
+   . mouseResizeNE . mouseResizeS . mouseResizeN . mouseResizeE
+   . mouseResizeW . windowArrangeAll $ SF 200)
 
 myLayout = avoidStruts
          . (WN.configurableNavigation WN.noNavigateBorders)
@@ -1077,7 +1275,7 @@ willFloat =
 
 ------------------------------------------------------------------------
 
-myEventHook = fullscreenEventHook
+myEventHook e = screenEdgeEventHook e
 
 ------------------------------------------------------------------------
 
@@ -1085,12 +1283,67 @@ myLogHook = return ()
 
 ------------------------------------------------------------------------
 
+barHeight = 90
+
 myStartupHook = do
-        spawnOnce "emacs --daemon"
-        spawnOnce "urxvtd --quiet &"
-        spawnOnce "pcmanfm --daemon-mode &"
-        spawnOnce "feh --bg-fill /etc/wallpaper.jpg"
-        setWMName "LG3D"
+  spawnOnce "emacs --daemon"
+  spawnOnce "urxvtd --quiet &"
+  spawnOnce "pcmanfm --daemon-mode &"
+  spawnOnce "feh --bg-fill /etc/wallpaper.jpg"
+  setWMName "LG3D"
+  addScreenEdges [
+    -- (SETop, sendMessage (Toggle DECOFULL))
+                   (SETop,
+                     withDisplay $ \dpy ->
+                       let dw = displayWidth  dpy (defaultScreen dpy) - 1
+                           dh = displayHeight dpy (defaultScreen dpy) - 1
+                           wwh = (fi dw)
+                           wht = (fi dh) - barHeight
+                           rect = Rectangle 0 0 wwh wht
+                       in sendMessage (SetGeometry rect))
+
+                 , (SEUpperLeft,
+                     withDisplay $ \dpy ->
+                       let dw = displayWidth  dpy (defaultScreen dpy) - 1
+                           dh = displayHeight dpy (defaultScreen dpy) - 1
+                           wwh = ((fi dw) `div` 2)
+                           wht = (fi dh) - barHeight
+                           rect = Rectangle 0 0 wwh wht
+                       in sendMessage (SetGeometry rect))
+
+                 , (SELowerLeft,
+                     withDisplay $ \dpy ->
+                       let dw = displayWidth  dpy (defaultScreen dpy) - 1
+                           dh = displayHeight dpy (defaultScreen dpy) - 1
+                           wy = fromIntegral (((fi dh) `div` 2) - (barHeight `div` 2))
+                           wwh = ((fi dw) `div` 2)
+                           wht = ((fi dh) `div` 2) - (barHeight `div` 2)
+                           rect = Rectangle 0 wy wwh wht
+                       in sendMessage (SetGeometry rect))
+
+                 , (SEUpperRight,
+                     withDisplay $ \dpy ->
+                       let dw = displayWidth  dpy (defaultScreen dpy) - 1
+                           dh = displayHeight dpy (defaultScreen dpy) - 1
+                           wx = fromIntegral ((fi dw) `div` 2)
+                           wwh = ((fi dw) `div` 2)
+                           wht = (fi dh) - barHeight
+                           rect = Rectangle wx 0 wwh wht
+                       in sendMessage (SetGeometry rect))
+
+                 , (SELowerRight,
+                     withDisplay $ \dpy ->
+                       let dw = displayWidth  dpy (defaultScreen dpy) - 1
+                           dh = displayHeight dpy (defaultScreen dpy) - 1
+                           wx = fromIntegral ((fi dw) `div` 2)
+                           wy = fromIntegral (((fi dh) `div` 2) - (barHeight `div` 2))
+                           wwh = ((fi dw) `div` 2)
+                           wht = ((fi dh) `div` 2) - (barHeight `div` 2)
+                           rect = Rectangle wx wy wwh wht
+                       in sendMessage (SetGeometry rect))
+
+                 -- , (SEBottom, withFocused minimizeWindow)
+                 ]
 
 ------------------------------------------------------------------------
 
@@ -1343,7 +1596,7 @@ prefixCommands =
   -- , ("bsp", onGroup swapUp')                             -- Swap prev buffer
   -- , ("bsN", windows W.swapDown)                          -- Swap next buffer alt
   -- , ("bsP", windows W.swapUp)                            -- Swap prev buffer alt
-  , ("bS", sendMessage Swap)                             -- Swap groups
+  , ("bs", sendMessage Swap)                             -- Swap groups
   , ("mh", sendMessage $ pullGroup L)                    -- Merge left
   , ("mj", sendMessage $ pullGroup D)                    -- Merge down
   , ("mk", sendMessage $ pullGroup U)                    -- Merge up
@@ -1370,11 +1623,11 @@ prefixCommands =
   -- , ("M-S-C-k",  sendMessage $ SplitShift Next)
   ]
   ++
-  -- Workspace switching and buffer send to workspace
+  -- Workspace switching and buffer move to workspace
   [ (otherModMasks ++ [key], action tag)
   | (tag, key)  <- zip myWorkspaces "12345"
   , (otherModMasks, action) <-
-      [ ("", windows . W.greedyView) , ("bs", windows . W.shift)]
+      [ ("", windows . W.greedyView) , ("bm", windows . W.shift)]
   ]
 
 prefixPrompt :: X ()
@@ -1383,6 +1636,7 @@ prefixPrompt = xmonadPromptC prefixCommands prefixXPConfig
 ------------------------------------------------------------------------
 
 main = xmonad
+       . ewmhFullscreen
        . ewmh
        . docks
         =<< statusBar bar ppWorkspaces toggleStrutsKey defaults

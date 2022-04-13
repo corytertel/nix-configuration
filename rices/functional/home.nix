@@ -4,6 +4,7 @@
   imports =
     [
       ./dunst
+      ./rofi
       ./urxvt
       ./zathura
     ];
@@ -14,20 +15,18 @@
     activeOpacity = "1.00";
     blur = true;
     experimentalBackends = true;
+      # backend = "glx";
+      # glx-no-stencil = true;
+      # glx-copy-from-front = false;
+      # glx-no-rebind-pixmap = true;
+      # spawn-center-screen = true;
     extraOptions = ''
-      backend = "glx";
-      glx-no-stencil = true;
-      glx-copy-from-front = false;
-      glx-no-rebind-pixmap = true;
-
-      shadow-radius = 28;
-
-      spawn-center-screen = true;
+      shadow-radius = 10;
     '';
     shadow = true;
-    # shadowOffsets = [ 0 0 ];
-    shadowOpacity = "0.50";
-    noDockShadow = false;
+    shadowOffsets = [ 0 0 ];
+    shadowOpacity = "0.60";
+    # noDockShadow = false;
     # vSync = true;
     package = pkgs.picom.overrideAttrs (
       o: {
@@ -72,12 +71,14 @@
     };
 
     iconTheme = {
-      package = pkgs.luna-icons;
-      name = "Luna";
+      # package = pkgs.luna-icons;
+      # name = "Luna";
+      package = pkgs.tango-icon-theme;
+      name = "Tango";
     };
 
     gtk3.extraConfig = {
-      gtk-icon-theme-name = "Luna";
+      gtk-icon-theme-name = "Tango";
       gtk-theme-name = "PlainLight";
       gtk-application-prefer-dark-theme = 0;
     };

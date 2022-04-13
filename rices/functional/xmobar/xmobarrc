@@ -8,7 +8,8 @@ Config {
    , bgColor =      "#e8e8e8"
    , alpha =        255
    , fgColor =      "#141404"
-   , position =     Static { xpos = 0 , ypos = 2310, width = 3840 , height = 90 }
+   -- , position =     Static { xpos = 0 , ypos = 2310, width = 3840 , height = 90 }
+   , position =     Static { xpos = 0 , ypos = 0, width = 3840 , height = 64 }
    , border =       FullB
    , borderWidth =  0
    , borderColor =  "#141404"
