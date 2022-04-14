@@ -82,7 +82,7 @@ import qualified XMonad.Util.ExtensibleState as XS
 myTerminal = "urxvtc"
 
 myFocusFollowsMouse :: Bool
-myFocusFollowsMouse = True
+myFocusFollowsMouse = False
 
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
@@ -132,6 +132,10 @@ myAdditionalKeys =
     , ("<XF86MonBrightnessDown>", spawn "xbrightness -5000")
     -- Keyboard Layout
     , ("S-M1-<Space>", spawn "/home/cory/manual_installs/layout_switch.sh")
+    -- Send Window To Locations
+    , ("M-<L>", sendLeft)
+    , ("M-<R>", sendRight)
+    , ("M-<U>", sendFullscreen)
     ]
 
 ------------------------------------------------------------------------
@@ -406,13 +410,12 @@ imageButtonDeco s c = decoration s c $ NFD True
 
 newtype ImageButtonDecoration a = NFD Bool deriving (Show, Read)
 
+-- TODO get around xdotool window move hack, reimplemenent using haskell
+-- mouse location library
 instance Eq a => DecorationStyle ImageButtonDecoration a where
     describeDeco _ = "ImageButtonDeco"
     decorationCatchClicksHook _ mainw dFL dFR = imageTitleBarButtonHandler mainw dFL dFR
-    decorationAfterDraggingHook _ (mainw, _) decoWin = focus mainw >> handleScreenCrossing mainw decoWin >> return ()
-
-
-
+    decorationAfterDraggingHook _ (mainw, _) decoWin = focus mainw >> handleScreenCrossing mainw decoWin >> spawn "CORDS=$(xdotool getmouselocation --shell | sed 's/[^0-9]*//g'); if [[ \"$(echo $CORDS | sed -n 2p)\" == \"0\" ]]; then xdotool key super+Up; elif [[ \"$(echo $CORDS | sed -n 1p)\" == \"3839\" ]]; then xdotool key super+Right; elif [[ \"$(echo $CORDS | sed -n 1p)\" == \"0\" ]]; then xdotool key super+Left; fi" >> return ()
 
 windowSwitcherDecorationWithImageButtons :: (Eq a, Shrinker s) => s -> Theme
   -> l a -> ModifiedLayout (Decoration ImageWindowSwitcherDecoration s) l a
@@ -1174,6 +1177,59 @@ instance Transformer StdTransformers Window where
 
 ------------------------------------------------------------------------
 
+barHeight = 90
+
+sendFullscreen :: X ()
+sendFullscreen = withDisplay $ \dpy ->
+                       let dw = displayWidth  dpy (defaultScreen dpy) - 1
+                           dh = displayHeight dpy (defaultScreen dpy) - 1
+                           wwh = (fi dw)
+                           wht = (fi dh) - barHeight
+                           rect = Rectangle 0 0 wwh wht
+                       in sendMessage (SetGeometry rect)
+
+sendLeft :: X ()
+sendLeft = withDisplay $ \dpy ->
+                       let dw = displayWidth  dpy (defaultScreen dpy) - 1
+                           dh = displayHeight dpy (defaultScreen dpy) - 1
+                           wwh = ((fi dw) `div` 2)
+                           wht = (fi dh) - barHeight
+                           rect = Rectangle 0 0 wwh wht
+                       in sendMessage (SetGeometry rect)
+
+-- sendLowerLeft :: X ()
+-- sendLowerLeft = withDisplay $ \dpy ->
+--                        let dw = displayWidth  dpy (defaultScreen dpy) - 1
+--                            dh = displayHeight dpy (defaultScreen dpy) - 1
+--                            wy = fromIntegral (((fi dh) `div` 2) - (barHeight `div` 2))
+--                            wwh = ((fi dw) `div` 2)
+--                            wht = ((fi dh) `div` 2) - (barHeight `div` 2)
+--                            rect = Rectangle 0 wy wwh wht
+--                        in sendMessage (SetGeometry rect)
+
+sendRight :: X ()
+sendRight = withDisplay $ \dpy ->
+                       let dw = displayWidth  dpy (defaultScreen dpy) - 1
+                           dh = displayHeight dpy (defaultScreen dpy) - 1
+                           wx = fromIntegral ((fi dw) `div` 2)
+                           wwh = ((fi dw) `div` 2)
+                           wht = (fi dh) - barHeight
+                           rect = Rectangle wx 0 wwh wht
+                       in sendMessage (SetGeometry rect)
+
+-- sendLowerRight :: X ()
+-- sendLowerRight = withDisplay $ \dpy ->
+--                        let dw = displayWidth  dpy (defaultScreen dpy) - 1
+--                            dh = displayHeight dpy (defaultScreen dpy) - 1
+--                            wx = fromIntegral ((fi dw) `div` 2)
+--                            wy = fromIntegral (((fi dh) `div` 2) - (barHeight `div` 2))
+--                            wwh = ((fi dw) `div` 2)
+--                            wht = ((fi dh) `div` 2) - (barHeight `div` 2)
+--                            rect = Rectangle wx wy wwh wht
+--                        in sendMessage (SetGeometry rect)
+
+------------------------------------------------------------------------
+
 -- for the future: want to spawn window within currently selected group,
 -- and then if you want it to be separate unmerge it from the group.
 -- the new window will already be selected so it will be easy to umerge it
@@ -1283,67 +1339,13 @@ myLogHook = return ()
 
 ------------------------------------------------------------------------
 
-barHeight = 90
-
 myStartupHook = do
   spawnOnce "emacs --daemon"
   spawnOnce "urxvtd --quiet &"
   spawnOnce "pcmanfm --daemon-mode &"
   spawnOnce "feh --bg-fill /etc/wallpaper.jpg"
+  spawnOnce "tint2 &"
   setWMName "LG3D"
-  addScreenEdges [
-    -- (SETop, sendMessage (Toggle DECOFULL))
-                   (SETop,
-                     withDisplay $ \dpy ->
-                       let dw = displayWidth  dpy (defaultScreen dpy) - 1
-                           dh = displayHeight dpy (defaultScreen dpy) - 1
-                           wwh = (fi dw)
-                           wht = (fi dh) - barHeight
-                           rect = Rectangle 0 0 wwh wht
-                       in sendMessage (SetGeometry rect))
-
-                 , (SEUpperLeft,
-                     withDisplay $ \dpy ->
-                       let dw = displayWidth  dpy (defaultScreen dpy) - 1
-                           dh = displayHeight dpy (defaultScreen dpy) - 1
-                           wwh = ((fi dw) `div` 2)
-                           wht = (fi dh) - barHeight
-                           rect = Rectangle 0 0 wwh wht
-                       in sendMessage (SetGeometry rect))
-
-                 , (SELowerLeft,
-                     withDisplay $ \dpy ->
-                       let dw = displayWidth  dpy (defaultScreen dpy) - 1
-                           dh = displayHeight dpy (defaultScreen dpy) - 1
-                           wy = fromIntegral (((fi dh) `div` 2) - (barHeight `div` 2))
-                           wwh = ((fi dw) `div` 2)
-                           wht = ((fi dh) `div` 2) - (barHeight `div` 2)
-                           rect = Rectangle 0 wy wwh wht
-                       in sendMessage (SetGeometry rect))
-
-                 , (SEUpperRight,
-                     withDisplay $ \dpy ->
-                       let dw = displayWidth  dpy (defaultScreen dpy) - 1
-                           dh = displayHeight dpy (defaultScreen dpy) - 1
-                           wx = fromIntegral ((fi dw) `div` 2)
-                           wwh = ((fi dw) `div` 2)
-                           wht = (fi dh) - barHeight
-                           rect = Rectangle wx 0 wwh wht
-                       in sendMessage (SetGeometry rect))
-
-                 , (SELowerRight,
-                     withDisplay $ \dpy ->
-                       let dw = displayWidth  dpy (defaultScreen dpy) - 1
-                           dh = displayHeight dpy (defaultScreen dpy) - 1
-                           wx = fromIntegral ((fi dw) `div` 2)
-                           wy = fromIntegral (((fi dh) `div` 2) - (barHeight `div` 2))
-                           wwh = ((fi dw) `div` 2)
-                           wht = ((fi dh) `div` 2) - (barHeight `div` 2)
-                           rect = Rectangle wx wy wwh wht
-                       in sendMessage (SetGeometry rect))
-
-                 -- , (SEBottom, withFocused minimizeWindow)
-                 ]
 
 ------------------------------------------------------------------------
 

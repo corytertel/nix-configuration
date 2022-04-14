@@ -106,7 +106,7 @@
       gimp
       #wpgtk
       blender
-      # zathura
+      zathura
       joplin-desktop
 
       # modern unix
@@ -173,6 +173,7 @@
       unzip
       klavaro
       obs-studio
+      pavucontrol
 
       #discord
       betterdiscord-installer

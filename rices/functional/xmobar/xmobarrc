@@ -8,18 +8,19 @@ Config {
    , bgColor =      "#e8e8e8"
    , alpha =        255
    , fgColor =      "#141404"
-   -- , position =     Static { xpos = 0 , ypos = 2310, width = 3840 , height = 90 }
-   , position =     Static { xpos = 0 , ypos = 0, width = 3840 , height = 64 }
+   , position =     Static { xpos = 0 , ypos = 2310, width = 3840 , height = 90 }
+   -- , position =     Static { xpos = 0 , ypos = 2310, width = 1000 , height = 90 }
    , border =       FullB
    , borderWidth =  0
-   , borderColor =  "#141404"
+   , borderColor =  "#e8e8e8"
 
    -- layout
    , sepChar =  "%"   -- delineator between plugin names and straight text
    , alignSep = "}{"  -- separator between left-right alignment
    --  , font size 18
    --  , font size 28
-   , template = "      <fc=#141404><fn=1><action=xdotool key super+x> </action></fn></fc>    <fn=2>%UnsafeStdinReader%</fn> }{ %bat-icon% %battery%      <action=amixer -q set Master toggle><fc=#141404>  </fc>%volume%</action>      <action=orage>%date%</action>      <action=/home/cory/manual_installs/layout_switch.sh><fn=2>%kbd%</fn></action>      "
+   -- , template = "      <fc=#141404><fn=1><action=xdotool key super+x> </action></fn></fc>    <fn=2>%UnsafeStdinReader%</fn> }{ %bat-icon% %battery%      <action=amixer -q set Master toggle><fc=#141404>  </fc>%volume%</action>      <action=orage>%date%</action>      <action=/home/cory/manual_installs/layout_switch.sh><fn=2>%kbd%</fn></action>      "
+   , template = "      <fc=#141404><fn=1><action=xdotool key super+x> </action></fn></fc>    <fn=2>%UnsafeStdinReader%</fn> }{ %bat-icon% %battery%      <action=`amixer -q set Master toggle` button=1><action=`pavucontrol` button=3>%volume%</action></action>      <action=orage>%date%</action>      <action=/home/cory/manual_installs/layout_switch.sh><fn=2>%kbd%</fn></action>      "
 
    -- general behavior
    , lowerOnStart =     True    -- send to bottom of window stack on start

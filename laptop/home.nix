@@ -18,24 +18,24 @@
     Xft.rgba: rgb
     Xft.lcdfilter: lcddefault
 
-    Sxiv.background: #000507
-    Sxiv.foreground: #d8dee9
+    Sxiv.background: #ffffff
+    Sxiv.foreground: #141404
     Sxiv.font:mplus Nerd Font,M+ 1c:size=10
   '';
 
   xsession = {
     enable = true;
     pointerCursor = {
-      name = "Numix-Cursor";
-      package = pkgs.numix-cursor-theme;
+      # name = "Numix-Cursor";
+      # package = pkgs.numix-cursor-theme;
+      name = "Vanilla-DMZ";
+      package = pkgs.vanilla-dmz;
       defaultCursor = "left_ptr";
       size = 48;
     };
   };
 
   home.packages = with pkgs; [
-    touchegg
-
     zoom-us
   ];
 }

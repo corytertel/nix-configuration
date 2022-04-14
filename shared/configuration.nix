@@ -106,14 +106,6 @@
       enable = true;
       extraConfig = "Defaults lecture=never";
     };
-    # doas = {
-    #   enable = true;
-    #   extraRules = [{
-    #     users = [ "cory" ];
-    #     keepEnv = true;
-    #     persist = true;
-    #   }];
-    # };
   };
 
   nix = {

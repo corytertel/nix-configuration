@@ -6,6 +6,7 @@
       ./dunst
       ./rofi
       ./urxvt
+      ./xmobar
       ./zathura
     ];
 
@@ -31,10 +32,6 @@
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
-          # owner = "Arian8j2";
-          # repo = "picom-jonaburg-fix";
-          # rev = "31d25da22b44f37cbb9be49fe5c239ef8d00df12";
-          # sha256 = "1z4bKDoNgmG40y2DKTSSh1NCafrE1rkHkCB3ob8ibm4=";
           owner = "jonaburg";
           repo = "picom";
           rev = "e3c19cd7d1108d114552267f302548c113278d45";
@@ -42,12 +39,6 @@
         };
       }
     );
-  };
-
-  home.file = {
-    ".config/xmobar/xmobarrc".text = builtins.readFile ./xmobar/xmobarrc;
-    ".config/xmobar/volume.sh".source = ./xmobar/volume.sh;
-    ".config/xmobar/battery.sh".source = ./xmobar/battery.sh;
   };
 
   home.packages = with pkgs; [
