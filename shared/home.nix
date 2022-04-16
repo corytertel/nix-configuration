@@ -64,7 +64,7 @@
       cmus
       feh
       cmatrix
-      bpytop
+      btop
       libsForQt5.ark
 
       # development basics

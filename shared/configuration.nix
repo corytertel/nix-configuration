@@ -230,13 +230,13 @@
       "audio/wav" = "audacious.desktop";
       "audio/weba" = "audacious.desktop";
 
-      "mage/bmp" = "sxiv.desktop";
+      "mage/bmp" = "feh.desktop";
       "image/gif" = "org.kde.gwenview.desktop";
-      "image/ico" = "sxiv.desktop";
-      "image/jpeg" = "sxiv.desktop";
-      "image/png" = "sxiv.desktop";
-      "image/svg" = "sxiv.desktop";
-      "image/webp" = "sxiv.desktop";
+      "image/ico" = "feh.desktop";
+      "image/jpeg" = "feh.desktop";
+      "image/png" = "feh.desktop";
+      "image/svg" = "feh.desktop";
+      "image/webp" = "feh.desktop";
 
       "video/mp4" = "mpv.desktop";
       "video/mpeg" = "mpv.desktop";
