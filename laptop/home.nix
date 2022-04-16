@@ -20,7 +20,7 @@
 
     Sxiv.background: #ffffff
     Sxiv.foreground: #141404
-    Sxiv.font:mplus Nerd Font,M+ 1c:size=10
+    Sxiv.font:NotoSans Nerd Font:size=10
   '';
 
   xsession = {

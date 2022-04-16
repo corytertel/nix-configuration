@@ -1,133 +1,129 @@
-/* -*- mode: css; -*- */
-/* vim: set syntax=css: */
+/*
+ *
+ * Author  : Aditya Shakya
+ * Mail    : adi1090x@gmail.com
+ * Github  : @adi1090x
+ * Twitter : @adi1090x
+ *
+ */
+
 configuration {
-  icon-theme:       "Paper";
-  cycle:            true;
-  disable-history:  false;
-
-  /* Vim-esque C-j/C-k as up/down in rofi */
-  kb-accept-entry: "Return,Control+m,KP_Enter";
-  kb-row-down: "Down,Control+n,Control+j";
-  kb-remove-to-eol: "";
-  kb-row-up: "Up,Control+p,Control+k";
+	font:			    "NotoSans Nerd Font 20";
+    show-icons:                     true;
+	icon-theme: 		    "Tango";
+    display-drun: 		    "";
+    drun-display-format:            "{name}";
+    disable-history:                false;
+	sidebar-mode: 		    false;
 }
 
+/* -- Light-- */
 * {
-  accent:   #bd93f9;
-  bg:       #1E2029FA;
-  bg-light: #1c1c1c;
-  bg-focus: #282a36;
-  bg-dark:  #181a23;
-  fg:       #bbc2cf;
-  fg-list:  #bbc2cf;
-  on:       #8BD49C;
-  off:      #cc6666;
-
-  magenta: #bd93f9;
-  blue:    #61bfff;
-
-  text-font:      "Roboto Mono 12";
-  text-mono-font: "Roboto Mono 12";
-  icon-font:      "FontAwesome 20";
-
-  background-color: transparent;
-  text-color: @fg-list;
-  font: @text-font;
-  border-color: @bg-dark;
+    background:                     #E8E8E8;
+    background-alt:                 #D8D8D8;
+    foreground:                     #141404;
+    background-selected:            #141404;
+    foreground-selected:            #FFFFFF;
+    accent:			    #CCCCCC;
 }
 
-/**** Layout ****/
 window {
-  width:    1000px;
-  anchor:   north;
-  location: center;
-  border: 1px;
-  border-radius: 6px 6px 0 0;
-  children: [ inputbar, listview ];
+    transparency:                   "real";
+    background-color:               @background;
+    text-color:                     @foreground;
+	border:			    0px;
+	border-color:		    @border;
+    border-radius:                  0px;
+	width:			    32%;
+    location:                       northwest;
+    x-offset:                       10px;
+    y-offset:                       1360px;
+}
+
+prompt {
+    enabled: 			    true;
+	padding: 		    0.30% 0.5% 0% 0%;
+	background-color: 	    @background-alt;
+	text-color: 		    @foreground;
+	font:			    "NotoSans Nerd Font 20";
+}
+
+entry {
+    background-color:               @background-alt;
+    text-color:                     @foreground;
+    placeholder-color:              @foreground;
+    expand:                         true;
+    horizontal-align:               0;
+    placeholder:                    "Search Applications";
+    padding:                        -0.15% 0% 0% 0%;
+    blink:                          true;
+}
+
+inputbar {
+	children: 		    [ prompt, entry ];
+    background-color:               @background;
+    text-color:                     @foreground;
+    expand:                         false;
+	border:			    0.1%;
+    border-radius:                  0px;
+	border-color:		    @accent;
+    margin:                         0% 0% 0% 0%;
+    padding:                        0.50%;
 }
 
 listview {
-  lines: 12;
-  fixed-height: false;
-  /* reverse: true; */
-  columns: 1;
-  scrollbar: true;
-  spacing: 1px;
-  /* Remove strange gap between listview and inputbar */
-  margin: -2px 0 0;
+    background-color:               @background-alt;
+    columns:                        5;
+    lines:                          3;
+    spacing:                        0%;
+    cycle:                          false;
+    dynamic:                        true;
+    layout:                         vertical;
 }
 
-/*
-  TODO Not supported in stable branch of rofi
-  @media only (max-height: 1080px) {
-    window {
-      y-offset: -30%;
-    }
-    listview {
-      lines: 14;
-    }
-  }
-*/
-
-scrollbar {
-  handle-width: 1px;
-}
-inputbar {
-  children: [ textbox-icon, prompt, entry ];
-  border: 0 0 0;
-}
-textbox-icon, prompt {
-  padding: 11px;
-  expand: false;
-  border: 0 1px 0 0;
-  margin: 0 -2px 0 0;
-}
-textbox-icon {
-  padding: 7px 4px 0;
-}
-entry, element {
-  padding: 10px 13px;
-}
-textbox {
-  padding: 24px;
-  margin: 20px;
-}
-
-
-/**** Looks ****/
-scrollbar {
-  background-color: @bg-dark;
-  handle-color: @accent;
-  border-color: @bg-dark;
-}
-listview, inputbar {
-  background-color: @bg-dark;
-}
-textbox-icon, prompt, entry {
-  text-color: @accent;
-}
-prompt, entry {
-  background-color: @bg-focus;
-}
-textbox-icon, prompt {
-  background-color: #2f313d;
-}
-prompt {
-  background-color: @bg-focus;
-}
-textbox-icon {
-  font: @icon-font;
-}
-entry {
-  font: @text-font-mono;
-  text-color: @fg;
+mainbox {
+    background-color:               @background-alt;
+	border:			    0% 0% 0% 0%;
+    border-radius:                  0% 0% 0% 0%;
+	border-color:	            @accent;
+    children:                       [ inputbar, listview ];
+    spacing:                        1%;
+    padding:                        1.25% 0.65% 1.25% 0.65%;
 }
 
 element {
-  background-color: @bg;
-  text-color: @fg;
+    font:			    "NotoSans Nerd Font 20";
+    background-color:               @background-alt;
+    text-color:                     @foreground;
+    orientation:                    vertical;
+    border-radius:                  0%;
+    padding:                        2% 0% 2% 0%;
 }
+
+element-icon {
+    background-color: 		    inherit;
+    text-color:       		    inherit;
+    horizontal-align:               0.5;
+    vertical-align:                 0.5;
+    size:                           128px;
+    border:                         0px;
+}
+
+element-text {
+    font:			    "NotoSans Nerd Font 20";
+    background-color: 		    inherit;
+    text-color:       		    inherit;
+    expand:                         true;
+    horizontal-align:               0.5;
+    vertical-align:                 0.5;
+    margin:                         0.5% 0.5% -0.5% 0.5%;
+}
+
 element selected {
-  background-color: @bg-dark;
-  text-color: @accent;
+    font:			    "NotoSans Nerd Font 20";
+    background-color:               @background-selected;
+    text-color:                     @foreground-selected;
+	border:			    0.1%;
+    border-radius:                  0px;
+    border-color:                   @accent;
 }

@@ -52,6 +52,7 @@ import XMonad.Hooks.EwmhDesktops (ewmh, ewmhFullscreen)
 import XMonad.Hooks.ManageHelpers
   (isFullscreen, isDialog,  doFullFloat, doCenterFloat, doRectFloat, composeOne, isInProperty)
 import XMonad.Hooks.SetWMName (setWMName)
+import XMonad.Hooks.Minimize
 
 import XMonad.Actions.Navigation2D (switchLayer)
 import XMonad.Actions.FloatKeys
@@ -110,8 +111,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
     -- Xmonad prompt
-    [ ("M-x", shellPrompt launcherXPConfig)
-    , ("M-<Space>", shellPrompt launcherXPConfig)
+    -- [ ("M-x", shellPrompt launcherXPConfig)
+    [ ("M-x", spawn "rofi -matching fuzzy -show drun -modi drun,run --icon-theme \"Tango\" show-icons")
+    -- , ("M-<Space>", shellPrompt launcherXPConfig)
+    , ("M-<Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run -icon-theme \"Tango\" -show-icons")
     , ("M1-<Space>", prefixPrompt)
     -- Resize prompt
     , ("M-r", resizePrompt)
@@ -141,22 +144,23 @@ myAdditionalKeys =
 ------------------------------------------------------------------------
 
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
-    [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
-                          >> windows W.shiftMaster))
-    , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
-    , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
-                          >> windows W.shiftMaster))
+    -- [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
+    --                       >> windows W.shiftMaster))
+    -- , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
+    -- , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
+    --                       >> windows W.shiftMaster))
 
-    , ((mod1Mask, button1),
-       (\w -> focus w >> mouseMoveWindow w
-         >> afterDrag (snapMagicMove (Just 50) (Just 50) w)))
-    , ((mod1Mask .|. shiftMask, button1),
-       (\w -> focus w >> mouseMoveWindow w
-         >> afterDrag (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)))
-    , ((mod1Mask, button3),
-       (\w -> focus w >> mouseResizeWindow w
-         >> afterDrag (snapMagicResize [R,D] (Just 50) (Just 50) w)))
-    ]
+    -- , ((mod1Mask, button1),
+    --    (\w -> focus w >> mouseMoveWindow w
+    --      >> afterDrag (snapMagicMove (Just 50) (Just 50) w)))
+    -- , ((mod1Mask .|. shiftMask, button1),
+    --    (\w -> focus w >> mouseMoveWindow w
+    --      >> afterDrag (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)))
+    -- , ((mod1Mask, button3),
+    --    (\w -> focus w >> mouseResizeWindow w
+    --      >> afterDrag (snapMagicResize [R,D] (Just 50) (Just 50) w)))
+    -- ]
+    []
 
 ------------------------------------------------------------------------
 
@@ -375,7 +379,7 @@ imageTitleBarButtonHandler mainw distFromLeft distFromRight = do
 
 defaultThemeWithImageButtons :: Theme
 defaultThemeWithImageButtons =
-  def { fontName = "xft:mplus Nerd Font,M+ 1c:size=11"
+  def { fontName = "xft:NotoSans Nerd Font:size=11"
       , inactiveBorderColor = "#eeeeee"
       , inactiveColor = "#eeeeee"
       , inactiveTextColor = "#999999"
@@ -471,21 +475,25 @@ newtype SimpleFloat a = SF Dimension deriving (Show, Read)
 instance LayoutClass SimpleFloat Window where
     description _ = "Float"
     doLayout (SF i) sc (W.Stack w l r) = do
-        wrs <- mapM (getSize i i sc) (w : reverse l ++ r)
+        wrs <- mapM (getSize i sc) (w : reverse l ++ r)
         return (wrs, Nothing)
 
-getSize :: Dimension -> Dimension -> Rectangle -> Window -> X (Window,Rectangle)
-getSize i j (Rectangle rx ry _ _) w = do
+-- argurment is vertical offset for bar
+getSize :: Dimension -> Rectangle -> Window -> X (Window,Rectangle)
+getSize i (Rectangle rx ry _ _) w = do
   d  <- asks display
   bw <- asks (borderWidth . config)
   wa <- io $ getWindowAttributes d w
-  let nx = rx + fi j
-      ny = ry + fi i
-      x  =  max nx $ fi $ wa_x wa
-      y  =  max ny $ fi $ wa_y wa
-      wh = fi (wa_width  wa) + (bw * 2)
-      ht = fi (wa_height wa) + (bw * 2)
-  return (w, Rectangle x y wh ht)
+  withDisplay $ \dpy ->
+    let dw = fi (displayWidth  dpy (defaultScreen dpy))
+        dh = fi (displayHeight dpy (defaultScreen dpy))
+        wh = fi (wa_width  wa) + (bw * 2)
+        ht = fi (wa_height wa) + (bw * 2)
+        nx = if rx == 0 then (dw - (fi wh)) `div` 2 else rx
+        ny = if ry == 0 then ((dh - (fi i)) - (fi ht)) `div` 2 else ry
+        x  =  max nx $ fi $ wa_x wa
+        y  =  max ny $ fi $ wa_y wa
+    in return (w, Rectangle x y wh ht)
 
 ------------------------------------------------------------------------
 
@@ -498,7 +506,7 @@ rw :: Dimension
 rw = resizeWidth
 -- Offset Resize Width
 orw :: XMonad.Position
-orw = fromIntegral (rw `div` 2)
+orw = fi (rw `div` 2)
 
 mouseResizeSE :: l a -> ModifiedLayout MouseResizeSE l a
 mouseResizeSE = ModifiedLayout (MR_SE [])
@@ -1079,34 +1087,34 @@ createWindowAt :: ScreenEdge -> X Window
 
 createWindowAt SEUpperLeft = withDisplay $ \dpy ->
     let h = displayHeight dpy (defaultScreen dpy) - 1
-        rh = fromIntegral ((fi h) `div` 2)
+        rh = fi ((fi h) `div` 2)
     in createWindowAt' 0 0 1 rh
 
 createWindowAt SEUpperRight = withDisplay $ \dpy ->
     let w = displayWidth  dpy (defaultScreen dpy) - 1
         h = displayHeight dpy (defaultScreen dpy) - 1
-        rh = fromIntegral ((fi h) `div` 2)
+        rh = fi ((fi h) `div` 2)
     in createWindowAt' (fi w) 0 1 rh
 
 createWindowAt SELowerLeft = withDisplay $ \dpy ->
     let h = displayHeight dpy (defaultScreen dpy) - 1
-        rh = fromIntegral ((fi h) `div` 2)
+        rh = fi ((fi h) `div` 2)
     in createWindowAt' 0 ((fi h) `div` 2) 1 rh
 
 createWindowAt SELowerRight = withDisplay $ \dpy ->
     let w = displayWidth  dpy (defaultScreen dpy) - 1
         h = displayHeight dpy (defaultScreen dpy) - 1
-        rh = fromIntegral ((fi h) `div` 2)
+        rh = fi ((fi h) `div` 2)
     in createWindowAt' (fi w) ((fi h) `div` 2) 1 rh
 
 createWindowAt SETop = withDisplay $ \dpy ->
     let w = displayWidth  dpy (defaultScreen dpy) - 1
-    in createWindowAt' 0 0 (fromIntegral (fi w)) 1
+    in createWindowAt' 0 0 (fi (fi w)) 1
 
 createWindowAt SEBottom = withDisplay $ \dpy ->
     let w = displayWidth  dpy (defaultScreen dpy) - 1
         h = displayHeight dpy (defaultScreen dpy) - 1
-    in createWindowAt' 0 (fi h) (fromIntegral (fi w)) 1
+    in createWindowAt' 0 (fi h) (fi (fi w)) 1
 
 -- Create a new X window at a (x,y) Position with wh width and ht height
 createWindowAt' :: XMonad.Position -> XMonad.Position ->
@@ -1201,7 +1209,7 @@ sendLeft = withDisplay $ \dpy ->
 -- sendLowerLeft = withDisplay $ \dpy ->
 --                        let dw = displayWidth  dpy (defaultScreen dpy) - 1
 --                            dh = displayHeight dpy (defaultScreen dpy) - 1
---                            wy = fromIntegral (((fi dh) `div` 2) - (barHeight `div` 2))
+--                            wy = fi (((fi dh) `div` 2) - (barHeight `div` 2))
 --                            wwh = ((fi dw) `div` 2)
 --                            wht = ((fi dh) `div` 2) - (barHeight `div` 2)
 --                            rect = Rectangle 0 wy wwh wht
@@ -1211,7 +1219,7 @@ sendRight :: X ()
 sendRight = withDisplay $ \dpy ->
                        let dw = displayWidth  dpy (defaultScreen dpy) - 1
                            dh = displayHeight dpy (defaultScreen dpy) - 1
-                           wx = fromIntegral ((fi dw) `div` 2)
+                           wx = fi ((fi dw) `div` 2)
                            wwh = ((fi dw) `div` 2)
                            wht = (fi dh) - barHeight
                            rect = Rectangle wx 0 wwh wht
@@ -1221,8 +1229,8 @@ sendRight = withDisplay $ \dpy ->
 -- sendLowerRight = withDisplay $ \dpy ->
 --                        let dw = displayWidth  dpy (defaultScreen dpy) - 1
 --                            dh = displayHeight dpy (defaultScreen dpy) - 1
---                            wx = fromIntegral ((fi dw) `div` 2)
---                            wy = fromIntegral (((fi dh) `div` 2) - (barHeight `div` 2))
+--                            wx = fi ((fi dw) `div` 2)
+--                            wy = fi (((fi dh) `div` 2) - (barHeight `div` 2))
 --                            wwh = ((fi dw) `div` 2)
 --                            wht = ((fi dh) `div` 2) - (barHeight `div` 2)
 --                            rect = Rectangle wx wy wwh wht
@@ -1256,7 +1264,7 @@ floating =
   (screenEdgeLayoutHook . floatingDeco
    . mouseResizeSE . mouseResizeSW . mouseResizeNW
    . mouseResizeNE . mouseResizeS . mouseResizeN . mouseResizeE
-   . mouseResizeW . windowArrangeAll $ SF 200)
+   . mouseResizeW . windowArrangeAll $ SF barHeight)
 
 myLayout = avoidStruts
          . (WN.configurableNavigation WN.noNavigateBorders)
@@ -1282,25 +1290,52 @@ p -!> f = p >>= \b -> if b then return mempty else f
 (=!?) :: Eq a => C.Query a -> a -> C.Query Bool
 q =!? x = fmap (/= x) q
 
+-- myManageHook = composeAll
+--     [ className =? "MPlayer"                              --> mediaFloat
+--     , className =? "mpv"                                  --> mediaFloat
+--     , className =? "vlc"                                  --> mediaFloat
+--     , className =? "gwenview"                             --> mediaFloat
+--     , className =? "Sxiv"                                 --> mediaFloat
+--     , className =? "Orage"                                --> doCenterFloat
+--     , className =? "Galculator"                           --> calculatorFloat
+--     , className =? "Firefox" <&&> resource =? "Toolkit"   --> myRectFloat
+--     , stringProperty "WM_WINDOW_ROLE"
+--       =? "GtkFileChooserDialog"                           --> myRectFloat
+--     , stringProperty "WM_WINDOW_ROLE" =? "pop-up"         --> doCenterFloat
+--     , stringProperty "WM_WINDOW_ROLE" =!? "gimp-image-window-1"
+--       <&&> className =? "Gimp"                            --> doCenterFloat
+--     , stringProperty "WM_WINDOW_ROLE" =!? "MainWindow#1"
+--       <&&> className =? "krita"                           --> doCenterFloat
+--     , isDialog                                            --> doCenterFloat
+--     , isInProperty "_NET_WM_WINDOW_TYPE"
+--       "_NET_WM_WINDOW_TYPE_SPLASH"                        --> doCenterFloat
+--     , title     =? "Save Image"                           --> myRectFloat
+--     , title     =? "Save File"                            --> myRectFloat
+--     , title     =? "Open"                                 --> myRectFloat
+--     , title     =? "Open Files"                           --> myRectFloat
+--     , resource  =? "xmomacs-help"                         --> helpFloat
+--     , resource  =? "desktop_window"                       --> doIgnore
+--     , resource  =? "kdesktop"                             --> doIgnore
+--     , isFullscreen --> doFullFloat
+--     , fmap not willFloat --> insertPosition Below Newer
+--     , fmap not willFloat -!> insertPosition Master Newer
+--     ]
+--   where
+--     -- xpos, ypos, width, height
+--     myRectFloat = doRectFloat (W.RationalRect (1 % 3) (3 % 10) (1 % 3) (2 % 5))
+--     mediaFloat = doRectFloat (W.RationalRect (3 % 10) (3 % 20) (2 % 5) (7 % 10))
+--     calculatorFloat = doRectFloat (W.RationalRect (7 % 16) (2 % 6) (1 % 8) (1 % 3))
+--     helpFloat = doRectFloat (W.RationalRect (7 % 8) (0 % 1) (1 % 8) (1 % 2))
+
 myManageHook = composeAll
-    [ className =? "MPlayer"                              --> mediaFloat
-    , className =? "mpv"                                  --> mediaFloat
-    , className =? "vlc"                                  --> mediaFloat
-    , className =? "gwenview"                             --> mediaFloat
-    , className =? "Sxiv"                                 --> mediaFloat
-    , className =? "Orage"                                --> doCenterFloat
-    , className =? "Galculator"                           --> calculatorFloat
+    [ className =? "Orage"                                --> doCenterFloat
     , className =? "Firefox" <&&> resource =? "Toolkit"   --> myRectFloat
     , stringProperty "WM_WINDOW_ROLE"
       =? "GtkFileChooserDialog"                           --> myRectFloat
-    , stringProperty "WM_WINDOW_ROLE" =? "pop-up"         --> doCenterFloat
-    , stringProperty "WM_WINDOW_ROLE" =!? "gimp-image-window-1"
-      <&&> className =? "Gimp"                            --> doCenterFloat
-    , stringProperty "WM_WINDOW_ROLE" =!? "MainWindow#1"
-      <&&> className =? "krita"                           --> doCenterFloat
-    , isDialog                                            --> doCenterFloat
+    , stringProperty "WM_WINDOW_ROLE" =? "pop-up"         --> myRectFloat
+    , isDialog                                            --> myRectFloat
     , isInProperty "_NET_WM_WINDOW_TYPE"
-      "_NET_WM_WINDOW_TYPE_SPLASH"                        --> doCenterFloat
+      "_NET_WM_WINDOW_TYPE_SPLASH"                        --> myRectFloat
     , title     =? "Save Image"                           --> myRectFloat
     , title     =? "Save File"                            --> myRectFloat
     , title     =? "Open"                                 --> myRectFloat
@@ -1313,11 +1348,8 @@ myManageHook = composeAll
     , fmap not willFloat -!> insertPosition Master Newer
     ]
   where
-    unfloat = ask >>= doF . W.sink
     -- xpos, ypos, width, height
     myRectFloat = doRectFloat (W.RationalRect (1 % 3) (3 % 10) (1 % 3) (2 % 5))
-    mediaFloat = doRectFloat (W.RationalRect (3 % 10) (3 % 20) (2 % 5) (7 % 10))
-    calculatorFloat = doRectFloat (W.RationalRect (7 % 16) (2 % 6) (1 % 8) (1 % 3))
     helpFloat = doRectFloat (W.RationalRect (7 % 8) (0 % 1) (1 % 8) (1 % 2))
 
 willFloat :: C.Query Bool
@@ -1342,7 +1374,7 @@ myLogHook = return ()
 myStartupHook = do
   spawnOnce "emacs --daemon"
   spawnOnce "urxvtd --quiet &"
-  spawnOnce "pcmanfm --daemon-mode &"
+  spawnOnce "pcmanfm-qt --daemon-mode &"
   spawnOnce "feh --bg-fill /etc/wallpaper.jpg"
   spawnOnce "tint2 &"
   setWMName "LG3D"
@@ -1401,7 +1433,7 @@ launcherXPKeymap = M.fromList
   , ((0, xK_Escape), quit)
   ]
 
-launcherXPConfig = def { font                = "xft:mplus Nerd Font,M+ 1c:size=11"
+launcherXPConfig = def { font                = "xft:NotoSans Nerd Font:size=11"
                        , bgColor             = "#e8e8e8"
                        , fgColor             = "#141404"
                        , bgHLight            = "#ffffff"
@@ -1447,7 +1479,7 @@ floatCommands =
   -- Center the window
   , ("c", (withFocused (keysMoveWindowTo (1920,1080) (1%2, 1%2)))
       >> spawn "xdotool key super+f")
-  , ("q", refresh)
+  , ("q", return ())
   ]
 
 floatPrompt :: X ()
@@ -1468,7 +1500,7 @@ resizeCommands =
   , ("J", (sendMessage $ ShrinkFrom D) >> spawn "xdotool key super+r")
   , ("K", (sendMessage $ ShrinkFrom U) >> spawn "xdotool key super+r")
   , ("L", (sendMessage $ ShrinkFrom R) >> spawn "xdotool key super+r")
-  , ("q", refresh)
+  , ("q", return ())
   ]
 
 resizePrompt :: X ()
@@ -1509,7 +1541,7 @@ prefixXPKeymap = M.fromList
   ]
 
 prefixXPConfig = def
-  { font                = "xft:mplus Nerd Font,M+ 1c:size=11"
+  { font                = "xft:NotoSans Nerd Font:size=11"
   , bgColor             = "#e8e8e8"
   , fgColor             = "#141404"
   , bgHLight            = "#ffffff"
@@ -1557,7 +1589,7 @@ prefixCommands =
   , ("e", spawn "emacsclient -c")
   , ("E", spawn "emacs")
   , ("f", spawn "firefox")
-  , ("F", spawn "pcmanfm --new-win")
+  , ("F", spawn "pcmanfm-qt --new-window")
   , ("g", runOrRaise "steam" (className =? "Steam"))
   , ("t", spawn $ myTerminal)
 
@@ -1661,7 +1693,7 @@ defaults = def {
       -- hooks, layouts
         layoutHook         = myLayout,
         manageHook         = myManageHook,
-        handleEventHook    = myEventHook,
+        handleEventHook    = myEventHook <+> minimizeEventHook,
         logHook            = myLogHook,
         startupHook        = myStartupHook
     } `additionalKeysP` myAdditionalKeys

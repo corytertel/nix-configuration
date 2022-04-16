@@ -53,7 +53,7 @@
       # package = pkgs.mplus-outline-fonts;
       # name = "M+ 1c 10";
       package = pkgs.nerdfonts;
-      name = "mplus Nerd Font,M+ 1c 10";
+      name = "NotoSans Nerd Font 10";
     };
 
     theme = {
@@ -62,8 +62,6 @@
     };
 
     iconTheme = {
-      # package = pkgs.luna-icons;
-      # name = "Luna";
       package = pkgs.tango-icon-theme;
       name = "Tango";
     };
@@ -75,9 +73,9 @@
     };
   };
 
-  qt = {
-    enable = true;
-    platformTheme = "gtk";
-    style.name = "gtk2";
-  };
+  # qt = {
+  #   enable = true;
+  #   platformTheme = "gtk";
+  #   style.name = "gtk2";
+  # };
 }

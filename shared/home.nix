@@ -145,7 +145,7 @@
       grapejuice
       pciutils
       #virt-manager
-      pcmanfm
+      pcmanfm-qt
       #xclip
       powershell
       cinnamon.nemo
@@ -174,6 +174,10 @@
       klavaro
       obs-studio
       pavucontrol
+
+      wireshark
+      tcpdump
+      nmap
 
       #discord
       betterdiscord-installer

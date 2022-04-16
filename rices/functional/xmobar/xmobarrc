@@ -1,7 +1,7 @@
 Config {
 
    -- appearance
-     font =         "xft:mplus Nerd Font:size=11:antialias=true"
+     font =         "xft:NotoSans Nerd Font:size=11:antialias=true"
    , additionalFonts = [ "xft:VictorMono Nerd Font:size=28:antialias=true"
      		       , "xft:VictorMono Nerd Font:size=11:antialias=true"
 		       ]

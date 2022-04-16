@@ -70,7 +70,7 @@
         # --- Text --- #
 
         # Set the font
-        font = "mplus Nerd Font,M+ 1c 10";
+        font = "NotoSans Nerd Font 10";
 
         # Set line height to font height
         line_height = 0;
