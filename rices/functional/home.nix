@@ -5,8 +5,9 @@
     [
       ./dunst
       ./rofi
+      ./tint2
       ./urxvt
-      ./xmobar
+      # ./xmobar
       ./zathura
     ];
 
@@ -16,19 +17,16 @@
     activeOpacity = "1.00";
     blur = true;
     experimentalBackends = true;
-      # backend = "glx";
-      # glx-no-stencil = true;
-      # glx-copy-from-front = false;
-      # glx-no-rebind-pixmap = true;
-      # spawn-center-screen = true;
     extraOptions = ''
-      shadow-radius = 10;
+      shadow-radius = 20;
     '';
     shadow = true;
     shadowOffsets = [ 0 0 ];
-    shadowOpacity = "0.60";
-    # noDockShadow = false;
-    # vSync = true;
+    shadowOpacity = "0.50";
+    shadowExclude = [
+       "class_g   *?= 'Rofi'"
+    ];
+    vSync = true;
     package = pkgs.picom.overrideAttrs (
       o: {
         src = pkgs.fetchFromGitHub {
@@ -41,6 +39,35 @@
     );
   };
 
+  home.file."Desktop/user-home.desktop".text = ''
+[Desktop Entry]
+Type=Application
+Exec=pcmanfm-qt /home/cory
+Icon=user-home
+Name=cory
+'';
+
+  home.file."Desktop/rxvt-unicode.desktop".text = ''
+[Desktop Entry]
+Categories=System;TerminalEmulator
+Comment=A clone of the well-known terminal emulator rxvt
+Exec=urxvtc
+GenericName=rxvt-unicode
+Icon=utilities-terminal
+Name=URxvt
+Type=Application
+Version=1.4
+'';
+
+  home.file = {
+    "Desktop/emacsclient.desktop".source = "${pkgs.emacsGcc}/share/applications/emacsclient.desktop";
+    "Desktop/firefox.desktop".source = "${pkgs.firefox}/share/applications/firefox.desktop";
+    "Desktop/discord.desktop".source = "${pkgs.discord}/share/applications/discord.desktop";
+    "Desktop/gimp.desktop".source = "${pkgs.gimp}/share/applications/gimp.desktop";
+    "Desktop/audacious.desktop".source = "${pkgs.audacious}/share/applications/audacious.desktop";
+    "Desktop/onlyoffice-desktopeditors.desktop".source = "${pkgs.onlyoffice-bin}/share/applications/onlyoffice-desktopeditors.desktop";
+  };
+
   home.packages = with pkgs; [
     libsForQt5.qtstyleplugins
   ];
@@ -50,8 +77,6 @@
     enable = true;
 
     font = {
-      # package = pkgs.mplus-outline-fonts;
-      # name = "M+ 1c 10";
       package = pkgs.nerdfonts;
       name = "NotoSans Nerd Font 10";
     };
@@ -73,9 +98,9 @@
     };
   };
 
-  # qt = {
-  #   enable = true;
-  #   platformTheme = "gtk";
-  #   style.name = "gtk2";
-  # };
+  qt = {
+    enable = true;
+    platformTheme = "gtk";
+    style.name = "gtk2";
+  };
 }

@@ -23,6 +23,7 @@
         (import ./overlays/parchment-gtk.nix { inherit config pkgs lib; })
         (import ./overlays/mountain-gtk.nix { inherit config pkgs lib; })
         (import ./overlays/plainlight-gtk.nix { inherit config pkgs lib; })
+        (import ./overlays/emacs.nix)
       ];
     };
 
@@ -62,7 +63,7 @@
 
     nixosConfigurations = {
       pc = lib.nixosSystem {
-        inherit system;
+        inherit system pkgs;
         modules = [
           ./pc/configuration.nix
           ./shared/configuration.nix
@@ -75,7 +76,7 @@
       };
 
       laptop = lib.nixosSystem {
-        inherit system;
+        inherit system pkgs;
         modules = [
           ./laptop/configuration.nix
           ./shared/configuration.nix

@@ -20,7 +20,8 @@
   };
 
   environment = {
-    etc."wallpaper.jpg".source = ./wallpapers/carl-kahler_my-wifes-lovers.jpg;
+    # etc."wallpaper.jpg".source = ./wallpapers/carl-kahler_my-wifes-lovers.jpg;
+    etc."wallpaper.jpg".source = ./wallpapers/lake.jpg;
     systemPackages = with pkgs; [
       xmobar
       xdotool

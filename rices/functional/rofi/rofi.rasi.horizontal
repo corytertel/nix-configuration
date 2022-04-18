@@ -19,7 +19,7 @@ configuration {
 
 /* -- Light-- */
 * {
-    background:                     #E8E8E8E6;
+    background:                     #E8E8E8;
     background-alt:                 #D8D8D8;
     foreground:                     #141404;
     background-selected:            #141404;
@@ -35,21 +35,21 @@ window {
 	border-color:		    @border;
     border-radius:                  0px;
 	width:			    32%;
-    location:                       northeast;
-    x-offset:                       -110px;
-    y-offset:                       0px;
+    location:                       northwest;
+    x-offset:                       10px;
+    y-offset:                       1350px;
 }
 
 prompt {
     enabled: 			    true;
 	padding: 		    0.30% 0.5% 0% 0%;
-	background-color: 	    @background;
+	background-color: 	    @background-alt;
 	text-color: 		    @foreground;
 	font:			    "NotoSans Nerd Font 20";
 }
 
 entry {
-    background-color:               @background;
+    background-color:               @background-alt;
     text-color:                     @foreground;
     placeholder-color:              @foreground;
     expand:                         true;
@@ -65,14 +65,14 @@ inputbar {
     text-color:                     @foreground;
     expand:                         false;
 	border:			    0.1%;
-    border-radius:                  18px;
+    border-radius:                  0px;
 	border-color:		    @accent;
     margin:                         0% 0% 0% 0%;
     padding:                        0.50%;
 }
 
 listview {
-    background-color:               @background;
+    background-color:               @background-alt;
     columns:                        5;
     lines:                          3;
     spacing:                        0%;
@@ -82,7 +82,7 @@ listview {
 }
 
 mainbox {
-    background-color:               @background;
+    background-color:               @background-alt;
 	border:			    0% 0% 0% 0%;
     border-radius:                  0% 0% 0% 0%;
 	border-color:	            @accent;
@@ -93,10 +93,10 @@ mainbox {
 
 element {
     font:			    "NotoSans Nerd Font 20";
-    background-color:               @background;
+    background-color:               @background-alt;
     text-color:                     @foreground;
     orientation:                    vertical;
-    border-radius:                  18px;
+    border-radius:                  0%;
     padding:                        2% 0% 2% 0%;
 }
 
@@ -124,6 +124,6 @@ element selected {
     background-color:               @background-selected;
     text-color:                     @foreground-selected;
 	border:			    0.1%;
-    border-radius:                  18px;
+    border-radius:                  0px;
     border-color:                   @accent;
 }

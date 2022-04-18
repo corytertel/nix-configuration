@@ -19,7 +19,6 @@ Config {
    , alignSep = "}{"  -- separator between left-right alignment
    --  , font size 18
    --  , font size 28
-   -- , template = "      <fc=#141404><fn=1><action=xdotool key super+x> </action></fn></fc>    <fn=2>%UnsafeStdinReader%</fn> }{ %bat-icon% %battery%      <action=amixer -q set Master toggle><fc=#141404>  </fc>%volume%</action>      <action=orage>%date%</action>      <action=/home/cory/manual_installs/layout_switch.sh><fn=2>%kbd%</fn></action>      "
    , template = "      <fc=#141404><fn=1><action=xdotool key super+x> </action></fn></fc>    <fn=2>%UnsafeStdinReader%</fn> }{ %bat-icon% %battery%      <action=`amixer -q set Master toggle` button=1><action=`pavucontrol` button=3>%volume%</action></action>      <action=orage>%date%</action>      <action=/home/cory/manual_installs/layout_switch.sh><fn=2>%kbd%</fn></action>      "
 
    -- general behavior

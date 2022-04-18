@@ -35,6 +35,7 @@ import XMonad.Layout.Decoration
 import XMonad.Layout.DecorationAddons
 import XMonad.Layout.PerWorkspace (onWorkspace)
 import XMonad.Layout.Minimize
+import XMonad.Layout.Maximize
 import XMonad.Layout.Reflect (reflectHoriz)
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.BinarySpacePartition
@@ -93,11 +94,11 @@ myBorderWidth = 16
 myNormalBorderColor  = "#eeeeee"
 myFocusedBorderColor = "#e8e8e8"
 
-barHeight = 90
+barWidth = 110
 
 myModMask = mod4Mask
 
-myWorkspaces = [ "  dev  ", "  web  ", "  com  ", "  mus  ", "  etc  " ]
+myWorkspaces = [ " 1 ", " 2 ", " 3 ", " 4 ", " 5 " ]
 
 myWorkspaceIndices = M.fromList
   $ zipWith (,) myWorkspaces [1..] -- (,) == \x y -> (x,y)
@@ -113,9 +114,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
     -- Xmonad prompt
-    -- [ ("M-x", shellPrompt launcherXPConfig)
     [ ("M-x", spawn "rofi -matching fuzzy -show drun -modi drun,run --icon-theme \"Tango\" show-icons")
-    -- , ("M-<Space>", shellPrompt launcherXPConfig)
     , ("M-<Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run -icon-theme \"Tango\" -show-icons")
     , ("M1-<Space>", prefixPrompt)
     -- Resize prompt
@@ -141,24 +140,7 @@ myAdditionalKeys =
 
 ------------------------------------------------------------------------
 
-myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
-    -- [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
-    --                       >> windows W.shiftMaster))
-    -- , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
-    -- , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
-    --                       >> windows W.shiftMaster))
-
-    -- , ((mod1Mask, button1),
-    --    (\w -> focus w >> mouseMoveWindow w
-    --      >> afterDrag (snapMagicMove (Just 50) (Just 50) w)))
-    -- , ((mod1Mask .|. shiftMask, button1),
-    --    (\w -> focus w >> mouseMoveWindow w
-    --      >> afterDrag (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)))
-    -- , ((mod1Mask, button3),
-    --    (\w -> focus w >> mouseResizeWindow w
-    --      >> afterDrag (snapMagicResize [R,D] (Just 50) (Just 50) w)))
-    -- ]
-    []
+myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $ []
 
 ------------------------------------------------------------------------
 
@@ -285,45 +267,6 @@ maxiButton' = [[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,
 maxiButton :: [[Bool]]
 maxiButton = convertToBool maxiButton'
 
-unmaxiButton' :: [[Int]]
-unmaxiButton' = [[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],
-                 [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
-                 [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
-                 [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
-                 [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-                 [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-                 [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-                 [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-                 [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
-                 [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
-                 [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
-                 [0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0]]
-
-unmaxiButton :: [[Bool]]
-unmaxiButton = convertToBool unmaxiButton'
-
 closeButton' :: [[Int]]
 closeButton' = [[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
@@ -334,8 +277,6 @@ closeButton' = [[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0
                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
                 [1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1],
                 [1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1],
                 [1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],
@@ -352,8 +293,6 @@ closeButton' = [[0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0
                 [1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1],
                 [1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1],
                 [1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1],
-                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
                 [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
@@ -376,9 +315,6 @@ menuButtonOffset = 30
 maximizeButtonOffset :: Int
 maximizeButtonOffset = 90
 
-unmaximizeButtonOffset :: Int
-unmaximizeButtonOffset = maximizeButtonOffset
-
 minimizeButtonOffset :: Int
 minimizeButtonOffset = 150
 
@@ -389,11 +325,11 @@ imageTitleBarButtonHandler :: Window -> Int -> Int -> X Bool
 imageTitleBarButtonHandler mainw distFromLeft distFromRight = do
     let action
           | fi distFromLeft >= menuButtonOffset &&
-             fi distFromLeft <= menuButtonOffset + buttonSize = focus mainw >> windowMenu >> return True
+             fi distFromLeft <= menuButtonOffset + buttonSize = focus mainw >> return True
           | fi distFromRight >= closeButtonOffset &&
             fi distFromRight <= closeButtonOffset + buttonSize = focus mainw >> kill >> return True
           | fi distFromRight >= maximizeButtonOffset &&
-            fi distFromRight <= maximizeButtonOffset + buttonSize = focus mainw >> sendMessage (Toggle DECOFULL) >> return True
+            fi distFromRight <= maximizeButtonOffset + buttonSize = focus mainw >> sendMessage (maximizeRestore mainw) >> return True
           | fi distFromRight >= minimizeButtonOffset &&
             fi distFromRight <= minimizeButtonOffset + buttonSize = focus mainw >> minimizeWindow mainw >> return True
           | otherwise = return False
@@ -421,15 +357,6 @@ defaultThemeWithImageButtons =
                              (miniButton, CenterRight 150) ]
       }
 
-maximizedThemeWithImageButtons :: Theme
-maximizedThemeWithImageButtons = defaultThemeWithImageButtons
-  {
-    windowTitleIcons = [ (menuButton, CenterLeft 30),
-                         (closeButton, CenterRight 30),
-                         (unmaxiButton, CenterRight 90),
-                         (miniButton, CenterRight 150) ]
-  }
-
 imageButtonDeco :: (Eq a, Shrinker s) => s -> Theme
                    -> l a -> ModifiedLayout (Decoration ImageButtonDecoration s) l a
 imageButtonDeco s c = decoration s c $ NFD True
@@ -449,27 +376,49 @@ handleDraggingInProgress ex ey (_, r) x y = withDisplay $ \dpy ->
         dh = displayHeight dpy (defaultScreen dpy)
         wx = x - (fi ex - rect_x r)
         wy = y - (fi ey - rect_y r)
+        regionWidth = 5
         rect =
-          if wy <= 0
+          if y <= regionWidth
           then
-            Rectangle 0 0 (fi dw) ((fi dh) - barHeight)
-          else if wx <= 0
+            Rectangle 0 0 ((fi dw) - barWidth) (fi dh)
+          else if x <= regionWidth
                then
-                 Rectangle 0 0 ((fi dw) `div` 2) ((fi dh) - barHeight)
-          else if wx >= ((fi dh) - 1)
+                 Rectangle 0 0 (((fi dw) - barWidth) `div` 2) (fi dh)
+          else if x >= (((fi dw) - 1) - regionWidth - (fi barWidth))
                then
-                 Rectangle (fi ((fi dw) `div` 2)) 0 ((fi dw) `div` 2) ((fi dh) - barHeight)
+                 Rectangle (fi (((fi dw) - barWidth) `div` 2)) 0 (((fi dw) - barWidth) `div` 2) (fi dh)
           else
             Rectangle wx wy (rect_width  r) (rect_height r)
     in sendMessage $ SetGeometry rect
+
+-- handleDraggingInProgress :: CInt -> CInt -> (Window, Rectangle)
+--   -> XMonad.Position -> XMonad.Position -> X ()
+-- handleDraggingInProgress ex ey (_, r) x y = withDisplay $ \dpy ->
+--     let dw = displayWidth  dpy (defaultScreen dpy)
+--         dh = displayHeight dpy (defaultScreen dpy)
+--         wx = x - (fi ex - rect_x r)
+--         wy = y - (fi ey - rect_y r)
+--         regionWidth = 5
+--     in if y <= regionWidth
+--        then
+--          -- sendMessage $ SetGeometry (Rectangle 0 0 (fi dw) ((fi dh) - barWidth))
+--          withFocused (sendMessage . maximizeRestore)
+--     else if x <= regionWidth
+--          then
+--            sendMessage $ SetGeometry (Rectangle 0 0 ((fi dw) `div` 2) ((fi dh) - barWidth))
+--     else if wx >= (((fi dh) - 1) - regionWidth)
+--          then
+--            sendMessage $ SetGeometry (Rectangle (fi ((fi dw) `div` 2)) 0 ((fi dw) `div` 2) ((fi dh) - barWidth))
+--     else
+--       sendMessage $ SetGeometry (Rectangle wx wy (rect_width  r) (rect_height r))
 
 -- sendLowerLeft :: X ()
 -- sendLowerLeft = withDisplay $ \dpy ->
 --                        let dw = displayWidth  dpy (defaultScreen dpy) - 1
 --                            dh = displayHeight dpy (defaultScreen dpy) - 1
---                            wy = fi (((fi dh) `div` 2) - (barHeight `div` 2))
+--                            wy = fi (((fi dh) `div` 2) - (barWidth `div` 2))
 --                            wwh = ((fi dw) `div` 2)
---                            wht = ((fi dh) `div` 2) - (barHeight `div` 2)
+--                            wht = ((fi dh) `div` 2) - (barWidth `div` 2)
 --                            rect = Rectangle 0 wy wwh wht
 --                        in sendMessage (SetGeometry rect)
 
@@ -478,9 +427,9 @@ handleDraggingInProgress ex ey (_, r) x y = withDisplay $ \dpy ->
 --                        let dw = displayWidth  dpy (defaultScreen dpy) - 1
 --                            dh = displayHeight dpy (defaultScreen dpy) - 1
 --                            wx = fi ((fi dw) `div` 2)
---                            wy = fi (((fi dh) `div` 2) - (barHeight `div` 2))
+--                            wy = fi (((fi dh) `div` 2) - (barWidth `div` 2))
 --                            wwh = ((fi dw) `div` 2)
---                            wht = ((fi dh) `div` 2) - (barHeight `div` 2)
+--                            wht = ((fi dh) `div` 2) - (barWidth `div` 2)
 --                            rect = Rectangle wx wy wwh wht
 --                        in sendMessage (SetGeometry rect)
 
@@ -553,8 +502,8 @@ getSize i (Rectangle rx ry _ _) w = do
         dh = fi (displayHeight dpy (defaultScreen dpy))
         wh = fi (wa_width  wa) + (bw * 2)
         ht = fi (wa_height wa) + (bw * 2)
-        nx = if rx == 0 then (dw - (fi wh)) `div` 2 else rx
-        ny = if ry == 0 then ((dh - (fi i)) - (fi ht)) `div` 2 else ry
+        nx = if rx == 0 then ((dw - (fi i)) - (fi wh)) `div` 2 else rx
+        ny = if ry == 0 then (dh - (fi ht)) `div` 2 else ry
         x  =  max nx $ fi $ wa_x wa
         y  =  max ny $ fi $ wa_y wa
     in return (w, Rectangle x y wh ht)
@@ -1117,138 +1066,6 @@ mkInputWindow d (Rectangle x y w h) = do
 
 ------------------------------------------------------------------------
 
-data ScreenEdge = SEUpperLeft
-                | SEUpperRight
-                | SELowerLeft
-                | SELowerRight
-                | SETop
-                | SEBottom
-                deriving (Eq, Ord, Show)
-
-newtype ScreenEdgeState = ScreenEdgeState (M.Map Window (ScreenEdge, X ()))
-
-instance ExtensionClass ScreenEdgeState where
-    initialValue = ScreenEdgeState M.empty
-
--- | Add one single @X ()@ action to a screen edge
-addScreenEdge :: ScreenEdge -> X () -> X ()
-addScreenEdge edge xF = do
-
-    ScreenEdgeState m <- XS.get
-    (win,xFunc) <- case P.find (\(_,(sc,_)) -> sc == edge) (M.toList m) of
-
-                        Just (w, (_,xF')) -> return (w, xF' >> xF) -- chain X actions
-                        Nothing           -> (, xF) <$> createWindowAt edge
-
-    XS.modify $ \(ScreenEdgeState m') -> ScreenEdgeState $ M.insert win (edge,xFunc) m'
-
--- | Add a list of @(ScreenEdge, X ())@ tuples
-addScreenEdges :: [ (ScreenEdge, X ()) ] -> X ()
-addScreenEdges = mapM_ (uncurry addScreenEdge)
-
--- "Translate" a ScreenEdge to real (x,y) Positions
-createWindowAt :: ScreenEdge -> X Window
-
-createWindowAt SEUpperLeft = withDisplay $ \dpy ->
-    let h = displayHeight dpy (defaultScreen dpy) - 1
-        rh = fi ((fi h) `div` 2)
-    in createWindowAt' 0 0 1 rh
-
-createWindowAt SEUpperRight = withDisplay $ \dpy ->
-    let w = displayWidth  dpy (defaultScreen dpy) - 1
-        h = displayHeight dpy (defaultScreen dpy) - 1
-        rh = fi ((fi h) `div` 2)
-    in createWindowAt' (fi w) 0 1 rh
-
-createWindowAt SELowerLeft = withDisplay $ \dpy ->
-    let h = displayHeight dpy (defaultScreen dpy) - 1
-        rh = fi ((fi h) `div` 2)
-    in createWindowAt' 0 ((fi h) `div` 2) 1 rh
-
-createWindowAt SELowerRight = withDisplay $ \dpy ->
-    let w = displayWidth  dpy (defaultScreen dpy) - 1
-        h = displayHeight dpy (defaultScreen dpy) - 1
-        rh = fi ((fi h) `div` 2)
-    in createWindowAt' (fi w) ((fi h) `div` 2) 1 rh
-
-createWindowAt SETop = withDisplay $ \dpy ->
-    let w = displayWidth  dpy (defaultScreen dpy) - 1
-    in createWindowAt' 0 0 (fi (fi w)) 1
-
-createWindowAt SEBottom = withDisplay $ \dpy ->
-    let w = displayWidth  dpy (defaultScreen dpy) - 1
-        h = displayHeight dpy (defaultScreen dpy) - 1
-    in createWindowAt' 0 (fi h) (fi (fi w)) 1
-
--- Create a new X window at a (x,y) Position with wh width and ht height
-createWindowAt' :: XMonad.Position -> XMonad.Position ->
-                  XMonad.Dimension -> XMonad.Dimension -> X Window
-createWindowAt' x y wh ht = withDisplay $ \dpy -> io $ do
-
-    rootw <- rootWindow dpy (defaultScreen dpy)
-
-    let
-        visual   = defaultVisualOfScreen $ defaultScreenOfDisplay dpy
-        attrmask = cWOverrideRedirect
-
-    w <- allocaSetWindowAttributes $ \attributes -> do
-
-        set_override_redirect attributes True
-        createWindow dpy        -- display
-                     rootw      -- parent window
-                     x          -- x
-                     y          -- y
-                     wh         -- width
-                     ht         -- height
-                     0          -- border width
-                     0          -- depth
-                     inputOnly  -- class
-                     visual     -- visual
-                     attrmask   -- valuemask
-                     attributes -- attributes
-
-    -- we only need mouse entry events
-    selectInput dpy w enterWindowMask
-    mapWindow dpy w
-    sync dpy False
-    return w
-
--- | Handle screen edge events
-screenEdgeEventHook :: Event -> X P.All
-screenEdgeEventHook CrossingEvent { ev_window = win } = do
-
-    ScreenEdgeState m <- XS.get
-
-    case M.lookup win m of
-         Just (_, xF) -> xF
-         Nothing      -> return ()
-
-    return (P.All True)
-
-screenEdgeEventHook _ = return (P.All True)
-
-data ScreenEdgeLayout a = ScreenEdgeLayout
-    deriving ( Read, Show )
-
-instance LayoutModifier ScreenEdgeLayout a where
-    hook ScreenEdgeLayout = withDisplay $ \dpy -> do
-        ScreenEdgeState m <- XS.get
-        io $ mapM_ (raiseWindow dpy) $ M.keys m
-    unhook = hook
-
-screenEdgeLayoutHook :: l a -> ModifiedLayout ScreenEdgeLayout l a
-screenEdgeLayoutHook = ModifiedLayout ScreenEdgeLayout
-
-------------------------------------------------------------------------
-
-data StdTransformers = DECOFULL -- ^ switch to Full with window decoration
-  deriving (Read, Show, Eq)
-
-instance Transformer StdTransformers Window where
-    transform DECOFULL     x k = k (maximizeDeco $ noBorders Full) (const x)
-
-------------------------------------------------------------------------
-
 -- for the future: want to spawn window within currently selected group,
 -- and then if you want it to be separate unmerge it from the group.
 -- the new window will already be selected so it will be easy to umerge it
@@ -1263,29 +1080,24 @@ windowDeco = windowSwitcherDecorationWithImageButtons
 
 floatingDeco = imageButtonDeco shrinkText defaultThemeWithImageButtons
 
-maximizeDeco = imageButtonDeco shrinkText maximizedThemeWithImageButtons
-
 emacs =
   renamed [Replace "bsp"] $
-  (windowDeco . draggingVisualizer
+  (windowDeco . draggingVisualizer . (maximizeWithPadding 0)
    . subLayout [] StateFull . gaps $ emptyBSP)
 
 floating =
   renamed [Replace "float"] $
-  (screenEdgeLayoutHook . floatingDeco
+  (floatingDeco . (maximizeWithPadding 0)
    . mouseResizeSE . mouseResizeSW . mouseResizeNW
    . mouseResizeNE . mouseResizeS . mouseResizeN . mouseResizeE
-   . mouseResizeW . windowArrangeAll $ SF barHeight)
+   . mouseResizeW . windowArrangeAll $ SF barWidth)
 
 myLayout = avoidStruts
          . (WN.configurableNavigation WN.noNavigateBorders)
          . lessBorders OnlyScreenFloat
-         . fullScreenToggle
          . minimize
          . BW.boringWindows
          $ emacs ||| floating
-  where
-     fullScreenToggle = mkToggle (single DECOFULL)
 
 ------------------------------------------------------------------------
 
@@ -1300,43 +1112,6 @@ p -!> f = p >>= \b -> if b then return mempty else f
 -- | @q =? x@. if the result of @q@ equals @x@, return 'False'.
 (=!?) :: Eq a => C.Query a -> a -> C.Query Bool
 q =!? x = fmap (/= x) q
-
--- myManageHook = composeAll
---     [ className =? "MPlayer"                              --> mediaFloat
---     , className =? "mpv"                                  --> mediaFloat
---     , className =? "vlc"                                  --> mediaFloat
---     , className =? "gwenview"                             --> mediaFloat
---     , className =? "Sxiv"                                 --> mediaFloat
---     , className =? "Orage"                                --> doCenterFloat
---     , className =? "Galculator"                           --> calculatorFloat
---     , className =? "Firefox" <&&> resource =? "Toolkit"   --> myRectFloat
---     , stringProperty "WM_WINDOW_ROLE"
---       =? "GtkFileChooserDialog"                           --> myRectFloat
---     , stringProperty "WM_WINDOW_ROLE" =? "pop-up"         --> doCenterFloat
---     , stringProperty "WM_WINDOW_ROLE" =!? "gimp-image-window-1"
---       <&&> className =? "Gimp"                            --> doCenterFloat
---     , stringProperty "WM_WINDOW_ROLE" =!? "MainWindow#1"
---       <&&> className =? "krita"                           --> doCenterFloat
---     , isDialog                                            --> doCenterFloat
---     , isInProperty "_NET_WM_WINDOW_TYPE"
---       "_NET_WM_WINDOW_TYPE_SPLASH"                        --> doCenterFloat
---     , title     =? "Save Image"                           --> myRectFloat
---     , title     =? "Save File"                            --> myRectFloat
---     , title     =? "Open"                                 --> myRectFloat
---     , title     =? "Open Files"                           --> myRectFloat
---     , resource  =? "xmomacs-help"                         --> helpFloat
---     , resource  =? "desktop_window"                       --> doIgnore
---     , resource  =? "kdesktop"                             --> doIgnore
---     , isFullscreen --> doFullFloat
---     , fmap not willFloat --> insertPosition Below Newer
---     , fmap not willFloat -!> insertPosition Master Newer
---     ]
---   where
---     -- xpos, ypos, width, height
---     myRectFloat = doRectFloat (W.RationalRect (1 % 3) (3 % 10) (1 % 3) (2 % 5))
---     mediaFloat = doRectFloat (W.RationalRect (3 % 10) (3 % 20) (2 % 5) (7 % 10))
---     calculatorFloat = doRectFloat (W.RationalRect (7 % 16) (2 % 6) (1 % 8) (1 % 3))
---     helpFloat = doRectFloat (W.RationalRect (7 % 8) (0 % 1) (1 % 8) (1 % 2))
 
 myManageHook = composeAll
     [ className =? "Orage"                                --> doCenterFloat
@@ -1374,7 +1149,7 @@ willFloat =
 
 ------------------------------------------------------------------------
 
-myEventHook e = screenEdgeEventHook e
+myEventHook = minimizeEventHook
 
 ------------------------------------------------------------------------
 
@@ -1384,86 +1159,11 @@ myLogHook = return ()
 
 myStartupHook = do
   spawnOnce "emacs --daemon"
-  spawnOnce "urxvtd --quiet &"
   spawnOnce "pcmanfm-qt --daemon-mode &"
-  spawnOnce "feh --bg-fill /etc/wallpaper.jpg"
-  spawnOnce "tint2 &"
+  spawnOnce "pcmanfm-qt --desktop &"
+  spawnOnce "urxvtd --quiet &"
+  spawnOnce "sleep 4 && tint2 &"
   setWMName "LG3D"
-
-------------------------------------------------------------------------
-
-bar = "xmobar $HOME/.config/xmobar/xmobarrc"
-
-ppWorkspaces = xmobarPP
-  { ppCurrent = xmobarColor "#141404" ""
-    . wrap "<fc=#ffffff,#141404:10>" "</fc>"
-  , ppHidden = xmobarColor "#141404" ""
-    . wrap "<fc=#141404,#d8d8d8:10>" "</fc>" . clickable
-  , ppHiddenNoWindows = xmobarColor "#777777" ""
-    . wrap "<fc=#999999,#d8d8d8:10>" "</fc>" . clickable
-  , ppVisible = xmobarColor "#141404" ""
-    . wrap "<fc=#141404,#d8d8d8:10>" "</fc>" . clickable
-  , ppUrgent = xmobarColor "#141404" ""
-    . wrap "<fc=#141404,#ed8f23:10>" "</fc>" . clickable
-  , ppOrder = \(ws:_:_:_) -> [ws]
-  }
-
-toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
-
-------------------------------------------------------------------------
-
-launcherXPKeymap :: M.Map (KeyMask,KeySym) (XP ())
-launcherXPKeymap = M.fromList
-  [ ((controlMask, xK_z), killBefore)
-  , ((controlMask, xK_k), killAfter)
-  , ((controlMask, xK_a), startOfLine)
-  , ((controlMask, xK_e), endOfLine)
-  , ((controlMask, xK_m), deleteString Next)
-  , ((controlMask, xK_b), moveCursor Prev)
-  , ((controlMask, xK_f), moveCursor Next)
-  , ((controlMask, xK_BackSpace), killWord Prev)
-  , ((controlMask, xK_y), pasteString)
-  , ((controlMask, xK_g), quit)
-  , ((controlMask, xK_bracketleft), quit)
-  , ((mod1Mask, xK_BackSpace), killWord Prev)
-  , ((mod1Mask, xK_f), moveWord Next)
-  , ((mod1Mask, xK_b), moveWord Prev)
-  , ((mod1Mask, xK_d), killWord Next)
-  , ((mod1Mask, xK_n), moveHistory W.focusUp')
-  , ((mod1Mask, xK_p), moveHistory W.focusDown')
-  , ((0, xK_Return), setSuccess True >> setDone True)
-  , ((0, xK_KP_Enter), setSuccess True >> setDone True)
-  , ((0, xK_BackSpace), deleteString Prev)
-  , ((0, xK_Delete), deleteString Next)
-  , ((0, xK_Left), moveCursor Prev)
-  , ((0, xK_Right), moveCursor Next)
-  , ((0, xK_Home), startOfLine)
-  , ((0, xK_End), endOfLine)
-  , ((0, xK_Down), moveHistory W.focusUp')
-  , ((0, xK_Up), moveHistory W.focusDown')
-  , ((0, xK_Escape), quit)
-  ]
-
-launcherXPConfig = def { font                = "xft:NotoSans Nerd Font:size=11"
-                       , bgColor             = "#e8e8e8"
-                       , fgColor             = "#141404"
-                       , bgHLight            = "#ffffff"
-                       , fgHLight            = "#3647d9"
-                       , borderColor         = "#3647d9"
-                       , promptBorderWidth   = 2
-                       , position            = CenteredAt (471 % 480) (1 % 2)
-                       , alwaysHighlight     = True
-                       , height              = 90
-                       , maxComplRows        = Just 14
-                       , historySize         = 256
-                       , historyFilter       = id
-                       , promptKeymap        = launcherXPKeymap
-                       , defaultText         = []
-                       , autoComplete        = Nothing
-                       , showCompletionOnTab = False
-                       , searchPredicate     = fuzzyMatch
-                       , sorter              = fuzzySort
-                       }
 
 ------------------------------------------------------------------------
 
@@ -1573,8 +1273,40 @@ prefixXPConfig = def
   , searchPredicate = isPrefixOf
   }
 
+windowXPKeymap :: M.Map (KeyMask,KeySym) (XP ())
+windowXPKeymap = M.fromList
+  [ ((controlMask, xK_z), killBefore)
+  , ((controlMask, xK_k), killAfter)
+  , ((controlMask, xK_a), startOfLine)
+  , ((controlMask, xK_e), endOfLine)
+  , ((controlMask, xK_m), deleteString Next)
+  , ((controlMask, xK_b), moveCursor Prev)
+  , ((controlMask, xK_f), moveCursor Next)
+  , ((controlMask, xK_BackSpace), killWord Prev)
+  , ((controlMask, xK_y), pasteString)
+  , ((controlMask, xK_g), quit)
+  , ((controlMask, xK_bracketleft), quit)
+  , ((mod1Mask, xK_BackSpace), killWord Prev)
+  , ((mod1Mask, xK_f), moveWord Next)
+  , ((mod1Mask, xK_b), moveWord Prev)
+  , ((mod1Mask, xK_d), killWord Next)
+  , ((mod1Mask, xK_n), moveHistory W.focusUp')
+  , ((mod1Mask, xK_p), moveHistory W.focusDown')
+  , ((0, xK_Return), setSuccess True >> setDone True)
+  , ((0, xK_KP_Enter), setSuccess True >> setDone True)
+  , ((0, xK_BackSpace), deleteString Prev)
+  , ((0, xK_Delete), deleteString Next)
+  , ((0, xK_Left), moveCursor Prev)
+  , ((0, xK_Right), moveCursor Next)
+  , ((0, xK_Home), startOfLine)
+  , ((0, xK_End), endOfLine)
+  , ((0, xK_Down), moveHistory W.focusUp')
+  , ((0, xK_Up), moveHistory W.focusDown')
+  , ((0, xK_Escape), quit)
+  ]
+
 windowXPConfig = prefixXPConfig
-  { promptKeymap        = launcherXPKeymap
+  { promptKeymap        = windowXPKeymap
   , alwaysHighlight     = True
   , autoComplete        = Nothing
   , showCompletionOnTab = False
@@ -1610,7 +1342,7 @@ prefixCommands =
   , ("s", spawn "flameshot full -p ~/Screenshots/")
   , ("S", spawn "flameshot gui")
   , ("M", sendMessage ToggleStruts)
-  , ("u", sendMessage (Toggle DECOFULL))
+  , ("u", withFocused (sendMessage . maximizeRestore))
   , ("i", withFocused minimizeWindow)
   , ("I", withLastMinimized maximizeWindowAndFocus)
 
@@ -1674,17 +1406,71 @@ prefixCommands =
   , (otherModMasks, action) <-
       [ ("", windows . W.greedyView) , ("bm", windows . W.shift)]
   ]
+  ++
+  ----------------------------------------------------------------------
+  --                  Russian Version of all Keybinds                 --
+  ----------------------------------------------------------------------
+  [ ("фф", runOrRaise "audacious" (className =? "Audacious"))
+  , ("фт", spawn "audacious --fwd")
+  , ("фз", spawn "audacious --rew")
+  , ("фе", spawn "audacious --play-pause")
+  , ("фы", spawn "audacious --stop")
+  , ("в", runOrRaise "discord" (className =? "discord"))
+  , ("у", spawn "emacsclient -c")
+  , ("У", spawn "emacs")
+  , ("а", spawn "firefox")
+  , ("А", spawn "pcmanfm-qt --new-window")
+  , ("п", runOrRaise "steam" (className =? "Steam"))
+  , ("е", spawn $ myTerminal)
+  , ("ы", spawn "flameshot full -p ~/Screenshots/")
+  , ("Ы", spawn "flameshot gui")
+  , ("Ь", sendMessage ToggleStruts)
+  , ("Г", withFocused (sendMessage . maximizeRestore))
+  , ("ш", withFocused minimizeWindow)
+  , ("Ш", withLastMinimized maximizeWindowAndFocus)
+  , ("р", sendMessage $ WN.Go WN.L)
+  , ("о", sendMessage $ WN.Go WN.D)
+  , ("л", sendMessage $ WN.Go WN.U)
+  , ("д", sendMessage $ WN.Go WN.R)
+  , ("Р", sendMessage $ WN.Swap WN.L)
+  , ("О", sendMessage $ WN.Swap WN.D)
+  , ("Л", sendMessage $ WN.Swap WN.U)
+  , ("Д", sendMessage $ WN.Swap WN.R)
+  , ("ии", windowPrompt windowXPConfig Goto allWindows)  -- Goto buffers
+  , ("иИ", windowPrompt windowXPConfig Bring allWindows) -- Bring buffer
+  , ("ив", kill)                                         -- Kill buffer
+  , ("иВ", killAll)                                      -- Kill every buffer
+  , ("ит", onGroup W.focusDown')                         -- Next buffer
+  , ("из", onGroup W.focusUp')                           -- Prev buffer
+  , ("иТ", windows W.focusDown)                          -- Next buffer alt
+  , ("иЗ", windows W.focusUp)                            -- Prev buffer alt
+  , ("иы", sendMessage Swap)                             -- Swap groups
+  , ("ьр", sendMessage $ pullGroup L)                    -- Merge left
+  , ("ьо", sendMessage $ pullGroup D)                    -- Merge down
+  , ("ьл", sendMessage $ pullGroup U)                    -- Merge up
+  , ("ьд", sendMessage $ pullGroup R)                    -- Merge right
+  , ("ци", sendMessage Balance)
+  , ("цИ", sendMessage Equalize)
+  , ("цт", moveTo Next NonEmptyWS)
+  , ("цз", moveTo Prev NonEmptyWS)
+  , ("цТ", nextWS)
+  , ("цЗ", prevWS)
+  , ("ца", withFocused (sendMessage . MergeAll)) -- Window focus
+  , ("цА", floatPrompt) -- Window float
+  , ("цк", resizePrompt) -- Window resize
+  , ("цК", sendMessage Rotate) -- Window rotate
+  , ("цы", withFocused (sendMessage . UnMerge)) -- Window split
+  , ("цЫ", withFocused (sendMessage . UnMerge) >>
+           sendMessage Rotate) -- Window split
+  , ("цд", sendMessage NextLayout)
+  ]
 
 prefixPrompt :: X ()
 prefixPrompt = xmonadPromptC prefixCommands prefixXPConfig
 
 ------------------------------------------------------------------------
 
-main = xmonad
-       . ewmhFullscreen
-       . ewmh
-       . docks
-        =<< statusBar bar ppWorkspaces toggleStrutsKey defaults
+main = xmonad . ewmhFullscreen . ewmh . docks $ defaults
 
 defaults = def {
       -- simple stuff
@@ -1704,7 +1490,7 @@ defaults = def {
       -- hooks, layouts
         layoutHook         = myLayout,
         manageHook         = myManageHook,
-        handleEventHook    = myEventHook <+> minimizeEventHook,
+        handleEventHook    = myEventHook,
         logHook            = myLogHook,
         startupHook        = myStartupHook
     } `additionalKeysP` myAdditionalKeys
