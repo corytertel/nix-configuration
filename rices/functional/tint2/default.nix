@@ -31,23 +31,21 @@ THEME="${pkgs.tango-icon-theme}/share/icons/gnome"
 
 if grep -qi $spattern <<< $master; then
     icon="🔇"
-    # icon="婢 "
+    ipath="$(find "$THEME" -name audio-volume-muted.png | grep 24 | head -n1)"
+elif [ $vol -eq 0 ]; then
+    icon="🔇"
     ipath="$(find "$THEME" -name audio-volume-muted.png | grep 24 | head -n1)"
 elif grep -qi 'values=on' <<< $($amixer cget "$jackdev"); then
     icon="🎧"
-    # icon=" "
     ipath="$(find "$THEME" -name *headphone* | grep 24 | head -n1)"
 elif [ $vol -lt 31 ]; then
     icon="🔈"
-    # icon=" "
     ipath="$(find "$THEME" -name audio-volume-low.png | grep 24 | head -n1)"
 elif [ $vol -gt 30  ] && [ $vol -lt 60 ]; then
     icon="🔉"
-    # icon=" "
     ipath="$(find "$THEME" -name audio-volume-medium.png | grep 24 | head -n1)"
 else
     icon="🔊"
-    # icon=" "
     ipath="$(find "$THEME" -name audio-volume-high.png | grep 24 | head -n1)"
 fi
 

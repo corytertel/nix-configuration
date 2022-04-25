@@ -28,8 +28,8 @@
 
         width = 400;
         # height = 520;
-        origin = "top-right";
-        offset = "52x128";
+        origin = "top-left";
+        offset = "50x50";
 
         progress_bar = "true";
         progress_bar_height = 15;

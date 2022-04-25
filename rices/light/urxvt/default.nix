@@ -46,6 +46,8 @@
       "depth" = "32";
       "perl-ext-common" = "default";
 
+      "iconFile" = "${pkgs.moka-icon-theme}/share/icons/Moka/48x48/apps/utilities-terminal.png";
+
       "urlLauncher" = "firefox";
       "underlineURLs" = "true";
       "urlButton" = "1";

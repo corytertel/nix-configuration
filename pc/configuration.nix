@@ -7,7 +7,6 @@
     ];
 
   # Nix
-  #nix.settings.cores = 4;
   nix.buildCores = 4;
 
   boot = {
@@ -34,7 +33,6 @@
   services = {
     xserver.videoDrivers = [ "nvidia" ];
   };
-
 
   environment.systemPackages = with pkgs; [
 

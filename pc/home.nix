@@ -8,7 +8,7 @@
   # Xresources
   # DPI settings
   # Set DPI to the scale you want your applications at
-  # 150 for desktop, 250 for laptop typically
+  # 150 for desktop, 225 for laptop typically
   xresources.extraConfig = ''
     Xft.dpi: 150
     Xft.antialias: 1
@@ -35,5 +35,8 @@
   };
 
   home.packages = with pkgs; [
+      airshipper
+      steamPackages.steamcmd
+      minecraft
   ];
 }

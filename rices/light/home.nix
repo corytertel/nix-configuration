@@ -4,6 +4,8 @@
   imports =
     [
       ./dunst
+      ./rofi
+      ./tint2
       ./urxvt
       ./zathura
     ];
@@ -38,6 +40,46 @@
     ".config/xmobar/volume.sh".source = ./xmobar/volume.sh;
   };
 
+  home.file."Desktop/discord.desktop".text = ''
+[Desktop Entry]
+Categories=Network;InstantMessaging
+Exec=Discord
+GenericName=All-in-one cross-platform voice and text chat for gamers
+Icon=internet-group-chat
+MimeType=x-scheme-handler/discord
+Name=Discord
+Type=Application
+Version=1.4
+'';
+
+  home.file."Desktop/user-home.desktop".text = ''
+[Desktop Entry]
+Type=Application
+Exec=pcmanfm-qt /home/cory
+Icon=user-home
+Name=cory
+'';
+
+  home.file."Desktop/rxvt-unicode.desktop".text = ''
+[Desktop Entry]
+Categories=System;TerminalEmulator
+Comment=A clone of the well-known terminal emulator rxvt
+Exec=urxvtc
+GenericName=rxvt-unicode
+Icon=utilities-terminal
+Name=URxvt
+Type=Application
+Version=1.4
+'';
+
+  home.file = {
+    "Desktop/emacsclient.desktop".source = "${pkgs.emacsGcc}/share/applications/emacsclient.desktop";
+    "Desktop/firefox.desktop".source = "${pkgs.firefox}/share/applications/firefox.desktop";
+    "Desktop/gimp.desktop".source = "${pkgs.gimp}/share/applications/gimp.desktop";
+    "Desktop/audacious.desktop".source = "${pkgs.audacious}/share/applications/audacious.desktop";
+    "Desktop/onlyoffice-desktopeditors.desktop".source = "${pkgs.onlyoffice-bin}/share/applications/onlyoffice-desktopeditors.desktop";
+  };
+
   home.packages = with pkgs; [
     libsForQt5.qtstyleplugins
   ];
@@ -59,13 +101,13 @@
     iconTheme = {
       # package = pkgs.pop-icon-theme;
       # name = "Pop";
-      package = pkgs.luna-icons;
-      name = "Luna";
+      package = pkgs.moka-icon-theme;
+      name = "Moka";
     };
 
     gtk3.extraConfig = {
       # gtk-icon-theme-name = "Pop";
-      gtk-icon-theme-name = "Luna";
+      gtk-icon-theme-name = "Moka";
       gtk-theme-name = "PlainLight";
       gtk-application-prefer-dark-theme = 0;
     };

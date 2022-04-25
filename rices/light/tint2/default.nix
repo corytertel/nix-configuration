@@ -1,12 +1,8 @@
-{ pkgs, home-manager, ... }:
+{ pkgs, ... }:
 
 {
-  home.file = {
-    ".config/xmobar/xmobarrc".text = builtins.readFile ./xmobarrc;
-    ".config/xmobar/battery.sh".source = ./battery.sh;
-  };
-
-  home.file.".config/xmobar/volume.sh" = {
+  home.file.".config/tint2/tint2_bat.sh".source = ./tint2_bat.sh;
+  home.file.".config/tint2/tint2_vol.sh" = {
     executable = true;
     text = ''
 #!/bin/sh
@@ -34,31 +30,29 @@ THEME="${pkgs.tango-icon-theme}/share/icons/gnome"
 
 
 if grep -qi $spattern <<< $master; then
-    # icon="🔇"
-    icon="婢 "
+    icon="🔇"
+    ipath="$(find "$THEME" -name audio-volume-muted.png | grep 24 | head -n1)"
+elif [ $vol -eq 0 ]; then
+    icon="🔇"
     ipath="$(find "$THEME" -name audio-volume-muted.png | grep 24 | head -n1)"
 elif grep -qi 'values=on' <<< $($amixer cget "$jackdev"); then
-    # icon="🎧"
-    icon=" "
+    icon="🎧"
     ipath="$(find "$THEME" -name *headphone* | grep 24 | head -n1)"
 elif [ $vol -lt 31 ]; then
-    # icon="🔈"
-    icon=" "
+    icon="🔈"
     ipath="$(find "$THEME" -name audio-volume-low.png | grep 24 | head -n1)"
 elif [ $vol -gt 30  ] && [ $vol -lt 60 ]; then
-    # icon="🔉"
-    icon=" "
+    icon="🔉"
     ipath="$(find "$THEME" -name audio-volume-medium.png | grep 24 | head -n1)"
 else
-    # icon="🔊"
-    icon=" "
+    icon="🔊"
     ipath="$(find "$THEME" -name audio-volume-high.png | grep 24 | head -n1)"
 fi
 
 if [ -z $1 ]; then
-    echo "$icon $vol%"
+    echo -e "$icon\n$vol%"
 else
-    notify-send -i $ipath "$mavol %"
+    notify-send -i $ipath "$vol%"
 fi
     '';
   };

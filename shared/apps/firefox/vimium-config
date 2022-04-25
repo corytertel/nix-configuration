@@ -1,0 +1,64 @@
+# Emacs keybindings for firefox
+# Heavily inspired by Chromemacs
+
+unmapAll
+
+# Navigating the current page
+map <c-h> showHelp
+map <c-b> scrollLeft
+map <c-n> scrollDown
+map <c-p> scrollUp
+map <c-f> scrollRight
+map <c-m-,> scrollToTop
+map <c-m-.> scrollToBottom
+map <c-v> scrollPageDown
+map <m-v> scrollPageUp
+map <c-x><c-f> LinkHints.activateMode
+map <c-x><a-F> LinkHints.activateModeToOpenInNewTab
+map <m-r> reload
+map <a-s> viewSource
+map <c-g><c-u> copyCurrentUrl
+map <c-g><c-l> LinkHints.activateModeToCopyLinkUrl
+map <c-x>o nextFrame
+
+# Navigating to new pages
+map <c-x><c-d> Vomnibar.activate
+map <c-x><c-D> Vomnibar.activateInNewTab
+map <c-x><c-b> Vomnibar.activateBookmarks
+map <c-x><c-B> Vomnibar.activateBookmarksInNewTab
+
+# Using find
+map <c-s> enterFindMode
+map n performFind
+map N performBackwardsFind
+
+# Navigating history
+map <c-m-b> goBack
+map <c-m-f> goForward
+
+# Manipulating tabs
+map <c-b> previousTab
+map <c-f> nextTab
+map <c-x><up> firstTab
+map <c-x><down> lastTab
+map <c-g><c-t> createTab
+map <c-x>4 duplicateTab
+map <c-x>0 removeTab
+map <c-g><c-r> restoreTab
+map <c-x>b Vomnibar.activateTabSelection
+map <c-x>5 moveTabToNewWindow
+map <a-p> togglePinTab
+
+# Using marks
+#map m Marks.activateCreateMode
+#map ` Marks.activateGotoMode
+
+# Additional browsing commands
+map <c-g><left> goNext
+map <c-g><right> goPrevious
+map <a-f> LinkHints.activateModeWithQueue
+map <c-g><c-f> focusInput
+map <c-g>< goUp
+map <c-g>/ goToRoot
+map <c-x>< scrollToLeft
+map <c-x>> scrollToRight

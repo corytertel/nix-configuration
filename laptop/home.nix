@@ -8,7 +8,7 @@
   # Xresources
   # DPI settings
   # Set DPI to the scale you want your applications at
-  # 175 for desktop, 250 for laptop typically
+  # 150 for desktop, 225 for laptop typically
   xresources.extraConfig = ''
     Xft.dpi: 225
     Xft.antialias: 1
@@ -24,7 +24,7 @@
     pointerCursor = {
       # name = "Numix-Cursor";
       # package = pkgs.numix-cursor-theme;
-      name = "Vanilla-DMZ";
+      name = "Vanilla-DMZ-AA";
       package = pkgs.vanilla-dmz;
       defaultCursor = "left_ptr";
       size = 48;

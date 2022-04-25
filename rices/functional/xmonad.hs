@@ -98,13 +98,7 @@ barWidth = 110
 
 myModMask = mod4Mask
 
-myWorkspaces = [ " 1 ", " 2 ", " 3 ", " 4 ", " 5 " ]
-
-myWorkspaceIndices = M.fromList
-  $ zipWith (,) myWorkspaces [1..] -- (,) == \x y -> (x,y)
-
-clickable ws = "<action=xdotool key super+"++show i++">"++ws++"</action>"
-  where i = fromJust $ M.lookup ws myWorkspaceIndices
+myWorkspaces = [ "Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ", "Ⅴ" ]
 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [((m .|. modm, k), windows $ f i)
@@ -115,8 +109,7 @@ myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
     -- Xmonad prompt
     [ ("M-x", spawn "rofi -matching fuzzy -show drun -modi drun,run --icon-theme \"Tango\" show-icons")
-    , ("M-<Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run -icon-theme \"Tango\" -show-icons")
-    , ("M1-<Space>", prefixPrompt)
+    , ("M1-<Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run -icon-theme \"Tango\" -show-icons")
     -- Resize prompt
     , ("M-r", resizePrompt)
     , ("M-S-r", resizePrompt)
@@ -134,8 +127,102 @@ myAdditionalKeys =
     -- Brightness
     , ("<XF86MonBrightnessUp>", spawn "xbrightness +5000")
     , ("<XF86MonBrightnessDown>", spawn "xbrightness -5000")
+    -- Screenshots
+    , ("<Print>", spawn "flameshot full -p ~/Screenshots/")
     -- Keyboard Layout
-    , ("S-M1-<Space>", spawn "/home/cory/manual_installs/layout_switch.sh")
+    , ("S-C-<Space>", spawn "/home/cory/manual_installs/layout_switch.sh")
+
+    ----------------------------------------------------------------------
+    --                            Audio                                 --
+    ----------------------------------------------------------------------
+    , ("C-. a a", runOrRaise "audacious" (className =? "Audacious"))
+    , ("C-. a n", spawn "audacious --fwd")
+    , ("C-. a p", spawn "audacious --rew")
+    , ("C-. a t", spawn "audacious --play-pause")
+    , ("C-. a s", spawn "audacious --stop")
+
+    ----------------------------------------------------------------------
+    --                            Launch                                --
+    ----------------------------------------------------------------------
+    , ("C-. <Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run --icon-theme \"Tango\" show-icons")
+    , ("C-. d", runOrRaise "discord" (className =? "discord"))
+    , ("C-. e", spawn "emacsclient -c")
+    , ("C-. C-e", spawn "emacs")
+    , ("C-. w", spawn "firefox")
+    , ("C-. C-w", spawn "pcmanfm-qt --new-window")
+    , ("C-. C-g", runOrRaise "steam" (className =? "Steam"))
+    , ("C-. t", spawn $ myTerminal)
+
+    ----------------------------------------------------------------------
+    --                           Commands                               --
+    ----------------------------------------------------------------------
+    , ("C-. s", spawn "flameshot full -p ~/Screenshots/")
+    , ("C-. C-s", spawn "flameshot gui")
+    , ("C-. C-m", sendMessage ToggleStruts)
+    , ("C-. u", withFocused (sendMessage . maximizeRestore))
+    , ("C-. i", withFocused minimizeWindow)
+    , ("C-. C-i", withLastMinimized maximizeWindowAndFocus)
+    , ("C-. C-r", spawn "xmonad --recompile; xmonad --restart")
+
+    ----------------------------------------------------------------------
+    --                     Basic Window Management                      --
+    ----------------------------------------------------------------------
+    , ("C-. b", sendMessage $ WN.Go WN.L)
+    , ("C-. n", sendMessage $ WN.Go WN.D)
+    , ("C-. p", sendMessage $ WN.Go WN.U)
+    , ("C-. f", sendMessage $ WN.Go WN.R)
+    , ("C-. C-b", sendMessage $ WN.Swap WN.L)
+    , ("C-. C-n", sendMessage $ WN.Swap WN.D)
+    , ("C-. C-p", sendMessage $ WN.Swap WN.U)
+    , ("C-. C-f", sendMessage $ WN.Swap WN.R)
+
+    ----------------------------------------------------------------------
+    --                       Buffers (Windows)                          --
+    ----------------------------------------------------------------------
+    , ("C-. M-b", windowPrompt windowXPConfig Goto allWindows)  -- Goto buffers
+    -- , ("C-. M-b", windowPrompt windowXPConfig Bring allWindows) -- Bring buffer
+    , ("C-. k", kill)                                     -- Kill buffer
+    -- , ("bD", killAll)                                      -- Kill every buffer
+    , ("C-. g n", onGroup W.focusDown')                   -- Next buffer
+    , ("C-. g p", onGroup W.focusUp')                     -- Prev buffer
+    , ("C-. g C-n", windows W.focusDown)                  -- Next buffer alt
+    , ("C-. g C-p", windows W.focusUp)                    -- Prev buffer alt
+    -- , ("bsn", onGroup swapDown')                          -- Swap next buffer
+    -- , ("bsp", onGroup swapUp')                            -- Swap prev buffer
+    -- , ("bsN", windows W.swapDown)                         -- Swap next buffer alt
+    -- , ("bsP", windows W.swapUp)                           -- Swap prev buffer alt
+    , ("C-. g s", sendMessage Swap)                            -- Swap groups
+    , ("C-. m b", sendMessage $ pullGroup L)              -- Merge left
+    , ("C-. m n", sendMessage $ pullGroup D)              -- Merge down
+    , ("C-. m p", sendMessage $ pullGroup U)              -- Merge up
+    , ("C-. m f", sendMessage $ pullGroup R)              -- Merge right
+
+    ----------------------------------------------------------------------
+    --                           Workspaces                             --
+    ----------------------------------------------------------------------
+    -- , ("wb", sendMessage Balance)
+    -- , ("wB", sendMessage Equalize)
+    -- , ("wn", moveTo Next NonEmptyWS)
+    -- , ("wp", moveTo Prev NonEmptyWS)
+    -- , ("wN", nextWS)
+    -- , ("wP", prevWS)
+    , ("C-. o 1", withFocused (sendMessage . MergeAll)) -- Window focus
+    -- , ("C-. C-f", floatPrompt) -- Window float
+    , ("C-. r", resizePrompt) -- Window resize
+    , ("C-. C-r", sendMessage Rotate) -- Window rotate
+    , ("C-. o 3", withFocused (sendMessage . UnMerge)) -- Window split
+    , ("C-. o 2", withFocused (sendMessage . UnMerge) >>
+                  sendMessage Rotate) -- Window split
+    , ("C-. C-l", sendMessage NextLayout)
+    -- , ("M-S-C-j",  sendMessage $ SplitShift Prev)
+    -- , ("M-S-C-k",  sendMessage $ SplitShift Next)
+    ]
+    ++
+    -- Workspace switching and buffer move to workspace
+    [ (otherModMasks ++ [key], action tag)
+    | (tag, key)  <- zip myWorkspaces "12345"
+    , (otherModMasks, action) <-
+        [ ("C-. ", windows . W.greedyView) , ("C-. C-", windows . W.shift)]
     ]
 
 ------------------------------------------------------------------------
@@ -1088,16 +1175,16 @@ emacs =
 floating =
   renamed [Replace "float"] $
   (floatingDeco . (maximizeWithPadding 0)
-   . mouseResizeSE . mouseResizeSW . mouseResizeNW
-   . mouseResizeNE . mouseResizeS . mouseResizeN . mouseResizeE
-   . mouseResizeW . windowArrangeAll $ SF barWidth)
+   . mouseResizeSE . mouseResizeSW . mouseResizeNW . mouseResizeNE
+   -- . mouseResizeS . mouseResizeN . mouseResizeE . mouseResizeW
+   . windowArrangeAll $ SF barWidth)
 
 myLayout = avoidStruts
          . (WN.configurableNavigation WN.noNavigateBorders)
          . lessBorders OnlyScreenFloat
          . minimize
          . BW.boringWindows
-         $ emacs ||| floating
+         $ floating ||| emacs
 
 ------------------------------------------------------------------------
 
@@ -1114,19 +1201,18 @@ p -!> f = p >>= \b -> if b then return mempty else f
 q =!? x = fmap (/= x) q
 
 myManageHook = composeAll
-    [ className =? "Orage"                                --> doCenterFloat
-    , className =? "Firefox" <&&> resource =? "Toolkit"   --> myRectFloat
+    -- [ className =? "Orage"                                --> doCenterFloat
+    [ className =? "Firefox" <&&> resource =? "Toolkit"   --> myRectFloat
     , stringProperty "WM_WINDOW_ROLE"
       =? "GtkFileChooserDialog"                           --> myRectFloat
     , stringProperty "WM_WINDOW_ROLE" =? "pop-up"         --> myRectFloat
-    , isDialog                                            --> myRectFloat
-    , isInProperty "_NET_WM_WINDOW_TYPE"
-      "_NET_WM_WINDOW_TYPE_SPLASH"                        --> myRectFloat
+    -- , isDialog                                            --> myRectFloat
+    -- , isInProperty "_NET_WM_WINDOW_TYPE"
+    --   "_NET_WM_WINDOW_TYPE_SPLASH"                        --> myRectFloat
     , title     =? "Save Image"                           --> myRectFloat
     , title     =? "Save File"                            --> myRectFloat
     , title     =? "Open"                                 --> myRectFloat
     , title     =? "Open Files"                           --> myRectFloat
-    , resource  =? "xmomacs-help"                         --> helpFloat
     , resource  =? "desktop_window"                       --> doIgnore
     , resource  =? "kdesktop"                             --> doIgnore
     , isFullscreen --> doFullFloat
@@ -1170,19 +1256,19 @@ myStartupHook = do
 floatCommands :: [(String, X ())]
 floatCommands =
   -- Float keys
-  [ ("k", (withFocused (keysMoveWindow (0,-80))) >> spawn "xdotool key super+f")
-  , ("j", (withFocused (keysMoveWindow (0, 80))) >> spawn "xdotool key super+f")
-  , ("h", (withFocused (keysMoveWindow (-80,0))) >> spawn "xdotool key super+f")
-  , ("l", (withFocused (keysMoveWindow (80, 0))) >> spawn "xdotool key super+f")
+  [ ("b", (withFocused (keysMoveWindow (0,-80))) >> spawn "xdotool key super+f")
+  , ("n", (withFocused (keysMoveWindow (0, 80))) >> spawn "xdotool key super+f")
+  , ("p", (withFocused (keysMoveWindow (-80,0))) >> spawn "xdotool key super+f")
+  , ("f", (withFocused (keysMoveWindow (80, 0))) >> spawn "xdotool key super+f")
   -- Float Snapping Keys
-  , ("sh", (withFocused $ snapMove L Nothing) >> spawn "xdotool key super+f")
-  , ("sj", (withFocused $ snapMove D Nothing) >> spawn "xdotool key super+f")
-  , ("sk", (withFocused $ snapMove U Nothing) >> spawn "xdotool key super+f")
-  , ("sl", (withFocused $ snapMove R Nothing) >> spawn "xdotool key super+f")
-  , ("sH", (withFocused $ snapShrink R Nothing) >> spawn "xdotool key super+f")
-  , ("sJ", (withFocused $ snapGrow D Nothing) >> spawn "xdotool key super+f")
-  , ("sK", (withFocused $ snapShrink D Nothing) >> spawn "xdotool key super+f")
-  , ("sL", (withFocused $ snapGrow R Nothing) >> spawn "xdotool key super+f")
+  , ("sb", (withFocused $ snapMove L Nothing) >> spawn "xdotool key super+f")
+  , ("sn", (withFocused $ snapMove D Nothing) >> spawn "xdotool key super+f")
+  , ("sp", (withFocused $ snapMove U Nothing) >> spawn "xdotool key super+f")
+  , ("sf", (withFocused $ snapMove R Nothing) >> spawn "xdotool key super+f")
+  , ("sB", (withFocused $ snapShrink R Nothing) >> spawn "xdotool key super+f")
+  , ("sN", (withFocused $ snapGrow D Nothing) >> spawn "xdotool key super+f")
+  , ("sP", (withFocused $ snapShrink D Nothing) >> spawn "xdotool key super+f")
+  , ("sF", (withFocused $ snapGrow R Nothing) >> spawn "xdotool key super+f")
   -- Push window back into tiling
   , ("t", (withFocused $ windows . W.sink) >> spawn "xdotool key super+f")
   -- Switch between layers
@@ -1194,7 +1280,7 @@ floatCommands =
   ]
 
 floatPrompt :: X ()
-floatPrompt = xmonadPromptC floatCommands prefixXPConfig
+floatPrompt = xmonadPromptC floatCommands baseXPConfig
               { fgHLight            = "#1f8c35"
               , borderColor         = "#1f8c35"
               }
@@ -1203,19 +1289,19 @@ floatPrompt = xmonadPromptC floatCommands prefixXPConfig
 
 resizeCommands :: [(String, X ())]
 resizeCommands =
-  [ ("h", (sendMessage $ ExpandTowards L) >> spawn "xdotool key super+r")
-  , ("j", (sendMessage $ ExpandTowards D) >> spawn "xdotool key super+r")
-  , ("k", (sendMessage $ ExpandTowards U) >> spawn "xdotool key super+r")
-  , ("l", (sendMessage $ ExpandTowards R) >> spawn "xdotool key super+r")
-  , ("H", (sendMessage $ ShrinkFrom L) >> spawn "xdotool key super+r")
-  , ("J", (sendMessage $ ShrinkFrom D) >> spawn "xdotool key super+r")
-  , ("K", (sendMessage $ ShrinkFrom U) >> spawn "xdotool key super+r")
-  , ("L", (sendMessage $ ShrinkFrom R) >> spawn "xdotool key super+r")
+  [ ("b", (sendMessage $ ExpandTowards L) >> spawn "xdotool key super+r")
+  , ("n", (sendMessage $ ExpandTowards D) >> spawn "xdotool key super+r")
+  , ("p", (sendMessage $ ExpandTowards U) >> spawn "xdotool key super+r")
+  , ("f", (sendMessage $ ExpandTowards R) >> spawn "xdotool key super+r")
+  , ("B", (sendMessage $ ShrinkFrom L) >> spawn "xdotool key super+r")
+  , ("N", (sendMessage $ ShrinkFrom D) >> spawn "xdotool key super+r")
+  , ("P", (sendMessage $ ShrinkFrom U) >> spawn "xdotool key super+r")
+  , ("F", (sendMessage $ ShrinkFrom R) >> spawn "xdotool key super+r")
   , ("q", return ())
   ]
 
 resizePrompt :: X ()
-resizePrompt = xmonadPromptC resizeCommands prefixXPConfig
+resizePrompt = xmonadPromptC resizeCommands baseXPConfig
                { fgHLight            = "#e01bd0"
                , borderColor         = "#e01bd0"
                }
@@ -1233,8 +1319,8 @@ swapDown' = reverseStack . swapUp' . reverseStack
 reverseStack :: W.Stack a -> W.Stack a
 reverseStack (W.Stack t ls rs) = W.Stack t rs ls
 
-prefixXPKeymap :: M.Map (KeyMask,KeySym) (XP ())
-prefixXPKeymap = M.fromList
+baseXPKeymap :: M.Map (KeyMask,KeySym) (XP ())
+baseXPKeymap = M.fromList
   [ ((controlMask, xK_g), quit)
   , ((controlMask, xK_bracketleft), quit)
   , ((0, xK_Escape), quit)
@@ -1242,8 +1328,6 @@ prefixXPKeymap = M.fromList
   , ((0, xK_KP_Enter), setSuccess True >> setDone True)
   , ((0, xK_BackSpace), deleteString Prev)
   , ((0, xK_Delete), deleteString Next)
-  , ((0, xK_space), setSuccess True >> setDone True
-      >> spawn "xdotool key super+x")
   , ((controlMask, xK_h), setSuccess True >> setDone True
       >> spawn "urxvtc -name xmomacs-help -e man xmonad")
   , ((controlMask, xK_r), setSuccess True >> setDone True
@@ -1251,7 +1335,7 @@ prefixXPKeymap = M.fromList
   , ((controlMask, xK_q), io (exitWith ExitSuccess))
   ]
 
-prefixXPConfig = def
+baseXPConfig = def
   { font                = "xft:NotoSans Nerd Font:size=11"
   , bgColor             = "#e8e8e8"
   , fgColor             = "#141404"
@@ -1262,10 +1346,10 @@ prefixXPConfig = def
   , position = CenteredAt (471 % 480) (1 % 2)
   , alwaysHighlight = False
   , height = 90
-  , maxComplRows = Just 14
+  , maxComplRows = Just 0
   , historySize = 256
   , historyFilter = id
-  , promptKeymap = prefixXPKeymap
+  , promptKeymap = baseXPKeymap
   , completionKey = (0,xK_Tab)
   , defaultText = []
   , autoComplete = Just 0
@@ -1305,7 +1389,7 @@ windowXPKeymap = M.fromList
   , ((0, xK_Escape), quit)
   ]
 
-windowXPConfig = prefixXPConfig
+windowXPConfig = baseXPConfig
   { promptKeymap        = windowXPKeymap
   , alwaysHighlight     = True
   , autoComplete        = Nothing
@@ -1313,160 +1397,6 @@ windowXPConfig = prefixXPConfig
   , searchPredicate     = fuzzyMatch
   , sorter              = fuzzySort
   }
-
-prefixCommands :: [(String, X ())]
-prefixCommands =
-  ----------------------------------------------------------------------
-  --                            Audio                                 --
-  ----------------------------------------------------------------------
-  [ ("aa", runOrRaise "audacious" (className =? "Audacious"))
-  , ("an", spawn "audacious --fwd")
-  , ("ap", spawn "audacious --rew")
-  , ("at", spawn "audacious --play-pause")
-  , ("as", spawn "audacious --stop")
-
-  ----------------------------------------------------------------------
-  --                            Launch                                --
-  ----------------------------------------------------------------------
-  , ("d", runOrRaise "discord" (className =? "discord"))
-  , ("e", spawn "emacsclient -c")
-  , ("E", spawn "emacs")
-  , ("f", spawn "firefox")
-  , ("F", spawn "pcmanfm-qt --new-window")
-  , ("g", runOrRaise "steam" (className =? "Steam"))
-  , ("t", spawn $ myTerminal)
-
-  ----------------------------------------------------------------------
-  --                           Commands                               --
-  ----------------------------------------------------------------------
-  , ("s", spawn "flameshot full -p ~/Screenshots/")
-  , ("S", spawn "flameshot gui")
-  , ("M", sendMessage ToggleStruts)
-  , ("u", withFocused (sendMessage . maximizeRestore))
-  , ("i", withFocused minimizeWindow)
-  , ("I", withLastMinimized maximizeWindowAndFocus)
-
-  ----------------------------------------------------------------------
-  --                     Basic Window Management                      --
-  ----------------------------------------------------------------------
-  , ("h", sendMessage $ WN.Go WN.L)
-  , ("j", sendMessage $ WN.Go WN.D)
-  , ("k", sendMessage $ WN.Go WN.U)
-  , ("l", sendMessage $ WN.Go WN.R)
-  , ("H", sendMessage $ WN.Swap WN.L)
-  , ("J", sendMessage $ WN.Swap WN.D)
-  , ("K", sendMessage $ WN.Swap WN.U)
-  , ("L", sendMessage $ WN.Swap WN.R)
-
-  ----------------------------------------------------------------------
-  --                       Buffers (Windows)                          --
-  ----------------------------------------------------------------------
-  , ("bb", windowPrompt windowXPConfig Goto allWindows)  -- Goto buffers
-  , ("bB", windowPrompt windowXPConfig Bring allWindows) -- Bring buffer
-  , ("bd", kill)                                         -- Kill buffer
-  , ("bD", killAll)                                      -- Kill every buffer
-  , ("bn", onGroup W.focusDown')                         -- Next buffer
-  , ("bp", onGroup W.focusUp')                           -- Prev buffer
-  , ("bN", windows W.focusDown)                          -- Next buffer alt
-  , ("bP", windows W.focusUp)                            -- Prev buffer alt
-  -- , ("bsn", onGroup swapDown')                           -- Swap next buffer
-  -- , ("bsp", onGroup swapUp')                             -- Swap prev buffer
-  -- , ("bsN", windows W.swapDown)                          -- Swap next buffer alt
-  -- , ("bsP", windows W.swapUp)                            -- Swap prev buffer alt
-  , ("bs", sendMessage Swap)                             -- Swap groups
-  , ("mh", sendMessage $ pullGroup L)                    -- Merge left
-  , ("mj", sendMessage $ pullGroup D)                    -- Merge down
-  , ("mk", sendMessage $ pullGroup U)                    -- Merge up
-  , ("ml", sendMessage $ pullGroup R)                    -- Merge right
-
-  ----------------------------------------------------------------------
-  --                           Workspaces                             --
-  ----------------------------------------------------------------------
-  , ("wb", sendMessage Balance)
-  , ("wB", sendMessage Equalize)
-  , ("wn", moveTo Next NonEmptyWS)
-  , ("wp", moveTo Prev NonEmptyWS)
-  , ("wN", nextWS)
-  , ("wP", prevWS)
-  , ("wf", withFocused (sendMessage . MergeAll)) -- Window focus
-  , ("wF", floatPrompt) -- Window float
-  , ("wr", resizePrompt) -- Window resize
-  , ("wR", sendMessage Rotate) -- Window rotate
-  , ("ws", withFocused (sendMessage . UnMerge)) -- Window split
-  , ("wS", withFocused (sendMessage . UnMerge) >>
-           sendMessage Rotate) -- Window split
-  , ("wl", sendMessage NextLayout)
-  -- , ("M-S-C-j",  sendMessage $ SplitShift Prev)
-  -- , ("M-S-C-k",  sendMessage $ SplitShift Next)
-  ]
-  ++
-  -- Workspace switching and buffer move to workspace
-  [ (otherModMasks ++ [key], action tag)
-  | (tag, key)  <- zip myWorkspaces "12345"
-  , (otherModMasks, action) <-
-      [ ("", windows . W.greedyView) , ("bm", windows . W.shift)]
-  ]
-  ++
-  ----------------------------------------------------------------------
-  --                  Russian Version of all Keybinds                 --
-  ----------------------------------------------------------------------
-  [ ("фф", runOrRaise "audacious" (className =? "Audacious"))
-  , ("фт", spawn "audacious --fwd")
-  , ("фз", spawn "audacious --rew")
-  , ("фе", spawn "audacious --play-pause")
-  , ("фы", spawn "audacious --stop")
-  , ("в", runOrRaise "discord" (className =? "discord"))
-  , ("у", spawn "emacsclient -c")
-  , ("У", spawn "emacs")
-  , ("а", spawn "firefox")
-  , ("А", spawn "pcmanfm-qt --new-window")
-  , ("п", runOrRaise "steam" (className =? "Steam"))
-  , ("е", spawn $ myTerminal)
-  , ("ы", spawn "flameshot full -p ~/Screenshots/")
-  , ("Ы", spawn "flameshot gui")
-  , ("Ь", sendMessage ToggleStruts)
-  , ("Г", withFocused (sendMessage . maximizeRestore))
-  , ("ш", withFocused minimizeWindow)
-  , ("Ш", withLastMinimized maximizeWindowAndFocus)
-  , ("р", sendMessage $ WN.Go WN.L)
-  , ("о", sendMessage $ WN.Go WN.D)
-  , ("л", sendMessage $ WN.Go WN.U)
-  , ("д", sendMessage $ WN.Go WN.R)
-  , ("Р", sendMessage $ WN.Swap WN.L)
-  , ("О", sendMessage $ WN.Swap WN.D)
-  , ("Л", sendMessage $ WN.Swap WN.U)
-  , ("Д", sendMessage $ WN.Swap WN.R)
-  , ("ии", windowPrompt windowXPConfig Goto allWindows)  -- Goto buffers
-  , ("иИ", windowPrompt windowXPConfig Bring allWindows) -- Bring buffer
-  , ("ив", kill)                                         -- Kill buffer
-  , ("иВ", killAll)                                      -- Kill every buffer
-  , ("ит", onGroup W.focusDown')                         -- Next buffer
-  , ("из", onGroup W.focusUp')                           -- Prev buffer
-  , ("иТ", windows W.focusDown)                          -- Next buffer alt
-  , ("иЗ", windows W.focusUp)                            -- Prev buffer alt
-  , ("иы", sendMessage Swap)                             -- Swap groups
-  , ("ьр", sendMessage $ pullGroup L)                    -- Merge left
-  , ("ьо", sendMessage $ pullGroup D)                    -- Merge down
-  , ("ьл", sendMessage $ pullGroup U)                    -- Merge up
-  , ("ьд", sendMessage $ pullGroup R)                    -- Merge right
-  , ("ци", sendMessage Balance)
-  , ("цИ", sendMessage Equalize)
-  , ("цт", moveTo Next NonEmptyWS)
-  , ("цз", moveTo Prev NonEmptyWS)
-  , ("цТ", nextWS)
-  , ("цЗ", prevWS)
-  , ("ца", withFocused (sendMessage . MergeAll)) -- Window focus
-  , ("цА", floatPrompt) -- Window float
-  , ("цк", resizePrompt) -- Window resize
-  , ("цК", sendMessage Rotate) -- Window rotate
-  , ("цы", withFocused (sendMessage . UnMerge)) -- Window split
-  , ("цЫ", withFocused (sendMessage . UnMerge) >>
-           sendMessage Rotate) -- Window split
-  , ("цд", sendMessage NextLayout)
-  ]
-
-prefixPrompt :: X ()
-prefixPrompt = xmonadPromptC prefixCommands prefixXPConfig
 
 ------------------------------------------------------------------------
 

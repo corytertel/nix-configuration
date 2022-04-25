@@ -46,6 +46,8 @@
       "depth" = "32";
       "perl-ext-common" = "default";
 
+      "iconFile" = "${pkgs.tango-icon-theme}/share/icons/Tango/48x48/apps/utilities-terminal.png";
+
       "urlLauncher" = "firefox";
       "underlineURLs" = "true";
       "urlButton" = "1";

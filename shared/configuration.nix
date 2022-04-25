@@ -64,7 +64,8 @@
       #exportConfiguration = true;
       #xkbModel = "microsoft";
       #layout = "us,ru";
-      #xkbOptions = "grp:toggle"; # ralt toggle keyboard
+      # xkbOptions = "caps:swapescape,altwin:ctrl_alt_win";
+      xkbOptions = "caps:backspace,shift:both_capslock,altwin:ctrl_alt_win";
       #xkbVariant = "winkeys";
       libinput = {
         enable = true;
@@ -167,16 +168,17 @@
   virtualisation = {
     virtualbox.host.enable = true; # Virtual Box
     libvirtd.enable = true; # virt-manager
+    # anbox.enable = true;
   };
 
   programs = {
     dconf.enable = true;
-    steam.enable = true;
     gnupg.agent = {
      enable = true;
      enableSSHSupport = true;
      pinentryFlavor = "tty";
-   };
+    };
+    steam.enable = true;
     zsh = {
       enable = true;
       enableCompletion = true;
@@ -195,6 +197,7 @@
     };
     mime.defaultApplications = {
       "application/pdf" = "org.pwmt.zathura.desktop";
+      # "application/pdf" = "okularApplication_pdf.desktop";
       "x-scheme-handler/tg" = "telegramdesktop.desktop";
       "application/x-sh" = "rxvt-unicode.desktop";
       "text/plain" = "leafpad.desktop";
@@ -238,13 +241,13 @@
       "image/svg" = "feh.desktop";
       "image/webp" = "feh.desktop";
 
-      "video/mp4" = "mpv.desktop";
-      "video/mpeg" = "mpv.desktop";
-      "video/ogg" = "mpv.desktop";
-      "video/webm" = "mpv.desktop";
-      "video/x-msvideo" = "mpv.desktop";
-      "video/quicktime" = "mpv.desktop";
-      "video/x-matroska" = "mpv.desktop";
+      "video/mp4" = "vlc.desktop";
+      "video/mpeg" = "vlc.desktop";
+      "video/ogg" = "vlc.desktop";
+      "video/webm" = "vlc.desktop";
+      "video/x-msvideo" = "vlc.desktop";
+      "video/quicktime" = "vlc.desktop";
+      "video/x-matroska" = "vlc.desktop";
     };
   };
 

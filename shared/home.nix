@@ -44,6 +44,8 @@
     };
   };
 
+  gtk.gtk2.extraConfig = "gtk-key-theme-name = \"Emacs\"";
+
   home = {
     username = "cory";
     homeDirectory = "/home/cory";
@@ -61,9 +63,7 @@
       killall
       gwenview
       neofetch
-      cmus
       feh
-      cmatrix
       btop
       libsForQt5.ark
 
@@ -104,10 +104,8 @@
       tdesktop
       flameshot
       gimp
-      #wpgtk
       blender
       zathura
-      joplin-desktop
 
       # modern unix
       bat #cat
@@ -118,18 +116,13 @@
 
       nix-prefetch-github
       git-crypt
-      #cool-retro-term
       bb
-      #htop
       qbittorrent
       polkit
       libsForQt5.polkit-qt
       brave
       mpv
-      pywal
-      airshipper
       tree
-      nyxt
       xbrightness
       imagemagick
       yt-dlp
@@ -144,29 +137,19 @@
       winetricks
       grapejuice
       pciutils
-      #virt-manager
       pcmanfm-qt
-      #xclip
-      powershell
-      cinnamon.nemo
       lxappearance
       peek # simple animated gif screen recorder
-      sxiv
       leafpad
       onlyoffice-bin
-      xfce.orage #simple calendar
-      imagemagick
+      xfce.orage
       audacious
-      xarchiver
-      xorg.xwd
       ledger-live-desktop
       #ledger-udev-rules
       acpi
       xorg.xkill
       gparted
-      nushell
       libnotify
-      deadd-notification-center
       tint2
       dos2unix
       galculator
@@ -174,16 +157,15 @@
       klavaro
       obs-studio
       pavucontrol
+      okular
+      vlc
 
       wireshark
       tcpdump
       nmap
 
-      #discord
       betterdiscord-installer
       betterdiscordctl
-      steamPackages.steamcmd
-      minecraft
     ];
   };
 }

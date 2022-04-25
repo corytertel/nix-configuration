@@ -7,7 +7,6 @@
       ./rofi
       ./tint2
       ./urxvt
-      # ./xmobar
       ./zathura
     ];
 
@@ -17,15 +16,20 @@
     activeOpacity = "1.00";
     blur = true;
     experimentalBackends = true;
+      # shadow-radius = 60;
+      # shadow-opacity = 0.40;
+      # shadow-offset-x = -60;
+      # shadow-offset-y = -80;
     extraOptions = ''
-      shadow-radius = 20;
+      shadow = true;
+      shadow-radius = 40;
+      shadow-opacity = 0.60;
+      shadow-offset-x = -40;
+      shadow-offset-y = -40;
+      shadow-exclude = [
+        "class_g   *?= 'Rofi'",
+      ];
     '';
-    shadow = true;
-    shadowOffsets = [ 0 0 ];
-    shadowOpacity = "0.50";
-    shadowExclude = [
-       "class_g   *?= 'Rofi'"
-    ];
     vSync = true;
     package = pkgs.picom.overrideAttrs (
       o: {
@@ -38,6 +42,18 @@
       }
     );
   };
+
+  home.file."Desktop/discord.desktop".text = ''
+[Desktop Entry]
+Categories=Network;InstantMessaging
+Exec=Discord
+GenericName=All-in-one cross-platform voice and text chat for gamers
+Icon=internet-group-chat
+MimeType=x-scheme-handler/discord
+Name=Discord
+Type=Application
+Version=1.4
+'';
 
   home.file."Desktop/user-home.desktop".text = ''
 [Desktop Entry]
@@ -62,7 +78,6 @@ Version=1.4
   home.file = {
     "Desktop/emacsclient.desktop".source = "${pkgs.emacsGcc}/share/applications/emacsclient.desktop";
     "Desktop/firefox.desktop".source = "${pkgs.firefox}/share/applications/firefox.desktop";
-    "Desktop/discord.desktop".source = "${pkgs.discord}/share/applications/discord.desktop";
     "Desktop/gimp.desktop".source = "${pkgs.gimp}/share/applications/gimp.desktop";
     "Desktop/audacious.desktop".source = "${pkgs.audacious}/share/applications/audacious.desktop";
     "Desktop/onlyoffice-desktopeditors.desktop".source = "${pkgs.onlyoffice-bin}/share/applications/onlyoffice-desktopeditors.desktop";
