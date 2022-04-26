@@ -1090,13 +1090,13 @@ mkInputWindow d (Rectangle x y w h) = do
 
 -- Spacing
 -- top, bottom, right, left
-bigGaps = spacingRaw False (Border 155 45 200 175)
+bigGaps = spacingRaw False (Border 155 130 200 175)
   True (Border 0 25 0 25) True
-threeGapsSingle = spacingRaw False (Border 155 70 1060 1060)
+threeGapsSingle = spacingRaw False (Border 155 155 1060 1060)
   True (Border 0 0 0 0) True
-threeGapsDouble = spacingRaw False (Border 155 70 1060 200)
+threeGapsDouble = spacingRaw False (Border 155 155 1060 200)
   True (Border 0 0 0 0) True
-threeGaps = spacingRaw False (Border 155 70 200 200)
+threeGaps = spacingRaw False (Border 155 155 200 200)
   True (Border 0 0 0 0) True
 
 windowDeco = windowSwitcherDecorationWithImageButtons
@@ -1132,13 +1132,13 @@ myLayout = avoidStruts
 
 ------------------------------------------------------------------------
 
--- infix 0 -!>
+infix 0 -!>
 
--- -- | @p -!> x@.  If @p@ returns 'False', execute the 'ManageHook'.
--- --
--- -- > (-!>) :: Monoid m => Query Bool -> Query m -> Query m -- a simpler type
--- (-!>) :: (Monad m, Monoid a) => m Bool -> m a -> m a
--- p -!> f = p >>= \b -> if b then return mempty else f
+-- | @p -!> x@.  If @p@ returns 'False', execute the 'ManageHook'.
+--
+-- > (-!>) :: Monoid m => Query Bool -> Query m -> Query m -- a simpler type
+(-!>) :: (Monad m, Monoid a) => m Bool -> m a -> m a
+p -!> f = p >>= \b -> if b then return mempty else f
 
 -- -- | @q =? x@. if the result of @q@ equals @x@, return 'False'.
 -- (=!?) :: Eq a => C.Query a -> a -> C.Query Bool
@@ -1163,16 +1163,20 @@ myLayout = avoidStruts
 --     myRectFloat = doRectFloat (W.RationalRect (1 % 3) (3 % 10) (1 % 3) (2 % 5))
 --     helpFloat = doRectFloat (W.RationalRect (7 % 8) (0 % 1) (1 % 8) (1 % 2))
 
--- willFloat :: C.Query Bool
--- willFloat =
---   ask >>= \w -> liftX $
---     withDisplay $ \d -> do
---       sh <- io $ getWMNormalHints d w
---       let isFixedSize = isJust (sh_min_size sh) && sh_min_size sh == sh_max_size sh
---       isTransient <- isJust <$> io (getTransientForHint d w)
---       return (isFixedSize || isTransient)
+myManageHook = composeAll
+               [ isFullscreen --> doFullFloat
+               , fmap not willFloat --> insertPosition Below Newer
+               , fmap not willFloat -!> insertPosition Master Newer
+               ]
 
-myManageHook = composeAll []
+willFloat :: C.Query Bool
+willFloat =
+  ask >>= \w -> liftX $
+    withDisplay $ \d -> do
+      sh <- io $ getWMNormalHints d w
+      let isFixedSize = isJust (sh_min_size sh) && sh_min_size sh == sh_max_size sh
+      isTransient <- isJust <$> io (getTransientForHint d w)
+      return (isFixedSize || isTransient)
 
 ------------------------------------------------------------------------
 
