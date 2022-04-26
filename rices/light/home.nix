@@ -16,13 +16,17 @@
     activeOpacity = "1.00";
     experimentalBackends = true;
     extraOptions = ''
+      shadow = true;
       shadow-radius = 10;
+      shadow-opacity = 0.60;
+      shadow-offset-x = 0;
+      shadow-offset-y = 0;
+      shadow-exclude = [
+        "class_g   *?= 'Rofi'",
+      ];
     '';
-    shadow = true;
-    shadowOffsets = [ 0 0 ];
-    shadowOpacity = "0.60";
-    noDockShadow = false;
-    vSync = true;
+    noDockShadow = true;
+    vSync = false;
     # package = pkgs.picom.overrideAttrs (
     #   o: {
     #     src = pkgs.fetchFromGitHub {
@@ -35,17 +39,12 @@
     # );
   };
 
-  home.file = {
-    ".config/xmobar/xmobarrc".text = builtins.readFile ./xmobar/xmobarrc;
-    ".config/xmobar/volume.sh".source = ./xmobar/volume.sh;
-  };
-
   home.file."Desktop/discord.desktop".text = ''
 [Desktop Entry]
 Categories=Network;InstantMessaging
 Exec=Discord
 GenericName=All-in-one cross-platform voice and text chat for gamers
-Icon=internet-group-chat
+Icon=hipchat
 MimeType=x-scheme-handler/discord
 Name=Discord
 Type=Application
@@ -78,6 +77,7 @@ Version=1.4
     "Desktop/gimp.desktop".source = "${pkgs.gimp}/share/applications/gimp.desktop";
     "Desktop/audacious.desktop".source = "${pkgs.audacious}/share/applications/audacious.desktop";
     "Desktop/onlyoffice-desktopeditors.desktop".source = "${pkgs.onlyoffice-bin}/share/applications/onlyoffice-desktopeditors.desktop";
+    "Desktop/steam.desktop".source = "${pkgs.steam}/share/applications/steam.desktop";
   };
 
   home.packages = with pkgs; [
@@ -99,14 +99,11 @@ Version=1.4
     };
 
     iconTheme = {
-      # package = pkgs.pop-icon-theme;
-      # name = "Pop";
       package = pkgs.moka-icon-theme;
       name = "Moka";
     };
 
     gtk3.extraConfig = {
-      # gtk-icon-theme-name = "Pop";
       gtk-icon-theme-name = "Moka";
       gtk-theme-name = "PlainLight";
       gtk-application-prefer-dark-theme = 0;

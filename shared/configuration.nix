@@ -60,13 +60,21 @@
     printing.enable = true;
     xserver = {
       enable = true;
-      layout = "us";
-      #exportConfiguration = true;
-      #xkbModel = "microsoft";
-      #layout = "us,ru";
-      # xkbOptions = "caps:swapescape,altwin:ctrl_alt_win";
+      # exportConfiguration = true;
+      extraLayouts = {
+        us_programmer = {
+          description = "US layout with numbers and characters flipped";
+          languages = [ "eng" ];
+          symbolsFile = ./us_programmer;
+        };
+        ru_programmer = {
+          description = "RU layout with numbers and characters flipped";
+          languages = [ "rus" ];
+          symbolsFile = ./ru_programmer;
+        };
+      };
+      layout = "us_programmer";
       xkbOptions = "caps:backspace,shift:both_capslock,altwin:ctrl_alt_win";
-      #xkbVariant = "winkeys";
       libinput = {
         enable = true;
         mouse = {

@@ -162,7 +162,7 @@ myAdditionalKeys =
     , ("C-. u", withFocused (sendMessage . maximizeRestore))
     , ("C-. i", withFocused minimizeWindow)
     , ("C-. C-i", withLastMinimized maximizeWindowAndFocus)
-    , ("C-. C-r", spawn "xmonad --recompile; xmonad --restart")
+    , ("C-. M-r", spawn "xmonad --recompile; xmonad --restart")
 
     ----------------------------------------------------------------------
     --                     Basic Window Management                      --
@@ -206,12 +206,12 @@ myAdditionalKeys =
     -- , ("wp", moveTo Prev NonEmptyWS)
     -- , ("wN", nextWS)
     -- , ("wP", prevWS)
-    , ("C-. o 1", withFocused (sendMessage . MergeAll)) -- Window focus
+    , ("C-. o !", withFocused (sendMessage . MergeAll)) -- Window focus
     -- , ("C-. C-f", floatPrompt) -- Window float
     , ("C-. r", resizePrompt) -- Window resize
     , ("C-. C-r", sendMessage Rotate) -- Window rotate
-    , ("C-. o 3", withFocused (sendMessage . UnMerge)) -- Window split
-    , ("C-. o 2", withFocused (sendMessage . UnMerge) >>
+    , ("C-. o #", withFocused (sendMessage . UnMerge)) -- Window split
+    , ("C-. o @", withFocused (sendMessage . UnMerge) >>
                   sendMessage Rotate) -- Window split
     , ("C-. C-l", sendMessage NextLayout)
     -- , ("M-S-C-j",  sendMessage $ SplitShift Prev)
@@ -220,7 +220,7 @@ myAdditionalKeys =
     ++
     -- Workspace switching and buffer move to workspace
     [ (otherModMasks ++ [key], action tag)
-    | (tag, key)  <- zip myWorkspaces "12345"
+    | (tag, key)  <- zip myWorkspaces "!@#$%"
     , (otherModMasks, action) <-
         [ ("C-. ", windows . W.greedyView) , ("C-. C-", windows . W.shift)]
     ]

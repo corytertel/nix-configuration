@@ -7,11 +7,11 @@ if [[ -n "$1" ]]; then
 else
     layout=$(setxkbmap -query | grep layout | awk 'END{print $2}')
     case $layout in
-        ru)
-            setxkbmap us
+        ru_programmer)
+            setxkbmap us_programmer
             ;;
         *)
-            setxkbmap ru
+            setxkbmap ru_programmer
             ;;
     esac
 fi

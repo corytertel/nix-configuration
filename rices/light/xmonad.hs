@@ -4,7 +4,7 @@
 import XMonad hiding ((|||))
 
 import Data.Monoid (mappend)
-import Data.Map (fromList, lookup
+import Data.Map (fromList, lookup)
 import Data.Maybe (fromJust, isJust)
 import Data.Ratio ((%)) -- for video
 
@@ -84,7 +84,7 @@ import qualified XMonad.Util.ExtensibleState as XS
 myTerminal = "urxvtc"
 
 myFocusFollowsMouse :: Bool
-myFocusFollowsMouse = True
+myFocusFollowsMouse = False
 
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
@@ -94,7 +94,7 @@ myBorderWidth = 4
 myNormalBorderColor  = "#ffffff"
 myFocusedBorderColor = "#3647d9"
 
-barWidth = 110
+barWidth = 80
 
 myModMask       = mod4Mask
 
@@ -171,7 +171,7 @@ myAdditionalKeys =
     , ("C-. u", withFocused (sendMessage . maximizeRestore))
     , ("C-. i", withFocused minimizeWindow)
     , ("C-. C-i", withLastMinimized maximizeWindowAndFocus)
-    , ("C-. C-r", spawn "xmonad --recompile; xmonad --restart")
+    , ("C-. M-r", spawn "xmonad --recompile; xmonad --restart")
 
     ----------------------------------------------------------------------
     --                     Basic Window Management                      --
@@ -215,12 +215,12 @@ myAdditionalKeys =
     -- , ("wp", moveTo Prev NonEmptyWS)
     -- , ("wN", nextWS)
     -- , ("wP", prevWS)
-    , ("C-. o 1", withFocused (sendMessage . MergeAll)) -- Window focus
+    , ("C-. o !", withFocused (sendMessage . MergeAll)) -- Window focus
     -- , ("C-. C-f", floatPrompt) -- Window float
     , ("C-. r", resizePrompt) -- Window resize
     , ("C-. C-r", sendMessage Rotate) -- Window rotate
-    , ("C-. o 3", withFocused (sendMessage . UnMerge)) -- Window split
-    , ("C-. o 2", withFocused (sendMessage . UnMerge) >>
+    , ("C-. o #", withFocused (sendMessage . UnMerge)) -- Window split
+    , ("C-. o @", withFocused (sendMessage . UnMerge) >>
                   sendMessage Rotate) -- Window split
     , ("C-. C-l", sendMessage NextLayout)
     -- , ("M-S-C-j",  sendMessage $ SplitShift Prev)
@@ -228,8 +228,9 @@ myAdditionalKeys =
     ]
     ++
     -- Workspace switching and buffer move to workspace
+    -- Must use special chars to account for custom keyboard layout
     [ (otherModMasks ++ [key], action tag)
-    | (tag, key)  <- zip myWorkspaces "12345"
+    | (tag, key)  <- zip myWorkspaces "!@#$%"
     , (otherModMasks, action) <-
         [ ("C-. ", windows . W.greedyView) , ("C-. C-", windows . W.shift)]
     ]
@@ -1105,7 +1106,7 @@ floatingDeco = imageButtonDeco shrinkText defaultThemeWithImageButtons
 emacs =
   renamed [Replace "bsp"] $
   (windowDeco . draggingVisualizer . (maximizeWithPadding 0)
-   . subLayout [] StateFull . gaps $ emptyBSP)
+   . subLayout [] StateFull . bigGaps $ emptyBSP)
 
 threeCol =
   renamed [Replace "threeCol"] $
@@ -1131,45 +1132,47 @@ myLayout = avoidStruts
 
 ------------------------------------------------------------------------
 
-infix 0 -!>
+-- infix 0 -!>
 
--- | @p -!> x@.  If @p@ returns 'False', execute the 'ManageHook'.
---
--- > (-!>) :: Monoid m => Query Bool -> Query m -> Query m -- a simpler type
-(-!>) :: (Monad m, Monoid a) => m Bool -> m a -> m a
-p -!> f = p >>= \b -> if b then return mempty else f
+-- -- | @p -!> x@.  If @p@ returns 'False', execute the 'ManageHook'.
+-- --
+-- -- > (-!>) :: Monoid m => Query Bool -> Query m -> Query m -- a simpler type
+-- (-!>) :: (Monad m, Monoid a) => m Bool -> m a -> m a
+-- p -!> f = p >>= \b -> if b then return mempty else f
 
--- | @q =? x@. if the result of @q@ equals @x@, return 'False'.
-(=!?) :: Eq a => C.Query a -> a -> C.Query Bool
-q =!? x = fmap (/= x) q
+-- -- | @q =? x@. if the result of @q@ equals @x@, return 'False'.
+-- (=!?) :: Eq a => C.Query a -> a -> C.Query Bool
+-- q =!? x = fmap (/= x) q
 
-myManageHook = composeAll
-    [ className =? "Firefox" <&&> resource =? "Toolkit"   --> myRectFloat
-    , stringProperty "WM_WINDOW_ROLE"
-      =? "GtkFileChooserDialog"                           --> myRectFloat
-    , title     =? "Save Image"                           --> myRectFloat
-    , title     =? "Save File"                            --> myRectFloat
-    , title     =? "Open"                                 --> myRectFloat
-    , title     =? "Open Files"                           --> myRectFloat
-    , resource  =? "desktop_window"                       --> doIgnore
-    , resource  =? "kdesktop"                             --> doIgnore
-    , isFullscreen --> doFullFloat
-    , fmap not willFloat --> insertPosition Below Newer
-    , fmap not willFloat -!> insertPosition Master Newer
-    ]
-  where
-    -- xpos, ypos, width, height
-    myRectFloat = doRectFloat (W.RationalRect (1 % 3) (3 % 10) (1 % 3) (2 % 5))
-    helpFloat = doRectFloat (W.RationalRect (7 % 8) (0 % 1) (1 % 8) (1 % 2))
+-- myManageHook = composeAll
+--     [ className =? "Firefox" <&&> resource =? "Toolkit"   --> myRectFloat
+--     , stringProperty "WM_WINDOW_ROLE"
+--       =? "GtkFileChooserDialog"                           --> myRectFloat
+--     , title     =? "Save Image"                           --> myRectFloat
+--     , title     =? "Save File"                            --> myRectFloat
+--     , title     =? "Open"                                 --> myRectFloat
+--     , title     =? "Open Files"                           --> myRectFloat
+--     , resource  =? "desktop_window"                       --> doIgnore
+--     , resource  =? "kdesktop"                             --> doIgnore
+--     , isFullscreen --> doFullFloat
+--     , fmap not willFloat --> insertPosition Below Newer
+--     , fmap not willFloat -!> insertPosition Master Newer
+--     ]
+--   where
+--     -- xpos, ypos, width, height
+--     myRectFloat = doRectFloat (W.RationalRect (1 % 3) (3 % 10) (1 % 3) (2 % 5))
+--     helpFloat = doRectFloat (W.RationalRect (7 % 8) (0 % 1) (1 % 8) (1 % 2))
 
-willFloat :: C.Query Bool
-willFloat =
-  ask >>= \w -> liftX $
-    withDisplay $ \d -> do
-      sh <- io $ getWMNormalHints d w
-      let isFixedSize = isJust (sh_min_size sh) && sh_min_size sh == sh_max_size sh
-      isTransient <- isJust <$> io (getTransientForHint d w)
-      return (isFixedSize || isTransient)
+-- willFloat :: C.Query Bool
+-- willFloat =
+--   ask >>= \w -> liftX $
+--     withDisplay $ \d -> do
+--       sh <- io $ getWMNormalHints d w
+--       let isFixedSize = isJust (sh_min_size sh) && sh_min_size sh == sh_max_size sh
+--       isTransient <- isJust <$> io (getTransientForHint d w)
+--       return (isFixedSize || isTransient)
+
+myManageHook = composeAll []
 
 ------------------------------------------------------------------------
 
@@ -1188,26 +1191,6 @@ myStartupHook = do
   spawnOnce "urxvtd --quiet &"
   spawnOnce "sleep 4 && tint2 &"
   setWMName "LG3D"
-
-------------------------------------------------------------------------
-
-bar = "xmobar $HOME/.config/xmobar/xmobarrc"
-
-ppWorkspaces = xmobarPP
-  { ppCurrent = xmobarColor "#141404" ""
-    . wrap "<fc=#ffffff,#3647d9:0>  " "  </fc>"
-  , ppHidden = xmobarColor "#141404" "" . clickable
-  , ppHiddenNoWindows = xmobarColor "#cccccc" "" . clickable
-  , ppVisible = xmobarColor "#141404" "" . clickable
-  , ppUrgent = xmobarColor "#141404" ""
-    . wrap "<fc=#141404,#e60909:0>" "</fc>" . clickable
-  , ppTitle = xmobarColor "#0f0f0f" ""
-    . wrap "<fn=2><fc=#ffffff,#3647d9:0>  " "  </fc></fn>" . shorten 40
-  , ppOrder = \(ws:_:t:_) -> [ws,t]
-  }
-
--- Key binding to toggle the gap from the bar.
-toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
 ------------------------------------------------------------------------
 
@@ -1316,8 +1299,40 @@ baseXPConfig = def
   , searchPredicate = isPrefixOf
   }
 
+windowXPKeymap :: M.Map (KeyMask,KeySym) (XP ())
+windowXPKeymap = M.fromList
+  [ ((controlMask, xK_z), killBefore)
+  , ((controlMask, xK_k), killAfter)
+  , ((controlMask, xK_a), startOfLine)
+  , ((controlMask, xK_e), endOfLine)
+  , ((controlMask, xK_m), deleteString Next)
+  , ((controlMask, xK_b), moveCursor Prev)
+  , ((controlMask, xK_f), moveCursor Next)
+  , ((controlMask, xK_BackSpace), killWord Prev)
+  , ((controlMask, xK_y), pasteString)
+  , ((controlMask, xK_g), quit)
+  , ((controlMask, xK_bracketleft), quit)
+  , ((mod1Mask, xK_BackSpace), killWord Prev)
+  , ((mod1Mask, xK_f), moveWord Next)
+  , ((mod1Mask, xK_b), moveWord Prev)
+  , ((mod1Mask, xK_d), killWord Next)
+  , ((mod1Mask, xK_n), moveHistory W.focusUp')
+  , ((mod1Mask, xK_p), moveHistory W.focusDown')
+  , ((0, xK_Return), setSuccess True >> setDone True)
+  , ((0, xK_KP_Enter), setSuccess True >> setDone True)
+  , ((0, xK_BackSpace), deleteString Prev)
+  , ((0, xK_Delete), deleteString Next)
+  , ((0, xK_Left), moveCursor Prev)
+  , ((0, xK_Right), moveCursor Next)
+  , ((0, xK_Home), startOfLine)
+  , ((0, xK_End), endOfLine)
+  , ((0, xK_Down), moveHistory W.focusUp')
+  , ((0, xK_Up), moveHistory W.focusDown')
+  , ((0, xK_Escape), quit)
+  ]
+
 windowXPConfig = baseXPConfig
-  { promptKeymap        = launcherXPKeymap
+  { promptKeymap        = windowXPKeymap
   , alwaysHighlight     = True
   , autoComplete        = Nothing
   , showCompletionOnTab = False
@@ -1331,7 +1346,7 @@ main = xmonad
        . ewmhFullscreen
        . ewmh
        . docks
-        =<< statusBar bar ppWorkspaces toggleStrutsKey defaults
+       $ defaults
 
 defaults = def {
       -- simple stuff

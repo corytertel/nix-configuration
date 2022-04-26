@@ -8,9 +8,9 @@
  */
 
 configuration {
-	font:			    "NotoSans Nerd Font 20";
+	font:			    "VictorMono Nerd Font 16";
     show-icons:                     true;
-	icon-theme: 		    "Tango";
+	icon-theme: 		    "Moka";
     display-drun: 		    "";
     drun-display-format:            "{name}";
     disable-history:                false;
@@ -19,7 +19,7 @@ configuration {
 
 /* -- Light-- */
 * {
-    background:                     #E8E8E8E6;
+    background:                     #FFFFFF;
     background-alt:                 #D8D8D8;
     foreground:                     #141404;
     background-selected:            #141404;
@@ -34,9 +34,9 @@ window {
 	border:			    0px;
 	border-color:		    @border;
     border-radius:                  0px;
-	width:			    32%;
+	width:			    24%;
     location:                       northeast;
-    x-offset:                       -110px;
+    x-offset:                       -80px;
     y-offset:                       0px;
 }
 
@@ -45,7 +45,7 @@ prompt {
 	padding: 		    0.30% 0.5% 0% 0%;
 	background-color: 	    @background;
 	text-color: 		    @foreground;
-	font:			    "NotoSans Nerd Font 20";
+	font:			    "VictorMono Nerd Font 16";
 }
 
 entry {
@@ -92,7 +92,7 @@ mainbox {
 }
 
 element {
-    font:			    "NotoSans Nerd Font 20";
+    font:			    "VictorMono Nerd Font 16";
     background-color:               @background;
     text-color:                     @foreground;
     orientation:                    vertical;
@@ -105,12 +105,12 @@ element-icon {
     text-color:       		    inherit;
     horizontal-align:               0.5;
     vertical-align:                 0.5;
-    size:                           128px;
+    size:                           96px;
     border:                         0px;
 }
 
 element-text {
-    font:			    "NotoSans Nerd Font 20";
+    font:			    "VictorMono Nerd Font 16";
     background-color: 		    inherit;
     text-color:       		    inherit;
     expand:                         true;
@@ -120,7 +120,7 @@ element-text {
 }
 
 element selected {
-    font:			    "NotoSans Nerd Font 20";
+    font:			    "VictorMono Nerd Font 16";
     background-color:               @background-selected;
     text-color:                     @foreground-selected;
 	border:			    0.1%;
