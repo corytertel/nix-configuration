@@ -24,6 +24,7 @@
         (import ./overlays/mountain-gtk.nix { inherit config pkgs lib; })
         (import ./overlays/plainlight-gtk.nix { inherit config pkgs lib; })
         (import ./overlays/emacs.nix)
+        (import ./overlays/sxiv.nix { inherit pkgs; })
       ];
     };
 

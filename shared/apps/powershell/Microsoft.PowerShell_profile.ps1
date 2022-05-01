@@ -1,1 +1,0 @@
-Function prompt {"╭╴ $PWD $(git rev-parse --abbrev-ref HEAD 2>/dev/null) `n╰─λ "}

@@ -6,14 +6,8 @@
       ./apps/bash
       ./apps/firefox
       ./apps/layout_switch
-      ./apps/ksh
       ./apps/neofetch
-      ./apps/nu
-      #./apps/pcmanfm
-      ./apps/powershell
       ./apps/ungoogled-chromium
-      ./apps/vscode
-      ./apps/xfce4-terminal
       ./apps/zsh
     ];
 
@@ -140,8 +134,8 @@
       pcmanfm-qt
       lxappearance
       peek # simple animated gif screen recorder
-      leafpad
-      onlyoffice-bin
+      # leafpad
+      # onlyoffice-bin
       xfce.orage
       audacious
       ledger-live-desktop
@@ -159,6 +153,8 @@
       pavucontrol
       okular
       vlc
+      sxiv
+      libreoffice-qt
 
       wireshark
       tcpdump

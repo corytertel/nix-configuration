@@ -25,9 +25,8 @@ xkb_symbols "winkeys" {
     key <AB10> { [      period,       comma  ] };
     key <BKSL> { [      slash,   backslash  ] };
 
-    key <BKSP> {        [    Escape,    Escape          ]       };
+    key <BKSP> {        [ Caps_Lock, Caps_Lock          ]       };
     key <CAPS> {        [ BackSpace                     ]       };
-    key <ESC>  {        [ Caps_Lock                     ]       };
 
     key <LALT> { [ Control_L, Control_L  ] };
     key <RALT> { type[Group1] = "TWO_LEVEL",
@@ -99,9 +98,8 @@ xkb_symbols "common" {
 
     include "kpdl(comma)"
 
-    key <BKSP> {        [    Escape,    Escape          ]       };
+    key <BKSP> {        [ Caps_Lock, Caps_Lock          ]       };
     key <CAPS> {        [ BackSpace                     ]       };
-    key <ESC>  {        [ Caps_Lock                     ]       };
 
     key <LALT> { [ Control_L, Control_L  ] };
     key <RALT> { type[Group1] = "TWO_LEVEL",

@@ -17,6 +17,10 @@
     Xft.hintstyle: hintslight
     Xft.rgba: rgb
     Xft.lcdfilter: lcddefault
+
+    Sxiv.background: #ffffff
+    Sxiv.foreground: #141404
+    Sxiv.font:NotoSans Nerd Font:size=10
   '';
 
   xsession = {

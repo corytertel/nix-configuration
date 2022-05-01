@@ -55,9 +55,9 @@ xkb_symbols "basic" {
 
     key <BKSL> {	[ backslash,         bar	]	};
 
-    key <BKSP> {        [    Escape,    Escape          ]       };
+
+    key <BKSP> {        [ Caps_Lock, Caps_Lock          ]       };
     key <CAPS> {        [ BackSpace                     ]       };
-    key <ESC>  {        [ Caps_Lock                     ]       };
 
     key <LALT> { [ Control_L, Control_L  ] };
     key <RALT> { type[Group1] = "TWO_LEVEL",

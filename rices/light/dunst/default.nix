@@ -29,7 +29,7 @@
         width = 400;
         # height = 520;
         origin = "bottom-right";
-        offset = "80x50";
+        offset = "130x50";
 
         progress_bar = "true";
         progress_bar_height = 15;

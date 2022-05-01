@@ -217,7 +217,7 @@
       # "application/pdf" = "okularApplication_pdf.desktop";
       "x-scheme-handler/tg" = "telegramdesktop.desktop";
       "application/x-sh" = "rxvt-unicode.desktop";
-      "text/plain" = "leafpad.desktop";
+      "text/plain" = "emacsclient.desktop";
       "inode/directory" = "pcmanfm-qt.desktop";
 
       "application/zip" = "org.kde.ark.desktop";
@@ -225,10 +225,10 @@
       "application/vnd.rar" = "org.kde.ark.desktop";
       "application/gzip" = "org.kde.ark.desktop";
 
-      "application/msword" = "onlyoffice-desktopeditors.desktop";
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = "onlyoffice-desktopeditors.desktop";
-      "application/vnd.ms-powerpoint" = "onlyoffice-desktopeditors.desktop";
-      "application/vnd.openxmlformats-officedocument.presentationml.presentation" = "onlyoffice-desktopeditors.desktop";
+      "application/msword" = "writer.desktop";
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = "writer.desktop";
+      "application/vnd.ms-powerpoint" = "impress.desktop";
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation" = "impress.desktop";
 
       "application/x-extension-htm" = "firefox.desktop";
       "application/x-extension-html" = "firefox.desktop";
@@ -250,13 +250,13 @@
       "audio/wav" = "audacious.desktop";
       "audio/weba" = "audacious.desktop";
 
-      "mage/bmp" = "feh.desktop";
+      "mage/bmp" = "sxiv.desktop";
       "image/gif" = "org.kde.gwenview.desktop";
-      "image/ico" = "feh.desktop";
-      "image/jpeg" = "feh.desktop";
-      "image/png" = "feh.desktop";
-      "image/svg" = "feh.desktop";
-      "image/webp" = "feh.desktop";
+      "image/ico" = "sxiv.desktop";
+      "image/jpeg" = "sxiv.desktop";
+      "image/png" = "sxiv.desktop";
+      "image/svg" = "sxiv.desktop";
+      "image/webp" = "sxiv.desktop";
 
       "video/mp4" = "vlc.desktop";
       "video/mpeg" = "vlc.desktop";
