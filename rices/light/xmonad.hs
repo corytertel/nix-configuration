@@ -89,10 +89,10 @@ myFocusFollowsMouse = False
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
 
-myBorderWidth = 4
+myBorderWidth = 1
 
-myNormalBorderColor  = "#ffffff"
-myFocusedBorderColor = "#3647d9"
+myNormalBorderColor  = "#141404"
+myFocusedBorderColor = "#141404"
 
 barWidth = 80
 
@@ -192,19 +192,19 @@ myAdditionalKeys =
     -- , ("C-. M-b", windowPrompt windowXPConfig Bring allWindows) -- Bring buffer
     , ("C-. k", kill)                                     -- Kill buffer
     -- , ("bD", killAll)                                      -- Kill every buffer
-    , ("C-. g n", onGroup W.focusDown')                   -- Next buffer
-    , ("C-. g p", onGroup W.focusUp')                     -- Prev buffer
-    , ("C-. g C-n", windows W.focusDown)                  -- Next buffer alt
-    , ("C-. g C-p", windows W.focusUp)                    -- Prev buffer alt
+    , ("C-. C-g C-n", onGroup W.focusDown')               -- Next buffer
+    , ("C-. C-g C-p", onGroup W.focusUp')                 -- Prev buffer
+    , ("C-. C-g n", windows W.focusDown)                  -- Next buffer alt
+    , ("C-. C-g p", windows W.focusUp)                    -- Prev buffer alt
     -- , ("bsn", onGroup swapDown')                          -- Swap next buffer
     -- , ("bsp", onGroup swapUp')                            -- Swap prev buffer
     -- , ("bsN", windows W.swapDown)                         -- Swap next buffer alt
     -- , ("bsP", windows W.swapUp)                           -- Swap prev buffer alt
-    , ("C-. g s", sendMessage Swap)                            -- Swap groups
-    , ("C-. m b", sendMessage $ pullGroup L)              -- Merge left
-    , ("C-. m n", sendMessage $ pullGroup D)              -- Merge down
-    , ("C-. m p", sendMessage $ pullGroup U)              -- Merge up
-    , ("C-. m f", sendMessage $ pullGroup R)              -- Merge right
+    , ("C-. C-g C-s", sendMessage Swap)                   -- Swap groups
+    , ("C-. C-m C-b", sendMessage $ pullGroup L)              -- Merge left
+    , ("C-. C-m C-n", sendMessage $ pullGroup D)              -- Merge down
+    , ("C-. C-m C-p", sendMessage $ pullGroup U)              -- Merge up
+    , ("C-. C-m C-f", sendMessage $ pullGroup R)              -- Merge right
 
     ----------------------------------------------------------------------
     --                           Workspaces                             --
@@ -232,7 +232,7 @@ myAdditionalKeys =
     [ (otherModMasks ++ [key], action tag)
     | (tag, key)  <- zip myWorkspaces "!@#$%"
     , (otherModMasks, action) <-
-        [ ("C-. ", windows . W.greedyView) , ("C-. C-", windows . W.shift)]
+        [ ("C-. ", windows . W.greedyView) , ("C-. M1-", windows . W.shift)]
     ]
 
 ------------------------------------------------------------------------
@@ -385,8 +385,6 @@ closeButtonOffset = 29
 imageTitleBarButtonHandler :: Window -> Int -> Int -> X Bool
 imageTitleBarButtonHandler mainw distFromLeft distFromRight = do
     let action
-          | fi distFromLeft >= menuButtonOffset &&
-             fi distFromLeft <= menuButtonOffset + buttonSize = focus mainw >> windowMenu >> return True
           | fi distFromRight >= closeButtonOffset &&
             fi distFromRight <= closeButtonOffset + buttonSize = focus mainw >> kill >> return True
           | fi distFromRight >= maximizeButtonOffset &&
@@ -399,19 +397,19 @@ imageTitleBarButtonHandler mainw distFromLeft distFromRight = do
 defaultThemeWithImageButtons :: Theme
 defaultThemeWithImageButtons =
   def { fontName = "xft:VictorMono Nerd Font:size=10"
-      , inactiveBorderColor = "#ffffff"
+      , inactiveBorderColor = "#141404"
       , inactiveColor = "#ffffff"
       , inactiveTextColor = "#141404"
-      , inactiveBorderWidth = 0
-      , activeBorderColor = "#3647d9"
-      , activeColor = "#3647d9"
+      , inactiveBorderWidth = 1
+      , activeBorderColor = "#141404"
+      , activeColor = "#141404"
       , activeTextColor = "#ffffff"
-      , activeBorderWidth = 0
-      , urgentBorderColor = "#e60909"
+      , activeBorderWidth = 1
+      , urgentBorderColor = "#141404"
       , urgentColor = "#e60909"
       , urgentTextColor = "#ffffff"
-      , urgentBorderWidth = 0
-      , decoHeight = 41 -- 45px high total, accounting for 4px bottom border
+      , urgentBorderWidth = 1
+      , decoHeight = 45 - myBorderWidth
       , windowTitleIcons = [ (menuButton, CenterLeft 29),
                              (closeButton, CenterRight 29),
                              (maxiButton, CenterRight 84),
@@ -516,12 +514,15 @@ getSize i (Rectangle rx ry _ _) w = do
   bw <- asks (borderWidth . config)
   wa <- io $ getWindowAttributes d w
   withDisplay $ \dpy ->
-    let dw = fi (displayWidth  dpy (defaultScreen dpy))
+    let -- deco = 45 - myBorderWidth
+        dw = fi (displayWidth  dpy (defaultScreen dpy))
         dh = fi (displayHeight dpy (defaultScreen dpy))
         wh = fi (wa_width  wa) + (bw * 2)
         ht = fi (wa_height wa) + (bw * 2)
+        -- ht = fi (wa_height wa) + (bw * 2) + deco
         nx = if rx == 0 then ((dw - (fi i)) - (fi wh)) `div` 2 else rx
         ny = if ry == 0 then (dh - (fi ht)) `div` 2 else ry
+        -- ny = if ry == 0 then (dh - (fi ht)) `div` 2 else ry - (fi deco)
         x  =  max nx $ fi $ wa_x wa
         y  =  max ny $ fi $ wa_y wa
     in return (w, Rectangle x y wh ht)
@@ -1165,9 +1166,12 @@ p -!> f = p >>= \b -> if b then return mempty else f
 
 myManageHook = composeAll
                [ isFullscreen --> doFullFloat
-               , fmap not willFloat --> insertPosition Below Newer
-               , fmap not willFloat -!> insertPosition Master Newer
+               --, fmap not willFloat -!> unfloat
+               , isFullscreen -!> unfloat
+               , insertPosition Below Newer
                ]
+               where
+                 unfloat = ask >>= doF . W.sink
 
 willFloat :: C.Query Bool
 willFloat =

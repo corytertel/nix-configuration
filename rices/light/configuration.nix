@@ -20,9 +20,8 @@
   };
 
   environment = {
-    etc."wallpaper.jpg".source = ./wallpapers/flowers.jpg;
+    etc."wallpaper.jpg".source = ./wallpapers/mountain.jpg;
     systemPackages = with pkgs; [
-      xmobar
       xdotool
     ];
   };

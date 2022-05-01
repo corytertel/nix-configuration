@@ -1,7 +1,6 @@
 { pkgs, ... }:
 
 {
-  home.file.".config/tint2/tint2_bat.sh".source = ./tint2_bat.sh;
   home.file.".config/tint2/tint2_vol.sh" = {
     executable = true;
     text = ''
@@ -26,7 +25,7 @@ vol=$(echo $master | awk -F"[][]" '/%/ { print $2 }' | head -n 1 | tr -d '%')
 
 jackdev=$($amixer contents | grep -i "'headphone jack'" | cut -d"," -f1,2)
 
-THEME="${pkgs.tango-icon-theme}/share/icons/gnome"
+THEME="${pkgs.numix-icon-theme-circle}/share/icons/Numix-Circle"
 
 
 if grep -qi $spattern <<< $master; then

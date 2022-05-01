@@ -60,7 +60,6 @@
     printing.enable = true;
     xserver = {
       enable = true;
-      # exportConfiguration = true;
       extraLayouts = {
         us_programmer = {
           description = "US layout with numbers and characters flipped";
@@ -74,13 +73,23 @@
         };
       };
       layout = "us_programmer";
-      xkbOptions = "caps:backspace,shift:both_capslock,altwin:ctrl_alt_win";
+      # xkbOptions = "caps:backspace,shift:both_capslock,altwin:ctrl_alt_win";
       libinput = {
         enable = true;
         mouse = {
+          # Mouse
           accelProfile = "flat";
           accelSpeed = null;
           disableWhileTyping = true;
+
+          # Trackball
+          # accelProfile = "flat";
+          # buttonMapping = "1 8 2 4 5 6 7 3 9";
+          # disableWhileTyping = true;
+          # naturalScrolling = true;
+          # scrollButton = 3;
+          # scrollMethod = "button";
+          # transformationMatrix = "3 0 0 0 3 0 0 0 1";
         };
       };
     };

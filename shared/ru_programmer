@@ -5,7 +5,7 @@
 // 2018/07/15 @a13 (a.k.a. @dbvvmpg) and Stepanenko Andrey <ftvkyo2011@yandex.ru>
 
 // Windows layout
-default partial alphanumeric_keys
+default partial alphanumeric_keys modifier_keys
 xkb_symbols "winkeys" {
 
     include "ru(common)"
@@ -23,10 +23,25 @@ xkb_symbols "winkeys" {
     key <AE10> { [  parenright,           0  ] };
 
     key <AB10> { [      period,       comma  ] };
-    key <BKSL> { [   backslash,       slash  ] };
+    key <BKSL> { [      slash,   backslash  ] };
+
+    key <BKSP> {        [    Escape,    Escape          ]       };
+    key <CAPS> {        [ BackSpace                     ]       };
+    key <ESC>  {        [ Caps_Lock                     ]       };
+
+    key <LALT> { [ Control_L, Control_L  ] };
+    key <RALT> { type[Group1] = "TWO_LEVEL",
+                 symbols[Group1] = [ Control_R, Control_R ] };
+    key <LWIN> { [ Alt_L, Meta_L ] };
+    key <RWIN> { [ Alt_R, Meta_R ] };
+    key <LCTL> { [ Super_L ] };
+    key <RCTL> { [ Super_R ] };
+    modifier_map Control { <RALT>, <LALT> };
+    modifier_map Mod1 { <LWIN>, <RWIN> };
+    modifier_map Mod4 { <LCTL>, <RCTL> };
 };
 
-hidden partial alphanumeric_keys
+hidden partial alphanumeric_keys modifier_keys
 xkb_symbols "common" {
 
     key <AE01> { [      exclam,           1  ] };
@@ -83,6 +98,21 @@ xkb_symbols "common" {
     key <AB09> { [       Cyrillic_yu,       Cyrillic_YU  ] };
 
     include "kpdl(comma)"
+
+    key <BKSP> {        [    Escape,    Escape          ]       };
+    key <CAPS> {        [ BackSpace                     ]       };
+    key <ESC>  {        [ Caps_Lock                     ]       };
+
+    key <LALT> { [ Control_L, Control_L  ] };
+    key <RALT> { type[Group1] = "TWO_LEVEL",
+                 symbols[Group1] = [ Control_R, Control_R ] };
+    key <LWIN> { [ Alt_L, Meta_L ] };
+    key <RWIN> { [ Alt_R, Meta_R ] };
+    key <LCTL> { [ Super_L ] };
+    key <RCTL> { [ Super_R ] };
+    modifier_map Control { <RALT>, <LALT> };
+    modifier_map Mod1 { <LWIN>, <RWIN> };
+    modifier_map Mod4 { <LCTL>, <RCTL> };
 };
 
 partial alphanumeric_keys

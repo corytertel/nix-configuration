@@ -82,6 +82,13 @@ Version=1.4
 
   home.packages = with pkgs; [
     libsForQt5.qtstyleplugins
+    moka-icon-theme
+    papirus-icon-theme
+    papirus-maia-icon-theme
+    luna-icons
+    numix-icon-theme
+    numix-icon-theme-square
+    zafiro-icons
   ];
 
   dconf.enable = true;
@@ -99,12 +106,12 @@ Version=1.4
     };
 
     iconTheme = {
-      package = pkgs.moka-icon-theme;
-      name = "Moka";
+      package = pkgs.numix-icon-theme-circle;
+      name = "Numix-Circle";
     };
 
     gtk3.extraConfig = {
-      gtk-icon-theme-name = "Moka";
+      gtk-icon-theme-name = "Numix-Circle";
       gtk-theme-name = "PlainLight";
       gtk-application-prefer-dark-theme = 0;
     };

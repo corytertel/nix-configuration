@@ -28,8 +28,8 @@
 
         width = 400;
         # height = 520;
-        origin = "top-right";
-        offset = "52x128";
+        origin = "bottom-right";
+        offset = "80x50";
 
         progress_bar = "true";
         progress_bar_height = 15;
@@ -50,7 +50,7 @@
         # Draw a line between multiple notifications
         separator_height = 1;
 
-        separator_color = "#141404aa";
+        separator_color = "#ffffffaa";
 
         # Set notification padding
         padding = 24;
@@ -59,7 +59,7 @@
         # Frame (border)
         frame_width = 0;
 
-        frame_color = "#141404";
+        frame_color = "#ffffff";
 
         # Sort messages by urgency.
         sort = "no";
@@ -70,7 +70,7 @@
         # --- Text --- #
 
         # Set the font
-        font = "Iosevka Nerd Font 11";
+        font = "VictorMono Nerd Font 10";
 
         # Set line height to font height
         line_height = 0;
@@ -132,7 +132,7 @@
         max_icon_size = 45;
 
         # Icon theme
-        icon_theme = "Pop";
+        icon_theme = "Numix-Circle";
 
         # --- History --- #
 
@@ -180,20 +180,20 @@
       };
 
       urgency_low = {
-        background = "#ffffff";
-        foreground = "#141404";
+        background = "#141404";
+        foreground = "#ffffff";
         timeout = 8;
       };
 
       urgency_normal = {
-        background = "#ffffff";
-        foreground = "#141404";
+        background = "#141404";
+        foreground = "#ffffff";
         timeout = 8;
       };
 
       urgency_critical = {
-        background = "#ffffff";
-        foreground = "#141404";
+        background = "#141404";
+        foreground = "#ffffff";
         timeout = 0;
         icon = "abrt";
       };
