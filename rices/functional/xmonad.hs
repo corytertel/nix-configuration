@@ -108,7 +108,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
     -- Xmonad prompt
-    [ ("M-x", spawn "rofi -matching fuzzy -show drun -modi drun,run --icon-theme \"Tango\" show-icons")
+    [ ("M-x", spawn "rofi -show drun -modi drun,run --icon-theme \"Tango\" show-icons")
     , ("M1-<Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run -icon-theme \"Tango\" -show-icons")
     -- Resize prompt
     , ("M-r", resizePrompt)
@@ -224,6 +224,22 @@ myAdditionalKeys =
     , (otherModMasks, action) <-
         [ ("C-. ", windows . W.greedyView) , ("C-. C-", windows . W.shift)]
     ]
+
+-- fixMinimizedWindow :: X ()
+-- fixMinimizedWindow =
+--   withFocused $ \win ->
+--                   let d = 1
+--                       rect = Rectangle
+--                   in sendMessage (SetGeometry rect)
+
+--                 withDisplay $ \dpy ->
+--                        let dw = displayWidth  dpy (defaultScreen dpy) - 1
+--                            dh = displayHeight dpy (defaultScreen dpy) - 1
+--                            wy = fi (((fi dh) `div` 2) - (barWidth `div` 2))
+--                            wwh = ((fi dw) `div` 2)
+--                            wht = ((fi dh) `div` 2) - (barWidth `div` 2)
+--                            rect = Rectangle 0 wy wwh wht
+--                        in sendMessage (SetGeometry rect)
 
 ------------------------------------------------------------------------
 
