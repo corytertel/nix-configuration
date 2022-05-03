@@ -35,8 +35,7 @@ alias directory='if [ "$PWD" = "$HOME" ]; then echo \'~'; else; basename "$PWD";
 
 setopt promptsubst
 PROMPT="%F{cyan} %f%F{yellow}%B\$(directory)%b%f %F{green}%U\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)%u%f
-$ "
-# λ
+λ "
 
 # Send to emacsclient
 function emacssend() {

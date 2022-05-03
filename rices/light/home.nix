@@ -17,13 +17,14 @@
     experimentalBackends = true;
     extraOptions = ''
       shadow = true;
-      shadow-radius = 10;
+      shadow-radius = 40;
       shadow-opacity = 0.60;
-      shadow-offset-x = 0;
-      shadow-offset-y = 0;
+      shadow-offset-x = -40;
+      shadow-offset-y = -40;
       shadow-exclude = [
         "class_g   *?= 'Rofi'",
       ];
+
     '';
     noDockShadow = true;
     vSync = false;
@@ -39,56 +40,49 @@
     # );
   };
 
-  home.file."Desktop/discord.desktop".text = ''
-[Desktop Entry]
-Categories=Network;InstantMessaging
-Exec=Discord
-GenericName=All-in-one cross-platform voice and text chat for gamers
-Icon=hipchat
-MimeType=x-scheme-handler/discord
-Name=Discord
-Type=Application
-Version=1.4
-'';
+#   home.file."Desktop/discord.desktop".text = ''
+# [Desktop Entry]
+# Categories=Network;InstantMessaging
+# Exec=Discord
+# GenericName=All-in-one cross-platform voice and text chat for gamers
+# Icon=internet-group-chat
+# MimeType=x-scheme-handler/discord
+# Name=Discord
+# Type=Application
+# Version=1.4
+# '';
 
-  home.file."Desktop/user-home.desktop".text = ''
-[Desktop Entry]
-Type=Application
-Exec=pcmanfm-qt /home/cory
-Icon=user-home
-Name=cory
-'';
+#   home.file."Desktop/user-home.desktop".text = ''
+# [Desktop Entry]
+# Type=Application
+# Exec=pcmanfm-qt /home/cory
+# Icon=user-home
+# Name=cory
+# '';
 
-  home.file."Desktop/rxvt-unicode.desktop".text = ''
-[Desktop Entry]
-Categories=System;TerminalEmulator
-Comment=A clone of the well-known terminal emulator rxvt
-Exec=urxvtc
-GenericName=rxvt-unicode
-Icon=utilities-terminal
-Name=URxvt
-Type=Application
-Version=1.4
-'';
+#   home.file."Desktop/rxvt-unicode.desktop".text = ''
+# [Desktop Entry]
+# Categories=System;TerminalEmulator
+# Comment=A clone of the well-known terminal emulator rxvt
+# Exec=urxvtc
+# GenericName=rxvt-unicode
+# Icon=utilities-terminal
+# Name=URxvt
+# Type=Application
+# Version=1.4
+# '';
 
-  home.file = {
-    "Desktop/emacsclient.desktop".source = "${pkgs.emacsGcc}/share/applications/emacsclient.desktop";
-    "Desktop/firefox.desktop".source = "${pkgs.firefox}/share/applications/firefox.desktop";
-    "Desktop/gimp.desktop".source = "${pkgs.gimp}/share/applications/gimp.desktop";
-    "Desktop/audacious.desktop".source = "${pkgs.audacious}/share/applications/audacious.desktop";
-    "Desktop/onlyoffice-desktopeditors.desktop".source = "${pkgs.onlyoffice-bin}/share/applications/onlyoffice-desktopeditors.desktop";
-    "Desktop/steam.desktop".source = "${pkgs.steam}/share/applications/steam.desktop";
-  };
+#   home.file = {
+#     "Desktop/emacsclient.desktop".source = "${pkgs.emacsGcc}/share/applications/emacsclient.desktop";
+#     "Desktop/firefox.desktop".source = "${pkgs.firefox}/share/applications/firefox.desktop";
+#     "Desktop/gimp.desktop".source = "${pkgs.gimp}/share/applications/gimp.desktop";
+#     "Desktop/audacious.desktop".source = "${pkgs.audacious}/share/applications/audacious.desktop";
+#     "Desktop/onlyoffice-desktopeditors.desktop".source = "${pkgs.onlyoffice-bin}/share/applications/onlyoffice-desktopeditors.desktop";
+#     "Desktop/steam.desktop".source = "${pkgs.steam}/share/applications/steam.desktop";
+#   };
 
   home.packages = with pkgs; [
     libsForQt5.qtstyleplugins
-    moka-icon-theme
-    papirus-icon-theme
-    papirus-maia-icon-theme
-    luna-icons
-    numix-icon-theme
-    numix-icon-theme-square
-    zafiro-icons
   ];
 
   dconf.enable = true;
@@ -97,7 +91,7 @@ Version=1.4
 
     font = {
       package = null;
-      name = "VictorMono Nerd Font 10";
+      name = "NotoSans Nerd Font 10";
     };
 
     theme = {
@@ -106,12 +100,12 @@ Version=1.4
     };
 
     iconTheme = {
-      package = pkgs.numix-icon-theme-circle;
-      name = "Numix-Circle";
+      package = pkgs.tango-icon-theme;
+      name = "Tango";
     };
 
     gtk3.extraConfig = {
-      gtk-icon-theme-name = "Numix-Circle";
+      gtk-icon-theme-name = "Tango";
       gtk-theme-name = "PlainLight";
       gtk-application-prefer-dark-theme = 0;
     };

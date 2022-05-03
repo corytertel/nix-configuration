@@ -10,7 +10,7 @@
 configuration {
 	font:			    "VictorMono Nerd Font 16";
     show-icons:                     true;
-	icon-theme: 		    "Tango";
+	icon-theme: 		    "Numix-Circle";
     display-drun: 		    "";
     drun-display-format:            "{name}";
     disable-history:                false;
@@ -19,13 +19,12 @@ configuration {
 
 /* -- Light-- */
 * {
-    background:                     #E8E8E8E6;
+    background:                     #141404;
     background-alt:                 #D8D8D8;
-    foreground:                     #141404;
-    background-selected:            #141404;
-    foreground-selected:            #FFFFFF;
+    foreground:                     #FFFFFF;
+    background-selected:            #FFFFFF;
+    foreground-selected:            #141404;
     accent:			    #CCCCCC;
-
 }
 
 window {

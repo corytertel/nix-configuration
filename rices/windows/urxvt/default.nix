@@ -1,6 +1,7 @@
 { pkgs, config, ... }:
 
 {
+  home.file.".icons/48/apps/utilities-terminal.png".source = ./utilities-terminal.png;
   programs.urxvt = {
     enable = true;
     extraConfig = {
@@ -13,9 +14,9 @@
       "pointerColor" = "#ffffff";
       "pointerColor2" = "#141404";
 
-      "foreground"  = "#141404";
-      "background"  = "#ffffff";
-      "cursorColor" = "#141404";
+      "foreground"  = "#ffffff";
+      "background"  = "#141404";
+      "cursorColor" = "#ffffff";
       "color0"      = "#141404";
       "color8"      = "#141404";
       "color1"      = "#e60909";
@@ -33,11 +34,6 @@
       "color7"      = "#cccccc";
       "color15"     = "#cccccc";
 
-      "font" = "xft:VictorMono Nerd Font Mono:style=Regular:size=10:antialias=true";
-      "boldFont" = "xft:VictorMono Nerd Font Mono:style=Bold:size=10:antialias=true";
-      "italicFont" = "xft:VictorMono Nerd Font Mono:style=Italic:size=10:antialias=true";
-      "boldItalicFont" = "xft:VictorMono Nerd Font Mono:style=Bold Italic:size=10:antialias=true";
-
       "internalBorder" = "40";
       "externalBorder" = "0";
       "cursorBlink" = "true";
@@ -46,12 +42,13 @@
       "depth" = "32";
       "perl-ext-common" = "default";
 
-      "iconFile" = "${pkgs.tango-icon-theme}/share/icons/Tango/48x48/apps/utilities-terminal.png";
+      "iconFile" = "/home/cory/.icons/48/apps/utilities-terminal.png";
 
       "urlLauncher" = "firefox";
       "underlineURLs" = "true";
       "urlButton" = "1";
     };
+    fonts = [ "xft:CaskaydiaCove Nerd Font Mono:size=10:antialias=true" ];
     iso14755 = false;
     keybindings = {
       "Shift-Control-V" = "eval:paste_clipboard";
