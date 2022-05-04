@@ -114,8 +114,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
     -- Xmonad prompt
-    [ ("M-x", spawn "rofi -matching fuzzy -show drun -modi drun,run --icon-theme \"Tango\" show-icons")
-    , ("M1-<Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run -icon-theme \"Tango\" -show-icons")
+    [ ("M-x", spawn "rofi -show drun -modi drun,run --icon-theme \"Tango\" show-icons")
+    , ("M1-<Space>", spawn "rofi -show drun -modi drun,run -icon-theme \"Tango\" -show-icons")
     -- Resize prompt
     , ("M-r", resizePrompt)
     , ("M-S-r", resizePrompt)
@@ -153,7 +153,7 @@ myAdditionalKeys =
     ----------------------------------------------------------------------
     --                            Launch                                --
     ----------------------------------------------------------------------
-    , ("C-. <Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run --icon-theme \"Tango\" show-icons")
+    , ("C-. <Space>", spawn "rofi -show drun -modi drun,run --icon-theme \"Tango\" show-icons")
     , ("C-. d", runOrRaise "discord" (className =? "discord"))
     , ("C-. e", spawn "emacsclient -c")
     , ("C-. C-e", spawn "emacs")

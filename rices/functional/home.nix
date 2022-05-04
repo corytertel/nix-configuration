@@ -48,7 +48,7 @@
 Categories=Network;InstantMessaging
 Exec=Discord
 GenericName=All-in-one cross-platform voice and text chat for gamers
-Icon=internet-group-chat
+Icon=${pkgs.discord}/share/pixmaps/discord.png
 MimeType=x-scheme-handler/discord
 Name=Discord
 Type=Application
@@ -80,7 +80,7 @@ Version=1.4
     "Desktop/firefox.desktop".source = "${pkgs.firefox}/share/applications/firefox.desktop";
     "Desktop/gimp.desktop".source = "${pkgs.gimp}/share/applications/gimp.desktop";
     "Desktop/audacious.desktop".source = "${pkgs.audacious}/share/applications/audacious.desktop";
-    "Desktop/onlyoffice-desktopeditors.desktop".source = "${pkgs.onlyoffice-bin}/share/applications/onlyoffice-desktopeditors.desktop";
+    "Desktop/writer.desktop".source = "${pkgs.libreoffice-qt}/share/applications/writer.desktop";
   };
 
   home.packages = with pkgs; [

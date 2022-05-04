@@ -5,7 +5,7 @@ final: prev: {
     src = pkgs.fetchFromGitHub {
       owner = "corytertel";
       repo = "sxiv";
-      rev = "a940d2ace00b7692be7f44574afdfe9e0528bd3d";
+      rev = "ba6f3fd45d0741070d9b74319ed5fb606cc79dfe";
       sha256 = "PDJgwqAcjoZcDvFaqC1UBoHp8docaOkZO6FVllZ0VVY=";
     };
   });

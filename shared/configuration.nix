@@ -186,6 +186,7 @@
     virtualbox.host.enable = true; # Virtual Box
     libvirtd.enable = true; # virt-manager
     # anbox.enable = true;
+    waydroid.enable = true;
   };
 
   programs = {
