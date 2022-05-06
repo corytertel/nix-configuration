@@ -14,11 +14,20 @@
     enable = true;
     inactiveOpacity = "1.00";
     activeOpacity = "1.00";
-    experimentalBackends = true;
+    # experimentalBackends = true;
+    experimentalBackends = false;
+    backend = "glx";
+    # paint-on-overlay = true;
+    # clear-shadow = true;
+    # vsync = "opengl-swc";
+    vSync = true;
     extraOptions = ''
+      glx-no-stencil = true;
+      glx-no-rebind-pixmap = true;
+
       shadow = true;
       shadow-radius = 40;
-      shadow-opacity = 0.60;
+      shadow-opacity = 0.70;
       shadow-offset-x = -40;
       shadow-offset-y = -40;
       shadow-exclude = [
@@ -26,8 +35,6 @@
       ];
 
     '';
-    noDockShadow = true;
-    vSync = false;
     # package = pkgs.picom.overrideAttrs (
     #   o: {
     #     src = pkgs.fetchFromGitHub {
@@ -40,46 +47,46 @@
     # );
   };
 
-  home.file."Desktop/discord.desktop".text = ''
-[Desktop Entry]
-Categories=Network;InstantMessaging
-Exec=Discord
-GenericName=All-in-one cross-platform voice and text chat for gamers
-Icon=${pkgs.discord}/share/pixmaps/discord.png
-MimeType=x-scheme-handler/discord
-Name=Discord
-Type=Application
-Version=1.4
-'';
+#   home.file."Desktop/discord.desktop".text = ''
+# [Desktop Entry]
+# Categories=Network;InstantMessaging
+# Exec=Discord
+# GenericName=All-in-one cross-platform voice and text chat for gamers
+# Icon=${pkgs.discord}/share/pixmaps/discord.png
+# MimeType=x-scheme-handler/discord
+# Name=Discord
+# Type=Application
+# Version=1.4
+# '';
 
-  home.file."Desktop/user-home.desktop".text = ''
-[Desktop Entry]
-Type=Application
-Exec=pcmanfm-qt /home/cory
-Icon=user-home
-Name=cory
-'';
+#   home.file."Desktop/user-home.desktop".text = ''
+# [Desktop Entry]
+# Type=Application
+# Exec=pcmanfm-qt /home/cory
+# Icon=user-home
+# Name=cory
+# '';
 
-  home.file."Desktop/rxvt-unicode.desktop".text = ''
-[Desktop Entry]
-Categories=System;TerminalEmulator
-Comment=A clone of the well-known terminal emulator rxvt
-Exec=urxvtc
-GenericName=rxvt-unicode
-Icon=utilities-terminal
-Name=URxvt
-Type=Application
-Version=1.4
-'';
+#   home.file."Desktop/rxvt-unicode.desktop".text = ''
+# [Desktop Entry]
+# Categories=System;TerminalEmulator
+# Comment=A clone of the well-known terminal emulator rxvt
+# Exec=urxvtc
+# GenericName=rxvt-unicode
+# Icon=utilities-terminal
+# Name=URxvt
+# Type=Application
+# Version=1.4
+# '';
 
-  home.file = {
-    "Desktop/emacsclient.desktop".source = "${pkgs.emacsGcc}/share/applications/emacsclient.desktop";
-    "Desktop/firefox.desktop".source = "${pkgs.firefox}/share/applications/firefox.desktop";
-    "Desktop/gimp.desktop".source = "${pkgs.gimp}/share/applications/gimp.desktop";
-    "Desktop/audacious.desktop".source = "${pkgs.audacious}/share/applications/audacious.desktop";
-    "Desktop/writer.desktop".source = "${pkgs.libreoffice-qt}/share/applications/writer.desktop";
-    "Desktop/steam.desktop".source = "${pkgs.steam}/share/applications/steam.desktop";
-  };
+#   home.file = {
+#     "Desktop/emacsclient.desktop".source = "${pkgs.emacsGcc}/share/applications/emacsclient.desktop";
+#     "Desktop/firefox.desktop".source = "${pkgs.firefox}/share/applications/firefox.desktop";
+#     "Desktop/gimp.desktop".source = "${pkgs.gimp}/share/applications/gimp.desktop";
+#     "Desktop/audacious.desktop".source = "${pkgs.audacious}/share/applications/audacious.desktop";
+#     "Desktop/writer.desktop".source = "${pkgs.libreoffice-qt}/share/applications/writer.desktop";
+#     "Desktop/steam.desktop".source = "${pkgs.steam}/share/applications/steam.desktop";
+#   };
 
   home.packages = with pkgs; [
     libsForQt5.qtstyleplugins

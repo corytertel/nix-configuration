@@ -155,6 +155,7 @@
       vlc
       sxiv
       libreoffice-qt
+      pinfo
 
       wireshark
       tcpdump

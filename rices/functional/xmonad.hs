@@ -1216,29 +1216,38 @@ p -!> f = p >>= \b -> if b then return mempty else f
 (=!?) :: Eq a => C.Query a -> a -> C.Query Bool
 q =!? x = fmap (/= x) q
 
+-- myManageHook = composeAll
+--     -- [ className =? "Orage"                                --> doCenterFloat
+--     [ className =? "Firefox" <&&> resource =? "Toolkit"   --> myRectFloat
+--     , stringProperty "WM_WINDOW_ROLE"
+--       =? "GtkFileChooserDialog"                           --> myRectFloat
+--     , stringProperty "WM_WINDOW_ROLE" =? "pop-up"         --> myRectFloat
+--     -- , isDialog                                            --> myRectFloat
+--     -- , isInProperty "_NET_WM_WINDOW_TYPE"
+--     --   "_NET_WM_WINDOW_TYPE_SPLASH"                        --> myRectFloat
+--     , title     =? "Save Image"                           --> myRectFloat
+--     , title     =? "Save File"                            --> myRectFloat
+--     , title     =? "Open"                                 --> myRectFloat
+--     , title     =? "Open Files"                           --> myRectFloat
+--     , resource  =? "desktop_window"                       --> doIgnore
+--     , resource  =? "kdesktop"                             --> doIgnore
+--     , isFullscreen --> doFullFloat
+--     , fmap not willFloat --> insertPosition Below Newer
+--     , fmap not willFloat -!> insertPosition Master Newer
+--     ]
+--   where
+--     -- xpos, ypos, width, height
+--     myRectFloat = doRectFloat (W.RationalRect (1 % 3) (3 % 10) (1 % 3) (2 % 5))
+--     helpFloat = doRectFloat (W.RationalRect (7 % 8) (0 % 1) (1 % 8) (1 % 2))
+
 myManageHook = composeAll
-    -- [ className =? "Orage"                                --> doCenterFloat
-    [ className =? "Firefox" <&&> resource =? "Toolkit"   --> myRectFloat
-    , stringProperty "WM_WINDOW_ROLE"
-      =? "GtkFileChooserDialog"                           --> myRectFloat
-    , stringProperty "WM_WINDOW_ROLE" =? "pop-up"         --> myRectFloat
-    -- , isDialog                                            --> myRectFloat
-    -- , isInProperty "_NET_WM_WINDOW_TYPE"
-    --   "_NET_WM_WINDOW_TYPE_SPLASH"                        --> myRectFloat
-    , title     =? "Save Image"                           --> myRectFloat
-    , title     =? "Save File"                            --> myRectFloat
-    , title     =? "Open"                                 --> myRectFloat
-    , title     =? "Open Files"                           --> myRectFloat
-    , resource  =? "desktop_window"                       --> doIgnore
-    , resource  =? "kdesktop"                             --> doIgnore
-    , isFullscreen --> doFullFloat
-    , fmap not willFloat --> insertPosition Below Newer
-    , fmap not willFloat -!> insertPosition Master Newer
-    ]
-  where
-    -- xpos, ypos, width, height
-    myRectFloat = doRectFloat (W.RationalRect (1 % 3) (3 % 10) (1 % 3) (2 % 5))
-    helpFloat = doRectFloat (W.RationalRect (7 % 8) (0 % 1) (1 % 8) (1 % 2))
+               [ isFullscreen --> doFullFloat
+               --, fmap not willFloat -!> unfloat
+               , isFullscreen -!> unfloat
+               , insertPosition Below Newer
+               ]
+               where
+                 unfloat = ask >>= doF . W.sink
 
 willFloat :: C.Query Bool
 willFloat =
