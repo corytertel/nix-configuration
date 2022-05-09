@@ -4,7 +4,11 @@
   services.xserver = {
     displayManager = {
       defaultSession = "none+xmonad";
-      gdm.enable = true;
+      sddm = {
+        enable = true;
+        enableHidpi = true;
+        theme = "mountain-light";
+      };
     };
 
     windowManager.xmonad = {
@@ -23,6 +27,7 @@
     etc."wallpaper.jpg".source = ./wallpapers/mountain.jpg;
     systemPackages = with pkgs; [
       xdotool
+      sddm-mountain-light
     ];
   };
 }

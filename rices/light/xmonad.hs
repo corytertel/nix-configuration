@@ -521,15 +521,15 @@ getSize i (Rectangle rx ry _ _) w = do
   bw <- asks (borderWidth . config)
   wa <- io $ getWindowAttributes d w
   withDisplay $ \dpy ->
-    let -- deco = 45 - myBorderWidth
+    let deco = 50 - myBorderWidth
         dw = fi (displayWidth  dpy (defaultScreen dpy))
         dh = fi (displayHeight dpy (defaultScreen dpy))
         wh = fi (wa_width  wa) + (bw * 2)
-        ht = fi (wa_height wa) + (bw * 2)
-        -- ht = fi (wa_height wa) + (bw * 2) + deco
+        -- ht = fi (wa_height wa) + (bw * 2)
+        ht = fi (wa_height wa) + (bw * 2) + deco
         nx = if rx == 0 then ((dw - (fi i)) - (fi wh)) `div` 2 else rx
+        -- ny = if ry == 0 then (dh - (fi ht)) `div` 2 else ry
         ny = if ry == 0 then (dh - (fi ht)) `div` 2 else ry
-        -- ny = if ry == 0 then (dh - (fi ht)) `div` 2 else ry - (fi deco)
         x  =  max nx $ fi $ wa_x wa
         y  =  max ny $ fi $ wa_y wa
     in return (w, Rectangle x y wh ht)

@@ -4,7 +4,7 @@
   services.xserver = {
     displayManager = {
       defaultSession = "none+xmonad";
-      gdm.enable = true;
+      sddm.enable = true;
     };
 
     windowManager.xmonad = {
