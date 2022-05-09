@@ -8,7 +8,7 @@
  */
 
 configuration {
-	font:			    "VictorMono Nerd Font 16";
+	font:			    "NotoSans Nerd Font 15";
     show-icons:                     true;
 	icon-theme: 		    "Tango";
     display-drun: 		    "";
@@ -35,7 +35,7 @@ window {
 	border:			    0px;
 	border-color:		    @border;
     border-radius:                  0px;
-	width:			    24%;
+	width:			    20%;
     location:                       northeast;
     x-offset:                       -80px;
     y-offset:                       0px;
@@ -46,7 +46,7 @@ prompt {
 	padding: 		    0.30% 0.5% 0% 0%;
 	background-color: 	    @background;
 	text-color: 		    @foreground;
-	font:			    "VictorMono Nerd Font 16";
+	font:			    "NotoSans Nerd Font 15";
 }
 
 entry {
@@ -93,7 +93,7 @@ mainbox {
 }
 
 element {
-    font:			    "VictorMono Nerd Font 16";
+    font:			    "NotoSans Nerd Font 15";
     background-color:               @background;
     text-color:                     @foreground;
     orientation:                    vertical;
@@ -111,7 +111,7 @@ element-icon {
 }
 
 element-text {
-    font:			    "VictorMono Nerd Font 16";
+    font:			    "NotoSans Nerd Font 15";
     background-color: 		    inherit;
     text-color:       		    inherit;
     expand:                         true;
@@ -121,7 +121,7 @@ element-text {
 }
 
 element selected {
-    font:			    "VictorMono Nerd Font 16";
+    font:			    "NotoSans Nerd Font 15";
     background-color:               @background-selected;
     text-color:                     @foreground-selected;
 	border:			    0.1%;

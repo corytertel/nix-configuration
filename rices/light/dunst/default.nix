@@ -26,7 +26,7 @@
         # Follow monitor with mouse
         follow = "mouse";
 
-        width = 400;
+        width = 350;
         # height = 520;
         origin = "bottom-right";
         offset = "130x50";
@@ -70,7 +70,7 @@
         # --- Text --- #
 
         # Set the font
-        font = "VictorMono Nerd Font 10";
+        font = "NotoSans Nerd Font 11";
 
         # Set line height to font height
         line_height = 0;

@@ -100,27 +100,18 @@ myModMask       = mod4Mask
 
 myWorkspaces = [ "Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ", "Ⅴ" ]
 
-myWorkspaceIndices = M.fromList
-  $ zipWith (,) myWorkspaces [1..] -- (,) == \x y -> (x,y)
-
-clickable ws = "<action=xdotool key super+"++show i++">  "++ws++"  </action>"
-  where i = fromJust $ M.lookup ws myWorkspaceIndices
-
-myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
-    [((m .|. modm, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_5]
-        , (f, m) <- [(W.greedyView, 0), (W.shift, controlMask)]]
+myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $ []
 
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
     -- Resize prompt
-    [ ("M-r", resizePrompt)
-    , ("M-S-r", resizePrompt)
+    -- [ ("M-r", resizePrompt)
+    -- , ("M-S-r", resizePrompt)
     -- Float prompt
-    , ("M-f", floatPrompt)
-    , ("M-S-f", floatPrompt)
+    -- , ("M-f", floatPrompt)
+    -- , ("M-S-f", floatPrompt)
     -- Audio Controls
-    , ("<XF86AudioLowerVolume>", spawn "amixer -q set Master unmute 2%-")
+    [ ("<XF86AudioLowerVolume>", spawn "amixer -q set Master unmute 2%-")
     , ("<XF86AudioRaiseVolume>", spawn "amixer -q set Master unmute 2%+")
     , ("<XF86AudioMute>", spawn "amixer -q set Master toggle")
     , ("<XF86AudioNext>", spawn "audacious --fwd")
@@ -232,6 +223,13 @@ myAdditionalKeys =
     , (otherModMasks, action) <-
         [ ("C-. ", windows . W.greedyView) , ("C-. M1-", windows . W.shift)]
     ]
+    ++
+    [ (otherModMasks ++ [key], action tag)
+    | (tag, key)  <- zip myWorkspaces "12345"
+    , (otherModMasks, action) <-
+        [ ("C-. ", windows . W.greedyView) , ("C-. M1-", windows . W.shift)]
+    ]
+
 
 ------------------------------------------------------------------------
 
@@ -380,16 +378,16 @@ buttonSize :: Int
 buttonSize = 27
 
 menuButtonOffset :: Int
-menuButtonOffset = 15
+menuButtonOffset = 20
 
 maximizeButtonOffset :: Int
 maximizeButtonOffset = 65
 
 minimizeButtonOffset :: Int
-minimizeButtonOffset = 115
+minimizeButtonOffset = 110
 
 closeButtonOffset :: Int
-closeButtonOffset = 15
+closeButtonOffset = 20
 
 imageTitleBarButtonHandler :: Window -> Int -> Int -> X Bool
 imageTitleBarButtonHandler mainw distFromLeft distFromRight = do
@@ -405,7 +403,7 @@ imageTitleBarButtonHandler mainw distFromLeft distFromRight = do
 
 defaultThemeWithImageButtons :: Theme
 defaultThemeWithImageButtons =
-  def { fontName = "xft:NotoSans Nerd Font:style=Bold:size=10"
+  def { fontName = "xft:NotoSans Nerd Font:style=Bold:size=11"
       , inactiveBorderColor = "#eeeeee"
       , inactiveColor = "#eeeeee"
       , inactiveTextColor = "#999999"
@@ -419,10 +417,10 @@ defaultThemeWithImageButtons =
       , urgentTextColor = "#e60909"
       , urgentBorderWidth = 0
       , decoHeight = 50 - myBorderWidth
-      , windowTitleIcons = [ (menuButton, CenterLeft 15),
-                             (closeButton, CenterRight 15),
+      , windowTitleIcons = [ (menuButton, CenterLeft 20),
+                             (closeButton, CenterRight 20),
                              (maxiButton, CenterRight 65),
-                             (miniButton, CenterRight 115) ]
+                             (miniButton, CenterRight 110) ]
       }
 
 imageButtonDeco :: (Eq a, Shrinker s) => s -> Theme
@@ -1206,7 +1204,8 @@ myStartupHook = do
   spawnOnce "pcmanfm-qt --daemon-mode &"
   spawnOnce "pcmanfm-qt --desktop &"
   spawnOnce "urxvtd --quiet &"
-  spawnOnce "sleep 4 && tint2 &"
+  spawnOnce "sleep 2 && tint2 &"
+  spawnOnce "amixer -q set Master unmute 28%"
   setWMName "LG3D"
 
 ------------------------------------------------------------------------
