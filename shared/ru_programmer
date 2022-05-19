@@ -11,16 +11,16 @@ xkb_symbols "winkeys" {
     include "ru(common)"
     name[Group1]= "Russian";
 
-    key <AE01> { [      exclam,           1  ] };
-    key <AE02> { [    quotedbl,           2  ] };
-    key <AE03> { [  numerosign,           3  ] };
-    key <AE04> { [   semicolon,           4  ] };
-    key <AE05> { [     percent,           5  ] };
-    key <AE06> { [       colon,           6  ] };
-    key <AE07> { [    question,           7  ] };
-    key <AE08> { [    asterisk,           8, U20BD  ] };
-    key <AE09> { [   parenleft,           9  ] };
-    key <AE10> { [  parenright,           0  ] };
+    key <AE01> { [  1,      exclam  ] };
+    key <AE02> { [  2,    quotedbl  ] };
+    key <AE03> { [  3,  numerosign  ] };
+    key <AE04> { [  4,   semicolon  ] };
+    key <AE05> { [  5,     percent  ] };
+    key <AE06> { [  6,       colon  ] };
+    key <AE07> { [  7,    question  ] };
+    key <AE08> { [  8,    asterisk, U20BD  ] };
+    key <AE09> { [  9,   parenleft  ] };
+    key <AE10> { [  0,  parenright  ] };
 
     key <AB10> { [      period,       comma  ] };
     key <BKSL> { [      slash,   backslash  ] };
@@ -43,16 +43,16 @@ xkb_symbols "winkeys" {
 hidden partial alphanumeric_keys modifier_keys
 xkb_symbols "common" {
 
-    key <AE01> { [      exclam,           1  ] };
-    key <AE02> { [    quotedbl,           2  ] };
-    key <AE03> { [  numbersign,           3  ] };
-    key <AE04> { [    asterisk,           4  ] };
-    key <AE05> { [       colon,           5  ] };
-    key <AE06> { [       comma,           6  ] };
-    key <AE07> { [      period,           7  ] };
-    key <AE08> { [   semicolon,           8  ] };
-    key <AE09> { [   parenleft,           9  ] };
-    key <AE10> { [  parenright,           0  ] };
+    key <AE01> { [           1,      exclam  ] };
+    key <AE02> { [           2,    quotedbl  ] };
+    key <AE03> { [           3,  numbersign  ] };
+    key <AE04> { [           4,    asterisk  ] };
+    key <AE05> { [           5,       colon  ] };
+    key <AE06> { [           6,       comma  ] };
+    key <AE07> { [           7,      period  ] };
+    key <AE08> { [           8,   semicolon  ] };
+    key <AE09> { [           9,   parenleft  ] };
+    key <AE10> { [           0,  parenright  ] };
     key <AE11> { [       minus,  underscore  ] };
     key <AE12> { [       equal,        plus  ] };
     key <BKSL> { [   backslash,         bar  ] };

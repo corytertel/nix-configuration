@@ -2,6 +2,7 @@
 
 {
   imports = [
+    # ./apps/photogimp
     ./overlays.nix
     ./udev.nix
   ];
@@ -64,12 +65,12 @@
         us_programmer = {
           description = "US layout with numbers and characters flipped";
           languages = [ "eng" ];
-          symbolsFile = ./us_programmer;
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_programmer";
         };
         ru_programmer = {
           description = "RU layout with numbers and characters flipped";
           languages = [ "rus" ];
-          symbolsFile = ./ru_programmer;
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_programmer";
         };
       };
       layout = "us_programmer";
@@ -133,8 +134,10 @@
     '';
     gc = {
       automatic = true;
-      dates = "*:0/10";
+      dates = "weekly";
+      options = "--delete-older-than 7d";
     };
+    autoOptimiseStore = true;
   };
 
   nixpkgs = {
@@ -147,26 +150,15 @@
     variables.EDITOR = "emacs -nw";
     systemPackages = with pkgs; [
       emacsGcc
-      vim
       wget
       curl
       #firefox
       git
-      networkmanager
       gcc
       gnumake
       cmake
       which
-      fd
-      htop
-      pamixer
       ripgrep
-      git-crypt
-      gnupg
-      pinentry
-      age
-      sops
-      discord
     ];
   };
 
@@ -197,6 +189,7 @@
      pinentryFlavor = "tty";
     };
     steam.enable = true;
+    # photogimp.enable = true;
     zsh = {
       enable = true;
       enableCompletion = true;

@@ -3,7 +3,7 @@
 {
   imports =
     [
-      ./apps/bash
+      # ./apps/bash
       ./apps/firefox
       ./apps/layout_switch
       ./apps/neofetch
@@ -97,7 +97,7 @@
       # essential user apps
       tdesktop
       flameshot
-      gimp
+      photogimp
       blender
       zathura
 
@@ -156,11 +156,14 @@
       sxiv
       libreoffice-qt
       pinfo
+      fd
+      networkmanagerapplet
 
       wireshark
       tcpdump
       nmap
 
+      discord
       betterdiscord-installer
       betterdiscordctl
     ];

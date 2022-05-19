@@ -20,12 +20,15 @@
       config = { allowUnfree = true; };
       overlays = [
         (import ./overlays/blacknord-gtk.nix { inherit config pkgs lib; })
-        (import ./overlays/parchment-gtk.nix { inherit config pkgs lib; })
-        (import ./overlays/mountain-gtk.nix { inherit config pkgs lib; })
-        (import ./overlays/plainlight-gtk.nix { inherit config pkgs lib; })
+        (import ./overlays/discord.nix)
         (import ./overlays/emacs.nix)
-        (import ./overlays/sxiv.nix { inherit pkgs; })
+        (import ./overlays/keyboard-layouts.nix { inherit pkgs; })
+        (import ./overlays/mountain-gtk.nix { inherit config pkgs lib; })
+        (import ./overlays/parchment-gtk.nix { inherit config pkgs lib; })
+        (import ./overlays/plainlight-gtk.nix { inherit config pkgs lib; })
+        (import ./overlays/photogimp.nix { inherit lib pkgs; })
         (import ./overlays/sddm-mountain-light.nix { inherit pkgs; })
+        (import ./overlays/sxiv.nix { inherit pkgs; })
       ];
     };
 
@@ -43,7 +46,7 @@
           imports = [
             ./pc/home.nix
             ./shared/home.nix
-            ./rices/light/home.nix
+            ./rices/fvwm-pc/home.nix
           ];
         };
       };
@@ -57,7 +60,7 @@
           imports = [
             ./laptop/home.nix
             ./shared/home.nix
-            ./rices/functional/home.nix
+            ./rices/xmonad-laptop/home.nix
           ];
         };
       };
@@ -69,7 +72,7 @@
         modules = [
           ./pc/configuration.nix
           ./shared/configuration.nix
-          ./rices/light/configuration.nix
+          ./rices/fvwm-pc/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
@@ -82,7 +85,7 @@
         modules = [
           ./laptop/configuration.nix
           ./shared/configuration.nix
-          ./rices/functional/configuration.nix
+          ./rices/xmonad-laptop/configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;

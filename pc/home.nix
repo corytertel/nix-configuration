@@ -23,14 +23,14 @@
     Sxiv.font:NotoSans Nerd Font:size=10
   '';
 
-  # Fix pointer cursor
-  xsession = {
-    enable = true;
-    pointerCursor = {
-      name = "Vanilla-DMZ-AA";
-      package = pkgs.vanilla-dmz;
+  home.pointerCursor = {
+    name = "Vanilla-DMZ-AA";
+    size = 32;
+    gtk.enable = true;
+    package = pkgs.vanilla-dmz;
+    x11 = {
+      enable = true;
       defaultCursor = "left_ptr";
-      size = 32;
     };
   };
 

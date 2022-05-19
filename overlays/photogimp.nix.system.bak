@@ -1,0 +1,90 @@
+{ lib, pkgs, ... }:
+
+self: super: {
+
+  # This derivation overrides the gimp system configuration, allowing for a
+  # custom local gimp config to still exist. However, not everything of
+  # photogimp is correctly set. Right now files that need to be located
+  # in /share/gimp/2.0 are not located there. So stuff like photogimp
+  # fonts, brushes, and the splash screen are not set
+  # In the future work on overriding the system files at /share/gimp/2.0
+  # so a local config can still exist
+
+  photogimp = let
+
+    desktop-patch = pkgs.writeTextFile {
+      name = "desktop.patch";
+      text = ''
+ desktop/gimp.desktop.in.in | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/desktop/gimp.desktop.in.in b/desktop/gimp.desktop.in.in
+index c0a98e9..998e274 100644
+--- a/desktop/gimp.desktop.in.in
++++ b/desktop/gimp.desktop.in.in
+@@ -1,14 +1,14 @@
+ [Desktop Entry]
+-Version=1.0
++Version=1.1
+ Type=Application
+-_Name=GNU Image Manipulation Program
++_Name=PhotoGIMP
+ _GenericName=Image Editor
+ _Comment=Create images and edit photographs
+ # Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+-_Keywords=GIMP;graphic;design;illustration;painting;
++_Keywords=GIMP;PhotoGIMP;graphic;design;illustration;painting;
+ Exec=@GIMP_COMMAND@ %U
+ TryExec=gimp-@GIMP_APP_VERSION@
+-Icon=gimp
++Icon=photogimp
+ Terminal=false
+ Categories=Graphics;2DGraphics;RasterGraphics;GTK;
+ StartupNotify=true
+      '';
+    };
+
+    srcs = {
+      photogimp-files = self.stdenv.mkDerivation rec {
+        name = "photogimp-files";
+        dontBuild = true;
+        installPhase = ''
+          # add photogimp icons to the system
+          mkdir -p $out/share/icons
+          cp -aR $src/.local/share/icons $out/share
+          # add photogimp configuration to the gimp system config directory
+          mkdir -p $out/etc/gimp/2.0
+          cp -aR $src/.var/app/org.gimp.GIMP/config/GIMP/2.10/* $out/etc/gimp/2.0
+          # correct the location of certain config files
+          mkdir -p $out/share/gimp/2.0
+          cp -aR $out/etc/gimp/2.0/brushes $out/share/gimp/2.0
+          rm -rf $out/etc/gimp/2.0/brushes
+          cp -aR $out/etc/gimp/2.0/fonts $out/share/gimp/2.0
+          rm -rf $out/etc/gimp/2.0/fonts
+        '';
+        src = pkgs.fetchFromGitHub {
+          owner = "Diolinux";
+          repo = "PhotoGIMP";
+          rev = "a1565875453babfdb98256c43e633c4a03913599";
+          sha256 = "E38fFiIHqJsvt03F+Wds7abyalMcygrJ8KYNW5hUBh8=";
+        };
+      };
+    };
+
+  in super.gimp.overrideAttrs (old: {
+    name = "photogimp";
+
+    # patch to use photogimp .desktop file
+    patches = (old.patches or []) ++ [
+      desktop-patch
+    ];
+
+    postInstall = ''
+      # Remove the etc folder
+      rm -rf $out/etc
+      # Now link etc to photogimp-files
+      ln -s ${srcs.photogimp-files}/etc $out
+    '';
+  });
+
+}

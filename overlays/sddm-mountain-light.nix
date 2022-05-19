@@ -11,8 +11,8 @@ self: super: {
     src = pkgs.fetchFromGitHub {
       owner = "corytertel";
       repo = "sddm-mountain-light";
-      rev = "d7b5fd41f68b003ae4b88107b62d8265df5fdeaa";
-      sha256 = "A/56OJ66EMvNindLJMwn9G4MTJ00Dpmlm+lZVutNerY=";
+      rev = "d9582a3f99a192eee3458ce10e01a5a5a95f5c69";
+      sha256 = "BcfeyVyb1Jvfmw+GUXIdUk29k7ZLoXZh2LVQOg+/MzQ=";
     };
   };
 }

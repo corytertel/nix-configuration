@@ -4,16 +4,16 @@ xkb_symbols "basic" {
     name[Group1]= "English (US)";
 
     key <TLDE>  { [     grave,	asciitilde	]	};
-    key <AE01> {     [  exclam       ,1  ]  };
-    key <AE02> {     [  at           ,2  ]  };
-    key <AE03> {     [  numbersign   ,3  ]  };
-    key <AE04> {     [  dollar       ,4  ]  };
-    key <AE05> {     [  percent      ,5  ]  };
-    key <AE06> {     [  asciicircum  ,6  ]  };
-    key <AE07> {     [  ampersand    ,7  ]  };
-    key <AE08> {     [  asterisk     ,8  ]  };
-    key <AE09> {     [  parenleft    ,9  ]  };
-    key <AE10> {     [  parenright   ,0  ]  };
+    key <AE01> {     [  1,       exclam  ]  };
+    key <AE02> {     [  2,           at  ]  };
+    key <AE03> {     [  3,   numbersign  ]  };
+    key <AE04> {     [  4,       dollar  ]  };
+    key <AE05> {     [  5,      percent  ]  };
+    key <AE06> {     [  6,  asciicircum  ]  };
+    key <AE07> {     [  7,    ampersand  ]  };
+    key <AE08> {     [  8,     asterisk  ]  };
+    key <AE09> {     [  9,  bracketleft  ]  };
+    key <AE10> {     [  0, bracketright  ]  };
     key <AE11>  { [     minus,	underscore	]	};
     key <AE12>  { [     equal,	plus		]	};
 
@@ -27,8 +27,8 @@ xkb_symbols "basic" {
     key <AD08> {	[	  i,	I		]	};
     key <AD09> {	[	  o,	O		]	};
     key <AD10> {	[	  p,	P		]	};
-    key <AD11> {	[   braceleft,	bracketleft	]	};
-    key <AD12> {	[  braceright,	bracketright	]	};
+    key <AD11> {	[   parenleft,	braceleft	]	};
+    key <AD12> {	[  parenright,	braceright	]	};
 
     key <AC01> {	[	  a,	A 		]	};
     key <AC02> {	[	  s,	S		]	};

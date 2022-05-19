@@ -10,8 +10,8 @@
   nix.buildCores = 4;
 
   boot = {
-    #kernelPackages = pkgs.linuxPackages_latest;
-    kernelPackages = pkgs.linuxPackages_5_15;
+    # kernelPackages = pkgs.linuxPackages_5_15;
+    kernelPackages = pkgs.linuxPackages_xanmod;
     kernelParams = [
       "pcie_aspm.policy=performance"
       "mitigations=off"
@@ -30,11 +30,15 @@
     };
   };
 
+  programs = {
+    gamemode.enable = true;
+  };
+
   services = {
     xserver.videoDrivers = [ "nvidia" ];
   };
 
   environment.systemPackages = with pkgs; [
-
+    xboxdrv
   ];
 }

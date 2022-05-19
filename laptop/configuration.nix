@@ -47,6 +47,10 @@
   };
 
   services = {
+    ananicy = {
+      enable = true;
+      package = pkgs.ananicy-cpp;
+    };
     tlp.enable = true;
     thermald.enable = true;
     gnome.gnome-keyring.enable = true;

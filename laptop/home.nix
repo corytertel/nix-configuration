@@ -23,15 +23,16 @@
     Sxiv.font:NotoSans Nerd Font:size=10
   '';
 
-  xsession = {
-    enable = true;
-    pointerCursor = {
-      # name = "Numix-Cursor";
-      # package = pkgs.numix-cursor-theme;
-      name = "Vanilla-DMZ-AA";
-      package = pkgs.vanilla-dmz;
+  home.pointerCursor = {
+    # name = "Numix-Cursor";
+    name = "Vanilla-DMZ-AA";
+    size = 48;
+    gtk.enable = true;
+    # package = pkgs.numix-cursor-theme;
+    package = pkgs.vanilla-dmz;
+    x11 = {
+      enable = true;
       defaultCursor = "left_ptr";
-      size = 48;
     };
   };
 
