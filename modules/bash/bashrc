@@ -1,0 +1,61 @@
+#!/bin/sh
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+alias ls='ls --color=auto'
+PS1='[\u@\h \W]\$ '
+
+# Aliases
+alias nixos-test='nixos-rebuild test --flake . --use-remote-sudo'
+alias nixos-switch='nixos-rebuild switch --flake . --use-remote-sudo'
+alias exa='exa --icons --all --git --binary --group-directories-first'
+alias ls='exa'
+alias l='exa --oneline --classify'
+alias ll='exa --long --header'
+alias c='clear'
+alias grep='grep -i --color=auto'
+alias rm='rm --verbose'
+alias mv='mv --interactive --verbose'
+alias cp='cp -i --verbose'
+alias nf='neofetch'
+alias e='emacsclient -nw'
+alias n='cd $HOME/.nix-configuration'
+alias fm='pcmanfm-qt -n'
+alias i='sxiv'
+alias info='pinfo'
+alias nd='nix develop'
+
+# Prompt
+bash_prompt() {
+    black="\e[0;30m"
+    red="\e[0;31m"
+    green="\e[0;32m"
+    yellow="\e[0;33m"
+    blue="\e[0;34m"
+    magenta="\e[0;35m"
+    cyan="\e[0;36m"
+    white="\e[0;37m"
+    bold="\e[1m"
+    uline="\e[4m"
+    reset="\e[0m"
+
+    # Finding the git branch
+    #git rev-parse --abbrev-ref HEAD
+    #git status 2>/dev/null | grep 'On branch' | sed 's/On branch / => /'
+    #git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+
+    # How many files were modified git
+    #git status -s | sed -n '$='
+    #if [ "git status -s | sed -n '$='" == "" ]; then echo "modified"; fi
+
+    # Aesthetics
+    #╭╴
+    #╰─>
+    #╰─❯
+
+    export PS1="╭╴${cyan}${bold} ${reset}${yellow}${bold}\W${reset} ${green}${uline}\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)${reset}\n╰─λ "
+}
+
+bash_prompt
+unset bash_prompt

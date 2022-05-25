@@ -18,64 +18,55 @@
     pkgs = import nixpkgs {
       inherit system;
       config = { allowUnfree = true; };
-      overlays = [
-        (import ./overlays/blacknord-gtk.nix { inherit config pkgs lib; })
-        (import ./overlays/discord.nix)
-        (import ./overlays/emacs.nix)
-        (import ./overlays/keyboard-layouts.nix { inherit pkgs; })
-        (import ./overlays/mountain-gtk.nix { inherit config pkgs lib; })
-        (import ./overlays/parchment-gtk.nix { inherit config pkgs lib; })
-        (import ./overlays/plainlight-gtk.nix { inherit config pkgs lib; })
-        (import ./overlays/photogimp.nix { inherit lib pkgs; })
-        (import ./overlays/sddm-mountain-light.nix { inherit pkgs; })
-        (import ./overlays/sxiv.nix { inherit pkgs; })
-      ];
+      overlays = import ./overlays { inherit pkgs; }
+                 ++ import ./packages { inherit config lib pkgs; };
     };
 
     config = nixpkgs.config;
     lib = nixpkgs.lib;
 
   in {
-    homeManagerConfigurations = {
-      pc = home-manager.lib.homeManagerConfiguration {
-        inherit system pkgs;
-        username = "cory";
-        stateVersion = "22.05";
-        homeDirectory = "/home/cory";
-        configuration = {
-          imports = [
-            ./pc/home.nix
-            ./shared/home.nix
-            ./rices/fvwm-pc/home.nix
-          ];
-        };
-      };
+    devShell.${system} = import ./shell.nix { inherit pkgs; };
 
-      laptop = home-manager.lib.homeManagerConfiguration {
-        inherit system pkgs;
-        username = "cory";
-        stateVersion = "22.05";
-        homeDirectory = "/home/cory";
-        configuration = {
-          imports = [
-            ./laptop/home.nix
-            ./shared/home.nix
-            ./rices/xmonad-laptop/home.nix
-          ];
-        };
-      };
-    };
+    # homeManagerConfigurations = {
+    #   pc = home-manager.lib.homeManagerConfiguration {
+    #     inherit system pkgs;
+    #     username = "cory";
+    #     stateVersion = "22.05";
+    #     homeDirectory = "/home/cory";
+    #     configuration = {
+    #       imports = [
+    #         ./pc/home.nix
+    #         ./shared/home.nix
+    #         ./wm/fvwm-pc/home.nix
+    #       ];
+    #     };
+    #   };
+
+    #   laptop = home-manager.lib.homeManagerConfiguration {
+    #     inherit system pkgs;
+    #     username = "cory";
+    #     stateVersion = "22.05";
+    #     homeDirectory = "/home/cory";
+    #     configuration = {
+    #       imports = [
+    #         ./laptop/home.nix
+    #         ./shared/home.nix
+    #         ./wm/xmonad-laptop/home.nix
+    #       ];
+    #     };
+    #   };
+    # };
 
     nixosConfigurations = {
       pc = lib.nixosSystem {
         inherit system pkgs;
         modules = [
-          ./pc/configuration.nix
-          ./shared/configuration.nix
-          ./rices/fvwm-pc/configuration.nix
+          ./hosts/pc
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.users.cory = import ./modules/pc.nix;
           }
         ];
       };
@@ -83,12 +74,11 @@
       laptop = lib.nixosSystem {
         inherit system pkgs;
         modules = [
-          ./laptop/configuration.nix
-          ./shared/configuration.nix
-          ./rices/xmonad-laptop/configuration.nix
+          ./hosts/laptop
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            home-manager.users.cory = import ./modules/laptop.nix;
           }
         ];
       };
