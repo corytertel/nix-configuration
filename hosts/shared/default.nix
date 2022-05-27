@@ -150,12 +150,15 @@
 
   environment = {
     shells = [ pkgs.ksh pkgs.nushell ];
-    variables.EDITOR = "emacs -nw";
+    variables = {
+      EDITOR = "emacs -nw";
+      # PLASMA_USE_QT_SCALING = "1";
+      # QT_SCALE_FACTOR = "0.85";
+    };
     systemPackages = with pkgs; [
       emacsGcc
       wget
       curl
-      firefox
       git
       gcc
       gnumake
@@ -216,10 +219,14 @@
       "text/plain" = "emacsclient.desktop";
       "inode/directory" = "pcmanfm-qt.desktop";
 
-      "application/zip" = "org.kde.ark.desktop";
-      "application/x-7z-compressed" = "org.kde.ark.desktop";
-      "application/vnd.rar" = "org.kde.ark.desktop";
-      "application/gzip" = "org.kde.ark.desktop";
+      # "application/zip" = "org.kde.ark.desktop";
+      # "application/x-7z-compressed" = "org.kde.ark.desktop";
+      # "application/vnd.rar" = "org.kde.ark.desktop";
+      # "application/gzip" = "org.kde.ark.desktop";
+      "application/zip" = "lxqt-archiver.desktop";
+      "application/x-7z-compressed" = "lxqt-archiver.desktop";
+      "application/vnd.rar" = "lxqt-archiver.desktop";
+      "application/gzip" = "lxqt-archiver.desktop";
 
       "application/msword" = "writer.desktop";
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = "writer.desktop";
@@ -246,13 +253,20 @@
       "audio/wav" = "audacious.desktop";
       "audio/weba" = "audacious.desktop";
 
-      "mage/bmp" = "sxiv.desktop";
-      "image/gif" = "org.kde.gwenview.desktop";
-      "image/ico" = "sxiv.desktop";
-      "image/jpeg" = "sxiv.desktop";
-      "image/png" = "sxiv.desktop";
-      "image/svg" = "sxiv.desktop";
-      "image/webp" = "sxiv.desktop";
+      # "mage/bmp" = "sxiv.desktop";
+      # "image/gif" = "org.kde.gwenview.desktop";
+      # "image/ico" = "sxiv.desktop";
+      # "image/jpeg" = "sxiv.desktop";
+      # "image/png" = "sxiv.desktop";
+      # "image/svg" = "sxiv.desktop";
+      # "image/webp" = "sxiv.desktop";
+      "mage/bmp" = "lximage-qt.desktop";
+      "image/gif" = "lximage-qt.desktop";
+      "image/ico" = "lximage-qt.desktop";
+      "image/jpeg" = "lximage-qt.desktop";
+      "image/png" = "lximage-qt.desktop";
+      "image/svg" = "lximage-qt.desktop";
+      "image/webp" = "lximage-qt.desktop";
 
       "video/mp4" = "vlc.desktop";
       "video/mpeg" = "vlc.desktop";

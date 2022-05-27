@@ -371,6 +371,9 @@ Mouse 3 WT 4 FvwmResize
 Mouse 1 A C4 Scroll reverse
 
 # Simple Commands
+Silent Key Super_L  A     A       FvwmLaunch
+Silent Key Super_R  A     A       FvwmLaunch
+Silent Key Menu     A     A       FvwmRootMenu
 Silent Key Return   A     4       FvwmTerm
 Silent Key Return   A     4S      FvwmEditor
 Silent Key Space    A     4       FvwmLaunch

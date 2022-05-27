@@ -1,2 +1,2 @@
 [PlankDockItemPreferences]
-Launcher=file:///run/current-system/sw/share/applications/firefox.desktop
+Launcher=file:///etc/profiles/per-user/cory/share/applications/firefox.desktop

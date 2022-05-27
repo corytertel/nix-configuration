@@ -1,4 +1,4 @@
-{ home-manager, ... }:
+{ pkgs, ... }:
 
 {
   home-manager.users.cory.home.file = {

@@ -12,8 +12,9 @@ let
 in {
   imports = [
     ../../bash
+    ../../discord
     ../../dunst
-    # ../../firefox
+    ../../firefox
     ../../gtk
     ../../layout_switch
     ../../neofetch
@@ -39,10 +40,6 @@ in {
 
     windowManager.session = [{
       name = "fvwm";
-      # start = ''
-      #   ${pkgs.fvwm}/bin/fvwm &
-      #   waitPID=$!
-      # '';
       start = ''
         ${pkgs.fvwm}/bin/fvwm -f ${fvwm-config}/config &
         waitPID=$!

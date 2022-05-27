@@ -1,9 +1,16 @@
-self: super: {
-  discord = super.discord.overrideAttrs (_: {
-    src = builtins.fetchTarball {
-      url = "https://discord.com/api/download?platform=linux&format=tar.gz";
-      sha256 = "0hdgif8jpp5pz2c8lxas88ix7mywghdf9c9fn95n0dwf8g1c1xbb";
-    };
+{ pkgs, ... }:
+
+final: prev: {
+
+  discord = let
+
+    source = prev.discord.overrideAttrs (_: {
+      src = builtins.fetchTarball {
+        url = "https://discord.com/api/download?platform=linux&format=tar.gz";
+        sha256 = "0hdgif8jpp5pz2c8lxas88ix7mywghdf9c9fn95n0dwf8g1c1xbb";
+      };
+    });
+
     commandLineArgs = toString [
       "--enable-accelerated-mjpeg-decode"
       "--enable-accelerated-video"
@@ -15,5 +22,94 @@ self: super: {
       "--disable-features=UseOzonePlatform"
       "--enable-features=VaapiVideoDecoder"
     ];
-  });
+
+    # Credit to mlvzk to creating the original script (discocss)
+    # https://github.com/mlvzk/discocss
+    # This script was modified to:
+    # - support launching discord at the correct nix store file location
+    # - support launching with the desired flags
+    # - exist in a nix wrapper
+    # - support nix variables
+    css-injector = ''
+      confdir="/home/cory/.config/discocss"
+      preloadFile="$confdir/preload.js"
+      cssFile="$confdir/custom.css"
+
+      mkdir -p "$confdir"
+
+      touch "$cssFile"
+
+      cat <<EOF > "$preloadFile"
+      module.exports = () => {
+        const fs = require("fs");
+        const confDir = "$confdir";
+        const cssFile = "$cssFile";
+
+        function reload(style) {
+          style.innerHTML = fs.readFileSync(cssFile);
+        }
+
+        function inject({ document, window }) {
+          window.addEventListener("load", () => {
+            const style = document.createElement("style");
+            reload(style);
+            document.head.appendChild(style);
+
+            fs.watch(confDir, {}, () => reload(style));
+          });
+        }
+
+        inject(require("electron").webFrame.context);
+      };
+
+      module.exports.mw = (mainWindow) => {
+        mainWindow.setBackgroundColor("#00000000");
+      };
+
+      module.exports.mo = (options) => {
+        options.transparent = true;
+        if (process.platform === "linux") {
+          options.frame = true;
+        }
+      };
+      EOF
+
+      ln -f -s "$preloadFile" /tmp/discocss-preload.js
+
+      if [ "$(uname)" = "Darwin" ]; then
+        sed_options='-i ""'
+        core_asar="$(echo "$HOME/Library/Application Support/discord/"*"/modules/discord_desktop_core/core.asar")"
+      else
+        sed_options='-i'
+        core_asar="$(echo "/home/cory/.config/discord/"*"/modules/discord_desktop_core/core.asar")"
+      fi
+
+      app_preload_replace='s|  // App preload script, used to provide a replacement native API now that|try {require\(`/tmp/discocss-preload.js`)()} catch \(e\) {console.error\(e\);} |'
+      launch_main_app_replace='s|// launch main app window; could be called multiple times for various reasons| const dp = require(`/tmp/discocss-preload.js`);                             |'
+      frame_true_replace='s|    mainWindowOptions.frame = true;|}dp.mo(mainWindowOptions);{        |'
+      causing_the_window_replace='s|// causing the window to be too small on a larger secondary display| dp.mw(mainWindow);                                                |'
+      LC_ALL=C sed $sed_options "$app_preload_replace; $launch_main_app_replace; $frame_true_replace; $causing_the_window_replace" \
+        "$core_asar"
+
+    '';
+
+    wrapped = pkgs.writeShellScriptBin "discord" (css-injector + ''
+      exec ${source}/bin/discord ${commandLineArgs}
+    '');
+
+    wrapped' = pkgs.writeShellScriptBin "Discord" (css-injector + ''
+      exec ${source}/bin/Discord ${commandLineArgs}
+    '');
+
+  in
+
+    pkgs.symlinkJoin {
+      name = "discord";
+      paths = [
+        wrapped
+        wrapped'
+        source
+      ];
+    };
+
 }

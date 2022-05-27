@@ -48,10 +48,9 @@
     in with pkgs; [
       # linux basics
       killall
-      gwenview
       neofetch
       btop
-      libsForQt5.ark
+      lxqt.lxqt-archiver
 
       # development basics
       ccls
@@ -92,6 +91,7 @@
       photogimp
       blender
       zathura
+      # epdfview
 
       # modern unix
       bat #cat
@@ -145,14 +145,15 @@
       pinfo
       fd
       networkmanagerapplet
+      lxqt.lximage-qt
+      libsForQt5.dolphin
 
       wireshark
       tcpdump
       nmap
 
       discord
-      betterdiscord-installer
-      betterdiscordctl
+      # discocss
     ];
   };
 }

@@ -3,13 +3,21 @@
 {
   home-manager.users.cory.services.picom = {
     enable = true;
-    inactiveDim = "0.02";
     experimentalBackends = false;
+
+    inactiveDim = "0.02";
+
     backend = "glx";
     vSync = true;
+
+    fade = false;
+    fadeDelta = 10;
+    fadeSteps = [ (3.0e-2) (3.0e-2) ];
+
     extraOptions = ''
       glx-no-stencil = true;
       glx-no-rebind-pixmap = true;
+      unredir-if-possible = true;
 
       corner-radius = 10;
       round-borders = 1;
@@ -27,6 +35,17 @@
         "class_g *?= 'FvwmPager'",
         "class_g *?= 'tint2'",
       ];
+
+      blur-background-exclude = [
+        "_GTK_FRAME_EXTENTS@:c",
+        "class_g *?= 'plank'",
+      ];
+
+      blur:
+      {
+        method = "kernel";
+        kernel = "23,23,0.000006,0.000204,0.001698,0.003446,0.001698,0.000204,0.000006,0.000204,0.006988,0.058286,0.118212,0.058286,0.006988,0.000204,0.001698,0.058286,0.486234,0.986138,0.486234,0.058286,0.001698,0.003446,0.118212,0.986138,0.986138,0.118212,0.003446,0.001698,0.058286,0.486234,0.986138,0.486234,0.058286,0.001698,0.000204,0.006988,0.058286,0.118212,0.058286,0.006988,0.000204,0.000006,0.000204,0.001698,0.003446,0.001698,0.000204,0.000006";
+      };
 
       wintypes:
       {

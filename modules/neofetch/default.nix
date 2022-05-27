@@ -165,12 +165,13 @@ let
 
     # Ascii distro
     # Which distro's ascii art to display.
-    #ascii_distro="auto"
-    ascii_distro="gnu"
+    ascii_distro="auto"
+    #ascii_distro="gnu"
     # Ascii Colors
     ascii_colors=(distro)
     # Bold ascii logo
-    ascii_bold="on"
+    #ascii_bold="on"
+    ascii_bold="off"
     # Image loop
     image_loop="off"
     # Crop mode

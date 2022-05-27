@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 [
-  (import ./discord.nix)
+  (import ./discord.nix { inherit pkgs; })
   (import ./emacs.nix)
   (import ./pcmanfm-qt.nix { inherit pkgs; })
   (import ./rofi.nix { inherit pkgs; })
