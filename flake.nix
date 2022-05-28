@@ -14,6 +14,9 @@
   let
     system = "x86_64-linux";
 
+    config = nixpkgs.config;
+    lib = nixpkgs.lib;
+
     pkgs = import nixpkgs {
       inherit system;
       config = { allowUnfree = true; };
@@ -22,15 +25,13 @@
         ++ import ./packages { inherit config lib pkgs; };
     };
 
-    config = nixpkgs.config;
-    lib = nixpkgs.lib;
-
   in {
     devShell.${system} = import ./shell.nix { inherit pkgs; };
     nixosConfigurations = {
       pc = lib.nixosSystem {
         inherit system pkgs;
         modules = [
+          ./modules
           ./hosts/pc
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
@@ -43,6 +44,7 @@
       laptop = lib.nixosSystem {
         inherit system pkgs;
         modules = [
+          ./modules
           ./hosts/laptop
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;

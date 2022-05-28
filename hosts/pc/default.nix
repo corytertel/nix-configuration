@@ -4,7 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ../shared
-    ../../modules/window-managers/fvwm-pc
+    ../../profiles/fvwm-pc
   ];
 
   nix.buildCores = 4;

@@ -92,8 +92,8 @@ Style * EdgeMoveDelay 350, EdgeMoveResistance 350
 
 # Sets the focus style to SloppyFocus and a mouse click
 # in a window will Raise it.
-# Style * SloppyFocus, MouseFocusClickRaises
-Style * ClickToFocus, ClickToFocusRaises, ClickToFocusPassesClick
+Style * SloppyFocus, MouseFocusClickRaises
+# Style * ClickToFocus, ClickToFocusRaises, ClickToFocusPassesClick
 
 # Window Placement
 Style * MinOverlapPlacement, GrabFocus, !UsePPosition
@@ -135,7 +135,7 @@ Style "SystemButton" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
 
 Style "tint2" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, FixedPosition, FixedSize, !Iconifiable, \
-  PositionPlacement +3760p +98p
+  PositionPlacement +3766p +98p
 
 Style "plank" NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
@@ -155,7 +155,9 @@ Colorset 1 fg #eeeeee, bg #eeeeee, hi, sh, Plain, NoShape
 # Active theme
 Colorset 2 fg #e8e8e8, bg #e8e8e8, hi, sh, Plain, NoShape
 # Border
-Colorset 3 fg #000000, bg #000000, hi, sh, Plain, NoShape
+Colorset 3 fg #141404, bg #141404, hi, sh, Plain, NoShape
+# Other Border
+Colorset 4 fg #3647d9, bg #3647d9, hi, sh, Plain, NoShape
 
 # System Button Hover
 Colorset 5 RootTransparent, fg #141404, bg #ffffff, sh #ffffff, \
@@ -490,7 +492,8 @@ AddToDecor   WindowDecor
 + ButtonStyle 3 - MwmDecorMin
 + ButtonStyle 5 - MwmDecorMax
 + TitleStyle -- Flat
-+ BorderStyle Simple -- NoInset Flat
+# + BorderStyle Simple -- NoInset Flat
++ BorderStyle Simple -- HiddenHandles NoInset Flat
 + ButtonStyle All -- UseTitleStyle
 
 ##############
@@ -502,7 +505,7 @@ DestroyModuleConfig FvwmIdent: *
 
 # StaysOnTop
 DestroyModuleConfig FvwmPager: *
-*FvwmPager: Geometry 68x546-6-30
+*FvwmPager: Geometry 68x546-0-30
 *FvwmPager: Colorset * 9
 *FvwmPager: HilightColorset * 10
 *FvwmPager: BalloonColorset * 9
@@ -552,7 +555,7 @@ DestroyModuleConfig RightDock: *
 *RightDock: (1x1, Frame 0)
 
 DestroyModuleConfig SystemButton: *
-*SystemButton: Geometry 68x68-6+30
+*SystemButton: Geometry 68x68-0+30
 *SystemButton: Colorset 9
 *SystemButton: ActiveColorset 5
 *SystemButton: PressColorset 6

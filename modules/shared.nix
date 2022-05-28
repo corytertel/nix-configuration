@@ -1,20 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  # imports =
-  #   [
-  #     ./bash
-  #     ./firefox
-  #     ./layout_switch
-  #     ./neofetch
-  #     ./ungoogled-chromium
-  #     ./zsh
-  #   ];
-
-  services = {
-    dunst.enable = true;
-  };
-
   programs = {
     home-manager.enable = true;
 
@@ -48,7 +34,6 @@
     in with pkgs; [
       # linux basics
       killall
-      neofetch
       btop
       lxqt.lxqt-archiver
 
@@ -90,7 +75,6 @@
       flameshot
       photogimp
       blender
-      zathura
       # epdfview
 
       # modern unix
@@ -146,14 +130,10 @@
       fd
       networkmanagerapplet
       lxqt.lximage-qt
-      libsForQt5.dolphin
 
       wireshark
       tcpdump
       nmap
-
-      discord
-      # discocss
     ];
   };
 }
