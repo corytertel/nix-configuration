@@ -19,6 +19,8 @@
     ./services/rofi
     ./services/tint2
 
+    ./theme
+
     ./windowManagers/fvwm-pc
     # ./windowManagers/xmonad-laptop
     # ./windowManagers/xmonad-pc

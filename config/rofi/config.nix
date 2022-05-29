@@ -1,4 +1,5 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
+with config.theme;
 
 pkgs.writeText "config.rasi" ''
 /*
@@ -11,9 +12,9 @@ pkgs.writeText "config.rasi" ''
  */
 
 configuration {
-	font:							"NotoSans Nerd Font Bold 17";
+	font:							"${font.system.name} Bold ${toString (font.system.size + 7)}";
     show-icons:                     true;
-	icon-theme: 					"Tango";
+	icon-theme: 					"${icons.name}";
     display-drun: 					"";
     drun-display-format:            "{name}";
     disable-history:                false;
@@ -23,9 +24,9 @@ configuration {
 * {
     background:                     #000000DD;
     background-alt:              	#00000000;
-    background-bar:                 #ffffff15;
-    foreground:                     #ffffffEE;
-    accent:			            	#e8e8e866;
+    background-bar:                 ${color.background}15;
+    foreground:                     ${color.background}EE;
+    accent:			            	${color.background-alt2}66;
 }
 
 window {
@@ -44,7 +45,7 @@ prompt {
 	padding: 						0.30% 1% 0% -0.5%;
 	background-color: 				@background-alt;
 	text-color: 					@foreground;
-	font:							"VictorMono Nerd Font 20";
+	font:							"${font.monospace.name} ${toString (font.monospace.size + 10)}";
 }
 
 entry {

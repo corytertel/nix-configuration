@@ -25,8 +25,8 @@ in {
         vimium
         ublock-origin
       ];
-      profiles."cory" = {
-        userChrome = builtins.readFile ../../../config/firefox/userChrome/userChrome.css.no-toolbar;
+      profiles."cory" =  with config.theme; {
+        userChrome = import ../../../config/firefox/userChrome.nix { inherit config pkgs; };
         bookmarks = {
           "YouTube" = {
             url = "https://www.youtube.com/";
@@ -153,9 +153,9 @@ in {
           "experiments.supported" = false;
           "experiments.enabled" = false;
           "experiments.manifest.uri" = "";
-          "font.name.monospace.x-western" = "VictorMono Nerd Font";
-          "font.name.sans-serif.x-western" = "NotoSans Nerd Font";
-          "font.name.serif.x-western" = "NotoSans Nerd Font";
+          "font.name.monospace.x-western" = "${font.monospace.name}";
+          "font.name.sans-serif.x-western" = "${font.system.name}";
+          "font.name.serif.x-western" = "${font.system.name}";
           # Disable health reports (basically more telemetry)
           # https://support.mozilla.org/en-US/kb/firefox-health-report-understand-your-browser-perf
           # https://gecko.readthedocs.org/en/latest/toolkit/components/telemetry/telemetry/preferences.html
@@ -167,6 +167,14 @@ in {
           "browser.toolbars.bookmarks.visibility" = "never";
           # Always ask where to download
           "browser.download.useDownloadDir" = false;
+          # Theme
+          # 0 = dark, 1 = light, 2, system theme
+          # firefox-compact-dark@mozilla.org = dark
+          # firefox-compact-light@mozilla.org = light
+          # default-theme@mozilla.org = system theme
+          "browser.theme.content-theme" = if darkTheme then 0 else 1;
+          "browser.theme.toolbar-theme" = if darkTheme then 0 else 1;
+          "extensions.activeThemeID" = if darkTheme then "firefox-compact-dark@mozilla.org" else "firefox-compact-light@mozilla.org";
         };
       };
     };

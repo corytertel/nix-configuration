@@ -1,25 +1,29 @@
+{ config, pkgs, ... }:
+with config.theme.color;
+
+''
 :root {
-    --interactive-normal: #141404;
-    --text-normal: #141404;
-    --text-link: #3647d9;
+    --interactive-normal: ${foreground};
+    --text-normal: ${foreground};
+    --text-link: ${color4};
 
-    --header-primary: #141404;
-    --background-accent: #dddddd;
-    --background-primary: #ffffff;
-    --background-secondary: #eeeeee;
-    --background-secondary-alt: #eeeeee;
-    --background-tertiary: #dddddd;
-    --background-floating: #dddddd;
+    --header-primary: ${foreground};
+    --background-accent: ${background-alt3};
+    --background-primary: ${background};
+    --background-secondary: ${background-alt1};
+    --background-secondary-alt: ${background-alt1};
+    --background-tertiary: ${background-alt3};
+    --background-floating: ${background-alt3};
 
-    --channels-default: #141404;
-    --deprecated-panel-background: #ffffff;
-    --channeltextarea-background: #dddddd;
+    --channels-default: ${foreground};
+    --deprecated-panel-background: ${background};
+    --channeltextarea-background: ${background-alt3};
 
-    --scrollbar-thin-thumb                : #dddddd;
+    --scrollbar-thin-thumb                : ${background-alt3};
     --scrollbar-thin-track                : transparent;
-    --scrollbar-auto-thumb                : #dddddd;
+    --scrollbar-auto-thumb                : ${background-alt3};
     --scrollbar-auto-track                : transparent;
-    --scrollbar-auto-scrollbar-color-thumb: #dddddd;
+    --scrollbar-auto-scrollbar-color-thumb: ${background-alt3};
     --scrollbar-auto-scrollbar-color-track: transparent;
 
     --accent-color : 94,  129, 172;
@@ -92,7 +96,7 @@
 .hljs-keyword,
 .hljs-link,
 .hljs-selector-tag {
-  color: #e60909;
+  color: ${color1};
 }
 
 /* Green */
@@ -103,7 +107,7 @@
 .hljs-selector-class,
 .hljs-string,
 .hljs-symbol {
-    color: #1f8c35;
+    color: ${color2};
 }
 
 /* Yellow */
@@ -111,7 +115,7 @@
 .hljs-params,
 .hljs-template-tag,
 .hljs-type {
-    color: #ed8f23;
+    color: ${color3};
 }
 
 /* Blue */
@@ -122,7 +126,7 @@
 .hljs-strong,
 .hljs-title,
 .hljs-variable {
-  color: #3647d9;
+  color: ${color4};
 }
 
 /* Purple */
@@ -130,7 +134,7 @@
 .hljs-doctag,
 .hljs-literal,
 .hljs-number {
-  color: #e01bd0;
+  color: ${color5};
 }
 
 /* Aqua */
@@ -142,7 +146,7 @@
 .hljs-meta-keyword,
 .hljs-selector-pseudo,
 .hljs-tag {
-    color: #2d9574;
+    color: ${color6};
 }
 
 /* Orange */
@@ -151,19 +155,19 @@
 .hljs-regexp,
 .hljs-selector-id,
 .hljs-template-variable {
-  color: #ed8f23;
+  color: ${color11};
 }
 
 /* Gray */
 .hljs-comment {
-  color: #3b3a32;
+  color: ${color12};
 }
 
 /* Magenta */
 .hljs-link_label,
 .hljs-literal,
 .hljs-number {
-  color: #e01bd0;
+  color: ${color13};
 }
 
 .hljs-comment,
@@ -180,3 +184,4 @@
 ::placeholder, body, button, input, select, textarea {
     font-family: 'Overpass' ;
 }
+''

@@ -1,48 +1,6 @@
 { config, lib, pkgs, ... }:
 
-let
-  theme = {
-    icons = rec {
-      package = pkgs.hello;
-      name = "";
-      path = "${package}/share/icons/${name}";
-    };
-    fonts = {
-      system = {
-        name = "";
-        size = 10;
-      };
-      monospace = {
-        name = "";
-        size = 10;
-      };
-    };
-    colors = {
-      background = "#";
-      background-alt1 = "#";
-      background-alt2 = "#";
-      background-alt3 = "#";
-      background-alt4 = "#";
-      foreground = "#";
-      color0 = "#";
-      color1 = "#";
-      color2 = "#";
-      color3 = "#";
-      color4 = "#";
-      color5 = "#";
-      color6 = "#";
-      color7 = "#";
-      color8 = "#";
-      color9 = "#";
-      color10 = "#";
-      color11 = "#";
-      color12 = "#";
-      color13 = "#";
-      color14 = "#";
-      color15 = "#";
-    };
-  };
-in {
+{
   windowManagers.cory.fvwm.pc.enable = true;
 
   services.cory.dunst.enable = true;
@@ -61,4 +19,49 @@ in {
   programs.cory.urxvt.enable = true;
   programs.cory.zathura.enable = true;
   programs.cory.zsh.enable = true;
+
+  theme = with pkgs; {
+    name = "PlainLight";
+    darkTheme = false;
+    icons = {
+      package = tango-icon-theme;
+      name = "Tango";
+    };
+    font = {
+      system = {
+        package = noto-nerdfont;
+        name = "NotoSans Nerd Font";
+        size = 10;
+      };
+      monospace = {
+        package = victor-mono-nerdfont;
+        name = "VictorMono Nerd Font";
+        size = 10;
+      };
+    };
+    color = {
+      foreground      = "#141404";
+      background      = "#ffffff";
+      background-alt1 = "#eeeeee";
+      background-alt2 = "#e8e8e8";
+      background-alt3 = "#dddddd";
+      background-alt4 = "#cccccc";
+      color0          = "#141404";
+      color8          = "#141404";
+      color1          = "#e60909";
+      color9          = "#e60909";
+      color2          = "#1f8c35";
+      color10         = "#1f8c35";
+      color3          = "#ed8f23";
+      color11         = "#ed8f23";
+      color4          = "#3647d9";
+      color12         = "#3647d9";
+      color5          = "#e01bd0";
+      color13         = "#e01bd0";
+      color6          = "#2d9574";
+      color14         = "#2d9574";
+      color7          = "#cccccc";
+      color15         = "#cccccc";
+    };
+  };
 }

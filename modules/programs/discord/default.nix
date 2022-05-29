@@ -10,7 +10,7 @@ in {
 
   config = mkIf cfg.enable {
     home-manager.users.cory.home.file = {
-      ".config/discocss/custom.css".source = ../../../config/discocss/custom.css;
+      ".config/discocss/custom.css".text = import ../../../config/discocss/custom.nix { inherit config pkgs; };
     };
     home-manager.users.cory.home.packages = [ pkgs.discord ];
   };

@@ -12,40 +12,40 @@ in {
     home-manager.users.cory.programs.urxvt = {
       enable = true;
       package = pkgs.rxvt-unicode-emoji;
-      extraConfig = {
+      extraConfig = with config.theme; {
         "termName" = "rxvt";
         "visualBell" = "false";
         "loginShell" = "true";
         "geometry" = "120x33";
 
         "colorMode" = "true";
-        "pointerColor" = "#ffffff";
-        "pointerColor2" = "#141404";
+        "pointerColor" = color.background;
+        "pointerColor2" = color.foreground;
 
-        "foreground"  = "#141404";
-        "background"  = "#ffffff";
-        "cursorColor" = "#141404";
-        "color0"      = "#141404";
-        "color8"      = "#141404";
-        "color1"      = "#e60909";
-        "color9"      = "#e60909";
-        "color2"      = "#1f8c35";
-        "color10"     = "#1f8c35";
-        "color3"      = "#ed8f23";
-        "color11"     = "#ed8f23";
-        "color4"      = "#3647d9";
-        "color12"     = "#3647d9";
-        "color5"      = "#e01bd0";
-        "color13"     = "#e01bd0";
-        "color6"      = "#2d9574";
-        "color14"     = "#2d9574";
-        "color7"      = "#cccccc";
-        "color15"     = "#cccccc";
+        "foreground"  = color.foreground;
+        "background"  = color.background;
+        "cursorColor" = color.foreground;
+        "color0"      = color.color0;
+        "color8"      = color.color8;
+        "color1"      = color.color1;
+        "color9"      = color.color9;
+        "color2"      = color.color2;
+        "color10"     = color.color10;
+        "color3"      = color.color3;
+        "color11"     = color.color11;
+        "color4"      = color.color4;
+        "color12"     = color.color12;
+        "color5"      = color.color5;
+        "color13"     = color.color13;
+        "color6"      = color.color6;
+        "color14"     = color.color14;
+        "color7"      = color.color7;
+        "color15"     = color.color15;
 
-        "font" = "xft:VictorMono Nerd Font:style=Regular:size=10:antialias=true";
-        "boldFont" = "xft:VictorMono Nerd Font:style=Bold:size=10:antialias=true";
-        "italicFont" = "xft:VictorMono Nerd Font:style=Italic:size=10:antialias=true";
-        "boldItalicFont" = "xft:VictorMono Nerd Font:style=Bold Italic:size=10:antialias=true";
+        "font" = "xft:${font.monospace.name}:style=Regular:size=${toString (font.monospace.size)}:antialias=true";
+        "boldFont" = "xft:${font.monospace.name}:style=Bold:size=${toString (font.monospace.size)}:antialias=true";
+        "italicFont" = "xft:${font.monospace.name}:style=Italic:size=${toString (font.monospace.size)}:antialias=true";
+        "boldItalicFont" = "xft:${font.monospace.name}:style=Bold Italic:size=${toString (font.monospace.size)}:antialias=true";
 
         "internalBorder" = "40";
         "externalBorder" = "0";
@@ -55,7 +55,7 @@ in {
         "depth" = "32";
         "perl-ext-common" = "default";
 
-        "iconFile" = "${pkgs.tango-icon-theme}/share/icons/Tango/48x48/apps/utilities-terminal.png";
+        "iconFile" = "${icons.package}/share/icons/${icons.name}/48x48/apps/utilities-terminal.png";
 
         "urlLauncher" = "firefox";
         "underlineURLs" = "true";

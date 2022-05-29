@@ -21,7 +21,7 @@ in {
         };
       });
 
-      settings = {
+      settings = with config.theme; {
         global = {
           # --- Display --- #
           # The monitor to be displayed to
@@ -54,7 +54,7 @@ in {
           # Draw a line between multiple notifications
           separator_height = 1;
 
-          separator_color = "#141404aa";
+          separator_color = "${color.foreground}aa";
 
           # Set notification padding
           padding = 24;
@@ -63,7 +63,7 @@ in {
           # Frame (border)
           frame_width = 0;
 
-          frame_color = "#141404";
+          frame_color = color.foreground;
 
           # Sort messages by urgency.
           sort = "no";
@@ -74,7 +74,7 @@ in {
           # --- Text --- #
 
           # Set the font
-          font = "NotoSans Nerd Font 11";
+          font = "${font.system.name} ${toString (font.system.size + 1)}";
 
           # Set line height to font height
           line_height = 0;
@@ -136,7 +136,7 @@ in {
           max_icon_size = 45;
 
           # Icon theme
-          icon_theme = "Tango";
+          icon_theme = "${icons.name}";
 
           # --- History --- #
 
@@ -184,20 +184,20 @@ in {
         };
 
         urgency_low = {
-          background = "#ffffff";
-          foreground = "#141404";
+          background = color.background;
+          foreground = color.foreground;
           timeout = 8;
         };
 
         urgency_normal = {
-          background = "#ffffff";
-          foreground = "#141404";
+          background = color.background;
+          foreground = color.foreground;
           timeout = 8;
         };
 
         urgency_critical = {
-          background = "#ffffff";
-          foreground = "#141404";
+          background = color.background;
+          foreground = color.foreground;
           timeout = 0;
           icon = "abrt";
         };

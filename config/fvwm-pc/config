@@ -92,8 +92,8 @@ Style * EdgeMoveDelay 350, EdgeMoveResistance 350
 
 # Sets the focus style to SloppyFocus and a mouse click
 # in a window will Raise it.
-Style * SloppyFocus, MouseFocusClickRaises
-# Style * ClickToFocus, ClickToFocusRaises, ClickToFocusPassesClick
+# Style * SloppyFocus, MouseFocusClickRaises
+Style * ClickToFocus, ClickToFocusRaises, ClickToFocusPassesClick
 
 # Window Placement
 Style * MinOverlapPlacement, GrabFocus, !UsePPosition
@@ -117,9 +117,9 @@ Style "*" BorderWidth 4, HandleWidth 4
 Style "*" MWMBorder, FirmBorder
 Style "*" PositionPlacement Center
 Style "*" Colorset 1
-Style "*" HilightColorset 2
+Style "*" HilightColorset 1
 Style "*" BorderColorset 1
-Style "*" HilightBorderColorset 2
+Style "*" HilightBorderColorset 1
 ## Minimize to Thumbnail Placeholder
 Style "*" IconBox 3700x2100+30-30, IconGrid 30 30, IconFill Bottom Left, \
 !IconTitle, IconBackgroundPadding 0, IconBackgroundRelief 0, IconSize -1 -1
@@ -151,9 +151,9 @@ Style ConfirmQuit !Title, PositionPlacement -6p +24p, WindowListSkip, Layer 6
 ################
 
 # Inactive theme
-Colorset 1 fg #eeeeee, bg #eeeeee, hi, sh, Plain, NoShape
+Colorset 1 fg #ffffff, bg #ffffff, hi, sh, Plain, NoShape
 # Active theme
-Colorset 2 fg #e8e8e8, bg #e8e8e8, hi, sh, Plain, NoShape
+Colorset 2 fg #eeeeee, bg #eeeeee, hi, sh, Plain, NoShape
 # Border
 Colorset 3 fg #141404, bg #141404, hi, sh, Plain, NoShape
 # Other Border

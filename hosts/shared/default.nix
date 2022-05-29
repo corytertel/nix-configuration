@@ -170,14 +170,12 @@
   };
 
   fonts.fonts = with pkgs; [
-    # nerdfonts
     julia-mono
     overpass
-    # victor-mono
-    victor-mono-nerdfont
     junicode
-    # noto-fonts
-    noto-nerdfont
+
+    config.theme.font.system.package
+    config.theme.font.monospace.package
   ];
 
   virtualisation = {
