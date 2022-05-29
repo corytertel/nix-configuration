@@ -55,7 +55,8 @@ in {
         "depth" = "32";
         "perl-ext-common" = "default";
 
-        "iconFile" = "${icons.package}/share/icons/${icons.name}/48x48/apps/utilities-terminal.png";
+        # "iconFile" = "${icons.package}/share/icons/${icons.name}/48x48/apps/utilities-terminal.png";
+        "iconFile" = "${icons.package}/share/icons/${icons.name}/apps/64/utilities-terminal.svg";
 
         "urlLauncher" = "firefox";
         "underlineURLs" = "true";

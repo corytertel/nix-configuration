@@ -33,7 +33,7 @@ in {
 
         jackdev=$($amixer contents | grep -i "'headphone jack'" | cut -d"," -f1,2)
 
-        THEME="${pkgs.tango-icon-theme}/share/icons/Tango"
+        THEME="${config.theme.icons.package}/share/icons/${config.theme.icons.name}"
 
 
         if grep -qi $spattern <<< $master; then

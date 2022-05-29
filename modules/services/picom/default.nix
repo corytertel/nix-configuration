@@ -28,7 +28,7 @@ in {
         glx-no-rebind-pixmap = true;
         unredir-if-possible = true;
 
-        corner-radius = 10;
+        corner-radius = 16;
         round-borders = 1;
 
         shadow = true;

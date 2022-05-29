@@ -265,6 +265,7 @@ AddToMenu   FvwmWallpaperMenu
 + " Forest " SetWallpaper forest.jpg
 + " Drink " SetWallpaper drink.jpg
 + " Peak " SetWallpaper peak.jpg
++ " View " SetWallpaper view.jpg
 + " Stripes " SetTiledWallpaper stripes.png
 + " Arches " SetTiledWallpaper tiled.png
 
@@ -700,7 +701,7 @@ AddToFunc InitFunction
 + I Exec exec nm-applet
 + I Exec exec xscreensaver --no-splash
 + I Exec exec mkdir -p /tmp/fvwm-cache
-+ I SetWallpaper peak.jpg
++ I SetWallpaper view.jpg
 # + I Exec exec xboxdrv --quiet --daemon --buttonmap LB=A,A=B,RB=X,X=LB,B=RB
 # + I SetVolume 28
 # + I FvwmTerm

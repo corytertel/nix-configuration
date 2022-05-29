@@ -24,10 +24,8 @@
     name = "PlainLight";
     darkTheme = false;
     icons = {
-      # package = numix-icon-theme-square;
-      # name = "Numix-Square-Light";
-      package = newaita-reborn-icon-theme;
-      name = "Newaita-reborn";
+      package = tango-icon-theme;
+      name = "Tango";
     };
     font = {
       system = {
