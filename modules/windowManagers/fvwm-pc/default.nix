@@ -50,8 +50,7 @@ in {
         feh
         xorg.xwd
         sddm-mountain-light
-        flameshot
-      ];
+      ] ++ import ../wm-pkgs.nix { inherit pkgs; };
     };
   };
 

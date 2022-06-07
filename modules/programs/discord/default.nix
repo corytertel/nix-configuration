@@ -6,11 +6,15 @@ let
 in {
   options.programs.cory.discord = {
     enable = mkEnableOption "Enables discord";
+    css = mkOption {
+      type = types.lines;
+      default = import ../../../config/discocss/custom.nix { inherit config pkgs; };
+    };
   };
 
   config = mkIf cfg.enable {
     home-manager.users.cory.home.file = {
-      ".config/discocss/custom.css".text = import ../../../config/discocss/custom.nix { inherit config pkgs; };
+      ".config/discocss/custom.css".text = cfg.css;
     };
     home-manager.users.cory.home.packages = [ pkgs.discord ];
   };

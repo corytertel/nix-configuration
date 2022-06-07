@@ -72,7 +72,6 @@
 
       # essential user apps
       tdesktop
-      flameshot
       photogimp
       blender
       # epdfview
@@ -88,32 +87,24 @@
       git-crypt
       bb
       qbittorrent
-      polkit
-      lxqt.lxqt-policykit
       brave
-      mpv
       tree
-      xbrightness
       imagemagick
       yt-dlp
       qemu
       qutebrowser
-      xscreensaver
       wine64
       winetricks
       grapejuice
       pciutils
       pcmanfm-qt
-      lxappearance
       peek # simple animated gif screen recorder
       # leafpad
       # onlyoffice-bin
-      xfce.orage
       audacious
       ledger-live-desktop
       #ledger-udev-rules
       acpi
-      xorg.xkill
       gparted
       libnotify
       dos2unix
@@ -121,14 +112,11 @@
       unzip
       klavaro
       obs-studio
-      pavucontrol
-      okular
+      # okular
       vlc
-      sxiv
       libreoffice-qt
       pinfo
       fd
-      networkmanagerapplet
       lxqt.lximage-qt
 
       wireshark

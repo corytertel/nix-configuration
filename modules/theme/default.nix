@@ -21,6 +21,22 @@ in {
       default = false;
     };
 
+    gtk = {
+
+      enable = mkEnableOption "Enables a gtk theme";
+
+      name = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+      };
+
+      package = mkOption {
+        type = types.nullOr types.package;
+        default = null;
+      };
+
+    };
+
     icons = {
 
       package = mkOption {
@@ -31,6 +47,11 @@ in {
       name = mkOption {
         type = types.str;
         default = "";
+      };
+
+      size = mkOption {
+        type = types.int;
+        default = 48;
       };
 
     };
@@ -104,6 +125,10 @@ in {
       color15 = mkColorOption "#000000";
     };
 
+  };
+
+  config = mkIf config.theme.gtk.enable {
+    programs.cory.gtk.enable = true;
   };
 
 }

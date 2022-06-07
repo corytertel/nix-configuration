@@ -6,6 +6,10 @@ let
 in {
   options.programs.cory.urxvt = {
     enable = mkEnableOption "Enables urxvt";
+    iconFile = mkOption {
+      type = types.str;
+      default = "${config.theme.icons.package}/share/icons/${config.theme.icons.name}/48x48/apps/utilities-terminal.png";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -55,8 +59,7 @@ in {
         "depth" = "32";
         "perl-ext-common" = "default";
 
-        # "iconFile" = "${icons.package}/share/icons/${icons.name}/48x48/apps/utilities-terminal.png";
-        "iconFile" = "${icons.package}/share/icons/${icons.name}/apps/64/utilities-terminal.svg";
+        "iconFile" = cfg.iconFile;
 
         "urlLauncher" = "firefox";
         "underlineURLs" = "true";

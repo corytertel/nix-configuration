@@ -3,7 +3,6 @@
 {
   imports = [
     ./shared.nix
-    ./window-managers/xmonad-laptop/home.nix
   ];
 
   xresources.extraConfig = ''
@@ -14,19 +13,17 @@
     Xft.hintstyle: hintslight
     Xft.rgba: rgb
     Xft.lcdfilter: lcddefault
-
-    Sxiv.background: #ffffff
-    Sxiv.foreground: #141404
-    Sxiv.font:NotoSans Nerd Font:size=10
   '';
 
   home.pointerCursor = {
     # name = "Numix-Cursor";
-    name = "Vanilla-DMZ-AA";
+    # name = "Vanilla-DMZ-AA";
+    name = "Oxygen_White";
     size = 48;
     gtk.enable = true;
     # package = pkgs.numix-cursor-theme;
-    package = pkgs.vanilla-dmz;
+    # package = pkgs.vanilla-dmz;
+    package = pkgs.libsForQt5.oxygen;
     x11 = {
       enable = true;
       defaultCursor = "left_ptr";

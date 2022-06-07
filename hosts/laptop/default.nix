@@ -4,7 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ../shared
-    ../../modules/window-managers/xmonad-laptop/configuration.nix
+    ../../profiles/kde
   ];
 
   nix.buildCores = 6;
@@ -35,19 +35,19 @@
     interfaces.wlp0s20f3.useDHCP = true;
   };
 
-  powerManagement = {
-    cpuFreqGovernor = "powersave";
-    enable = true;
-    powertop.enable = true;
-  };
+  # powerManagement = {
+  #   cpuFreqGovernor = "powersave";
+  #   enable = true;
+  #   powertop.enable = true;
+  # };
 
   services = {
     ananicy = {
       enable = true;
       package = pkgs.ananicy-cpp;
     };
-    tlp.enable = true;
-    thermald.enable = true;
+    # tlp.enable = true;
+    # thermald.enable = true;
     gnome.gnome-keyring.enable = true;
     xserver = {
       displayManager.autoLogin = {

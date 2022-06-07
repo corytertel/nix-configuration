@@ -15,8 +15,12 @@
   programs.cory.gtk.enable = true;
   programs.cory.layout_switch.enable = true;
   programs.cory.neofetch.enable = true;
+  programs.cory.sxiv.enable = true;
   programs.cory.ungoogled-chromium.enable = true;
-  programs.cory.urxvt.enable = true;
+  programs.cory.urxvt = with config.theme; {
+    enable = true;
+    iconFile = "${icons.package}/share/icons/${icons.name}/apps/64/utilities-terminal.svg";
+  };
   programs.cory.zathura.enable = true;
   programs.cory.zsh.enable = true;
 
@@ -28,6 +32,7 @@
       # name = "Numix-Square-Light";
       package = newaita-reborn-icon-theme;
       name = "Newaita-reborn";
+      size = 54;
     };
     font = {
       system = {

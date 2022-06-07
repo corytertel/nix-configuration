@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  windowManagers.cory.fvwm.pc.enable = true;
+  windowManagers.cory.fvwm.laptop.enable = true;
 
   services.cory.dunst.enable = true;
   services.cory.picom.enable = true;
@@ -12,9 +12,9 @@
   programs.cory.bash.enable = true;
   programs.cory.discord.enable = true;
   programs.cory.firefox.enable = true;
-  programs.cory.gtk.enable = true;
   programs.cory.layout_switch.enable = true;
   programs.cory.neofetch.enable = true;
+  programs.cory.sxiv.enable = true;
   programs.cory.ungoogled-chromium.enable = true;
   programs.cory.urxvt.enable = true;
   programs.cory.zathura.enable = true;
@@ -23,9 +23,15 @@
   theme = with pkgs; {
     name = "PlainLight";
     darkTheme = false;
+    gtk = {
+      enable = true;
+    };
     icons = {
-      package = tango-icon-theme;
-      name = "Tango";
+      # package = tango-icon-theme;
+      # name = "Tango";
+      package = crystal-remix-icon-theme;
+      name = "crystal-remix";
+      size = 74;
     };
     font = {
       system = {
@@ -64,4 +70,13 @@
       color15         = "#cccccc";
     };
   };
+
+  environment.systemPackages = with pkgs; [
+
+  ];
+
+  home-manager.users.cory.home.packages = with pkgs; [
+    libsForQt5.oxygen
+    oxygenfonts
+  ];
 }

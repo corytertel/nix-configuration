@@ -14,9 +14,9 @@ final: prev: {
     commandLineArgs = toString [
       "--enable-accelerated-mjpeg-decode"
       "--enable-accelerated-video"
-      "--ignore-gpu-blacklist"
-      "--enable-native-gpu-memory-buffers"
-      "--enable-gpu-rasterization"
+      # "--ignore-gpu-blacklist"
+      # "--enable-native-gpu-memory-buffers"
+      # "--enable-gpu-rasterization"
       "--enable-zero-copy"
       "--use-gl=desktop"
       "--disable-features=UseOzonePlatform"

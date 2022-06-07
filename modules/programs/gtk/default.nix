@@ -124,14 +124,32 @@ in {
         };
 
         gtk2.extraConfig = ''
-        gtk-key-theme-name = "Emacs"
+          gtk-key-theme-name = "Emacs"
+          # gtk-enable-animations=1
+          # gtk-primary-button-warps-slider=0
+          # gtk-toolbar-style=3
+          # gtk-menu-images=1
+          # gtk-button-images=1
       '';
 
-        gtk3.extraConfig = { gtk-key-theme-name = "Emacs"; };
+        gtk3.extraConfig = {
+          gtk-key-theme-name = "Emacs";
+          # gtk-button-images = true;
+          # gtk-decoration-layout = "icon:minimize,maximize,close";
+          # gtk-enable-animations = true;
+          # gtk-menu-images = true;
+          # gtk-modules = "colorreload-gtk-module";
+          # gtk-primary-button-warps-slider = false;
+          # gtk-toolbar-style = 3;
+        };
+
+        gtk4.extraConfig = {
+          gtk-key-theme-name = "Emacs";
+        };
 
         theme = {
-          package = gtk-theme;
-          name = theme.name;
+          package = if theme.gtk.package == null then gtk-theme else theme.gtk.package;
+          name = if theme.gtk.name == null then theme.name else theme.gtk.name;
         };
 
         iconTheme = {
@@ -141,7 +159,7 @@ in {
 
         gtk3.extraConfig = {
           gtk-icon-theme-name = theme.icons.name;
-          gtk-theme-name = theme.name;
+          gtk-theme-name = if theme.gtk.name == null then theme.name else theme.gtk.name;
           gtk-application-prefer-dark-theme = if theme.darkTheme then 1 else 0;
         };
       };
