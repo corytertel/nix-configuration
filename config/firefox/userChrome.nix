@@ -1,7 +1,7 @@
-{ config, pkgs, ... }:
+{ changeColor, config }:
 with config.theme.color;
 
-''
+(if changeColor == false then "" else ''
 :root {
 
     /*---+---+---+---+---+---+---+
@@ -159,8 +159,9 @@ window,
 .identity-color-red       { --identity-tab-color: var(--uc-identity-color-red)       !important; --identity-icon-color: var(--uc-identity-color-red)       !important; }
 .identity-color-pink      { --identity-tab-color: var(--uc-identity-color-pink)      !important; --identity-icon-color: var(--uc-identity-color-pink)      !important; }
 .identity-color-purple    { --identity-tab-color: var(--uc-identity-color-purple)    !important; --identity-icon-color: var(--uc-identity-color-purple)    !important; }
-
-
+'')
++
+''
 /* Source file https://github.com/MrOtherGuy/firefox-csshacks/tree/master/chrome/navbar_tabs_oneliner.css made available under Mozilla Public License v. 2.0
 See the above repository for updates as well as full license text. */
 

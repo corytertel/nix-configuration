@@ -8,6 +8,7 @@
   (import ./newaita-reborn.nix { inherit lib pkgs; })
   (import ./new-tab-override.nix { inherit lib pkgs; })
   (import ./nf-noto.nix { inherit lib pkgs; })
+  (import ./nf-oxygen.nix { inherit lib pkgs; })
   (import ./nf-victormono.nix { inherit lib pkgs; })
   (import ./nomanssky-theme.nix)
   (import ./oxygen-kde4-theme.nix)

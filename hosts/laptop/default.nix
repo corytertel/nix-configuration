@@ -35,19 +35,19 @@
     interfaces.wlp0s20f3.useDHCP = true;
   };
 
-  # powerManagement = {
-  #   cpuFreqGovernor = "powersave";
-  #   enable = true;
-  #   powertop.enable = true;
-  # };
+  powerManagement = {
+    cpuFreqGovernor = "powersave";
+    enable = true;
+    powertop.enable = true;
+  };
 
   services = {
     ananicy = {
       enable = true;
       package = pkgs.ananicy-cpp;
     };
-    # tlp.enable = true;
-    # thermald.enable = true;
+    tlp.enable = true;
+    thermald.enable = true;
     gnome.gnome-keyring.enable = true;
     xserver = {
       displayManager.autoLogin = {
@@ -80,4 +80,35 @@
   environment.systemPackages = with pkgs; [
 
   ];
+
+  home-manager.users.cory = {
+    xresources.extraConfig = ''
+    Xft.dpi: 225
+    Xft.antialias: 1
+    Xft.hinting: 1
+    Xft.autohint: 0
+    Xft.hintstyle: hintslight
+    Xft.rgba: rgb
+    Xft.lcdfilter: lcddefault
+  '';
+
+    home.pointerCursor = {
+      # name = "Numix-Cursor";
+      # name = "Vanilla-DMZ-AA";
+      name = "Oxygen_White";
+      size = 48;
+      gtk.enable = true;
+      # package = pkgs.numix-cursor-theme;
+      # package = pkgs.vanilla-dmz;
+      package = pkgs.libsForQt5.oxygen;
+      x11 = {
+        enable = true;
+        defaultCursor = "left_ptr";
+      };
+    };
+
+    home.packages = with pkgs; [
+      zoom-us
+    ];
+  };
 }

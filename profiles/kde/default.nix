@@ -17,7 +17,10 @@
     enable = true;
     css = builtins.readFile ../../config/discocss/skeuocord.theme.css;
   };
-  programs.cory.firefox.enable = true;
+  programs.cory.firefox = {
+    enable = true;
+    changeColor = false;
+  };
   programs.cory.layout_switch.enable = true;
   programs.cory.neofetch.enable = true;
   programs.cory.sxiv.enable = true;
@@ -36,9 +39,9 @@
     };
     font = {
       system = {
-        package = noto-nerdfont;
-        name = "NotoSans Nerd Font";
-        size = 10;
+        package = oxygen-nerdfont;
+        name = "Oxygen Nerd Font";
+        size = 11;
       };
       monospace = {
         package = victor-mono-nerdfont;
@@ -76,9 +79,9 @@
     crystal-remix-icon-theme
     oxygen-kde4-theme
     libsForQt5.oxygen
-    oxygenfonts
     nomanssky-theme
     libsForQt5.qt5.qttools
+    libsForQt5.kde-gtk-config
   ];
 
   home-manager.users.cory.home.packages = with pkgs; [

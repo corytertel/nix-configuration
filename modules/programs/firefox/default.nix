@@ -6,6 +6,10 @@ let
 in {
   options.programs.cory.firefox = {
     enable = mkEnableOption "Enables firefox";
+    changeColor = mkOption {
+      type = types.bool;
+      default = true;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -26,7 +30,9 @@ in {
         ublock-origin
       ];
       profiles."cory" =  with config.theme; {
-        userChrome = import ../../../config/firefox/userChrome.nix { inherit config pkgs; };
+        userChrome = let
+          changeColor = cfg.changeColor;
+        in import ../../../config/firefox/userChrome.nix { inherit changeColor config; };
         bookmarks = {
           "YouTube" = {
             url = "https://www.youtube.com/";
@@ -84,27 +90,24 @@ in {
           "browser.shell.checkDefaultBrowser" = true;
           # Set the startup page
           "browser.startup.homepage" = "${searx-link}";
-
           # Disable the "new tab page" feature and show a blank tab instead
           # https://wiki.mozilla.org/Privacy/Reviews/New_Tab
           # https://support.mozilla.org/en-US/kb/new-tab-page-show-hide-and-customize-top-sites#w_how-do-i-turn-the-new-tab-page-off
-          # # "browser.newtabpage.enabled" = false;
-          # "browser.newtab.url" = "about:blank";
-          "browser.newtab.url" = "${searx-link}";
+          "browser.newtabpage.enabled" = false;
+          "browser.newtab.url" = "about:blank";
           # Disable Activity Stream
           # https://wiki.mozilla.org/Firefox/Activity_Stream
-          # # "browser.newtabpage.activity-stream.enabled" = false;
+          "browser.newtabpage.activity-stream.enabled" = false;
           # Disable new tab tile ads & preload
           # http://www.thewindowsclub.com/disable-remove-ad-tiles-from-firefox
           # http://forums.mozillazine.org/viewtopic.php?p=13876331#p13876331
           # https://wiki.mozilla.org/Tiles/Technical_Documentation#Ping
           # https://gecko.readthedocs.org/en/latest/browser/browser/DirectoryLinksProvider.html#browser-newtabpage-directory-source
           # https://gecko.readthedocs.org/en/latest/browser/browser/DirectoryLinksProvider.html#browser-newtabpage-directory-ping
-          # # "browser.newtabpage.enhanced" = false;
-          # # "browser.newtab.preload" = false;
-          # # "browser.newtabpage.directory.ping" = "";
-          # # "browser.newtabpage.directory.source" = "data:text/plain,{}";
-
+          "browser.newtabpage.enhanced" = false;
+          "browser.newtab.preload" = false;
+          "browser.newtabpage.directory.ping" = "";
+          "browser.newtabpage.directory.source" = "data:text/plain,{}";
           # "browser.search.defaultenginename" = "DuckDuckGo";
           # "browser.search.selectedEngine" = "DuckDuckGo";
           "browser.search.defaultenginename" = "Searx";

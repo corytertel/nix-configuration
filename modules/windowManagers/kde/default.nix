@@ -9,12 +9,14 @@ in {
   };
 
   config = mkIf cfg.enable {
+
     services.xserver = {
       displayManager = {
         defaultSession = "plasma";
         sddm = {
           enable = true;
           enableHidpi = true;
+          theme = "mountain-light";
         };
       };
 
@@ -25,8 +27,12 @@ in {
       };
     };
 
+    home-manager.users.cory = import ./config.nix { inherit config lib pkgs; };
+
     environment = {
-      systemPackages = with pkgs; [];
+      systemPackages = with pkgs; [
+        sddm-mountain-light
+      ];
     };
   };
 }

@@ -36,7 +36,6 @@
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.cory = import ./modules/pc.nix;
           }
         ];
       };
@@ -49,7 +48,6 @@
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.cory = import ./modules/laptop.nix;
           }
         ];
       };
