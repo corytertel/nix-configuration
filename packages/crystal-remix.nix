@@ -8,14 +8,8 @@ self: super: {
     src = builtins.fetchGit {
       url = "https://github.com/corytertel/crystal-remix-icon-theme.git";
       ref = "main";
-      rev = "1a16ae8ec2b0f1bc7f1edff47283c0786d35d463";
+      rev = "d7c6380065bdf0e7e066c551294d0ed35305310e";
     };
-
-    # src = builtins.fetchGit {
-    #   url = "https://github.com/dangvd/crystal-remix-icon-theme.git";
-    #   ref = "main";
-    #   rev = "1debe08ab8935f533a038ccc955cf43c0677291d";
-    # };
 
     nativeBuildInputs = [
       pkgs.gtk3

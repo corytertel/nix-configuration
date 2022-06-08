@@ -16,7 +16,7 @@ in {
         sddm = {
           enable = true;
           enableHidpi = true;
-          theme = "mountain-light";
+          # theme = "mountain-light";
         };
       };
 
@@ -27,11 +27,12 @@ in {
       };
     };
 
+    programs.dconf.enable = true;
     home-manager.users.cory = import ./config.nix { inherit config lib pkgs; };
 
     environment = {
       systemPackages = with pkgs; [
-        sddm-mountain-light
+        # sddm-mountain-light
       ];
     };
   };

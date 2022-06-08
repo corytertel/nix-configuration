@@ -45,4 +45,27 @@ in {
     } && _
     unset -f _
   '';
+
+  home.activation.extraGtkConfig = let
+    insertLine = line: file: ''
+      $DRY_RUN_CMD grep -qxF ${line} ${file} || echo ${line} >> ${file}
+    '';
+  in dagEntryAfter ["linkGeneration"] ''
+    ${insertLine "\'gtk-key-theme-name=\"Emacs\"\'" "$HOME/.gtkrc-2.0"}
+    ${insertLine "\'gtk-key-theme-name = \"Emacs\"\'" "$HOME/.config/gtkrc-2.0"}
+    ${insertLine "\'gtk-key-theme-name=Emacs\'" "$HOME/.config/gtk-3.0/settings.ini"}
+    ${insertLine "\'gtk-key-theme-name=Emacs\'" "$HOME/.config/gtk-4.0/settings.ini"}
+  '';
+
+  dconf = {
+    enable = true;
+    settings = {
+      "org/gnome/desktop/interface" = with config.theme; {
+        icon-theme = "${icons.name}";
+        document-font-name = "${font.system.name} ${toString font.system.size}";
+        monospace-font-name = "${font.monospace.name} ${toString font.monospace.size}";
+        gtk-key-theme = "Emacs";
+      };
+    };
+  };
 }
