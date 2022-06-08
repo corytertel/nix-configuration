@@ -186,6 +186,7 @@
   };
 
   programs = {
+    cory.qpdfview.enable = true;
     dconf.enable = true;
     gnupg.agent = {
      enable = true;
@@ -209,70 +210,76 @@
       enable = true;
       extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     };
-    mime.defaultApplications = {
-      "application/pdf" = "org.pwmt.zathura.desktop";
-      # "application/pdf" = "okularApplication_pdf.desktop";
-      "x-scheme-handler/tg" = "telegramdesktop.desktop";
-      "application/x-sh" = "rxvt-unicode.desktop";
-      "text/plain" = "emacsclient.desktop";
-      "inode/directory" = "pcmanfm-qt.desktop";
+    mime.defaultApplications = let
+      archiver = "lxqt-archiver.desktop";
+      # archiver = "org.kde.ark.desktop";
+      browser = "firefox.desktop";
+      document = "writer.desktop";
+      editor = "emacsclient.desktop";
+      file-manager = "pcmanfm-qt.desktop";
+      image = "lximage-qt.desktop";
+      # image = "sxiv.desktop";
+      # image = "org.kde.gwenview.desktop";
+      music = "audacious.desktop";
+      # pdf = "org.pwmt.zathura.desktop";
+      # pdf = "okularApplication_pdf.desktop";
+      pdf = "qpdfview.desktop";
+      presentation = "impress.desktop";
+      telegram = "telegramdesktop.desktop";
+      terminal = "rxvt-unicode-client.desktop";
+      video = "vlc.desktop";
+    in {
+      "application/pdf" = pdf;
+      "x-scheme-handler/tg" = telegram;
+      "application/x-sh" = terminal;
+      "text/plain" = editor;
+      "inode/directory" = file-manager;
 
-      # "application/zip" = "org.kde.ark.desktop";
-      # "application/x-7z-compressed" = "org.kde.ark.desktop";
-      # "application/vnd.rar" = "org.kde.ark.desktop";
-      # "application/gzip" = "org.kde.ark.desktop";
-      "application/zip" = "lxqt-archiver.desktop";
-      "application/x-7z-compressed" = "lxqt-archiver.desktop";
-      "application/vnd.rar" = "lxqt-archiver.desktop";
-      "application/gzip" = "lxqt-archiver.desktop";
+      "application/zip" = archiver;
+      "application/x-7z-compressed" = archiver;
+      "application/vnd.rar" = archiver;
+      "application/gzip" = archiver;
 
-      "application/msword" = "writer.desktop";
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = "writer.desktop";
-      "application/vnd.ms-powerpoint" = "impress.desktop";
-      "application/vnd.openxmlformats-officedocument.presentationml.presentation" = "impress.desktop";
+      "application/msword" = document;
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = document;
+      "application/vnd.ms-powerpoint" = presentation;
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation" = presentation;
 
-      "application/x-extension-htm" = "firefox.desktop";
-      "application/x-extension-html" = "firefox.desktop";
-      "application/x-extension-shtml" = "firefox.desktop";
-      "application/x-extension-xht" = "firefox.desktop";
-      "application/x-extension-xhtml" = "firefox.desktop";
-      "application/xhtml+xml" = "firefox.desktop";
-      "text/html" = "firefox.desktop";
-      "x-scheme-handler/about" = "firefox.desktop";
-      "x-scheme-handler/chrome" = "firefox.desktop";
-      "x-scheme-handler/http" = "firefox.desktop";
-      "x-scheme-handler/https" = "firefox.desktop";
-      "x-scheme-handler/unknown" = "firefox.desktop";
+      "application/x-extension-htm" = browser;
+      "application/x-extension-html" = browser;
+      "application/x-extension-shtml" = browser;
+      "application/x-extension-xht" = browser;
+      "application/x-extension-xhtml" = browser;
+      "application/xhtml+xml" = browser;
+      "text/html" = browser;
+      "x-scheme-handler/about" = browser;
+      "x-scheme-handler/chrome" = browser;
+      "x-scheme-handler/http" = browser;
+      "x-scheme-handler/https" = browser;
+      "x-scheme-handler/unknown" = browser;
 
-      "audio/aac" = "audacious.desktop";
-      "audio/mpeg" = "audacious.desktop";
-      "audio/ogg" = "audacious.desktop";
-      "audio/opus" = "audacious.desktop";
-      "audio/wav" = "audacious.desktop";
-      "audio/weba" = "audacious.desktop";
+      "audio/aac" = music;
+      "audio/mpeg" = music;
+      "audio/ogg" = music;
+      "audio/opus" = music;
+      "audio/wav" = music;
+      "audio/weba" = music;
 
-      # "mage/bmp" = "sxiv.desktop";
-      # "image/gif" = "org.kde.gwenview.desktop";
-      # "image/ico" = "sxiv.desktop";
-      # "image/jpeg" = "sxiv.desktop";
-      # "image/png" = "sxiv.desktop";
-      # "image/svg" = "sxiv.desktop";
-      # "image/webp" = "sxiv.desktop";
-      "mage/bmp" = "lximage-qt.desktop";
-      "image/gif" = "lximage-qt.desktop";
-      "image/ico" = "lximage-qt.desktop";
-      "image/jpeg" = "lximage-qt.desktop";
-      "image/png" = "lximage-qt.desktop";
-      "image/svg" = "lximage-qt.desktop";
-      "image/webp" = "lximage-qt.desktop";
+      "image/bmp" = image;
+      "image/gif" = image;
+      "image/ico" = image;
+      "image/jpeg" = image;
+      "image/png" = image;
+      "image/svg" = image;
+      "image/webp" = image;
 
-      "video/mp4" = "vlc.desktop";
-      "video/mpeg" = "vlc.desktop";
-      "video/ogg" = "vlc.desktop";
-      "video/webm" = "vlc.desktop";
-      "video/x-msvideo" = "vlc.desktop";
-      "video/quicktime" = "vlc.desktop";
-      "video/x-matroska" = "vlc.desktop";
+      "video/mp4" = video;
+      "video/mpeg" = video;
+      "video/ogg" = video;
+      "video/webm" = video;
+      "video/x-msvideo" = video;
+      "video/quicktime" = video;
+      "video/x-matroska" = video;
     };
   };
 

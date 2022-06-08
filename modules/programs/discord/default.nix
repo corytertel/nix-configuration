@@ -13,9 +13,9 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home-manager.users.cory.home.file = {
-      ".config/discocss/custom.css".text = cfg.css;
+    home-manager.users.cory = {
+      home.packages = [ pkgs.discord ];
+      xdg.configFile."discocss/custom.css".text = cfg.css;
     };
-    home-manager.users.cory.home.packages = [ pkgs.discord ];
   };
 }

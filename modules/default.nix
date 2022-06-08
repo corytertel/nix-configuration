@@ -8,6 +8,7 @@
     ./programs/gtk
     ./programs/layout_switch
     ./programs/neofetch
+    ./programs/qpdfview
     ./programs/sxiv
     ./programs/ungoogled-chromium
     ./programs/urxvt
