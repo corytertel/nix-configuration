@@ -13,7 +13,6 @@ in {
     home-manager.users.cory = {
       xdg.configFile."touchegg/touchegg.conf".text =
         builtins.readFile ../../../config/touchegg/touchegg.conf;
-      # home.packages = [ pkgs.touchegg ];
-  };
+    };
   };
 }

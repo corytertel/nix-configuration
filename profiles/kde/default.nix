@@ -3,13 +3,11 @@
 {
   windowManagers.cory.kde.enable = true;
 
-  # services.cory.plank.enable = true;
   services.cory.rofi.enable = true;
   services.cory.sxhkd = {
     enable = true;
     keybindings = import ../../config/sxhkd/kde.nix;
   };
-  # services.cory.tint2.enable = true;
   services.cory.touchegg.enable = true;
 
   programs.cory.bash.enable = true;
@@ -79,9 +77,9 @@
     crystal-remix-icon-theme
     oxygen-kde4-theme
     libsForQt5.oxygen
+    # oxygen-gtk # broken, need to fix
     nomanssky-theme
     libsForQt5.qt5.qttools
-    libsForQt5.kde-gtk-config
   ];
 
   home-manager.users.cory.home.packages = with pkgs; [

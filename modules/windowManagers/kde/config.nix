@@ -47,14 +47,81 @@ in {
   '';
 
   home.activation.extraGtkConfig = let
-    insertLine = line: file: ''
-      $DRY_RUN_CMD grep -qxF ${line} ${file} || echo ${line} >> ${file}
+    updateConfig = option: line: file: ''
+      grep -qxF ${option} ${file} \
+      && $DRY_RUN_CMD sed -i "s/^.*\b${option}\b.*$/${line}/g" ${file} \
+      || $DRY_RUN_CMD echo ${line} >> ${file}
     '';
+
+    convertToGtk2 = with lib; value:
+      let
+        value' = if isBool value
+                 then
+                   boolToString value
+                 else if isString value then
+                   ''"${value}"''
+                 else
+                   toString value;
+      in "${value'}";
+
+    gtk2Configure = option: value: ''
+      ${updateConfig option "\'${option}=${convertToGtk2 value}\'" "$HOME/.gtkrc-2.0"}
+      ${updateConfig option "\'${option} = ${convertToGtk2 value}\'" "$HOME/.config/gtkrc-2.0"}
+    '';
+
+    gtk3Configure = option: value: ''
+      ${updateConfig option "\'${option}=${toString value}\'" "$HOME/.config/gtk-3.0/settings.ini"}
+    '';
+
+    gtk4Configure = option: value: ''
+      ${updateConfig option "\'${option}=${toString value}\'" "$HOME/.config/gtk-4.0/settings.ini"}
+    '';
+
+    font-name = "${config.theme.font.system.name},  ${toString config.theme.font.system.size}";
+
   in dagEntryAfter ["linkGeneration"] ''
-    ${insertLine "\'gtk-key-theme-name=\"Emacs\"\'" "$HOME/.gtkrc-2.0"}
-    ${insertLine "\'gtk-key-theme-name = \"Emacs\"\'" "$HOME/.config/gtkrc-2.0"}
-    ${insertLine "\'gtk-key-theme-name=Emacs\'" "$HOME/.config/gtk-3.0/settings.ini"}
-    ${insertLine "\'gtk-key-theme-name=Emacs\'" "$HOME/.config/gtk-4.0/settings.ini"}
+    ${gtk2Configure "gtk-key-theme-name" "Emacs"}
+    ${gtk3Configure "gtk-key-theme-name" "Emacs"}
+    ${gtk4Configure "gtk-key-theme-name" "Emacs"}
+
+    ${gtk2Configure "gtk-font-name" font-name}
+    ${gtk3Configure "gtk-font-name" font-name}
+    ${gtk4Configure "gtk-font-name" font-name}
+
+    ${gtk2Configure "gtk-icon-theme-name" config.theme.icons.name}
+    ${gtk3Configure "gtk-icon-theme-name" config.theme.icons.name}
+    ${gtk4Configure "gtk-icon-theme-name" config.theme.icons.name}
+
+    ${gtk2Configure "gtk-theme-name" "Breeze"}
+    ${gtk3Configure "gtk-theme-name" "Breeze"}
+    ${gtk4Configure "gtk-theme-name" "Breeze"}
+
+    ${gtk2Configure "gtk-cursor-theme-name" "Oxygen_White"}
+    ${gtk3Configure "gtk-cursor-theme-name" "Oxygen_White"}
+    ${gtk4Configure "gtk-cursor-theme-name" "Oxygen_White"}
+    ${gtk2Configure "gtk-cursor-theme-size" 48}
+    ${gtk3Configure "gtk-cursor-theme-size" "48"}
+    ${gtk4Configure "gtk-cursor-theme-size" "48"}
+
+    ${gtk2Configure "gtk-enable-animations" 1}
+    ${gtk2Configure "gtk-primary-button-warps-slider" 0}
+    ${gtk2Configure "gtk-toolbar-style" 3}
+    ${gtk2Configure "gtk-menu-images" 1}
+    ${gtk2Configure "gtk-button-images" 1}
+
+    ${gtk3Configure "gtk-application-prefer-dark-theme" "false"}
+    ${gtk3Configure "gtk-button-images" "true"}
+    ${gtk3Configure "gtk-decoration-layout" "icon:minimize,maximize,close"}
+    ${gtk3Configure "gtk-enable-animations" "true"}
+    ${gtk3Configure "gtk-menu-images" "true"}
+    ${gtk3Configure "gtk-modules" "colorreload-gtk-module:window-decorations-gtk-module"}
+    ${gtk3Configure "gtk-primary-button-warps-slider" "false"}
+    ${gtk3Configure "gtk-toolbar-style" "3"}
+
+    ${gtk4Configure "gtk-application-prefer-dark-theme" "false"}
+    ${gtk4Configure "gtk-decoration-layout" "icon:minimize,maximize,close"}
+    ${gtk4Configure "gtk-enable-animations" "true"}
+    ${gtk4Configure "gtk-primary-button-warps-slider" "false"}
   '';
 
   dconf = {
@@ -63,9 +130,56 @@ in {
       "org/gnome/desktop/interface" = with config.theme; {
         icon-theme = "${icons.name}";
         document-font-name = "${font.system.name} ${toString font.system.size}";
+        font-name = "${font.system.name}, ${toString font.system.size}";
         monospace-font-name = "${font.monospace.name} ${toString font.monospace.size}";
         gtk-key-theme = "Emacs";
+
+        avatar-directories = [];
+        can-change-accels = false;
+        clock-format = "24h";
+        clock-show-date = true;
+        clock-show-seconds = false;
+        clock-show-weekday = false;
+        cursor-blink = true;
+        cursor-blink-time = 1200;
+        cursor-blink-timeout = 10;
+        cursor-size = 48;
+        cursor-theme = "Oxygen_White";
+        enable-animations = true;
+        enable-hot-corners = true;
+        font-antialiasing = "grayscale";
+        font-hinting = "slight";
+        font-rgba-order = "rgb";
+        gtk-color-palette = "";
+        gtk-enable-primary-paste = true;
+        gtk-im-module = "";
+        gtk-im-preedit-style = "callback";
+        gtk-im-status-style = "callback";
+        gtk-theme = "Breeze";
+        gtk-timeout-initial = 200;
+        gtk-timeout-repeat = 20;
+        locate-pointer = false;
+        menubar-accel = "F10";
+        menubar-detachable = false;
+        menus-have-tearoff = false;
+        overlay-scrolling = true;
+        scaling-factor = 0;
+        show-battery-percentage = false;
+        text-scaling-factor = 1;
+        toolbar-detachable = false;
+        toolbar-icons-size = "large";
+        toolbar-style = "text";
+        toolkit-accessibility = false;
       };
     };
+  };
+
+  home.activation.kdeSetTheme = dagEntryAfter [ "linkGeneration" ] ''
+    $DRY_RUN_CMD ${pkgs.plasma-workspace}/bin/plasma-apply-colorscheme OxygenCold
+  '';
+
+  home.file.".config/autostart" = {
+    source = ../../../config/kde/autostart;
+    recursive = true;
   };
 }

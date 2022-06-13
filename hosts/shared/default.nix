@@ -111,7 +111,7 @@
         extraGroups = [ "wheel" "network" "audio" "libvirtd" ];
         createHome = true;
         home = "/home/cory";
-        shell = pkgs.nushell;
+        shell = pkgs.zsh;
         passwordFile = "/persist/secrets/cory";
       };
     };

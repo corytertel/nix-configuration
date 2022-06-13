@@ -29,11 +29,17 @@
     TabBox = {
       LayoutName = "big_icons";
     };
+
+    "org.kde.kdecoration2" = {
+      BorderSizeAuto = false;
+      theme = "Oxygen";
+    };
   };
 
   kcminputrc = {
     Mouse = {
       XLbInptAccelProfileFlat = true;
+      cursorTheme = "Oxygen_White";
     };
   };
 
@@ -53,6 +59,7 @@
     };
 
     KDE = {
+      LookAndFeelPackage = "org.kde.oxygen";
       SingleClick = true;
       widgetStyle = "Oxygen";
     };
@@ -60,5 +67,10 @@
     WM = with config.theme.font; {
       activeFont = "${system.name},${toString system.size},-1,5,50,0,0,0,0,0";
     };
+  };
+
+  plasmarc = {
+    Theme.name = "org.kde.oxygenKDE4";
+    Theme-plasmathemeexplorer.name = "org.kde.oxygenKDE4";
   };
 }

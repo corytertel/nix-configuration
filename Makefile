@@ -10,7 +10,7 @@ update:
 	nix flake update
 
 clean:
-	sudo nix-collect-garbage
+	sudo nix-collect-garbage --delete-older-than 7d
 
 superclean:
 	sudo nix-collect-garbage -d

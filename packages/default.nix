@@ -11,6 +11,7 @@
   (import ./nf-oxygen.nix { inherit lib pkgs; })
   (import ./nf-victormono.nix { inherit lib pkgs; })
   (import ./nomanssky-theme.nix)
+  (import ./oxygen-gtk.nix)
   (import ./oxygen-kde4-theme.nix)
   (import ./parchment-gtk.nix { inherit config pkgs lib; })
   (import ./plainlight-gtk.nix { inherit config pkgs lib; })
