@@ -406,7 +406,6 @@
         libreoffice-qt
         pinfo
         fd
-        lxqt.lximage-qt
 
         wireshark
         tcpdump

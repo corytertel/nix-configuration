@@ -7,6 +7,7 @@
     ./programs/firefox
     ./programs/gtk
     ./programs/layout_switch
+    ./programs/lximage-qt
     ./programs/neofetch
     ./programs/qpdfview
     ./programs/sxiv
