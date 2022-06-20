@@ -9,6 +9,18 @@ in {
   };
 
   config = mkIf cfg.enable {
+    users.users.cory.shell = pkgs.zsh;
+
+    # programs.zsh = {
+    #   enable = true;
+    #   enableCompletion = true;
+    #   enableGlobalCompInit = true;
+    #   autosuggestions.enable = true;
+    #   setOptions = [];
+    #   shellAliases = {};
+    #   syntaxHighlighting.enable = true;
+    # };
+
     home-manager.users.cory.programs = {
       zsh = {
         enable = true;
@@ -121,7 +133,7 @@ in {
 
           exa = "exa --icons --all --git --binary --group-directories-first";
           ls = "exa";
-          l = "exa --oneline --classify";
+          l = "exa --classify";
           ll = "exa --long --header";
           c = "clear";
           grep = "grep -i --color=auto";
@@ -129,17 +141,17 @@ in {
           mv = "mv --interactive --verbose";
           cp = "cp -i --verbose";
           nf = "neofetch";
-          e = "emacsclient -nw";
-          n = "cd $HOME/.nix-configuration";
+          e = "eval $EDITOR";
+          n = "cd $HOME/.config/nix";
           fm = "pcmanfm-qt -n";
-          i = "sxiv";
-          info = "pinfo";
+          i = "lximage-qt";
+          # info = "pinfo";
           nd = "nix develop";
           directory = "if [ \"$PWD\" = \"$HOME\" ]; then echo \'~'; else; basename \"$PWD\"; fi";
         };
         sessionVariables = {
-          ALTERNATE_EDITOR = "nano";
-          EDITOR = "emacs -nw";
+          ALTERNATE_EDITOR = "emacs -nw";
+          EDITOR = "emacsclient -nw";
           VISUAL = "emacsclient -c -a ''";
           BROWSER = "firefox";
           CALIBRE_USE_SYSTEM_THEME = "1";

@@ -4,7 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ../shared
-    ../../profiles/kde
+    ../../profiles/kde/pc.nix
   ];
 
   nix.buildCores = 4;
@@ -44,25 +44,25 @@
 
   home-manager.users.cory = {
     xresources.extraConfig = ''
-    Xft.dpi: 150
-    Xft.antialias: 1
-    Xft.hinting: 1
-    Xft.autohint: 0
-    Xft.hintstyle: hintslight
-    Xft.rgba: rgb
-    Xft.lcdfilter: lcddefault
-  '';
+      Xft.dpi: 150
+      Xft.antialias: 1
+      Xft.hinting: 1
+      Xft.autohint: 0
+      Xft.hintstyle: hintslight
+      Xft.rgba: rgb
+      Xft.lcdfilter: lcddefault
+    '';
 
-    home.pointerCursor = {
-      name = "Vanilla-DMZ-AA";
-      size = 32;
-      gtk.enable = true;
-      package = pkgs.vanilla-dmz;
-      x11 = {
-        enable = true;
-        defaultCursor = "left_ptr";
-      };
-    };
+    # home.pointerCursor = {
+    #   name = "Vanilla-DMZ-AA";
+    #   size = 32;
+    #   gtk.enable = true;
+    #   package = pkgs.vanilla-dmz;
+    #   x11 = {
+    #     enable = true;
+    #     defaultCursor = "left_ptr";
+    #   };
+    # };
 
     home.packages = with pkgs; [
       airshipper

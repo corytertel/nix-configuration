@@ -48,7 +48,7 @@ in {
 
   home.activation.extraGtkConfig = let
     updateConfig = option: line: file: ''
-      grep -qxF ${option} ${file} \
+      grep -qF ${option} ${file} \
       && $DRY_RUN_CMD sed -i "s/^.*\b${option}\b.*$/${line}/g" ${file} \
       || $DRY_RUN_CMD echo ${line} >> ${file}
     '';
@@ -96,12 +96,12 @@ in {
     ${gtk3Configure "gtk-theme-name" "Breeze"}
     ${gtk4Configure "gtk-theme-name" "Breeze"}
 
-    ${gtk2Configure "gtk-cursor-theme-name" "Oxygen_White"}
-    ${gtk3Configure "gtk-cursor-theme-name" "Oxygen_White"}
-    ${gtk4Configure "gtk-cursor-theme-name" "Oxygen_White"}
-    ${gtk2Configure "gtk-cursor-theme-size" 48}
-    ${gtk3Configure "gtk-cursor-theme-size" "48"}
-    ${gtk4Configure "gtk-cursor-theme-size" "48"}
+    ${gtk2Configure "gtk-cursor-theme-name" config.theme.cursor.theme}
+    ${gtk3Configure "gtk-cursor-theme-name" config.theme.cursor.theme}
+    ${gtk4Configure "gtk-cursor-theme-name" config.theme.cursor.theme}
+    ${gtk2Configure "gtk-cursor-theme-size" config.theme.cursor.size}
+    ${gtk3Configure "gtk-cursor-theme-size" "${toString config.theme.cursor.size}"}
+    ${gtk4Configure "gtk-cursor-theme-size" "${toString config.theme.cursor.size}"}
 
     ${gtk2Configure "gtk-enable-animations" 1}
     ${gtk2Configure "gtk-primary-button-warps-slider" 0}
@@ -143,8 +143,8 @@ in {
         cursor-blink = true;
         cursor-blink-time = 1200;
         cursor-blink-timeout = 10;
-        cursor-size = 48;
-        cursor-theme = "Oxygen_White";
+        cursor-size = config.theme.cursor.size;
+        cursor-theme = cursor.theme;
         enable-animations = true;
         enable-hot-corners = true;
         font-antialiasing = "grayscale";
@@ -176,6 +176,7 @@ in {
 
   home.activation.kdeSetTheme = dagEntryAfter [ "linkGeneration" ] ''
     $DRY_RUN_CMD ${pkgs.plasma-workspace}/bin/plasma-apply-colorscheme OxygenCold
+    $DRY_RUN_CMD ${pkgs.plasma-workspace}/bin/plasma-apply-wallpaperimage ${config.theme.wallpaper}
   '';
 
   home.file.".config/autostart" = {

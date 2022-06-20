@@ -13,7 +13,6 @@
   programs.cory.discord.enable = true;
   programs.cory.firefox.enable = true;
   programs.cory.gtk.enable = true;
-  programs.cory.layout_switch.enable = true;
   programs.cory.lximage-qt.enable = true;
   programs.cory.neofetch.enable = true;
   programs.cory.sxiv.enable = true;

@@ -62,6 +62,10 @@ in {
           "Image Upscaler" = {
             url = "https://www.imgupscaler.com/";
           };
+          "kde-configuration-files" = {
+            url = "https://github.com/shalva97/kde-configuration-files";
+            keyword = "kde-config";
+          };
           "xmonad-contrib" = {
             url = "https://hackage.haskell.org/package/xmonad-contrib";
             keyword = "xmonad-contrib";

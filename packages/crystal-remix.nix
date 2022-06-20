@@ -5,10 +5,11 @@ self: super: {
     pname = "crystal-remix-icon-theme";
     version = "1.1";
 
-    src = builtins.fetchGit {
-      url = "https://github.com/corytertel/crystal-remix-icon-theme.git";
-      ref = "main";
+    src = pkgs.fetchFromGitHub {
+      owner = "corytertel";
+      repo = "crystal-remix-icon-theme";
       rev = "d7c6380065bdf0e7e066c551294d0ed35305310e";
+      sha256 = "5E6BiFhL+dzJve0yCp4YLvdQT16Qf/+jpZqeDg9MYH8=";
     };
 
     nativeBuildInputs = [
@@ -35,7 +36,7 @@ self: super: {
 
     meta = with lib; {
       description = "A crystal icon theme for modern Linux desktop environments.";
-      homepage = "https://github.com/dangvd/crystal-remix-icon-theme";
+      homepage = "https://github.com/corytertel/crystal-remix-icon-theme";
       license = with licenses; [ lgpl2Only ];
       platforms = platforms.linux;
       maintainers = with maintainers; [ ];

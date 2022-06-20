@@ -39,7 +39,7 @@
   kcminputrc = {
     Mouse = {
       XLbInptAccelProfileFlat = true;
-      cursorTheme = "Oxygen_White";
+      cursorTheme = config.theme.cursor.theme;
     };
   };
 

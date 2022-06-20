@@ -10,7 +10,6 @@ let
 
 in {
   options.theme = {
-
     name = mkOption {
       type = types.str;
       default = "MyTheme";
@@ -22,82 +21,79 @@ in {
     };
 
     gtk = {
-
       enable = mkEnableOption "Enables a gtk theme";
-
       name = mkOption {
         type = types.nullOr types.str;
         default = null;
       };
-
       package = mkOption {
         type = types.nullOr types.package;
         default = null;
       };
-
     };
 
     icons = {
-
       package = mkOption {
         type = types.package;
         default = pkgs.hicolor-icon-theme;
       };
-
       name = mkOption {
         type = types.str;
         default = "";
       };
-
       size = mkOption {
         type = types.int;
         default = 48;
       };
-
     };
 
     font = {
-
       system = {
-
         package = mkOption {
           type = types.nullOr types.package;
           default = null;
           description = "The system-wide font. Will be used everywhere except where a monospace font is forced.";
         };
-
         name = mkOption {
           type = types.str;
           default = "";
         };
-
         size = mkOption {
           type = types.int;
           default = 10;
         };
-
       };
 
       monospace = {
-
         package = mkOption {
           type = types.nullOr types.package;
           default = null;
           description = "The font used when a monospace font is forced.";
         };
-
         name = mkOption {
           type = types.str;
           default = "";
         };
-
         size = mkOption {
           type = types.int;
           default = 10;
         };
-
       };
+    };
 
+    cursor = {
+      theme = mkOption {
+        type = types.str;
+        default = "Adwaita";
+      };
+      size = mkOption {
+        type = types.int;
+        default = "24";
+      };
+      package = mkOption {
+        type = types.nullOr types.packages;
+        default = null;
+      };
     };
 
     color = {
@@ -125,10 +121,16 @@ in {
       color15 = mkColorOption "#000000";
     };
 
+    wallpaper = mkOption {
+      type = types.nullOr types.path;
+      default = null;
+    };
   };
 
   config = mkIf config.theme.gtk.enable {
     programs.cory.gtk.enable = true;
+    home-manager.users.cory.home.packages =
+      if config.theme.cursor.package == null
+      then [] else [ config.theme.cursor.package ];
   };
-
 }

@@ -9,8 +9,42 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home-manager.users.cory.home.file = {
-      ".bashrc".text = builtins.readFile ./bashrc;
+    users.users.cory.shell = pkgs.shadow;
+
+    programs.bash = {
+      enableCompletion = true;
+
+      enableLsColors = true;
+
+      undistractMe = {
+        enable = true;
+        playSound = true;
+      };
+
+      promptInit = builtins.readFile ./bashrc;
+
+      shellAliases = {
+        nixos-test = "sudo nixos-rebuild test --flake .";
+        nixos-switch = "sudo nixos-rebuild switch --flake .";
+        exa = "exa --icons --all --git --binary --group-directories-first";
+        ls = "exa";
+        l = "exa --classify";
+        ll = "exa --long --header";
+        c = "clear";
+        grep = "grep -i --color=auto";
+        rm = "rm --verbose";
+        mv = "mv --interactive --verbose";
+        cp = "cp -i --verbose";
+        nf = "neofetch";
+        e = "eval $EDITOR";
+        n = "cd $HOME/.config/nix";
+        fm = "pcmanfm-qt -n";
+        i = "lximage-qt";
+        # info = "pinfo";
+        nd = "nix develop";
+      };
     };
+
+    home-manager.users.cory.home.packages = with pkgs; [ exa neofetch ];
   };
 }

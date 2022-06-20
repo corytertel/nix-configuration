@@ -185,7 +185,7 @@ $ nix-shell '<home-manager>' -A install
 * Pull Down Nix Config in Git Repo
 ** Pull down git repo
 $ git clone https://github.com/corytertel/nix-configuration
-$ mv nix-configuration .nix-configuration
+$ mv nix-configuration .config/nix
 
 ** If creating a new device, then create a new folder
 

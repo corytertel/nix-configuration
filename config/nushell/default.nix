@@ -17,7 +17,7 @@
     "alias f = neofetch"
     "alias e = emacsclient -nw"
     "alias bat = bat --theme base16"
-    "alias n = cd ~/.nix-configuration"
+    "alias n = cd ~/.config/nix"
     "alias fm = pcmanfm -n"
   ];
   table_mode = "light"; # basic, compact, compact_double, light, thin, with_love, rounded, reinforced, heavy, none, other

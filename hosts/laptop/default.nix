@@ -4,7 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ../shared
-    ../../profiles/kde
+    ../../profiles/kde/laptop.nix
   ];
 
   nix.buildCores = 6;
@@ -92,20 +92,20 @@
     Xft.lcdfilter: lcddefault
   '';
 
-    home.pointerCursor = {
-      # name = "Numix-Cursor";
-      # name = "Vanilla-DMZ-AA";
-      name = "Oxygen_White";
-      size = 48;
-      gtk.enable = true;
-      # package = pkgs.numix-cursor-theme;
-      # package = pkgs.vanilla-dmz;
-      package = pkgs.libsForQt5.oxygen;
-      x11 = {
-        enable = true;
-        defaultCursor = "left_ptr";
-      };
-    };
+    # home.pointerCursor = {
+    #   # name = "Numix-Cursor";
+    #   # name = "Vanilla-DMZ-AA";
+    #   name = "Oxygen_White";
+    #   size = 48;
+    #   gtk.enable = true;
+    #   # package = pkgs.numix-cursor-theme;
+    #   # package = pkgs.vanilla-dmz;
+    #   package = pkgs.libsForQt5.oxygen;
+    #   x11 = {
+    #     enable = true;
+    #     defaultCursor = "left_ptr";
+    #   };
+    # };
 
     home.packages = with pkgs; [
       zoom-us

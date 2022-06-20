@@ -1,30 +1,48 @@
-#!/bin/sh
-
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-alias ls='ls --color=auto'
-PS1='[\u@\h \W]\$ '
+# Provide a nice prompt if the terminal supports it.
+if [ "$TERM" != "dumb" ] || [ -n "$INSIDE_EMACS" ]; then
+  PROMPT_COLOR="1;31m"
+  ((UID)) && PROMPT_COLOR="1;32m"
+  if [ -n "$INSIDE_EMACS" ] || [ "$TERM" = "eterm" ] || [ "$TERM" = "eterm-color" ]; then
+    # Emacs term mode doesn't support xterm title escape sequence (\e]0;)
+    PS1="\n\[\033[$PROMPT_COLOR\][\u@\h:\w]\\$\[\033[0m\] "
+  else
+    PS1="\n\[\033[$PROMPT_COLOR\][\[\e]0;\u@\h: \w\a\]\u@\h:\w]\\$\[\033[0m\] "
+  fi
+  if test "$TERM" = "xterm"; then
+    PS1="\[\033]2;\h:\u:\w\007\]$PS1"
+  fi
+fi
 
-# Aliases
-alias nixos-test='nixos-rebuild test --flake . --use-remote-sudo'
-alias nixos-switch='nixos-rebuild switch --flake . --use-remote-sudo'
-alias exa='exa --icons --all --git --binary --group-directories-first'
-alias ls='exa'
-alias l='exa --oneline --classify'
-alias ll='exa --long --header'
-alias c='clear'
-alias grep='grep -i --color=auto'
-alias rm='rm --verbose'
-alias mv='mv --interactive --verbose'
-alias cp='cp -i --verbose'
-alias nf='neofetch'
-alias e='emacsclient -nw'
-alias n='cd $HOME/.nix-configuration'
-alias fm='pcmanfm-qt -n'
-alias i='sxiv'
-alias info='pinfo'
-alias nd='nix develop'
+# Session Variables
+export ALTERNATE_EDITOR="emacs -nw";
+export EDITOR="emacsclient -nw";
+export VISUAL="emacsclient -c -a ''";
+export BROWSER="firefox";
+export CALIBRE_USE_SYSTEM_THEME="1";
+
+# # Aliases
+# alias nixos-test='nixos-rebuild test --flake . --use-remote-sudo'
+# alias nixos-switch='nixos-rebuild switch --flake . --use-remote-sudo'
+# alias exa='exa --icons --all --git --binary --group-directories-first'
+# alias ls='exa'
+# # alias ls='ls --color=auto'
+# alias l='exa --classify'
+# alias ll='exa --long --header'
+# alias c='clear'
+# alias grep='grep -i --color=auto'
+# alias rm='rm --verbose'
+# alias mv='mv --interactive --verbose'
+# alias cp='cp -i --verbose'
+# alias nf='neofetch'
+# alias e='eval $EDITOR'
+# alias n='cd $HOME/.config/nix'
+# alias fm='pcmanfm-qt -n'
+# alias i='lximage-qt'
+# #alias info='pinfo'
+# alias nd='nix develop'
 
 # Prompt
 bash_prompt() {
@@ -53,9 +71,97 @@ bash_prompt() {
     #╭╴
     #╰─>
     #╰─❯
+    #╰─λ
 
-    export PS1="╭╴${cyan}${bold} ${reset}${yellow}${bold}\W${reset} ${green}${uline}\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)${reset}\n╰─λ "
+    # Default
+    # export PS1='[\u@\h \W]\$ '
+
+    export PS1="╭╴${cyan}${bold}  ${reset}${blue}${bold}\W${reset} ${green}${uline}\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)${reset}\n╰─λ "
 }
 
 bash_prompt
 unset bash_prompt
+
+# Extract any archive
+function extract() {
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2) tar xjf $1 ;;
+            *.tar.gz) tar xzf $1 ;;
+            *.bz2) bunzip2 $1 ;;
+            *.rar) rar x $1 ;;
+            *.gz) gunzip $1 ;;
+            *.tar) tar xf $1 ;;
+            *.tbz2) tar xjf $1 ;;
+            *.tgz) tar xzf $1 ;;
+            *.zip) unzip $1 ;;
+            *.Z) uncompress $1 ;;
+            *) echo "'$1' cannot be extracted via extract()" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+# Open a file with the appropriate application
+function open {
+    while [ "$1" ] ; do
+        xdg-open $1 &> /dev/null
+        shift # shift décale les param
+    done
+}
+
+# A reminder
+function githelp {
+    echo "-------------------------------------------------------------------------------"
+    echo "git clone http://... [repo-name]"
+    echo "git init [repo-name]"
+    echo "-------------------------------------------------------------------------------"
+    echo "git add -A <==> git add . ; git add -u # Add to the staging area (index)"
+    echo "-------------------------------------------------------------------------------"
+    echo "git commit -m 'message' -a"
+    echo "git commit -m 'message' -a --amend"
+    echo "-------------------------------------------------------------------------------"
+    echo "git status"
+    echo "git log --stat # Last commits, --stat optional"
+    echo "git ls-files"
+    echo "git diff HEAD~1..HEAD"
+    echo "-------------------------------------------------------------------------------"
+    echo "git push origin master"
+    echo "git push origin master:master"
+    echo "-------------------------------------------------------------------------------"
+    echo "git remote add origin http://..."
+    echo "git remote set-url origin git://..."
+    echo "-------------------------------------------------------------------------------"
+    echo "git stash"
+    echo "git pull origin master"
+    echo "git stash list ; git stash pop"
+    echo "-------------------------------------------------------------------------------"
+    echo "git submodule add /absolute/path repo-name"
+    echo "git submodule add http://... repo-name"
+    echo "-------------------------------------------------------------------------------"
+    echo "git checkout -b new-branch <==> git branch new-branch ; git checkout new-branch"
+    echo "git merge old-branch"
+    echo "git branch local_name origin/remote_name # Associate branches"
+    echo "-------------------------------------------------------------------------------"
+    echo "git update-index --assume-unchanged <file> # Ignore changes"
+    echo "git rm --cached <file> # Untrack a file"
+    echo "-------------------------------------------------------------------------------"
+    echo "git reset --hard HEAD # Repair what has been done since last commit"
+    echo "git revert HEAD # Repair last commit"
+    echo "git checkout [file] # Reset a file to its previous state at last commit"
+    echo "-------------------------------------------------------------------------------"
+    echo "git tag # List"
+    echo "git tag v0.5 # Lightwieght tag"
+    echo "git tag -a v1.4 -m 'my version 1.4' # Annotated tag"
+    echo "git push origin v1.4 # Pushing"
+    echo "-------------------------------------------------------------------------------"
+    echo "HOW TO RENAME A BRANCH LOCALLY AND REMOTELY"
+    echo "git branch -m old_name new_name"
+    echo "git push origin new_name"
+    echo "git push origin :old_name"
+    echo "------"
+    echo "Each other client of the repository has to do:"
+    echo "git fetch origin ; git remote prune origin"
+    echo "-------------------------------------------------------------------------------"
+}

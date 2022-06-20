@@ -111,7 +111,6 @@
         extraGroups = [ "wheel" "network" "audio" "libvirtd" ];
         createHome = true;
         home = "/home/cory";
-        shell = pkgs.zsh;
         passwordFile = "/persist/secrets/cory";
       };
     };
@@ -194,15 +193,6 @@
      pinentryFlavor = "tty";
     };
     steam.enable = true;
-    zsh = {
-      enable = true;
-      enableCompletion = true;
-      enableGlobalCompInit = true;
-      autosuggestions.enable = true;
-      setOptions = [];
-      shellAliases = {};
-      syntaxHighlighting.enable = true;
-    };
   };
 
   xdg = {
