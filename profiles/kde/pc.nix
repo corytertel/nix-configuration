@@ -4,9 +4,8 @@
   imports = [ ./shared.nix ];
 
   theme.cursor = {
-    theme = "Vanilla-DMZ-AA";
-    size = 32;
-    package = pkgs.vanilla-dmz;
+    theme = "Oxygen_White";
+    size = 48;
   };
 
   theme.wallpaper = ./wallpapers/gatekeeper.jpg;

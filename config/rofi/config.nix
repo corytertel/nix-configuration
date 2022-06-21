@@ -79,7 +79,7 @@ mainbox {
 	border-color:					@accent;
     children:                       [ inputbar, listview ];
     spacing:                       	8%;
-    padding:                        10% 8.5% 10% 8.5%;
+    padding:                        7.5% 6% 7.5% 6%;
 }
 
 element {
