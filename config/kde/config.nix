@@ -73,4 +73,6 @@
     Theme.name = "org.kde.oxygenKDE4";
     Theme-plasmathemeexplorer.name = "org.kde.oxygenKDE4";
   };
+
+  krunnerrc.General.ActivateWhenTypingOnDesktop=false;
 }
