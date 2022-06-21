@@ -2,17 +2,8 @@
 with config.theme;
 
 pkgs.writeText "config.rasi" ''
-/*
- *
- * Author  : Aditya Shakya
- * Mail    : adi1090x@gmail.com
- * Github  : @adi1090x
- * Twitter : @adi1090x
- *
- */
-
 configuration {
-	font:							"${font.system.name} Bold ${toString (font.system.size + 7)}";
+	font:							"${font.system.name} Bold ${toString (font.system.size + 14)}";
     show-icons:                     true;
 	icon-theme: 					"${icons.name}";
     display-drun: 					"";
@@ -33,11 +24,11 @@ window {
     transparency:                   "real";
     background-color:               @background;
     text-color:                     @foreground;
-	border:							0px;
-	border-color:					@border;
-    border-radius:                  0px;
-	width:							100%;
-	height:							100%;
+	border:							12px;
+	border-color:					@accent;
+    border-radius:                  1%;
+	width:							80%;
+	height:							80%;
 }
 
 prompt {
@@ -45,7 +36,7 @@ prompt {
 	padding: 						0.30% 1% 0% -0.5%;
 	background-color: 				@background-alt;
 	text-color: 					@foreground;
-	font:							"${font.monospace.name} ${toString (font.monospace.size + 10)}";
+	font:							"${font.monospace.name} ${toString (font.monospace.size + 14)}";
 }
 
 entry {
@@ -67,7 +58,7 @@ inputbar {
 	border:							0.1%;
     border-radius:                  12px;
 	border-color:					@accent;
-    margin:                         0% 30% 0% 30%;
+    margin:                         0% 10% 0% 10%;
     padding:                        1%;
 }
 

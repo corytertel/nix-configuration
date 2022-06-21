@@ -11,16 +11,6 @@ in {
   config = mkIf cfg.enable {
     users.users.cory.shell = pkgs.zsh;
 
-    # programs.zsh = {
-    #   enable = true;
-    #   enableCompletion = true;
-    #   enableGlobalCompInit = true;
-    #   autosuggestions.enable = true;
-    #   setOptions = [];
-    #   shellAliases = {};
-    #   syntaxHighlighting.enable = true;
-    # };
-
     home-manager.users.cory.programs = {
       zsh = {
         enable = true;
@@ -130,7 +120,6 @@ in {
         shellAliases = {
           nixos-test = "sudo nixos-rebuild test --flake .";
           nixos-switch = "sudo nixos-rebuild switch --flake .";
-
           exa = "exa --icons --all --git --binary --group-directories-first";
           ls = "exa";
           l = "exa --classify";

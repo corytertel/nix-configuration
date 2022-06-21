@@ -179,9 +179,12 @@ in {
           # firefox-compact-dark@mozilla.org = dark
           # firefox-compact-light@mozilla.org = light
           # default-theme@mozilla.org = system theme
-          "browser.theme.content-theme" = if darkTheme then 0 else 1;
-          "browser.theme.toolbar-theme" = if darkTheme then 0 else 1;
-          "extensions.activeThemeID" = if darkTheme then "firefox-compact-dark@mozilla.org" else "firefox-compact-light@mozilla.org";
+          # "browser.theme.content-theme" = if darkTheme then 0 else 1;
+          # "browser.theme.toolbar-theme" = if darkTheme then 0 else 1;
+          # "extensions.activeThemeID" = if darkTheme then "firefox-compact-dark@mozilla.org" else "firefox-compact-light@mozilla.org";
+          "browser.theme.content-theme" = 2;
+          "browser.theme.toolbar-theme" = 2;
+          "extensions.activeThemeID" = "default-theme@mozilla.org";
         };
       };
     };

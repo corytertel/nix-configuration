@@ -282,10 +282,10 @@
       direnv.enable = true;
       direnv.nix-direnv.enable = true;
 
-      nushell = {
-        enable = true;
-        settings = import ../../config/nushell;
-      };
+      # nushell = {
+      #   enable = true;
+      #   settings = import ../../config/nushell;
+      # };
 
       java = {
         enable = true;
@@ -302,6 +302,7 @@
     home = {
       username = "cory";
       homeDirectory = "/home/cory";
+      stateVersion = "21.11";
 
       packages = let
         tex = (pkgs.texlive.combine {
@@ -396,6 +397,7 @@
         libreoffice-qt
         pinfo
         fd
+        citra-canary
 
         wireshark
         tcpdump

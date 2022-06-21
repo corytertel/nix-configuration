@@ -10,7 +10,7 @@
   };
   services.cory.touchegg.enable = true;
 
-  programs.cory.bash.enable = true;
+  # programs.cory.bash.enable = true;
   programs.cory.discord = {
     enable = true;
     css = builtins.readFile ../../config/discocss/skeuocord.theme.css;
@@ -25,7 +25,7 @@
   programs.cory.ungoogled-chromium.enable = true;
   programs.cory.urxvt.enable = true;
   # programs.cory.zathura.enable = true;
-  # programs.cory.zsh.enable = true;
+  programs.cory.zsh.enable = true;
 
   theme = with pkgs; {
     name = "PlainLight";

@@ -36,5 +36,5 @@ in {
     "${p} s" = spectacleShortcut "FullScreenScreenShot";
     "${p} control + s" = spectacleShortcut "RectangularRegionScreenShot";
 
-    "meta + space" = "layout-switch";
+    "super" = "rofi -show drun -modi drun,run -show-icons";
 }

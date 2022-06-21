@@ -9,5 +9,5 @@
     package = pkgs.vanilla-dmz;
   };
 
-  theme.wallpaper = ./wallpapers/maui.jpg;
+  theme.wallpaper = ./wallpapers/gatekeeper.jpg;
 }

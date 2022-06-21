@@ -2,9 +2,16 @@
   description = "Cory's system configuration";
 
   inputs = {
+    # Unstable Branch
     nixpkgs.url = "nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "nixpkgs/master";
     home-manager.url = "github:nix-community/home-manager/master";
+
+    # Stable Branch
+    # nixpkgs.url = "nixpkgs/nixos-22.05";
+    # nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
+    # home-manager.url = "github:nix-community/home-manager/release-22.05";
+
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nur.url = "github:nix-community/NUR";
     nur.inputs.nixpkgs.follows = "nixpkgs";
