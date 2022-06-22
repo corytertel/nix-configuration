@@ -395,7 +395,6 @@
         # okular
         vlc
         libreoffice-qt
-        pinfo
         fd
         citra-canary
 

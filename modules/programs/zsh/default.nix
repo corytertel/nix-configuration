@@ -30,7 +30,7 @@ in {
           bindkey -M emacs '^P' history-substring-search-up
           bindkey -M emacs '^N' history-substring-search-down
           setopt promptsubst
-          PROMPT="╭╴%F{cyan}  %f%F{blue}%B\$(directory)%b%f %F{green}%U\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)%u%f
+          PROMPT="╭╴%F{cyan}  %f%F{blue}%B\$(_directory)%b%f %F{green}%U\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)%u%f
           ╰─λ "
 
           # Extract any archive
@@ -116,6 +116,10 @@ in {
               echo "git fetch origin ; git remote prune origin"
               echo "-------------------------------------------------------------------------------"
           }
+
+          # undistract-me-zsh
+          . "${pkgs.undistract-me-zsh}"
+          notify_when_long_running_commands_finish_install
         '';
         shellAliases = {
           nixos-test = "sudo nixos-rebuild test --flake .";
@@ -134,9 +138,8 @@ in {
           n = "cd $HOME/.config/nix";
           fm = "pcmanfm-qt -n";
           i = "lximage-qt";
-          # info = "pinfo";
           nd = "nix develop";
-          directory = "if [ \"$PWD\" = \"$HOME\" ]; then echo \'~'; else; basename \"$PWD\"; fi";
+          _directory = "if [ \"$PWD\" = \"$HOME\" ]; then echo \'~'; else; basename \"$PWD\"; fi";
         };
         sessionVariables = {
           ALTERNATE_EDITOR = "emacs -nw";
@@ -144,6 +147,8 @@ in {
           VISUAL = "emacsclient -c -a ''";
           BROWSER = "firefox";
           CALIBRE_USE_SYSTEM_THEME = "1";
+          LONG_RUNNING_COMMAND_TIMEOUT = "10";
+          UDM_PLAY_SOUND = "1";
         };
         plugins = [
           {

@@ -40,7 +40,6 @@ in {
         n = "cd $HOME/.config/nix";
         fm = "pcmanfm-qt -n";
         i = "lximage-qt";
-        # info = "pinfo";
         nd = "nix develop";
       };
     };
