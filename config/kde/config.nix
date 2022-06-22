@@ -74,5 +74,7 @@
     Theme-plasmathemeexplorer.name = "org.kde.oxygenKDE4";
   };
 
-  krunnerrc.General.ActivateWhenTypingOnDesktop=false;
+  krunnerrc.General.ActivateWhenTypingOnDesktop = false;
+
+  ksmserverrc.General.loginMode = "emptySession";
 }

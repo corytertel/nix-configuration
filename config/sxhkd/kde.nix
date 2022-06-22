@@ -23,6 +23,8 @@ in {
     "${p} a ; p" = mediaShortcut "previousmedia";
     "${p} a ; s" = mediaShortcut "stopmedia";
     "${p} a ; t" = mediaShortcut "playpausemedia";
+    "control + f5" = mediaShortcut "mediavolumedown";
+    "control + f6" = mediaShortcut "mediavolumeup";
 
     "${p} k" = kwinShortcut "Window Close";
     "${p} u" = kwinShortcut "Window Maximize";
