@@ -10,6 +10,18 @@ in {
       type = types.bool;
       default = true;
     };
+    invertedColor = mkOption {
+      type = types.str;
+      default = config.theme.color.foreground;
+    };
+    secondaryColor = mkOption {
+      type = types.str;
+      default = config.theme.color.background-alt1;
+    };
+    windowColor = mkOption {
+      type = types.str;
+      default = config.theme.color.background;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -32,7 +44,10 @@ in {
       profiles."cory" =  with config.theme; {
         userChrome = let
           changeColor = cfg.changeColor;
-        in import ../../../config/firefox/userChrome.nix { inherit changeColor config; };
+          invertedColor = cfg.invertedColor;
+          secondaryColor = cfg.secondaryColor;
+          windowColor = cfg.windowColor;
+        in import ../../../config/firefox/userChrome.nix { inherit changeColor config invertedColor secondaryColor windowColor; };
         bookmarks = {
           "YouTube" = {
             url = "https://www.youtube.com/";

@@ -1,5 +1,4 @@
-{ changeColor, config }:
-with config.theme.color;
+{ changeColor, config, invertedColor, secondaryColor, windowColor }:
 
 (if changeColor == false then "" else ''
 :root {
@@ -10,9 +9,9 @@ with config.theme.color;
 
 
     /* Theme Colour */
-     --window-colour:               ${background};
-     --secondary-colour:            ${background-alt1};
-     --inverted-colour:             ${foreground};
+     --window-colour:               ${windowColor};
+     --secondary-colour:            ${secondaryColor};
+     --inverted-colour:             ${invertedColor};
 
 
     /* Containter Tab Colours */
@@ -36,7 +35,7 @@ with config.theme.color;
      +---+---+---+---+---+---+---*/
 
     /* global border radius */
-    --uc-border-radius: 0;
+    --uc-border-radius: 10;
 
     /* dynamic url bar width settings */
     --uc-urlbar-width: clamp(400px, 40vw, 1000px);
@@ -312,4 +311,85 @@ See the above repository for updates as well as full license text. */
 /* This may seem pretty weird, but it gets around an issue where the height of urlbar may suddenly change when one starts typing into it */
 /* If you are otherwise modifying the urlbar height then you might need to modify the height of this too */
 #urlbar > #urlbar-input-container::before{ content: ""; display: -moz-box; height: 24px; }
+
+
+
+
+/* Source file https://github.com/MrOtherGuy/firefox-csshacks/tree/master/chrome/classic_firefox_menu_button.css made available under Mozilla Public License v. 2.0
+See the above repository for updates as well as full license text. */
+
+/* Makes the main menu button appear in the top left corner styled similarly to Firefox versions 4 to 29 */
+
+#PanelUI-button{
+   /* Nightly colors scheme */
+  /*--uc-fx-button-color: #9752fa;
+  --uc-fx-button-sec-color: #00b2fa8a;*/
+
+  /* Release color scheme*/
+  --uc-fx-button-color: #ff8313;
+  --uc-fx-button-sec-color: #ffdfbf85;
+}
+
+#PanelUI-button{ -moz-box-ordinal-group: 0; margin-inline: 2px var(--uc-window-drag-space-pre,24px) !important; }
+:root[tabsintitlebar] #nav-bar{ border-left-width: 0px; padding-left: 0px !important; }
+#PanelUI-menu-button{ -moz-box-align: start !important; }
+#PanelUI-menu-button > stack{
+  background-color: var(--uc-fx-button-color);
+  background-image: linear-gradient(var(--uc-fx-button-sec-color), transparent) !important;
+  list-style-image: url(chrome://global/skin/icons/arrow-down-12.svg) !important;
+  border-radius: 0 0 4px 4px !important;
+  border: 2px groove var(--uc-fx-button-color);
+  border-top: none;
+  display: -moz-box;
+  padding: 4px 10px !important;
+}
+
+#PanelUI-menu-button:hover > stack,
+#PanelUI-menu-button[open] > stack{
+  background-color: var(--uc-fx-button-color) !important;
+  background-image: linear-gradient(rgba(100,100,150,0.3), transparent) !important;
+}
+
+#PanelUI-menu-button > stack::before{
+  display: -moz-box;
+  content: "Firefox"; /* Change text here */
+  font-weight: 700;
+  margin-inline-end: 4px;
+}
+
+/* OPTIONAL - move the menu button to top-left corner of the window.
+ * Don't use this if you also use tabs_on_bottom.css
+ */
+
+/*
+#PanelUI-button{
+  position: fixed;
+  display: flex;
+  top: 0;
+}
+#toolbar-menubar,
+#toolbar-menubar[autohide="true"] + #TabsToolbar{
+  padding-left: 94px !important;
+}
+*/
+
+
+
+/* replaces back and forward buttons */
+
+#back-button{
+  list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/32x32/actions/go-previous.png) !important;
+}
+
+#forward-button{
+  list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/32x32/actions/go-next.png) !important;
+}
+
+#reload-button{
+  list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/32x32/actions/view-refresh.png) !important;
+}
+
+#home-button{
+  list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/32x32/places/user-home.png) !important;
+}
 ''

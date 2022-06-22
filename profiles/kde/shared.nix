@@ -17,7 +17,10 @@
   };
   programs.cory.firefox = {
     enable = true;
-    changeColor = false;
+    changeColor = true;
+    windowColor = "#e0dfde";
+    secondaryColor = "#c8c6c4";
+    invertedColor = "#222120";
   };
   programs.cory.lximage-qt.enable = true;
   programs.cory.neofetch.enable = true;
