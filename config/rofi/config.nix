@@ -13,7 +13,7 @@ configuration {
 }
 
 * {
-    background:                     #000000DD;
+    background:                     #000000CC;
     background-alt:              	#00000000;
     background-bar:                 ${color.background}15;
     foreground:                     ${color.background}EE;
@@ -24,7 +24,7 @@ window {
     transparency:                   "real";
     background-color:               @background;
     text-color:                     @foreground;
-	border:							12px;
+	border:							0.1%;
 	border-color:					@accent;
     border-radius:                  1%;
 	width:							80%;
