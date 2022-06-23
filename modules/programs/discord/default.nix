@@ -10,11 +10,15 @@ in {
       type = types.lines;
       default = import ../../../config/discocss/custom.nix { inherit config pkgs; };
     };
+    package = mkOption {
+      type = types.package;
+      default = pkgs.discord;
+    };
   };
 
   config = mkIf cfg.enable {
     home-manager.users.cory = {
-      home.packages = [ pkgs.discord ];
+      home.packages = [ cfg.package ];
       xdg.configFile."discocss/custom.css".text = cfg.css;
     };
   };

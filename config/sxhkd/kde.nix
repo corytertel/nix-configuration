@@ -10,6 +10,9 @@ let
 
   mediaShortcut = shortcut:
     "qdbus org.kde.kglobalaccel /component/mediacontrol invokeShortcut '${shortcut}'";
+
+  audioShortcut = shortcut:
+    "qdbus org.kde.kglobalaccel /component/kmix invokeShortcut '${shortcut}'";
 in {
     "${p} t" = "urxvtc";
     "${p} e" = "emacsclient -c";
@@ -23,8 +26,12 @@ in {
     "${p} a ; p" = mediaShortcut "previousmedia";
     "${p} a ; s" = mediaShortcut "stopmedia";
     "${p} a ; t" = mediaShortcut "playpausemedia";
-    "control + f5" = mediaShortcut "mediavolumedown";
-    "control + f6" = mediaShortcut "mediavolumeup";
+    "F5" = audioShortcut "decrease_volume";
+    "F6" = audioShortcut "increase_volume";
+    "F7" = audioShortcut "mute";
+    "F8" = mediaShortcut "playpausemedia";
+    "F9" = mediaShortcut "previousmedia";
+    "F10" = mediaShortcut "nextmedia";
 
     "${p} k" = kwinShortcut "Window Close";
     "${p} u" = kwinShortcut "Window Maximize";

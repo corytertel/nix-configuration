@@ -357,7 +357,7 @@
         # epdfview
 
         # modern unix
-        bat #cat
+        # bat #cat
         exa # ls
         fd # find
         ripgrep # grep
@@ -397,6 +397,7 @@
         libreoffice-qt
         fd
         citra-canary
+        # protonvpn-gui
 
         wireshark
         tcpdump

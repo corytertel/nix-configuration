@@ -17,7 +17,7 @@
   };
   programs.cory.firefox = {
     enable = true;
-    changeColor = true;
+    changeColor = false;
     windowColor = "#e0dfde";
     secondaryColor = "#c8c6c4";
     invertedColor = "#222120";

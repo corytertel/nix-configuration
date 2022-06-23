@@ -37,6 +37,7 @@ in {
         facebook-container
         https-everywhere
         pkgs.new-tab-override
+        plasma-integration
         privacy-badger
         vimium
         ublock-origin

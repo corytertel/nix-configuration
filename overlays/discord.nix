@@ -1,36 +1,42 @@
 { pkgs, ... }:
 
-final: prev: {
-
-  discord = let
-
-    source = prev.discord.overrideAttrs (_: {
-      src = builtins.fetchTarball {
-        url = "https://discord.com/api/download?platform=linux&format=tar.gz";
+final: prev: let
+  source = prev.discord.overrideAttrs (_: {
+    src = builtins.fetchTarball {
+      url = "https://discord.com/api/download?platform=linux&format=tar.gz";
         sha256 = "1bhjalv1c0yxqdra4gr22r31wirykhng0zglaasrxc41n0sjwx0m";
       };
-    });
+  });
 
-    commandLineArgs = toString [
-      "--enable-accelerated-mjpeg-decode"
-      "--enable-accelerated-video"
-      # "--ignore-gpu-blacklist"
-      # "--enable-native-gpu-memory-buffers"
-      # "--enable-gpu-rasterization"
-      "--enable-zero-copy"
-      "--use-gl=desktop"
-      "--disable-features=UseOzonePlatform"
-      "--enable-features=VaapiVideoDecoder"
-    ];
+  commandLineArgs = toString [
+    "--enable-accelerated-mjpeg-decode"
+    "--enable-accelerated-video"
+    "--enable-zero-copy"
+    "--use-gl=desktop"
+    "--disable-features=UseOzonePlatform"
+    "--enable-features=VaapiVideoDecoder"
+  ];
 
-    # Credit to mlvzk to creating the original script (discocss)
-    # https://github.com/mlvzk/discocss
-    # This script was modified to:
-    # - support launching discord at the correct nix store file location
-    # - support launching with the desired flags
-    # - exist in a nix wrapper
-    # - support nix variables
-    css-injector = ''
+  gpuCommandLineArgs = toString [
+    "--enable-accelerated-mjpeg-decode"
+    "--enable-accelerated-video"
+    "--ignore-gpu-blacklist"
+    "--enable-native-gpu-memory-buffers"
+    "--enable-gpu-rasterization"
+    "--enable-zero-copy"
+    "--use-gl=desktop"
+    "--disable-features=UseOzonePlatform"
+    "--enable-features=VaapiVideoDecoder"
+  ];
+
+  # Credit to mlvzk to creating the original script (discocss)
+  # https://github.com/mlvzk/discocss
+  # This script was modified to:
+  # - support launching discord at the correct nix store file location
+  # - support launching with the desired flags
+  # - exist in a nix wrapper
+  # - support nix variables
+  css-injector = ''
       confdir="/home/cory/.config/discocss"
       preloadFile="$confdir/preload.js"
       cssFile="$confdir/custom.css"
@@ -91,8 +97,9 @@ final: prev: {
       LC_ALL=C sed $sed_options "$app_preload_replace; $launch_main_app_replace; $frame_true_replace; $causing_the_window_replace" \
         "$core_asar"
 
-    '';
-
+  '';
+in {
+  discord = let
     wrapped = pkgs.writeShellScriptBin "discord" (css-injector + ''
       exec ${source}/bin/discord ${commandLineArgs}
     '');
@@ -100,9 +107,7 @@ final: prev: {
     wrapped' = pkgs.writeShellScriptBin "Discord" (css-injector + ''
       exec ${source}/bin/Discord ${commandLineArgs}
     '');
-
   in
-
     pkgs.symlinkJoin {
       name = "discord";
       paths = [
@@ -112,4 +117,21 @@ final: prev: {
       ];
     };
 
+  discord-gpu = let
+    wrapped = pkgs.writeShellScriptBin "discord" (css-injector + ''
+      exec ${source}/bin/discord ${gpuCommandLineArgs}
+    '');
+
+    wrapped' = pkgs.writeShellScriptBin "Discord" (css-injector + ''
+      exec ${source}/bin/Discord ${gpuCommandLineArgs}
+    '');
+  in
+    pkgs.symlinkJoin {
+      name = "discord";
+      paths = [
+        wrapped
+        wrapped'
+        source
+      ];
+    };
 }

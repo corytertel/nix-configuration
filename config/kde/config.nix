@@ -5,7 +5,7 @@
     Compositing = {
       # GLCore = true;
       OpenGLIsUnsafe = false;
-      # LatencyPolicy = "ExtremelyLow";
+      LatencyPolicy = "ExtremelyLow";
       # MaxFPS = 60;
       # RefreshRate = 60;
       # Enabled = false;
@@ -31,8 +31,15 @@
     };
 
     "org.kde.kdecoration2" = {
+      # Oxygen Window Decoration
+      # BorderSizeAuto = false;
+      # theme = "Oxygen";
+
+      # Plastik Window Decoration
+      BorderSize = "Large";
       BorderSizeAuto = false;
-      theme = "Oxygen";
+      library = "org.kde.kwin.aurorae";
+      theme = "kwin4_decoration_qml_plastik";
     };
   };
 
