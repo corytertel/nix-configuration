@@ -16,6 +16,7 @@ let
 in {
     "${p} t" = "urxvtc";
     "${p} e" = "emacsclient -c";
+    "${p} control + e" = "emacs";
     "${p} w" = "firefox";
     "${p} r" = "pcmanfm-qt --new-window";
     "${p} d" = "discord";
