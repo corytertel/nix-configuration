@@ -36,10 +36,16 @@
       # theme = "Oxygen";
 
       # Plastik Window Decoration
+      # BorderSize = "Large";
+      # BorderSizeAuto = false;
+      # library = "org.kde.kwin.aurorae";
+      # theme = "kwin4_decoration_qml_plastik";
+
+      # ExposeGlassy WindowDecoration
       BorderSize = "Large";
       BorderSizeAuto = false;
       library = "org.kde.kwin.aurorae";
-      theme = "kwin4_decoration_qml_plastik";
+      theme = "__aurorae__svg__ExposeGlassy";
     };
   };
 

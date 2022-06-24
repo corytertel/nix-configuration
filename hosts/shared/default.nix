@@ -398,6 +398,7 @@
         fd
         citra-canary
         # protonvpn-gui
+        inkscape
 
         wireshark
         tcpdump

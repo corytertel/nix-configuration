@@ -80,6 +80,7 @@
     crystal-remix-icon-theme
     oxygen-kde4-theme
     libsForQt5.oxygen
+    expose-glassy
     libsForQt5.qt5.qttools
     layout-switch
   ];
