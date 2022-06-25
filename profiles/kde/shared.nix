@@ -11,6 +11,7 @@
   services.cory.touchegg.enable = true;
 
   # programs.cory.bash.enable = true;
+  programs.cory.bat.enable = true;
   programs.cory.discord = {
     enable = true;
     css = builtins.readFile ../../config/discocss/skeuocord.theme.css;

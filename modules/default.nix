@@ -3,6 +3,7 @@
 {
   imports = [
     ./programs/bash
+    ./programs/bat
     ./programs/discord
     ./programs/firefox
     ./programs/gtk
