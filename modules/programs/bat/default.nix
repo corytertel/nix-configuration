@@ -41,6 +41,10 @@ in {
         less = "${pkgs.bat}/bin/bat --paging=always";
       };
 
+      programs.zsh.sessionVariables = {
+        MANPAGER = "${pkgs.bashInteractive}/bin/sh -c 'col -bx | ${pkgs.bat}/bin/bat -l man -p'";
+      };
+
     };
   };
 }
