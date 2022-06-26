@@ -138,6 +138,7 @@ in {
           fm = "pcmanfm-qt -n";
           i = "lximage-qt";
           nd = "nix develop";
+          info = "info -v link-style=blue,underline -v active-link-style=blue,bold -v match-style=black,bgyellow";
           _directory = "if [ \"$PWD\" = \"$HOME\" ]; then echo \'~'; else; basename \"$PWD\"; fi";
         };
         sessionVariables = {
