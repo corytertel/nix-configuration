@@ -360,7 +360,6 @@
 
         # modern unix
         # bat #cat
-        exa # ls
         fd # find
         ripgrep # grep
         fzf

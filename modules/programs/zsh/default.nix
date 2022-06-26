@@ -124,7 +124,7 @@ in {
         shellAliases = {
           nixos-test = "sudo nixos-rebuild test --flake .";
           nixos-switch = "sudo nixos-rebuild switch --flake .";
-          ls = "${pkgs.exa} --icons --all --git --binary --group-directories-first";
+          ls = "${pkgs.exa}/bin/exa --icons --all --git --binary --group-directories-first";
           l = "ls --classify";
           ll = "ls -l -h";
           c = "clear";

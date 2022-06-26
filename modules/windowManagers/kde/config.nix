@@ -47,10 +47,10 @@ in {
   '';
 
   home.activation.extraGtkConfig = let
-    updateConfig = option: line: file: ''
-      grep -qF ${option} ${file} \
-      && $DRY_RUN_CMD sed -i "s/^.*\b${option}\b.*$/${line}/g" ${file} \
-      || $DRY_RUN_CMD echo ${line} >> ${file}
+    updateConfig = key: line: file: ''
+      grep -qF ${key} ${file} \
+      && $DRY_RUN_CMD sed -i "s/^.*\b${key}\b.*$/${line}/g" ${file} \
+      || $DRY_RUN_CMD echo '${line}' >> ${file}
     '';
 
     convertToGtk2 = with lib; value:
@@ -64,17 +64,17 @@ in {
                    toString value;
       in "${value'}";
 
-    gtk2Configure = option: value: ''
-      ${updateConfig option "\'${option}=${convertToGtk2 value}\'" "$HOME/.gtkrc-2.0"}
-      ${updateConfig option "\'${option} = ${convertToGtk2 value}\'" "$HOME/.config/gtkrc-2.0"}
+    gtk2Configure = key: value: ''
+      ${updateConfig key "${key}=${convertToGtk2 value}" "$HOME/.gtkrc-2.0"}
+      ${updateConfig key "${key} = ${convertToGtk2 value}" "$HOME/.config/gtkrc-2.0"}
     '';
 
-    gtk3Configure = option: value: ''
-      ${updateConfig option "\'${option}=${toString value}\'" "$HOME/.config/gtk-3.0/settings.ini"}
+    gtk3Configure = key: value: ''
+      ${updateConfig key "${key}=${toString value}" "$HOME/.config/gtk-3.0/settings.ini"}
     '';
 
-    gtk4Configure = option: value: ''
-      ${updateConfig option "\'${option}=${toString value}\'" "$HOME/.config/gtk-4.0/settings.ini"}
+    gtk4Configure = key: value: ''
+      ${updateConfig key "${key}=${toString value}" "$HOME/.config/gtk-4.0/settings.ini"}
     '';
 
     font-name = "${config.theme.font.system.name},  ${toString config.theme.font.system.size}";
