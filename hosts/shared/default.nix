@@ -279,6 +279,8 @@
     programs = {
       home-manager.enable = true;
 
+      nix-index.enable = true;
+
       direnv.enable = true;
       direnv.nix-direnv.enable = true;
 
