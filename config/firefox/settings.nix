@@ -20,8 +20,7 @@ in {
   # https://wiki.mozilla.org/Privacy/Reviews/New_Tab
   # https://support.mozilla.org/en-US/kb/new-tab-page-show-hide-and-customize-top-sites#w_how-do-i-turn-the-new-tab-page-off
   "browser.newtabpage.enabled" = false;
-  # "browser.newtab.url" = "about:blank";
-  "browser.newtab.url" = "moz-extension://9033de8b-ee20-4a84-a698-376f1c358598/pages/blank.html";
+  "browser.newtab.url" = "about:blank";
   # Disable Activity Stream
   # https://wiki.mozilla.org/Firefox/Activity_Stream
   "browser.newtabpage.activity-stream.enabled" = false;
