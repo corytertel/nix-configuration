@@ -399,6 +399,7 @@
         citra-canary
         # protonvpn-gui
         inkscape
+        libsForQt5.kpat
 
         wireshark
         tcpdump
