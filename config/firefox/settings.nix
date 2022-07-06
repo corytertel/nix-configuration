@@ -115,4 +115,6 @@ in {
   "ui.key.menuAccessKey" = 0;
   "ui.key.menuAccessKeyFocuses" = true;
   "ui.key.textcontrol.prefer_native_key_bindings_over_builtin_shortcut_key_definitions" = true;
+  # Prevent sites from taking over copy/paste
+  "dom.event.clipboardevents.enabled" = false;
 }

@@ -3,19 +3,11 @@
 {
   windowManagers.cory.kde.enable = true;
 
-  services.cory.rofi.enable = true;
-  services.cory.sxhkd = {
-    enable = true;
-    keybindings = import ../../config/sxhkd/kde.nix;
-  };
-  services.cory.touchegg.enable = true;
+  # Terminal
+  # programs.cory.urxvt.enable = true;
+  programs.cory.konsole.enable = true;
 
-  # programs.cory.bash.enable = true;
-  programs.cory.bat.enable = true;
-  programs.cory.discord = {
-    enable = true;
-    css = builtins.readFile ../../config/discocss/skeuocord.theme.css;
-  };
+  # Browser
   programs.cory.firefox = {
     enable = true;
     changeColor = false;
@@ -23,14 +15,74 @@
     secondaryColor = "#c8c6c4";
     invertedColor = "#222120";
   };
+
+  # Photo Viewer
   programs.cory.lximage-qt.enable = true;
+
+  # PDF Viewer
+  programs.cory.qpdfview.enable = true;
+
+  # Set other apps
+  apps = {
+    photoEditor = {
+      name = "photogimp";
+      command = "gimp";
+      desktopFile = "gimp.desktop";
+      package = pkgs.photogimp;
+    };
+    musicPlayer = {
+      name = "audacious";
+      command = "audacious";
+      desktopFile = "audacious.desktop";
+      package = pkgs.audacious;
+    };
+    videoPlayer = {
+      name = "vlc";
+      command = "vlc";
+      desktopFile = "vlc.desktop";
+      package = pkgs.vlc;
+    };
+    fileManager = {
+      name = "pcmanfm-qt";
+      command = "pcmanfm-qt --new-window";
+      desktopFile = "pcmanfm-qt.desktop";
+      package = pkgs.pcmanfm-qt;
+    };
+    archiver = {
+      name = "lxqt-archiver";
+      command = "lxqt-archiver";
+      desktopFile = "lxqt-archiver.desktop";
+      package = pkgs.lxqt.lxqt-archiver;
+    };
+    launcher = {
+      name = "krunner";
+      command = "krunner";
+      desktopFile = "krunner.desktop";
+      package = pkgs.libsForQt5.plasma-workspace;
+    };
+  };
+
+  # Keybinds
+  services.cory.sxhkd = {
+    enable = true;
+    keybindings = import ../../config/sxhkd/kde.nix { inherit config pkgs; };
+  };
+
+  # Gestures
+  services.cory.touchegg.enable = true;
+
+  # Discord
+  programs.cory.discord = {
+    enable = true;
+    css = builtins.readFile ../../config/discocss/skeuocord.theme.css;
+  };
+
+  # Shell
+  programs.cory.bat.enable = true;
   programs.cory.neofetch.enable = true;
-  # programs.cory.sxiv.enable = true;
-  programs.cory.ungoogled-chromium.enable = true;
-  programs.cory.urxvt.enable = true;
-  # programs.cory.zathura.enable = true;
   programs.cory.zsh.enable = true;
 
+  # Aesthetics
   theme = with pkgs; {
     name = "PlainLight";
     darkTheme = false;
@@ -72,8 +124,10 @@
       color13         = "#e01bd0";
       color6          = "#2d9574";
       color14         = "#2d9574";
-      color7          = "#cccccc";
-      color15         = "#cccccc";
+      # color7          = "#cccccc";
+      # color15         = "#cccccc";
+      color7          = "#ffffff";
+      color15         = "#ffffff";
     };
   };
 
@@ -82,8 +136,6 @@
     oxygen-kde4-theme
     libsForQt5.oxygen
     expose-glassy
-    libsForQt5.qt5.qttools
-    layout-switch
   ];
 
   home-manager.users.cory.home.packages = with pkgs; [

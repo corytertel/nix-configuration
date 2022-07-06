@@ -2,12 +2,11 @@
 
 final: prev: {
   rofi = let
-    # Icon=system-search
     desktop-file = pkgs.writeTextDir "share/applications/rofi.desktop" ''
       [Desktop Entry]
       Type=Application
       Exec=rofi -show drun -modi drun,run -show-icons
-      Icon=kde
+      Icon=system-search
       Name=Rofi Launcher
     '';
   in

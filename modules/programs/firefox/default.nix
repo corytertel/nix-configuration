@@ -39,5 +39,11 @@ in {
         settings = import ../../../config/firefox/settings.nix { inherit config; };
       };
     };
+    apps.browser = {
+      name = "firefox";
+      command = "firefox";
+      desktopFile = "firefox.desktop";
+      package = pkgs.firefox;
+    };
   };
 }

@@ -238,5 +238,11 @@ in {
         '';
       };
     };
+    apps.pdfViewer = {
+      name = "zathura";
+      command = "zathura";
+      desktopFile = "org.pwmt.zathura.desktop";
+      package = pkgs.zathura;
+    };
   };
 }

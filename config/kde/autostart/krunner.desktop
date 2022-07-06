@@ -1,0 +1,7 @@
+[Desktop Entry]
+Exec=krunner -d
+Icon=
+Name=krunner
+Path=
+Terminal=False
+Type=Application

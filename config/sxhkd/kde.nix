@@ -1,3 +1,5 @@
+{ config, pkgs }:
+
 let
   # Prefix
   p = "control + period ;";
@@ -13,16 +15,18 @@ let
 
   audioShortcut = shortcut:
     "qdbus org.kde.kglobalaccel /component/kmix invokeShortcut '${shortcut}'";
-in {
-    "${p} t" = "urxvtc";
-    "${p} e" = "emacsclient -c";
-    "${p} control + e" = "emacs";
-    "${p} w" = "firefox";
-    "${p} r" = "pcmanfm-qt --new-window";
-    "${p} d" = "discord";
-    "${p} space" = "rofi -show drun -modi drun,run -show-icons";
 
-    "${p} a ; a" = "audacious";
+in with config.apps; {
+    "${p} t" = terminal.command;
+    "${p} e" = editor.command;
+    "${p} control + e" = "emacs";
+    "${p} w" = browser.command;
+    "${p} r" = fileManager.command;
+    "${p} d" = "discord";
+    "${p} space" = launcher.command;
+    "Menu" = launcher.command;
+
+    "${p} a ; a" = musicPlayer.command;
     "${p} a ; n" = mediaShortcut "nextmedia";
     "${p} a ; p" = mediaShortcut "previousmedia";
     "${p} a ; s" = mediaShortcut "stopmedia";
@@ -42,9 +46,18 @@ in {
     "${p} control + {1-5}" = kwinShortcut "Window to Desktop {1-5}";
     "${p} o" = kwinShortcut "Walk Through Windows (Reverse)";
     "${p} control + o" = kwinShortcut "Walk Through Windows";
+    "${p} p" = kwinShortcut "Window On All Desktops";
 
     "${p} s" = spectacleShortcut "FullScreenScreenShot";
     "${p} control + s" = spectacleShortcut "RectangularRegionScreenShot";
 
-    "super" = "rofi -show drun -modi drun,run -show-icons";
+    "control + button9" = kwinShortcut "Switch One Desktop Up";
+    "control + button8" = kwinShortcut "Switch One Desktop Down";
+    "control + button2" = kwinShortcut "Window Move Center";
+    "alt + button9" = kwinShortcut "ExposeAll";
+    "alt + button8" = kwinShortcut "Show Desktop";
+    "button9" = kwinShortcut "Walk Through Windows (Reverse)";
+    "button8" = kwinShortcut "Walk Through Windows";
+
+    "control + alt + space" = "${pkgs.layout-switch}/bin/layout-switch";
 }

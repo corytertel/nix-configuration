@@ -36,5 +36,11 @@ in {
         # { id = "aghfnjkcakhmadgdomlmlhhaocbkloab"; } # Just Black - good for dark mode
       ] else []);
     };
+    apps.browser = {
+      name = "ungoogled-chromium";
+      command = "chromium";
+      desktopFile = "chromium-browser.desktop";
+      package = pkgs.ungoogled-chromium;
+    };
   };
 }

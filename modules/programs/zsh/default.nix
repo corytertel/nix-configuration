@@ -29,9 +29,10 @@ in {
         initExtra = ''
           bindkey -M emacs '^P' history-substring-search-up
           bindkey -M emacs '^N' history-substring-search-down
-          setopt promptsubst
-          PROMPT="╭╴%F{cyan}  %f%F{blue}%B\$(_directory)%b%f %F{green}%U\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)%u%f
-          ╰─λ "
+
+          # setopt promptsubst
+          # PROMPT="╭╴%F{cyan}  %f%F{blue}%B\$(_directory)%b%f %F{green}%U\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)%u%f
+          # ╰─λ "
 
           # Extract any archive
           function extract() {
@@ -116,17 +117,16 @@ in {
               echo "git fetch origin ; git remote prune origin"
               echo "-------------------------------------------------------------------------------"
           }
-
-          # undistract-me-zsh
-          . "${pkgs.undistract-me-zsh}"
-          notify_when_long_running_commands_finish_install
         '';
         shellAliases = {
           nixos-test = "sudo nixos-rebuild test --flake .";
           nixos-switch = "sudo nixos-rebuild switch --flake .";
+          cd = "z";
+          cdi = "zi";
           ls = "${pkgs.exa}/bin/exa --icons --all --git --binary --group-directories-first";
           l = "ls --classify";
           ll = "ls -l -h";
+          tree = "${pkgs.exa}/bin/exa --icons --tree";
           c = "clear";
           grep = "grep -i --color=auto";
           rm = "rm --verbose";
@@ -135,17 +135,13 @@ in {
           nf = "neofetch";
           e = "eval $EDITOR";
           n = "cd $HOME/.config/nix";
-          fm = "pcmanfm-qt -n";
-          i = "lximage-qt";
+          fm = config.apps.fileManager.command;
+          i = config.apps.photoViewer.command;
           nd = "nix develop";
           info = "info -v link-style=blue,underline -v active-link-style=blue,bold -v match-style=black,bgyellow";
-          _directory = "if [ \"$PWD\" = \"$HOME\" ]; then echo \'~'; else; basename \"$PWD\"; fi";
+          # _directory = "if [ \"$PWD\" = \"$HOME\" ]; then echo \'~'; else; basename \"$PWD\"; fi";
         };
         sessionVariables = {
-          ALTERNATE_EDITOR = "emacs -nw";
-          EDITOR = "emacsclient -nw";
-          VISUAL = "emacsclient -c -a ''";
-          BROWSER = "firefox";
           CALIBRE_USE_SYSTEM_THEME = "1";
           LONG_RUNNING_COMMAND_TIMEOUT = "10";
           UDM_PLAY_SOUND = "1";
@@ -179,11 +175,95 @@ in {
               sha256 = "8kiPBtgsjRDqLWt0xGJ6vBBLqCWEIyFpYfd+s1prHWk=";
             };
           }
+          {
+            name = "undistract-me-zsh";
+            file = "undistract-me-zsh.zsh";
+            src = pkgs.undistract-me-zsh;
+          }
         ];
       };
     };
 
-    home-manager.users.cory.programs.nix-index.enableZshIntegration = true;
+
     home-manager.users.cory.home.packages = with pkgs; [ neofetch ];
+
+    home-manager.users.cory.programs = {
+      nix-index.enableZshIntegration = true;
+
+      zoxide = {
+        enable = true;
+        enableZshIntegration = true;
+      };
+
+      starship = {
+        enable = true;
+        enableZshIntegration = true;
+        settings = {
+          add_newline = false;
+
+          scan_timeout = 10;
+
+          format = lib.concatStrings [
+            # "$username"
+            # "$hostname"
+            "$directory"
+            "$git_branch"
+            "$git_state"
+            "$git_status"
+            "$nix_shell"
+            "$cmd_duration"
+            "$line_break"
+            "$character"
+          ];
+
+          directory = {
+            style = "bold blue";
+            format = "╭╴[ ](cyan)[ $path ]($style)";
+            truncation_length = 3;
+            truncation_symbol = "…/";
+          };
+
+          character = {
+            success_symbol = "╰─λ";
+            error_symbol = "╰─[λ](red)";
+          };
+
+          git_branch = {
+            format = "[$branch]($style)";
+            style = "underline green";
+          };
+
+          git_status = {
+            format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](green) ($ahead_behind$stashed)]($style)";
+            style = "green";
+            conflicted = "​";
+            untracked = "​";
+            modified = "​";
+            staged = "​";
+            renamed = "​";
+            deleted = "​";
+            stashed = "≡";
+          };
+
+          git_state = {
+            format = "\([$state( $progress_current/$progress_total)]($style)\) ";
+            style = "green";
+          };
+
+          cmd_duration = {
+            format = "[$duration]($style) ";
+            style = "purple";
+          };
+
+          nix_shell = {
+            format = "via[$symbol$state( \($name\))]($style) ";
+            symbol = "  ";
+            style = "bold cyan";
+            impure_msg = "impure";
+            pure_msg = "pure";
+          };
+        };
+      };
+    };
   };
 }

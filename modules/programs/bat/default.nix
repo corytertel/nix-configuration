@@ -2,8 +2,13 @@
 with lib;
 
 let
-
   cfg = config.programs.cory.bat;
+
+  dagEntryAfter = after: data: {
+    inherit data after;
+    before = [ ];
+  };
+
 
   toConfigFile = generators.toKeyValue {
     mkKeyValue = k: v: "--${k}=${lib.escapeShellArg v}";
@@ -12,12 +17,12 @@ let
 
   bat-config = {
     pager = "less -R";
-    theme = "PlainLight";
+    theme = config.theme.name;
     style = "plain";
   };
 
   bat-themes = {
-    PlainLight = builtins.readFile ../../../config/bat/PlainLight.tmTheme;
+    "${config.theme.name}" = import ./theme.nix { inherit config; };
   };
 
 in {
@@ -45,6 +50,9 @@ in {
         MANPAGER = "${pkgs.bashInteractive}/bin/sh -c 'col -bx | ${pkgs.bat}/bin/bat -l man -p'";
       };
 
+      home.activation.batcache = dagEntryAfter [ "linkGeneration" ] ''
+        $DRY_RUN_CMD ${pkgs.bat}/bin/bat cache --build
+      '';
     };
   };
 }

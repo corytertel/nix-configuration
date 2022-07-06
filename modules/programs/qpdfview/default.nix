@@ -14,7 +14,12 @@ in {
       #   builtins.readFile ../../../config/qpdfview/shortcuts.conf;
       home.file.".config/qpdfview/shortcuts.conf".text =
         builtins.readFile ../../../config/qpdfview/shortcuts.conf;
-      home.packages = [ pkgs.qpdfview ];
+    };
+    apps.pdfViewer = {
+      name = "qpdfview";
+      command = "qpdfview";
+      desktopFile = "qpdfview.desktop";
+      package = pkgs.qpdfview;
     };
   };
 }

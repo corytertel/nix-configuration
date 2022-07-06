@@ -12,7 +12,12 @@ in {
     home-manager.users.cory = {
       home.file.".config/lximage-qt/settings.conf".text =
         builtins.readFile ../../../config/lximage-qt/settings.conf;
-      home.packages = [ pkgs.lxqt.lximage-qt ];
+    };
+    apps.photoViewer = {
+      name = "lximage-qt";
+      command = "lximage-qt";
+      desktopFile = "lximage-qt.desktop";
+      package = pkgs.lxqt.lximage-qt;
     };
   };
 }

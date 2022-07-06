@@ -33,6 +33,8 @@ in {
     environment = {
       systemPackages = with pkgs; [
         # sddm-mountain-light
+        libsForQt5.qt5.qttools
+        krunner-desktop
       ];
     };
   };

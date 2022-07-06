@@ -7,6 +7,7 @@
     ./programs/discord
     ./programs/firefox
     ./programs/gtk
+    ./programs/konsole
     ./programs/lximage-qt
     ./programs/neofetch
     ./programs/qpdfview
@@ -25,6 +26,7 @@
     ./services/tint2
     ./services/touchegg
 
+    ./apps
     ./theme
 
     ./windowManagers/fvwm-laptop

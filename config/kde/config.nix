@@ -5,7 +5,7 @@
     Compositing = {
       # GLCore = true;
       OpenGLIsUnsafe = false;
-      LatencyPolicy = "ExtremelyLow";
+      # LatencyPolicy = "ExtremelyLow";
       # MaxFPS = 60;
       # RefreshRate = 60;
       # Enabled = false;
@@ -26,13 +26,24 @@
       Rows = "5";
     };
 
+    Plugins = {
+      slideEnabled = false;
+    };
+
     TabBox = {
       LayoutName = "big_icons";
     };
 
+    Windows = {
+      DelayFocusInterval = 0;
+      FocusPolicy = "FocusFollowsMouse";
+    };
+
     "org.kde.kdecoration2" = {
       # Oxygen Window Decoration
+      # BorderSize = "Normal";
       # BorderSizeAuto = false;
+      # library = "org.kde.oxygen";
       # theme = "Oxygen";
 
       # Plastik Window Decoration
@@ -87,7 +98,46 @@
     Theme-plasmathemeexplorer.name = "org.kde.oxygenKDE4";
   };
 
-  krunnerrc.General.ActivateWhenTypingOnDesktop = false;
+  krunnerrc = {
+    General = {
+      ActivateWhenTypingOnDesktop = false;
+      ActivityAware = false;
+      FreeFloating = true;
+      HistoryEnabled = false;
+      RetainPriorSearch = false;
+    };
+
+    Plugins = {
+      CharacterRunnerEnabled = false;
+      DictionaryEnabled = false;
+      PowerDevilEnabled = false;
+      appstreamEnabled = false;
+      bookmarksEnabled = false;
+      calculatorEnabled = false;
+      desktopsessionsEnabled = false;
+      helprunnerEnabled = false;
+      katesessionsEnabled = false;
+      konsoleprofilesEnabled = false;
+      krunner_killEnabled = false;
+      krunner_spellcheckEnabled = false;
+      krunner_systemsettingsEnabled = false;
+      kwin-runner-windowsEnabled = true;
+      kwinEnabled = false;
+      locationsEnabled = false;
+      "org.kde.datetimeEnabled" = false;
+      "org.kde.windowedwidgetsEnabled" = false;
+      placesEnabled = false;
+      plasma-desktopEnabled = false;
+      plasma-runner-baloosearchEnabled = false;
+      plasma-runner-browserhistoryEnabled = false;
+      plasma-runner-browsertabsEnabled = false;
+      plasma-runnners-activitiesEnabled = false;
+      recentdocumentsEnabled = false;
+      shellEnabled = false;
+      unitconverterEnabled = false;
+      webshortcutsEnabled = false;
+    };
+  };
 
   ksmserverrc.General.loginMode = "emptySession";
 }

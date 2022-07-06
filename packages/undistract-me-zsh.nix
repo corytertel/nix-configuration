@@ -1,7 +1,22 @@
 { pkgs, ... }:
 
 self: super: {
-  undistract-me-zsh = pkgs.writeScript "long-running.zsh" ''
+  undistract-me-zsh = let
+    source-script = pkgs.writeTextFile {
+      name = "undistract-me-zsh.zsh";
+      executable = true;
+      destination = "/undistract-me-zsh.zsh";
+      text = ''
+        source ${long-running-script}/long-running.zsh
+        notify_when_long_running_commands_finish_install
+      '';
+    };
+
+    long-running-script = pkgs.writeTextFile {
+      name = "long-running.zsh";
+      executable = true;
+      destination = "/long-running.zsh";
+      text = ''
 # Zsh port of undistract-me, by corytertel
 
 # Copyright (c) 2008-2012 undistract-me developers. See LICENSE for details.
@@ -107,4 +122,13 @@ function notify_when_long_running_commands_finish_install() {
     }
 }
 '';
+    };
+  in
+    pkgs.symlinkJoin {
+      name = "undistract-me-zsh";
+      paths = [
+        source-script
+        long-running-script
+      ];
+    };
 }

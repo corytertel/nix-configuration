@@ -147,15 +147,21 @@
     system = "x86_64-linux";
   };
 
+  apps.editor = {
+    name = "emacs";
+    command = "emacsclient -c";
+    desktopFile = "emacsclient.desktop";
+    package = pkgs.emacsGcc;
+  };
+
   environment = {
-    shells = [ pkgs.ksh pkgs.nushell ];
     variables = {
-      EDITOR = "emacs -nw";
-      # PLASMA_USE_QT_SCALING = "1";
-      # QT_SCALE_FACTOR = "0.85";
+      ALTERNATE_EDITOR = "emacs -nw";
+      EDITOR = "emacsclient -nw";
+      VISUAL = "emacsclient -c -a ''";
+      BROWSER = config.apps.browser.command;
     };
     systemPackages = with pkgs; [
-      emacsGcc
       wget
       curl
       git
@@ -169,10 +175,6 @@
   };
 
   fonts.fonts = with pkgs; [
-    julia-mono
-    overpass
-    junicode
-
     config.theme.font.system.package
     config.theme.font.monospace.package
   ];
@@ -185,7 +187,6 @@
   };
 
   programs = {
-    cory.qpdfview.enable = true;
     dconf.enable = true;
     gnupg.agent = {
      enable = true;
@@ -201,75 +202,61 @@
       extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     };
     mime.defaultApplications = let
-      archiver = "lxqt-archiver.desktop";
-      # archiver = "org.kde.ark.desktop";
-      browser = "firefox.desktop";
       document = "writer.desktop";
-      editor = "emacsclient.desktop";
-      file-manager = "pcmanfm-qt.desktop";
-      image = "lximage-qt.desktop";
-      # image = "sxiv.desktop";
-      # image = "org.kde.gwenview.desktop";
-      music = "audacious.desktop";
-      # pdf = "org.pwmt.zathura.desktop";
-      # pdf = "okularApplication_pdf.desktop";
-      pdf = "qpdfview.desktop";
       presentation = "impress.desktop";
       telegram = "telegramdesktop.desktop";
-      terminal = "rxvt-unicode-client.desktop";
-      video = "vlc.desktop";
-    in {
-      "application/pdf" = pdf;
+    in with config.apps; {
+      "application/pdf" = pdfViewer.desktopFile;
       "x-scheme-handler/tg" = telegram;
-      "application/x-sh" = terminal;
-      "text/plain" = editor;
-      "inode/directory" = file-manager;
+      "application/x-sh" = terminal.desktopFile;
+      "text/plain" = editor.desktopFile;
+      "inode/directory" = fileManager.desktopFile;
 
-      "application/zip" = archiver;
-      "application/x-7z-compressed" = archiver;
-      "application/vnd.rar" = archiver;
-      "application/gzip" = archiver;
+      "application/zip" = archiver.desktopFile;
+      "application/x-7z-compressed" = archiver.desktopFile;
+      "application/vnd.rar" = archiver.desktopFile;
+      "application/gzip" = archiver.desktopFile;
 
       "application/msword" = document;
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = document;
       "application/vnd.ms-powerpoint" = presentation;
       "application/vnd.openxmlformats-officedocument.presentationml.presentation" = presentation;
 
-      "application/x-extension-htm" = browser;
-      "application/x-extension-html" = browser;
-      "application/x-extension-shtml" = browser;
-      "application/x-extension-xht" = browser;
-      "application/x-extension-xhtml" = browser;
-      "application/xhtml+xml" = browser;
-      "text/html" = browser;
-      "x-scheme-handler/about" = browser;
-      "x-scheme-handler/chrome" = browser;
-      "x-scheme-handler/http" = browser;
-      "x-scheme-handler/https" = browser;
-      "x-scheme-handler/unknown" = browser;
+      "application/x-extension-htm" = browser.desktopFile;
+      "application/x-extension-html" = browser.desktopFile;
+      "application/x-extension-shtml" = browser.desktopFile;
+      "application/x-extension-xht" = browser.desktopFile;
+      "application/x-extension-xhtml" = browser.desktopFile;
+      "application/xhtml+xml" = browser.desktopFile;
+      "text/html" = browser.desktopFile;
+      "x-scheme-handler/about" = browser.desktopFile;
+      "x-scheme-handler/chrome" = browser.desktopFile;
+      "x-scheme-handler/http" = browser.desktopFile;
+      "x-scheme-handler/https" = browser.desktopFile;
+      "x-scheme-handler/unknown" = browser.desktopFile;
 
-      "audio/aac" = music;
-      "audio/mpeg" = music;
-      "audio/ogg" = music;
-      "audio/opus" = music;
-      "audio/wav" = music;
-      "audio/weba" = music;
+      "audio/aac" = musicPlayer.desktopFile;
+      "audio/mpeg" = musicPlayer.desktopFile;
+      "audio/ogg" = musicPlayer.desktopFile;
+      "audio/opus" = musicPlayer.desktopFile;
+      "audio/wav" = musicPlayer.desktopFile;
+      "audio/weba" = musicPlayer.desktopFile;
 
-      "image/bmp" = image;
-      "image/gif" = image;
-      "image/ico" = image;
-      "image/jpeg" = image;
-      "image/png" = image;
-      "image/svg" = image;
-      "image/webp" = image;
+      "image/bmp" = photoViewer.desktopFile;
+      "image/gif" = photoViewer.desktopFile;
+      "image/ico" = photoViewer.desktopFile;
+      "image/jpeg" = photoViewer.desktopFile;
+      "image/png" = photoViewer.desktopFile;
+      "image/svg" = photoViewer.desktopFile;
+      "image/webp" = photoViewer.desktopFile;
 
-      "video/mp4" = video;
-      "video/mpeg" = video;
-      "video/ogg" = video;
-      "video/webm" = video;
-      "video/x-msvideo" = video;
-      "video/quicktime" = video;
-      "video/x-matroska" = video;
+      "video/mp4" = videoPlayer.desktopFile;
+      "video/mpeg" = videoPlayer.desktopFile;
+      "video/ogg" = videoPlayer.desktopFile;
+      "video/webm" = videoPlayer.desktopFile;
+      "video/x-msvideo" = videoPlayer.desktopFile;
+      "video/quicktime" = videoPlayer.desktopFile;
+      "video/x-matroska" = videoPlayer.desktopFile;
     };
   };
 
@@ -283,11 +270,6 @@
 
       direnv.enable = true;
       direnv.nix-direnv.enable = true;
-
-      # nushell = {
-      #   enable = true;
-      #   settings = import ../../config/nushell;
-      # };
 
       java = {
         enable = true;
@@ -318,7 +300,6 @@
         # linux basics
         killall
         btop
-        lxqt.lxqt-archiver
 
         # development basics
         ccls
@@ -351,18 +332,19 @@
         python39Packages.pip
         racket
         rnix-lsp
+        javaPackages.openjfx17
+        maven
+        gradle
 
         # essential user apps
         tdesktop
-        photogimp
         blender
-        # epdfview
 
         # modern unix
-        # bat #cat
-        fd # find
-        ripgrep # grep
+        fd
+        ripgrep
         fzf
+        jq
 
         nix-prefetch-github
         git-crypt
@@ -378,11 +360,9 @@
         winetricks
         grapejuice
         pciutils
-        pcmanfm-qt
         peek # simple animated gif screen recorder
         # leafpad
         # onlyoffice-bin
-        audacious
         ledger-live-desktop
         #ledger-udev-rules
         acpi
@@ -394,7 +374,6 @@
         klavaro
         obs-studio
         # okular
-        vlc
         libreoffice-qt
         fd
         citra-canary
