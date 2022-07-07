@@ -379,7 +379,11 @@
         citra-canary
         # protonvpn-gui
         inkscape
+        thunderbird
+
+        # Games
         libsForQt5.kpat
+        libsForQt5.kolf
 
         wireshark
         tcpdump

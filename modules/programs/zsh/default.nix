@@ -235,7 +235,7 @@ in {
 
           git_status = {
             format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](green) ($ahead_behind$stashed)]($style)";
-            style = "green";
+            style = "bold purple";
             conflicted = "​";
             untracked = "​";
             modified = "​";
@@ -252,7 +252,7 @@ in {
 
           cmd_duration = {
             format = "[$duration]($style) ";
-            style = "purple";
+            style = "bold yellow";
           };
 
           nix_shell = {

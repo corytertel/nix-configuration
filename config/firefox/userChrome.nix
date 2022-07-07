@@ -379,17 +379,21 @@ See the above repository for updates as well as full license text. */
 
 #back-button{
   list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/32x32/actions/go-previous.png) !important;
+  /* list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/actions/32x32/go-previous.png) !important; */
 }
 
 #forward-button{
   list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/32x32/actions/go-next.png) !important;
+  /* list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/actions/32x32/go-next.png) !important; */
 }
 
 #reload-button{
   list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/32x32/actions/view-refresh.png) !important;
+  /* list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/actions/32x32/view-refresh.png) !important; */
 }
 
 #home-button{
   list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/32x32/places/user-home.png) !important;
+  /* list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/places/32x32/user-home.png) !important; */
 }
 ''

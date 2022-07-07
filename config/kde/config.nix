@@ -27,7 +27,10 @@
     };
 
     Plugins = {
+      blurEnabled = false;
+      contrastEnabled = true;
       slideEnabled = false;
+      zoomEnabled = false;
     };
 
     TabBox = {

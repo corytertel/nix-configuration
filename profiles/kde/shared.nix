@@ -90,6 +90,8 @@
     icons = {
       name = "crystal-remix";
       package = crystal-remix-icon-theme;
+      # name = "nova7";
+      # package = nova7-icon-theme;
     };
     font = {
       system = {
@@ -136,6 +138,8 @@
     oxygen-kde4-theme
     libsForQt5.oxygen
     expose-glassy
+
+    nova7-icon-theme
   ];
 
   home-manager.users.cory.home.packages = with pkgs; [

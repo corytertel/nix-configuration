@@ -12,6 +12,7 @@
   (import ./nf-oxygen.nix { inherit lib pkgs; })
   (import ./nf-victormono.nix { inherit lib pkgs; })
   (import ./nomanssky-theme.nix)
+  (import ./nova7.nix { inherit lib pkgs; })
   (import ./oxygen-kde4-theme.nix)
   (import ./photogimp.nix { inherit lib pkgs; })
   (import ./sddm-mountain-light.nix { inherit pkgs; })
