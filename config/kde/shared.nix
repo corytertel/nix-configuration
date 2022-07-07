@@ -29,6 +29,8 @@
     Plugins = {
       blurEnabled = false;
       contrastEnabled = true;
+      kwin4_effect_squashEnabled = false;
+      magiclampEnabled = true;
       zoomEnabled = false;
     };
 
