@@ -1,7 +1,7 @@
 # Credit to LunNova for supplying the original file
 # I would have never been able to figure out KDE file patching
 
-{ config, lib, pkgs, ... }:
+{ config, kdeConfig, lib, pkgs, ... }:
 
 let
   dagEntryAfter = after: data: {
@@ -19,8 +19,6 @@ let
     else
       builtins.abort ("Unknown value type: " ++ builtins.toString v);
 
-  configs = import ../../../config/kde/config.nix { inherit config; };
-
   lines = lib.flatten (lib.mapAttrsToList
     (file:
       lib.mapAttrsToList
@@ -31,7 +29,7 @@ let
                 toValue value
               }'")
         ))
-    configs);
+    kdeConfig);
 
 in {
   home.activation.kwriteconfig5 = dagEntryAfter [ "linkGeneration" ] ''
