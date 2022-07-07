@@ -1,7 +1,7 @@
 { config }:
 
 {
-  "$HOME/.config/konsolerc" = {
+  "/home/cory/.config/konsolerc" = {
     "Desktop Entry".DefaultProfile = "cory.profile";
 
     KonsoleWindow = {
@@ -21,7 +21,7 @@
     UiSettings.ColorScheme = "";
   };
 
-  "$HOME/.local/share/konsole/cory.profile" = {
+  "/home/cory/.local/share/konsole/cory.profile" = {
     Appearance.ColorScheme = config.theme.name;
 
     "Cursor Options".CursorShape = 1;
@@ -47,7 +47,7 @@
     };
   };
 
-  "$HOME/.local/share/konsole/${config.theme.name}.colorscheme" = {
+  "/home/cory/.local/share/konsole/${config.theme.name}.colorscheme" = {
     Background.Color = "255,255,255";
     BackgroundFaint.Color = "255,255,255";
     BackgroundIntense.Color = "255,255,255";
