@@ -88,10 +88,10 @@
     darkTheme = false;
     gtk.enable = false;
     icons = {
-      name = "crystal-remix";
-      package = crystal-remix-icon-theme;
-      # name = "nova7";
-      # package = nova7-icon-theme;
+      # name = "crystal-remix";
+      # package = crystal-remix-icon-theme;
+      name = "nova7";
+      package = nova7-icon-theme;
     };
     font = {
       system = {

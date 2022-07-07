@@ -8,8 +8,8 @@ self: super: {
     src = pkgs.fetchFromGitHub {
       owner = "corytertel";
       repo = "nova7-icon-theme";
-      rev = "e63fdd1a3f19179641414a88f7f036694a321051";
-      sha256 = "qN/eRqXWj1XHCeUREwAZSqN0MnUJBnsfzdEFsuftk7o=";
+      rev = "1a72ef08c048e6f5ea33f755614b0f04dcc79ff8";
+      sha256 = "R24MMQyIWa/wqFhkjvb9IlbzCR8tbBhSqMqJBbWLF2w=";
     };
 
     nativeBuildInputs = [
@@ -33,6 +33,7 @@ self: super: {
     '';
 
     meta = with lib; {
+      description = "A theme rooted in the icon designs of the noughties.";
       homepage = "https://store.kde.org/p/1379986";
       license = with licenses; [ lgpl3Only ];
       platforms = platforms.linux;
