@@ -10,6 +10,10 @@ in {
       type = with types; attrsOf (attrsOf (attrsOf (either bool (either int str))));
       default = { };
     };
+    rightWindowDecor = mkOption {
+      type = types.bool;
+      default = false;
+    };
   };
 
   config = mkIf cfg.enable {

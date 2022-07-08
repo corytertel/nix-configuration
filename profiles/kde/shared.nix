@@ -1,16 +1,19 @@
 { config, lib, pkgs, ... }:
 
 {
-  windowManagers.cory.kde.enable = true;
+  windowManagers.cory.kde = {
+    enable = true;
+    # rightWindowDecor = true;
+  };
 
   # Terminal
-  # programs.cory.urxvt.enable = true;
   programs.cory.konsole.enable = true;
 
   # Browser
   programs.cory.firefox = {
     enable = true;
     changeColor = false;
+    # Oxygen colors
     windowColor = "#e0dfde";
     secondaryColor = "#c8c6c4";
     invertedColor = "#222120";
@@ -21,6 +24,9 @@
 
   # PDF Viewer
   programs.cory.qpdfview.enable = true;
+
+  # Launcher
+  services.cory.rofi.enable = true;
 
   # Set other apps
   apps = {
@@ -54,12 +60,12 @@
       desktopFile = "lxqt-archiver.desktop";
       package = pkgs.lxqt.lxqt-archiver;
     };
-    launcher = {
-      name = "krunner";
-      command = "krunner";
-      desktopFile = "krunner.desktop";
-      package = pkgs.libsForQt5.plasma-workspace;
-    };
+    # launcher = {
+    #   name = "krunner";
+    #   command = "krunner";
+    #   desktopFile = "krunner.desktop";
+    #   package = pkgs.libsForQt5.plasma-workspace;
+    # };
   };
 
   # Keybinds
@@ -90,8 +96,10 @@
     icons = {
       # name = "crystal-remix";
       # package = crystal-remix-icon-theme;
-      name = "nova7";
-      package = nova7-icon-theme;
+      # name = "nova7";
+      # package = nova7-icon-theme;
+      name = "crystal-nova";
+      package = crystal-nova-icon-theme;
     };
     font = {
       system = {
@@ -138,8 +146,9 @@
     oxygen-kde4-theme
     libsForQt5.oxygen
     expose-glassy
-
+    # expose-glassy-right
     nova7-icon-theme
+    crystal-nova-icon-theme
   ];
 
   home-manager.users.cory.home.packages = with pkgs; [

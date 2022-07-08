@@ -177,8 +177,17 @@ in {
     $DRY_RUN_CMD ${pkgs.plasma-workspace}/bin/plasma-apply-wallpaperimage ${config.theme.wallpaper}
   '';
 
-  home.file.".config/autostart" = {
-    source = ../../../config/kde/autostart;
-    recursive = true;
-  };
+  home.file =
+    if config.windowManagers.cory.kde.rightWindowDecor
+    then {
+      ".local/share/kwin/aurorae" = {
+        source = ./aurorae;
+        recursive = true;
+      };
+    } else {} // {
+      ".config/autostart" = {
+        source = ../../../config/kde/autostart;
+        recursive = true;
+      };
+    };
 }

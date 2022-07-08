@@ -61,6 +61,14 @@
       BorderSizeAuto = false;
       library = "org.kde.kwin.aurorae";
       theme = "__aurorae__svg__ExposeGlassy";
+
+      # ExposeGlassyRight Window Decoration
+      # BorderSize = "Large";
+      # BorderSizeAuto = false;
+      # ButtonsOnLeft = "";
+      # ButtonsOnRight = "MXIASH";
+      # library = "org.kde.kwin.aurorae";
+      # theme = "__aurorae__svg__ExposeGlassyRight";
     };
   };
 

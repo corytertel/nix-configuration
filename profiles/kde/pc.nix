@@ -13,5 +13,5 @@
     size = 48;
   };
 
-  theme.wallpaper = ./wallpapers/gatekeeper.jpg;
+  theme.wallpaper = ./wallpapers/gatekeeper-flipped.jpg;
 }

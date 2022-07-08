@@ -10,6 +10,7 @@ with pkgs.nur.repos.rycee.firefox-addons;
   duckduckgo-privacy-essentials
   facebook-container
   https-everywhere
+  pkgs.firefox-classic-theme
   # pkgs.new-tab-override
   plasma-integration
   privacy-badger

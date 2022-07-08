@@ -384,6 +384,7 @@
         # Games
         libsForQt5.kpat
         libsForQt5.kolf
+        libsForQt5.kmines
 
         wireshark
         tcpdump
