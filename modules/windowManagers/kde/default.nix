@@ -7,8 +7,8 @@ in {
   options.windowManagers.cory.kde = {
     enable = mkEnableOption "Enable kde";
     config = mkOption {
-      type = with types; attrsOf (attrsOf (attrsOf (either bool (either int str))));
-      default = { };
+      type = with types; listOf (attrsOf (attrsOf (attrsOf (either bool (either int str)))));
+      default = [ ];
     };
     rightWindowDecor = mkOption {
       type = types.bool;

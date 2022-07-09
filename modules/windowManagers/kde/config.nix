@@ -19,17 +19,18 @@ let
     else
       builtins.abort ("Unknown value type: " ++ builtins.toString v);
 
-  lines = lib.flatten (lib.mapAttrsToList
-    (file:
-      lib.mapAttrsToList
-        (group:
-          lib.mapAttrsToList
-            (key: value:
-              "$DRY_RUN_CMD ${pkgs.libsForQt5.kconfig}/bin/kwriteconfig5 --file $confdir/'${file}' --group '${group}' --key '${key}' '${
-                toValue value
-              }'")
-        ))
-    kdeConfig);
+  lines = builtins.concatLists (builtins.map
+    (configs: lib.flatten (lib.mapAttrsToList
+      (file:
+        lib.mapAttrsToList
+          (group:
+            lib.mapAttrsToList
+              (key: value:
+                "$DRY_RUN_CMD ${pkgs.libsForQt5.kconfig}/bin/kwriteconfig5 --file $confdir/'${file}' --group '${group}' --key '${key}' '${
+                  toValue value
+                }'")
+          ))
+      configs)) kdeConfig);
 
 in {
   home.activation.kwriteconfig5 = dagEntryAfter [ "linkGeneration" ] ''

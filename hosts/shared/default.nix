@@ -385,6 +385,17 @@
         libsForQt5.kpat
         libsForQt5.kolf
         libsForQt5.kmines
+        libsForQt5.kmahjongg
+        libsForQt5.kapman
+        libsForQt5.kspaceduel
+        libsForQt5.knights
+        libsForQt5.konquest
+        libsForQt5.knavalbattle
+        libsForQt5.ksudoku
+        libsForQt5.killbots
+        ace-of-penguins
+        superTux
+        superTuxKart
 
         wireshark
         tcpdump

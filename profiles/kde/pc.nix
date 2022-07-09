@@ -3,8 +3,10 @@
 {
   imports = [ ./shared.nix ];
 
-  windowManagers.cory.kde.config =
-    import ../../config/kde/shared.nix { inherit config; } // import ../../config/kde/pc.nix;
+  windowManagers.cory.kde.config = [
+    (import ../../config/kde/shared.nix { inherit config; })
+    (import ../../config/kde/pc.nix)
+  ];
 
   programs.cory.discord.package = pkgs.discord-gpu;
 
@@ -13,5 +15,5 @@
     size = 48;
   };
 
-  theme.wallpaper = ./wallpapers/gatekeeper-flipped.jpg;
+  theme.wallpaper = ./wallpapers/gatekeeper.jpg;
 }

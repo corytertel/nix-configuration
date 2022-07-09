@@ -69,12 +69,19 @@
       # ButtonsOnRight = "MXIASH";
       # library = "org.kde.kwin.aurorae";
       # theme = "__aurorae__svg__ExposeGlassyRight";
+
+      # Titlebar Buttons
+      # ButtonsOnLeft = "MS";
+      # ButtonsOnRight = "HIAX";
+      ButtonsOnLeft = "XIA";
+      ButtonsOnRight = "HSM";
     };
   };
 
   kcminputrc = {
     Mouse = {
       XLbInptAccelProfileFlat = true;
+      cursorSize = config.theme.cursor.size;
       cursorTheme = config.theme.cursor.theme;
     };
   };
