@@ -4,7 +4,7 @@ with lib;
 let
   cfg = config.services.cory.rofi;
 
-  rofi-config = import ../../../config/rofi/config.nix { inherit config pkgs; };
+  rofi-config = import ../../../config/rofi/krunner.nix { inherit config pkgs; };
 in {
   options.services.cory.rofi = {
     enable = mkEnableOption "Enables rofi";

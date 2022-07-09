@@ -393,9 +393,11 @@
         libsForQt5.knavalbattle
         libsForQt5.ksudoku
         libsForQt5.killbots
-        ace-of-penguins
+        # ace-of-penguins
         superTux
         superTuxKart
+        srb2kart
+        crispyDoom
 
         wireshark
         tcpdump
