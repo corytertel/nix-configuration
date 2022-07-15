@@ -6,6 +6,9 @@
     # rightWindowDecor = true;
   };
 
+  # Editor
+  programs.cory.emacs.enable = true;
+
   # Terminal
   programs.cory.konsole.enable = true;
 

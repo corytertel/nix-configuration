@@ -2,7 +2,7 @@
 
 [
   (import ./discord.nix { inherit pkgs; })
-  (import ./emacs.nix)
+  # (import ./emacs.nix)
   # (import ./info.nix)
   (import ./pcmanfm-qt.nix { inherit pkgs; })
   # (import ./plasma-workspace.nix { inherit pkgs; })

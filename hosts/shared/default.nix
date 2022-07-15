@@ -134,12 +134,14 @@
       dates = "weekly";
       options = "--delete-older-than 7d";
     };
-    autoOptimiseStore = true;
     optimise = {
       automatic = true;
       dates = [ "weekly" ];
     };
-    trustedUsers = [ "root" "cory" ];
+    settings = {
+      auto-optimise-store = true;
+      trusted-users = [ "root" "cory" ];
+    };
   };
 
   nixpkgs = {
@@ -147,18 +149,8 @@
     system = "x86_64-linux";
   };
 
-  apps.editor = {
-    name = "emacs";
-    command = "emacsclient -c";
-    desktopFile = "emacsclient.desktop";
-    package = pkgs.emacsGcc;
-  };
-
   environment = {
     variables = {
-      ALTERNATE_EDITOR = "emacs -nw";
-      EDITOR = "emacsclient -nw";
-      VISUAL = "emacsclient -c -a ''";
       BROWSER = config.apps.browser.command;
     };
     systemPackages = with pkgs; [
@@ -171,6 +163,7 @@
       which
       ripgrep
       keyboard-layouts
+      trim-generations
     ];
   };
 

@@ -52,5 +52,7 @@ in {
       desktopFile = "org.kde.konsole.desktop";
       package = pkgs.libsForQt5.konsole;
     };
+
+    environment.systemPackages = [ pkgs.libsForQt5.yakuake ];
   };
 }

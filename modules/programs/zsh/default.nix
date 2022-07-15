@@ -117,10 +117,34 @@ in {
               echo "git fetch origin ; git remote prune origin"
               echo "-------------------------------------------------------------------------------"
           }
+
+          # for nixos
+          function nixos-test() {
+            nixos-rebuild test --flake .#$1 --use-remote-sudo
+          }
+
+          function nixos-switch() {
+            nixos-rebuild switch --flake .#$1 --use-remote-sudo
+          }
+
+          # for emacs vterm
+          function vterm_printf() {
+              if [ -n "$TMUX" ] && ([ "${"$" + "{TERM%%-*}"}" = "tmux" ] || [ "${"$" + "{TERM%%-*}"}" = "screen" ] ); then
+                  # Tell tmux to pass the escape sequences through
+                  printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+              elif [ "${"$" + "{TERM%%-*}"}" = "screen" ]; then
+                  # GNU screen (screen, screen-256color, screen-256color-bce)
+                  printf "\eP\e]%s\007\e\\" "$1"
+              else
+                  printf "\e]%s\e\\" "$1"
+              fi
+          }
         '';
         shellAliases = {
-          nixos-test = "sudo nixos-rebuild test --flake .";
-          nixos-switch = "sudo nixos-rebuild switch --flake .";
+          nixos-update = "nix flake update";
+          # nixos-clean = "sudo nix-collect-garbage --delete-older-than";
+          nixos-clean = "${pkgs.trim-generations}/bin/trim-generations";
+          nixos-superclean = "sudo nix-collect-garbage --delete-old";
           cd = "z";
           cdi = "zi";
           ls = "${pkgs.exa}/bin/exa --icons --all --git --binary --group-directories-first";
