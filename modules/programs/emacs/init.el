@@ -144,14 +144,8 @@
 (use-package all-the-icons
   :ensure t)
 
-(use-package all-the-icons-dired
-  :hook (dired-mode . all-the-icons-dired-mode)
-  :config
-  (put 'dired-find-alternate-file 'disabled nil)
-  ;; Use the system trash can.
-  (setq delete-by-moving-to-trash t)
-  (setq dired-dwim-target t)
-  (setq dired-listing-switches "-agho --group-directories-first"))
+(use-package dired-icon
+  :hook (dired-mode . dired-icon-mode))
 
 ;; Doom Modeline
 
@@ -1280,9 +1274,9 @@ use-package will load java-lsp for us simply by calling this function."
 
 ;; Syntax highlighting
 (use-package eshell-syntax-highlighting
-  :after eshell-mode
+  ;; :after eshell-mode
   :ensure t
-  :hook (eshell-mode . eshell-syntax-highlighting-mode)
+  ;; :hook (eshell-mode . eshell-syntax-highlighting-mode)
   :config
   ;; Enable in all future ehell buffers
   (eshell-syntax-highlighting-global-mode +1))
