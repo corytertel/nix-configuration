@@ -1243,6 +1243,21 @@ use-package will load java-lsp for us simply by calling this function."
 
 (add-hook 'eshell-first-time-mode-hook 'cory/configure-eshell)
 
+;; Info
+(defun eshell/info (subject)
+  "Read the Info manual on SUBJECT."
+  (let ((buf (current-buffer)))
+    (Info-directory)
+    (let ((node-exists (ignore-errors (Info-menu subject))))
+      (if node-exists
+          0
+        ;; We want to switch back to *eshell* if the requested
+        ;; Info manual doesn't exist.
+        (switch-to-buffer buf)
+        (eshell-print (format "There is no Info manual on %s.\n"
+                              subject))
+        1))))
+
 ;; Use vterm for visual commands
 (use-package eshell-vterm
   :load-path "site-lisp/eshell-vterm"
@@ -1267,6 +1282,7 @@ use-package will load java-lsp for us simply by calling this function."
 (use-package eshell-syntax-highlighting
   :after eshell-mode
   :ensure t
+  :hook (eshell-mode . eshell-syntax-highlighting-mode)
   :config
   ;; Enable in all future ehell buffers
   (eshell-syntax-highlighting-global-mode +1))

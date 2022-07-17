@@ -53,5 +53,11 @@ in {
       ".cache/emacs/eshell/alias".text = import ./eshell-alias.nix { inherit config pkgs; };
     };
 
+    environment.systemPackages = with pkgs; [
+      extract
+      githelp
+      nixos-shell
+    ];
+
   };
 }
