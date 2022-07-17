@@ -97,16 +97,17 @@
 (setq visible-bell nil) ; Disables the visible bell
 
 ;; Setting the font
-(set-face-attribute 'default nil
-		    :family "VictorMono Nerd Font" :weight 'regular :height 100)
-(set-face-attribute 'bold nil
-		    :family "VictorMono Nerd Font" :weight 'bold)
-(set-face-attribute 'italic nil
-		    :family "VictorMono Nerd Font" :weight 'regular :slant 'italic)
-(set-fontset-font t 'unicode
-		  (font-spec :name "VictorMono Nerd Font" :size 16) nil)
-(set-fontset-font t '(#xe000 . #xffdd)
-		  (font-spec :name "VictorMono Nerd Font" :size 12) nil)
+(set-face-attribute 'default nil :family "VictorMono Nerd Font Mono")
+;; (set-face-attribute 'default nil
+;; 		    :family "VictorMono Nerd Font" :weight 'regular :height 100)
+;; (set-face-attribute 'bold nil
+;; 		    :family "VictorMono Nerd Font" :weight 'bold)
+;; (set-face-attribute 'italic nil
+;; 		    :family "VictorMono Nerd Font" :weight 'regular :slant 'italic)
+;; (set-fontset-font t 'unicode
+;; 		  (font-spec :name "VictorMono Nerd Font" :size 16) nil)
+;; (set-fontset-font t '(#xe000 . #xffdd)
+;; 		  (font-spec :name "VictorMono Nerd Font" :size 12) nil)
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
@@ -144,6 +145,7 @@
   :ensure t)
 
 (use-package all-the-icons-dired
+  :hook (dired-mode . all-the-icons-dired-mode)
   :config
   (put 'dired-find-alternate-file 'disabled nil)
   ;; Use the system trash can.
@@ -304,9 +306,9 @@
   :diminish undo-tree-mode
   :commands (global-undo-tree-mode)
   :config
-  (setq undo-tree-visualizer-relative-timestamps t
-        undo-tree-visualizer-timestamps t
-        undo-tree-enable-undo-in-region t)
+  ;; (setq undo-tree-visualizer-relative-timestamps t
+  ;;       undo-tree-visualizer-timestamps t
+  ;;       undo-tree-enable-undo-in-region t)
   (global-undo-tree-mode))
 
 ;; Visual Keybinding Info
@@ -367,8 +369,7 @@
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
-;; BROKEN
-;; (use-package forge)
+(use-package forge)
 
 ;; Ligatures and Indicators
 (use-package pretty-mode
@@ -679,27 +680,12 @@
   :config (add-to-list 'company-backends 'company-emoji))
 
 (use-package company-quickhelp
-  :config (company-quickhelp-mode 1))
+  :config (company-quickhelp-mode))
 
 (use-package company-box
   :hook (company-mode . company-box-mode)
   :config
   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
-
-;; BROKEN
-;; Enhances TAB select
-;; (use-package company-tng
-;;   :after company
-;;   :bind (:map company-active-map
-;;          ([return] . nil)
-;;          ("RET" . nil)
-;;          ("TAB" . company-select-next)
-;;          ([tab] . company-select-next)
-;;          ("S-TAB" . company-select-previous)
-;;          ([backtab] . company-select-previous)
-;;          ("C-j" . company-complete-selection))
-;;   :config
-;;   (company-tng-mode))
 
 ;; Autocompletion for shell
 (use-package company-shell
@@ -753,44 +739,44 @@
   :defer 1
   :bind (("M-n" . flycheck-next-error)
 	 ("M-p" . flycheck-previous-error))
-  ;; :init
-  ;; (progn
-  ;;   (define-fringe-bitmap 'my-flycheck-fringe-indicator
-  ;;     (vector #b00000000
-  ;;             #b00000000
-  ;;             #b00000000
-  ;;             #b00000000
-  ;;             #b00000000
-  ;;             #b00000000
-  ;;             #b00000000
-  ;;             #b00011100
-  ;;             #b00111110
-  ;;             #b00111110
-  ;;             #b00111110
-  ;;             #b00011100
-  ;;             #b00000000
-  ;;             #b00000000
-  ;;             #b00000000
-  ;;             #b00000000
-  ;;             #b00000000))
+  :init
+  (progn
+    (define-fringe-bitmap 'my-flycheck-fringe-indicator
+      (vector #b00000000
+              #b00000000
+              #b00000000
+              #b00000000
+              #b00000000
+              #b00111100
+              #b01111110
+              #b11111111
+              #b11111111
+              #b11111111
+              #b11111111
+              #b01111110
+              #b00111100
+              #b00000000
+              #b00000000
+              #b00000000
+              #b00000000))
 
-  ;;   (flycheck-define-error-level 'error
-  ;;     :severity 2
-  ;;     :overlay-category 'flycheck-error-overlay
-  ;;     :fringe-bitmap 'my-flycheck-fringe-indicator
-  ;;     :fringe-face 'flycheck-fringe-error)
+    (flycheck-define-error-level 'error
+      :severity 2
+      :overlay-category 'flycheck-error-overlay
+      :fringe-bitmap 'my-flycheck-fringe-indicator
+      :fringe-face 'flycheck-fringe-error)
 
-  ;;   (flycheck-define-error-level 'warning
-  ;;     :severity 1
-  ;;     :overlay-category 'flycheck-warning-overlay
-  ;;     :fringe-bitmap 'my-flycheck-fringe-indicator
-  ;;     :fringe-face 'flycheck-fringe-warning)
+    (flycheck-define-error-level 'warning
+      :severity 1
+      :overlay-category 'flycheck-warning-overlay
+      :fringe-bitmap 'my-flycheck-fringe-indicator
+      :fringe-face 'flycheck-fringe-warning)
 
-  ;;   (flycheck-define-error-level 'info
-  ;;     :severity 0
-  ;;     :overlay-category 'flycheck-info-overlay
-  ;;     :fringe-bitmap 'my-flycheck-fringe-indicator
-  ;;     :fringe-face 'flycheck-fringe-info))
+    (flycheck-define-error-level 'info
+      :severity 0
+      :overlay-category 'flycheck-info-overlay
+      :fringe-bitmap 'my-flycheck-fringe-indicator
+      :fringe-face 'flycheck-fringe-info))
   :config
   ;; Only check buffer when mode is enabled or buffer is saved.
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
@@ -1243,6 +1229,7 @@ use-package will load java-lsp for us simply by calling this function."
 ;;; Eshell
 
 (defun cory/configure-eshell ()
+  "Eshell configuration that will run the first time eshell launches."
   ;; Save command history when commands are entered
   (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
 
@@ -1254,25 +1241,69 @@ use-package will load java-lsp for us simply by calling this function."
 	eshell-hist-ignoredups t
 	eshell-scroll-to-bottom-on-input t))
 
-;;(use-package eshell
-;;  :hook (eshell-first-time-mode . cory/configure-shell))
+(add-hook 'eshell-first-time-mode-hook 'cory/configure-eshell)
 
-(use-package eshell-git-prompt
+;; Use vterm for visual commands
+(use-package eshell-vterm
+  :load-path "site-lisp/eshell-vterm"
+  :demand t
+  :after eshell
   :config
-  (eshell-git-prompt-use-theme 'powerline))
+  (eshell-vterm-mode)
+  (defalias 'eshell/v 'eshell-exec-visual))
+
+;; Eshell's zoxide
+(use-package eshell-z
+  ;; :hook (eshell-mode . eshell-z)
+  ;; :config
+  ;; (defalias 'eshell/cd 'eshell-z)
+  )
+
+;; One prompt at all times
+(use-package eshell-fixed-prompt
+  :hook (eshell-mode . eshell-fixed-prompt-mode))
+
+;; Syntax highlighting
+(use-package eshell-syntax-highlighting
+  :after eshell-mode
+  :ensure t
+  :config
+  ;; Enable in all future ehell buffers
+  (eshell-syntax-highlighting-global-mode +1))
+
+;; Eshell toggling
+(use-package eshell-toggle
+  :bind
+  (("C-`" . eshell-toggle))
+  :config
+  (setq eshell-toggle-size-fraction 3
+	eshell-toggle-window-side 'below
+	eshell-toggle-use-projectile-root nil
+	eshell-toggle-run-command nil))
+
+;; Eshell up
+(use-package eshell-up
+  :config
+  (defalias 'eshell/up 'eshell-up)
+  (defalias 'eshell/pk 'eshell-up-peek))
 
 ;; Running programs in a term-mode buffer
-(with-eval-after-load 'esh-opt
-  (setq eshell-destroy-buffer-when-process-dies t)
-  (setq eshell-visual-commands '("htop" "zsh" "vim")))
+;; (with-eval-after-load 'esh-opt
+;;   (setq eshell-destroy-buffer-when-process-dies t)
+;;   (setq eshell-visual-commands '("htop" "zsh" "vim")))
 
 ;; Vterm
 (use-package vterm
   :ensure t
+  ;; :bind ("C-c C-t" . vterm-other-window)
+  :bind (:map vterm-mode-map
+	 ("C-c C-t" . nil))
   :commands (vterm))
 
 (use-package multi-vterm
-  :ensure t)
+  :ensure t
+  :bind ("C-c C-t" . multi-vterm-dedicated-toggle))
+
 ;; Usage
 ;; Command                       Description
 ;; multi-vterm 	                 Create new terminal

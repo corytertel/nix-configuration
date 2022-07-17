@@ -62,6 +62,8 @@ in with config.apps; {
   "${p} s" = spectacleShortcut "FullScreenScreenShot";
   "${p} control + s" = spectacleShortcut "RectangularRegionScreenShot";
 
+  "control + comma" = kwinShortcut "Walk Through Windows (Reverse)";
+
   "control + button9" = kwinShortcut "Switch One Desktop Up";
   "control + button8" = kwinShortcut "Switch One Desktop Down";
   "control + button2" = kwinShortcut "Window Move Center";

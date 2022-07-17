@@ -5,7 +5,8 @@ let
 
   cfg = config.programs.cory.emacs;
 
-  initFile = (builtins.readFile ./init.el);
+  initFile = (builtins.readFile ./init.el)
+             + (import ./eshell-prompt.nix { inherit config; });
 
   init = pkgs.runCommand "default.el" {} ''
     mkdir -p $out/share/emacs/site-lisp
@@ -49,6 +50,7 @@ in {
     home-manager.users.cory.home.file = {
       ".cache/emacs/themes/plain-light-theme.el".source = ./plain-light-theme.el;
       ".cache/emacs/logo.png".source = ./logo.png;
+      ".cache/emacs/eshell/alias".text = import ./eshell-alias.nix { inherit config pkgs; };
     };
 
   };
