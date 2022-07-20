@@ -17,8 +17,9 @@ alias tree ${pkgs.exa}/bin/exa --icons --tree $*
 alias c clear-scrollback
 alias nf neofetch $*
 alias e find-file $1
-alias open find-file $1
-alias openo find-file-other-window $1
+alias eo find-file-other-window $1
+alias edit find-file $1
+alias edit-other find-file-other-window $1
 alias fm ${config.apps.fileManager.command} $*
 alias i ${config.apps.photoViewer.command} $*
 ''

@@ -7,11 +7,11 @@
 ;;;
 
 ;; Keep transient cruft out of ~/.emacs.d/
-(setq user-emacs-directory "~/.cache/emacs/"
-      backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory)))
-      url-history-file (expand-file-name "url/history" user-emacs-directory)
-      auto-save-list-file-prefix (expand-file-name "auto-save-list/.saves-" user-emacs-directory)
-      projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" user-emacs-directory))
+;; (setq user-emacs-directory "~/.cache/emacs/"
+;;       backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory)))
+;;       url-history-file (expand-file-name "url/history" user-emacs-directory)
+;;       auto-save-list-file-prefix (expand-file-name "auto-save-list/.saves-" user-emacs-directory)
+;;       projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" user-emacs-directory))
 
 ;;
 ;; --- GARBAGE COLLECTION ---
@@ -114,7 +114,7 @@
 
 ;; Theme
 (setq custom-safe-themes t) ; Treat all themes as safe
-(add-to-list 'custom-theme-load-path (expand-file-name "~/.cache/emacs/themes/"))
+(add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
 (add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-light t)))
 
 ;; Display Line numbers
@@ -595,7 +595,8 @@
   ;; (setq lsp-ui-sideline-show-hover nil)
   ;; (setq lsp-ui-sideline-show-symbol nil)
 
-  (lsp-ui-doc-position 'bottom))
+  ;; (lsp-ui-doc-position 'bottom)
+  )
 
 ;; MISSING
 ;; (use-package lsp-ui-flycheck
@@ -1320,7 +1321,8 @@ use-package will load java-lsp for us simply by calling this function."
 ;; Eshell toggling
 (use-package eshell-toggle
   :bind
-  (("C-`" . eshell-toggle))
+  (("C-`" . eshell-toggle)
+   ("C-c C-t" . eshell-toggle))
   :config
   (setq eshell-toggle-size-fraction 2
 	eshell-toggle-window-side 'below
@@ -1389,7 +1391,9 @@ use-package will load java-lsp for us simply by calling this function."
 
 (use-package multi-vterm
   :ensure t
-  :bind ("C-c C-t" . multi-vterm-dedicated-toggle))
+  :bind
+  ;; ("C-c C-t" . multi-vterm-dedicated-toggle)
+  )
 
 ;; Usage
 ;; Command                       Description

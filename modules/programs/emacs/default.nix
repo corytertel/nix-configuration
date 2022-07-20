@@ -24,7 +24,6 @@ let
     init
     use-package
     vterm
-    # eshell-undistract-me
   ] ++ (if cfg.exwm then [ epkgs.exwm ] else []);
 
   emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
@@ -32,6 +31,18 @@ let
     alwaysEnsure = true;
     package = pkgs.emacsNativeComp;
     extraEmacsPackages = emacsPackages;
+    # override = epkgs: epkgs // {
+    #   eshell-undistract-me = pkgs.melpaBuild {
+    #     pname = "eshell-undistract-me";
+    #     version = "0.1";
+    #     src = fetchTarball {
+    #       url = "https://github.com/corytertel/eshell-undistract-me/archive/master.tar.gz";
+    #     };
+    #     recipe = pkgs.writeText "recipe" ''
+    #       (eshell-undistract-me :fetcher github :repo "corytertel/eshell-undistract-me" :files (:defaults "index.html" "assets"))
+    #     '';
+    #   };
+    # };
   };
 
 in {
@@ -47,9 +58,12 @@ in {
   config = mkIf cfg.enable {
 
     environment.variables = {
-      ALTERNATE_EDITOR = "emacs -nw";
-      EDITOR = "emacsclient -nw";
-      VISUAL = "emacsclient -c -a ''";
+      # ALTERNATE_EDITOR = "emacs -nw";
+      # EDITOR = "emacsclient -nw";
+      # VISUAL = "emacsclient -c -a ''";
+      ALTERNATE_EDITOR = "nano";
+      EDITOR = "emacs -nw";
+      VISUAL = "emacs";
     };
 
     apps.editor = {
@@ -62,9 +76,9 @@ in {
     };
 
     home-manager.users.cory.home.file = {
-      ".cache/emacs/themes/plain-light-theme.el".source = ./plain-light-theme.el;
-      ".cache/emacs/logo.png".source = ./logo.png;
-      ".cache/emacs/eshell/alias".text = import ./eshell-alias.nix { inherit config pkgs; };
+      ".emacs.d/themes/plain-light-theme.el".source = ./plain-light-theme.el;
+      ".emacs.d/logo.png".source = ./logo.png;
+      ".emacs.d/eshell/alias".text = import ./eshell-alias.nix { inherit config pkgs; };
     };
 
     environment.systemPackages = with pkgs; [

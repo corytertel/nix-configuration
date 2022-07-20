@@ -16,12 +16,8 @@ let
   audioShortcut = shortcut:
     "qdbus org.kde.kglobalaccel /component/kmix invokeShortcut '${shortcut}'";
 
-  yakuakeShortcut = shortcut:
-    "qdbus org.kde.kglobalaccel /component/yakuake invokeShortcut '${shortcut}'";
-
 in with config.apps; {
   "${p} t" = terminal.command;
-  # "${p} control + t" = yakuakeShortcut "toggle-window-state";
   "${p} e" = editor.command;
   # "${p} control + e" = "emacs";
   "${p} w" = browser.command;
@@ -61,10 +57,10 @@ in with config.apps; {
   "${p} s" = spectacleShortcut "FullScreenScreenShot";
   "${p} control + s" = spectacleShortcut "RectangularRegionScreenShot";
 
-  "control + tab" = kwinShortcut "Walk Through Windows (Reverse)";
-  "control + shift + tab" = kwinShortcut "Walk Through Windows";
+  "control + Tab" = kwinShortcut "Walk Through Windows (Reverse)";
+  "control + shift + Tab" = kwinShortcut "Walk Through Windows";
   "control + slash" = launcher.command;
-  "control + escape" = kwinShortcut "Window Close";
+  "control + Escape" = kwinShortcut "Window Close";
 
   "control + button9" = kwinShortcut "Switch One Desktop Up";
   "control + button8" = kwinShortcut "Switch One Desktop Down";
