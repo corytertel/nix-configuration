@@ -1,5 +1,6 @@
 { config, pkgs, ... }:
 
+
 ''
 alias nixos-update nix flake update
 alias nixos-clean ${pkgs.trim-generations}/bin/trim-generations $*

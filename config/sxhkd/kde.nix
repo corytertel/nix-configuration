@@ -63,6 +63,8 @@ in with config.apps; {
   "${p} control + s" = spectacleShortcut "RectangularRegionScreenShot";
 
   "control + comma" = kwinShortcut "Walk Through Windows (Reverse)";
+  "control + slash" = launcher.command;
+  "control + escape" = kwinShortcut "Window Close";
 
   "control + button9" = kwinShortcut "Switch One Desktop Up";
   "control + button8" = kwinShortcut "Switch One Desktop Down";
@@ -73,6 +75,4 @@ in with config.apps; {
   "button8" = kwinShortcut "Walk Through Windows";
 
   "control + alt + space" = "${pkgs.layout-switch}/bin/layout-switch";
-
-  # "${p} control + z" = "${pkgs.xdotool}/bin/xdotool key control+z";
 }

@@ -1,4 +1,4 @@
-{ config }:
+{ config, pkgs }:
 with config.theme.color;
 
 ''
@@ -52,4 +52,10 @@ with config.theme.color;
   (with-eval-after-load "esh-opt"
     (setq eshell-highlight-prompt nil
           eshell-prompt-function 'epe-theme-cory)))
+
+;; Eshell undistract me
+(setq eshell-undistract-me-play-sound t)
+(setq eshell-undistract-me-sound-path "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/complete.oga")
+(add-hook 'eshell-pre-command-hook #'eshell-undistract-me-pre-command)
+(add-hook 'eshell-before-prompt-hook #'eshell-undistract-me-before-prompt)
 ''

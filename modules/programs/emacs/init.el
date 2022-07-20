@@ -300,9 +300,9 @@
   :diminish undo-tree-mode
   :commands (global-undo-tree-mode)
   :config
-  ;; (setq undo-tree-visualizer-relative-timestamps t
-  ;;       undo-tree-visualizer-timestamps t
-  ;;       undo-tree-enable-undo-in-region t)
+  (setq undo-tree-visualizer-relative-timestamps t
+        undo-tree-visualizer-timestamps t
+        undo-tree-enable-undo-in-region t)
   (global-undo-tree-mode))
 
 ;; Visual Keybinding Info
@@ -542,7 +542,7 @@
   (lsp-headerline-breadcrumb-mode))
 
 (use-package lsp-mode
-  :after company flycheck
+  ;; :after company flycheck
   :commands (lsp lsp-deferred)
   :hook (prog-mode . lsp)
   :init
@@ -736,23 +736,23 @@
   :init
   (progn
     (define-fringe-bitmap 'my-flycheck-fringe-indicator
-      (vector #b00000000
-              #b00000000
-              #b00000000
-              #b00000000
-              #b00000000
-              #b00111100
+      (vector #b00111100
               #b01111110
               #b11111111
               #b11111111
               #b11111111
               #b11111111
+              #b11111111
+              #b11111111
+              #b11111111
+              #b11111111
+              #b11111111
+              #b11111111
+              #b11111111
+              #b11111111
+              #b11111111
               #b01111110
-              #b00111100
-              #b00000000
-              #b00000000
-              #b00000000
-              #b00000000))
+              #b00111100))
 
     (flycheck-define-error-level 'error
       :severity 2
@@ -1252,6 +1252,38 @@ use-package will load java-lsp for us simply by calling this function."
                               subject))
         1))))
 
+;; Less/More
+(defun eshell-view-file (file)
+  "A version of `view-file' which properly respects the eshell prompt."
+  (interactive "fView file: ")
+  (unless (file-exists-p file) (error "%s does not exist" file))
+  (let ((had-a-buf (get-file-buffer file))
+        (buffer (find-file-noselect file)))
+    (if (eq (with-current-buffer buffer (get major-mode 'mode-class))
+            'special)
+        (progn
+          (switch-to-buffer buffer)
+          (message "Not using View mode because the major mode is special"))
+      (let ((undo-window
+	     (list (window-buffer) (window-start)
+                   (+ (window-point)
+                      (length (funcall eshell-prompt-function))))))
+        (switch-to-buffer buffer)
+        (view-mode-enter (cons (selected-window) (cons nil undo-window))
+                         'kill-buffer)))))
+
+(defun eshell/less (&rest args)
+  "Invoke `view-file' on a file.  \"less +42 foo\" will go to line 42 in the buffer for foo."
+  (while args
+    (if (string-match "\\`\\+\\([0-9]+\\)\\'" (car args))
+        (let* ((line (string-to-number (match-string 1 (pop args))))
+               (file (pop args)))
+          (eshell-view-file file)
+          (goto-line line))
+      (eshell-view-file (pop args)))))
+
+(defalias 'eshell/more 'eshell/less)
+
 ;; Use vterm for visual commands
 (use-package eshell-vterm
   :load-path "site-lisp/eshell-vterm"
@@ -1274,28 +1306,72 @@ use-package will load java-lsp for us simply by calling this function."
 
 ;; Syntax highlighting
 (use-package eshell-syntax-highlighting
-  ;; :after eshell-mode
   :ensure t
-  ;; :hook (eshell-mode . eshell-syntax-highlighting-mode)
   :config
   ;; Enable in all future ehell buffers
   (eshell-syntax-highlighting-global-mode +1))
+
+;; Eshell auto-suggest
+(use-package esh-autosuggest
+  :ensure t
+  :hook (eshell-mode . esh-autosuggest-mode))
 
 ;; Eshell toggling
 (use-package eshell-toggle
   :bind
   (("C-`" . eshell-toggle))
   :config
-  (setq eshell-toggle-size-fraction 3
+  (setq eshell-toggle-size-fraction 2
 	eshell-toggle-window-side 'below
 	eshell-toggle-use-projectile-root nil
 	eshell-toggle-run-command nil))
+
+;; Eshell undistract-me
+;; (defun preexec-undistract-me ()
+;;   "Sends a notification if the command is longer than 10s."
+;;   (shell-command "notify-send hi hi"))
+;; (add-hook 'eshell-pre-command-hook #'preexec-undistract-me)
+
+;; ;; Needs to be ran after the command is ran but before it is executed
+;; (defun debug-preexec ()
+;;   (shell-command "notify-send pre-command-hook"))
+;; ;; Needs to be ran before each prompt is drawn
+;; (defun debug-precmd ()
+;;   (shell-command "notify-send before-prompt-hook"))
+;; (add-hook 'eshell-pre-command-hook #'debug-preexec)
+;; (add-hook 'eshell-before-prompt-hook #'debug-precmd)
 
 ;; Eshell up
 (use-package eshell-up
   :config
   (defalias 'eshell/up 'eshell-up)
   (defalias 'eshell/pk 'eshell-up-peek))
+
+;; Eshell smart display
+;; (use-package em-smart
+;;   :defer t
+;;   :config
+;;   (eshell-smart-initialize)
+;;   (setq eshell-where-to-jump 'begin
+;; 	eshell-review-quick-commands nil
+;; 	eshell-smart-space-goes-to-end t))
+(require 'em-smart)
+(setq eshell-where-to-jump 'begin)
+(setq eshell-review-quick-commands nil)
+(setq eshell-smart-space-goes-to-end t)
+
+;; Eshell help
+(use-package esh-help
+  :ensure t
+  :defer t
+  :config
+  (setup-esh-help-eldoc))
+
+;; Eshell module
+;; (use-package esh-module
+;;   :defer t
+;;   :custom-update
+;;   (eshell-modules-list '(eshell-tramp)))
 
 ;; Running programs in a term-mode buffer
 ;; (with-eval-after-load 'esh-opt

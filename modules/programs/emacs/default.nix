@@ -6,7 +6,9 @@ let
   cfg = config.programs.cory.emacs;
 
   initFile = (builtins.readFile ./init.el)
-             + (import ./eshell-prompt.nix { inherit config; });
+             + (builtins.readFile ./eshell-undistract-me.el)
+             + (import ./eshell-extras.nix { inherit config pkgs; })
+             + (if cfg.exwm then builtins.readFile ./exwm.el else "");
 
   init = pkgs.runCommand "default.el" {} ''
     mkdir -p $out/share/emacs/site-lisp
@@ -17,7 +19,7 @@ let
     init
     use-package
     vterm
-  ];
+  ] ++ (if cfg.exwm then [ epkgs.exwm ] else []);
 
   emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
     config = initFile;
@@ -30,6 +32,10 @@ in {
 
   options.programs.cory.emacs = {
     enable = mkEnableOption "Enables emacs";
+    exwm = mkOption {
+      type = types.bool;
+      default = false;
+    };
   };
 
   config = mkIf cfg.enable {
@@ -56,7 +62,8 @@ in {
     environment.systemPackages = with pkgs; [
       extract
       githelp
-      nixos-shell
+      nixos-test
+      nixos-switch
     ];
 
   };
