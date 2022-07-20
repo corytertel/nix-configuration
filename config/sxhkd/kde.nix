@@ -3,7 +3,6 @@
 let
   # Prefix
   p = "control + period ;";
-  # p = "control + z ;";
 
   kwinShortcut = shortcut:
     "qdbus org.kde.kglobalaccel /component/kwin invokeShortcut '${shortcut}'";
@@ -22,12 +21,12 @@ let
 
 in with config.apps; {
   "${p} t" = terminal.command;
-  "${p} control + t" = yakuakeShortcut "toggle-window-state";
+  # "${p} control + t" = yakuakeShortcut "toggle-window-state";
   "${p} e" = editor.command;
-  "${p} control + e" = "emacs";
+  # "${p} control + e" = "emacs";
   "${p} w" = browser.command;
   "${p} r" = fileManager.command;
-  "${p} d" = "discord";
+  # "${p} d" = "discord";
   "${p} space" = launcher.command;
   "Menu" = launcher.command;
 
@@ -62,7 +61,8 @@ in with config.apps; {
   "${p} s" = spectacleShortcut "FullScreenScreenShot";
   "${p} control + s" = spectacleShortcut "RectangularRegionScreenShot";
 
-  "control + comma" = kwinShortcut "Walk Through Windows (Reverse)";
+  "control + tab" = kwinShortcut "Walk Through Windows (Reverse)";
+  "control + shift + tab" = kwinShortcut "Walk Through Windows";
   "control + slash" = launcher.command;
   "control + escape" = kwinShortcut "Window Close";
 

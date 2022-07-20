@@ -1,22 +1,60 @@
-;;; ehsell-undistract-me --- Summary
+;;; ehsell-undistract-me.el --- Notifies you when a long running command is complete. -*- lexical-binding: t -*-
 
-;; Eshell port of undistract-me, by corytertel
+;; Author: Cory Tertel <ctertel@comcast.net>
+;; Maintainer: Cory Tertel <ctertel@comcast.net>
+;; URL: https://github.com/corytertel/eshell-undistract-me
+;; Version: 0.1
+;; Package-Requires: ((emacs "25.1"))
+;; Keywords: eshell
 
-;; The original bash undistract-me is Copyright (c) 2008-2012
-;; by the orignal undistract-me developers.
-;; See the LICENSE in the original undistract-me repo for more details.
+;; This file is an eshell port of the bash undistract-me.
 
-;; Generate a notification for any command that takes longer than this amount
-;; of seconds to return to the shell.  e.g. if LONG_RUNNING_COMMAND_TIMEOUT=10,
-;; then 'sleep 11' will always generate a notification.
+;; The original bash undistract-me is Copyright (c) 2008-2012 by the
+;; orignal undistract-me developers. See the LICENSE in the original
+;; undistract-me repo for more details. Like the original undistract-me,
+;; this file is under the Expat License.
 
-;; Relies on eshell-pre-command-hook
+;; Permission is hereby granted, free of charge, to any person obtaining a copy
+;; of this software and associated documentation files (the "Software"), to deal
+;; in the Software without restriction, including without limitation the rights
+;; to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+;; copies of the Software, and to permit persons to whom the Software is
+;; furnished to do so, subject to the following conditions:
 
-;; Hook eshell-undistract-me-notify-when-long-running-commands-finish-install
-;; into eshell-pre-command-hook
+;; The above copyright notice and this permission notice shall be included in
+;; all copies or substantial portions of the Software.
+
+;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+;; SOFTWARE.
 
 ;;; Commentary:
+
+;; Generates a notification for any command that takes longer than a given
+;; ammount of seconds to return to the shell.
+;; e.g. if LONG_RUNNING_COMMAND_TIMEOUT=10, then 'sleep 11' will always
+;; generate a notification.
+
+;; Relies on eshell-pre-command-hook and eshell-before-prompt-hook.
+
+;; Hook eshell-undistract-me-pre-command into eshell-pre-command-hook
+;; and eshell-undistract-me-before-prompt into ehsell-before-prompt-hook.
+
+;; Requires libnotify to be installed.  By default uses pulseaudio's
+;; `paplay'.  Any command can be used to play audio by changing
+;; `eshell-undistract-me-sound-command'.
+
+;;; Customization
+
 ;;; Code:
+
+;; (require 'eshell)
+;; (require 'esh-mode)
+;; (require 'term)
 
 (defgroup eshell-undistract-me nil
   "Eshell undistract-me."
@@ -114,5 +152,7 @@
    eshell-undistract-me-last-command (getenv "1")
    eshell-undistract-me-last-window (eshell-undistract-me-active-x-window-id))
   nil)
+
+;; (provide 'eshell-undistract-me)
 
 ;;; eshell-undistract-me.el ends here

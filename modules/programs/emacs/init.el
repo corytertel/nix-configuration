@@ -670,11 +670,12 @@
         company-require-match nil)
   (global-company-mode))
 
-(use-package company-emoji
-  :config (add-to-list 'company-backends 'company-emoji))
+;; TODO figure out import order
+;; (use-package company-emoji
+;;   :config (add-to-list 'company-backends 'company-emoji))
 
-(use-package company-quickhelp
-  :config (company-quickhelp-mode))
+;; (use-package company-quickhelp
+;;   :config (company-quickhelp-mode))
 
 (use-package company-box
   :hook (company-mode . company-box-mode)

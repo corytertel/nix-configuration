@@ -15,10 +15,16 @@ let
     cp ${pkgs.writeText "default.el" initFile} $out/share/emacs/site-lisp/default.el
   '';
 
+  # eshell-undistract-me = pkgs.runCommand "eshell-undistract-me.el" {} ''
+  #   mkdir -p $out/share/emacs/site-lisp
+  #   cp ${pkgs.writeText "eshell-undistract-me.el" (builtins.readFile ./eshell-undistract-me.el)} $out/share/emacs/site-lisp/eshell-undistract-me.el
+  # '';
+
   emacsPackages = epkgs: with epkgs; [
     init
     use-package
     vterm
+    # eshell-undistract-me
   ] ++ (if cfg.exwm then [ epkgs.exwm ] else []);
 
   emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
@@ -48,8 +54,10 @@ in {
 
     apps.editor = {
       name = "emacs";
-      command = "emacsclient -c";
-      desktopFile = "emacsclient.desktop";
+      # command = "emacsclient -c";
+      command = "emacs";
+      # desktopFile = "emacsclient.desktop";
+      desktopFile = "emacs.desktop";
       package = emacsPackage;
     };
 

@@ -54,6 +54,13 @@ with config.theme.color;
           eshell-prompt-function 'epe-theme-cory)))
 
 ;; Eshell undistract me
+;; (use-package eshell-undistract-me
+;;   :config
+;;   (setq eshell-undistract-me-play-sound t)
+;;   (setq eshell-undistract-me-sound-path "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/complete.oga")
+;;   (add-hook 'eshell-pre-command-hook #'eshell-undistract-me-pre-command)
+;;   (add-hook 'eshell-before-prompt-hook #'eshell-undistract-me-before-prompt))
+
 (setq eshell-undistract-me-play-sound t)
 (setq eshell-undistract-me-sound-path "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/complete.oga")
 (add-hook 'eshell-pre-command-hook #'eshell-undistract-me-pre-command)
