@@ -542,7 +542,7 @@
   (lsp-headerline-breadcrumb-mode))
 
 (use-package lsp-mode
-  ;; :after company flycheck
+  :after company flycheck
   :commands (lsp lsp-deferred)
   :hook (prog-mode . lsp)
   :init

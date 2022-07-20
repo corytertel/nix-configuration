@@ -1,6 +1,9 @@
 { config, pkgs, ... }:
 
-
+# alias grep grep -i --color=auto $*
+# alias rm rm --verbose $*
+# alias mv mv --interactive --verbose $*
+# alias cp cp -i --verbose $*
 ''
 alias nixos-update nix flake update
 alias nixos-clean ${pkgs.trim-generations}/bin/trim-generations $*
@@ -12,10 +15,6 @@ alias l ls --classify $*
 alias ll ls -l -h $*
 alias tree ${pkgs.exa}/bin/exa --icons --tree $*
 alias c clear-scrollback
-alias grep grep -i --color=auto $*
-alias rm rm --verbose $*
-alias mv mv --interactive --verbose $*
-alias cp cp -i --verbose $*
 alias nf neofetch $*
 alias e find-file $1
 alias open find-file $1
