@@ -44,7 +44,7 @@ with config.theme.color;
             '(:weight italic :foreground "${color2}"))
 	   (epe-colorize-with-face
 	    (let ((unpushed (epe-git-unpushed-number)))
-                      (unless (= unpushed 0)
+                      (if (= unpushed 0) ""
 			(concat "↑" (number-to-string unpushed))))
 	    '(:foreground "${color5}"))))))
      (epe-colorize-with-face "\n╰─λ" '(:weight regular))
