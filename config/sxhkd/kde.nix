@@ -61,6 +61,7 @@ in with config.apps; {
   "control + shift + Tab" = kwinShortcut "Walk Through Windows";
   "control + slash" = launcher.command;
   "control + Escape" = kwinShortcut "Window Close";
+  "alt + F4" = kwinShortcut "Kill Window";
 
   "control + button9" = kwinShortcut "Switch One Desktop Up";
   "control + button8" = kwinShortcut "Switch One Desktop Down";

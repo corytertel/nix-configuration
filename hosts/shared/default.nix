@@ -3,6 +3,7 @@
 {
   imports = [
     ./udev.nix
+    ./zfs.nix
   ];
 
   boot = {
@@ -17,25 +18,6 @@
       };
     };
   };
-
-  # Zfs
-  boot.supportedFilesystems = [ "zfs" ];
-  boot.initrd.postDeviceCommands = lib.mkAfter ''
-    zfs rollback -r rpool/local/root@blank
-  '';
-  boot.zfs.enableUnstable = true;
-  boot.loader.grub.copyKernels = true;
-
-  #services.zfs.autoScrub.enable = true;
-  #services.zfs.autoScrub.interval = "weekly";
-  #systemd.services.zfs-scrub.unitConfig.ConditionACPower = true;
-
-  # Erase on every boot fix
-  environment.etc = {
-    "NetworkManager/system-connections".source = "/persist/etc/NetworkManager/system-connections/";
-    "nixos".source = "/persist/etc/nixos/";
-  };
-  fileSystems."/persist".neededForBoot = true;
 
   networking = {
     hostName = "nixos";
@@ -102,26 +84,15 @@
   hardware.pulseaudio.enable = true;
 
   users = {
-    mutableUsers = false;
     users = {
-      root.passwordFile = "/persist/secrets/root";
       cory = {
         isNormalUser = true;
         uid = 1000;
         extraGroups = [ "wheel" "network" "audio" "libvirtd" ];
-        createHome = true;
         home = "/home/cory";
-        passwordFile = "/persist/secrets/cory";
       };
     };
     extraGroups.vboxusers.members = [ "cory" ];
-  };
-
-  security = {
-    sudo = {
-      enable = true;
-      extraConfig = "Defaults lecture=never";
-    };
   };
 
   nix = {

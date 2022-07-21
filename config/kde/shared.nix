@@ -159,4 +159,13 @@
   };
 
   ksmserverrc.General.loginMode = "emptySession";
+
+  "plasma_workspace.notifyrc"."Event/startkde" = {
+    Action = "Sound";
+    Execute = "";
+    Logfile = "";
+    Sound = "${./KDE_Startup_1.ogg}";
+    TTS = "";
+  };
+
 }

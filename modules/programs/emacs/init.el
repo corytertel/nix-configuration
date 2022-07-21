@@ -2,17 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-;;;
-;;; --- PRELUDE ---
-;;;
-
-;; Keep transient cruft out of ~/.emacs.d/
-;; (setq user-emacs-directory "~/.cache/emacs/"
-;;       backup-directory-alist `(("." . ,(expand-file-name "backups" user-emacs-directory)))
-;;       url-history-file (expand-file-name "url/history" user-emacs-directory)
-;;       auto-save-list-file-prefix (expand-file-name "auto-save-list/.saves-" user-emacs-directory)
-;;       projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" user-emacs-directory))
-
 ;;
 ;; --- GARBAGE COLLECTION ---
 ;;
@@ -1239,7 +1228,7 @@ use-package will load java-lsp for us simply by calling this function."
 
 (add-hook 'eshell-first-time-mode-hook 'cory/configure-eshell)
 
-;; Info
+;; Info (from Emacs wiki)
 (defun eshell/info (subject)
   "Read the Info manual on SUBJECT."
   (let ((buf (current-buffer)))
@@ -1254,7 +1243,7 @@ use-package will load java-lsp for us simply by calling this function."
                               subject))
         1))))
 
-;; Less/More
+;; Less/More (from Emacs wiki)
 (defun eshell-view-file (file)
   "A version of `view-file' which properly respects the eshell prompt."
   (interactive "fView file: ")
@@ -1285,6 +1274,34 @@ use-package will load java-lsp for us simply by calling this function."
       (eshell-view-file (pop args)))))
 
 (defalias 'eshell/more 'eshell/less)
+
+;; Cat with syntax highlight (from aweshell)
+(defun eshell/cat-with-syntax-highlight (filename)
+  "Like cat(1) but with syntax highlighting."
+  (let ((existing-buffer (get-file-buffer filename))
+        (buffer (find-file-noselect filename)))
+    (eshell-print
+     (with-current-buffer buffer
+       (if (fboundp 'font-lock-ensure)
+           (font-lock-ensure)
+         (with-no-warnings
+           (font-lock-fontify-buffer)))
+       (let ((contents (buffer-string)))
+         (remove-text-properties 0 (length contents) '(read-only nil) contents)
+         contents)))
+    (unless existing-buffer
+      (kill-buffer buffer))
+    nil))
+
+(advice-add 'eshell/cat :override #'cat-with-syntax-highlight)
+
+;; Clear buffer (from aweshell)
+(defun eshell/clear-buffer ()
+  "Clear eshell buffer."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
 
 ;; Use vterm for visual commands
 (use-package eshell-vterm
@@ -1328,21 +1345,6 @@ use-package will load java-lsp for us simply by calling this function."
 	eshell-toggle-window-side 'below
 	eshell-toggle-use-projectile-root nil
 	eshell-toggle-run-command nil))
-
-;; Eshell undistract-me
-;; (defun preexec-undistract-me ()
-;;   "Sends a notification if the command is longer than 10s."
-;;   (shell-command "notify-send hi hi"))
-;; (add-hook 'eshell-pre-command-hook #'preexec-undistract-me)
-
-;; ;; Needs to be ran after the command is ran but before it is executed
-;; (defun debug-preexec ()
-;;   (shell-command "notify-send pre-command-hook"))
-;; ;; Needs to be ran before each prompt is drawn
-;; (defun debug-precmd ()
-;;   (shell-command "notify-send before-prompt-hook"))
-;; (add-hook 'eshell-pre-command-hook #'debug-preexec)
-;; (add-hook 'eshell-before-prompt-hook #'debug-precmd)
 
 ;; Eshell up
 (use-package eshell-up

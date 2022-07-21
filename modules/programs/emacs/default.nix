@@ -58,20 +58,15 @@ in {
   config = mkIf cfg.enable {
 
     environment.variables = {
-      # ALTERNATE_EDITOR = "emacs -nw";
-      # EDITOR = "emacsclient -nw";
-      # VISUAL = "emacsclient -c -a ''";
-      ALTERNATE_EDITOR = "nano";
-      EDITOR = "emacs -nw";
-      VISUAL = "emacs";
+      ALTERNATE_EDITOR = "emacs -nw";
+      EDITOR = "emacsclient -nw";
+      VISUAL = "emacsclient -c -a ''";
     };
 
     apps.editor = {
       name = "emacs";
-      # command = "emacsclient -c";
-      command = "emacs";
-      # desktopFile = "emacsclient.desktop";
-      desktopFile = "emacs.desktop";
+      command = "emacsclient -c";
+      desktopFile = "emacsclient.desktop";
       package = emacsPackage;
     };
 
