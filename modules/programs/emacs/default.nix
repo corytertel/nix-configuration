@@ -6,6 +6,7 @@ let
   cfg = config.programs.cory.emacs;
 
   initFile = (builtins.readFile ./init.el)
+             + (builtins.readFile ./aweshell.el)
              + (builtins.readFile ./eshell-undistract-me.el)
              + (import ./eshell-extras.nix { inherit config pkgs; })
              + (if cfg.exwm then builtins.readFile ./exwm.el else "");

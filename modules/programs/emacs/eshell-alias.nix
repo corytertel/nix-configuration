@@ -15,8 +15,8 @@ alias ls ${pkgs.exa}/bin/exa --icons --all --git --binary --group-directories-fi
 alias l ls --classify $*
 alias ll ls -l -h $*
 alias tree ${pkgs.exa}/bin/exa --icons --tree $*
-alias c eshell/clear-buffer
-alias clear eshell/clear-buffer
+alias c aweshell-clear-buffer
+alias clear aweshell-clear-buffer
 alias nf neofetch $*
 alias e find-file $1
 alias eo find-file-other-window $1

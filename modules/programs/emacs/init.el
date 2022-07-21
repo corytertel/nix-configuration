@@ -1228,6 +1228,81 @@ use-package will load java-lsp for us simply by calling this function."
 
 (add-hook 'eshell-first-time-mode-hook 'cory/configure-eshell)
 
+;; Use vterm for visual commands
+(use-package eshell-vterm
+  :load-path "site-lisp/eshell-vterm"
+  :demand t
+  :after eshell
+  :config
+  (eshell-vterm-mode)
+  (defalias 'eshell/v 'eshell-exec-visual))
+
+;; Eshell's zoxide
+(use-package eshell-z
+  ;; :hook (eshell-mode . eshell-z)
+  ;; :config
+  ;; (defalias 'eshell/cd 'eshell-z)
+  )
+
+;; One prompt at all times
+(use-package eshell-fixed-prompt
+  :hook (eshell-mode . eshell-fixed-prompt-mode))
+
+;; Syntax highlighting
+(use-package eshell-syntax-highlighting
+  :ensure t
+  :config
+  ;; Enable in all future ehell buffers
+  (eshell-syntax-highlighting-global-mode +1))
+
+;; Eshell auto-suggest
+(use-package esh-autosuggest
+  :ensure t
+  :hook (eshell-mode . esh-autosuggest-mode))
+
+;; Eshell toggling
+;; (use-package eshell-toggle
+;;   :bind
+;;   (("C-`" . eshell-toggle)
+;;    ("C-c C-t" . eshell-toggle))
+;;   :config
+;;   (setq eshell-toggle-size-fraction 2
+;; 	eshell-toggle-window-side 'below
+;; 	eshell-toggle-use-projectile-root nil
+;; 	eshell-toggle-run-command nil))
+
+;; Eshell up
+(use-package eshell-up
+  :config
+  (defalias 'eshell/up 'eshell-up)
+  (defalias 'eshell/pk 'eshell-up-peek))
+
+;; Eshell smart display
+;; (use-package em-smart
+;;   :defer t
+;;   :config
+;;   (eshell-smart-initialize)
+;;   (setq eshell-where-to-jump 'begin
+;; 	eshell-review-quick-commands nil
+;; 	eshell-smart-space-goes-to-end t))
+(require 'em-smart)
+(setq eshell-where-to-jump 'begin)
+(setq eshell-review-quick-commands nil)
+(setq eshell-smart-space-goes-to-end t)
+
+;; Eshell help
+(use-package esh-help
+  :ensure t
+  :defer t
+  :config
+  (setup-esh-help-eldoc))
+
+;; Eshell module
+;; (use-package esh-module
+;;   :defer t
+;;   :custom-update
+;;   (eshell-modules-list '(eshell-tramp)))
+
 ;; Info (from Emacs wiki)
 (defun eshell/info (subject)
   "Read the Info manual on SUBJECT."
@@ -1274,109 +1349,6 @@ use-package will load java-lsp for us simply by calling this function."
       (eshell-view-file (pop args)))))
 
 (defalias 'eshell/more 'eshell/less)
-
-;; Cat with syntax highlight (from aweshell)
-(defun eshell/cat-with-syntax-highlight (filename)
-  "Like cat(1) but with syntax highlighting."
-  (let ((existing-buffer (get-file-buffer filename))
-        (buffer (find-file-noselect filename)))
-    (eshell-print
-     (with-current-buffer buffer
-       (if (fboundp 'font-lock-ensure)
-           (font-lock-ensure)
-         (with-no-warnings
-           (font-lock-fontify-buffer)))
-       (let ((contents (buffer-string)))
-         (remove-text-properties 0 (length contents) '(read-only nil) contents)
-         contents)))
-    (unless existing-buffer
-      (kill-buffer buffer))
-    nil))
-
-(advice-add 'eshell/cat :override #'cat-with-syntax-highlight)
-
-;; Clear buffer (from aweshell)
-(defun eshell/clear-buffer ()
-  "Clear eshell buffer."
-  (interactive)
-  (let ((inhibit-read-only t))
-    (erase-buffer)
-    (eshell-send-input)))
-
-;; Use vterm for visual commands
-(use-package eshell-vterm
-  :load-path "site-lisp/eshell-vterm"
-  :demand t
-  :after eshell
-  :config
-  (eshell-vterm-mode)
-  (defalias 'eshell/v 'eshell-exec-visual))
-
-;; Eshell's zoxide
-(use-package eshell-z
-  ;; :hook (eshell-mode . eshell-z)
-  ;; :config
-  ;; (defalias 'eshell/cd 'eshell-z)
-  )
-
-;; One prompt at all times
-(use-package eshell-fixed-prompt
-  :hook (eshell-mode . eshell-fixed-prompt-mode))
-
-;; Syntax highlighting
-(use-package eshell-syntax-highlighting
-  :ensure t
-  :config
-  ;; Enable in all future ehell buffers
-  (eshell-syntax-highlighting-global-mode +1))
-
-;; Eshell auto-suggest
-(use-package esh-autosuggest
-  :ensure t
-  :hook (eshell-mode . esh-autosuggest-mode))
-
-;; Eshell toggling
-(use-package eshell-toggle
-  :bind
-  (("C-`" . eshell-toggle)
-   ("C-c C-t" . eshell-toggle))
-  :config
-  (setq eshell-toggle-size-fraction 2
-	eshell-toggle-window-side 'below
-	eshell-toggle-use-projectile-root nil
-	eshell-toggle-run-command nil))
-
-;; Eshell up
-(use-package eshell-up
-  :config
-  (defalias 'eshell/up 'eshell-up)
-  (defalias 'eshell/pk 'eshell-up-peek))
-
-;; Eshell smart display
-;; (use-package em-smart
-;;   :defer t
-;;   :config
-;;   (eshell-smart-initialize)
-;;   (setq eshell-where-to-jump 'begin
-;; 	eshell-review-quick-commands nil
-;; 	eshell-smart-space-goes-to-end t))
-(require 'em-smart)
-(setq eshell-where-to-jump 'begin)
-(setq eshell-review-quick-commands nil)
-(setq eshell-smart-space-goes-to-end t)
-
-;; Eshell help
-(use-package esh-help
-  :ensure t
-  :defer t
-  :config
-  (setup-esh-help-eldoc))
-
-;; Eshell module
-;; (use-package esh-module
-;;   :defer t
-;;   :custom-update
-;;   (eshell-modules-list '(eshell-tramp)))
 
 ;; Running programs in a term-mode buffer
 ;; (with-eval-after-load 'esh-opt
