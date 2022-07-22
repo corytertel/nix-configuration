@@ -60,6 +60,18 @@
           }
         ];
       };
+
+      vm = lib.nixosSystem {
+        inherit system pkgs;
+        modules = [
+          ./modules
+          ./hosts/vm
+          home-manager.nixosModules.home-manager {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+          }
+        ];
+      };
     };
   };
 }

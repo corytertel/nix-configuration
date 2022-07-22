@@ -1,25 +1,15 @@
 { config, lib, pkgs, ... }:
 
 {
-  windowManagers.cory.kde = {
-    enable = true;
-    # rightWindowDecor = true;
-  };
-
-  # Editor
-  programs.cory.emacs.enable = true;
+  windowManagers.cory.exwm.enable = true;
 
   # Terminal
-  programs.cory.konsole.enable = true;
+  programs.cory.urxvt.enable = true;
 
   # Browser
   programs.cory.firefox = {
     enable = true;
     changeColor = false;
-    # Oxygen colors
-    windowColor = "#e0dfde";
-    secondaryColor = "#c8c6c4";
-    invertedColor = "#222120";
   };
 
   # Photo Viewer
@@ -63,28 +53,19 @@
       desktopFile = "lxqt-archiver.desktop";
       package = pkgs.lxqt.lxqt-archiver;
     };
-    # launcher = {
-    #   name = "krunner";
-    #   command = "krunner";
-    #   desktopFile = "krunner.desktop";
-    #   package = pkgs.libsForQt5.plasma-workspace;
-    # };
   };
-
-  # Keybinds
-  services.cory.sxhkd = {
-    enable = true;
-    keybindings = import ../../config/sxhkd/kde.nix { inherit config pkgs; };
-  };
-
-  # Gestures
-  services.cory.touchegg.enable = true;
 
   # Discord
   programs.cory.discord = {
     enable = true;
     css = builtins.readFile ../../config/discocss/skeuocord.theme.css;
   };
+
+  # Notifications
+  services.cory.dunst.enable = true;
+
+  # Compositor
+  services.cory.picom.enable = true;
 
   # Shell
   programs.cory.bat.enable = true;
@@ -97,10 +78,6 @@
     darkTheme = false;
     gtk.enable = false;
     icons = {
-      # name = "crystal-remix";
-      # package = crystal-remix-icon-theme;
-      # name = "nova7";
-      # package = nova7-icon-theme;
       name = "crystal-nova";
       package = crystal-nova-icon-theme;
     };
@@ -145,13 +122,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-    crystal-remix-icon-theme
-    oxygen-kde4-theme
-    libsForQt5.oxygen
-    expose-glassy
-    # expose-glassy-right
-    nova7-icon-theme
-    crystal-nova-icon-theme
+
   ];
 
   home-manager.users.cory.home.packages = with pkgs; [

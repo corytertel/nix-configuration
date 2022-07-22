@@ -1,11 +1,9 @@
 { config, pkgs, lib, ... }:
 
-# Not used by VM configuration
-
 {
   imports = [
-    ./udev.nix
-    ./zfs.nix
+    ../../profiles/exwm
+    /etc/nixos/hardware-configuration.nix
   ];
 
   boot = {
@@ -16,9 +14,10 @@
         enable = true;
         devices = ["nodev"];
         efiSupport = true;
-        useOSProber = true;
+        useOSProber = false;
       };
     };
+    kernelPackages = pkgs.linuxPackages_5_15;
   };
 
   networking = {
@@ -26,6 +25,7 @@
     wireless.enable = false;  # disables wpa_supplicant
     useDHCP = false;
     networkmanager.enable = true;
+    interfaces.wlp0s20f3.useDHCP = true;
   };
 
   time.timeZone = "America/Phoenix";
@@ -38,12 +38,13 @@
   };
 
   services = {
-    flatpak.enable = true;
     openssh.enable = true;
-    pcscd.enable = true;
-    printing.enable = true;
     xserver = {
       enable = true;
+      displayManager.autoLogin = {
+        enable = true;
+        user = "cory";
+      };
       extraLayouts = {
         us_programmer = {
           description = "US layout with numbers and characters flipped";
@@ -64,22 +65,9 @@
           accelProfile = "flat";
           accelSpeed = null;
           disableWhileTyping = true;
-
-          # Trackball
-          # accelProfile = "flat";
-          # buttonMapping = "1 8 2 4 5 6 7 3 9";
-          # disableWhileTyping = true;
-          # naturalScrolling = true;
-          # scrollButton = 3;
-          # scrollMethod = "button";
-          # transformationMatrix = "3 0 0 0 3 0 0 0 1";
         };
       };
     };
-  };
-
-  systemd = {
-    services.nix-gc.unitConfig.ConditionACPower = true;
   };
 
   sound.enable = true;
@@ -145,13 +133,6 @@
     config.theme.font.monospace.package
   ];
 
-  virtualisation = {
-    virtualbox.host.enable = true; # Virtual Box
-    libvirtd.enable = true; # virt-manager
-    # anbox.enable = true;
-    waydroid.enable = true;
-  };
-
   programs = {
     dconf.enable = true;
     gnupg.agent = {
@@ -159,14 +140,9 @@
      enableSSHSupport = true;
      pinentryFlavor = "tty";
     };
-    steam.enable = true;
   };
 
   xdg = {
-    portal = {
-      enable = true;
-      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    };
     mime.defaultApplications = let
       document = "writer.desktop";
       presentation = "impress.desktop";
@@ -226,21 +202,13 @@
     };
   };
 
-  system.stateVersion = "21.11";
+  system.stateVersion = "22.05";
 
   home-manager.users.cory = {
     programs = {
       home-manager.enable = true;
 
       nix-index.enable = true;
-
-      direnv.enable = true;
-      direnv.nix-direnv.enable = true;
-
-      java = {
-        enable = true;
-        package = pkgs.jdk;
-      };
 
       git = {
         enable = true;
@@ -252,20 +220,11 @@
     home = {
       username = "cory";
       homeDirectory = "/home/cory";
-      stateVersion = "21.11";
+      stateVersion = "22.05";
 
-      packages = let
-        tex = (pkgs.texlive.combine {
-          inherit (pkgs.texlive) scheme-basic
-            dvisvgm dvipng # for preview and export as html
-            wrapfig amsmath ulem hyperref capt-of;
-          #(setq org-latex-compiler "lualatex")
-          #(setq org-preview-latex-default-process 'dvisvgm)
-        });
-      in with pkgs; [
+      packages = with pkgs; [
         # linux basics
         killall
-        btop
 
         # development basics
         ccls
@@ -281,90 +240,23 @@
         ncurses
         global
         gdb
-        nodejs
-        yarn
-        tex
-
-        # clojure
-        clisp
-        clojure
-        #clojure-lsp
-        leiningen
-        joker
-        clj-kondo
 
         # other programing languages
         python39Full
         python39Packages.pip
-        racket
         rnix-lsp
-        javaPackages.openjfx17
-        maven
-        gradle
-
-        # essential user apps
-        tdesktop
-        blender
 
         # modern unix
         fd
         ripgrep
-        fzf
-        jq
 
         nix-prefetch-github
-        git-crypt
-        bb
-        qbittorrent
-        brave
-        tree
-        imagemagick
-        yt-dlp
-        qemu
-        qutebrowser
-        wine64
-        winetricks
-        grapejuice
-        pciutils
-        peek # simple animated gif screen recorder
-        # leafpad
-        # onlyoffice-bin
-        ledger-live-desktop
-        #ledger-udev-rules
-        acpi
         gparted
         libnotify
         dos2unix
-        galculator
         unzip
-        klavaro
-        obs-studio
-        # okular
-        libreoffice-qt
-        fd
-        citra-canary
-        # protonvpn-gui
-        inkscape
-        thunderbird
 
-        # Games
-        libsForQt5.kpat
-        libsForQt5.kolf
-        libsForQt5.kmines
-        libsForQt5.kmahjongg
-        libsForQt5.kapman
-        libsForQt5.kspaceduel
-        libsForQt5.knights
-        libsForQt5.konquest
-        libsForQt5.knavalbattle
-        libsForQt5.ksudoku
-        libsForQt5.killbots
-        # ace-of-penguins
-        superTux
-        superTuxKart
-        srb2kart
-        crispyDoom
-
+        # Security
         wireshark
         tcpdump
         nmap

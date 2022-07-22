@@ -30,6 +30,7 @@
     ./apps
     ./theme
 
+    ./windowManagers/exwm
     ./windowManagers/fvwm-laptop
     ./windowManagers/fvwm-pc
     ./windowManagers/kde
