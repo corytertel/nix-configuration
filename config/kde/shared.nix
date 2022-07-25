@@ -45,22 +45,16 @@
 
     "org.kde.kdecoration2" = {
       # Oxygen Window Decoration
-      # BorderSize = "Normal";
-      # BorderSizeAuto = false;
-      # library = "org.kde.oxygen";
-      # theme = "Oxygen";
+      BorderSize = "Normal";
+      BorderSizeAuto = false;
+      library = "org.kde.oxygen";
+      theme = "Oxygen";
 
-      # Plastik Window Decoration
+      # ExposeGlassy WindowDecoration
       # BorderSize = "Large";
       # BorderSizeAuto = false;
       # library = "org.kde.kwin.aurorae";
-      # theme = "kwin4_decoration_qml_plastik";
-
-      # ExposeGlassy WindowDecoration
-      BorderSize = "Large";
-      BorderSizeAuto = false;
-      library = "org.kde.kwin.aurorae";
-      theme = "__aurorae__svg__ExposeGlassy";
+      # theme = "__aurorae__svg__ExposeGlassy";
 
       # ExposeGlassyRight Window Decoration
       # BorderSize = "Large";
