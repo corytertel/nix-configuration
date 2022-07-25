@@ -46,9 +46,9 @@
       enable = true;
       package = pkgs.ananicy-cpp;
     };
-    tlp.enable = true;
+    # tlp.enable = true;
     thermald.enable = true;
-    gnome.gnome-keyring.enable = true;
+    # gnome.gnome-keyring.enable = true;
     xserver = {
       displayManager.autoLogin = {
         enable = true;

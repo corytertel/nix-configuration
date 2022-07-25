@@ -172,9 +172,18 @@
     kwin = {
       "Kill Window" = "Alt+F4,Meta+Ctrl+Esc,Kill Window";
       "Window Close" = "none,Alt+F4,Close Window";
-      "Walk Through Windows" = "Ctrl+Tab,Alt+Tab,Walk Through Windows";
-      "Walk Through Windows (Reverse)" = "Ctrl+Shift+Tab,Alt+Shift+Backtab,Walk Through Windows (Reverse)";
+      "Walk Through Windows" =
+        "Ctrl+Tab,Alt+Tab,Walk Through Windows";
+      "Walk Through Windows (Reverse)" =
+        "Ctrl+Shift+Tab,Alt+Shift+Backtab,Walk Through Windows (Reverse)";
+      "Walk Through Windows of Current Application" =
+        "none,Alt+`,Walk Through Windows of Current Application";
+      "Walk Through Windows of Current Application (Reverse)" =
+        "none,Alt+~,Walk Through Windows of Current Application (Reverse)";
     };
+
+    "org.kde.krunner.desktop"."_launch" =
+      "none,Alt+Space\tAlt+F2\tSearch,KRunner";
   };
 
 }

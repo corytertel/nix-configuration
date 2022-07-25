@@ -119,7 +119,6 @@
   :ensure t)
 
 ;; Modeline
-
 (use-package smart-mode-line
   :config
   (setq sml/theme 'cory)
@@ -226,7 +225,9 @@
 
 (use-package hippie-exp
   :ensure nil
-  :bind ([remap dabbrev-expand] . hippie-expand)
+  :bind
+  ;; ([remap dabbrev-expand] . hippie-expand)
+  (("\M- " . hippie-expand))
   :commands (hippie-expand)
   :config
   (setq hippie-expand-try-functions-list
@@ -241,38 +242,28 @@
           try-expand-list
           try-expand-line)))
 
-(use-package popper
-  :ensure t
-  :config
-  (setq popper-reference-buffers
-        '("\\*Messages\\*"
-          "Output\\*$"
-          "\\*Async Shell Command\\*"
-	  "\\*eldoc\\*"
-	  "\\*Ibuffer\\*"
-	  "\\*vc-git"
-	  "\\*Help\\*"
-	  "\\*RE-Builder\\*$"
-	  flymake-diagnostics-buffer-mode
-	  calendar-mode
-	  help-mode
-	  compilation-mode
-	  eshell-mode
-	  vterm-mode))
-  (popper-mode)
-  (popper-echo-mode)
-  :bind* ("C-\\" . popper-toggle-type)
-  ("C-+" . popper-toggle-latest))
-
-(use-package ibuffer-project
-  :bind (("C-x C-b" . ibuffer-other-window))
-  :config
-  (setq ibuffer-truncate-lines nil)
-  (defun ibuffer-setup ()
-    (setq ibuffer-filter-groups
-	  (ibuffer-project-generate-filter-groups)))
-  (setq ibuffer-project-use-cache t)
-  :hook ((ibuffer . ibuffer-setup)))
+;; (use-package popper
+;;   :ensure t
+;;   :config
+;;   (setq popper-reference-buffers
+;;         '("\\*Messages\\*"
+;;           "Output\\*$"
+;;           "\\*Async Shell Command\\*"
+;; 	  "\\*eldoc\\*"
+;; 	  "\\*Ibuffer\\*"
+;; 	  "\\*vc-git"
+;; 	  "\\*Help\\*"
+;; 	  "\\*RE-Builder\\*$"
+;; 	  flymake-diagnostics-buffer-mode
+;; 	  calendar-mode
+;; 	  help-mode
+;; 	  compilation-mode
+;; 	  eshell-mode
+;; 	  vterm-mode))
+;;   (popper-mode)
+;;   (popper-echo-mode)
+;;   :bind* ("C-\\" . popper-toggle-type)
+;;   ("C-+" . popper-toggle-latest))
 
 (use-package eldoc
   :ensure nil
@@ -1344,11 +1335,6 @@ use-package will load java-lsp for us simply by calling this function."
   (eshell-syntax-highlighting-global-mode +1))
 
 ;; Eshell auto-complete
-;; (use-package fish-completion
-;;   :if (executable-find "fish")
-;;   :after eshell
-;;   :config (global-fish-completion-mode))
-
 ;; `company-mode' backend to provide eshell history suggestion
 (use-package esh-autosuggest
   :ensure t
