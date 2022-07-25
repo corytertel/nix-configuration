@@ -77,11 +77,17 @@ in {
       ".emacs.d/eshell/alias".text = import ./eshell-alias.nix { inherit config pkgs; };
     };
 
+    # home-manager.users.cory.xresources.extraConfig = ''
+    #   emacs.bitmapIcon: off
+    #   emacs.geometry: 2000x1500+0+0
+    # '';
+
     environment.systemPackages = with pkgs; [
       extract
       githelp
       nixos-test
       nixos-switch
+      # fish
     ];
 
   };

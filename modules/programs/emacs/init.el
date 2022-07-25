@@ -87,16 +87,6 @@
 
 ;; Setting the font
 (set-face-attribute 'default nil :family "VictorMono Nerd Font Mono")
-;; (set-face-attribute 'default nil
-;; 		    :family "VictorMono Nerd Font" :weight 'regular :height 100)
-;; (set-face-attribute 'bold nil
-;; 		    :family "VictorMono Nerd Font" :weight 'bold)
-;; (set-face-attribute 'italic nil
-;; 		    :family "VictorMono Nerd Font" :weight 'regular :slant 'italic)
-;; (set-fontset-font t 'unicode
-;; 		  (font-spec :name "VictorMono Nerd Font" :size 16) nil)
-;; (set-fontset-font t '(#xe000 . #xffdd)
-;; 		  (font-spec :name "VictorMono Nerd Font" :size 12) nil)
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
@@ -133,18 +123,69 @@
 (use-package all-the-icons
   :ensure t)
 
-(use-package dired-icon
-  :hook (dired-mode . dired-icon-mode))
+;; Modeline
 
-;; Doom Modeline
+;; (use-package doom-modeline
+;;   :ensure t
+;;   :init (doom-modeline-mode 1)
+;;   :config
+;;   (setq doom-modeline-lsp t)
+;;   (setq doom-modeline-height 15)
+;;   (doom-modeline-mode))
 
-(use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode 1)
+(use-package smart-mode-line
   :config
-  (setq doom-modeline-lsp t)
-  (setq doom-modeline-height 15)
-  (doom-modeline-mode))
+  (setq sml/theme 'respectful)
+  (sml/setup))
+
+(use-package rich-minority
+  :config
+  (rich-minority-mode 1)
+  (setf rm-blacklist ""))
+
+;; ;; Remove all unwanted spaces
+;; (setq-default mode-line-format
+;;               '("%e" mode-line-front-space mode-line-mule-info mode-line-client mode-line-modified mode-line-remote mode-line-buffer-identification mode-line-position
+;; 		(vc-mode vc-mode) " "
+;; 		mode-line-modes mode-line-misc-info mode-line-end-spaces))
+;; ;; Remove all spaces and "min-width" of position info on mode-line
+;; (setq mode-line-position
+;;       `((1 ,(propertize
+;;              " %p"
+;;              'local-map mode-line-column-line-number-mode-map
+;;              'mouse-face 'mode-line-highlight
+;;              ;; XXX needs better description
+;;              'help-echo "Size indication mode\n\
+;; mouse-1: Display Line and Column Mode Menu"))
+;; 	(size-indication-mode
+;; 	 (2 ,(propertize
+;;               "/%I"
+;;               'local-map mode-line-column-line-number-mode-map
+;;               'mouse-face 'mode-line-highlight
+;;               ;; XXX needs better description
+;;               'help-echo "Size indication mode\n\
+;; mouse-1: Display Line and Column Mode Menu")))
+;; 	(line-number-mode
+;; 	 ((column-number-mode
+;; 	   (1 ,(propertize
+;; 		"(%l,%c)"
+;; 		'local-map mode-line-column-line-number-mode-map
+;; 		'mouse-face 'mode-line-highlight
+;; 		'help-echo "Line number and Column number\n\
+;; mouse-1: Display Line and Column Mode Menu"))
+;; 	   (1 ,(propertize
+;; 		"L%l"
+;; 		'local-map mode-line-column-line-number-mode-map
+;; 		'mouse-face 'mode-line-highlight
+;; 		'help-echo "Line Number\n\
+;; mouse-1: Display Line and Column Mode Menu"))))
+;; 	 ((column-number-mode
+;; 	   (1 ,(propertize
+;; 		"C%c"
+;; 		'local-map mode-line-column-line-number-mode-map
+;; 		'mouse-face 'mode-line-highlight
+;; 		'help-echo "Column number\n\
+;; mouse-1: Display Line and Column Mode Menu")))))))
 
 ;; Start screen
 (use-package dashboard
@@ -191,6 +232,17 @@
 
 ;; Make the cursor a bar
 (setq-default cursor-type 'bar)
+
+;; Beacon
+(use-package beacon
+  :config
+  (beacon-mode 1))
+
+;; Visual feedback on yank/kill
+(use-package goggles
+  :hook ((prog-mode text-mode) . goggles-mode)
+  :config
+  (setq-default goggles-pulse nil))
 
 ;;
 ;; --- WINDOW MANAGEMENT
@@ -364,6 +416,13 @@
   :hook ((text-mode prog-mode) . ws-butler-mode)
   :config (setq ws-butler-keep-whitespace-before-point nil))
 
+;; Indenting
+(use-package aggressive-indent
+  :config
+  (electric-indent-mode 0)
+  (global-aggressive-indent-mode 1)
+  (add-to-list 'aggressive-indent-excluded-modes 'html-mode))
+
 ;; Word wrapping
 (global-visual-line-mode 1)
 (setq-default fill-column 80)
@@ -381,7 +440,8 @@
 
 ;; Show empty whitespace
 (global-whitespace-mode)
-(setq whitespace-style '(face trailing tabs lines empty big-indent))
+;; (setq whitespace-style '(face trailing tabs lines empty big-indent))
+(setq whitespace-style '(face trailing tabs lines empty))
 
 ;; Use hex mode for binary files
 (add-to-list 'auto-mode-alist '("\\.bin\\'" . hexl-mode))
@@ -402,7 +462,7 @@
 ;; (use-package which-func
 ;;  :config (which-function-mode 1))
 
-;;; Smartparens
+;; Smartparens
 (use-package smartparens
   :defer 1
   :hook ((
@@ -421,8 +481,8 @@
          ("C-M-p" . sp-backward-down-sexp)
          ("C-M-n" . sp-up-sexp)
          ;; ("C-w" . whole-line-or-region-sp-kill-region)
-         ;; ("M-s" . sp-splice-sexp) ;; depth-changing commands
-         ;; ("M-r" . sp-splice-sexp-killing-around)
+         ("M-s" . sp-splice-sexp) ;; depth-changing commands
+         ("M-r" . sp-splice-sexp-killing-around)
          ("M-(" . sp-wrap-round)
          ("C-)" . sp-forward-slurp-sexp) ;; barf/slurp
          ("C-<right>" . sp-forward-slurp-sexp)
@@ -444,7 +504,9 @@
 
   ;; Always highlight matching parens
   (show-smartparens-global-mode +1)
-  (setq blink-matching-paren nil)  ;; Don't blink matching parens
+
+  ;; Blink matching parens
+  (setq blink-matching-paren t)
 
   (defun whole-line-or-region-sp-kill-region (prefix)
     "Call `sp-kill-region' on region or PREFIX whole lines."
@@ -481,13 +543,13 @@
   ;; use smartparens-mode everywhere
   (smartparens-global-mode))
 
-;;; end smartparens
-
 ;; Multiple cursors
 (use-package multiple-cursors
   :bind (("C-c m" . mc/mark-all-dwim)
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
+	 ("C-M-<" . mc/mark-all-in-region-regexp)
+	 ("C-M->" . mc/edit-lines)
          :map mc/keymap
          ("C-x v" . mc/vertical-align-with-space)
          ("C-x n" . mc-hide-unmatched-lines-mode))
@@ -503,6 +565,13 @@
     (define-key mc/keymap (kbd "M-T") 'mc/reverse-regions)
     (define-key mc/keymap (kbd "C-,") 'mc/unmark-next-like-this)
     (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)))
+
+;; Move text
+(use-package move-text
+  :bind (([(control shift up)]   . move-text-up)
+         ([(control shift down)] . move-text-down)
+         ([(meta shift up)]      . move-text-up)
+         ([(meta shift down)]    . move-text-down)))
 
 ;; Copy text as Discord/GitHub/etc formatted code
 (use-package copy-as-format
@@ -522,14 +591,6 @@
 
 ;; LSP
 
-;; lsp-mode performance
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
-(setq lsp-prefer-capf t)
-
-(defun lsp-mode-setup ()
-  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-  (lsp-headerline-breadcrumb-mode))
-
 (use-package lsp-mode
   :after company flycheck
   :commands (lsp lsp-deferred)
@@ -546,19 +607,24 @@
          ("C-c l a" . lsp-execute-code-action)
          ("C-c l r" . lsp-find-references))
   :config
+  ;; Performance
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
+  (setq lsp-prefer-capf t)
+  ;; Which-key
   (lsp-enable-which-key-integration t)
   ;; Don't watch `build' and `.gradle' directories for file changes
   (add-to-list 'lsp-file-watch-ignored "[/\\\\]build$")
   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\.gradle$")
   ;; Turn off breadcrumb trail
   (setq lsp-headerline-breadcrumb-enable nil)
+  ;; Turn off warnings
+  (setq lsp-warn-no-matched-clients nil)
   ;; Add Nix
   (add-to-list 'lsp-language-id-configuration '(nix-mode . "nix"))
   (lsp-register-client
    (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
                     :major-modes '(nix-mode)
-                    :server-id 'nix))
-  )
+                    :server-id 'nix)))
 
 (use-package lsp-ui
   :commands (lsp-ui-mode)
@@ -584,8 +650,16 @@
   ;; (setq lsp-ui-sideline-show-hover nil)
   ;; (setq lsp-ui-sideline-show-symbol nil)
 
-  ;; (lsp-ui-doc-position 'bottom)
-  )
+  (setq lsp-ui-doc-position 'right)
+
+  ;; Enable features
+  (setq lsp-ui-doc-enable t)
+  (setq lsp-ui-doc-use-childframe t)
+  (setq lsp-ui-doc-include-signature t)
+  (setq lsp-ui-doc-position 'at-point)
+  (setq lsp-ui-sideline-enable t)
+  (setq lsp-ui-sideline-show-hover t)
+  (setq lsp-ui-sideline-show-symbol t))
 
 ;; MISSING
 ;; (use-package lsp-ui-flycheck
@@ -858,33 +932,28 @@ Lisp function does not specify a special indentation."
                   (funcall method indent-point state)))))))))
 
 ;;; Elisp
-;; (use-package subr-x
-;;   :defer t
-;;   :config
-;;   (put 'if-let   'byte-obsolete-info nil)
-;;   (put 'when-let 'byte-obsolete-info nil))
 
-;; (use-package elisp-mode
-;;   :bind (:map emacs-lisp-mode-map
-;;          ("C-c C-c" . eval-defun)
-;;          ("C-c C-b" . eval-buffer)
-;;          ("C-c C-k" . eval-buffer)
-;;          ("C-c ;"   . eval-print-as-comment))
-;;   :config
-;;   (defvar eval-print-as-comment-prefix ";;=> ")
+;; subr-x
+(put 'if-let   'byte-obsolete-info nil)
+(put 'when-let 'byte-obsolete-info nil)
 
-;;   (defun eval-print-as-comment (&optional arg)
-;;     (interactive "P")
-;;     (let ((start (point)))
-;;       (eval-print-last-sexp arg)
-;;       (save-excursion
-;;         (goto-char start)
-;;         (save-match-data
-;;           (re-search-forward "[[:space:]\n]*" nil t)
-;;           (insert eval-print-as-comment-prefix)))))
+;; emacs-lisp-mode
+(defvar eval-print-as-comment-prefix ";;=> ")
 
-;;   (add-hook 'emacs-lisp-mode-hook (lambda ()
-;;                                     (setq mode-name "EL"))))
+(defun eval-print-as-comment (&optional arg)
+  (interactive "P")
+  (let ((start (point)))
+    (eval-print-last-sexp arg)
+    (save-excursion
+      (goto-char start)
+      (save-match-data
+        (re-search-forward "[[:space:]\n]*" nil t)
+        (insert eval-print-as-comment-prefix)))))
+
+(define-key emacs-lisp-mode-map (kbd "C-c C-c") 'eval-defun)
+(define-key emacs-lisp-mode-map (kbd "C-c C-b") 'eval-buffer)
+(define-key emacs-lisp-mode-map (kbd "C-c C-k") 'eval-buffer)
+(define-key emacs-lisp-mode-map (kbd "C-c C-;") 'eval-print-as-comment)
 
 ;;; Clojure
 (use-package clojure-mode
@@ -1147,9 +1216,6 @@ use-package will load java-lsp for us simply by calling this function."
     (setq company-lsp-cache-candidates nil)  ; Company cache should be disabled for lsp-java
     (lsp-deferred)))
 
-;; (use-package dap-java
-;;   :after lsp-java)
-
 ;; For groovy and gradle support
 (use-package groovy-mode :defer t)
 
@@ -1211,7 +1277,34 @@ use-package will load java-lsp for us simply by calling this function."
 ;; (use-package eterm-256color
 ;;   :hook (term-mode . eterm-256color-mode))
 
+;; Use local Emacs instance as $EDITOR (e.g. in `git commit' or `crontab -e')
+(use-package with-editor
+  :hook ((shell-mode eshell-mode vterm-mode term-exec) . with-editor-export-editor))
+
 ;;; Eshell
+
+;; Don't print the welcome banner and
+;; use native 'sudo', system sudo asks for password every time.
+(require 'em-tramp)
+(setq eshell-modules-list
+      '(eshell-alias
+        eshell-basic
+        eshell-cmpl
+        eshell-dirs
+        eshell-glob
+        eshell-hist
+        eshell-ls
+        eshell-pred
+        eshell-prompt
+        eshell-script
+        eshell-term
+        eshell-tramp
+        eshell-unix))
+
+(require 'em-smart)
+(setq eshell-where-to-jump 'begin)
+(setq eshell-review-quick-commands nil)
+(setq eshell-smart-space-goes-to-end t)
 
 (defun cory/configure-eshell ()
   "Eshell configuration that will run the first time eshell launches."
@@ -1255,7 +1348,13 @@ use-package will load java-lsp for us simply by calling this function."
   ;; Enable in all future ehell buffers
   (eshell-syntax-highlighting-global-mode +1))
 
-;; Eshell auto-suggest
+;; Eshell auto-complete
+;; (use-package fish-completion
+;;   :if (executable-find "fish")
+;;   :after eshell
+;;   :config (global-fish-completion-mode))
+
+;; `company-mode' backend to provide eshell history suggestion
 (use-package esh-autosuggest
   :ensure t
   :hook (eshell-mode . esh-autosuggest-mode))
@@ -1277,19 +1376,6 @@ use-package will load java-lsp for us simply by calling this function."
   (defalias 'eshell/up 'eshell-up)
   (defalias 'eshell/pk 'eshell-up-peek))
 
-;; Eshell smart display
-;; (use-package em-smart
-;;   :defer t
-;;   :config
-;;   (eshell-smart-initialize)
-;;   (setq eshell-where-to-jump 'begin
-;; 	eshell-review-quick-commands nil
-;; 	eshell-smart-space-goes-to-end t))
-(require 'em-smart)
-(setq eshell-where-to-jump 'begin)
-(setq eshell-review-quick-commands nil)
-(setq eshell-smart-space-goes-to-end t)
-
 ;; Eshell help
 (use-package esh-help
   :ensure t
@@ -1297,11 +1383,30 @@ use-package will load java-lsp for us simply by calling this function."
   :config
   (setup-esh-help-eldoc))
 
-;; Eshell module
-;; (use-package esh-module
-;;   :defer t
-;;   :custom-update
-;;   (eshell-modules-list '(eshell-tramp)))
+;; Show last status in fringe
+;; (use-package eshell-fringe-status
+;;   :hook (eshell-mode . eshell-fringe-status-mode)
+;;   :config
+;;   (define-fringe-bitmap 'efs-line-bitmap
+;;     (vector #b00111100
+;;             #b01111110
+;;             #b11111111
+;;             #b11111111
+;;             #b11111111
+;;             #b11111111
+;;             #b11111111
+;;             #b11111111
+;;             #b11111111
+;;             #b11111111
+;;             #b11111111
+;;             #b11111111
+;;             #b11111111
+;;             #b11111111
+;;             #b11111111
+;;             #b01111110
+;;             #b00111100))
+;;   (setq eshell-fringe-status-success-bitmap 'efs-line-bitmap)
+;;   (setq eshell-fringe-status-failure-bitmap 'efs-line-bitmap))
 
 ;; Info (from Emacs wiki)
 (defun eshell/info (subject)
@@ -1350,6 +1455,11 @@ use-package will load java-lsp for us simply by calling this function."
 
 (defalias 'eshell/more 'eshell/less)
 
+;; Delete backup files (from Emacs wiki)
+(defun eshell/rmb ()
+  "Delete files matching pattern \".*~\" and \"*~\"."
+  (eshell/rm (directory-files "." nil "^\\.?.*~$" nil)))
+
 ;; Running programs in a term-mode buffer
 ;; (with-eval-after-load 'esh-opt
 ;;   (setq eshell-destroy-buffer-when-process-dies t)
@@ -1363,19 +1473,10 @@ use-package will load java-lsp for us simply by calling this function."
 	 ("C-c C-t" . nil))
   :commands (vterm))
 
-(use-package multi-vterm
-  :ensure t
-  :bind
-  ;; ("C-c C-t" . multi-vterm-dedicated-toggle)
-  )
-
-;; Usage
-;; Command                       Description
-;; multi-vterm 	                 Create new terminal
-;; multi-vterm-next              Switch to next terminal
-;; multi-vterm-prev              Switch to previous terminal
-;; multi-vterm-dedicated-toggle  Toggle dedicated terminal
-;; multi-vterm-project 	         Create/toggle terminal based on current project
+;; (use-package multi-vterm
+;;   :ensure t
+;;   :bind
+;;   ("C-c C-t" . multi-vterm-dedicated-toggle))
 
 ;;
 ;; --- GENERAL KEYBINDS ---
@@ -1385,8 +1486,9 @@ use-package will load java-lsp for us simply by calling this function."
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "C-c t t") 'counsel-load-theme)
 (global-set-key (kbd "C-c t c") 'comment-or-uncomment-region)
+(global-set-key (kbd "C-#") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c r") 'replace-string)
-(global-set-key (kbd "M-s") 'project-search)
+(global-set-key (kbd "C-M-s") 'project-search)
 
 ;;
 ;; --- MISC ---

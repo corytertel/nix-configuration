@@ -249,9 +249,9 @@ to 'auto, tags may not be properly aligned."
      `(centaur-tabs-selected ((,class (:background ,bg1 :foreground ,base :weight bold))))
      `(centaur-tabs-unselected ((,class (:background ,bg2 :foreground ,base-dim :weight light))))
      `(centaur-tabs-selected-modified ((,class (:background ,bg1
-                  :foreground ,blue :weight bold))))
+						:foreground ,blue :weight bold))))
      `(centaur-tabs-unselected-modified ((,class (:background ,bg2 :weight light
-                    :foreground ,blue))))
+						  :foreground ,blue))))
      `(centaur-tabs-active-bar-face ((,class (:background ,keyword))))
      `(centaur-tabs-modified-marker-selected ((,class (:inherit 'centaur-tabs-selected :foreground,keyword))))
      `(centaur-tabs-modified-marker-unselected ((,class (:inherit 'centaur-tabs-unselected :foreground,keyword))))
@@ -396,30 +396,30 @@ to 'auto, tags may not be properly aligned."
      `(evil-ex-substitute-replacement ((,class (:background ,green-bg :foreground ,green))))
 
 ;;;;; evil-goggles
-      `(evil-goggles--pulse-face ((,class (:background ,yellow-bg :foreground ,yellow))))
-      `(evil-goggles-change-face ((,class (:background ,blue-bg-s :foreground ,blue))))
-      `(evil-goggles-commentary-face ((,class (:background ,aqua-bg :foreground ,aqua))))
-      `(evil-goggles-delete-face ((,class (:background ,red-bg-s :foreground ,red))))
-      `(evil-goggles-fill-and-move-face ((,class (:background ,green-bg-s :foreground ,green))))
-      `(evil-goggles-indent-face ((,class (:background ,green-bg-s :foreground ,green))))
-      `(evil-goggles-join-face ((,class (:background ,green-bg-s :foreground ,green))))
-      `(evil-goggles-nerd-commenter-face ((,class (:background ,aqua-bg :foreground ,aqua))))
-      `(evil-goggles-paste-face ((,class (:background ,green-bg-s :foreground ,green))))
-      `(evil-goggles-record-macro-face ((,class (:background ,blue-bg-s :foreground ,blue))))
-      `(evil-goggles-replace-with-register-face ((,class (:background ,yellow-bg :foreground ,yellow))))
-      `(evil-goggles-set-marker-face ((,class (:background ,blue-bg-s :foreground ,blue))))
-      `(evil-goggles-shift-face ((,class (:background ,blue-bg-s :foreground ,blue))))
-      `(evil-goggles-surround-face ((,class (:background ,blue-bg-s :foreground ,blue))))
-      `(evil-goggles-yank-face ((,class (:background ,blue-bg-s :foreground ,blue))))
-      `(evil-goggles-undo-redo-add-face ((,class (:background ,green-bg-s :foreground ,green))))
-      `(evil-goggles-undo-redo-change-face ((,class (:background ,blue-bg-s :foreground ,blue))))
-      `(evil-goggles-undo-redo-remove-face ((,class (:background ,red-bg-s :foreground ,red))))
+     `(evil-goggles--pulse-face ((,class (:background ,yellow-bg :foreground ,yellow))))
+     `(evil-goggles-change-face ((,class (:background ,blue-bg-s :foreground ,blue))))
+     `(evil-goggles-commentary-face ((,class (:background ,aqua-bg :foreground ,aqua))))
+     `(evil-goggles-delete-face ((,class (:background ,red-bg-s :foreground ,red))))
+     `(evil-goggles-fill-and-move-face ((,class (:background ,green-bg-s :foreground ,green))))
+     `(evil-goggles-indent-face ((,class (:background ,green-bg-s :foreground ,green))))
+     `(evil-goggles-join-face ((,class (:background ,green-bg-s :foreground ,green))))
+     `(evil-goggles-nerd-commenter-face ((,class (:background ,aqua-bg :foreground ,aqua))))
+     `(evil-goggles-paste-face ((,class (:background ,green-bg-s :foreground ,green))))
+     `(evil-goggles-record-macro-face ((,class (:background ,blue-bg-s :foreground ,blue))))
+     `(evil-goggles-replace-with-register-face ((,class (:background ,yellow-bg :foreground ,yellow))))
+     `(evil-goggles-set-marker-face ((,class (:background ,blue-bg-s :foreground ,blue))))
+     `(evil-goggles-shift-face ((,class (:background ,blue-bg-s :foreground ,blue))))
+     `(evil-goggles-surround-face ((,class (:background ,blue-bg-s :foreground ,blue))))
+     `(evil-goggles-yank-face ((,class (:background ,blue-bg-s :foreground ,blue))))
+     `(evil-goggles-undo-redo-add-face ((,class (:background ,green-bg-s :foreground ,green))))
+     `(evil-goggles-undo-redo-change-face ((,class (:background ,blue-bg-s :foreground ,blue))))
+     `(evil-goggles-undo-redo-remove-face ((,class (:background ,red-bg-s :foreground ,red))))
 
 ;;;;; evil-mc
-      `(evil-mc-cursor-bar-face ((,class (:foreground ,aqua))))
-      `(evil-mc-cursor-default-face ((,class (:background ,aqua :foreground ,bg4))))
-      `(evil-mc-cursor-hbar-face ((,class (:foreground ,aqua))))
-      `(evil-mc-region-face ((,class (:inherit highlight))))
+     `(evil-mc-cursor-bar-face ((,class (:foreground ,aqua))))
+     `(evil-mc-cursor-default-face ((,class (:background ,aqua :foreground ,bg4))))
+     `(evil-mc-cursor-hbar-face ((,class (:foreground ,aqua))))
+     `(evil-mc-region-face ((,class (:inherit highlight))))
 
 ;;;;; flycheck
      `(flycheck-error
@@ -684,7 +684,8 @@ to 'auto, tags may not be properly aligned."
 
 ;;;;; mode-line
      `(mode-line           ((,class (:foreground ,base :background ,act1 :box (:color ,border :line-width 1)))))
-     `(mode-line-buffer-id ((,class (:inherit bold :foreground ,func))))
+     ;;`(mode-line-buffer-id ((,class (:inherit bold :foreground ,func))))
+     `(mode-line-buffer-id ((,class (:inherit bold :foreground ,blue))))
      `(mode-line-inactive  ((,class (:foreground ,base :background ,bg1  :box (:color ,border :line-width 1)))))
 
 ;;;;; mu4e
@@ -1030,7 +1031,7 @@ to 'auto, tags may not be properly aligned."
      `(org-fontify-todo-headline nil)
 
 ;;;;; pdf-tools
-    `(pdf-view-midnight-colors '(,base . ,bg1)))
+     `(pdf-view-midnight-colors '(,base . ,bg1)))
     ))
 
 
