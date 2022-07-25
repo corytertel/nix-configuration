@@ -5,6 +5,7 @@
     ./programs/bash
     ./programs/bat
     ./programs/discord
+    ./programs/emacs
     ./programs/firefox
     ./programs/gtk
     ./programs/konsole
@@ -29,6 +30,7 @@
     ./apps
     ./theme
 
+    ./windowManagers/exwm
     ./windowManagers/fvwm-laptop
     ./windowManagers/fvwm-pc
     ./windowManagers/kde

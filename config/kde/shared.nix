@@ -159,4 +159,22 @@
   };
 
   ksmserverrc.General.loginMode = "emptySession";
+
+  "plasma_workspace.notifyrc"."Event/startkde" = {
+    Action = "Sound";
+    Execute = "";
+    Logfile = "";
+    Sound = "${./KDE_Startup_1.ogg}";
+    TTS = "";
+  };
+
+  kglobalshortcutsrc = {
+    kwin = {
+      "Kill Window" = "Alt+F4,Meta+Ctrl+Esc,Kill Window";
+      "Window Close" = "none,Alt+F4,Close Window";
+      "Walk Through Windows" = "Ctrl+Tab,Alt+Tab,Walk Through Windows";
+      "Walk Through Windows (Reverse)" = "Ctrl+Shift+Tab,Alt+Shift+Backtab,Walk Through Windows (Reverse)";
+    };
+  };
+
 }

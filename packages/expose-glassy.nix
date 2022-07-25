@@ -12,8 +12,8 @@ self: super: {
     src = self.fetchFromGitHub {
       owner = "corytertel";
       repo = "ExposeGlassy";
-      rev = "f003f18bbc3c0c7ac5887bf86ca51744a11333d4";
-      sha256 = "pD0gUQaHoYB8WuJinAyOiH9RAnilU6GdjJkvL3WV3ew=";
+      rev = "53cdc4ea369277a09a2ff6dac66ad43ec4fde812";
+      sha256 = "TlF5ORb/FXeQS5YXFiiVYTo9RAVGRITR2kE0sl+PfWE=";
     };
   };
 }

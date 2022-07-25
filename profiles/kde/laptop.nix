@@ -13,5 +13,5 @@
     size = 72;
   };
 
-  theme.wallpaper = ./wallpapers/maui.jpg;
+  theme.wallpaper = ./wallpapers/maui2.jpg;
 }
