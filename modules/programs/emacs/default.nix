@@ -66,7 +66,7 @@ in {
 
     apps.editor = {
       name = "emacs";
-      command = "emacsclient -c";
+      command = "emacsclient -c -e '(fancy-startup-screen)'";
       desktopFile = "emacsclient.desktop";
       package = emacsPackage;
     };

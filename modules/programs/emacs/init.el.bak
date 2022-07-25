@@ -74,11 +74,16 @@
 ;; --- VISUALS ---
 ;;
 
+;; Disables the startup message
+;; (setq inhibit-startup-message t)
+
 (scroll-bar-mode -1) ; Disables the visible scrollbar
 (tool-bar-mode -1)   ; Disables the toolbar
 (menu-bar-mode -1)   ; Disables the menubar
 (tooltip-mode -1)    ; Disables tooltips
 (set-fringe-mode 10) ; Gives some breathing room
+
+(setq visible-bell nil) ; Disables the visible bell
 
 ;; Setting the font
 (set-face-attribute 'default nil :family "VictorMono Nerd Font Mono")
@@ -120,12 +125,16 @@
 
 ;; Modeline
 
+;; (use-package doom-modeline
+;;   :ensure t
+;;   :init (doom-modeline-mode 1)
+;;   :config
+;;   (setq doom-modeline-lsp t)
+;;   (setq doom-modeline-height 15)
+;;   (doom-modeline-mode))
+
 (use-package smart-mode-line
   :config
-  ;; (custom-theme-set-faces
-  ;;  'smart-mode-line-respectful
-  ;;  '(sml/global    ((t :inherit font-lock-string-face)))
-  ;;  '(sml/prefix    ((t :inherit (font-lock-variable-name-face sml/global)))))
   (setq sml/theme 'respectful)
   (sml/setup))
 
@@ -133,6 +142,35 @@
   :config
   (rich-minority-mode 1)
   (setf rm-blacklist ""))
+
+;; Start screen
+(use-package dashboard
+  :disabled t
+  :ensure t
+  :defer t
+  :init
+  (dashboard-setup-startup-hook)
+  :custom ((inhibit-start-screen t)
+	   (dashboard-set-footer nil)
+	   (dashboard-startup-banner (locate-user-emacs-file "logo.png"))
+	   (dashboard-items '((recents . 10)))
+	   (initial-buffer-choice #'dashboard-or-scratch)
+	   (dashboard-banner-logo-title
+	    "Welcome to GNU Emacs!")
+	   (dashboard-center-content t)
+	   (dashboard-show-shortcuts nil))
+  :hook (dashboard-mode . dashboard-immortal))
+
+;; Show dashboard or scratch initially
+(defun dashboard-or-scratch ()
+  "Open either dashboard or the scratch buffer."
+  (or (get-buffer "*dashboard*")
+      (get-buffer "*scratch*")))
+
+;; Make the dashboard buffer immortal
+(defun dashboard-immortal ()
+  "Make the dashboard buffer immortal."
+  (emacs-lock-mode 'kill))
 
 ;; Add padding to the sides
 (require 'frame)
@@ -167,22 +205,37 @@
 ;; --- WINDOW MANAGEMENT
 ;;
 
-(setq focus-follows-mouse t
-      mouse-autoselect-window t)
+(use-package buffer-move
+  :ensure t
+  :defer t
+  ;; :bind (("C-x o" . nil)
+  ;; 	 ("C-x o p" . windmove-up)
+  ;; 	 ("C-x o n" . windmove-down)
+  ;; 	 ("C-x o b" . windmove-left)
+  ;; 	 ("C-x o f" . windmove-right)
+  ;; 	 ("C-x o C-p" . buf-move-up)
+  ;; 	 ("C-x o C-n" . buf-move-down)
+  ;; 	 ("C-x o C-b" . buf-move-left)
+  ;; 	 ("C-x o C-f" . buf-move-right))
+  :bind (("C-x o" . next-window-any-frame)
+	 ("C-x C-o" . previous-window-any-frame)
+	 ("C-x M-o" . hydra-window-resize/body))
+  :custom ((focus-follows-mouse t)
+	   (mouse-autoselect-window t)))
 
 (defun split-and-follow-below ()
   "Open a new window vertically."
   (interactive)
   (split-window-below)
   (other-window 1)
-  (consult-buffer))
+  (counsel-ibuffer))
 
 (defun split-and-follow-right ()
   "Open a new window horizontally."
   (interactive)
   (split-window-right)
   (other-window 1)
-  (consult-buffer))
+  (counsel-ibuffer))
 
 (defun kill-all-buffers-and-windows ()
   "Kill all buffers and windows."
@@ -192,13 +245,8 @@
     (mapc 'kill-buffer (buffer-list))
     (delete-other-windows)))
 
-(defun previous-window ()
-  "Reverse direction of `other-window'."
-  (other-window -1))
-
 (global-set-key (kbd "C-x o") 'other-window)
-(global-set-key (kbd "C-x O") 'previous-window)
-(global-set-key (kbd "C-x M-o") 'hydra-window-resize/body)
+(global-set-key (kbd "C-x C-o") (lambda () (interactive) (other-window -1)))
 (global-set-key (kbd "C-x 0") 'delete-window)
 (global-set-key (kbd "C-x 1") 'delete-other-windows)
 (global-set-key (kbd "C-x 2") 'split-and-follow-below)
@@ -210,268 +258,39 @@
 ;; --- IDE Features (LSP, Completion, etc) ---
 ;;
 
-(setq visible-bell nil
-      backup-directory-alist `((".*" . ,temporary-file-directory))
-      auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
-
-(setq-default fill-column 80
-	      left-margin-width 1
-	      sentence-end-double-space nil
-	      lisp-backquote-indentation nil
-	      blink-cursor-blinks 1
-	      fast-but-imprecise-scrolling t
-	      auto-save-interval 60
-	      kill-do-not-save-duplicates t
-	      bidi-paragraph-direction 'left-to-right
-	      bidi-inhibit-bpa t)
-
-(global-so-long-mode 1)
-(save-place-mode 1)
-
-(use-package hippie-exp
-  :ensure nil
-  :bind ([remap dabbrev-expand] . hippie-expand)
-  :commands (hippie-expand)
+(use-package ivy
+  :diminish
+  :bind (:map ivy-minibuffer-map
+	 ("TAB" . ivy-alt-done)
+	 ("C-f" . ivy-alt-done)
+	 ("C-n" . ivy-next-line)
+	 ("C-p" . ivy-previous-line)
+	 :map ivy-switch-buffer-map
+	 ("C-p" . ivy-previous-line)
+	 ("C-f" . ivy-done)
+	 ("C-d" . ivy-switch-buffer-kill)
+	 :map ivy-reverse-i-search-map
+	 ("C-p" . ivy-previous-line)
+	 ("C-d" . ivy-reverse-i-search-kill))
   :config
-  (setq hippie-expand-try-functions-list
-        '(try-expand-dabbrev
-          try-expand-dabbrev-all-buffers
-          try-expand-dabbrev-from-kill
-          try-complete-lisp-symbol-partially
-          try-complete-lisp-symbol
-          try-complete-file-name-partially
-          try-complete-file-name
-          try-expand-all-abbrevs
-          try-expand-list
-          try-expand-line)))
+  (ivy-mode 1))
 
-(use-package popper
-  :ensure t
-  :config
-  (setq popper-reference-buffers
-        '("\\*Messages\\*"
-          "Output\\*$"
-          "\\*Async Shell Command\\*"
-	  "\\*eldoc\\*"
-	  "\\*Ibuffer\\*"
-	  "\\*vc-git"
-	  "\\*Help\\*"
-	  "\\*RE-Builder\\*$"
-	  flymake-diagnostics-buffer-mode
-	  calendar-mode
-	  help-mode
-	  compilation-mode
-	  eshell-mode
-	  vterm-mode))
-  (popper-mode)
-  (popper-echo-mode)
-  :bind* ("C-\\" . popper-toggle-type)
-  ("C-+" . popper-toggle-latest))
-
-(use-package ibuffer-project
-  :bind (("C-x C-b" . ibuffer-other-window))
-  :config
-  (setq ibuffer-truncate-lines nil)
-  (defun ibuffer-setup ()
-    (setq ibuffer-filter-groups
-	  (ibuffer-project-generate-filter-groups)))
-  (setq ibuffer-project-use-cache t)
-  :hook ((ibuffer . ibuffer-setup)))
-
-(use-package eldoc
-  :ensure nil
-  :config
-  (setq eldoc-echo-area-prefer-doc-buffer nil))
-
-;; LSP
-;; (use-package eglot
-;;   :defer t
-;;   :hook
-;;   (haskell-mode . eglot-ensure)
-;;   (c-mode . eglot-ensure)
-;;   (python-mode . eglot-ensure)
-;;   (js-jsx-mode . eglot-ensure)
-;;   (js-mode . eglot-ensure)
-;;   :custom
-;;   (eglot-autoshutdown t)
-;;   (eglot-autoreconnect nil)
-;;   (eglot-confirm-server-initiated-edits nil)
-;;   (eldoc-idle-delay 1)
-;;   (eldoc-echo-area-display-truncation-message nil)
-;;   (eldoc-echo-area-use-multiline-p 2)
-
-;;   :config
-;;   (add-to-list 'eglot-server-programs
-;; 	       '((tex-mode context-mode texinfo-mode bibtex-mode) . ("texlab")))
-
-;;   (define-key eglot-mode-map [remap display-local-help] nil)
-
-;;   :bind (:map eglot-mode-map
-;; 	 ("C-c C-a" . eglot-code-actions)
-;; 	 ("C-c C-f" . eglot-format-buffer)))
-
-;; Completion
-
-(use-package company
-  :diminish company-mode
-  :bind
-  (:map company-active-map
-   ([return] . nil)
-   ("RET" . nil)
-   ("TAB" . company-complete-selection)
-   ([tab] . company-complete-selection)
-   ("C-f" . company-complete-selection)
-   ("S-TAB" . company-select-previous)
-   ([backtab] . company-select-previous)
-   ("C-n" . company-select-next)
-   ("C-p" . company-select-previous))
-  (:map lsp-mode-map
-   ("<tab>" . company-indent-or-complete-common))
-  :config
-  (setq company-idle-delay 0.0
-        company-minimum-prefix-length 1
-        company-show-numbers t
-        company-tooltip-maximum-width 100
-        company-tooltip-minimum-width 20
-	;; Allow me to keep typing even if company disapproves.
-        company-require-match nil)
-  (global-company-mode))
-
-;; TODO figure out import order
-(use-package company-emoji
-  :config (add-to-list 'company-backends 'company-emoji))
-
-(use-package company-quickhelp
-  :config (company-quickhelp-mode))
-
-(use-package company-box
-  :hook (company-mode . company-box-mode)
-  :config
-  (setq company-box-icons-alist 'company-box-icons-all-the-icons))
-
-;; Autocompletion for shell
-(use-package company-shell
-  :hook ((sh-mode shell-mode) . sh-mode-init)
-  :config
-  (defun sh-mode-init ()
-    (setq-local company-backends
-		'((company-shell
-                   company-shell-env
-                   company-files
-                   company-dabbrev-code
-                   company-capf
-                   company-yasnippet)))))
-
-(use-package company-nixos-options
-  :config
-  (add-to-list 'company-backends 'company-nixos-options))
-
-;; (use-package corfu
-;;   :bind
-;;   (:map corfu-map
-;;    ("TAB" . corfu-next)
-;;    ([tab] . corfu-next)
-;;    ("S-TAB" . corfu-previous)
-;;    ([backtab] . corfu-previous)
-;;    ;; ([return] . nil)
-;;    ;; ("RET" . nil)
-;;    ;; ("TAB" . corfu-complete)
-;;    ;; ([tab] . corfu-complete)
-;;    ;; ("C-f" . corfu-complete)
-;;    ;; ("S-TAB" . corfu-previous)
-;;    ;; ([backtab] . corfu-previous)
-;;    ;; ("C-n" . corfu-next)
-;;    ;; ("C-p" . corfu-previous)
-;;    )
-;;   :init
-;;   (setq completion-cycle-threshold 3
-;; 	read-extended-command-predicate #'command-completion-default-include-p
-;; 	tab-always-indent 'complete)
-;;   (global-corfu-mode)
-;;   :config
-;;   (setq corfu-cycle t
-;; 	corfu-preselect-first nil
-;; 	corfu-auto t
-;; 	corfu-auto-delay 0
-;; 	corfu-auto-prefix 0
-;; 	completion-styles '(basic)
-;; 	corfu-commit-predicate nil
-;; 	corfu-quit-at-boundary t
-;; 	corfu-quit-no-match t
-;; 	corfu-echo-documentation t)
-;;   ;; Eshell
-;;   (add-to-list 'corfu-excluded-modes 'eshell-mode)
-;;   (add-to-list 'corfu-excluded-modes 'vterm-mode))
-
-;; (use-package cape
-;;   :after corfu
-;;   :bind (("C-c p i" . cape-ispell)
-;; 	 ("C-c p d" . cape-dabbrev)
-;; 	 ("C-c p l" . cape-line)
-;; 	 ("C-c p \\" . cape-tex))
-;;   :config
-;;   (setq-local completion-at-point-functions
-;;               (list (cape-super-capf #'cape-dabbrev #'cape-file #'cape-keyword #'cape-symbol)))
-
-;;   ;; Silence then pcomplete capf, no errors or messages!
-;;   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
-
-;;   ;; Ensure that pcomplete does not write to the buffer
-;;   ;; and behaves as a pure `completion-at-point-function'.
-;;   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
-
-;;   :init
-;;   (dolist (backend '(cape-symbol cape-keyword cape-file cape-dabbrev))
-;;     (add-to-list 'completion-at-point-functions backend)))
-
-(use-package vertico
-  ;; :bind
-  ;; (:map vertico-map
-  ;;  ("DEL" . vertico-directory-delete-char)
-  ;;  ("M-." . consult-dir)
-  ;;  ("M-j" . consult-dir-jump-file)
-  ;;  ("M-q" . vertico-multiform-grid)
-  ;;  ("M-a" . vertico-multiform-unobtrusive)
-  ;;  ("'" . vertico-quick-jump))
+(use-package ivy-rich
   :init
-  ;; (use-package orderless
-  ;;   :commands (orderless)
-  ;;   :custom (completion-styles '(orderless flex)))
+  (ivy-rich-mode 1))
 
-  (use-package consult
-    :init
-    (setq consult-preview-key nil)
-    :bind
-    ("C-c r" . consult-recent-file)
-    ("C-c f" . consult-ripgrep)
-    ("C-c l" . consult-line)
-    ("C-c i" . consult-imenu)
-    ("C-c t" . gtags-find-tag)
-    ("C-x b" . consult-buffer)
-    ("C-c x" . consult-complex-command)
-    (:map comint-mode-map
-     ("C-c C-l" . consult-history)))
+(use-package swiper
+  :bind (("C-s" . swiper-isearch)
+	 ("C-r" . swiper-isearch-backward)))
+
+(use-package counsel
+  :bind (("M-x" . counsel-M-x)
+	 ("C-x C-f" . counsel-find-file)
+	 ("C-x b" . counsel-switch-buffer)
+	 :map minibuffer-local-map
+	 ("C-r" . 'counsel-minibuffer-history))
   :config
-  ;; (setq vertico-cycle t)
-  (recentf-mode t)
-  (vertico-mode t))
-
-(use-package marginalia
-  :after vertico
-  :ensure t
-  :config
-  (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-  (marginalia-mode))
-
-;; Search
-(define-key isearch-mode-map (kbd "TAB") 'isearch-toggle-symbol)
-(define-key isearch-mode-map (kbd "M-q") 'isearch-query-replace)
-
-(use-package repeat
-  :ensure nil
-  :bind (:map isearch-mode-map
-	 ("<down>" . #'isearch-repeat-forward)
-	 ("<up>" . #'isearch-repeat-backward)))
+  (setq ivy-initial-inputs-alist nil)) ;; Don't start searches with ^
 
 ;; Undo
 (use-package undo-tree
@@ -493,8 +312,13 @@
 
 (use-package helpful
   :ensure
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
   :bind
+  ([remap describe-function] . counsel-describe-function)
   ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
 
 ;; Hydras
@@ -518,12 +342,17 @@
 (use-package projectile
   :diminish projectile-mode
   :config (projectile-mode)
+  :custom ((projectile-completion-system 'ivy))
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :init
   (when (file-directory-p "~/Code")
     (setq projectile-project-search-path '("~/Code")))
   (setq projectile-switch-project-action #'projectile-dired))
+
+(use-package counsel-projectile
+  :after projectile
+  :config (counsel-projectile-mode))
 
 ;; Git Management
 (use-package magit
@@ -720,21 +549,20 @@
 ;; LSP
 
 (use-package lsp-mode
-  ;; :after corfu flycheck
   :after company flycheck
   :commands (lsp lsp-deferred)
   :hook (prog-mode . lsp)
   :init
-  (setq lsp-keymap-prefix "C-c C-a")
+  (setq lsp-keymap-prefix "C-c l")
   :bind (:map lsp-mode-map
          ("C-c C-l" . lsp-execute-code-action)
          ("M-." . lsp-find-definition)
          ("M-," . lsp-find-references)
-	 ("C-c C-a r" . lsp-rename)
-         ("C-c C-a f" . lsp-format-buffer)
-         ("C-c C-a g" . lsp-format-region)
-         ("C-c C-a a" . lsp-execute-code-action)
-         ("C-c C-a r" . lsp-find-references))
+	 ("C-c l r" . lsp-rename)
+         ("C-c l f" . lsp-format-buffer)
+         ("C-c l g" . lsp-format-region)
+         ("C-c l a" . lsp-execute-code-action)
+         ("C-c l r" . lsp-find-references))
   :config
   ;; Performance
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
@@ -760,8 +588,8 @@
   :hook (lsp-mode . lsp-ui-mode)
   :bind (:map lsp-mode-map
          ("M-?" . lsp-ui-doc-toggle)
-         ("C-c C-a d" . lsp-ui-doc-show)
-         ("C-c C-a s" . lsp-ui-find-workspace-symbol))
+         ("C-c l d" . lsp-ui-doc-show)
+         ("C-c l s" . lsp-ui-find-workspace-symbol))
   :config
   (defun lsp-ui-doc-toggle ()
     "Shows or hides lsp-ui-doc popup."
@@ -801,6 +629,9 @@
   ;; Enable bidirectional synchronization of lsp workspace folders and treemacs
   (lsp-treemacs-sync-mode))
 
+(use-package lsp-ivy
+  :after lsp-mode)
+
 (use-package dap-mode
   :after lsp-mode
   :bind (:map dap-server-log-mode-map
@@ -833,6 +664,57 @@
   (dap-ui-controls-mode)
   ;; Displaying DAP visuals
   (dap-ui-mode))
+
+;; Autocompletion
+(use-package company
+  :diminish company-mode
+  :bind
+  (:map company-active-map
+        ([return] . nil)
+        ("RET" . nil)
+        ("TAB" . company-complete-selection)
+        ([tab] . company-complete-selection)
+	("C-f" . company-complete-selection)
+        ("S-TAB" . company-select-previous)
+        ([backtab] . company-select-previous)
+	("C-n" . company-select-next)
+	("C-p" . company-select-previous))
+  (:map lsp-mode-map
+        ("<tab>" . company-indent-or-complete-common))
+  :config
+  (setq company-idle-delay 0.0
+        company-minimum-prefix-length 1
+        company-show-numbers t
+        company-tooltip-maximum-width 100
+        company-tooltip-minimum-width 20
+	;; Allow me to keep typing even if company disapproves.
+        company-require-match nil)
+  (global-company-mode))
+
+;; TODO figure out import order
+;; (use-package company-emoji
+;;   :config (add-to-list 'company-backends 'company-emoji))
+
+;; (use-package company-quickhelp
+;;   :config (company-quickhelp-mode))
+
+(use-package company-box
+  :hook (company-mode . company-box-mode)
+  :config
+  (setq company-box-icons-alist 'company-box-icons-all-the-icons))
+
+;; Autocompletion for shell
+(use-package company-shell
+  :hook ((sh-mode shell-mode) . sh-mode-init)
+  :config
+  (defun sh-mode-init ()
+    (setq-local company-backends
+		'((company-shell
+                   company-shell-env
+                   company-files
+                   company-dabbrev-code
+                   company-capf
+                   company-yasnippet)))))
 
 ;; Tramp
 (use-package tramp
@@ -1065,14 +947,14 @@ Lisp function does not specify a special indentation."
   ;; Inject reveal middleware in cider-jack-in when the `:reveal' alias is set
   (defun cider-cli-global-options-contains-reveal? (&rest _)
     (and cider-clojure-cli-global-options
-       (s-contains? ":reveal" cider-clojure-cli-global-options)))
+         (s-contains? ":reveal" cider-clojure-cli-global-options)))
   (add-to-list 'cider-jack-in-nrepl-middlewares
                '("vlaaad.reveal.nrepl/middleware" :predicate cider-cli-global-options-contains-reveal?))
 
   ;; Inject shadowcljs nrepl middleware in cider-jack-in when the `:cljs' alias is set
   (defun cider-cli-global-options-contains-cljs? (&rest _)
     (and cider-clojure-cli-global-options
-       (s-contains? ":cljs" cider-clojure-cli-global-options)))
+         (s-contains? ":cljs" cider-clojure-cli-global-options)))
   (add-to-list 'cider-jack-in-nrepl-middlewares
                '("shadow.cljs.devtools.server.nrepl/middleware" :predicate cider-cli-global-options-contains-cljs?))
 
@@ -1260,16 +1142,7 @@ Lisp function does not specify a special indentation."
 ;;(global-set-key [f9] 'code-compile)
 
 ;;; Racket
-(use-package racket-mode
-  :config
-  (defun setup-racket-eldoc ()
-    (eldoc-mode +1)
-    (setq eldoc-documentation-function #'racket-xp-eldoc-function))
-
-  (add-hook 'racket-mode-hook      #'racket-unicode-input-method-enable)
-  (add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
-  (add-hook 'racket-mode-hook      #'setup-racket-eldoc))
-
+(use-package racket-mode)
 (use-package flymake-racket)
 (use-package dr-racket-like-unicode)
 (use-package bracketed-paste)
@@ -1309,7 +1182,7 @@ use-package will load java-lsp for us simply by calling this function."
   (let ((inhibit-file-name-handlers
          (cons 'javap-handler
                (and (eq inhibit-file-name-operation operation)
-                  inhibit-file-name-handlers)))
+                    inhibit-file-name-handlers)))
         (inhibit-file-name-operation operation))
     (apply operation args)))
 
@@ -1568,6 +1441,8 @@ use-package will load java-lsp for us simply by calling this function."
 
 ;; Basic Keybind
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
+(global-set-key (kbd "C-c t t") 'counsel-load-theme)
+(global-set-key (kbd "C-c t c") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-#") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c r") 'replace-string)
 (global-set-key (kbd "C-M-s") 'project-search)
@@ -1594,5 +1469,18 @@ use-package will load java-lsp for us simply by calling this function."
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+;; Emacs run launcher
+(defun emacs-run-launcher ()
+  "A frame to launch desktop applications."
+  (interactive)
+  (with-selected-frame
+      (make-frame '((name . "emacs-run-launcher")
+		    (minibuffer . only)
+		    (width . 240)
+		    (height . 22)))
+    (unwind-protect
+	(counsel-linux-app)
+      (delete-frame))))
 
 ;;; init.el ends here

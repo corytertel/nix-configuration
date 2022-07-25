@@ -1,7 +1,5 @@
 { config, pkgs, lib, ... }:
 
-# Not used by VM configuration
-
 {
   imports = [
     ./udev.nix
