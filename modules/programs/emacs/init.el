@@ -122,11 +122,7 @@
 
 (use-package smart-mode-line
   :config
-  ;; (custom-theme-set-faces
-  ;;  'smart-mode-line-respectful
-  ;;  '(sml/global    ((t :inherit font-lock-string-face)))
-  ;;  '(sml/prefix    ((t :inherit (font-lock-variable-name-face sml/global)))))
-  (setq sml/theme 'respectful)
+  (setq sml/theme 'cory)
   (sml/setup))
 
 (use-package rich-minority
@@ -138,7 +134,7 @@
 (require 'frame)
 (setq-default default-frame-alist
 	      (append (list
-		       '(internal-border-width . 40)
+		       '(internal-border-width . 20)
 		       ;; '(left-fringe . 0)
 		       ;; '(right-fringe . 0)
 		       '(tool-bar-lines . 0)
@@ -197,7 +193,7 @@
   (other-window -1))
 
 (global-set-key (kbd "C-x o") 'other-window)
-(global-set-key (kbd "C-x O") 'previous-window)
+(global-set-key (kbd "C-x S-o") 'previous-window)
 (global-set-key (kbd "C-x M-o") 'hydra-window-resize/body)
 (global-set-key (kbd "C-x 0") 'delete-window)
 (global-set-key (kbd "C-x 1") 'delete-other-windows)
@@ -284,34 +280,132 @@
   (setq eldoc-echo-area-prefer-doc-buffer nil))
 
 ;; LSP
-;; (use-package eglot
-;;   :defer t
-;;   :hook
-;;   (haskell-mode . eglot-ensure)
-;;   (c-mode . eglot-ensure)
-;;   (python-mode . eglot-ensure)
-;;   (js-jsx-mode . eglot-ensure)
-;;   (js-mode . eglot-ensure)
-;;   :custom
-;;   (eglot-autoshutdown t)
-;;   (eglot-autoreconnect nil)
-;;   (eglot-confirm-server-initiated-edits nil)
-;;   (eldoc-idle-delay 1)
-;;   (eldoc-echo-area-display-truncation-message nil)
-;;   (eldoc-echo-area-use-multiline-p 2)
+(use-package lsp-mode
+  :after company flycheck
+  :commands (lsp lsp-deferred)
+  :hook (prog-mode . lsp)
+  :init
+  (setq lsp-keymap-prefix "C-c C-a")
+  :bind (:map lsp-mode-map
+         ("C-c C-l" . lsp-execute-code-action)
+         ("M-." . lsp-find-definition)
+         ("M-," . lsp-find-references)
+	 ("C-c C-a r" . lsp-rename)
+         ("C-c C-a f" . lsp-format-buffer)
+         ("C-c C-a g" . lsp-format-region)
+         ("C-c C-a a" . lsp-execute-code-action)
+         ("C-c C-a r" . lsp-find-references))
+  :config
+  ;; Performance
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
+  (setq lsp-prefer-capf t)
+  ;; Which-key
+  (lsp-enable-which-key-integration t)
+  ;; Don't watch `build' and `.gradle' directories for file changes
+  (add-to-list 'lsp-file-watch-ignored "[/\\\\]build$")
+  (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\.gradle$")
+  ;; Turn off breadcrumb trail
+  (setq lsp-headerline-breadcrumb-enable nil)
+  ;; Turn off warnings
+  (setq lsp-warn-no-matched-clients nil)
+  ;; Add Nix
+  (add-to-list 'lsp-language-id-configuration '(nix-mode . "nix"))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
+                    :major-modes '(nix-mode)
+                    :server-id 'nix))
 
-;;   :config
-;;   (add-to-list 'eglot-server-programs
-;; 	       '((tex-mode context-mode texinfo-mode bibtex-mode) . ("texlab")))
+  ;; Company packages that depend on lsp-mode
+  (use-package company-emoji
+    :config (add-to-list 'company-backends 'company-emoji))
 
-;;   (define-key eglot-mode-map [remap display-local-help] nil)
+  (use-package company-quickhelp
+    :config (company-quickhelp-mode))
 
-;;   :bind (:map eglot-mode-map
-;; 	 ("C-c C-a" . eglot-code-actions)
-;; 	 ("C-c C-f" . eglot-format-buffer)))
+  (use-package company-nixos-options
+    :config
+    (add-to-list 'company-backends 'company-nixos-options)))
+
+(use-package lsp-ui
+  :commands (lsp-ui-mode)
+  :hook (lsp-mode . lsp-ui-mode)
+  :bind (:map lsp-mode-map
+         ("M-?" . lsp-ui-doc-toggle)
+         ("C-c C-a d" . lsp-ui-doc-show)
+         ("C-c C-a s" . lsp-ui-find-workspace-symbol))
+  :config
+  (defun lsp-ui-doc-toggle ()
+    "Shows or hides lsp-ui-doc popup."
+    (interactive)
+    (if lsp-ui-doc--bounds
+        (lsp-ui-doc-hide)
+      (lsp-ui-doc-show)))
+
+  ;; Deactivate most of the annoying "fancy features"
+  ;; (setq lsp-ui-doc-enable nil)
+  ;; (setq lsp-ui-doc-use-childframe t)
+  ;; (setq lsp-ui-doc-include-signature t)
+  ;; (setq lsp-ui-doc-position 'at-point)
+  ;; (setq lsp-ui-sideline-enable nil)
+  ;; (setq lsp-ui-sideline-show-hover nil)
+  ;; (setq lsp-ui-sideline-show-symbol nil)
+
+  (setq lsp-ui-doc-position 'right)
+
+  ;; Enable features
+  (setq lsp-ui-doc-enable t)
+  (setq lsp-ui-doc-use-childframe t)
+  (setq lsp-ui-doc-include-signature t)
+  (setq lsp-ui-doc-position 'at-point)
+  (setq lsp-ui-sideline-enable t)
+  (setq lsp-ui-sideline-show-hover t)
+  (setq lsp-ui-sideline-show-symbol t))
+
+;; MISSING
+;; (use-package lsp-ui-flycheck
+;;   :commands (lsp-flycheck-enable)
+;;   :hook (lsp-ui-mode . lsp-ui-flycheck-mode))
+
+(use-package lsp-treemacs
+  :after lsp-mode
+  :config
+  ;; Enable bidirectional synchronization of lsp workspace folders and treemacs
+  (lsp-treemacs-sync-mode))
+
+(use-package dap-mode
+  :after lsp-mode
+  :bind (:map dap-server-log-mode-map
+         ("g" . recompile)
+         :map dap-mode-map
+         ([f9] . dap-continue)
+         ([S-f9] . dap-disconnect)
+         ([f10] . dap-next)
+         ([f11] . dap-step-in)
+         ([S-f11] . dap-step-out)
+         ([f12] . dap-hide/show-ui))
+  :config
+  ;; FIXME: Create nice solution instead of a hack
+  (defvar dap-hide/show-ui-hidden? t)
+  (defun dap-hide/show-ui ()
+    "Hide/show dap ui. FIXME"
+    (interactive)
+    (if dap-hide/show-ui-hidden?
+        (progn
+          (setq dap-hide/show-ui-hidden? nil)
+          (dap-ui-locals)
+          (dap-ui-repl))
+      (dolist (buf '("*dap-ui-inspect*" "*dap-ui-locals*" "*dap-ui-repl*" "*dap-ui-sessions*"))
+        (when (get-buffer buf)
+          (kill-buffer buf)))
+      (setq dap-hide/show-ui-hidden? t)))
+
+  (dap-mode)
+  ;; displays floating panel with debug buttons
+  (dap-ui-controls-mode)
+  ;; Displaying DAP visuals
+  (dap-ui-mode))
 
 ;; Completion
-
 (use-package company
   :diminish company-mode
   :bind
@@ -337,13 +431,6 @@
         company-require-match nil)
   (global-company-mode))
 
-;; TODO figure out import order
-(use-package company-emoji
-  :config (add-to-list 'company-backends 'company-emoji))
-
-(use-package company-quickhelp
-  :config (company-quickhelp-mode))
-
 (use-package company-box
   :hook (company-mode . company-box-mode)
   :config
@@ -362,68 +449,7 @@
                    company-capf
                    company-yasnippet)))))
 
-(use-package company-nixos-options
-  :config
-  (add-to-list 'company-backends 'company-nixos-options))
-
-;; (use-package corfu
-;;   :bind
-;;   (:map corfu-map
-;;    ("TAB" . corfu-next)
-;;    ([tab] . corfu-next)
-;;    ("S-TAB" . corfu-previous)
-;;    ([backtab] . corfu-previous)
-;;    ;; ([return] . nil)
-;;    ;; ("RET" . nil)
-;;    ;; ("TAB" . corfu-complete)
-;;    ;; ([tab] . corfu-complete)
-;;    ;; ("C-f" . corfu-complete)
-;;    ;; ("S-TAB" . corfu-previous)
-;;    ;; ([backtab] . corfu-previous)
-;;    ;; ("C-n" . corfu-next)
-;;    ;; ("C-p" . corfu-previous)
-;;    )
-;;   :init
-;;   (setq completion-cycle-threshold 3
-;; 	read-extended-command-predicate #'command-completion-default-include-p
-;; 	tab-always-indent 'complete)
-;;   (global-corfu-mode)
-;;   :config
-;;   (setq corfu-cycle t
-;; 	corfu-preselect-first nil
-;; 	corfu-auto t
-;; 	corfu-auto-delay 0
-;; 	corfu-auto-prefix 0
-;; 	completion-styles '(basic)
-;; 	corfu-commit-predicate nil
-;; 	corfu-quit-at-boundary t
-;; 	corfu-quit-no-match t
-;; 	corfu-echo-documentation t)
-;;   ;; Eshell
-;;   (add-to-list 'corfu-excluded-modes 'eshell-mode)
-;;   (add-to-list 'corfu-excluded-modes 'vterm-mode))
-
-;; (use-package cape
-;;   :after corfu
-;;   :bind (("C-c p i" . cape-ispell)
-;; 	 ("C-c p d" . cape-dabbrev)
-;; 	 ("C-c p l" . cape-line)
-;; 	 ("C-c p \\" . cape-tex))
-;;   :config
-;;   (setq-local completion-at-point-functions
-;;               (list (cape-super-capf #'cape-dabbrev #'cape-file #'cape-keyword #'cape-symbol)))
-
-;;   ;; Silence then pcomplete capf, no errors or messages!
-;;   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
-
-;;   ;; Ensure that pcomplete does not write to the buffer
-;;   ;; and behaves as a pure `completion-at-point-function'.
-;;   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
-
-;;   :init
-;;   (dolist (backend '(cape-symbol cape-keyword cape-file cape-dabbrev))
-;;     (add-to-list 'completion-at-point-functions backend)))
-
+;; Minibuffer completion
 (use-package vertico
   ;; :bind
   ;; (:map vertico-map
@@ -699,7 +725,9 @@
   :bind (([(control shift up)]   . move-text-up)
          ([(control shift down)] . move-text-down)
          ([(meta shift up)]      . move-text-up)
-         ([(meta shift down)]    . move-text-down)))
+         ([(meta shift down)]    . move-text-down)
+	 ("C-S-n" . move-text-down)
+	 ("C-S-p" . move-text-up)))
 
 ;; Copy text as Discord/GitHub/etc formatted code
 (use-package copy-as-format
@@ -716,123 +744,6 @@
   (defun copy-as-format--markdown-table (text _multiline)
     (s-replace "--+--" "--|--" text))
   (add-to-list 'copy-as-format-format-alist '("markdown-table" copy-as-format--markdown-table)))
-
-;; LSP
-
-(use-package lsp-mode
-  ;; :after corfu flycheck
-  :after company flycheck
-  :commands (lsp lsp-deferred)
-  :hook (prog-mode . lsp)
-  :init
-  (setq lsp-keymap-prefix "C-c C-a")
-  :bind (:map lsp-mode-map
-         ("C-c C-l" . lsp-execute-code-action)
-         ("M-." . lsp-find-definition)
-         ("M-," . lsp-find-references)
-	 ("C-c C-a r" . lsp-rename)
-         ("C-c C-a f" . lsp-format-buffer)
-         ("C-c C-a g" . lsp-format-region)
-         ("C-c C-a a" . lsp-execute-code-action)
-         ("C-c C-a r" . lsp-find-references))
-  :config
-  ;; Performance
-  (setq read-process-output-max (* 1024 1024)) ;; 1mb
-  (setq lsp-prefer-capf t)
-  ;; Which-key
-  (lsp-enable-which-key-integration t)
-  ;; Don't watch `build' and `.gradle' directories for file changes
-  (add-to-list 'lsp-file-watch-ignored "[/\\\\]build$")
-  (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\.gradle$")
-  ;; Turn off breadcrumb trail
-  (setq lsp-headerline-breadcrumb-enable nil)
-  ;; Turn off warnings
-  (setq lsp-warn-no-matched-clients nil)
-  ;; Add Nix
-  (add-to-list 'lsp-language-id-configuration '(nix-mode . "nix"))
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
-                    :major-modes '(nix-mode)
-                    :server-id 'nix)))
-
-(use-package lsp-ui
-  :commands (lsp-ui-mode)
-  :hook (lsp-mode . lsp-ui-mode)
-  :bind (:map lsp-mode-map
-         ("M-?" . lsp-ui-doc-toggle)
-         ("C-c C-a d" . lsp-ui-doc-show)
-         ("C-c C-a s" . lsp-ui-find-workspace-symbol))
-  :config
-  (defun lsp-ui-doc-toggle ()
-    "Shows or hides lsp-ui-doc popup."
-    (interactive)
-    (if lsp-ui-doc--bounds
-        (lsp-ui-doc-hide)
-      (lsp-ui-doc-show)))
-
-  ;; Deactivate most of the annoying "fancy features"
-  ;; (setq lsp-ui-doc-enable nil)
-  ;; (setq lsp-ui-doc-use-childframe t)
-  ;; (setq lsp-ui-doc-include-signature t)
-  ;; (setq lsp-ui-doc-position 'at-point)
-  ;; (setq lsp-ui-sideline-enable nil)
-  ;; (setq lsp-ui-sideline-show-hover nil)
-  ;; (setq lsp-ui-sideline-show-symbol nil)
-
-  (setq lsp-ui-doc-position 'right)
-
-  ;; Enable features
-  (setq lsp-ui-doc-enable t)
-  (setq lsp-ui-doc-use-childframe t)
-  (setq lsp-ui-doc-include-signature t)
-  (setq lsp-ui-doc-position 'at-point)
-  (setq lsp-ui-sideline-enable t)
-  (setq lsp-ui-sideline-show-hover t)
-  (setq lsp-ui-sideline-show-symbol t))
-
-;; MISSING
-;; (use-package lsp-ui-flycheck
-;;   :commands (lsp-flycheck-enable)
-;;   :hook (lsp-ui-mode . lsp-ui-flycheck-mode))
-
-(use-package lsp-treemacs
-  :after lsp-mode
-  :config
-  ;; Enable bidirectional synchronization of lsp workspace folders and treemacs
-  (lsp-treemacs-sync-mode))
-
-(use-package dap-mode
-  :after lsp-mode
-  :bind (:map dap-server-log-mode-map
-         ("g" . recompile)
-         :map dap-mode-map
-         ([f9] . dap-continue)
-         ([S-f9] . dap-disconnect)
-         ([f10] . dap-next)
-         ([f11] . dap-step-in)
-         ([S-f11] . dap-step-out)
-         ([f12] . dap-hide/show-ui))
-  :config
-  ;; FIXME: Create nice solution instead of a hack
-  (defvar dap-hide/show-ui-hidden? t)
-  (defun dap-hide/show-ui ()
-    "Hide/show dap ui. FIXME"
-    (interactive)
-    (if dap-hide/show-ui-hidden?
-        (progn
-          (setq dap-hide/show-ui-hidden? nil)
-          (dap-ui-locals)
-          (dap-ui-repl))
-      (dolist (buf '("*dap-ui-inspect*" "*dap-ui-locals*" "*dap-ui-repl*" "*dap-ui-sessions*"))
-        (when (get-buffer buf)
-          (kill-buffer buf)))
-      (setq dap-hide/show-ui-hidden? t)))
-
-  (dap-mode)
-  ;; displays floating panel with debug buttons
-  (dap-ui-controls-mode)
-  ;; Displaying DAP visuals
-  (dap-ui-mode))
 
 ;; Tramp
 (use-package tramp
