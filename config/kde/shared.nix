@@ -67,9 +67,17 @@
       # Titlebar Buttons
       # ButtonsOnLeft = "MS";
       # ButtonsOnRight = "HIAX";
-      ButtonsOnLeft = "XIA";
-      ButtonsOnRight = "HSM";
+      # ButtonsOnLeft = "XIA";
+      # ButtonsOnRight = "HSM";
+      ButtonsOnLeft = "M";
+      ButtonsOnRight = "HIAX";
     };
+  };
+
+  oxygenrc = {
+    ActiveShadow.ShadowSize = 50;
+    InactiveShadow.ShadowSize = 50;
+    Windeco.TitleAlignment = "AlignLeft";
   };
 
   kcminputrc = {

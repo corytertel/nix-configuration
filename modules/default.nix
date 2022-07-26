@@ -10,6 +10,7 @@
     ./programs/firefox
     ./programs/gtk
     ./programs/konsole
+    ./programs/krusader
     ./programs/lximage-qt
     ./programs/neofetch
     ./programs/qpdfview
