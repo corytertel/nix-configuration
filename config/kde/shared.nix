@@ -70,7 +70,7 @@
       # ButtonsOnLeft = "XIA";
       # ButtonsOnRight = "HSM";
       ButtonsOnLeft = "M";
-      ButtonsOnRight = "HIAX";
+      ButtonsOnRight = "IAX";
     };
   };
 
