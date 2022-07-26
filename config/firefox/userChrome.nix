@@ -378,17 +378,14 @@ See the above repository for updates as well as full license text. */
 /* replaces back and forward buttons */
 
 #back-button{
-  /* list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/32x32/actions/go-previous.png) !important; */
   list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/actions/32x32/go-previous.png) !important;
 }
 
 #forward-button{
-  /* list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/32x32/actions/go-next.png) !important; */
   list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/actions/32x32/go-next.png) !important;
 }
 
 #reload-button{
-  /* list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/32x32/actions/view-refresh.png) !important; */
   list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/actions/32x32/view-refresh.png) !important;
 }
 
@@ -397,12 +394,15 @@ See the above repository for updates as well as full license text. */
 }
 
 #home-button{
-  /* list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/32x32/places/user-home.png) !important; */
   list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/actions/32x32/go-home.png) !important;
 }
 
 .tab-close-button{
   list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/actions/32x32/tab-close.png) !important;
+  width: 22px !important;
+  height: 22px !important;
+  padding: 2px !important;
+  margin: 0px !important;
 }
 
 #downloads-button{
