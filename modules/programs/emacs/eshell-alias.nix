@@ -15,7 +15,7 @@ alias clear clear-scrollback
 alias grep grep -i --color=auto $*
 alias rm eshell/rm --verbose $*
 alias mv eshell/mv --interactive --verbose $1 $2
-alias cp eshell/cp --interactive --verbose $1 $2
+alias cp eshell/cp --interactive --verbose $*
 alias nf neofetch $*
 alias e find-file $1
 alias eo find-file-other-window $1

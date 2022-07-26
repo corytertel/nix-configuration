@@ -1,0 +1,7 @@
+[Desktop Entry]
+Exec=dolphin --daemon
+Icon=
+Name=dolphin
+Path=
+Terminal=False
+Type=Application

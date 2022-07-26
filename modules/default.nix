@@ -5,6 +5,7 @@
     ./programs/bash
     ./programs/bat
     ./programs/discord
+    ./programs/dolphin
     ./programs/emacs
     ./programs/firefox
     ./programs/gtk

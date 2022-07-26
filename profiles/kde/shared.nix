@@ -22,6 +22,9 @@
     invertedColor = "#222120";
   };
 
+  # File Manager
+  programs.cory.dolphin.enable = true;
+
   # Photo Viewer
   programs.cory.lximage-qt.enable = true;
 
@@ -50,12 +53,6 @@
       command = "vlc";
       desktopFile = "vlc.desktop";
       package = pkgs.vlc;
-    };
-    fileManager = {
-      name = "pcmanfm-qt";
-      command = "pcmanfm-qt --new-window";
-      desktopFile = "pcmanfm-qt.desktop";
-      package = pkgs.pcmanfm-qt;
     };
     archiver = {
       name = "lxqt-archiver";
