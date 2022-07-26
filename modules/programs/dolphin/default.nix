@@ -19,8 +19,6 @@ let
     else
       builtins.abort ("Unknown value type: " ++ builtins.toString v);
 
-  configs = import ../../../config/dolphin/config.nix;
-
   lines = flatten (mapAttrsToList
     (file:
       mapAttrsToList
@@ -31,11 +29,15 @@ let
                 toValue value
               }'")
         ))
-    configs);
+    cfg.config);
 
 in {
   options.programs.cory.dolphin = {
     enable = mkEnableOption "Enables dolphin";
+    config = mkOption {
+      type = with types; nullOr (attrsOf (attrsOf (attrsOf (either bool (either int str)))));
+      default = null;
+    };
   };
 
   config = mkIf cfg.enable {

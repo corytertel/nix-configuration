@@ -26,7 +26,7 @@
   programs.cory.dolphin.enable = true;
 
   # Photo Viewer
-  programs.cory.lximage-qt.enable = true;
+  # programs.cory.lximage-qt.enable = true;
 
   # PDF Viewer
   programs.cory.qpdfview.enable = true;
@@ -36,6 +36,12 @@
 
   # Set other apps
   apps = {
+    photoViewer = {
+      name = "gwenview";
+      command = "gwenview";
+      desktopFile = "org.kde.gwenview.desktop";
+      package = pkgs.libsForQt5.gwenview;
+    };
     photoEditor = {
       name = "photogimp";
       command = "gimp";
@@ -55,17 +61,11 @@
       package = pkgs.vlc;
     };
     archiver = {
-      name = "lxqt-archiver";
-      command = "lxqt-archiver";
-      desktopFile = "lxqt-archiver.desktop";
-      package = pkgs.lxqt.lxqt-archiver;
+      name = "ark";
+      command = "ark";
+      desktopFile = "org.kde.ark.desktop";
+      package = pkgs.libsForQt5.ark;
     };
-    # launcher = {
-    #   name = "krunner";
-    #   command = "krunner";
-    #   desktopFile = "krunner.desktop";
-    #   package = pkgs.libsForQt5.plasma-workspace;
-    # };
   };
 
   # Keybinds
@@ -94,10 +94,6 @@
     darkTheme = false;
     gtk.enable = false;
     icons = {
-      # name = "crystal-remix";
-      # package = crystal-remix-icon-theme;
-      # name = "nova7";
-      # package = nova7-icon-theme;
       name = "crystal-nova";
       package = crystal-nova-icon-theme;
     };
@@ -134,8 +130,6 @@
       color13         = "#e01bd0";
       color6          = "#2d9574";
       color14         = "#2d9574";
-      # color7          = "#cccccc";
-      # color15         = "#cccccc";
       color7          = "#ffffff";
       color15         = "#ffffff";
     };

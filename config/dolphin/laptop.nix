@@ -1,11 +1,16 @@
 {
   "/home/cory/.config/dolphinrc" = {
 
-    CompactMode.FontWeight = 50;
+    CompactMode = {
+      FontWeight = 50;
+      IconSize = 32;
+      PreviewSize = 96;
+    };
 
     DetailsMode = {
       FontWeight = 50;
-      PreviewSize = 16;
+      IconSize = 32;
+      PreviewSize = 32;
     };
 
     General = {
@@ -17,22 +22,22 @@
 
     IconsMode = {
       FontWeight = 50;
-      IconSize = 48;
-      PreviewSize = 96;
+      IconSize = 80;
+      PreviewSize = 160;
     };
 
     "KFileDialog Settings" = {
       "Places Icons Auto-resize" = false;
-      "Places Icons Static Size" = 32;
+      "Places Icons Static Size" = 48;
     };
 
     MainWindow.ToolBarsMovable = "Disabled";
 
-    PlacesPanel.IconSize = 32;
+    PlacesPanel.IconSize = 48;
 
     Search.Location = "Everywhere";
 
-    "Toolbar mainToolBar".IconSize = 32;
+    "Toolbar mainToolBar".IconSize = 64;
 
   };
 }

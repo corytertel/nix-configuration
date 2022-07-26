@@ -16,4 +16,7 @@
   };
 
   theme.wallpaper = ./wallpapers/honolulu.jpg;
+
+  # File Manager
+  programs.cory.dolphin.config = import ../../config/dolphin/pc.nix;
 }

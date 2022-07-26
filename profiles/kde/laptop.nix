@@ -14,4 +14,7 @@
   };
 
   theme.wallpaper = ./wallpapers/maui2.jpg;
+
+  # File Manager
+  programs.cory.dolphin.config = import ../../config/dolphin/laptop.nix;
 }
