@@ -66,6 +66,7 @@ in {
       githelp
       nixos-test
       nixos-switch
+      ripgrep
     ];
 
   };

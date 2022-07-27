@@ -34,44 +34,24 @@
         ++ import ./packages { inherit config lib pkgs; };
     };
 
+    mkHost = hostModules: lib.nixosSystem {
+      inherit system pkgs;
+      modules = hostModules ++ [
+        ./modules
+        home-manager.nixosModules.home-manager {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+        }
+      ];
+    };
+
   in {
     devShell.${system} = import ./shell.nix { inherit pkgs; };
+
     nixosConfigurations = {
-      pc = lib.nixosSystem {
-        inherit system pkgs;
-        modules = [
-          ./modules
-          ./hosts/pc
-          home-manager.nixosModules.home-manager {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-          }
-        ];
-      };
-
-      laptop = lib.nixosSystem {
-        inherit system pkgs;
-        modules = [
-          ./modules
-          ./hosts/laptop
-          home-manager.nixosModules.home-manager {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-          }
-        ];
-      };
-
-      vm = lib.nixosSystem {
-        inherit system pkgs;
-        modules = [
-          ./modules
-          ./hosts/vm
-          home-manager.nixosModules.home-manager {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-          }
-        ];
-      };
+      pc = mkHost [ ./hosts/pc  ];
+      laptop = mkHost [ ./hosts/laptop ];
+      vm = mkHost [ ./hosts/vm ];
     };
   };
 }

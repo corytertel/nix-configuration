@@ -361,36 +361,37 @@
 
 ;; Minibuffer completion
 (use-package vertico
-;; :bind
-;; (:map vertico-map
-;;  ("DEL" . vertico-directory-delete-char)
-;;  ("M-." . consult-dir)
-;;  ("M-j" . consult-dir-jump-file)
-;;  ("M-q" . vertico-multiform-grid)
-;;  ("M-a" . vertico-multiform-unobtrusive)
-;;  ("'" . vertico-quick-jump))
-:init
-;; (use-package orderless
-;;   :commands (orderless)
-;;   :custom (completion-styles '(orderless flex)))
-
-(use-package consult
   :init
-  (setq consult-preview-key nil)
-  :bind
-  ("C-c r" . consult-recent-file)
-  ("C-c f" . consult-ripgrep)
-  ("C-c l" . consult-line)
-  ("C-c i" . consult-imenu)
-  ("C-c t" . gtags-find-tag)
-  ("C-x b" . consult-buffer)
-  ("C-c x" . consult-complex-command)
-  (:map comint-mode-map
-   ("C-c C-l" . consult-history)))
-:config
-;; (setq vertico-cycle t)
-(recentf-mode t)
-(vertico-mode t))
+  ;; (use-package orderless
+  ;;   :commands (orderless)
+  ;;   :custom (completion-styles '(orderless flex)))
+
+  (use-package consult
+    :init
+    (setq consult-preview-key nil)
+    :bind
+    ("C-c f" . consult-recent-file)
+    ("C-c s" . consult-ripgrep)
+    ("C-c l" . consult-line)
+    ("C-c i" . consult-imenu)
+    ("C-c t" . gtags-find-tag)
+    ("C-x b" . consult-buffer)
+    ("C-c x" . consult-complex-command)
+    (:map comint-mode-map
+     ("C-c C-l" . consult-history)))
+  :config
+  (recentf-mode t)
+  (vertico-mode t))
+
+(use-package consult-company
+  :bind (:map company-mode-map
+	 ([completion-at-point] . consult-company)))
+
+(use-package consult-eglot
+  :bind ("C-c C-s" . consult-eglot-symbols))
+
+(use-package consult-flycheck
+  :bind ("C-c e" . consult-flycheck))
 
 (use-package marginalia
   :after vertico
@@ -1128,7 +1129,9 @@ Lisp function does not specify a special indentation."
 
 (use-package nix-mode
   :mode "\\.nix\\'"
-  :hook (nix-mode . subword-mode))
+  :hook
+  (nix-mode . subword-mode)
+  (nix-mode . nix-prettify-mode))
 
 (use-package fvwm-mode)
 
