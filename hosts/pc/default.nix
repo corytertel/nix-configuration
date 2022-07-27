@@ -30,6 +30,8 @@
     };
   };
 
+  console.font = "Lat2-Terminus16";
+
   programs = {
     gamemode.enable = true;
   };

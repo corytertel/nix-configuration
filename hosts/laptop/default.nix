@@ -35,6 +35,11 @@
     interfaces.wlp0s20f3.useDHCP = true;
   };
 
+  console = {
+    packages = [ pkgs.terminus_font ];
+    font = "ter-132n";
+  };
+
   powerManagement = {
     cpuFreqGovernor = "powersave";
     enable = true;
