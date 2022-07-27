@@ -104,14 +104,14 @@ in {
   # "browser.theme.content-theme" = if darkTheme then 0 else 1;
   # "browser.theme.toolbar-theme" = if darkTheme then 0 else 1;
   # "extensions.activeThemeID" = if darkTheme then "firefox-compact-dark@mozilla.org" else "firefox-compact-light@mozilla.org";
-  "browser.theme.content-theme" = 2;
-  "browser.theme.toolbar-theme" = 2;
-  "extensions.activeThemeID" = "default-theme@mozilla.org";
   # System theme
-  # FF 4.0 Theme
   # "browser.theme.content-theme" = 2;
-  # "browser.theme.toolbar-theme" = 1;
-  # "extensions.activeThemeID" = "{dd0d4862-e183-44d4-9841-5db3c8a43d11}";
+  # "browser.theme.toolbar-theme" = 2;
+  # "extensions.activeThemeID" = "default-theme@mozilla.org";
+  # FF 3.6 Theme
+  "browser.theme.content-theme" = 2;
+  "browser.theme.toolbar-theme" = 1;
+  "extensions.activeThemeID" = "{dd0d4862-e183-44d4-9841-5db3c8a43d11}";
   # Keybindings
   # https://searchcode.com/codesearch/view/26755902/
   # default is 17, 17 is ctrl
