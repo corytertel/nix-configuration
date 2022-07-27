@@ -223,6 +223,9 @@
 (global-so-long-mode 1)
 (save-place-mode 1)
 
+;; don't back up files
+(setq make-backup-files nil)
+
 (use-package hippie-exp
   :ensure nil
   :bind
@@ -271,130 +274,35 @@
   (setq eldoc-echo-area-prefer-doc-buffer nil))
 
 ;; LSP
-(use-package lsp-mode
-  :after company flycheck
-  :commands (lsp lsp-deferred)
-  :hook (prog-mode . lsp)
-  :init
-  (setq lsp-keymap-prefix "C-c C-a")
-  :bind (:map lsp-mode-map
-         ("C-c C-l" . lsp-execute-code-action)
-         ("M-." . lsp-find-definition)
-         ("M-," . lsp-find-references)
-	 ("C-c C-a r" . lsp-rename)
-         ("C-c C-a f" . lsp-format-buffer)
-         ("C-c C-a g" . lsp-format-region)
-         ("C-c C-a a" . lsp-execute-code-action)
-         ("C-c C-a r" . lsp-find-references))
+(use-package eglot
+  :after flycheck company
+  :defer t
+  :ensure t
+
+  :hook
+  (nix-mode . eglot-ensure)
+  (c-mode . eglot-ensure)
+  (c++-mode . eglot-ensure)
+  (racket-mode . eglot-ensure)
+  (clojure-mode . eglot-ensure)
+  (clojurescript-mode . eglot-ensure)
+  (clojurec-mode . eglot-ensure)
+  (java-mode . eglot-ensure)
+
+  :custom
+  (eglot-autoshutdown t)
+  (eglot-autoreconnect nil)
+  (eglot-confirm-server-initiated-edits nil)
+  (eldoc-idle-delay 1)
+  (eldoc-echo-area-display-truncation-message nil)
+  (eldoc-echo-area-use-multiline-p 2)
+
   :config
-  ;; Performance
-  (setq read-process-output-max (* 1024 1024)) ;; 1mb
-  (setq lsp-prefer-capf t)
-  ;; Which-key
-  (lsp-enable-which-key-integration t)
-  ;; Don't watch `build' and `.gradle' directories for file changes
-  (add-to-list 'lsp-file-watch-ignored "[/\\\\]build$")
-  (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\.gradle$")
-  ;; Turn off breadcrumb trail
-  (setq lsp-headerline-breadcrumb-enable nil)
-  ;; Turn off warnings
-  (setq lsp-warn-no-matched-clients nil)
-  ;; Add Nix
-  (add-to-list 'lsp-language-id-configuration '(nix-mode . "nix"))
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
-                    :major-modes '(nix-mode)
-                    :server-id 'nix))
+  (define-key eglot-mode-map [remap display-local-help] nil)
 
-  ;; Company packages that depend on lsp-mode
-  (use-package company-emoji
-    :config (add-to-list 'company-backends 'company-emoji))
-
-  (use-package company-quickhelp
-    :config (company-quickhelp-mode))
-
-  (use-package company-nixos-options
-    :config
-    (add-to-list 'company-backends 'company-nixos-options)))
-
-(use-package lsp-ui
-  :commands (lsp-ui-mode)
-  :hook (lsp-mode . lsp-ui-mode)
-  :bind (:map lsp-mode-map
-         ("M-?" . lsp-ui-doc-toggle)
-         ("C-c C-a d" . lsp-ui-doc-show)
-         ("C-c C-a s" . lsp-ui-find-workspace-symbol))
-  :config
-  (defun lsp-ui-doc-toggle ()
-    "Shows or hides lsp-ui-doc popup."
-    (interactive)
-    (if lsp-ui-doc--bounds
-        (lsp-ui-doc-hide)
-      (lsp-ui-doc-show)))
-
-  ;; Deactivate most of the annoying "fancy features"
-  ;; (setq lsp-ui-doc-enable nil)
-  ;; (setq lsp-ui-doc-use-childframe t)
-  ;; (setq lsp-ui-doc-include-signature t)
-  ;; (setq lsp-ui-doc-position 'at-point)
-  ;; (setq lsp-ui-sideline-enable nil)
-  ;; (setq lsp-ui-sideline-show-hover nil)
-  ;; (setq lsp-ui-sideline-show-symbol nil)
-
-  (setq lsp-ui-doc-position 'right)
-
-  ;; Enable features
-  (setq lsp-ui-doc-enable t)
-  (setq lsp-ui-doc-use-childframe t)
-  (setq lsp-ui-doc-include-signature t)
-  (setq lsp-ui-doc-position 'at-point)
-  (setq lsp-ui-sideline-enable t)
-  (setq lsp-ui-sideline-show-hover t)
-  (setq lsp-ui-sideline-show-symbol t))
-
-;; MISSING
-;; (use-package lsp-ui-flycheck
-;;   :commands (lsp-flycheck-enable)
-;;   :hook (lsp-ui-mode . lsp-ui-flycheck-mode))
-
-(use-package lsp-treemacs
-  :after lsp-mode
-  :config
-  ;; Enable bidirectional synchronization of lsp workspace folders and treemacs
-  (lsp-treemacs-sync-mode))
-
-(use-package dap-mode
-  :after lsp-mode
-  :bind (:map dap-server-log-mode-map
-         ("g" . recompile)
-         :map dap-mode-map
-         ([f9] . dap-continue)
-         ([S-f9] . dap-disconnect)
-         ([f10] . dap-next)
-         ([f11] . dap-step-in)
-         ([S-f11] . dap-step-out)
-         ([f12] . dap-hide/show-ui))
-  :config
-  ;; FIXME: Create nice solution instead of a hack
-  (defvar dap-hide/show-ui-hidden? t)
-  (defun dap-hide/show-ui ()
-    "Hide/show dap ui. FIXME"
-    (interactive)
-    (if dap-hide/show-ui-hidden?
-        (progn
-          (setq dap-hide/show-ui-hidden? nil)
-          (dap-ui-locals)
-          (dap-ui-repl))
-      (dolist (buf '("*dap-ui-inspect*" "*dap-ui-locals*" "*dap-ui-repl*" "*dap-ui-sessions*"))
-        (when (get-buffer buf)
-          (kill-buffer buf)))
-      (setq dap-hide/show-ui-hidden? t)))
-
-  (dap-mode)
-  ;; displays floating panel with debug buttons
-  (dap-ui-controls-mode)
-  ;; Displaying DAP visuals
-  (dap-ui-mode))
+  :bind (:map eglot-mode-map
+	 ("C-c C-a" . eglot-code-actions)
+	 ("C-c C-f" . eglot-format-buffer)))
 
 ;; Completion
 (use-package company
@@ -409,9 +317,10 @@
    ("S-TAB" . company-select-previous)
    ([backtab] . company-select-previous)
    ("C-n" . company-select-next)
-   ("C-p" . company-select-previous))
-  (:map lsp-mode-map
-   ("<tab>" . company-indent-or-complete-common))
+   ("C-p" . company-select-previous)
+   ;; :map eglot-mode-map
+   ;; ("<tab>" . company-indent-or-complete-common)
+   )
   :config
   (setq company-idle-delay 0.0
         company-minimum-prefix-length 1
@@ -440,38 +349,48 @@
                    company-capf
                    company-yasnippet)))))
 
+;; (use-package company-emoji
+;;   :config (add-to-list 'company-backends 'company-emoji))
+
+(use-package company-quickhelp
+  :config (company-quickhelp-mode))
+
+(use-package company-nixos-options
+  :config
+  (add-to-list 'company-backends 'company-nixos-options))
+
 ;; Minibuffer completion
 (use-package vertico
-  ;; :bind
-  ;; (:map vertico-map
-  ;;  ("DEL" . vertico-directory-delete-char)
-  ;;  ("M-." . consult-dir)
-  ;;  ("M-j" . consult-dir-jump-file)
-  ;;  ("M-q" . vertico-multiform-grid)
-  ;;  ("M-a" . vertico-multiform-unobtrusive)
-  ;;  ("'" . vertico-quick-jump))
-  :init
-  ;; (use-package orderless
-  ;;   :commands (orderless)
-  ;;   :custom (completion-styles '(orderless flex)))
+;; :bind
+;; (:map vertico-map
+;;  ("DEL" . vertico-directory-delete-char)
+;;  ("M-." . consult-dir)
+;;  ("M-j" . consult-dir-jump-file)
+;;  ("M-q" . vertico-multiform-grid)
+;;  ("M-a" . vertico-multiform-unobtrusive)
+;;  ("'" . vertico-quick-jump))
+:init
+;; (use-package orderless
+;;   :commands (orderless)
+;;   :custom (completion-styles '(orderless flex)))
 
-  (use-package consult
-    :init
-    (setq consult-preview-key nil)
-    :bind
-    ("C-c r" . consult-recent-file)
-    ("C-c f" . consult-ripgrep)
-    ("C-c l" . consult-line)
-    ("C-c i" . consult-imenu)
-    ("C-c t" . gtags-find-tag)
-    ("C-x b" . consult-buffer)
-    ("C-c x" . consult-complex-command)
-    (:map comint-mode-map
-     ("C-c C-l" . consult-history)))
-  :config
-  ;; (setq vertico-cycle t)
-  (recentf-mode t)
-  (vertico-mode t))
+(use-package consult
+  :init
+  (setq consult-preview-key nil)
+  :bind
+  ("C-c r" . consult-recent-file)
+  ("C-c f" . consult-ripgrep)
+  ("C-c l" . consult-line)
+  ("C-c i" . consult-imenu)
+  ("C-c t" . gtags-find-tag)
+  ("C-x b" . consult-buffer)
+  ("C-c x" . consult-complex-command)
+  (:map comint-mode-map
+   ("C-c C-l" . consult-history)))
+:config
+;; (setq vertico-cycle t)
+(recentf-mode t)
+(vertico-mode t))
 
 (use-package marginalia
   :after vertico
@@ -1054,7 +973,7 @@ Lisp function does not specify a special indentation."
              nil
              '(("(\\(facts?\\)"
                 (1 font-lock-keyword-face))
-               ("(\\(background?\\)"
+	       ("(\\(background?\\)"
                 (1 font-lock-keyword-face))))
             (define-clojure-indent (fact 1))
             (define-clojure-indent (facts 1))
@@ -1091,34 +1010,15 @@ Lisp function does not specify a special indentation."
 ;; Clojure-mode specific keybindings
 (add-hook 'clojure-mode-hook
 	  '(cory/leader-keys
-	     ","  '(:ignore t :which-key "clojure")
-	     ",c" '(cider-jack-in-clj :which-key "cider jack in")
-	     ",k" '(cider-load-buffer :which-key "load buffer")))
+	    ","  '(:ignore t :which-key "clojure")
+	    ",c" '(cider-jack-in-clj :which-key "cider jack in")
+	    ",k" '(cider-load-buffer :which-key "load buffer")))
 
-(add-hook 'clojure-mode-hook 'lsp)
-(add-hook 'clojurescript-mode-hook 'lsp)
-(add-hook 'clojurec-mode-hook 'lsp)
-
-(setq gc-cons-threshold (* 100 1024 1024)
-      read-process-output-max (* 1024 1024)
-      treemacs-space-between-root-nodes nil
-      company-minimum-prefix-length 1
-      lsp-lens-enable t
-      lsp-signature-auto-activate nil
-      ;; lsp-enable-indentation nil ; uncomment to use cider identation instead of lsp
-      ;; lsp-enable-completion-at-point-nil ; uncomment to use cider completion instead of lsp
-      )
+(setq read-process-output-max (* 1024 1024))
 
 ;;; C++
 (use-package yasnippet)
 (yas-global-mode 1)
-
-;; (use-package auto-complete
-;;   :ensure t
-;;   :init
-;;   (progn
-;;     (ac-config-default)
-;;     (global-auto-complete-mode t)))
 
 (use-package modern-cpp-font-lock
   :ensure t)
@@ -1170,37 +1070,25 @@ Lisp function does not specify a special indentation."
 
   (add-hook 'racket-mode-hook      #'racket-unicode-input-method-enable)
   (add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
-  (add-hook 'racket-mode-hook      #'setup-racket-eldoc))
+  (add-hook 'racket-mode-hook      #'setup-racket-eldoc)
+  (add-hook 'racket-mode-hook      #'racket-xp-mode))
 
-(use-package flymake-racket)
+;; (use-package flymake-racket)
 (use-package dr-racket-like-unicode)
-(use-package bracketed-paste)
+;; (use-package bracketed-paste)
+
+;; (use-package geiser)
+;; (use-package geiser-racket)
 
 (add-hook 'racket-mode-hook
-	  (lambda ()
-	    (define-key racket-mode-map (kbd "<f5>") 'racket-run)))
+	   (lambda ()
+	     (define-key racket-mode-map (kbd "<f5>") 'racket-run)))
 
 (add-hook 'racket-repl-mode-hook
 	  (lambda ()
 	    (define-key racket-repl-mode-map (kbd "<f5>") 'racket-run)))
 
 ;;; Java
-(use-package lsp-java
-  :hook (java-mode . java-lsp-init)
-  :config
-  ;; Use Google style formatting by default
-  (setq lsp-java-format-settings-url
-        "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml")
-  (setq lsp-java-format-settings-profile "GoogleStyle")
-
-  ;; Use 3rd party decompiler
-  (setq lsp-java-content-provider-preferred "fernflower")
-  (defun java-lsp-init ()
-    "We need to require java-lsp before loading lsp in a Java buffer.
-use-package will load java-lsp for us simply by calling this function."
-    (setq electric-indent-inhibit nil)  ; Auto-indent code after e.g. {}
-    (setq company-lsp-cache-candidates nil)  ; Company cache should be disabled for lsp-java
-    (lsp-deferred)))
 
 ;; For groovy and gradle support
 (use-package groovy-mode :defer t)
