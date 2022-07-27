@@ -36,6 +36,8 @@
       TerminalRows = 33;
     };
 
+    Keyboard.KeyBindings = "default";
+
     Scrolling = {
       ScrollBarPosition = 2;
       ScrollFullPage = true;
@@ -43,6 +45,7 @@
 
     "Terminal Features" = {
       BlinkingCursorEnabled = true;
+      FlowControlEnabled = false;
       VerticalLine = false;
     };
   };

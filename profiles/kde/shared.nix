@@ -139,6 +139,7 @@
     crystal-remix-icon-theme
     oxygen-kde4-theme
     libsForQt5.oxygen
+    oxygen-cory-colors
     expose-glassy
     # expose-glassy-right
     nova7-icon-theme

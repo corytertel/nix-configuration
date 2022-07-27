@@ -1063,6 +1063,11 @@ Lisp function does not specify a special indentation."
 
 ;;; Racket
 (use-package racket-mode
+  :bind
+  (:map racket-mode-map
+   ("C-c C-r" . racket-run)
+   :map racket-repl-mode-map
+   ("C-c C-r" . racket-run))
   :config
   (defun setup-racket-eldoc ()
     (eldoc-mode +1)
@@ -1079,14 +1084,6 @@ Lisp function does not specify a special indentation."
 
 ;; (use-package geiser)
 ;; (use-package geiser-racket)
-
-(add-hook 'racket-mode-hook
-	   (lambda ()
-	     (define-key racket-mode-map (kbd "<f5>") 'racket-run)))
-
-(add-hook 'racket-repl-mode-hook
-	  (lambda ()
-	    (define-key racket-repl-mode-map (kbd "<f5>") 'racket-run)))
 
 ;;; Java
 

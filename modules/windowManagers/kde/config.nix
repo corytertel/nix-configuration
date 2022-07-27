@@ -174,7 +174,7 @@ in {
   };
 
   home.activation.kdeSetTheme = dagEntryAfter [ "linkGeneration" ] ''
-    $DRY_RUN_CMD ${pkgs.plasma-workspace}/bin/plasma-apply-colorscheme OxygenCold
+    $DRY_RUN_CMD ${pkgs.plasma-workspace}/bin/plasma-apply-colorscheme OxygenCory
     $DRY_RUN_CMD ${pkgs.plasma-workspace}/bin/plasma-apply-wallpaperimage ${config.theme.wallpaper}
   '';
 

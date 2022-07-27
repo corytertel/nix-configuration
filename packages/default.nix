@@ -18,6 +18,7 @@
   (import ./nf-victormono.nix { inherit lib pkgs; })
   (import ./nixos-shell.nix { inherit pkgs; })
   (import ./nova7.nix { inherit lib pkgs; })
+  (import ./oxygen-cory-colors)
   (import ./oxygen-kde4-theme.nix)
   (import ./photogimp.nix { inherit lib pkgs; })
   (import ./sddm-mountain-light.nix { inherit pkgs; })

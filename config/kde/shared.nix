@@ -77,7 +77,10 @@
   oxygenrc = {
     ActiveShadow.ShadowSize = 50;
     InactiveShadow.ShadowSize = 50;
-    Windeco.TitleAlignment = "AlignLeft";
+    Windeco = {
+      TitleAlignment = "AlignLeft";
+      UseWindowColors = false;
+    };
   };
 
   kcminputrc = {
