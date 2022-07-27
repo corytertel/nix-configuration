@@ -29,10 +29,7 @@
   time.timeZone = "America/Phoenix";
 
   i18n.defaultLocale = "en_US.UTF-8";
-  console = {
-    keyMap = "us";
-    # keyMap = "us_programmer";
-  };
+  console.useXkbConfig = true;
 
   services = {
     flatpak.enable = true;
@@ -152,9 +149,9 @@
   programs = {
     dconf.enable = true;
     gnupg.agent = {
-     enable = true;
-     enableSSHSupport = true;
-     pinentryFlavor = "tty";
+      enable = true;
+      enableSSHSupport = true;
+      pinentryFlavor = "tty";
     };
     steam.enable = true;
   };
