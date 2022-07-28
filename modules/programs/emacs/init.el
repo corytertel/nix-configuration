@@ -302,7 +302,7 @@
 
   :bind (:map eglot-mode-map
 	 ("C-c C-a" . eglot-code-actions)
-	 ("C-c C-f" . eglot-format-buffer)))
+	 ("C-c f" . eglot-format-buffer)))
 
 ;; Completion
 (use-package company
@@ -337,17 +337,17 @@
   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
 
 ;; Autocompletion for shell
-(use-package company-shell
-  :hook ((sh-mode shell-mode) . sh-mode-init)
-  :config
-  (defun sh-mode-init ()
-    (setq-local company-backends
-		'((company-shell
-                   company-shell-env
-                   company-files
-                   company-dabbrev-code
-                   company-capf
-                   company-yasnippet)))))
+;; (use-package company-shell
+;;   :hook ((sh-mode shell-mode) . sh-mode-init)
+;;   :config
+;;   (defun sh-mode-init ()
+;;     (setq-local company-backends
+;; 		'((company-shell
+;;                    company-shell-env
+;;                    company-files
+;;                    company-dabbrev-code
+;;                    company-capf
+;;                    company-yasnippet)))))
 
 (use-package company-quickhelp
   :config (company-quickhelp-mode))
@@ -364,27 +364,25 @@
 
 ;; Completion matching
 (use-package orderless
-  :commands (orderless)
-  :custom (completion-styles '(orderless basic)))
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 
 ;; Minibuffer visual menu
 (use-package consult
   :init
   (setq consult-preview-key nil)
   :bind
-  ("C-c f" . consult-recent-file)
-  ("C-c s" . consult-ripgrep)
-  ("C-c l" . consult-line)
+  ("C-c C-f" . consult-recent-file)
+  ("C-c p s" . consult-ripgrep)
+  ("C-s" . consult-line)
   ("C-c i" . consult-imenu)
   ("C-c t" . gtags-find-tag)
   ("C-x b" . consult-buffer)
   ("C-c x" . consult-complex-command)
   (:map comint-mode-map
    ("C-c C-l" . consult-history)))
-
-;; (use-package consult-company
-;;   :bind (:map company-mode-map
-;; 	 ([remap completion-at-point] . consult-company)))
 
 (use-package consult-eglot
   :bind (:map eglot-mode-map
@@ -1194,7 +1192,9 @@ Lisp function does not specify a special indentation."
   (setq eshell-history-size 10000
 	eshell-buffer-maximum-lines 10000
 	eshell-hist-ignoredups t
-	eshell-scroll-to-bottom-on-input t))
+	eshell-scroll-to-bottom-on-input t)
+
+  (setq-local completion-in-region-function #'consult-completion-in-region))
 
 (add-hook 'eshell-first-time-mode-hook 'cory/configure-eshell)
 
