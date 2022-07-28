@@ -280,7 +280,7 @@
   :ensure t
 
   :hook
-  (nix-mode . eglot-ensure)
+  ;; (nix-mode . eglot-ensure)
   (c-mode . eglot-ensure)
   (c++-mode . eglot-ensure)
   (racket-mode . eglot-ensure)
@@ -349,9 +349,6 @@
                    company-capf
                    company-yasnippet)))))
 
-;; (use-package company-emoji
-;;   :config (add-to-list 'company-backends 'company-emoji))
-
 (use-package company-quickhelp
   :config (company-quickhelp-mode))
 
@@ -361,34 +358,38 @@
 
 ;; Minibuffer completion
 (use-package vertico
-  :init
-  ;; (use-package orderless
-  ;;   :commands (orderless)
-  ;;   :custom (completion-styles '(orderless flex)))
-
-  (use-package consult
-    :init
-    (setq consult-preview-key nil)
-    :bind
-    ("C-c f" . consult-recent-file)
-    ("C-c s" . consult-ripgrep)
-    ("C-c l" . consult-line)
-    ("C-c i" . consult-imenu)
-    ("C-c t" . gtags-find-tag)
-    ("C-x b" . consult-buffer)
-    ("C-c x" . consult-complex-command)
-    (:map comint-mode-map
-     ("C-c C-l" . consult-history)))
   :config
   (recentf-mode t)
   (vertico-mode t))
 
+;; Completion matching
+(use-package orderless
+  :commands (orderless)
+  :custom (completion-styles '(orderless flex)))
+
+;; Minibuffer visual menu
+(use-package consult
+  :init
+  (setq consult-preview-key nil)
+  :bind
+  ("C-c f" . consult-recent-file)
+  ("C-c s" . consult-ripgrep)
+  ("C-c l" . consult-line)
+  ("C-c i" . consult-imenu)
+  ("C-c t" . gtags-find-tag)
+  ("C-x b" . consult-buffer)
+  ("C-c x" . consult-complex-command)
+  (:map comint-mode-map
+   ("C-c C-l" . consult-history)))
+
 (use-package consult-company
   :bind (:map company-mode-map
-	 ([completion-at-point] . consult-company)))
+	 ([remap completion-at-point] . consult-company)))
 
 (use-package consult-eglot
-  :bind ("C-c C-s" . consult-eglot-symbols))
+  :bind (:map eglot-mode-map
+	 ([remap xref-find-apropos] . consult-eglot-symbols)
+	 ([remap xref-find-references-and-replace] . eglot-rename)))
 
 (use-package consult-flycheck
   :bind ("C-c e" . consult-flycheck))
