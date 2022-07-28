@@ -363,9 +363,9 @@
   (vertico-mode t))
 
 ;; Completion matching
-;; (use-package orderless
-;;   :commands (orderless)
-;;   :custom (completion-styles '(orderless flex)))
+(use-package orderless
+  :commands (orderless)
+  :custom (completion-styles '(orderless basic)))
 
 ;; Minibuffer visual menu
 (use-package consult
@@ -1157,6 +1157,8 @@ Lisp function does not specify a special indentation."
   :hook ((shell-mode eshell-mode vterm-mode term-exec) . with-editor-export-editor))
 
 ;;; Eshell
+
+(setenv "PAGER" "eshell/less")
 
 ;; Don't print the welcome banner and
 ;; use native 'sudo', system sudo asks for password every time.
