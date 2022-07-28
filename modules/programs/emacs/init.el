@@ -363,9 +363,9 @@
   (vertico-mode t))
 
 ;; Completion matching
-(use-package orderless
-  :commands (orderless)
-  :custom (completion-styles '(orderless flex)))
+;; (use-package orderless
+;;   :commands (orderless)
+;;   :custom (completion-styles '(orderless flex)))
 
 ;; Minibuffer visual menu
 (use-package consult
@@ -382,9 +382,9 @@
   (:map comint-mode-map
    ("C-c C-l" . consult-history)))
 
-(use-package consult-company
-  :bind (:map company-mode-map
-	 ([remap completion-at-point] . consult-company)))
+;; (use-package consult-company
+;;   :bind (:map company-mode-map
+;; 	 ([remap completion-at-point] . consult-company)))
 
 (use-package consult-eglot
   :bind (:map eglot-mode-map
