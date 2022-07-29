@@ -18,7 +18,7 @@ in {
     };
     apps.launcher = {
       name = "rofi";
-      command = "rofi -show drun -modi drun,run -show -scroll-method 1 -sort";
+      command = "rofi -show drun -modi drun,run -show -scroll-method 0 -sort -hover-select -me-select-entry '' -me-accept-entry MousePrimary";
       desktopFile = "rofi.desktop";
       package = pkgs.rofi;
     };
