@@ -22,7 +22,7 @@
   (import ./oxygen-cory-colors)
   (import ./oxygen-kde4-theme.nix)
   (import ./photogimp.nix { inherit lib pkgs; })
-  (import ./sddm-mountain-light.nix { inherit pkgs; })
+  (import ./sddm-oxygen.nix { inherit pkgs; })
   (import ./trim-generations { inherit pkgs; })
   (import ./undistract-me-zsh.nix { inherit pkgs; })
 ]
