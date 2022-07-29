@@ -275,7 +275,7 @@
 
 ;; LSP
 (use-package eglot
-  :after flycheck company
+  :after flymake company
   :defer t
   :ensure t
 
@@ -374,13 +374,14 @@
   :init
   (setq consult-preview-key nil)
   :bind
-  ("C-c C-f" . consult-recent-file)
-  ("C-c p s" . consult-ripgrep)
+  ("C-c r" . consult-recent-file)
+  ("C-x p s" . consult-ripgrep)
   ("C-s" . consult-line)
   ("C-c i" . consult-imenu)
   ("C-c t" . gtags-find-tag)
   ("C-x b" . consult-buffer)
   ("C-c x" . consult-complex-command)
+  ("C-c e" . consult-flymake)
   (:map comint-mode-map
    ("C-c C-l" . consult-history)))
 
@@ -388,9 +389,6 @@
   :bind (:map eglot-mode-map
 	 ([remap xref-find-apropos] . consult-eglot-symbols)
 	 ([remap xref-find-references-and-replace] . eglot-rename)))
-
-(use-package consult-flycheck
-  :bind ("C-c e" . consult-flycheck))
 
 (use-package marginalia
   :after vertico
@@ -451,15 +449,7 @@
   ("q" nil "finished" :exit t))
 
 ;; Project Management
-(use-package projectile
-  :diminish projectile-mode
-  :config (projectile-mode)
-  :bind-keymap
-  ("C-c p" . projectile-command-map)
-  :init
-  (when (file-directory-p "~/Code")
-    (setq projectile-project-search-path '("~/Code")))
-  (setq projectile-switch-project-action #'projectile-dired))
+(use-package project)
 
 ;; Git Management
 (use-package magit
@@ -538,12 +528,12 @@
   :bind (:map smartparens-mode-map
          ;; This is the paredit mode map minus a few key bindings
          ;; that I use in other modes (e.g. M-?)
-         ("C-M-f" . sp-forward-sexp) ;; navigation
-         ("C-M-b" . sp-backward-sexp)
-         ("C-M-u" . sp-backward-up-sexp)
-         ("C-M-d" . sp-down-sexp)
-         ("C-M-p" . sp-backward-down-sexp)
-         ("C-M-n" . sp-up-sexp)
+         ("C-S-f" . sp-forward-sexp) ;; navigation
+         ("C-S-b" . sp-backward-sexp)
+         ("C-S-u" . sp-backward-up-sexp)
+         ("C-S-d" . sp-down-sexp)
+         ("C-S-p" . sp-backward-down-sexp)
+         ("C-S-n" . sp-up-sexp)
          ;; ("C-w" . whole-line-or-region-sp-kill-region)
          ("M-s" . sp-splice-sexp) ;; depth-changing commands
          ("M-r" . sp-splice-sexp-killing-around)
@@ -553,9 +543,9 @@
          ("C-}" . sp-forward-barf-sexp)
          ("C-<left>" . sp-forward-barf-sexp)
          ("C-(" . sp-backward-slurp-sexp)
-         ("C-M-<left>" . sp-backward-slurp-sexp)
+         ("C-S-<left>" . sp-backward-slurp-sexp)
          ("C-{" . sp-backward-barf-sexp)
-         ("C-M-<right>" . sp-backward-barf-sexp)
+         ("C-S-<right>" . sp-backward-barf-sexp)
          ("M-S" . sp-split-sexp) ;; misc
          ("M-j" . sp-join-sexp))
   :config
@@ -688,36 +678,47 @@
                            (nil "atomx" "/ssh:%h:")))
     (add-to-list 'tramp-default-proxies-alist tramp-proxies)))
 
-(use-package flycheck
+;; Syntax checking
+(use-package flymake
   :ensure t
-  :diminish flycheck-mode
-  :defer 1
-  :bind (("M-n" . flycheck-next-error)
-	 ("M-p" . flycheck-previous-error))
+  :hook
+  (prog-mode . flymake-mode)
+  :bind
+  (:map flymake-mode-map
+   ("M-n" . flymake-goto-next-error)
+   ("M-p" . flymake-goto-prev-error))
   :init
-  (progn
-    (flycheck-define-error-level 'error
-      :severity 2
-      :overlay-category 'flycheck-error-overlay
-      :fringe-bitmap 'flymake-double-exclamation-mark
-      :fringe-face 'compilation-error)
+  ;; Disable legacy diagnostic functions as some have bugs (mainly haskell)
+  (setq flymake-proc-ignored-file-name-regexps '("\\.l?hs\\'"))
+  (remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake))
 
-    (flycheck-define-error-level 'warning
-      :severity 1
-      :overlay-category 'flycheck-warning-overlay
-      :fringe-bitmap 'exclamation-mark
-      :fringe-face 'compilation-warning)
-
-    (flycheck-define-error-level 'info
-      :severity 0
-      :overlay-category 'flycheck-info-overlay
-      :fringe-bitmap 'exclamation-mark
-      :fringe-face 'compilation-info))
+(use-package flymake-diagnostic-at-point
+  :ensure t
+  :after flymake
   :config
-  ;; Only check buffer when mode is enabled or buffer is saved.
-  (setq flycheck-check-syntax-automatically '(mode-enabled save))
-  ;; Enable flycheck in all eligible buffers.
-  (global-flycheck-mode))
+  ;; (setq flymake-diagnostic-at-point-error-prefix nil)
+  (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode))
+
+(use-package flymake-racket
+  :ensure t
+  :commands (flymake-racket-add-hook)
+  :init
+  (add-hook 'scheme-mode-hook #'flymake-racket-add-hook)
+  (add-hook 'racket-mode-hook #'flymake-racket-add-hook))
+
+(use-package flymake-kondor
+  :ensure t
+  :hook (clojure-mode . flymake-kondor-setup))
+
+;; (use-package flymake-joker
+;;   :config
+;;   (add-hook 'clojure-mode-hook #'flymake-joker-clj-enable)
+;;   (add-hook 'clojurescript-mode-hook #'flymake-joker-cljs-enable)
+;;   (add-hook 'clojure-mode-hook #'flymake-mode))
+
+;; Display help messages automatically in echo area
+(setq help-at-pt-timer-delay 0.1)
+(setq help-at-pt-display-when-idle '(flymake-diagnostic))
 
 ;;
 ;; --- MODE CONFIGURATION ---
@@ -928,9 +929,6 @@ Lisp function does not specify a special indentation."
                            ("re-frame" . "re-frame.core")))
     (add-to-list 'cljr-magic-require-namespaces magit-require)))
 
-(use-package flycheck-clj-kondo
-  :after (flycheck clojure-mode))
-
 ;; (use-package ob-clojure
 ;;   :after ob
 ;;   :config
@@ -1041,11 +1039,6 @@ Lisp function does not specify a special indentation."
   :hook (irony-mode))
 
 ;;(global-set-key [f9] 'code-compile)
-
-(use-package flycheck-clang-tidy
-  :after flycheck
-  :hook
-  (flycheck-mode . flycheck-clang-tidy-setup))
 
 ;;; Racket
 (use-package racket-mode
@@ -1347,8 +1340,7 @@ Lisp function does not specify a special indentation."
 ;; Basic Keybind
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "C-#") 'comment-or-uncomment-region)
-(global-set-key (kbd "C-c r") 'replace-string)
-(global-set-key (kbd "C-M-s") 'project-search)
+(global-set-key (kbd "C-c S-r") 'replace-string)
 
 ;;
 ;; --- MISC ---
