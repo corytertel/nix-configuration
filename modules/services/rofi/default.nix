@@ -18,7 +18,7 @@ in {
     };
     apps.launcher = {
       name = "rofi";
-      command = "rofi -show drun -modi drun,run -show-icons";
+      command = "rofi -show drun -modi drun,run -show -scroll-method 1 -sort";
       desktopFile = "rofi.desktop";
       package = pkgs.rofi;
     };
