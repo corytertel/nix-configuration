@@ -11,6 +11,7 @@ with pkgs.nur.repos.rycee.firefox-addons;
   facebook-container
   https-everywhere
   pkgs.firefox-classic-theme
+  pkgs.firefox-oxygen-theme
   # pkgs.new-tab-override
   plasma-integration
   privacy-badger

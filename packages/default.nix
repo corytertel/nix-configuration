@@ -7,6 +7,7 @@
   (import ./expose-glassy-right.nix)
   (import ./extract.nix { inherit pkgs; })
   (import ./firefox-classic-theme.nix { inherit lib pkgs; })
+  (import ./firefox-oxygen-theme.nix { inherit lib pkgs; })
   (import ./githelp.nix { inherit pkgs; })
   (import ./keyboard-layouts.nix { inherit pkgs; })
   (import ./krunner-desktop.nix { inherit pkgs; })
