@@ -696,42 +696,23 @@
 	 ("M-p" . flycheck-previous-error))
   :init
   (progn
-    (define-fringe-bitmap 'my-flycheck-fringe-indicator
-      (vector #b00111100
-              #b01111110
-              #b11111111
-              #b11111111
-              #b11111111
-              #b11111111
-              #b11111111
-              #b11111111
-              #b11111111
-              #b11111111
-              #b11111111
-              #b11111111
-              #b11111111
-              #b11111111
-              #b11111111
-              #b01111110
-              #b00111100))
-
     (flycheck-define-error-level 'error
       :severity 2
       :overlay-category 'flycheck-error-overlay
-      :fringe-bitmap 'my-flycheck-fringe-indicator
-      :fringe-face 'flycheck-fringe-error)
+      :fringe-bitmap 'flymake-double-exclamation-mark
+      :fringe-face 'compilation-error)
 
     (flycheck-define-error-level 'warning
       :severity 1
       :overlay-category 'flycheck-warning-overlay
-      :fringe-bitmap 'my-flycheck-fringe-indicator
-      :fringe-face 'flycheck-fringe-warning)
+      :fringe-bitmap 'exclamation-mark
+      :fringe-face 'compilation-warning)
 
     (flycheck-define-error-level 'info
       :severity 0
       :overlay-category 'flycheck-info-overlay
-      :fringe-bitmap 'my-flycheck-fringe-indicator
-      :fringe-face 'flycheck-fringe-info))
+      :fringe-bitmap 'exclamation-mark
+      :fringe-face 'compilation-info))
   :config
   ;; Only check buffer when mode is enabled or buffer is saved.
   (setq flycheck-check-syntax-automatically '(mode-enabled save))
@@ -1061,6 +1042,11 @@ Lisp function does not specify a special indentation."
 
 ;;(global-set-key [f9] 'code-compile)
 
+(use-package flycheck-clang-tidy
+  :after flycheck
+  :hook
+  (flycheck-mode . flycheck-clang-tidy-setup))
+
 ;;; Racket
 (use-package racket-mode
   :bind
@@ -1086,6 +1072,10 @@ Lisp function does not specify a special indentation."
 ;; (use-package geiser-racket)
 
 ;;; Java
+
+(use-package eglot-java
+  :init
+  (eglot-java-init))
 
 ;; For groovy and gradle support
 (use-package groovy-mode :defer t)
