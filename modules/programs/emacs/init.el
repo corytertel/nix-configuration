@@ -213,7 +213,7 @@
 	      left-margin-width 1
 	      sentence-end-double-space nil
 	      lisp-backquote-indentation nil
-	      blink-cursor-blinks 1
+	      blink-cursor-blinks 10
 	      fast-but-imprecise-scrolling t
 	      auto-save-interval 60
 	      kill-do-not-save-duplicates t
@@ -367,6 +367,18 @@
   :config
   (recentf-mode t)
   (vertico-mode t))
+
+;; Configure directory extension.
+(use-package vertico-directory
+  :after vertico
+  :ensure nil
+  ;; More convenient directory navigation commands
+  :bind (:map vertico-map
+         ("RET" . vertico-directory-enter)
+         ("DEL" . vertico-directory-delete-char)
+         ("M-DEL" . vertico-directory-delete-word))
+  ;; Tidy shadowed file names
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
 ;; Completion matching
 (use-package orderless
