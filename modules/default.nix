@@ -9,6 +9,7 @@
     ./programs/emacs
     ./programs/firefox
     ./programs/gtk
+    ./programs/gwenview
     ./programs/konsole
     ./programs/krusader
     ./programs/lximage-qt

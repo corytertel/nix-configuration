@@ -22,7 +22,10 @@
   programs.cory.dolphin.enable = true;
 
   # Photo Viewer
-  # programs.cory.lximage-qt.enable = true;
+  programs.cory.gwenview = {
+    enable = true;
+    config = import ../../config/gwenview/config.nix;
+  };
 
   # PDF Viewer
   programs.cory.qpdfview.enable = true;
@@ -32,12 +35,6 @@
 
   # Set other apps
   apps = {
-    photoViewer = {
-      name = "gwenview";
-      command = "gwenview";
-      desktopFile = "org.kde.gwenview.desktop";
-      package = pkgs.libsForQt5.gwenview;
-    };
     photoEditor = {
       name = "photogimp";
       command = "gimp";
