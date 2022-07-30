@@ -435,13 +435,13 @@
 (use-package hydra)
 
 (defhydra hydra-text-scale (:timeout 4)
-  "scale text"
+  "Scales text."
   ("n" text-scale-increase "in")
   ("p" text-scale-decrease "out")
   ("q" nil "finished" :exit t))
 
 (defhydra hydra-window-resize (:timeout 4)
-  "resize window"
+  "Resizes window."
   ("p" shrink-window 5 "shrink vertically")
   ("n" enlarge-window 5 "enlarge vertically")
   ("b" shrink-window-horizontally 5 "shrink horizontally")
@@ -683,20 +683,65 @@
   :ensure t
   :hook
   (prog-mode . flymake-mode)
+
   :bind
   (:map flymake-mode-map
    ("M-n" . flymake-goto-next-error)
    ("M-p" . flymake-goto-prev-error))
+
   :init
   ;; Disable legacy diagnostic functions as some have bugs (mainly haskell)
   (setq flymake-proc-ignored-file-name-regexps '("\\.l?hs\\'"))
-  (remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake))
+  (remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake)
+
+  :config
+  (define-fringe-bitmap 'cory-exclamation-mark
+    (vector #b00000111
+            #b00000111
+            #b00000111
+            #b00000111
+            #b00000111
+            #b00000111
+            #b00000111
+            #b00000111
+            #b00000111
+            #b00000111
+            #b00000111
+            #b00000010
+            #b00000000
+            #b00000000
+            #b00000111
+            #b00000111
+            #b00000111))
+
+  (define-fringe-bitmap 'cory-double-exclamation-mark
+    (vector #b11100111
+            #b11100111
+            #b11100111
+            #b11100111
+            #b11100111
+            #b11100111
+            #b11100111
+            #b11100111
+            #b11100111
+            #b11100111
+            #b11100111
+            #b01000010
+            #b00000000
+            #b00000000
+            #b11100111
+            #b11100111
+            #b11100111))
+
+  (setq flymake-note-bitmap '(cory-exclamation-mark compilation-info)
+	flymake-warning-bitmap '(cory-exclamation-mark compilation-warning)
+	flymake-error-bitmap '(cory-double-exclamation-mark compilation-error)))
 
 (use-package flymake-diagnostic-at-point
   :ensure t
   :after flymake
   :config
-  ;; (setq flymake-diagnostic-at-point-error-prefix nil)
+  (setq flymake-diagnostic-at-point-error-prefix nil)
   (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode))
 
 (use-package flymake-racket
@@ -1057,12 +1102,11 @@ Lisp function does not specify a special indentation."
   (add-hook 'racket-mode-hook      #'setup-racket-eldoc)
   (add-hook 'racket-mode-hook      #'racket-xp-mode))
 
-;; (use-package flymake-racket)
 (use-package dr-racket-like-unicode)
 ;; (use-package bracketed-paste)
 
-;; (use-package geiser)
-;; (use-package geiser-racket)
+(use-package geiser)
+(use-package geiser-racket)
 
 ;;; Java
 
@@ -1237,31 +1281,6 @@ Lisp function does not specify a special indentation."
   :defer t
   :config
   (setup-esh-help-eldoc))
-
-;; Show last status in fringe
-;; (use-package eshell-fringe-status
-;;   :hook (eshell-mode . eshell-fringe-status-mode)
-;;   :config
-;;   (define-fringe-bitmap 'efs-line-bitmap
-;;     (vector #b00111100
-;;             #b01111110
-;;             #b11111111
-;;             #b11111111
-;;             #b11111111
-;;             #b11111111
-;;             #b11111111
-;;             #b11111111
-;;             #b11111111
-;;             #b11111111
-;;             #b11111111
-;;             #b11111111
-;;             #b11111111
-;;             #b11111111
-;;             #b11111111
-;;             #b01111110
-;;             #b00111100))
-;;   (setq eshell-fringe-status-success-bitmap 'efs-line-bitmap)
-;;   (setq eshell-fringe-status-failure-bitmap 'efs-line-bitmap))
 
 ;; Info (from Emacs wiki)
 (defun eshell/info (subject)
