@@ -17,4 +17,9 @@
 
   # File Manager
   programs.cory.dolphin.config = import ../../config/dolphin/laptop.nix;
+
+  # Launcher
+  services.cory.rofi.config = let
+    offsetX = -120;
+  in "${import ../../config/rofi/launcher.nix { inherit config pkgs offsetX; }}";
 }
