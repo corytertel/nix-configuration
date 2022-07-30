@@ -245,28 +245,34 @@
           try-expand-list
           try-expand-line)))
 
-;; (use-package popper
-;;   :ensure t
-;;   :config
-;;   (setq popper-reference-buffers
-;;         '("\\*Messages\\*"
-;;           "Output\\*$"
-;;           "\\*Async Shell Command\\*"
-;; 	  "\\*eldoc\\*"
-;; 	  "\\*Ibuffer\\*"
-;; 	  "\\*vc-git"
-;; 	  "\\*Help\\*"
-;; 	  "\\*RE-Builder\\*$"
-;; 	  flymake-diagnostics-buffer-mode
-;; 	  calendar-mode
-;; 	  help-mode
-;; 	  compilation-mode
-;; 	  eshell-mode
-;; 	  vterm-mode))
-;;   (popper-mode)
-;;   (popper-echo-mode)
-;;   :bind* ("C-\\" . popper-toggle-type)
-;;   ("C-+" . popper-toggle-latest))
+(use-package popper
+  :ensure t
+  :config
+  (setq popper-reference-buffers
+        '(;; "\\*Messages\\*"
+          "Output\\*$"
+	  "\\*eldoc\\*"
+	  "\\*Help\\*"
+	  flymake-diagnostics-buffer-mode
+	  calendar-mode
+	  help-mode
+	  compilation-mode
+	  eshell-mode
+	  vterm-mode))
+  (popper-mode)
+  ;; (popper-echo-mode)
+  :bind
+  (("C-`" . popper-toggle-latest)
+   ("C-~" . popper-toggle-type)
+   ("M-`" . popper-cycle))
+  :custom
+  (popper-group-function #'popper-group-by-project) ; project.el projects
+  ;; (popper-window-height 30)
+  (popper-window-height (lambda (win)
+			  (fit-window-to-buffer
+			   win
+			   (frame-height)
+			   30))))
 
 (use-package eldoc
   :ensure nil
@@ -367,7 +373,14 @@
   :ensure t
   :custom
   (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
+  (completion-category-overrides '((file (styles basic partial-completion))))
+  (orderless-component-separator "[ \\]")
+  :config
+  (defun just-one-face (fn &rest args)
+    (let ((orderless-match-faces [completions-common-part]))
+      (apply fn args)))
+
+  (advice-add 'company-capf--candidates :around #'just-one-face))
 
 ;; Minibuffer visual menu
 (use-package consult
@@ -1257,17 +1270,6 @@ Lisp function does not specify a special indentation."
 (use-package esh-autosuggest
   :ensure t
   :hook (eshell-mode . esh-autosuggest-mode))
-
-;; Eshell toggling
-;; (use-package eshell-toggle
-;;   :bind
-;;   (("C-`" . eshell-toggle)
-;;    ("C-c C-t" . eshell-toggle))
-;;   :config
-;;   (setq eshell-toggle-size-fraction 2
-;; 	eshell-toggle-window-side 'below
-;; 	eshell-toggle-use-projectile-root nil
-;; 	eshell-toggle-run-command nil))
 
 ;; Eshell up
 (use-package eshell-up
