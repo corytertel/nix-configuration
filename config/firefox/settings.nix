@@ -123,6 +123,8 @@ in {
   "ui.key.textcontrol.prefer_native_key_bindings_over_builtin_shortcut_key_definitions" = true;
   # Prevent sites from taking over copy/paste
   "dom.event.clipboardevents.enabled" = false;
+  # Prevent sites from taking over right click
+  "dom.event.contextmenu.enabled" = false;
 
   # Extra security options
 
