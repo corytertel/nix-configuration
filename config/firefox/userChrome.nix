@@ -217,6 +217,10 @@ window,
   list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/actions/32x32/go-down.png) !important;
 }
 
+#PanelUI-menu-button{
+  list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/actions/32x32/application-menu.png) !important;
+}
+
 #star-button{
   list-style-image: url(file://${config.theme.icons.package}/share/icons/${config.theme.icons.name}/actions/32x32/bookmark-new.png) !important;
 }
