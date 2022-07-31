@@ -11,4 +11,23 @@
       slidingpopupsEnabled = false;
     };
   };
+
+  oxygenrc = {
+    Windeco = {
+      AnimationsEnabled = false;
+      ButtonAnimationsEnabled = false;
+      ShadowAnimationsEnabled = false;
+    };
+  };
+
+  klaunchrc = {
+    BusyCursorSettings.Bouncing = false;
+    FeedbackStyle.TaskbarButton = false;
+  };
+
+  kdeglobals = {
+    KDE = {
+      AnimationDurationFactor = 0;
+    };
+  };
 }

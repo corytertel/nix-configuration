@@ -26,6 +26,8 @@
       Rows = "5";
     };
 
+    Effect-windowview.BorderActivateAll = 9;
+
     Plugins = {
       blurEnabled = false;
       contrastEnabled = true;
@@ -40,6 +42,7 @@
 
     Windows = {
       DelayFocusInterval = 0;
+      ElectricBorders = 2;
       FocusPolicy = "FocusFollowsMouse";
     };
 
@@ -108,6 +111,7 @@
 
     KDE = {
       LookAndFeelPackage = "org.kde.oxygen";
+      ShowDeleteCommand = false;
       SingleClick = true;
       widgetStyle = "Oxygen";
     };
