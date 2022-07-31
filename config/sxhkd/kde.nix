@@ -59,9 +59,9 @@ in with config.apps; {
 
   "control + slash" = launcher.command;
   "control + q" = kwinShortcut "Window Close";
+  "control + Tab" = kwinShortcut "Walk Through Windows (Reverse)";
+  "control + shift + Tab" = kwinShortcut "Walk Through Windows";
   # Set through kglobalshortcutsrc
-  # "control + Tab" = kwinShortcut "Walk Through Windows (Reverse)";
-  # "control + shift + Tab" = kwinShortcut "Walk Through Windows";
   # "alt + F4" = kwinShortcut "Kill Window";
 
   "control + button9" = kwinShortcut "Switch One Desktop Up";

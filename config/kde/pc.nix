@@ -27,7 +27,8 @@
 
   kdeglobals = {
     KDE = {
-      AnimationDurationFactor = 0;
+      # AnimationDurationFactor = 0;
+      AnimationDurationFactor = "0.5";
     };
   };
 }

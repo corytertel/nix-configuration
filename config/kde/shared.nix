@@ -111,6 +111,7 @@
 
     KDE = {
       LookAndFeelPackage = "org.kde.oxygen";
+      ScrollbarLeftClickNavigatesByPage = false;
       ShowDeleteCommand = false;
       SingleClick = true;
       widgetStyle = "Oxygen";
@@ -179,18 +180,30 @@
 
   kglobalshortcutsrc = {
     kwin = {
+      # Fix window killing
       "Kill Window" = "Alt+F4,Meta+Ctrl+Esc,Kill Window";
       "Window Close" = "none,Alt+F4,Close Window";
+
+      # Bind ctrl+tab to walking through windows
+      # "Walk Through Windows" =
+      #   "Ctrl+Tab,Alt+Tab,Walk Through Windows";
+      # "Walk Through Windows (Reverse)" =
+      #   "Ctrl+Shift+Tab,Alt+Shift+Backtab,Walk Through Windows (Reverse)";
+
+      # Unbind walk through windows
       "Walk Through Windows" =
-        "Ctrl+Tab,Alt+Tab,Walk Through Windows";
+        "none,Alt+Tab,Walk Through Windows";
       "Walk Through Windows (Reverse)" =
-        "Ctrl+Shift+Tab,Alt+Shift+Backtab,Walk Through Windows (Reverse)";
+        "none,Alt+Shift+Backtab,Walk Through Windows (Reverse)";
+
+      # Unbind walking through current application
       "Walk Through Windows of Current Application" =
         "none,Alt+`,Walk Through Windows of Current Application";
       "Walk Through Windows of Current Application (Reverse)" =
         "none,Alt+~,Walk Through Windows of Current Application (Reverse)";
     };
 
+    # Unbind krunner
     "org.kde.krunner.desktop"."_launch" =
       "none,Alt+Space\tAlt+F2\tSearch,KRunner";
   };
