@@ -43,4 +43,8 @@
     url = "https://1337x.to/";
     keyword = "1337";
   };
+  "nyaa" = {
+    url = "https://nyaa.si/";
+    keyword = "nyaa";
+  };
 }
