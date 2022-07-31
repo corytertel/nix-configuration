@@ -42,14 +42,18 @@ in with config.apps; {
   "${p} u" = kwinShortcut "Window Maximize";
   "${p} i" = kwinShortcut "Window Minimize";
   "${p} c" = kwinShortcut "Window Move Center";
-  "${p} {1-5}" = kwinShortcut "Switch to Desktop {1-5}";
+  "${p} {1-9}" = kwinShortcut "Switch to Desktop {1-9}";
   # Doesn't work for some reason
-  # "${p} control + {1-5}" = "${kwinShortcut "Window to Desktop {1-5}"} && ${kwinShortcut "Switch to Desktop {1-5}"}";
+  # "${p} control + {1-9}" = "${kwinShortcut "Window to Desktop {1-9}"} && ${kwinShortcut "Switch to Desktop {1-9}"}";
   "${p} control + 1" = "${kwinShortcut "Window to Desktop 1"} && ${kwinShortcut "Switch to Desktop 1"}";
   "${p} control + 2" = "${kwinShortcut "Window to Desktop 2"} && ${kwinShortcut "Switch to Desktop 2"}";
   "${p} control + 3" = "${kwinShortcut "Window to Desktop 3"} && ${kwinShortcut "Switch to Desktop 3"}";
   "${p} control + 4" = "${kwinShortcut "Window to Desktop 4"} && ${kwinShortcut "Switch to Desktop 4"}";
   "${p} control + 5" = "${kwinShortcut "Window to Desktop 5"} && ${kwinShortcut "Switch to Desktop 5"}";
+  "${p} control + 6" = "${kwinShortcut "Window to Desktop 6"} && ${kwinShortcut "Switch to Desktop 6"}";
+  "${p} control + 7" = "${kwinShortcut "Window to Desktop 7"} && ${kwinShortcut "Switch to Desktop 7"}";
+  "${p} control + 8" = "${kwinShortcut "Window to Desktop 8"} && ${kwinShortcut "Switch to Desktop 8"}";
+  "${p} control + 9" = "${kwinShortcut "Window to Desktop 9"} && ${kwinShortcut "Switch to Desktop 9"}";
   "${p} o" = kwinShortcut "Walk Through Windows (Reverse)";
   "${p} control + o" = kwinShortcut "Walk Through Windows";
   "${p} p" = kwinShortcut "Window On All Desktops";

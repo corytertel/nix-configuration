@@ -17,13 +17,21 @@
       Id_3 = "27a65d64-3f82-43c4-a21a-7656693e9980";
       Id_4 = "38cfb913-13bf-405f-9500-e6d774a117ea";
       Id_5 = "9d2a0c53-8c16-43ed-ad45-30ad558f3514";
+      Id_6 = "43e34c73-65a9-4002-b8c5-29b0d9736ba6";
+      Id_7 = "4119e1a2-cc3f-407a-a25e-753821d09ab2";
+      Id_8 = "36565f20-e328-43e0-8f50-bd09a591364d";
+      Id_9 = "5a658449-66b6-4de4-b0cc-32cd47a66b46";
       Name_1 = "1";
       Name_2 = "2";
       Name_3 = "3";
       Name_4 = "4";
       Name_5 = "5";
-      Number = "5";
-      Rows = "5";
+      Name_6 = "6";
+      Name_7 = "7";
+      Name_8 = "8";
+      Name_9 = "9";
+      Number = "9";
+      Rows = "3";
     };
 
     Effect-windowview.BorderActivateAll = 9;
