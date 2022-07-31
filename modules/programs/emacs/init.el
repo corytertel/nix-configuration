@@ -266,8 +266,7 @@
    ("C-~" . popper-toggle-type)
    ("M-`" . popper-cycle))
   :custom
-  (popper-group-function #'popper-group-by-project) ; project.el projects
-  ;; (popper-window-height 30)
+  ;; (popper-group-function #'popper-group-by-project) ; project.el projects
   (popper-window-height (lambda (win)
 			  (fit-window-to-buffer
 			   win

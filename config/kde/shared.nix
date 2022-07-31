@@ -100,6 +100,7 @@
     };
 
     General = with config.theme.font; {
+      AllowKDEAppsToRememberWindowPositions = false;
       XftHintStyle = "hintslight";
       XftSubPixel = "rgb";
       fixed = "${monospace.name},${toString monospace.size},-1,5,50,0,0,0,0,0";
@@ -183,12 +184,6 @@
       # Fix window killing
       "Kill Window" = "Alt+F4,Meta+Ctrl+Esc,Kill Window";
       "Window Close" = "none,Alt+F4,Close Window";
-
-      # Bind ctrl+tab to walking through windows
-      # "Walk Through Windows" =
-      #   "Ctrl+Tab,Alt+Tab,Walk Through Windows";
-      # "Walk Through Windows (Reverse)" =
-      #   "Ctrl+Shift+Tab,Alt+Shift+Backtab,Walk Through Windows (Reverse)";
 
       # Unbind walk through windows
       "Walk Through Windows" =

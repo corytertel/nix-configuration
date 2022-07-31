@@ -340,6 +340,7 @@
         # protonvpn-gui
         inkscape
         thunderbird
+        mullvad-vpn
 
         # Games
         libsForQt5.kpat

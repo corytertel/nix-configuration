@@ -48,10 +48,10 @@
       package = pkgs.audacious;
     };
     videoPlayer = {
-      name = "vlc";
-      command = "vlc";
-      desktopFile = "vlc.desktop";
-      package = pkgs.vlc;
+      name = "mpc-qt";
+      command = "mpc-qt";
+      desktopFile = "mpc-qt.desktop";
+      package = pkgs.mpc-qt;
     };
     archiver = {
       name = "ark";

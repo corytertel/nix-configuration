@@ -22,6 +22,6 @@
 
   # Launcher
   services.cory.rofi.config = let
-    offsetX = -88;
+    offsetX = -94;
   in "${import ../../config/rofi/launcher.nix { inherit config pkgs offsetX; }}";
 }

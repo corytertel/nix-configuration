@@ -61,8 +61,7 @@ in with config.apps; {
   "control + q" = kwinShortcut "Window Close";
   "control + Tab" = kwinShortcut "Walk Through Windows (Reverse)";
   "control + shift + Tab" = kwinShortcut "Walk Through Windows";
-  # Set through kglobalshortcutsrc
-  # "alt + F4" = kwinShortcut "Kill Window";
+  "control + alt + Delete" = "plasma-systemmonitor";
 
   "control + button9" = kwinShortcut "Switch One Desktop Up";
   "control + button8" = kwinShortcut "Switch One Desktop Down";
