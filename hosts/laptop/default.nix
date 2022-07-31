@@ -61,7 +61,7 @@
       };
       libinput.touchpad = {
         accelProfile = "adaptive";
-        accelSpeed = null;
+        accelSpeed = "0.5";
         additionalOptions = "";
         buttonMapping = null;
         calibrationMatrix = null;
@@ -77,7 +77,7 @@
         sendEventsMode = "enabled";
         tapping = false;
         tappingDragLock = false;
-        transformationMatrix = "2.5 0 0 0 2.5 0 0 0 1";
+        # transformationMatrix = "2.5 0 0 0 2.5 0 0 0 1";
       };
     };
   };
