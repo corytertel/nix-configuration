@@ -13,6 +13,7 @@
     ./programs/konsole
     ./programs/krusader
     ./programs/lximage-qt
+    ./programs/mpc-qt
     ./programs/neofetch
     ./programs/qpdfview
     ./programs/sxiv

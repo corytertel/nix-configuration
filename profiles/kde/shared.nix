@@ -27,6 +27,9 @@
     config = import ../../config/gwenview/config.nix;
   };
 
+  # Video Player
+  programs.cory.mpc-qt.enable = true;
+
   # PDF Viewer
   programs.cory.qpdfview.enable = true;
 
@@ -46,12 +49,6 @@
       command = "audacious";
       desktopFile = "audacious.desktop";
       package = pkgs.audacious;
-    };
-    videoPlayer = {
-      name = "mpc-qt";
-      command = "mpc-qt";
-      desktopFile = "mpc-qt.desktop";
-      package = pkgs.mpc-qt;
     };
     archiver = {
       name = "ark";
