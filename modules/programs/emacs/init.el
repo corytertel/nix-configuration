@@ -264,7 +264,7 @@
 	  eshell-mode
 	  vterm-mode))
   (popper-mode)
-  (popper-echo-mode)
+  ;; (popper-echo-mode)
   :bind
   (("C-`" . popper-toggle-latest)
    ("C-~" . popper-toggle-type)

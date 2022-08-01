@@ -213,4 +213,45 @@
       "none,Alt+Space\tAlt+F2\tSearch,KRunner";
   };
 
+  # Need weird syntax for nested groups
+  "plasma-org.kde.plasma.desktop-appletsrc" = {
+    "ActionPlugins' --group '0" = {
+      "LeftButton;NoModifier" = "org.kde.applauncher";
+      "MiddleButton;NoModifier" = "switchwindow";
+      "RightButton;NoModifier" = "org.kde.contextmenu";
+      "wheel:Vertical;NoModifier" = "org.kde.switchdesktop";
+    };
+
+    "ActionPlugins' --group '0' --group 'LeftButton;NoModifier" = {
+      showAppsByName = true;
+    };
+
+    "ActionPlugins' --group '0' --group 'MiddleButton;NoModifier" = {
+      mode = 0;
+    };
+
+    "ActionPlugins' --group '0' --group 'RightButton;NoModifier" = {
+      "_add panel" = true;
+      _context = true;
+      _display_settings = true;
+      _lock_screen = true;
+      _logout = true;
+      _run_command = false;
+      _sep1 = true;
+      _sep2 = true;
+      _sep3 = true;
+      _wallpaper = true;
+      "add widgets" = true;
+      configure = true;
+      "configure shortcuts" = false;
+      "edit mode" = true;
+      "manage activities" = true;
+      remove = true;
+    };
+
+    "ActionPlugins' --group '1" = {
+      "RightButton;NoModifier" = "org.kde.contextmenu";
+    };
+  };
+
 }
