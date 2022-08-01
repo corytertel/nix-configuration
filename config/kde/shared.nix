@@ -42,6 +42,17 @@
       kwin4_effect_squashEnabled = false;
       magiclampEnabled = true;
       zoomEnabled = false;
+
+      # Disable fancy effects
+      kwin4_effect_fadingpopupsEnabled = false;
+      kwin4_effect_morphingpopupsEnabled = false;
+      slidingpopupsEnabled = false;
+
+      # Keep some effects enabled
+      kwin4_effect_fullscreenEnabled = true;
+      kwin4_effect_loginEnabled = true;
+      kwin4_effect_logoutEnabled = true;
+      kwin4_effect_maximizeEnabled = true;
     };
 
     TabBox = {
