@@ -61,25 +61,7 @@
       library = "org.kde.oxygen";
       theme = "Oxygen";
 
-      # ExposeGlassy WindowDecoration
-      # BorderSize = "Large";
-      # BorderSizeAuto = false;
-      # library = "org.kde.kwin.aurorae";
-      # theme = "__aurorae__svg__ExposeGlassy";
-
-      # ExposeGlassyRight Window Decoration
-      # BorderSize = "Large";
-      # BorderSizeAuto = false;
-      # ButtonsOnLeft = "";
-      # ButtonsOnRight = "MXIASH";
-      # library = "org.kde.kwin.aurorae";
-      # theme = "__aurorae__svg__ExposeGlassyRight";
-
       # Titlebar Buttons
-      # ButtonsOnLeft = "MS";
-      # ButtonsOnRight = "HIAX";
-      # ButtonsOnLeft = "XIA";
-      # ButtonsOnRight = "HSM";
       ButtonsOnLeft = "M";
       ButtonsOnRight = "IAX";
     };
@@ -89,6 +71,9 @@
     ActiveShadow.ShadowSize = 50;
     InactiveShadow.ShadowSize = 50;
     Windeco = {
+      AnimationsEnabled = false;
+      ButtonAnimationsEnabled = false;
+      ShadowAnimationsEnabled = false;
       TitleAlignment = "AlignLeft";
       UseWindowColors = false;
     };
@@ -119,6 +104,7 @@
     };
 
     KDE = {
+      AnimationDurationFactor = "0.5";
       LookAndFeelPackage = "org.kde.oxygen";
       ScrollbarLeftClickNavigatesByPage = false;
       ShowDeleteCommand = false;
@@ -178,6 +164,11 @@
   };
 
   ksmserverrc.General.loginMode = "emptySession";
+
+  klaunchrc = {
+    BusyCursorSettings.Bouncing = false;
+    FeedbackStyle.TaskbarButton = false;
+  };
 
   "plasma_workspace.notifyrc"."Event/startkde" = {
     Action = "Sound";

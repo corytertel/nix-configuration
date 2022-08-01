@@ -19,10 +19,8 @@ let
 in with config.apps; {
   "${p} t" = terminal.command;
   "${p} e" = editor.command;
-  # "${p} control + e" = "emacs";
   "${p} w" = browser.command;
   "${p} r" = fileManager.command;
-  # "${p} d" = "discord";
   "${p} space" = launcher.command;
   "Menu" = launcher.command;
 
@@ -66,6 +64,11 @@ in with config.apps; {
   "control + Tab" = kwinShortcut "Walk Through Windows (Reverse)";
   "control + shift + Tab" = kwinShortcut "Walk Through Windows";
   "control + alt + Delete" = "plasma-systemmonitor";
+
+  "control + Up" = kwinShortcut "Switch One Desktop Up";
+  "control + Down" = kwinShortcut "Switch One Desktop Down";
+  "control + Left" = kwinShortcut "Switch One Desktop to the Left";
+  "control + Right" = kwinShortcut "Switch One Desktop to the Right";
 
   "control + button9" = kwinShortcut "Switch One Desktop Up";
   "control + button8" = kwinShortcut "Switch One Desktop Down";

@@ -74,6 +74,10 @@
 ;; --- VISUALS ---
 ;;
 
+;; Emacs size of window
+(setq initial-frame-alist
+      '((top . 0) (left . 0) (width . 210) (height . 70)))
+
 (scroll-bar-mode -1) ; Disables the visible scrollbar
 (tool-bar-mode -1)   ; Disables the toolbar
 (menu-bar-mode -1)   ; Disables the menubar
@@ -260,7 +264,7 @@
 	  eshell-mode
 	  vterm-mode))
   (popper-mode)
-  ;; (popper-echo-mode)
+  (popper-echo-mode)
   :bind
   (("C-`" . popper-toggle-latest)
    ("C-~" . popper-toggle-type)
@@ -399,7 +403,7 @@
   (setq consult-preview-key nil)
   :bind
   ("C-c r" . consult-recent-file)
-  ("C-x p s" . consult-ripgrep)
+  ("C-x p s" . consult-ripgrep) ; for use with project.el
   ("C-s" . consult-line)
   ("C-c i" . consult-imenu)
   ("C-c t" . gtags-find-tag)
@@ -407,11 +411,12 @@
   ("C-c x" . consult-complex-command)
   ("C-c e" . consult-flymake)
   (:map comint-mode-map
-   ("C-c C-l" . consult-history)))
+   ("C-c h" . consult-history)))
 
 (use-package consult-eglot
-  :bind (:map eglot-mode-map
-	 ([remap xref-find-apropos] . consult-eglot-symbols)
+  :bind (("C-c v" . xref-find-references-and-replace)
+	 :map eglot-mode-map
+	 ([remap xref-find-apropos] . consult-eglot-symbols) ; "C-M-."
 	 ([remap xref-find-references-and-replace] . eglot-rename)))
 
 (use-package marginalia
@@ -420,16 +425,6 @@
   :config
   (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
   (marginalia-mode))
-
-;; Search
-(define-key isearch-mode-map (kbd "TAB") 'isearch-toggle-symbol)
-(define-key isearch-mode-map (kbd "M-q") 'isearch-query-replace)
-
-(use-package repeat
-  :ensure nil
-  :bind (:map isearch-mode-map
-	 ("<down>" . #'isearch-repeat-forward)
-	 ("<up>" . #'isearch-repeat-backward)))
 
 ;; Undo
 (use-package undo-tree
@@ -563,13 +558,13 @@
          ("M-r" . sp-splice-sexp-killing-around)
          ("M-(" . sp-wrap-round)
          ("C-)" . sp-forward-slurp-sexp) ;; barf/slurp
-         ("C-<right>" . sp-forward-slurp-sexp)
+         ("M-<right>" . sp-forward-slurp-sexp)
          ("C-}" . sp-forward-barf-sexp)
-         ("C-<left>" . sp-forward-barf-sexp)
+         ("M-<left>" . sp-forward-barf-sexp)
          ("C-(" . sp-backward-slurp-sexp)
-         ("C-S-<left>" . sp-backward-slurp-sexp)
+         ("M-S-<left>" . sp-backward-slurp-sexp)
          ("C-{" . sp-backward-barf-sexp)
-         ("C-S-<right>" . sp-backward-barf-sexp)
+         ("M-S-<right>" . sp-backward-barf-sexp)
          ("M-S" . sp-split-sexp) ;; misc
          ("M-j" . sp-join-sexp))
   :config
@@ -1355,9 +1350,6 @@ Lisp function does not specify a special indentation."
 ;; Vterm
 (use-package vterm
   :ensure t
-  ;; :bind ("C-c C-t" . vterm-other-window)
-  :bind (:map vterm-mode-map
-	 ("C-c C-t" . nil))
   :commands (vterm))
 
 ;; (use-package multi-vterm
@@ -1372,7 +1364,14 @@ Lisp function does not specify a special indentation."
 ;; Basic Keybind
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "C-#") 'comment-or-uncomment-region)
-(global-set-key (kbd "C-c S-r") 'replace-string)
+(global-set-key (kbd "C-c s") 'replace-string)
+
+;; FIXME
+(defun kill-ring-save-and-comment (BEG END)
+  "Save the region to the kill ring, then comment it out."
+  (kill-ring-save BEG END)
+  (comment-region BEG END))
+(global-set-key (kbd "M-#") 'kill-ring-save-and-comment)
 
 ;;
 ;; --- MISC ---

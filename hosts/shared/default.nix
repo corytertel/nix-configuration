@@ -286,6 +286,7 @@
         leiningen
         joker
         clj-kondo
+        # babashka
 
         # other programing languages
         python39Full
