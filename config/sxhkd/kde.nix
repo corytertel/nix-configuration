@@ -41,8 +41,6 @@ in with config.apps; {
   "${p} i" = kwinShortcut "Window Minimize";
   "${p} c" = kwinShortcut "Window Move Center";
   "${p} {1-9}" = kwinShortcut "Switch to Desktop {1-9}";
-  # Doesn't work for some reason
-  # "${p} control + {1-9}" = "${kwinShortcut "Window to Desktop {1-9}"} && ${kwinShortcut "Switch to Desktop {1-9}"}";
   "${p} control + 1" = "${kwinShortcut "Window to Desktop 1"} && ${kwinShortcut "Switch to Desktop 1"}";
   "${p} control + 2" = "${kwinShortcut "Window to Desktop 2"} && ${kwinShortcut "Switch to Desktop 2"}";
   "${p} control + 3" = "${kwinShortcut "Window to Desktop 3"} && ${kwinShortcut "Switch to Desktop 3"}";
