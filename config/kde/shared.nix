@@ -254,4 +254,23 @@
     };
   };
 
+  # Latte dock
+  lattedockrc = {
+    "UniversalSettings" = {
+      badges3DStyle = false;
+      canDisableBorders = false;
+      contextMenuActionsAlwaysShown = "_layouts,_preferences,_quit_latte,_separator1,_add_latte_widgets,_add_view";
+      inAdvancedModeForEditSettings = true;
+      isAvailableGeometryBroadcastedToPlasma = true;
+      launchers = "";
+      memoryUsage = 0;
+      metaPressAndHoldEnabled = false;
+      mouseSensitivity = 2;
+      screenTrackerInterval = 2500;
+      showInfoWindow = true;
+      singleModeLayoutName = "fvwm";
+      version = 2;
+    };
+  };
+
 }
