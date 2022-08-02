@@ -14,5 +14,6 @@ in {
       xdg.configFile."touchegg/touchegg.conf".text =
         builtins.readFile ../../../config/touchegg/touchegg.conf;
     };
+    home-manager.users.cory.home.file.".config/autostart/touchegg.desktop".source = ./touchegg.desktop;
   };
 }

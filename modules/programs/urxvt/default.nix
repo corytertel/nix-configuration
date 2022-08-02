@@ -97,6 +97,7 @@ in {
 
     home-manager.users.cory.home.file = {
       ".urxvt/ext/tabbedex".text = builtins.readFile ./tabbedex;
+      ".config/autostart/urxvtd.desktop" = builtins.readFile ./urxvtd.desktop;
     };
 
     apps.terminal = {

@@ -77,7 +77,13 @@
   };
 
   sound.enable = true;
-  hardware.pulseaudio.enable = true;
+  hardware.pulseaudio = {
+    enable = true;
+    extraConfig = ''
+      # Set volume to 50% on boot
+      set-sink-volume 0 32768
+    '';
+  };
 
   users = {
     users = {

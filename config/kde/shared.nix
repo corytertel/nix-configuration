@@ -181,14 +181,6 @@
     FeedbackStyle.TaskbarButton = false;
   };
 
-  "plasma_workspace.notifyrc"."Event/startkde" = {
-    Action = "Sound";
-    Execute = "";
-    Logfile = "";
-    Sound = "${./KDE_Startup_1.ogg}";
-    TTS = "";
-  };
-
   kglobalshortcutsrc = {
     kwin = {
       # Fix window killing

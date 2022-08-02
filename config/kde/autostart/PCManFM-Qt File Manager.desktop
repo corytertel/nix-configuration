@@ -1,7 +1,0 @@
-[Desktop Entry]
-Exec=pcmanfm-qt --daemon-mode %U
-Icon=system-file-manager
-Name=PCManFM-Qt File Manager
-Path=
-Terminal=False
-Type=Application

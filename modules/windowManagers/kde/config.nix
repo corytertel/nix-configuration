@@ -190,6 +190,17 @@ in {
         source = ../../../config/kde/autostart;
         recursive = true;
       };
+
       ".config/latte/Default.layout.latte".source = ../../../config/kde/Default.layout.latte;
+
+      ".config/autostart/paplay.desktop".text = ''
+        [Desktop Entry]
+        Exec=paplay ${./KDE_Startup_1.ogg}
+        Icon=
+        Name=paplay
+        Path=
+        Terminal=False
+        Type=Application
+      '';
     };
 }
