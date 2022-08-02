@@ -24,7 +24,7 @@ in {
         sddm = {
           enable = true;
           enableHidpi = true;
-          theme = "oxygen";
+          # theme = "oxygen";
         };
       };
 
@@ -42,7 +42,7 @@ in {
 
     environment = {
       systemPackages = with pkgs; [
-        sddm-oxygen
+        # sddm-oxygen
         libsForQt5.qt5.qttools
         krunner-desktop
       ];
