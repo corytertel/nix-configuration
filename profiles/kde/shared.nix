@@ -33,9 +33,6 @@
   # PDF Viewer
   programs.cory.qpdfview.enable = true;
 
-  # Launcher
-  services.cory.rofi.enable = true;
-
   # Set other apps
   apps = {
     photoEditor = {
@@ -55,6 +52,12 @@
       command = "ark";
       desktopFile = "org.kde.ark.desktop";
       package = pkgs.libsForQt5.ark;
+    };
+    launcher = {
+      name = "xdotool";
+      command = "xdotool mousemove 3740 100 click 1";
+      desktopFile = "";
+      package = pkgs.xdotool;
     };
   };
 

@@ -21,8 +21,8 @@ in with config.apps; {
   "${p} e" = editor.command;
   "${p} w" = browser.command;
   "${p} r" = fileManager.command;
-  # "${p} space" = launcher.command;
-  # "Menu" = launcher.command;
+  "${p} space" = launcher.command;
+  "Menu" = launcher.command;
 
   "${p} a ; a" = musicPlayer.command;
   "${p} a ; n" = mediaShortcut "nextmedia";
@@ -57,7 +57,7 @@ in with config.apps; {
   "${p} s" = spectacleShortcut "FullScreenScreenShot";
   "${p} control + s" = spectacleShortcut "RectangularRegionScreenShot";
 
-  # "control + slash" = launcher.command;
+  "control + slash" = launcher.command;
   "control + q" = kwinShortcut "Window Close";
   "control + Tab" = kwinShortcut "Walk Through Windows (Reverse)";
   "control + shift + Tab" = kwinShortcut "Walk Through Windows";
