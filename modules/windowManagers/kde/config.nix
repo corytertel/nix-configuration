@@ -190,6 +190,6 @@ in {
         source = ../../../config/kde/autostart;
         recursive = true;
       };
-      ".config/latte/fvwm.layout.latte".source = ../../../config/kde/fvwm.layout.latte;
+      ".config/latte/Default.layout.latte".source = ../../../config/kde/Default.layout.latte;
     };
 }

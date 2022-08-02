@@ -211,6 +211,11 @@
     # Unbind krunner
     "org.kde.krunner.desktop"."_launch" =
       "none,Alt+Space\tAlt+F2\tSearch,KRunner";
+
+    # Latte dock
+    lattedock = {
+      "activate widget 87" = "Ctrl+/,none,Activate Application Menu Widget";
+    };
   };
 
   # Need weird syntax for nested groups
