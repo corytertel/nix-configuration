@@ -195,7 +195,7 @@ in {
 
       ".config/autostart/paplay.desktop".text = ''
         [Desktop Entry]
-        Exec=paplay ${./KDE_Startup_1.ogg}
+        Exec=sleep 3 && paplay ${./KDE_Startup_1.ogg}
         Icon=
         Name=paplay
         Path=
