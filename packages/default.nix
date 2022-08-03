@@ -8,7 +8,6 @@
   (import ./firefox-classic-theme.nix { inherit lib pkgs; })
   (import ./firefox-oxygen-theme.nix { inherit lib pkgs; })
   (import ./keyboard-layouts.nix { inherit pkgs; })
-  (import ./krunner-desktop.nix { inherit pkgs; })
   (import ./layout-switch.nix {inherit pkgs; })
   (import ./newaita-reborn.nix { inherit lib pkgs; })
   (import ./new-tab-override.nix { inherit lib pkgs; })

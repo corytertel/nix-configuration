@@ -29,12 +29,12 @@ in with config.apps; {
   "${p} a ; p" = mediaShortcut "previousmedia";
   "${p} a ; s" = mediaShortcut "stopmedia";
   "${p} a ; t" = mediaShortcut "playpausemedia";
-  "F5" = audioShortcut "decrease_volume";
-  "F6" = audioShortcut "increase_volume";
-  "F7" = audioShortcut "mute";
-  "F8" = mediaShortcut "playpausemedia";
-  "F9" = mediaShortcut "previousmedia";
-  "F10" = mediaShortcut "nextmedia";
+  "alt + F5" = audioShortcut "decrease_volume";
+  "alt + F6" = audioShortcut "increase_volume";
+  "alt + F7" = audioShortcut "mute";
+  "alt + F8" = mediaShortcut "playpausemedia";
+  "alt + F9" = mediaShortcut "previousmedia";
+  "alt + F10" = mediaShortcut "nextmedia";
 
   "${p} k" = kwinShortcut "Window Close";
   "${p} u" = kwinShortcut "Window Maximize";

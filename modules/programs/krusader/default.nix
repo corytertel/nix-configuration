@@ -11,6 +11,9 @@ in {
   config = mkIf cfg.enable {
     home-manager.users.cory.home.packages = with pkgs; [
       krusader
+      findutils
+      libsForQt5.kio-extras
+      libsForQt5.kget
       kdiff3 # or kompare
       krename
       thunderbird
@@ -18,20 +21,20 @@ in {
       gzip
       bzip2
       xz
+      zip
       unzip
       rar
-      # unrar
       rpm
       dpkg
       arj
       lha
     ];
 
-    apps.fileManager = {
-      name = "krusader";
-      command = "krusader";
-      desktopFile = "org.kde.krusader.desktop";
-      package = pkgs.krusader;
-    };
+    # apps.fileManager = {
+    #   name = "krusader";
+    #   command = "krusader";
+    #   desktopFile = "org.kde.krusader.desktop";
+    #   package = pkgs.krusader;
+    # };
   };
 }

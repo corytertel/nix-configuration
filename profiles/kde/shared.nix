@@ -20,6 +20,7 @@
 
   # File Manager
   programs.cory.dolphin.enable = true;
+  programs.cory.krusader.enable = true;
 
   # Photo Viewer
   programs.cory.gwenview = {

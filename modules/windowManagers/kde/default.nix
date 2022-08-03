@@ -44,7 +44,6 @@ in {
       systemPackages = with pkgs; [
         # sddm-oxygen
         libsForQt5.qt5.qttools
-        krunner-desktop
         latte-dock
       ];
     };
