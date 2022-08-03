@@ -59,5 +59,10 @@ in {
       ".local/share/kxmlgui5/dolphin/dolphinui.rc".source = ./dolphinui.rc;
       ".local/share/user-places.xbel".source = ./user-places.xbel;
     };
+
+    home-manager.users.cory.home.packages = with pkgs; [
+      kompare
+      krename
+    ];
   };
 }
