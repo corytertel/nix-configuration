@@ -1,33 +1,35 @@
 { config, lib, pkgs, ... }:
 
 {
+  # Window Manager and Editor
   windowManagers.cory.exwm.enable = true;
 
-  # Terminal
-  programs.cory.urxvt.enable = true;
-
   # Browser
-  programs.cory.firefox = {
-    enable = true;
-    changeColor = false;
-  };
-
-  # Photo Viewer
-  programs.cory.lximage-qt.enable = true;
+  programs.cory.firefox.enable = true;
 
   # PDF Viewer
   programs.cory.qpdfview.enable = true;
 
-  # Launcher
-  services.cory.rofi.enable = true;
-
   # Set other apps
   apps = {
+    terminal = {
+      name = "emacs";
+      command = "emacsclient -e '(eshell)'";
+      desktopFile = "emacsclient.desktop";
+      package = pkgs.emacsNativeComp;
+    };
+    photoViewer = {
+      name = "emacs";
+      command = "emacsclient";
+      desktopFile = "emacsclient.desktop";
+      package = pkgs.emacsNativeComp;
+    };
     photoEditor = {
-      name = "photogimp";
+      # No need to compile photogimp here
+      name = "gimp";
       command = "gimp";
       desktopFile = "gimp.desktop";
-      package = pkgs.photogimp;
+      package = pkgs.gimp;
     };
     musicPlayer = {
       name = "audacious";
@@ -36,16 +38,16 @@
       package = pkgs.audacious;
     };
     videoPlayer = {
-      name = "vlc";
-      command = "vlc";
-      desktopFile = "vlc.desktop";
-      package = pkgs.vlc;
+      name = "mpv";
+      command = "mpv";
+      desktopFile = "mpv.desktop";
+      package = pkgs.mpv;
     };
     fileManager = {
-      name = "pcmanfm-qt";
-      command = "pcmanfm-qt --new-window";
-      desktopFile = "pcmanfm-qt.desktop";
-      package = pkgs.pcmanfm-qt;
+      name = "emacs";
+      command = "emacsclient -e '(dired \"/home/cory\")'";
+      desktopFile = "emacsclient.desktop";
+      package = pkgs.emacsNativeComp;
     };
     archiver = {
       name = "lxqt-archiver";
@@ -53,12 +55,12 @@
       desktopFile = "lxqt-archiver.desktop";
       package = pkgs.lxqt.lxqt-archiver;
     };
-  };
-
-  # Discord
-  programs.cory.discord = {
-    enable = true;
-    css = builtins.readFile ../../config/discocss/skeuocord.theme.css;
+    launcher = {
+      name = "emacs";
+      command = "emacsclient -e '(async-shell-command)'";
+      desktopFile = "emacsclient.desktop";
+      package = pkgs.emacsNativeComp;
+    };
   };
 
   # Notifications
@@ -68,9 +70,7 @@
   services.cory.picom.enable = true;
 
   # Shell
-  programs.cory.bat.enable = true;
   programs.cory.neofetch.enable = true;
-  programs.cory.zsh.enable = true;
 
   # Aesthetics
   theme = with pkgs; {
@@ -114,8 +114,6 @@
       color13         = "#e01bd0";
       color6          = "#2d9574";
       color14         = "#2d9574";
-      # color7          = "#cccccc";
-      # color15         = "#cccccc";
       color7          = "#ffffff";
       color15         = "#ffffff";
     };
