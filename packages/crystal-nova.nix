@@ -8,8 +8,8 @@ self: super: {
     src = pkgs.fetchFromGitHub {
       owner = "corytertel";
       repo = "crystal-nova-icon-theme";
-      rev = "83e907800aed91d402be390e19760a80a7e51915";
-      sha256 = "AtNGEz5+p4JDmI56zy3Rf1GHgmPpSPPyh6fn0Fb3FNI=";
+      rev = "4c1499adc57033f7381ff96a94dac7380333e424";
+      sha256 = "5BK6akyqacM3g1rOfBGkMwliL19W0yauGO5LC71HiRI=";
     };
 
     nativeBuildInputs = [

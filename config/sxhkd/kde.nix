@@ -22,7 +22,7 @@ in with config.apps; {
   "${p} w" = browser.command;
   "${p} r" = fileManager.command;
   "${p} space" = launcher.command;
-  "Menu" = launcher.command;
+  "Menu" = editor.command;
 
   "${p} a ; a" = musicPlayer.command;
   "${p} a ; n" = mediaShortcut "nextmedia";
@@ -56,13 +56,17 @@ in with config.apps; {
 
   "${p} s" = spectacleShortcut "FullScreenScreenShot";
   "${p} control + s" = spectacleShortcut "RectangularRegionScreenShot";
+  "Print" = "spectacle -b -n -c";
+  "alt + Print" = spectacleShortcut "FullScreenScreenShot";
+  "alt + shift + Print" = spectacleShortcut "RectangularRegionScreenShot";
 
-  "control + slash" = launcher.command;
+  "control + semicolon" = launcher.command;
   "control + q" = kwinShortcut "Window Close";
   "control + Tab" = kwinShortcut "Walk Through Windows (Reverse)";
   "control + shift + Tab" = kwinShortcut "Walk Through Windows";
   "control + alt + Delete" = "plasma-systemmonitor";
 
+  "control + {1-9}" = kwinShortcut "Switch to Desktop {1-9}";
   "control + Up" = kwinShortcut "Switch One Desktop Up";
   "control + Down" = kwinShortcut "Switch One Desktop Down";
   "control + Left" = kwinShortcut "Switch One Desktop to the Left";
