@@ -230,6 +230,14 @@
 ;; don't back up files
 (setq make-backup-files nil)
 
+;; Minimap
+;; (use-package minimap
+;;   :custom
+;;   (minimap-window-location ')
+;;   :config
+;;   (minimap-mode))
+
+;; Expansion
 (use-package hippie-exp
   :ensure nil
   :bind
@@ -249,6 +257,7 @@
           try-expand-list
           try-expand-line)))
 
+;; Popups
 (use-package popper
   :ensure t
   :config
