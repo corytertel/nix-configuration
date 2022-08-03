@@ -3,14 +3,14 @@
 
     CompactMode = {
       FontWeight = 50;
-      IconSize = 22;
+      IconSize = 32;
       PreviewSize = 48;
     };
 
     DetailsMode = {
       FontWeight = 50;
-      IconSize = 22;
-      PreviewSize = 22;
+      IconSize = 32;
+      PreviewSize = 32;
     };
 
     General = {
@@ -32,6 +32,8 @@
     };
 
     MainWindow.ToolBarsMovable = "Disabled";
+
+    "MainWindow' --group 'Toolbar mainToolBar".IconSize = 32;
 
     PlacesPanel.IconSize = 32;
 
