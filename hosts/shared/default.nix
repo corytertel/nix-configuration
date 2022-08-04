@@ -294,6 +294,11 @@
         clj-kondo
         # babashka
 
+        # common lisp
+        clisp
+        sbcl
+        asdf
+
         # other programing languages
         python39Full
         python39Packages.pip

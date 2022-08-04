@@ -282,6 +282,15 @@ to 'auto, tags may not be properly aligned."
      `(company-tooltip-search ((,class (:inherit match))))
      `(company-tooltip-selection ((,class (:background ,ttip-sl :foreground ,base))))
 
+;;;;; corfu
+     `(corfu-default ((,class (:background ,ttip-bg :foreground ,ttip))))
+     `(corfu-current ((,class (:background ,ttip-sl :foreground ,base))))
+     `(corfu-bar ((,class (:background ,base))))
+     `(corfu-border ((,class (:background ,bg2))))
+     `(corfu-echo ((,class (:background ,base :foreground ,bg1))))
+     `(corfu-annotations ((,class (:foreground ,type))))
+     `(corfu-deprecated ((,class (:foreground ,war :strike-through t))))
+
 ;;;;; diff
      `(diff-added             ((,class :background nil :foreground ,green :extend t)))
      `(diff-changed           ((,class :background nil :foreground ,blue)))

@@ -74,6 +74,10 @@
 ;; --- VISUALS ---
 ;;
 
+;; Emacs size of window
+(setq initial-frame-alist
+      '((top . 0) (left . 0) (width . 210) (height . 70)))
+
 (scroll-bar-mode -1) ; Disables the visible scrollbar
 (tool-bar-mode -1)   ; Disables the toolbar
 (menu-bar-mode -1)   ; Disables the menubar
@@ -289,8 +293,7 @@
 
 ;; LSP
 (use-package eglot
-  ;; :after flymake company
-  :after flymake corfu
+  :after flymake company
   :defer t
   :ensure t
 
@@ -320,139 +323,56 @@
 	 ("C-c f" . eglot-format-buffer)))
 
 ;; Completion
-;; (use-package company
-;;   :diminish company-mode
-;;   :bind
-;;   (:map company-active-map
-;;    ([return] . nil)
-;;    ("RET" . nil)
-;;    ("TAB" . company-complete-selection)
-;;    ([tab] . company-complete-selection)
-;;    ("C-f" . company-complete-selection)
-;;    ("S-TAB" . company-select-previous)
-;;    ([backtab] . company-select-previous)
-;;    ("C-n" . company-select-next)
-;;    ("C-p" . company-select-previous)
-;;    ;; :map eglot-mode-map
-;;    ;; ("<tab>" . company-indent-or-complete-common)
-;;    )
-;;   :config
-;;   (setq company-idle-delay 0.0
-;;         company-minimum-prefix-length 1
-;;         company-show-numbers t
-;;         company-tooltip-maximum-width 100
-;;         company-tooltip-minimum-width 20
-;; 	;; Allow me to keep typing even if company disapproves.
-;;         company-require-match nil)
-;;   (global-company-mode))
-
-;; (use-package company-box
-;;   :hook (company-mode . company-box-mode)
-;;   :config
-;;   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
-
-;; ;; Autocompletion for shell
-;; ;; (use-package company-shell
-;; ;;   :hook ((sh-mode shell-mode) . sh-mode-init)
-;; ;;   :config
-;; ;;   (defun sh-mode-init ()
-;; ;;     (setq-local company-backends
-;; ;; 		'((company-shell
-;; ;;                    company-shell-env
-;; ;;                    company-files
-;; ;;                    company-dabbrev-code
-;; ;;                    company-capf
-;; ;;                    company-yasnippet)))))
-
-;; (use-package company-quickhelp
-;;   :config (company-quickhelp-mode))
-
-;; (use-package company-nixos-options
-;;   :config
-;;   (add-to-list 'company-backends 'company-nixos-options))
-
-(use-package corfu
-  :ensure t
-  ;; Optional customizations
-  :custom
-  (corfu-cycle t)                  ; Allows cycling through candidates
-  (corfu-auto t)                   ; Enable auto completion
-  (corfu-auto-prefix 0)            ; Enable auto completion
-  (corfu-auto-delay 0.0)           ; Enable auto completion
-  (corfu-quit-at-boundary t)
-  (corfu-echo-documentation 0.25)   ; Enable auto completion
-  ;; (corfu-preview-current 'insert)   ; Do not preview current candidate
-  ;; (corfu-preselect-first nil)
-
-  ;; Optionally use TAB for cycling, default is `corfu-complete'.
-  :bind (:map corfu-map
-         ("RET"     . nil)
-	 ([return]  . nil)
-         ("TAB"     . corfu-complete)
-         ([tab]     . corfu-complete)
-	 ("C-f"     . corfu-complete)
-         ("S-TAB"   . corfu-previous)
-         ([backtab] . corfu-previous)
-	 ("C-n"     . corfu-next)
-	 ("C-p"     . corfu-previous)
-         ("S-<return>" . corfu-insert))
-
-  :init
-  (global-corfu-mode))
-
-;; Add extensions
-(use-package cape
-  :ensure t
-  :init
-  ;; Add `completion-at-point-functions', used by `completion-at-point'.
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+(use-package company
+  :diminish company-mode
+  :bind
+  (:map company-active-map
+   ([return] . nil)
+   ("RET" . nil)
+   ("TAB" . company-complete-selection)
+   ([tab] . company-complete-selection)
+   ("C-f" . company-complete-selection)
+   ("S-TAB" . company-select-previous)
+   ([backtab] . company-select-previous)
+   ("C-n" . company-select-next)
+   ("C-p" . company-select-previous)
+   ;; :map eglot-mode-map
+   ;; ("<tab>" . company-indent-or-complete-common)
+   )
   :config
-  ;; Silence then pcomplete capf, no errors or messages!
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+  (setq company-idle-delay 0.0
+        company-minimum-prefix-length 1
+        company-show-numbers t
+        company-tooltip-maximum-width 100
+        company-tooltip-minimum-width 20
+	;; Allow me to keep typing even if company disapproves.
+        company-require-match nil)
+  (global-company-mode))
 
-  ;; Ensure that pcomplete does not write to the buffer
-  ;; and behaves as a pure `completion-at-point-function'.
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
-  (add-hook 'eshell-mode-hook
-            (lambda () (setq-local corfu-quit-at-boundary t
-                              corfu-quit-no-match t
-                              corfu-auto nil)
-              (corfu-mode))))
-
-;; Templates takes advantage of emacs's tempo
-(use-package tempel
-  :ensure t
-  :defer 10
-  :hook ((prog-mode text-mode) . tempel-setup-capf)
-  :bind (("M-+" . tempel-insert) ;; Alternative tempel-expand
-         :map tempel-map
-         ([remap keyboard-escape-quit] . tempel-done)
-         :map corfu-map
-         ("C-M-i" . tempel-expand))
-  :init
-  ;; Setup completion at point
-  (defun tempel-setup-capf ()
-    (setq-local completion-at-point-functions
-                (cons #'tempel-expand
-                      completion-at-point-functions))))
-
-;; Documentation popup
-(use-package corfu-doc
-  :bind (:map corfu-map
-	 ("M-p" . corfu-doc-scroll-down)
-	 ("M-n" . corfu-doc-scroll-up))
+(use-package company-box
+  :hook (company-mode . company-box-mode)
   :config
-  (add-hook 'corfu-mode-hook #'corfu-doc-mode))
+  (setq company-box-icons-alist 'company-box-icons-all-the-icons))
 
-;; Icons for corfu
-(use-package kind-icon
-  :ensure t
-  :after corfu
-  :custom
-  (kind-icon-default-face 'corfu-default)
+;; Autocompletion for shell
+;; (use-package company-shell
+;;   :hook ((sh-mode shell-mode) . sh-mode-init)
+;;   :config
+;;   (defun sh-mode-init ()
+;;     (setq-local company-backends
+;; 		'((company-shell
+;;                    company-shell-env
+;;                    company-files
+;;                    company-dabbrev-code
+;;                    company-capf
+;;                    company-yasnippet)))))
+
+(use-package company-quickhelp
+  :config (company-quickhelp-mode))
+
+(use-package company-nixos-options
   :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+  (add-to-list 'company-backends 'company-nixos-options))
 
 ;; Minibuffer completion
 (use-package vertico
@@ -479,12 +399,12 @@
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion))))
   (orderless-component-separator "[ \\]")
-  ;; :config
-  ;; (defun just-one-face (fn &rest args)
-  ;;   (let ((orderless-match-faces [completions-common-part]))
-  ;;     (apply fn args)))
-  ;; (advice-add 'company-capf--candidates :around #'just-one-face)
-  )
+  :config
+  (defun just-one-face (fn &rest args)
+    (let ((orderless-match-faces [completions-common-part]))
+      (apply fn args)))
+
+  (advice-add 'company-capf--candidates :around #'just-one-face))
 
 ;; Minibuffer visual menu
 (use-package consult
@@ -1003,7 +923,7 @@ Lisp function does not specify a special indentation."
          ("M-?" . cider-maybe-clojuredocs)
          :map cider-repl-mode-map
          ("M-?" . cider-doc))
-  :hook ( ;; ((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
+  :hook (((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
          (cider-mode . eldoc-mode))
   :config
   (defun cider-maybe-clojuredocs (&optional arg)
@@ -1184,9 +1104,9 @@ Lisp function does not specify a special indentation."
     (when (member major-mode irony-supported-major-modes)
       (irony-mode 1))))
 
-;; (use-package company-irony
-;;   :after irony
-;;   :config (add-to-list 'company-backends 'company-irony))
+(use-package company-irony
+  :after irony
+  :config (add-to-list 'company-backends 'company-irony))
 
 (use-package irony-eldoc
   :hook (irony-mode))
@@ -1195,7 +1115,6 @@ Lisp function does not specify a special indentation."
 
 ;;; Racket
 (use-package racket-mode
-  :mode "\\.rkt\\'"
   :bind
   (:map racket-mode-map
    ("C-c C-r" . racket-run)
@@ -1257,57 +1176,14 @@ Lisp function does not specify a special indentation."
 
 ;;; Common Lisp
 
-(use-package sly
-  :commands (sly sly-connect)
-  :init
-  (setq sly-symbol-completion-mode nil)
-  (setq inferior-lisp-program "sbcl")
-  ;; (setq sly-default-lisp 'roswell)
-  ;; (setq ros-config (concat user-emacs-directory
-  ;;                          "ros-conf.lisp"))
-  ;; (setq sly-lisp-implementations
-  ;;       `((sbcl ("sbcl") :coding-system utf-8-unix)
-  ;;         (ccl ("ccl") :coding-system utf-8-unix)
-  ;;         (ecl ("ecl") :coding-system utf-8-unix)
-  ;;         (roswell ("ros" "-Q" "-l" ,ros-config "run"))
-  ;;         (qlot ("qlot" "exec" "ros" "-l" ,ros-config "run" "-S" ".")
-  ;;               :coding-system utf-8-unix)))
-  (setq sly-lisp-implementations
-        `((sbcl ("sbcl") :coding-system utf-8-unix)))
+(use-package slime)
 
-  ;; (defun qlot-sly ()
-  ;;   "Start a sly repl using qlot at the projects root"
-  ;;   (interactive)
-  ;;   (let ((dir (cdr (project-current))))
-  ;;     (if (cd dir)
-  ;;         (sly 'qlot)
-  ;;       (error (format "Failed to cd to %s" dir)))))
+;; (use-package slime-company)
+(use-package slime-repl-ansi-color)
 
-  ;; (defun sly-critique-defun ()
-  ;;   "Lint this file with lisp-critic"
-  ;;   (interactive)
-  ;;   ;; (sly-eval-async '(ql:quickload :lisp-critic))
-  ;;   (let ((form (apply #'buffer-substring-no-properties
-  ;;                      (sly-region-for-defun-at-point))))
-  ;;     (sly-eval-async
-  ;;      `(cl:format  "~a" (list ,(read form)))
-  ;;      nil (sly-current-package))))
-
-  ;; (defun sly-critique-file ()
-  ;;   "Lint this file with lisp-critic"
-  ;;   (interactive)
-  ;;   (sly-eval-async '(ql:quickload :lisp-critic))
-  ;;   (sly-eval-async `(lisp-critic:critique ,(buffer-file-name))))
-  )
-
-(use-package sly-asdf
-  :config
-  (add-to-list 'sly-contribs 'sly-asdf 'append))
-
-(use-package sly-repl-ansi-color)
+(use-package hippie-expand-slime)
 
 (use-package common-lisp-snippets)
-
 (use-package lisp-extra-font-lock)
 
 ;;; Latex
@@ -1344,9 +1220,6 @@ Lisp function does not specify a special indentation."
 ;; Use local Emacs instance as $EDITOR (e.g. in `git commit' or `crontab -e')
 (use-package with-editor
   :hook ((shell-mode eshell-mode vterm-mode term-exec) . with-editor-export-editor))
-
-;; Enhanced shell completion
-(use-package pcmpl-args)
 
 ;;; Eshell
 
@@ -1421,9 +1294,9 @@ Lisp function does not specify a special indentation."
 
 ;; Eshell auto-complete
 ;; `company-mode' backend to provide eshell history suggestion
-;; (use-package esh-autosuggest
-;;   :ensure t
-;;   :hook (eshell-mode . esh-autosuggest-mode))
+(use-package esh-autosuggest
+  :ensure t
+  :hook (eshell-mode . esh-autosuggest-mode))
 
 ;; Eshell up
 (use-package eshell-up
