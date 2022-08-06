@@ -36,6 +36,40 @@
     openssh.enable = true;
     pcscd.enable = true;
     printing.enable = true;
+    kmonad = {
+      enable = false;
+      keyboards = {
+        pc = {
+          name = "pc-keyboard";
+          device = "/dev/input/by-id/usb-Unicomp_Inc_Unicomp_R7_2_10x_Kbrd_v7_48-event-kbd";
+          defcfg = {
+            enable = true;
+            compose.key = null;
+          };
+          config = ''
+            (defsrc
+              grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+              tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+              caps a    s    d    f    g    h    j    k    l    ;    '    ret
+              lsft z    x    c    v    b    n    m    ,    .    /    rsft
+              lctl lmet lalt           spc            ralt rmet cmp  rctl
+            )
+
+            (defalias
+              ;; Control that does `spc' on tap
+              sctl (tap-next spc lctl))
+
+            (deflayer qwerty_programmer
+              grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+              tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+              caps a    s    d    f    g    h    j    k    l    ;    '    ret
+              lsft z    x    c    v    b    n    m    ,    .    /    rsft
+              lctl lmet lalt           @sctl          ralt rmet cmp  rctl
+            )
+          '';
+        };
+      };
+    };
     xserver = {
       enable = true;
       extraLayouts = {
@@ -90,7 +124,8 @@
       cory = {
         isNormalUser = true;
         uid = 1000;
-        extraGroups = [ "wheel" "network" "audio" "libvirtd" ];
+        extraGroups = [ "wheel" "network" "audio" "libvirtd"
+                        "input" "uinput" "kmonad" ];
         home = "/home/cory";
       };
     };

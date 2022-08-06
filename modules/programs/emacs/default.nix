@@ -115,44 +115,53 @@ let
       echo "git fetch origin ; git remote prune origin"
       echo "-------------------------------------------------------------------------------"
     '')
-    ];
+  ];
 
-    in {
+  kbd-mode = pkgs.writeText "kbd-mode.el"
+    (builtins.readFile "${pkgs.fetchFromGitHub {
+      owner = "kmonad";
+      repo = "kbd-mode";
+      rev = "4a26abcbfc04208f437fd6b6a5bf3217b124db84";
+      sha256 = "U0JzvnS4VDnVNtUTRxQm0ePV+6f+WUoLaT7KuDiGkFg=";
+    }}/kbd-mode.el");
 
-      options.programs.cory.emacs = {
-        enable = mkEnableOption "Enables emacs";
-        exwm = mkOption {
-          type = types.bool;
-          default = false;
-        };
-      };
+in {
 
-      config = mkIf cfg.enable {
+  options.programs.cory.emacs = {
+    enable = mkEnableOption "Enables emacs";
+    exwm = mkOption {
+      type = types.bool;
+      default = false;
+    };
+  };
 
-        environment.variables = {
-          ALTERNATE_EDITOR = "emacs -nw";
-          EDITOR = "emacsclient -nw";
-          VISUAL = "emacsclient -c -a ''";
-        };
+  config = mkIf cfg.enable {
 
-        apps.editor = {
-          name = "emacs";
-          command = "emacsclient -c -e '(fancy-startup-screen)'";
-          desktopFile = "emacsclient.desktop";
-          package = emacsPackage;
-        };
+    environment.variables = {
+      ALTERNATE_EDITOR = "emacs -nw";
+      EDITOR = "emacsclient -nw";
+      VISUAL = "emacsclient -c -a ''";
+    };
 
-        home-manager.users.cory.home.file = {
-          ".emacs.d/themes/plain-light-theme.el".source = ./plain-light-theme.el;
-          ".emacs.d/themes/smart-mode-line-cory-theme.el".source = ./smart-mode-line-cory-theme.el;
-          ".emacs.d/logo.png".source = ./logo.png;
-          ".emacs.d/eshell/alias".text = import ./eshell-alias.nix { inherit config pkgs; };
-        };
+    apps.editor = {
+      name = "emacs";
+      command = "emacsclient -c -e '(fancy-startup-screen)'";
+      desktopFile = "emacsclient.desktop";
+      package = emacsPackage;
+    };
 
-        environment.systemPackages = with pkgs; [
-          git
-          ripgrep
-        ] ++ shellScripts;
+    home-manager.users.cory.home.file = {
+      ".emacs.d/themes/plain-light-theme.el".source = ./plain-light-theme.el;
+      ".emacs.d/themes/smart-mode-line-cory-theme.el".source = ./smart-mode-line-cory-theme.el;
+      ".emacs.d/logo.png".source = ./logo.png;
+      ".emacs.d/eshell/alias".text = import ./eshell-alias.nix { inherit config pkgs; };
+      ".emacs.d/elisp/kbd-mode.el".source = kbd-mode;
+    };
 
-      };
-    }
+    environment.systemPackages = with pkgs; [
+      git
+      ripgrep
+    ] ++ shellScripts;
+
+  };
+}

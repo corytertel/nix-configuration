@@ -1281,6 +1281,9 @@ Lisp function does not specify a special indentation."
 
 (use-package fvwm-mode)
 
+(use-package kbd-mode
+  :load-path "~/.emacs.d/elisp/")
+
 ;;
 ;; --- TERMINALS ---
 ;;
@@ -1472,6 +1475,18 @@ Lisp function does not specify a special indentation."
   (kill-ring-save BEG END)
   (comment-region BEG END))
 (global-set-key (kbd "M-#") 'kill-ring-save-and-comment)
+
+;; (use-package god-mode
+;;   :bind (("<escape>" . god-mode-all)
+;; 	 ;; ("<escape>" . god-local-mode)
+;; 	 )
+;;   :custom
+;;   (god-exempt-major-modes nil)
+;;   (god-exempt-predicates nil)
+;;   :config
+;;   (defun my-god-mode-update-cursor-type ()
+;;     (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
+;;   (add-hook 'post-command-hook #'my-god-mode-update-cursor-type))
 
 ;;
 ;; --- MISC ---
