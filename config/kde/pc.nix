@@ -2,7 +2,8 @@
   kwinrc = {
     Plugins = {
       # Disable sliding
-      slideEnabled = false;
+      # slideEnabled = false;
+      slideEnabled = true;
     };
   };
 }

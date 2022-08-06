@@ -320,7 +320,6 @@
 ;; Completion
 (use-package corfu
   :ensure t
-  ;; Optional customizations
   :custom
   (corfu-cycle t)                  ; Allows cycling through candidates
   (corfu-auto t)                   ; Enable auto completion
@@ -328,19 +327,8 @@
   (corfu-auto-delay 0.0)           ; Enable auto completion
   (corfu-quit-at-boundary t)
   (corfu-echo-documentation t)     ; Enable auto documentation in the minibuffer
-  ;; (corfu-preview-current 'insert)  ; Do not preview current candidate
-  ;; (corfu-preselect-first nil)
-
-  ;; :bind (:map corfu-map
-  ;;        ("RET"     . nil)
-  ;; 	 ([return]  . nil)
-  ;;        ("TAB"     . corfu-insert)
-  ;;        ([tab]     . corfu-insert)
-  ;; 	 ;; ("C-f"     . corfu-insert)
-  ;;        ("S-TAB"   . corfu-previous)
-  ;;        ([backtab] . corfu-previous)
-  ;; 	 ("C-n"     . corfu-next)
-  ;; 	 ("C-p"     . corfu-previous))
+  (corfu-preview-current 'insert)
+  (corfu-preselect-first t)
 
   :init
   ;; Need to recreate the map in order to preserve movement keys
@@ -421,6 +409,7 @@
   :ensure t
   :after corfu
   :custom
+  (kind-icon-use-icons t)
   (kind-icon-default-face 'corfu-default)
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
@@ -449,13 +438,7 @@
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion))))
-  (orderless-component-separator "[ \\]")
-  ;; :config
-  ;; (defun just-one-face (fn &rest args)
-  ;;   (let ((orderless-match-faces [completions-common-part]))
-  ;;     (apply fn args)))
-  ;; (advice-add 'company-capf--candidates :around #'just-one-face)
-  )
+  (orderless-component-separator "[ \\]"))
 
 ;; Minibuffer visual menu
 (use-package consult
