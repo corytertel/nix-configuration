@@ -237,8 +237,7 @@
 (use-package hippie-exp
   :ensure nil
   :bind
-  ;; ([remap dabbrev-expand] . hippie-expand)
-  (("\M- " . hippie-expand))
+  ([remap dabbrev-expand] . hippie-expand)
   :commands (hippie-expand)
   :config
   (setq hippie-expand-try-functions-list
@@ -289,7 +288,6 @@
 
 ;; LSP
 (use-package eglot
-  ;; :after flymake company
   :after flymake corfu
   :defer t
   :ensure t
@@ -320,84 +318,51 @@
 	 ("C-c f" . eglot-format-buffer)))
 
 ;; Completion
-;; (use-package company
-;;   :diminish company-mode
-;;   :bind
-;;   (:map company-active-map
-;;    ([return] . nil)
-;;    ("RET" . nil)
-;;    ("TAB" . company-complete-selection)
-;;    ([tab] . company-complete-selection)
-;;    ("C-f" . company-complete-selection)
-;;    ("S-TAB" . company-select-previous)
-;;    ([backtab] . company-select-previous)
-;;    ("C-n" . company-select-next)
-;;    ("C-p" . company-select-previous)
-;;    ;; :map eglot-mode-map
-;;    ;; ("<tab>" . company-indent-or-complete-common)
-;;    )
-;;   :config
-;;   (setq company-idle-delay 0.0
-;;         company-minimum-prefix-length 1
-;;         company-show-numbers t
-;;         company-tooltip-maximum-width 100
-;;         company-tooltip-minimum-width 20
-;; 	;; Allow me to keep typing even if company disapproves.
-;;         company-require-match nil)
-;;   (global-company-mode))
-
-;; (use-package company-box
-;;   :hook (company-mode . company-box-mode)
-;;   :config
-;;   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
-
-;; ;; Autocompletion for shell
-;; ;; (use-package company-shell
-;; ;;   :hook ((sh-mode shell-mode) . sh-mode-init)
-;; ;;   :config
-;; ;;   (defun sh-mode-init ()
-;; ;;     (setq-local company-backends
-;; ;; 		'((company-shell
-;; ;;                    company-shell-env
-;; ;;                    company-files
-;; ;;                    company-dabbrev-code
-;; ;;                    company-capf
-;; ;;                    company-yasnippet)))))
-
-;; (use-package company-quickhelp
-;;   :config (company-quickhelp-mode))
-
-;; (use-package company-nixos-options
-;;   :config
-;;   (add-to-list 'company-backends 'company-nixos-options))
-
 (use-package corfu
   :ensure t
   ;; Optional customizations
   :custom
   (corfu-cycle t)                  ; Allows cycling through candidates
   (corfu-auto t)                   ; Enable auto completion
-  (corfu-auto-prefix 0)            ; Enable auto completion
+  (corfu-auto-prefix 1)            ; Enable auto completion
   (corfu-auto-delay 0.0)           ; Enable auto completion
   (corfu-quit-at-boundary t)
-  (corfu-echo-documentation 0.25)   ; Enable auto completion
-  ;; (corfu-preview-current 'insert)   ; Do not preview current candidate
+  (corfu-echo-documentation t)     ; Enable auto documentation in the minibuffer
+  ;; (corfu-preview-current 'insert)  ; Do not preview current candidate
   ;; (corfu-preselect-first nil)
 
-  ;; Optionally use TAB for cycling, default is `corfu-complete'.
-  :bind (:map corfu-map
-         ("RET"     . nil)
-	 ([return]  . nil)
-         ("TAB"     . corfu-complete)
-         ([tab]     . corfu-complete)
-	 ("C-f"     . corfu-complete)
-         ("S-TAB"   . corfu-previous)
-         ([backtab] . corfu-previous)
-	 ("C-n"     . corfu-next)
-	 ("C-p"     . corfu-previous)
-         ("S-<return>" . corfu-insert))
+  ;; :bind (:map corfu-map
+  ;;        ("RET"     . nil)
+  ;; 	 ([return]  . nil)
+  ;;        ("TAB"     . corfu-insert)
+  ;;        ([tab]     . corfu-insert)
+  ;; 	 ;; ("C-f"     . corfu-insert)
+  ;;        ("S-TAB"   . corfu-previous)
+  ;;        ([backtab] . corfu-previous)
+  ;; 	 ("C-n"     . corfu-next)
+  ;; 	 ("C-p"     . corfu-previous))
 
   :init
+  ;; Need to recreate the map in order to preserve movement keys
+  ;; Don't touch my movement keys!!
+  ;; TAB cycles through completion options
+  (setq corfu-map
+	(let ((map (make-sparse-keymap)))
+	  (define-key map [remap completion-at-point] #'corfu-complete)
+	  (define-key map [remap keyboard-escape-quit] #'corfu-quit)
+	  (define-key map (kbd "C-g") #'corfu-quit)
+	  (define-key map [down] #'corfu-next)
+	  (define-key map [up] #'corfu-previous)
+	  (define-key map [tab] #'corfu-next)
+	  (define-key map [backtab] #'corfu-previous)
+	  (define-key map (kbd "TAB") #'corfu-next)
+	  (define-key map (kbd "S-TAB") #'corfu-previous)
+	  (define-key map [return] #'corfu-insert)
+	  (define-key map (kbd "RET") #'corfu-insert)
+	  (define-key map (kbd "M-l") 'corfu-info-location)
+	  (define-key map (kbd "C-h") 'corfu-info-documentation)
+	  (define-key map (kbd "M-SPC") #'corfu-insert-separator)
+	  map))
   (global-corfu-mode))
 
 ;; Add extensions
@@ -421,29 +386,35 @@
               (corfu-mode))))
 
 ;; Templates takes advantage of emacs's tempo
-(use-package tempel
-  :ensure t
-  :defer 10
-  :hook ((prog-mode text-mode) . tempel-setup-capf)
-  :bind (("M-+" . tempel-insert) ;; Alternative tempel-expand
-         :map tempel-map
-         ([remap keyboard-escape-quit] . tempel-done)
-         :map corfu-map
-         ("C-M-i" . tempel-expand))
-  :init
-  ;; Setup completion at point
-  (defun tempel-setup-capf ()
-    (setq-local completion-at-point-functions
-                (cons #'tempel-expand
-                      completion-at-point-functions))))
+;; (use-package tempel
+;;   :ensure t
+;;   :defer 10
+;;   :hook ((prog-mode text-mode) . tempel-setup-capf)
+;;   :bind (("M-+" . tempel-insert) ;; Alternative tempel-expand
+;;          :map tempel-map
+;;          ([remap keyboard-escape-quit] . tempel-done)
+;;          :map corfu-map
+;;          ("C-M-i" . tempel-expand))
+;;   :init
+;;   ;; Setup completion at point
+;;   (defun tempel-setup-capf ()
+;;     (setq-local completion-at-point-functions
+;;                 (cons #'tempel-expand
+;; 			completion-at-point-functions))))
 
 ;; Documentation popup
 (use-package corfu-doc
+  :ensure t
   :bind (:map corfu-map
+	 ([remap corfu-info-documentation] . corfu-doc-toggle)
 	 ("M-p" . corfu-doc-scroll-down)
 	 ("M-n" . corfu-doc-scroll-up))
-  :config
-  (add-hook 'corfu-mode-hook #'corfu-doc-mode))
+  :custom
+  (corfu-doc-auto nil)
+  (corfu-doc-max-width 60)
+  (corfu-doc-max-height 30)
+  :hook
+  (corfu-mode . corfu-doc-mode))
 
 ;; Icons for corfu
 (use-package kind-icon
@@ -1304,7 +1275,9 @@ Lisp function does not specify a special indentation."
   :config
   (add-to-list 'sly-contribs 'sly-asdf 'append))
 
-(use-package sly-repl-ansi-color)
+(use-package sly-repl-ansi-color
+  :config
+  (push 'sly-repl-ansi-color sly-contribs))
 
 (use-package common-lisp-snippets)
 
@@ -1337,16 +1310,12 @@ Lisp function does not specify a special indentation."
 ;;   ;;(setq explicit-zsh-args '())
 ;;   (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *"))
 
-;; BROKEN
-;; (use-package eterm-256color
-;;   :hook (term-mode . eterm-256color-mode))
-
 ;; Use local Emacs instance as $EDITOR (e.g. in `git commit' or `crontab -e')
 (use-package with-editor
   :hook ((shell-mode eshell-mode vterm-mode term-exec) . with-editor-export-editor))
 
 ;; Enhanced shell completion
-(use-package pcmpl-args)
+;; (use-package pcmpl-args) ; slow?
 
 ;;; Eshell
 
