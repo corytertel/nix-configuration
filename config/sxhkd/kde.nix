@@ -29,12 +29,12 @@ in with config.apps; {
   "${p} a ; p" = mediaShortcut "previousmedia";
   "${p} a ; s" = mediaShortcut "stopmedia";
   "${p} a ; t" = mediaShortcut "playpausemedia";
-  "alt + F5" = audioShortcut "decrease_volume";
-  "alt + F6" = audioShortcut "increase_volume";
-  "alt + F7" = audioShortcut "mute";
-  "alt + F8" = mediaShortcut "playpausemedia";
-  "alt + F9" = mediaShortcut "previousmedia";
-  "alt + F10" = mediaShortcut "nextmedia";
+  "F5" = audioShortcut "decrease_volume";
+  "F6" = audioShortcut "increase_volume";
+  "F7" = audioShortcut "mute";
+  "F8" = mediaShortcut "playpausemedia";
+  "F9" = mediaShortcut "previousmedia";
+  "F10" = mediaShortcut "nextmedia";
 
   "${p} k" = kwinShortcut "Window Close";
   "${p} u" = kwinShortcut "Window Maximize";
@@ -57,20 +57,20 @@ in with config.apps; {
   "${p} s" = spectacleShortcut "FullScreenScreenShot";
   "${p} control + s" = spectacleShortcut "RectangularRegionScreenShot";
   "Print" = "spectacle -b -n -c";
-  "alt + Print" = spectacleShortcut "FullScreenScreenShot";
-  "alt + shift + Print" = spectacleShortcut "RectangularRegionScreenShot";
+  "super + Print" = spectacleShortcut "FullScreenScreenShot";
+  "super + shift + Print" = spectacleShortcut "RectangularRegionScreenShot";
 
   "control + semicolon" = launcher.command;
-  "control + q" = kwinShortcut "Window Close";
-  "control + Tab" = kwinShortcut "Walk Through Windows (Reverse)";
-  "control + shift + Tab" = kwinShortcut "Walk Through Windows";
+  "alt + q" = kwinShortcut "Window Close";
+  "alt + Tab" = kwinShortcut "Walk Through Windows (Reverse)";
+  "alt + shift + Tab" = kwinShortcut "Walk Through Windows";
   "control + alt + Delete" = "plasma-systemmonitor";
 
-  "control + {1-9}" = kwinShortcut "Switch to Desktop {1-9}";
-  "control + Up" = kwinShortcut "Switch One Desktop Up";
-  "control + Down" = kwinShortcut "Switch One Desktop Down";
-  "control + Left" = kwinShortcut "Switch One Desktop to the Left";
-  "control + Right" = kwinShortcut "Switch One Desktop to the Right";
+  "alt + {1-9}" = kwinShortcut "Switch to Desktop {1-9}";
+  "alt + Up" = kwinShortcut "Switch One Desktop Up";
+  "alt + Down" = kwinShortcut "Switch One Desktop Down";
+  "alt + Left" = kwinShortcut "Switch One Desktop to the Left";
+  "alt + Right" = kwinShortcut "Switch One Desktop to the Right";
 
   "control + button9" = kwinShortcut "Switch One Desktop Up";
   "control + button8" = kwinShortcut "Switch One Desktop Down";

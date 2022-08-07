@@ -6,14 +6,14 @@ self: super: {
     dontBuild = true;
     installPhase = ''
       mkdir -p $out/share/X11/xkb/symbols
-      cp -a $src/v2/us_programmer $out/share/X11/xkb/symbols/us_programmer
-      cp -a $src/v2/ru_programmer $out/share/X11/xkb/symbols/ru_programmer
+      cp -a $src/v3/us_programmer $out/share/X11/xkb/symbols/us_programmer
+      cp -a $src/v3/ru_programmer $out/share/X11/xkb/symbols/ru_programmer
     '';
     src = pkgs.fetchFromGitHub {
       owner = "corytertel";
       repo = "keyboard-layouts";
-      rev = "162e26623b6a11d9cb4e2144f2489e3af973ffae";
-      sha256 = "gunHukdExrK3C5wo5BnMN8rGnvzfTvemAs40l5cifT8=";
+      rev = "a75d743c7d66a88d6b73e739e06e0a39f6ff6bf5";
+      sha256 = "6Kk+TpdKU5Ri1acL/6/kT2yr0Lk8fNbWukAcDWwc6XY=";
     };
   };
 }

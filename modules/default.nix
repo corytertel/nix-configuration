@@ -23,7 +23,6 @@
     ./programs/zsh
 
     ./services/dunst
-    ./services/kmonad
     ./services/libinput-gestures
     ./services/picom
     ./services/plank

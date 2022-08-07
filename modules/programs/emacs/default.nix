@@ -117,14 +117,6 @@ let
     '')
   ];
 
-  kbd-mode = pkgs.writeText "kbd-mode.el"
-    (builtins.readFile "${pkgs.fetchFromGitHub {
-      owner = "kmonad";
-      repo = "kbd-mode";
-      rev = "4a26abcbfc04208f437fd6b6a5bf3217b124db84";
-      sha256 = "U0JzvnS4VDnVNtUTRxQm0ePV+6f+WUoLaT7KuDiGkFg=";
-    }}/kbd-mode.el");
-
 in {
 
   options.programs.cory.emacs = {
@@ -155,7 +147,6 @@ in {
       ".emacs.d/themes/smart-mode-line-cory-theme.el".source = ./smart-mode-line-cory-theme.el;
       ".emacs.d/logo.png".source = ./logo.png;
       ".emacs.d/eshell/alias".text = import ./eshell-alias.nix { inherit config pkgs; };
-      ".emacs.d/elisp/kbd-mode.el".source = kbd-mode;
     };
 
     environment.systemPackages = with pkgs; [

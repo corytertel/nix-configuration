@@ -220,7 +220,7 @@
 	      bidi-paragraph-direction 'left-to-right
 	      bidi-inhibit-bpa t)
 
-(global-so-long-mode 1)
+;; (global-so-long-mode 1)
 (save-place-mode 1)
 
 ;; don't back up files
@@ -482,11 +482,14 @@
 
 ;; Visual Keybinding Info
 (use-package which-key
-  :init (which-key-mode)
+  :init
+  (which-key-mode)
+  (which-key-enable-god-mode-support)
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.00000001))
 
+;; Better help information
 (use-package helpful
   :ensure
   :bind
@@ -1281,9 +1284,6 @@ Lisp function does not specify a special indentation."
 
 (use-package fvwm-mode)
 
-(use-package kbd-mode
-  :load-path "~/.emacs.d/elisp/")
-
 ;;
 ;; --- TERMINALS ---
 ;;
@@ -1476,17 +1476,42 @@ Lisp function does not specify a special indentation."
   (comment-region BEG END))
 (global-set-key (kbd "M-#") 'kill-ring-save-and-comment)
 
-;; (use-package god-mode
-;;   :bind (("<escape>" . god-mode-all)
-;; 	 ;; ("<escape>" . god-local-mode)
-;; 	 )
-;;   :custom
-;;   (god-exempt-major-modes nil)
-;;   (god-exempt-predicates nil)
-;;   :config
-;;   (defun my-god-mode-update-cursor-type ()
-;;     (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
-;;   (add-hook 'post-command-hook #'my-god-mode-update-cursor-type))
+(use-package god-mode
+  :custom
+  (god-mode-alist
+   '((nil . "C-")
+     ("z" . "M-")
+     ("Z" . "C-M-")))
+  (god-exempt-major-modes nil) ; for god-mode all
+  (god-exempt-predicates nil)  ; for god-mode-all
+  :config
+  (defun my-god-mode-update-mode-line ()
+    (cond
+     (god-local-mode
+      (set-face-attribute 'mode-line nil
+                          :foreground "#141404"
+                          :background "#ed8f23")
+      (set-face-attribute 'mode-line-inactive nil
+                          :foreground "#141404"
+                          :background "#ed9063"))
+     (t
+      (set-face-attribute 'mode-line nil
+			  :foreground "#141404"
+			  :background "#cccccc")
+      (set-face-attribute 'mode-line-inactive nil
+			  :foreground "#141404"
+			  :background "#ffffff"))))
+  (add-hook 'post-command-hook 'my-god-mode-update-mode-line)
+
+  (global-set-key (kbd "<escape>") #'god-mode-all)
+  (global-set-key (kbd "C-x C-0") #'delete-window)
+  (global-set-key (kbd "C-x C-1") #'delete-other-windows)
+  (global-set-key (kbd "C-x C-2") #'split-and-follow-below)
+  (global-set-key (kbd "C-x C-3") #'split-and-follow-right)
+  (define-key god-local-mode-map (kbd ".") #'repeat))
+
+;; Make ESC quit prompts
+;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 ;;
 ;; --- MISC ---
@@ -1507,8 +1532,5 @@ Lisp function does not specify a special indentation."
 ;; Replace "yes or no" prompts with "y or n" prompts
 (defalias 'yes-or-no-p #'y-or-n-p
   "Use `y-or-n-p' instead of a yes/no prompt.")
-
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 ;;; init.el ends here
