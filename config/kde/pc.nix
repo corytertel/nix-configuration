@@ -2,8 +2,13 @@
   kwinrc = {
     Plugins = {
       # Disable sliding
-      # slideEnabled = false;
-      slideEnabled = true;
+      slideEnabled = false;
+    };
+  };
+
+  kdeglobals = {
+    KDE = {
+      AnimationDurationFactor = "0.0";
     };
   };
 }

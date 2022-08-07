@@ -73,19 +73,20 @@
       theme = "Oxygen";
 
       # Titlebar Buttons
-      ButtonsOnLeft = "M";
+      ButtonsOnLeft = "MS";
       ButtonsOnRight = "IAX";
     };
   };
 
   oxygenrc = {
     ActiveShadow.ShadowSize = 50;
+    ActiveShadow.Enabled = false;
     InactiveShadow.ShadowSize = 50;
     Windeco = {
       AnimationsEnabled = false;
       ButtonAnimationsEnabled = false;
       ShadowAnimationsEnabled = false;
-      TitleAlignment = "AlignLeft";
+      # TitleAlignment = "AlignLeft";
       UseWindowColors = false;
     };
   };
@@ -115,7 +116,6 @@
     };
 
     KDE = {
-      AnimationDurationFactor = "0.5";
       LookAndFeelPackage = "org.kde.oxygen";
       ScrollbarLeftClickNavigatesByPage = false;
       ShowDeleteCommand = false;

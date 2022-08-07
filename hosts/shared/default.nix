@@ -252,8 +252,6 @@
     services.xcape = {
       enable = true;
       mapExpression = {
-        # Control_L= "BackSpace";
-        # Caps_Lock = "BackSpace";
         Shift_L = "Escape";
         Shift_R = "Escape";
       };
