@@ -50,7 +50,8 @@
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_programmer";
         };
       };
-      layout = "us_programmer";
+      # layout = "us_programmer";
+      layout = "us_programmer(dvorak-emacs)";
       libinput = {
         enable = true;
         mouse = {
