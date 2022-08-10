@@ -323,7 +323,7 @@
   :custom
   (corfu-cycle t)                  ; Allows cycling through candidates
   (corfu-auto t)                   ; Enable auto completion
-  (corfu-auto-prefix 1)            ; Enable auto completion
+  (corfu-auto-prefix 2)            ; Enable auto completion
   (corfu-auto-delay 0.0)           ; Enable auto completion
   (corfu-quit-at-boundary t)
   (corfu-echo-documentation t)     ; Enable auto documentation in the minibuffer
@@ -398,7 +398,7 @@
 	 ("M-p" . corfu-doc-scroll-down)
 	 ("M-n" . corfu-doc-scroll-up))
   :custom
-  (corfu-doc-auto nil)
+  (corfu-doc-auto nil) ; Disable auto-documentation
   (corfu-doc-max-width 60)
   (corfu-doc-max-height 30)
   :hook
