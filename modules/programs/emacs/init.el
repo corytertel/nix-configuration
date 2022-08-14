@@ -813,7 +813,6 @@
   :ensure t
   :commands (flymake-racket-add-hook)
   :init
-  (add-hook 'scheme-mode-hook #'flymake-racket-add-hook)
   (add-hook 'racket-mode-hook #'flymake-racket-add-hook))
 
 (use-package flymake-kondor
@@ -877,10 +876,10 @@ Lisp function does not specify a special indentation."
        (cond
         ;; car of form doesn't seem to be a symbol, or is a keyword
         ((and (elt state 2)
-              (or (not (looking-at "\\sw\\|\\s_"))
-                  (looking-at ":")))
+	    (or (not (looking-at "\\sw\\|\\s_"))
+	       (looking-at ":")))
          (if (not (> (save-excursion (forward-line 1) (point))
-                     calculate-lisp-indent-last-sexp))
+		   calculate-lisp-indent-last-sexp))
              (progn (goto-char calculate-lisp-indent-last-sexp)
                     (beginning-of-line)
                     (parse-partial-sexp (point)
@@ -892,12 +891,12 @@ Lisp function does not specify a special indentation."
          (backward-prefix-chars)
          (current-column))
         ((and (save-excursion
-                (goto-char indent-point)
-                (skip-syntax-forward " ")
-                (not (looking-at ":")))
-              (save-excursion
-                (goto-char orig-point)
-                (looking-at ":")))
+	      (goto-char indent-point)
+	      (skip-syntax-forward " ")
+	      (not (looking-at ":")))
+	    (save-excursion
+	      (goto-char orig-point)
+	      (looking-at ":")))
          (save-excursion
            (goto-char (+ 2 (elt state 1)))
            (current-column)))
@@ -906,12 +905,12 @@ Lisp function does not specify a special indentation."
                                            (progn (forward-sexp 1) (point))))
                method)
            (setq method (or (function-get (intern-soft function)
-                                          'lisp-indent-function)
-                            (get (intern-soft function) 'lisp-indent-hook)))
+					 'lisp-indent-function)
+			   (get (intern-soft function) 'lisp-indent-hook)))
            (cond ((or (eq method 'defun)
-                      (and (null method)
-                           (> (length function) 3)
-                           (string-match "\\`def" function)))
+		     (and (null method)
+			(> (length function) 3)
+			(string-match "\\`def" function)))
                   (lisp-indent-defform state indent-point))
                  ((integerp method)
                   (lisp-indent-specform method state
@@ -943,6 +942,7 @@ Lisp function does not specify a special indentation."
 (define-key emacs-lisp-mode-map (kbd "C-c C-k") 'eval-buffer)
 (define-key emacs-lisp-mode-map (kbd "C-c C-;") 'eval-print-as-comment)
 
+;;; TODO Clean up clojure config
 ;;; Clojure
 (use-package clojure-mode
   :defer t
@@ -1105,51 +1105,6 @@ Lisp function does not specify a special indentation."
 
 (setq read-process-output-max (* 1024 1024))
 
-;;; C++
-(use-package yasnippet)
-(yas-global-mode 1)
-
-(use-package modern-cpp-font-lock
-  :ensure t)
-(modern-c++-font-lock-global-mode t)
-
-(use-package cpp-auto-include)
-
-(defun code-compile ()
-  (interactive)
-  (unless (file-exists-p "Makefile")
-    (set (make-local-variable 'compile-command)
-     (let ((file (file-name-nondirectory buffer-file-name)))
-       (format "%s -o %s %s"
-           (if  (equal (file-name-extension file) "cpp") "clang++" "clang" )
-           (file-name-sans-extension file)
-           file)))
-    (compile compile-command)))
-
-(use-package cmake-font-lock
-  :hook (cmake-mode . cmake-font-lock-activate))
-
-(use-package cmake-mode
-  :mode ("CMakeLists.txt" "\\.cmake\\'"))
-
-(use-package irony
-  :hook (((c++-mode c-mode objc-mode) . irony-mode-on-maybe)
-         (irony-mode . irony-cdb-autosetup-compile-options))
-  :config
-  (defun irony-mode-on-maybe ()
-    ;; avoid enabling irony-mode in modes that inherits c-mode, e.g: solidity-mode
-    (when (member major-mode irony-supported-major-modes)
-      (irony-mode 1))))
-
-;; (use-package company-irony
-;;   :after irony
-;;   :config (add-to-list 'company-backends 'company-irony))
-
-(use-package irony-eldoc
-  :hook (irony-mode))
-
-;;(global-set-key [f9] 'code-compile)
-
 ;;; Racket
 (use-package racket-mode
   :mode "\\.rkt\\'"
@@ -1170,47 +1125,6 @@ Lisp function does not specify a special indentation."
 
 (use-package dr-racket-like-unicode)
 ;; (use-package bracketed-paste)
-
-;; (use-package geiser)
-;; (use-package geiser-racket)
-
-;;; Java
-
-(use-package eglot-java
-  :init
-  (eglot-java-init))
-
-;; For groovy and gradle support
-(use-package groovy-mode :defer t)
-
-;; Viewing Java Class files
-(defun javap-handler-real (operation args)
-  "Run the real handler without the javap handler installed."
-  (let ((inhibit-file-name-handlers
-         (cons 'javap-handler
-               (and (eq inhibit-file-name-operation operation)
-                  inhibit-file-name-handlers)))
-        (inhibit-file-name-operation operation))
-    (apply operation args)))
-
-(defun javap-handler (op &rest args)
-  "Handle .class files by putting the output of javap in the buffer."
-  (cond
-   ((eq op 'get-file-buffer)
-    (let ((file (car args)))
-      (with-current-buffer (create-file-buffer file)
-        (call-process "javap" nil (current-buffer) nil "-verbose"
-                      "-classpath" (file-name-directory file)
-                      (file-name-sans-extension (file-name-nondirectory file)))
-        (setq buffer-file-name file)
-        (setq buffer-read-only t)
-        (set-buffer-modified-p nil)
-        (goto-char (point-min))
-        (java-mode)
-        (current-buffer))))
-   ((javap-handler-real op args))))
-
-(add-to-list 'file-name-handler-alist '("\\.class$" . javap-handler))
 
 ;;; Common Lisp
 
@@ -1268,6 +1182,104 @@ Lisp function does not specify a special indentation."
 (use-package common-lisp-snippets)
 
 (use-package lisp-extra-font-lock)
+
+;;; Chicken Scheme
+
+(use-package geiser
+  :hook
+  (scheme-mode . geiser-mode)
+  :custom
+  (geiser-active-implementations '(chicken)))
+
+(use-package geiser-chicken)
+
+;; Scheme LSP
+;; (add-to-list 'eglot-server-programs
+;;              `(scheme-mode . ("chicken-lsp-server")))
+;; (add-hook 'scheme-mode-hook 'eglot-ensure)
+
+;;; C++
+(use-package yasnippet)
+(yas-global-mode 1)
+
+(use-package modern-cpp-font-lock
+  :ensure t)
+(modern-c++-font-lock-global-mode t)
+
+(use-package cpp-auto-include)
+
+(defun code-compile ()
+  (interactive)
+  (unless (file-exists-p "Makefile")
+    (set (make-local-variable 'compile-command)
+	 (let ((file (file-name-nondirectory buffer-file-name)))
+	   (format "%s -o %s %s"
+		   (if  (equal (file-name-extension file) "cpp") "clang++" "clang" )
+		   (file-name-sans-extension file)
+		   file)))
+    (compile compile-command)))
+
+(use-package cmake-font-lock
+  :hook (cmake-mode . cmake-font-lock-activate))
+
+(use-package cmake-mode
+  :mode ("CMakeLists.txt" "\\.cmake\\'"))
+
+(use-package irony
+  :hook (((c++-mode c-mode objc-mode) . irony-mode-on-maybe)
+         (irony-mode . irony-cdb-autosetup-compile-options))
+  :config
+  (defun irony-mode-on-maybe ()
+    ;; avoid enabling irony-mode in modes that inherits c-mode, e.g: solidity-mode
+    (when (member major-mode irony-supported-major-modes)
+      (irony-mode 1))))
+
+;; (use-package company-irony
+;;   :after irony
+;;   :config (add-to-list 'company-backends 'company-irony))
+
+(use-package irony-eldoc
+  :hook (irony-mode))
+
+;;(global-set-key [f9] 'code-compile)
+
+;;; Java
+
+(use-package eglot-java
+  :init
+  (eglot-java-init))
+
+;; For groovy and gradle support
+(use-package groovy-mode :defer t)
+
+;; Viewing Java Class files
+(defun javap-handler-real (operation args)
+  "Run the real handler without the javap handler installed."
+  (let ((inhibit-file-name-handlers
+         (cons 'javap-handler
+               (and (eq inhibit-file-name-operation operation)
+                  inhibit-file-name-handlers)))
+        (inhibit-file-name-operation operation))
+    (apply operation args)))
+
+(defun javap-handler (op &rest args)
+  "Handle .class files by putting the output of javap in the buffer."
+  (cond
+   ((eq op 'get-file-buffer)
+    (let ((file (car args)))
+      (with-current-buffer (create-file-buffer file)
+        (call-process "javap" nil (current-buffer) nil "-verbose"
+                      "-classpath" (file-name-directory file)
+                      (file-name-sans-extension (file-name-nondirectory file)))
+        (setq buffer-file-name file)
+        (setq buffer-read-only t)
+        (set-buffer-modified-p nil)
+        (goto-char (point-min))
+        (java-mode)
+        (current-buffer))))
+   ((javap-handler-real op args))))
+
+(add-to-list 'file-name-handler-alist '("\\.class$" . javap-handler))
 
 ;;; Latex
 ;; (use-package latex-preview-pane)

@@ -309,10 +309,31 @@
         sbcl
         asdf
 
+        # chicken scheme
+        chicken
+        chickenPackages.chickenEggs.apropos
+        chickenPackages.chickenEggs.srfi-18
+        chickenPackages.chickenEggs.srfi-1
+        chickenPackages.egg2nix
+        chickenPackages.chickenEggs.utf8
+        chickenPackages.chickenEggs.r7rs
+        chickenPackages.chickenEggs.regex
+        chickenPackages.chickenEggs.check-errors
+        chickenPackages.chickenEggs.defstruct
+        # for lsp run:
+        # chicken-install -s apropos chicken-doc srfi-18
+        # cd `csi -p '(chicken-home)'`
+        # curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
+        # chicken-install -s lsp-server
+
+        # racket
+        racket
+        # for lsp run:
+        # raco pkg install racket-langserver
+
         # other programing languages
         python39Full
         python39Packages.pip
-        racket
         rnix-lsp
         javaPackages.openjfx17
         maven
