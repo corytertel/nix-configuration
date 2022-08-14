@@ -20,10 +20,6 @@
 
   # File Manager
   programs.cory.dolphin.enable = true;
-  programs.cory.krusader = {
-    enable = true;
-    config = import ../../config/krusader/config.nix { inherit pkgs; };
-  };
 
   # Photo Viewer
   programs.cory.gwenview = {

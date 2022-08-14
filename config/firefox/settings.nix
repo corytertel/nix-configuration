@@ -111,8 +111,8 @@ in {
   # FF 3.6 Theme
   "browser.theme.content-theme" = 2;
   "browser.theme.toolbar-theme" = 1;
-  # "extensions.activeThemeID" = "{dd0d4862-e183-44d4-9841-5db3c8a43d11}";
-  "extensions.activeThemeID" = "{b71025ab-42c7-48a5-ba37-063efa0dee7e}";
+  "extensions.activeThemeID" = "{dd0d4862-e183-44d4-9841-5db3c8a43d11}";
+  # "extensions.activeThemeID" = "{b71025ab-42c7-48a5-ba37-063efa0dee7e}";
   # Keybindings
   # https://searchcode.com/codesearch/view/26755902/
   # default is 17, 17 is ctrl

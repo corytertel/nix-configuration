@@ -3,9 +3,9 @@
 {
   kwinrc = {
     Compositing = {
-      # GLCore = true;
+      GLCore = true;
       OpenGLIsUnsafe = false;
-      # LatencyPolicy = "ExtremelyLow";
+      LatencyPolicy = "ExtremelyLow";
       # MaxFPS = 60;
       # RefreshRate = 60;
       # Enabled = false;
@@ -21,15 +21,15 @@
       Id_7 = "4119e1a2-cc3f-407a-a25e-753821d09ab2";
       Id_8 = "36565f20-e328-43e0-8f50-bd09a591364d";
       Id_9 = "5a658449-66b6-4de4-b0cc-32cd47a66b46";
-      Name_1 = "┌";
-      Name_2 = "┬";
-      Name_3 = "┐";
-      Name_4 = "├";
-      Name_5 = "┼";
-      Name_6 = "┤";
-      Name_7 = "└";
-      Name_8 = "┴";
-      Name_9 = "┘";
+      Name_1 = "1";
+      Name_2 = "2";
+      Name_3 = "3";
+      Name_4 = "4";
+      Name_5 = "5";
+      Name_6 = "6";
+      Name_7 = "7";
+      Name_8 = "8";
+      Name_9 = "9";
       Number = "9";
       Rows = "3";
     };
@@ -79,9 +79,9 @@
   };
 
   oxygenrc = {
-    ActiveShadow.ShadowSize = 50;
-    ActiveShadow.Enabled = false;
-    InactiveShadow.ShadowSize = 50;
+    ActiveShadow.ShadowSize = 40;
+    ActiveShadow.Enabled = true;
+    InactiveShadow.ShadowSize = 40;
     Windeco = {
       AnimationsEnabled = false;
       ButtonAnimationsEnabled = false;
@@ -129,8 +129,8 @@
   };
 
   plasmarc = {
-    Theme.name = "org.kde.oxygenKDE4";
-    Theme-plasmathemeexplorer.name = "org.kde.oxygenKDE4";
+    Theme.name = "oxygen";
+    Theme-plasmathemeexplorer.name = "oxygen";
   };
 
   krunnerrc = {

@@ -593,12 +593,12 @@
   :bind (:map smartparens-mode-map
          ;; This is the paredit mode map minus a few key bindings
          ;; that I use in other modes (e.g. M-?)
-         ("C-S-f" . sp-forward-sexp) ;; navigation
-         ("C-S-b" . sp-backward-sexp)
-         ("C-S-u" . sp-backward-up-sexp)
-         ("C-S-d" . sp-down-sexp)
-         ("C-S-p" . sp-backward-down-sexp)
-         ("C-S-n" . sp-up-sexp)
+         ("C-M-f" . sp-forward-sexp) ;; navigation
+         ("C-M-b" . sp-backward-sexp)
+         ("C-M-u" . sp-backward-up-sexp)
+         ("C-M-d" . sp-down-sexp)
+         ("C-M-p" . sp-backward-down-sexp)
+         ("C-M-n" . sp-up-sexp)
          ;; ("C-w" . whole-line-or-region-sp-kill-region)
          ("M-s" . sp-splice-sexp) ;; depth-changing commands
          ("M-r" . sp-splice-sexp-killing-around)
@@ -691,8 +691,8 @@
          ([(control shift down)] . move-text-down)
          ([(meta shift up)]      . move-text-up)
          ([(meta shift down)]    . move-text-down)
-	 ("C-S-n" . move-text-down)
-	 ("C-S-p" . move-text-up)))
+	 ("C-M-n" . move-text-down)
+	 ("C-M-p" . move-text-up)))
 
 ;; Copy text as Discord/GitHub/etc formatted code
 (use-package copy-as-format
@@ -1480,8 +1480,8 @@ Lisp function does not specify a special indentation."
   :custom
   (god-mode-alist
    '((nil . "C-")
-     ("z" . "M-")
-     ("Z" . "C-M-")))
+     ("." . "M-")
+     (">" . "C-M-")))
   (god-exempt-major-modes nil) ; for god-mode all
   (god-exempt-predicates nil)  ; for god-mode-all
   :config
@@ -1508,7 +1508,7 @@ Lisp function does not specify a special indentation."
   (global-set-key (kbd "C-x C-1") #'delete-other-windows)
   (global-set-key (kbd "C-x C-2") #'split-and-follow-below)
   (global-set-key (kbd "C-x C-3") #'split-and-follow-right)
-  (define-key god-local-mode-map (kbd ".") #'repeat))
+  (define-key god-local-mode-map (kbd "z") #'repeat))
 
 ;; Make ESC quit prompts
 ;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)

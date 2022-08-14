@@ -61,8 +61,24 @@ in {
     };
 
     home-manager.users.cory.home.packages = with pkgs; [
-      kompare
+      findutils
+      libsForQt5.kio-extras
+      libsForQt5.kget
+      kompare # or kdiff3
       krename
+      thunderbird
+      gnutar
+      gzip
+      bzip2
+      xz
+      zip
+      unzip
+      rar
+      rpm
+      dpkg
+      arj
+      lha
+      p7zip
     ];
   };
 }
