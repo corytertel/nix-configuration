@@ -300,6 +300,7 @@
   (clojure-mode . eglot-ensure)
   (clojurescript-mode . eglot-ensure)
   (clojurec-mode . eglot-ensure)
+  (scheme-mode . eglot-ensure)
   (java-mode . eglot-ensure)
 
   :custom
@@ -312,6 +313,8 @@
 
   :config
   (define-key eglot-mode-map [remap display-local-help] nil)
+  (add-to-list 'eglot-server-programs
+               `(scheme-mode . ("chicken-lsp-server")))
 
   :bind (:map eglot-mode-map
 	 ("C-c C-a" . eglot-code-actions)
@@ -1192,11 +1195,6 @@ Lisp function does not specify a special indentation."
   (geiser-active-implementations '(chicken)))
 
 (use-package geiser-chicken)
-
-;; Scheme LSP
-;; (add-to-list 'eglot-server-programs
-;;              `(scheme-mode . ("chicken-lsp-server")))
-;; (add-hook 'scheme-mode-hook 'eglot-ensure)
 
 ;;; C++
 (use-package yasnippet)
