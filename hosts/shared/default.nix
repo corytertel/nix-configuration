@@ -272,6 +272,13 @@
           #(setq org-latex-compiler "lualatex")
           #(setq org-preview-latex-default-process 'dvisvgm)
         });
+
+        # chickenEggs = import ./chicken { inherit pkgs; };
+
+        eggs = let
+          stdenv = pkgs.stdenv;
+        in import ./chicken/eggs.nix { inherit pkgs stdenv; };
+
       in with pkgs; [
         # linux basics
         killall
@@ -311,20 +318,12 @@
 
         # chicken scheme
         chicken
-        chickenPackages.chickenEggs.apropos
-        chickenPackages.chickenEggs.srfi-18
-        chickenPackages.chickenEggs.srfi-1
-        chickenPackages.egg2nix
-        chickenPackages.chickenEggs.utf8
-        chickenPackages.chickenEggs.r7rs
-        chickenPackages.chickenEggs.regex
-        chickenPackages.chickenEggs.check-errors
-        chickenPackages.chickenEggs.defstruct
-        # for lsp run:
-        # chicken-install -s apropos chicken-doc srfi-18
-        # cd `csi -p '(chicken-home)'`
-        # curl http://3e8.org/pub/chicken-doc/chicken-doc-repo.tgz | sudo tar zx
-        # chicken-install -s lsp-server
+        # chickenEggs
+        eggs.apropos
+        eggs.chicken-doc
+        eggs.srfi-1
+        eggs.srfi-18
+        eggs.lsp-server
 
         # racket
         racket
