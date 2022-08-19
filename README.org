@@ -10,39 +10,33 @@ There are instructions as to how to replicate my install in the install director
 
 * PC
 
-[[Screenshot][img/xmomacs.png]]
+[[Screenshot][img/pc.png]]
 
 #+ATTR_HTML: :border 2 :rules all :frame border
-|---------------+-----------|
-| *OS*          | NixOS     |
-| *Shell*       | zsh       |
-| *Terminal*    | urxvt     |
-| *Colorscheme* | Parchment |
-| *WM*          | xmonad    |
-| *Bar/Dock*    | xmobar    |
-| *Font*        | Iosevka   |
-| *Editor*      | Emacs     |
+|---------------+---------------------|
+| *OS*          | NixOS               |
+| *Shell*       | zsh                 |
+| *Terminal*    | konsole             |
+| *Colorscheme* | Plainlight          |
+| *WM*          | KDE                 |
+| *Panel*       | latte-dock          |
+| *Font*        | VictorMono & Oxygen |
+| *Editor*      | Emacs               |
 
 * Laptop
 
 [[Screenshot][img/laptop.png]]
 
 #+ATTR_HTML: :border 2 :rules all :frame border
-|---------------+-------------------|
-| *OS*          | NixOS             |
-| *Shell*       | zsh               |
-| *Terminal*    | urxvt             |
-| *Colorscheme* | Black Nord        |
-| *WM*          | xmonad            |
-| *Bar*         | xmobar & tint2    |
-| *Font*        | mplus & JetBrains |
-| *Editor*      | Emacs             |
-| *Fetch*       | pfetch && df -h   |
-
-* TO DO
-  + Reorganize file structure
-    + Clean up files too
-  + Sort through and remove unnecessary files in `old`
+|---------------+---------------------|
+| *OS*          | NixOS               |
+| *Shell*       | zsh                 |
+| *Terminal*    | konsole             |
+| *Colorscheme* | Plainlight          |
+| *WM*          | KDE                 |
+| *Panel*       | latte-dock          |
+| *Font*        | VictorMono & Oxygen |
+| *Editor*      | Emacs               |
 
 * Inspired by
 
