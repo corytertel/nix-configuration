@@ -1188,6 +1188,27 @@ Lisp function does not specify a special indentation."
 
 ;;; Chicken Scheme
 
+(custom-set-variables '(scheme-program-name "csi -R r7rs"))
+
+(add-to-list 'auto-mode-alist
+             '("\\.egg\\'" . scheme-mode))
+(add-to-list 'auto-mode-alist
+             '("\\.scm\\'" . scheme-mode))
+(add-to-list 'auto-mode-alist
+             '("\\.sld\\'" . scheme-mode))
+(add-hook 'scheme-mode-hook
+          (lambda ()
+            (setq open-paren-in-column-0-is-defun-start t)))
+
+(defun scheme-module-indent (state indent-point normal-indent) 0)
+
+(defun scheme-indent-hook ()
+  (put 'module 'scheme-indent-function 'scheme-module-indent)
+  (put 'define-library 'scheme-indent-function 'scheme-module-indent)
+  (put 'define-module 'scheme-indent-function 'scheme-module-indent))
+
+(add-hook 'scheme-mode-hook 'scheme-indent-hook)
+
 (use-package geiser
   :hook
   (scheme-mode . geiser-mode)

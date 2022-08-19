@@ -124,8 +124,10 @@
   };
 
   environment = {
-    variables = {
+    variables = with pkgs; {
       BROWSER = config.apps.browser.command;
+      CHICKEN_REPOSITORY_PATH = "${chicken-lsp-server}/lib/chicken/${toString chicken.binaryVersion}";
+      CHICKEN_INCLUDE_PATH = "${chicken}/share";
     };
     systemPackages = with pkgs; [
       wget
@@ -273,12 +275,6 @@
           #(setq org-preview-latex-default-process 'dvisvgm)
         });
 
-        # chickenEggs = import ./chicken { inherit pkgs; };
-
-        eggs = let
-          stdenv = pkgs.stdenv;
-        in import ./chicken/eggs.nix { inherit pkgs stdenv; };
-
       in with pkgs; [
         # linux basics
         killall
@@ -318,12 +314,7 @@
 
         # chicken scheme
         chicken
-        # chickenEggs
-        eggs.apropos
-        eggs.chicken-doc
-        eggs.srfi-1
-        eggs.srfi-18
-        eggs.lsp-server
+        chicken-lsp-server
 
         # racket
         racket
