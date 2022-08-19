@@ -412,7 +412,7 @@
   :ensure t
   :after corfu
   :custom
-  (kind-icon-use-icons t)
+  (kind-icon-use-icons nil) ; Use text labels
   (kind-icon-default-face 'corfu-default)
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
