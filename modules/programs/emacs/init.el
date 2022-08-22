@@ -102,7 +102,8 @@
 		eshell-mode-hook
 		vterm-mode-hook
 		cider-repl-mode-hook
-		racket-repl-mode-hook))
+		racket-repl-mode-hook
+		geiser-repl-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; Window dividers
@@ -579,17 +580,13 @@
 (use-package goggles
   :config (goggles-mode))
 
-;; DOESN'T EXIST
-;; Show the name of the current function definition in the modeline
-;; (use-package which-func
-;;  :config (which-function-mode 1))
-
 ;; Smartparens
 (use-package smartparens
   :defer 1
   :hook ((
           emacs-lisp-mode lisp-mode lisp-data-mode clojure-mode cider-repl-mode
-	  racket-mode racket-repl-mode hy-mode prolog-mode go-mode cc-mode
+	  racket-mode racket-repl-mode scheme-mode geiser-repl-mode
+	  hy-mode prolog-mode go-mode cc-mode
 	  python-mode typescript-mode json-mode javascript-mode ;java-mode
           ) . smartparens-strict-mode)
   ;; :hook (prog-mode . smartparens-strict-mode)
@@ -1543,6 +1540,12 @@ Lisp function does not specify a special indentation."
 
 ;; Make ESC quit prompts
 ;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+;;
+;; --- ORG MODE ---
+;;
+
+(use-package org)
 
 ;;
 ;; --- MISC ---
