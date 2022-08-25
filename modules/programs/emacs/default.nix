@@ -153,6 +153,7 @@ in {
     environment.systemPackages = with pkgs; [
       git
       ripgrep
+      ispell
     ] ++ shellScripts;
 
   };

@@ -74,6 +74,9 @@
 ;; --- VISUALS ---
 ;;
 
+;; Disable startup screen
+(setq inhibit-startup-message t)
+
 (scroll-bar-mode -1) ; Disables the visible scrollbar
 (tool-bar-mode -1)   ; Disables the toolbar
 (menu-bar-mode -1)   ; Disables the menubar
@@ -82,6 +85,10 @@
 
 ;; Setting the font
 (set-face-attribute 'default nil :family "VictorMono Nerd Font Mono")
+;; Set fixed pitch face
+(set-face-attribute 'fixed-pitch nil :font "VictorMono Nerd Font Mono")
+;; Set variable pitch face
+(set-face-attribute 'variable-pitch nil :font "Oxygen Nerd Font")
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
@@ -413,7 +420,7 @@
   :ensure t
   :after corfu
   :custom
-  (kind-icon-use-icons nil) ; Use text labels
+  (kind-icon-use-icons t) ; Use icons labels
   (kind-icon-default-face 'corfu-default)
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
@@ -549,7 +556,7 @@
 ;; Word wrapping
 (global-visual-line-mode 1)
 (setq-default fill-column 80)
-(add-hook 'text-mode-hook #'turn-on-auto-fill)
+;; (add-hook 'text-mode-hook #'turn-on-auto-fill)
 
 ;; Turn ^L into pretty lines
 (use-package page-break-lines
@@ -1545,7 +1552,73 @@ Lisp function does not specify a special indentation."
 ;; --- ORG MODE ---
 ;;
 
-(use-package org)
+(use-package org
+  :defer
+  :hook
+  (org-mode . (lambda ()
+		(org-indent-mode)
+		(variable-pitch-mode)
+		;; (auto-fill-mode)
+		(visual-line-mode)))
+
+  :bind
+  (("C-c o" . org-agenda))
+
+  :custom
+  (org-ellipsis " ▼")
+  (org-hide-emphasis-markers t)
+  (org-agenda-files '("~/Code/Org/tasks.org"
+		      "~/Code/Org/school.org"
+		      "~/Code/Org/homework.org"))
+  (org-agenda-start-with-log-mode t)
+  (org-log-done 'time)
+  (org-log-into-drawer t)
+  (org-pretty-entities t)
+  (org-startup-with-inline-images t)
+  (org-image-actual-width nil)
+  (org-return-follows-link t)
+  (org-agenda-current-time-string "← now ----------")
+
+  :config
+  ;; Replace list hyphen with dot
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+  ;; (set-face-attribute 'org-indent nil   :inherit '(org-hide fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+
+(use-package org-bullets
+  :after org
+  :hook (org-mode . org-bullets-mode)
+  :custom
+  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+(use-package visual-fill-column
+  :after org
+  :hook (org-mode . visual-fill-column-mode)
+  :custom
+  (visual-fill-column-width 100)
+  (visual-fill-column-center-text t))
+
+;; Spelling
+(dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode -1))))
+
+(use-package flyspell-correct
+  :after flyspell
+  :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper)))
+
+(use-package flyspell-correct-popup
+  :after flyspell-correct)
 
 ;;
 ;; --- MISC ---

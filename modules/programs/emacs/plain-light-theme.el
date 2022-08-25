@@ -24,6 +24,7 @@
 
 ;; This file is not part of Emacs.
 
+;;; Commentary:
 ;;; Code:
 
 (defgroup plainlight-theme nil
@@ -113,11 +114,11 @@ to 'auto, tags may not be properly aligned."
         (comp          "#ed8f23")
         (err           "#e60909")
         (func          "#ed8f23")
-        (head1         "#3b3a32")
+        (head1         "#141404")
         (head1-bg      "#ffffff")
-        (head2         "#1f8c35")
+        (head2         "#141404")
         (head2-bg      "#ffffff")
-        (head3         "#ed8f23")
+        (head3         "#141404")
         (head3-bg      "#ffffff")
         (head4         "#141404")
         (head4-bg      "#ffffff")
@@ -764,14 +765,14 @@ to 'auto, tags may not be properly aligned."
      `(org-headline-todo ((,class (:foreground ,meta))))
      `(org-hide ((,class (:foreground ,base))))
      `(org-kbd ((,class (:inherit region :foreground ,base :box (:line-width 1 :style released-button)))))
-     `(org-level-1 ((,class (:inherit bold :bold ,(if plainlight-theme-org-bold 'unspecified nil) :foreground ,head1 :height ,(if plainlight-theme-org-height 1.3 1.0) :background ,(when plainlight-theme-org-highlight head1-bg)))))
-     `(org-level-2 ((,class (:inherit bold :bold ,(if plainlight-theme-org-bold 'unspecified nil) :foreground ,head2 :height ,(if plainlight-theme-org-height 1.2 1.0) :background ,(when plainlight-theme-org-highlight head2-bg)))))
-     `(org-level-3 ((,class (:bold nil :foreground ,head3 :height ,(if plainlight-theme-org-height 1.1 1.0) :background ,(when plainlight-theme-org-highlight head3-bg)))))
-     `(org-level-4 ((,class (:bold nil :foreground ,head4 :background ,(when plainlight-theme-org-highlight head4-bg)))))
-     `(org-level-5 ((,class (:bold nil :foreground ,head1))))
-     `(org-level-6 ((,class (:bold nil :foreground ,head2))))
-     `(org-level-7 ((,class (:bold nil :foreground ,head3))))
-     `(org-level-8 ((,class (:bold nil :foreground ,head4))))
+     `(org-level-1 ((,class (:inherit bold :bold ,(if plainlight-theme-org-bold 'unspecified nil) :foreground ,head1 :height ,(if plainlight-theme-org-height 1.2 1.0) :background ,(when plainlight-theme-org-highlight head1-bg)))))
+     `(org-level-2 ((,class (:inherit bold :bold ,(if plainlight-theme-org-bold 'unspecified nil) :foreground ,head2 :height ,(if plainlight-theme-org-height 1.1 1.0) :background ,(when plainlight-theme-org-highlight head2-bg)))))
+     `(org-level-3 ((,class (:inherit bold :bold ,(if plainlight-theme-org-bold 'unspecified nil) :foreground ,head3 :height ,(if plainlight-theme-org-height 1.05 1.0) :background ,(when plainlight-theme-org-highlight head3-bg)))))
+     `(org-level-4 ((,class (:inherit bold :bold ,(if plainlight-theme-org-bold 'unspecified nil) :foreground ,head4 :height ,(if plainlight-theme-org-height 1.0 1.0) :background ,(when plainlight-theme-org-highlight head4-bg)))))
+     `(org-level-5 ((,class (:inherit bold :bold ,(if plainlight-theme-org-bold 'unspecified nil) :foreground ,head1 :height ,(if plainlight-theme-org-height 1.1 1.0)))))
+     `(org-level-6 ((,class (:inherit bold :bold ,(if plainlight-theme-org-bold 'unspecified nil) :foreground ,head2 :height ,(if plainlight-theme-org-height 1.1 1.0)))))
+     `(org-level-7 ((,class (:inherit bold :bold ,(if plainlight-theme-org-bold 'unspecified nil) :foreground ,head3 :height ,(if plainlight-theme-org-height 1.1 1.0)))))
+     `(org-level-8 ((,class (:inherit bold :bold ,(if plainlight-theme-org-bold 'unspecified nil) :foreground ,head4 :height ,(if plainlight-theme-org-height 1.1 1.0)))))
      `(org-link ((,class (:underline t :foreground ,comment))))
      `(org-meta-line ((,class (:foreground ,meta))))
      `(org-mode-line-clock-overrun ((,class (:foreground ,err))))
