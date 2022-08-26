@@ -1562,7 +1562,9 @@ Lisp function does not specify a special indentation."
 		(visual-line-mode)))
 
   :bind
-  (("C-c o" . org-agenda))
+  (("C-c o a" . org-agenda-list)
+   ("C-c o g" . consult-org-agenda)
+   ("C-c o c" . org-capture))
 
   :custom
   (org-ellipsis " ▼")
@@ -1607,6 +1609,13 @@ Lisp function does not specify a special indentation."
   (visual-fill-column-width 100)
   (visual-fill-column-center-text t))
 
+;; Drag and drop
+(use-package org-download
+  :commands (org-mode org-download-clipboard)
+  :custom
+  (org-download-screenshot-method "flameshot gui -s --raw > %s")
+  :bind ("<f8>" . org-download-screenshot))
+
 ;; Spelling
 (dolist (hook '(text-mode-hook))
   (add-hook hook (lambda () (flyspell-mode 1))))
@@ -1639,5 +1648,17 @@ Lisp function does not specify a special indentation."
 ;; Replace "yes or no" prompts with "y or n" prompts
 (defalias 'yes-or-no-p #'y-or-n-p
   "Use `y-or-n-p' instead of a yes/no prompt.")
+
+;; PDFs
+(use-package pdf-tools
+  :ensure t
+  :defer t
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :config
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+	TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+	TeX-source-correlate-start-server t)
+  (add-hook 'TeX-after-compilation-finished-functions
+            #'TeX-revert-document-buffer))
 
 ;;; init.el ends here

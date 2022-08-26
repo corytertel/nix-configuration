@@ -154,6 +154,7 @@ in {
       git
       ripgrep
       ispell
+      flameshot
     ] ++ shellScripts;
 
   };
