@@ -84,11 +84,11 @@
 (set-fringe-mode 10) ; Gives some breathing room
 
 ;; Setting the font
-(set-face-attribute 'default nil :family "VictorMono Nerd Font Mono")
+(set-face-attribute 'default nil :family "Victor Mono")
 ;; Set fixed pitch face
-(set-face-attribute 'fixed-pitch nil :font "VictorMono Nerd Font Mono")
+(set-face-attribute 'fixed-pitch nil :font "Victor Mono")
 ;; Set variable pitch face
-(set-face-attribute 'variable-pitch nil :font "Oxygen Nerd Font")
+(set-face-attribute 'variable-pitch nil :font "Oxygen-Sans")
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
@@ -127,15 +127,25 @@
   :ensure t)
 
 ;; Modeline
-(use-package smart-mode-line
-  :config
-  (setq sml/theme 'cory)
-  (sml/setup))
+;; (use-package smart-mode-line
+;;   :config
+;;   (setq sml/theme 'cory)
+;;   (sml/setup))
 
-(use-package rich-minority
+;; (use-package rich-minority
+;;   :config
+;;   (rich-minority-mode 1)
+;;   (setf rm-blacklist ""))
+
+(use-package moody
   :config
-  (rich-minority-mode 1)
-  (setf rm-blacklist ""))
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode)
+  (moody-replace-eldoc-minibuffer-message-function))
+
+(use-package minions
+  :config (minions-mode))
 
 ;; Add padding to the sides
 (require 'frame)
@@ -420,7 +430,7 @@
   :ensure t
   :after corfu
   :custom
-  (kind-icon-use-icons t) ; Use icons labels
+  (kind-icon-use-icons nil) ; Don't use icons labels
   (kind-icon-default-face 'corfu-default)
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
@@ -1573,6 +1583,7 @@ Lisp function does not specify a special indentation."
 		      "~/Code/Org/school.org"
 		      "~/Code/Org/homework.org"))
   (org-agenda-start-with-log-mode t)
+  (org-agenda-start-on-weekday nil)
   (org-log-done 'time)
   (org-log-into-drawer t)
   (org-pretty-entities t)

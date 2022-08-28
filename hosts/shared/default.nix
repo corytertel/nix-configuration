@@ -56,18 +56,19 @@
         enable = true;
         mouse = {
           # Mouse
-          accelProfile = "flat";
-          accelSpeed = null;
-          disableWhileTyping = true;
+          # accelProfile = "flat";
+          # accelSpeed = null;
+          # disableWhileTyping = true;
 
           # Trackball
-          # accelProfile = "flat";
-          # buttonMapping = "1 8 2 4 5 6 7 3 9";
-          # disableWhileTyping = true;
-          # naturalScrolling = true;
-          # scrollButton = 3;
-          # scrollMethod = "button";
-          # transformationMatrix = "3 0 0 0 3 0 0 0 1";
+          accelProfile = "flat";
+          accelSpeed = "0.8";
+          buttonMapping = "1 8 2 4 5 6 7 3 9";
+          disableWhileTyping = true;
+          naturalScrolling = true;
+          scrollButton = 3;
+          scrollMethod = "button";
+          transformationMatrix = "3 0 0 0 3 0 0 0 1";
         };
       };
     };
@@ -78,13 +79,7 @@
   };
 
   sound.enable = true;
-  hardware.pulseaudio = {
-    enable = true;
-    extraConfig = ''
-      # Set volume to 50% on boot
-      set-sink-volume 0 32768
-    '';
-  };
+  hardware.pulseaudio.enable = true;
 
   users = {
     users = {
@@ -146,6 +141,8 @@
   fonts.fonts = with pkgs; [
     config.theme.font.system.package
     config.theme.font.monospace.package
+    victor-mono
+    oxygenfonts
   ];
 
   virtualisation = {
@@ -374,6 +371,7 @@
         inkscape
         thunderbird
         mullvad-vpn
+        # lazpaint
 
         # Games
         libsForQt5.kpat
