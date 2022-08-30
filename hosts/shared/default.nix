@@ -61,8 +61,8 @@
           # disableWhileTyping = true;
 
           # Trackball
-          accelProfile = "flat";
-          accelSpeed = "0.8";
+          accelProfile = "adaptive";
+          accelSpeed = "0.4";
           buttonMapping = "1 8 2 4 5 6 7 3 9";
           disableWhileTyping = true;
           naturalScrolling = true;

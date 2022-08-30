@@ -74,9 +74,6 @@
 ;; --- VISUALS ---
 ;;
 
-;; Disable startup screen
-(setq inhibit-startup-message t)
-
 (scroll-bar-mode -1) ; Disables the visible scrollbar
 (tool-bar-mode -1)   ; Disables the toolbar
 (menu-bar-mode -1)   ; Disables the menubar
@@ -137,7 +134,46 @@
 ;;   (rich-minority-mode 1)
 ;;   (setf rm-blacklist ""))
 
+(defface my-narrow-face
+  '((t (:foreground "#141404" :background "#ed8f23")))
+  "Todo/fixme highlighting."
+  :group 'faces)
+
+(defface my-read-only-face
+  '((t (:foreground "#141404" :background "#1f8c35")))
+  "Read-only buffer highlighting."
+  :group 'faces)
+
+(defface my-modified-face
+  '((t (:foreground "#d8d8d8" :background "#e60909")))
+  "Modified buffer highlighting."
+  :group 'faces)
+
+(setq-default
+ mode-line-format
+ '("  "
+   (:eval (let ((str (if buffer-read-only
+                         (if (buffer-modified-p) "%%*" "%%%%")
+                       (if (buffer-modified-p) "**" "--"))))
+            (if buffer-read-only
+                (propertize str 'face 'my-read-only-face)
+              (if (buffer-modified-p)
+                  (propertize str 'face 'my-modified-face)
+                str))))
+   (list 'line-number-mode "  ")
+   (:eval (when line-number-mode
+            (let ((str "L%l"))
+              (if (/= (buffer-size) (- (point-max) (point-min)))
+                  (propertize str 'face 'my-narrow-face)
+                str))))
+   "  %p"
+   (list 'column-number-mode "  C%c")
+   "  " mode-line-buffer-identification
+   "  " mode-line-modes))
+
 (use-package moody
+  :custom
+  (moody-mode-line-height 40)
   :config
   (setq x-underline-at-descent-line t)
   (moody-replace-mode-line-buffer-identification)
@@ -227,8 +263,7 @@
       backup-directory-alist `((".*" . ,temporary-file-directory))
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
-(setq-default fill-column 80
-	      left-margin-width 1
+(setq-default left-margin-width 1
 	      sentence-end-double-space nil
 	      lisp-backquote-indentation nil
 	      blink-cursor-blinks 10
@@ -344,12 +379,12 @@
   :custom
   (corfu-cycle t)                  ; Allows cycling through candidates
   (corfu-auto t)                   ; Enable auto completion
-  (corfu-auto-prefix 2)            ; Enable auto completion
+  (corfu-auto-prefix 1)            ; Enable auto completion
   (corfu-auto-delay 0.0)           ; Enable auto completion
   (corfu-quit-at-boundary t)
   (corfu-echo-documentation t)     ; Enable auto documentation in the minibuffer
   (corfu-preview-current 'insert)
-  (corfu-preselect-first t)
+  (corfu-preselect-first nil)
 
   :init
   ;; Need to recreate the map in order to preserve movement keys
@@ -366,8 +401,8 @@
 	  (define-key map [backtab] #'corfu-previous)
 	  (define-key map (kbd "TAB") #'corfu-next)
 	  (define-key map (kbd "S-TAB") #'corfu-previous)
-	  (define-key map [return] #'corfu-insert)
-	  (define-key map (kbd "RET") #'corfu-insert)
+	  ;; (define-key map [return] #'corfu-insert)
+	  ;; (define-key map (kbd "RET") #'corfu-insert)
 	  (define-key map (kbd "M-l") 'corfu-info-location)
 	  (define-key map (kbd "C-h") 'corfu-info-documentation)
 	  (define-key map (kbd "M-SPC") #'corfu-insert-separator)
@@ -391,7 +426,7 @@
   (add-hook 'eshell-mode-hook
             (lambda () (setq-local corfu-quit-at-boundary t
                               corfu-quit-no-match t
-                              corfu-auto nil)
+                              corfu-auto t)
               (corfu-mode))))
 
 ;; Templates takes advantage of emacs's tempo
@@ -579,9 +614,8 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; Show empty whitespace
-(global-whitespace-mode)
-;; (setq whitespace-style '(face trailing tabs lines empty big-indent))
 (setq whitespace-style '(face trailing tabs lines empty))
+(add-hook 'prog-mode-hook 'whitespace-mode)
 
 ;; Use hex mode for binary files
 (add-to-list 'auto-mode-alist '("\\.bin\\'" . hexl-mode))
@@ -1573,15 +1607,17 @@ Lisp function does not specify a special indentation."
 
   :bind
   (("C-c o a" . org-agenda-list)
+   ("C-c o A" . org-agenda)
    ("C-c o g" . consult-org-agenda)
-   ("C-c o c" . org-capture))
+   ("C-c o c" . org-capture)
+   ("C-c o r" . org-refile))
 
   :custom
   (org-ellipsis " ▼")
   (org-hide-emphasis-markers t)
-  (org-agenda-files '("~/Code/Org/tasks.org"
-		      "~/Code/Org/school.org"
-		      "~/Code/Org/homework.org"))
+  (org-agenda-files '("~/Code/Org/Tasks.org"
+		      "~/Code/Org/School.org"
+		      "~/Code/Org/Homework.org"))
   (org-agenda-start-with-log-mode t)
   (org-agenda-start-on-weekday nil)
   (org-log-done 'time)
@@ -1591,12 +1627,107 @@ Lisp function does not specify a special indentation."
   (org-image-actual-width nil)
   (org-return-follows-link t)
   (org-agenda-current-time-string "← now ----------")
+  (org-agenda-timegrid-use-ampm 1) ;; 12-hour clock
+  (org-todo-keywords
+   '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+     (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+  (org-refile-targets
+   '(("Archive.org" :maxlevel . 1)
+     ("Tasks.org" :maxlevel . 1)))
+  (org-tag-alist
+   '((:startgroup)
+     ;; Put mutually exclusive tags here
+     (:endgroup)
+     ("@errand" . ?E)
+     ("@home" . ?H)
+     ("@work" . ?W)
+     ("agenda" . ?a)
+     ("planning" . ?p)
+     ("publish" . ?P)
+     ("batch" . ?b)
+     ("note" . ?n)
+     ("idea" . ?i)))
+
+  ;; Configure custom agenda views
+  (org-agenda-custom-commands
+   '(("d" "Dashboard"
+      ((agenda "" ((org-deadline-warning-days 7)))
+       (todo "NEXT"
+	     ((org-agenda-overriding-header "Next Tasks")))
+       (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+
+     ("n" "Next Tasks"
+      ((todo "NEXT"
+	     ((org-agenda-overriding-header "Next Tasks")))))
+
+     ("W" "Work Tasks" tags-todo "+work")
+
+     ;; Low-effort next actions
+     ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+      ((org-agenda-overriding-header "Low Effort Tasks")
+       (org-agenda-max-todos 20)
+       (org-agenda-files org-agenda-files)))
+
+     ("w" "Workflow Status"
+      ((todo "WAIT"
+	     ((org-agenda-overriding-header "Waiting on External")
+	      (org-agenda-files org-agenda-files)))
+       (todo "REVIEW"
+	     ((org-agenda-overriding-header "In Review")
+	      (org-agenda-files org-agenda-files)))
+       (todo "PLAN"
+	     ((org-agenda-overriding-header "In Planning")
+	      (org-agenda-todo-list-sublevels nil)
+	      (org-agenda-files org-agenda-files)))
+       (todo "BACKLOG"
+	     ((org-agenda-overriding-header "Project Backlog")
+	      (org-agenda-todo-list-sublevels nil)
+	      (org-agenda-files org-agenda-files)))
+       (todo "READY"
+	     ((org-agenda-overriding-header "Ready for Work")
+	      (org-agenda-files org-agenda-files)))
+       (todo "ACTIVE"
+	     ((org-agenda-overriding-header "Active Projects")
+	      (org-agenda-files org-agenda-files)))
+       (todo "COMPLETED"
+	     ((org-agenda-overriding-header "Completed Projects")
+	      (org-agenda-files org-agenda-files)))
+       (todo "CANC"
+	     ((org-agenda-overriding-header "Cancelled Projects")
+	      (org-agenda-files org-agenda-files)))))))
+
+  (org-capture-templates
+   `(("t" "Tasks / Projects")
+     ("tt" "Task" entry (file+olp "~/Code/Org/Tasks.org" "Inbox")
+      "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+
+     ("j" "Journal Entries")
+     ("jj" "Journal" entry
+      (file+olp+datetree "~/Code/Org/Journal.org")
+      "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+      ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
+      :clock-in :clock-resume
+      :empty-lines 1)
+     ("jm" "Meeting" entry
+      (file+olp+datetree "~/Code/Org/Journal.org")
+      "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
+      :clock-in :clock-resume
+      :empty-lines 1)
+
+     ("w" "Workflows")
+     ("we" "Checking Email" entry (file+olp+datetree "~/Code/Org/Journal.org")
+      "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
+
+     ("m" "Metrics Capture")
+     ("mw" "Weight" table-line (file+headline "~/Code/Org/Metrics.org" "Weight")
+      "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
   :config
   ;; Replace list hyphen with dot
   (font-lock-add-keywords 'org-mode
                           '(("^ *\\([-]\\) "
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
   (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
@@ -1605,7 +1736,12 @@ Lisp function does not specify a special indentation."
   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+  ;; Save Org buffers after refiling
+  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+  )
 
 (use-package org-bullets
   :after org
@@ -1643,6 +1779,9 @@ Lisp function does not specify a special indentation."
 ;;
 ;; --- MISC ---
 ;;
+
+;; Disable startup screen
+(setq inhibit-startup-message t)
 
 ;; Use UTF-8 Encoding
 (prefer-coding-system 'utf-8)
