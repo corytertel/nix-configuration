@@ -140,6 +140,11 @@
     recursive = true;
   };
 
+  home-manager.users.cory.home.file.".config/qt5ct" = {
+    source = ./qt5ct;
+    recursive = true;
+  };
+
   environment.systemPackages = with pkgs; [
 
   ];

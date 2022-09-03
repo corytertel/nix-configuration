@@ -108,8 +108,10 @@ in {
 
     qt5 = {
       enable = true;
-      platformTheme = "gtk2";
-      style = "gtk2";
+      # platformTheme = "gtk2";
+      # style = "gtk2";
+      platformTheme = "qt5ct";
+      style = "Oxygen";
     };
 
     home-manager.users.cory = with config; {
@@ -171,14 +173,18 @@ in {
 
       qt = {
         enable = true;
-        platformTheme = "gtk";
-        style.name = "gtk2";
+        # platformTheme = "gtk";
+        # style.name = "gtk2";
+        style.name = "Oxygen";
+        style.package = pkgs.libsForQt5.oxygen;
       };
 
       home.packages = with pkgs; [
         gnome.gnome-themes-extra
         gsettings-desktop-schemas
         libsForQt5.qtstyleplugins
+        libsForQt5.qt5ct
+        libsForQt5.breeze-qt5
       ];
     };
   };

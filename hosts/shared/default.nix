@@ -163,10 +163,6 @@
   };
 
   xdg = {
-    portal = {
-      enable = true;
-      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    };
     mime.defaultApplications = let
       document = "writer.desktop";
       presentation = "impress.desktop";

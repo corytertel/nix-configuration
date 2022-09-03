@@ -39,6 +39,25 @@ PipeRead fvwm-menu-xlock
 PipeRead fvwm-menu-desktop
 Read xdgmenu
 
+# Set the cursor
+CursorStyle ROOT          left_ptr
+CursorStyle TITLE         left_ptr
+CursorStyle DEFAULT       left_ptr
+CursorStyle SYS           left_ptr
+CursorStyle MENU          left_ptr
+CursorStyle TOP           size_ver
+CursorStyle RIGHT         size_hor
+CursorStyle BOTTOM        size_ver
+CursorStyle LEFT          size_hor
+CursorStyle TOP_LEFT      size_fdiag
+CursorStyle TOP_RIGHT     size_bdiag
+CursorStyle BOTTOM_LEFT   size_bdiag
+CursorStyle BOTTOM_RIGHT  size_fdiag
+CursorStyle TOP_EDGE      left_ptr
+CursorStyle RIGHT_EDGE    left_ptr
+CursorStyle BOTTOM_EDGE   left_ptr
+CursorStyle LEFT_EDGE     left_ptr
+
 ###########
 # 1: Functions
 #
@@ -231,8 +250,8 @@ DesktopSize 3x3
 #
 # Set EdgeScroll 0 0 and/or EdgeResistance -1 to disable.
 EdgeScroll 100 100 wrap
-EdgeResistance 450
-EdgeThickness 2
+EdgeResistance 150
+EdgeThickness 1
 Style * EdgeMoveDelay 350, EdgeMoveResistance 350
 
 # EwmhBaseStruts [left] [right] [top] [bottom]
@@ -250,7 +269,7 @@ MoveThreshold 3
 Style * SloppyFocus, MouseFocusClickRaises
 
 # Default Font
-DefaultFont "xft:Oxygen Nerd Font:Bold:size=10:antialias=True"
+DefaultFont "xft:Oxygen Nerd Font:size=11:antialias=True"
 
 # Window Placement
 Style * MinOverlapPlacement, GrabFocusOff, !UsePPosition
@@ -357,7 +376,7 @@ MenuStyle * MenuColorset 5, ActiveColorset 6, GreyedColorset 7, TitleColorset 8
 MenuStyle * Hilight3DOff, HilightBack, HilightTitleBack, SeparatorsLong
 MenuStyle * TrianglesSolid, TrianglesUseFore
 MenuStyle * ItemFormat "%|%3.1i%5.3l%5.3>%|"
-MenuStyle * Font "xft:Oxygen Nerd Font:Bold:size=10:antialias=True"
+MenuStyle * Font "xft:Oxygen Nerd Font:size=11:antialias=True"
 
 # Root Menu
 #
@@ -365,33 +384,34 @@ MenuStyle * Font "xft:Oxygen Nerd Font:Bold:size=10:antialias=True"
 # window or using alt-f1 (or menu).
 DestroyMenu MenuFvwmRoot
 AddToMenu   MenuFvwmRoot "Fvwm" Title
-+ "&Home%icons/apps.png%" Popup MenuHome
-+ "&Applications%icons/apps.png%" Popup xdgmenu
-+ "&Terminal%icons/terminal.png%" Exec exec $[fvwm_term]
-+ "&Editor%icons/terminal.png%" Exec exec $[fvwm_editor]
++ "&Home%$[fvwm_icon]/places/32x32/user-home.png%" Popup MenuHome
++ "&Applications%$[fvwm_icon]/categories/32x32/applications-all.png%" Popup xdgmenu
++ "&Terminal%$[fvwm_icon]/apps/32x32/utilities-terminal.png%" Exec exec $[fvwm_term]
++ "&Editor%$[fvwm_icon]/apps/32x32/accessories-text-editor.png%" Exec exec $[fvwm_editor]
++ "&Browser%$[fvwm_icon]/apps/32x32/internet-web-browser.png%" Exec exec $[fvwm_browser]
 + "" Nop
-+ "Fvwm&Console%icons/terminal.png%" Module FvwmConsole -terminal $[fvwm_term]
-+ "&Wallpapers%icons/wallpaper.png%" Popup BGMenu
-+ "&Man Pages%icons/help.png%" Popup MenuFvwmManPages
-+ "Copy Config%icons/conf.png%" FvwmScript FvwmScript-ConfirmCopyConfig
++ "Fvwm&Console%$[fvwm_icon]/apps/32x32/utilities-terminal.png%" Module FvwmConsole -terminal $[fvwm_term]
++ "&Wallpapers%$[fvwm_icon]/actions/32x32/photo.png%" Popup BGMenu
++ "&Man Pages%$[fvwm_icon]/apps/32x32/help-browser.png%" Popup MenuFvwmManPages
++ "Copy Config%$[fvwm_icon]/actions/32x32/edit-copy.png%" FvwmScript FvwmScript-ConfirmCopyConfig
 + "" Nop
-+ "Re&fresh%icons/refresh.png%" Refresh
-+ "&Restart%icons/restart.png%" Restart
-+ "&Quit%icons/quit.png%" Module FvwmScript FvwmScript-ConfirmQuit
++ "Re&fresh%$[fvwm_icon]/actions/32x32/view-refresh.png%" Refresh
++ "&Restart%$[fvwm_icon]/actions/32x32/system-reboot.png%" Restart
++ "&Quit%$[fvwm_icon]/actions/32x32/system-shutdown.png%" Module FvwmScript FvwmScript-ConfirmQuit
 
 # Home Menu
 #
 # This menu shows folders in the home directory if the exist.
 DestroyMenu MenuHome
 AddToMenu   MenuHome "Home" Title
-Test (f /home/cory/Classes) + "Classes" Exec exec $[fvwm_file_manager] --new-window /home/cory/Classes
-Test (f /home/cory/Code) + "Code" Exec exec $[fvwm_file_manager] --new-window /home/cory/Code
-Test (f /home/cory/Desktop) + "Desktop" Exec exec $[fvwm_file_manager] --new-window /home/cory/Desktop
-Test (f /home/cory/Documents) + "Documents" Exec exec $[fvwm_file_manager] --new-window /home/cory/Documents
-Test (f /home/cory/Downloads) + "Downloads" Exec exec $[fvwm_file_manager] --new-window /home/cory/Downloads
-Test (f /home/cory/Music) + "Music" Exec exec $[fvwm_file_manager] --new-window /home/cory/Music
-Test (f /home/cory/Pictures) + "Pictures" Exec exec $[fvwm_file_manager] --new-window /home/cory/Pictures
-Test (f /home/cory/Videos) + "Videos" Exec exec $[fvwm_file_manager] --new-window /home/cory/Videos
+Test (f /home/cory/Classes) + "Classes%$[fvwm_icon]/places/32x32/folder-text.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Classes
+Test (f /home/cory/Code) + "Code%$[fvwm_icon]/places/32x32/folder-development.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Code
+Test (f /home/cory/Desktop) + "Desktop%$[fvwm_icon]/places/32x32/desktop.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Desktop
+Test (f /home/cory/Documents) + "Documents%$[fvwm_icon]/places/32x32/folder-documents.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Documents
+Test (f /home/cory/Downloads) + "Downloads%$[fvwm_icon]/places/32x32/folder-downloads.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Downloads
+Test (f /home/cory/Music) + "Music%$[fvwm_icon]/places/32x32/folder-sound.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Music
+Test (f /home/cory/Pictures) + "Pictures%$[fvwm_icon]/places/32x32/folder-pictures.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Pictures
+Test (f /home/cory/Videos) + "Videos%$[fvwm_icon]/places/32x32/folder-videos.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Videos
 
 # Background Menu
 #
@@ -399,9 +419,6 @@ Test (f /home/cory/Videos) + "Videos" Exec exec $[fvwm_file_manager] --new-windo
 # Menu icons are located in ~/.fvwm/images/bgicons/
 DestroyMenu BGMenu
 AddToMenu   BGMenu "Wallpapers" Title
-+ "Floral%bgicons/bg1.png%" SetBG tile bg1.png
-+ "Circles%bgicons/bg2.png%" SetBG tile bg2.png
-+ "Space%bgicons/bg3.png%" SetBG tile bg3.png
 + "Honolulu" SetBG fill honolulu.jpg
 
 # Window Operations Menus
@@ -630,7 +647,7 @@ Mouse 3 I    A Menu MenuIconOps
 # ButtonStyle 4 - MwmDecorMax
 # ButtonStyle 6 - MwmDecorMin
 
-TitleStyle Centered Height 46 -- Flat
+TitleStyle LeftJustified Height 46 -- Flat
 ButtonStyle 1 \
       ActiveUp          (Pixmap $[fvwm_img]/button/pin-activeup.png -- Flat) \
       ActiveDown        (Pixmap $[fvwm_img]/button/pin-activedown.png -- Flat) \
@@ -668,7 +685,7 @@ ButtonStyle All -- UseTitleStyle
 # a window. One use is getting the class/resource/name of a window.
 DestroyModuleConfig FvwmIdent:*
 *FvwmIdent: Colorset 10
-*FvwmIdent: Font "xft:Oxygen Nerd Font:size=12:antialias=True"
+*FvwmIdent: Font "xft:Oxygen Nerd Font:size=13:antialias=True"
 
 # FvwmBanner
 #
@@ -688,7 +705,7 @@ DestroyModuleConfig FvwmBanner:*
 #     quitting fvwm.
 DestroyModuleConfig FvwmScript:*
 *FvwmScript: DefaultColorset 10
-*FvwmScript: Font "xft:Oxygen Nerd Font:style=Bold:size=12"
+*FvwmScript: Font "xft:Oxygen Nerd Font:style=Bold:size=13"
 
 # FvwmButtons - RightPanel
 #
@@ -704,7 +721,7 @@ DestroyModuleConfig RightPanel:*
 *RightPanel: Rows $[vp.height]
 *RightPanel: Columns 120
 *RightPanel: Frame 0
-*RightPanel: Font "xft:Oxygen Nerd Font:Bold:size=12:antialias=True"
+*RightPanel: Font "xft:Oxygen Nerd Font:Bold:size=13:antialias=True"
 *RightPanel: (120x200, Icon "$[fvwm_img]/nixos-logo.png", Frame 0)
 *RightPanel: (120x5, Frame 0)
 *RightPanel: (10x20, Frame 0)
@@ -739,7 +756,7 @@ DestroyModuleConfig FvwmPager:*
 *FvwmPager: WindowColorsets 10 11
 *FvwmPager: Font None
 *FvwmPager: Balloons All
-*FvwmPager: BalloonFont "xft:Oxygen Nerd Font:Bold:size=10:antialias=True"
+*FvwmPager: BalloonFont "xft:Oxygen Nerd Font:Bold:size=11:antialias=True"
 *FvwmPager: BallonYOffset +2
 *FvwmPager: Window3dBorders
 *FvwmPager: MiniIcons
@@ -762,7 +779,7 @@ DestroyModuleConfig FvwmIconMan:*
 *FvwmIconMan: DrawIcons always
 *FvwmIconMan: ReliefThickness 0
 *FvwmIconMan: Format "%t"
-*FvwmIconMan: Font "xft:Oxygen Nerd Font:Bold:size=10:antialias=True"
+*FvwmIconMan: Font "xft:Oxygen Nerd Font:Bold:size=11:antialias=True"
 *FvwmIconMan: Action Mouse 0 A ret
 *FvwmIconMan: Action Mouse 1 A sendcommand IconManClick
 *FvwmIconMan: Action Mouse 3 A sendcommand "Menu MenuIconOps"

@@ -13,7 +13,7 @@ in {
   # using an external one (you are using one, right?).
   "signon.rememberSignons" = false;
   # Check if Firefox is the default browser
-  "browser.shell.checkDefaultBrowser" = true;
+  "browser.shell.checkDefaultBrowser" = false;
   # Set the startup page
   "browser.startup.homepage" = "${searx-link}";
   # Disable the "new tab page" feature and show a blank tab instead

@@ -42,7 +42,7 @@ in {
       FVWM_USERDIR = "${fvwm-config}";
 
       fvwm_img = "${fvwm-config}/images";
-      fvwm_icon = "${config.theme.icons.package}";
+      fvwm_icon = "${config.theme.icons.package}/share/icons/crystal-nova";
       fvwm_wallpaper = "${fvwm-config}/images/wallpaper";
       fvwm_cache = "/tmp/fvwm-cache";
       fvwm_scripts = "${fvwm-config}/scripts";
@@ -76,6 +76,7 @@ in {
         xdgmenumaker
         xbrightness
         imagemagick
+        kde-gtk-config
 
         libsForQt5.kwallet
         libsForQt5.kwallet-pam
