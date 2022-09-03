@@ -35,6 +35,7 @@
     ./theme
 
     ./windowManagers/exwm
+    ./windowManagers/fluxbox
     ./windowManagers/fvwm-laptop
     ./windowManagers/fvwm-pc
     ./windowManagers/kde

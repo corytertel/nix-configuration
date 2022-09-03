@@ -61,14 +61,14 @@
           # disableWhileTyping = true;
 
           # Trackball
-          accelProfile = "adaptive";
-          accelSpeed = "0.4";
+          accelProfile = "flat";
+          accelSpeed = null;
           buttonMapping = "1 8 2 4 5 6 7 3 9";
           disableWhileTyping = true;
           naturalScrolling = true;
           scrollButton = 3;
           scrollMethod = "button";
-          transformationMatrix = "3 0 0 0 3 0 0 0 1";
+          transformationMatrix = "2.5 0 0 0 2.5 0 0 0 1";
         };
       };
     };
@@ -372,6 +372,7 @@
         thunderbird
         mullvad-vpn
         # lazpaint
+        libsForQt5.kcalc
 
         # Games
         libsForQt5.kpat

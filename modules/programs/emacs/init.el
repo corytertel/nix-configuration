@@ -1361,7 +1361,9 @@ Lisp function does not specify a special indentation."
   (nix-mode . subword-mode)
   (nix-mode . nix-prettify-mode))
 
-(use-package fvwm-mode)
+(use-package fvwm-mode
+  ;; :mode "config"
+  :hook (fvwm-mode . subword-mode))
 
 ;;
 ;; --- TERMINALS ---

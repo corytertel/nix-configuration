@@ -91,7 +91,7 @@ in {
         default = "24";
       };
       package = mkOption {
-        type = types.nullOr types.packages;
+        type = types.nullOr types.package;
         default = null;
       };
     };

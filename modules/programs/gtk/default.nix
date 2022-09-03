@@ -125,26 +125,37 @@ in {
 
         gtk2.extraConfig = ''
           gtk-key-theme-name = "Emacs"
-          # gtk-enable-animations=1
-          # gtk-primary-button-warps-slider=0
-          # gtk-toolbar-style=3
-          # gtk-menu-images=1
-          # gtk-button-images=1
+          gtk-enable-animations=1
+          gtk-primary-button-warps-slider=1
+          gtk-toolbar-style=3
+          gtk-menu-images=1
+          gtk-button-images=1
       '';
 
         gtk3.extraConfig = {
           gtk-key-theme-name = "Emacs";
-          # gtk-button-images = true;
-          # gtk-decoration-layout = "icon:minimize,maximize,close";
-          # gtk-enable-animations = true;
-          # gtk-menu-images = true;
-          # gtk-modules = "colorreload-gtk-module";
-          # gtk-primary-button-warps-slider = false;
-          # gtk-toolbar-style = 3;
+          gtk-button-images = true;
+          gtk-decoration-layout = "icon:minimize,maximize,close";
+          gtk-enable-animations = true;
+          gtk-menu-images = true;
+          gtk-modules = "colorreload-gtk-module:window-decorations-gtk-module";
+          gtk-primary-button-warps-slider = true;
+          gtk-toolbar-style = 3;
+
+          gtk-icon-theme-name = theme.icons.name;
+          gtk-theme-name = if theme.gtk.name == null then theme.name else theme.gtk.name;
+          gtk-application-prefer-dark-theme = if theme.darkTheme then true else false;
         };
 
         gtk4.extraConfig = {
           gtk-key-theme-name = "Emacs";
+          gtk-decoration-layout = "icon:minimize,maximize,close";
+          gtk-enable-animations = true;
+          gtk-primary-button-warps-slider = true;
+
+          gtk-icon-theme-name = theme.icons.name;
+          gtk-theme-name = if theme.gtk.name == null then theme.name else theme.gtk.name;
+          gtk-application-prefer-dark-theme = if theme.darkTheme then true else false;
         };
 
         theme = {
@@ -155,12 +166,6 @@ in {
         iconTheme = {
           package = theme.icons.package;
           name = theme.icons.name;
-        };
-
-        gtk3.extraConfig = {
-          gtk-icon-theme-name = theme.icons.name;
-          gtk-theme-name = if theme.gtk.name == null then theme.name else theme.gtk.name;
-          gtk-application-prefer-dark-theme = if theme.darkTheme then 1 else 0;
         };
       };
 

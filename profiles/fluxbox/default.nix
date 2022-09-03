@@ -6,7 +6,7 @@
   ];
 
   # Window Manager
-  windowManagers.cory.fvwm.pc.enable = true;
+  windowManagers.cory.fluxbox.enable = true;
 
   # Editor
   programs.cory.emacs.enable = true;
@@ -15,10 +15,7 @@
   programs.cory.konsole.enable = true;
 
   # Browser
-  programs.cory.firefox = {
-    enable = true;
-    changeColor = false;
-  };
+  programs.cory.firefox.enable = true;
 
   # File Manager
   programs.cory.dolphin.enable = true;
@@ -63,16 +60,6 @@
   # Gestures
   services.cory.touchegg.enable = true;
 
-  # Notifications
-  services.cory.dunst.enable = true;
-
-  # Compositor
-  services.cory.picom.enable = true;
-
-  # Dock
-  services.cory.plank.enable = true;
-  services.cory.tint2.enable = true;
-
   # Discord
   programs.cory.discord = {
     enable = true;
@@ -88,11 +75,7 @@
   theme = with pkgs; {
     name = "PlainLight";
     darkTheme = false;
-    gtk = {
-      enable = true;
-      name = "Breeze";
-      package = pkgs.libsForQt5.breeze-gtk;
-    };
+    gtk.enable = true;
     icons = {
       name = "crystal-nova";
       package = crystal-nova-icon-theme;
@@ -133,11 +116,6 @@
       color7          = "#ffffff";
       color15         = "#ffffff";
     };
-  };
-
-  home-manager.users.cory.home.file.".config/gtk-3.0" = {
-    source = ./gtk-3.0;
-    recursive = true;
   };
 
   environment.systemPackages = with pkgs; [

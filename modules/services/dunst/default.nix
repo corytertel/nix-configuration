@@ -12,14 +12,14 @@ in {
     home-manager.users.cory.services.dunst = {
       enable = true;
 
-      package = pkgs.dunst.overrideAttrs (o: {
-        src = pkgs.fetchFromGitHub {
-          owner = "k-vernooy";
-          repo = "dunst";
-          rev = "c7358148edef23e883586cca37c0c7ee4b363ce8";
-          sha256 = "eZoIeLERDbXIBBm/j9jgqvvul2h0YNjzedbnQGMxsiU=";
-        };
-      });
+      # package = pkgs.dunst.overrideAttrs (o: {
+      #   src = pkgs.fetchFromGitHub {
+      #     owner = "k-vernooy";
+      #     repo = "dunst";
+      #     rev = "c7358148edef23e883586cca37c0c7ee4b363ce8";
+      #     sha256 = "eZoIeLERDbXIBBm/j9jgqvvul2h0YNjzedbnQGMxsiU=";
+      #   };
+      # });
 
       settings = with config.theme; {
         global = {
@@ -32,8 +32,8 @@ in {
 
           width = 350;
           # height = 520;
-          origin = "top-left";
-          offset = "50x50";
+          origin = "bottom-right";
+          offset = "170x30";
 
           progress_bar = "true";
           progress_bar_height = 15;
