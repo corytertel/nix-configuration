@@ -35,7 +35,7 @@ in {
 
       opacityRules = [
         # "93:class_g = 'Emacs' && !_NET_WM_STATE@:32a" "0:_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
-        "80:class_g *?= 'FvwmButtons'"
+        "70:class_g *?= 'FvwmButtons'"
       ];
 
       settings = {
@@ -43,8 +43,8 @@ in {
         glx-no-rebind-pixmap = true;
         unredir-if-possible = true;
 
-        corner-radius = 0;
-        round-borders = 0;
+        corner-radius = 5;
+        round-borders = 1;
 
         shadow = true;
         shadow-radius = 20;

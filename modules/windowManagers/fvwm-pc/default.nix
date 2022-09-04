@@ -77,6 +77,7 @@ in {
         xbrightness
         imagemagick
         kde-gtk-config
+        xorg.xkill
 
         libsForQt5.kwallet
         libsForQt5.kwallet-pam

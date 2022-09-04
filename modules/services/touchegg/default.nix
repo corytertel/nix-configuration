@@ -6,13 +6,17 @@ let
 in {
   options.services.cory.touchegg = {
     enable = mkEnableOption "Enables touchegg";
+    config = mkOption {
+      type = types.nullOr types.path;
+      default = null;
+    };
   };
 
   config = mkIf cfg.enable {
     services.touchegg.enable = true;
     home-manager.users.cory = {
       xdg.configFile."touchegg/touchegg.conf".text =
-        builtins.readFile ../../../config/touchegg/touchegg.conf;
+        builtins.readFile cfg.config;
     };
     home-manager.users.cory.home.file.".config/autostart/touchegg.desktop".source = ./touchegg.desktop;
   };

@@ -67,9 +67,6 @@
     keybindings = import ../../config/sxhkd/kde.nix { inherit config pkgs; };
   };
 
-  # Gestures
-  services.cory.touchegg.enable = true;
-
   # Discord
   programs.cory.discord = {
     enable = true;

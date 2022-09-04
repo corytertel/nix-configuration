@@ -37,6 +37,14 @@ ImagePath $[fvwm_img]:$[fvwm_img];.png:$[fvwm_wallpaper]:+
 
 PipeRead fvwm-menu-xlock
 PipeRead fvwm-menu-desktop
+
+# Reads in the file "xdgmenu" that contains a menu with all apps
+# that have a .desktop file. Before rebuilding read over and
+# correct the file to ensure that:
+# 1. There are no hard paths to the nix store
+# 2. All icons that are displayed are the same size
+# 3. There is no menu title
+# 4. The "Emacs (Client)" option works
 Read xdgmenu
 
 # Set the cursor
@@ -95,7 +103,7 @@ AddToFunc InitFunction
 + I Exec exec mkdir -p /tmp/fvwm-cache
 + I Exec exec emacs --daemon
 + I Exec exec dolphin --daemon
-+ I Exec exec touchegg
++ I Exec exec touchegg --daemon
 + I Exec exec kwalletd5
 + I Exec exec nm-applet
 + I Exec exec pasystray
@@ -298,7 +306,7 @@ Style * BorderColorset 3, HilightBorderColorset 4
 
 # Disable Icons from appearing on desktop.
 # Comment this out or use Style * Icon to get the icons back.
-# Style * !Icon
+Style * !Icon
 
 # Minimize to Thumbnail Placeholder
 Style * IconBox 3700x2100+30-30, IconGrid 30 30, IconFill Bottom Left, \
@@ -359,15 +367,15 @@ Colorset 1  fg #83aad8, bg #e0dfde, hi, sh, Plain, NoShape
 Colorset 2  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
 Colorset 3  fg #83aad8, bg #e0dfde, hi, sh, Plain, NoShape
 Colorset 4  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
-Colorset 5  fg #000000, bg #ffffff, hi, sh, Plain, NoShape
-Colorset 6  fg #ffffff, bg #2d2d2d, hi, sh, Plain, NoShape
-Colorset 7  fg grey30, bg #ffffff, hi, sh, Plain, NoShape
+Colorset 5  fg #141404, bg #dae9fa, hi, sh, Plain, NoShape
+Colorset 6  fg #141404, bg #c3dcf7, hi, sh, Plain, NoShape
+Colorset 7  fg grey30, bg #c3dcf7, hi, sh, Plain, NoShape
 Colorset 8  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
-Colorset 10 fg #141404, bg #c0daff, hi #aaaaaa, sh #999999, Plain, NoShape
-Colorset 11 fg #ffffff, bg #1a6e99, hi #ffffff, sh #ffffff, Plain, NoShape
+Colorset 10 fg #ffffff, bg #1a1a1a, hi #aaaaaa, sh #999999, Plain, NoShape
+Colorset 11 fg #141404, bg #c0daff, hi #ffffff, sh #ffffff, Plain, NoShape
 Colorset 12 fg #2d2d2d, bg #ffffff, hi, sh, Plain, NoShape
-Colorset 13 fg #ffffff, bg #006c6c, hi, sh, Plain, NoShape
-Colorset 14 fg #555555, bg #c0daff, hi #aaaaaa, sh #999999, Plain, NoShape
+Colorset 13 fg #141404, bg #c0daff, hi, sh, Plain, NoShape
+Colorset 14 fg #999999, bg #2a2a2a, hi #aaaaaa, sh #999999, Plain, NoShape
 
 #######
 # 4: Menus
@@ -375,25 +383,31 @@ Colorset 14 fg #555555, bg #c0daff, hi #aaaaaa, sh #999999, Plain, NoShape
 MenuStyle * MenuColorset 5, ActiveColorset 6, GreyedColorset 7, TitleColorset 8
 MenuStyle * Hilight3DOff, HilightBack, HilightTitleBack, SeparatorsLong
 MenuStyle * TrianglesSolid, TrianglesUseFore
-MenuStyle * ItemFormat "%|%3.1i%5.3l%5.3>%|"
+MenuStyle * ItemFormat "%|%6.2i%10.6l%10.6>%|"
 MenuStyle * Font "xft:Oxygen Nerd Font:size=11:antialias=True"
+
+MenuStyle * PopupDelayed, PopupDelay 300, PopdownImmediately
+MenuStyle * PopupOffset -5 100, TitleWarpOff
+MenuStyle * TitleUnderlines2
+MenuStyle * AnimationOff, AutomaticHotkeysOff
+MenuStyle * BorderWidth 2
+MenuStyle * PopupAsSubmenu, HoldSubmenus, SubmenusRight
+MenuStyle * VerticalItemSpacing 5 5, VerticalTitleSpacing 10 10
+MenuStyle * ActiveFore
 
 # Root Menu
 #
 # The root menu will PopUp with a click in the root
 # window or using alt-f1 (or menu).
 DestroyMenu MenuFvwmRoot
-AddToMenu   MenuFvwmRoot "Fvwm" Title
+AddToMenu   MenuFvwmRoot
 + "&Home%$[fvwm_icon]/places/32x32/user-home.png%" Popup MenuHome
 + "&Applications%$[fvwm_icon]/categories/32x32/applications-all.png%" Popup xdgmenu
 + "&Terminal%$[fvwm_icon]/apps/32x32/utilities-terminal.png%" Exec exec $[fvwm_term]
 + "&Editor%$[fvwm_icon]/apps/32x32/accessories-text-editor.png%" Exec exec $[fvwm_editor]
 + "&Browser%$[fvwm_icon]/apps/32x32/internet-web-browser.png%" Exec exec $[fvwm_browser]
 + "" Nop
-+ "Fvwm&Console%$[fvwm_icon]/apps/32x32/utilities-terminal.png%" Module FvwmConsole -terminal $[fvwm_term]
 + "&Wallpapers%$[fvwm_icon]/actions/32x32/photo.png%" Popup BGMenu
-+ "&Man Pages%$[fvwm_icon]/apps/32x32/help-browser.png%" Popup MenuFvwmManPages
-+ "Copy Config%$[fvwm_icon]/actions/32x32/edit-copy.png%" FvwmScript FvwmScript-ConfirmCopyConfig
 + "" Nop
 + "Re&fresh%$[fvwm_icon]/actions/32x32/view-refresh.png%" Refresh
 + "&Restart%$[fvwm_icon]/actions/32x32/system-reboot.png%" Restart
@@ -403,7 +417,7 @@ AddToMenu   MenuFvwmRoot "Fvwm" Title
 #
 # This menu shows folders in the home directory if the exist.
 DestroyMenu MenuHome
-AddToMenu   MenuHome "Home" Title
+AddToMenu   MenuHome
 Test (f /home/cory/Classes) + "Classes%$[fvwm_icon]/places/32x32/folder-text.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Classes
 Test (f /home/cory/Code) + "Code%$[fvwm_icon]/places/32x32/folder-development.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Code
 Test (f /home/cory/Desktop) + "Desktop%$[fvwm_icon]/places/32x32/desktop.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Desktop
@@ -503,34 +517,6 @@ AddToMenu   MenuSendToPage
 + "Page (2,1)"	MoveToPage 2 1
 + "Page (2,2)"	MoveToPage 2 2
 
-# Fvwm Man Pages (Help) Menu
-DestroyMenu MenuFvwmManPages
-AddToMenu   MenuFvwmManPages "Help" Title
-+ "fvwm"                ViewManPage fvwm
-+ "FvwmAnimate"         ViewManPage FvwmAnimate
-+ "FvwmAuto"            ViewManPage FvwmAuto
-+ "FvwmBacker"          ViewManPage FvwmBacker
-+ "FvwmBanner"          ViewManPage FvwmBanner
-+ "FvwmButtons"         ViewManPage FvwmButtons
-+ "FvwmCommand"         ViewManPage FvwmCommand
-+ "FvwmConsole"         ViewManPage FvwmConsole
-+ "FvwmEvent"           ViewManPage FvwmEvent
-+ "FvwmForm"            ViewManPage FvwmForm
-+ "FvwmIconMan"         ViewManPage FvwmIconMan
-+ "FvwmIdent"           ViewManPage FvwmIdent
-+ "FvwmPager"           ViewManPage FvwmPager
-+ "FvwmPerl"            ViewManPage FvwmPerl
-+ "FvwmProxy"           ViewManPage FvwmProxy
-+ "FvwmRearrange"       ViewManPage FvwmRearrange
-+ "FvwmScript"          ViewManPage FvwmScript
-+ "" Nop
-+ "fvwm-root"	        ViewManPage fvwm-root
-+ "fvwm-menu-desktop"   ViewManPage fvwm-menu-desktop
-+ "fvwm-menu-directory" ViewManPage fvwm-menu-directory
-+ "fvwm-menu-headlines" ViewManPage fvwm-menu-headlines
-+ "fvwm-menu-xlock"     ViewManPage fvwm-menu-xlock
-+ "fvwm-config"         ViewManPage fvwm-config
-
 #######
 # 5: Mouse and Key bindings
 #
@@ -563,7 +549,8 @@ Silent Key F1 A C GotoDesk 0 0
 Silent Key F2 A C GotoDesk 0 1
 Silent Key F3 A C GotoDesk 0 2
 Silent Key F4 A C GotoDesk 0 3
-Silent Key Super_R A A Exec exec $[fvwm_term]
+Silent Key Super_L A A Exec exec $[fvwm_launch]
+Silent Key F4 A M Exex exec xkill
 
 # Audio Controls
 Silent Key XF86AudioLowerVolume A A DecVolume
@@ -730,10 +717,10 @@ DestroyModuleConfig RightPanel:*
 *RightPanel: (25x20, Id desk2, Title "2", Action (Mouse 1) GotoDesk 0 2, ActiveColorset 12, Frame 0)
 *RightPanel: (25x20, Id desk3, Title "3", Action (Mouse 1) GotoDesk 0 3, ActiveColorset 12, Frame 0)
 *RightPanel: (10x20, Frame 0)
-*RightPanel: (5x80, Frame 0)
-*RightPanel: (110x120, Swallow FvwmPager 'Module FvwmPager *', Frame 0)
-*RightPanel: (5x80, Frame 0)
-*RightPanel: (120x5, Frame 0)
+*RightPanel: (10x115, Frame 0)
+*RightPanel: (100x115, Swallow FvwmPager 'Module FvwmPager *', Frame 0)
+*RightPanel: (10x115, Frame 0)
+*RightPanel: (120x10, Frame 0)
 Test (x stalonetray) *RightPanel: (120x40, Swallow(NoClose,UseOld) \
     stalonetray 'Exec exec stalonetray --config \
     "$[FVWM_USERDIR]/stalonetrayrc"', Frame 0)
@@ -758,8 +745,10 @@ DestroyModuleConfig FvwmPager:*
 *FvwmPager: Balloons All
 *FvwmPager: BalloonFont "xft:Oxygen Nerd Font:Bold:size=11:antialias=True"
 *FvwmPager: BallonYOffset +2
-*FvwmPager: Window3dBorders
+# *FvwmPager: Window3dBorders
 *FvwmPager: MiniIcons
+*FvwmPager: UseSkipList
+*FvwmPager: SolidSeparators
 
 # FvwmIconMan
 #
@@ -769,8 +758,8 @@ DestroyModuleConfig FvwmIconMan:*
 *FvwmIconMan: UseWinList true
 *FvwmIconMan: ButtonGeometry 120x40
 *FvwmIconMan: ManagerGeometry 1x1
-*FvwmIconMan: Background #c0daff
-*FvwmIconMan: Foreground #141404
+*FvwmIconMan: Background #1a1a1a
+*FvwmIconMan: Foreground #ffffff
 *FvwmIconMan: FocusColorset 11
 *FvwmIconMan: IconColorset 14
 *FvwmIconMan: FocusAndSelectColorset 12

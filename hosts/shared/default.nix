@@ -56,19 +56,19 @@
         enable = true;
         mouse = {
           # Mouse
-          # accelProfile = "flat";
-          # accelSpeed = null;
-          # disableWhileTyping = true;
-
-          # Trackball
           accelProfile = "flat";
           accelSpeed = null;
-          buttonMapping = "1 8 2 4 5 6 7 3 9";
           disableWhileTyping = true;
-          naturalScrolling = true;
-          scrollButton = 3;
-          scrollMethod = "button";
-          transformationMatrix = "2.5 0 0 0 2.5 0 0 0 1";
+
+          # Trackball
+          # accelProfile = "flat";
+          # accelSpeed = null;
+          # buttonMapping = "1 8 2 4 5 6 7 3 9";
+          # disableWhileTyping = true;
+          # naturalScrolling = true;
+          # scrollButton = 3;
+          # scrollMethod = "button";
+          # transformationMatrix = "2.5 0 0 0 2.5 0 0 0 1";
         };
       };
     };
@@ -336,41 +336,41 @@
         git-crypt
         bb
         qbittorrent
-        brave
+        # brave
         tree
         imagemagick
         yt-dlp
-        qemu
-        qutebrowser
+        # qemu
+        # qutebrowser
         wine64
         winetricks
         grapejuice
         pciutils
-        peek # simple animated gif screen recorder
+        # peek # simple animated gif screen recorder
         # leafpad
-        # onlyoffice-bin
+        onlyoffice-bin
         ledger-live-desktop
         #ledger-udev-rules
         acpi
         gparted
         libnotify
         dos2unix
-        galculator
+        # galculator
         unzip
         klavaro
         obs-studio
         # okular
-        libreoffice-qt
+        # libreoffice-qt
         fd
-        citra-canary
+        # citra-canary
         # protonvpn-gui
         inkscape
         thunderbird
-        mullvad-vpn
+        # mullvad-vpn
         # lazpaint
         libsForQt5.kcalc
 
-        # Games
+        # games
         libsForQt5.kpat
         libsForQt5.kolf
         libsForQt5.kmines
@@ -385,12 +385,12 @@
         # ace-of-penguins
         superTux
         superTuxKart
-        srb2kart
-        crispyDoom
+        # srb2kart
+        # crispyDoom
 
-        wireshark
-        tcpdump
-        nmap
+        # wireshark
+        # tcpdump
+        # nmap
       ];
     };
   };

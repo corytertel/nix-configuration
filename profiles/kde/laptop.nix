@@ -18,6 +18,12 @@
   # File Manager
   programs.cory.dolphin.config = import ../../config/dolphin/laptop.nix;
 
+  # Gestures
+  services.cory.touchegg = {
+    enable = true;
+    config = ../../config/touchegg/kde.conf;
+  };
+
   # Launcher
   services.cory.rofi.config = let
     offsetX = -240;
