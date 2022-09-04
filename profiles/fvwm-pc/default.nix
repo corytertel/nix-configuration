@@ -60,17 +60,15 @@
     };
   };
 
-  # Gestures
-  services.cory.touchegg = {
-    enable = true;
-    config = ../../config/touchegg/fvwm.conf;
-  };
-
   # Notifications
   services.cory.dunst.enable = true;
 
   # Compositor
-  services.cory.picom.enable = true;
+  services.cory.picom = {
+    enable = true;
+    roundBorders = true;
+    cornerRadius = 5;
+  };
 
   # Dock
   services.cory.plank.enable = true;

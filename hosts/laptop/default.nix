@@ -4,7 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ../shared
-    ../../profiles/kde/laptop.nix
+    ../../profiles/fvwm-laptop
   ];
 
   nix.settings.cores = 6;

@@ -6,22 +6,29 @@ let
 in {
   options.services.cory.picom = {
     enable = mkEnableOption "Enables picom";
+    package = mkOption {
+      type = types.package;
+      default = pkgs.picom;
+    };
+    experimentalBackends = mkOption {
+      type = types.bool;
+      default = false;
+    };
+    roundBorders = mkOption {
+      type = types.bool;
+      default = false;
+    };
+    cornerRadius = mkOption {
+      type = types.int;
+      default = 0;
+    };
   };
 
   config = mkIf cfg.enable {
     home-manager.users.cory.services.picom = {
       enable = true;
-      experimentalBackends = false;
-      # experimentalBackends = true;
-
-      # package = pkgs.picom.overrideAttrs (o: {
-      #   src = pkgs.fetchFromGitHub {
-      #     owner = "jonaburg";
-      #     repo = "picom";
-      #     rev = "e3c19cd7d1108d114552267f302548c113278d45";
-      #     sha256 = "4voCAYd0fzJHQjJo4x3RoWz5l3JJbRvgIXn1Kg6nz6Y=";
-      #   };
-      # });
+      experimentalBackends = cfg.experimentalBackends;
+      package = cfg.package;
 
       # inactiveDim = "0.02";
 
@@ -43,8 +50,8 @@ in {
         glx-no-rebind-pixmap = true;
         unredir-if-possible = true;
 
-        corner-radius = 5;
-        round-borders = 1;
+        corner-radius = cfg.cornerRadius;
+        round-borders = if cfg.roundBorders then 1 else 0;
 
         shadow = true;
         shadow-radius = 20;

@@ -1,43 +1,121 @@
 { config, lib, pkgs, ... }:
 
 {
+  imports = [
+    ./laptop.nix
+  ];
+
+  # Window Manager
   windowManagers.cory.fvwm.laptop.enable = true;
 
-  services.cory.dunst.enable = true;
-  services.cory.picom.enable = true;
-  services.cory.plank.enable = true;
+  # Editor
+  programs.cory.emacs.enable = true;
+
+  # Terminal
+  programs.cory.konsole.enable = true;
+
+  # Browser
+  programs.cory.firefox = {
+    enable = true;
+    changeColor = false;
+  };
+
+  # File Manager
+  programs.cory.dolphin.enable = true;
+
+  # Photo Viewer
+  programs.cory.gwenview = {
+    enable = true;
+    config = import ../../config/gwenview/config.nix;
+  };
+
+  # Video Player
+  programs.cory.mpc-qt.enable = true;
+
+  # PDF Viewer
+  programs.cory.qpdfview.enable = true;
+
+  # Launcher
   services.cory.rofi.enable = true;
+
+  # Set other apps
+  apps = {
+    photoEditor = {
+      name = "photogimp";
+      command = "gimp";
+      desktopFile = "gimp.desktop";
+      package = pkgs.photogimp;
+    };
+    musicPlayer = {
+      name = "audacious";
+      command = "audacious";
+      desktopFile = "audacious.desktop";
+      package = pkgs.audacious;
+    };
+    archiver = {
+      name = "ark";
+      command = "ark";
+      desktopFile = "org.kde.ark.desktop";
+      package = pkgs.libsForQt5.ark;
+    };
+  };
+
+  # Gestures
+  services.cory.touchegg = {
+    enable = true;
+    config = ../../config/touchegg/fvwm.conf;
+  };
+
+  # Notifications
+  services.cory.dunst.enable = true;
+
+  # Compositor
+  services.cory.picom = {
+    enable = true;
+    experimentalBackends = true;
+    package = pkgs.picom.overrideAttrs (o: {
+      src = pkgs.fetchFromGitHub {
+        owner = "jonaburg";
+        repo = "picom";
+        rev = "e3c19cd7d1108d114552267f302548c113278d45";
+        sha256 = "4voCAYd0fzJHQjJo4x3RoWz5l3JJbRvgIXn1Kg6nz6Y=";
+      };
+    });
+  };
+
+  # Dock
+  services.cory.plank.enable = true;
   services.cory.tint2.enable = true;
 
-  programs.cory.bash.enable = true;
-  programs.cory.discord.enable = true;
-  programs.cory.firefox.enable = true;
-  programs.cory.lximage-qt.enable = true;
+  # Discord
+  programs.cory.discord = {
+    enable = true;
+    css = builtins.readFile ../../config/discocss/skeuocord.theme.css;
+  };
+
+  # Shell
+  programs.cory.bat.enable = true;
   programs.cory.neofetch.enable = true;
-  programs.cory.sxiv.enable = true;
-  programs.cory.ungoogled-chromium.enable = true;
-  programs.cory.urxvt.enable = true;
-  programs.cory.zathura.enable = true;
   programs.cory.zsh.enable = true;
 
+  # Aesthetics
   theme = with pkgs; {
     name = "PlainLight";
     darkTheme = false;
     gtk = {
       enable = true;
+      name = "Breeze";
+      package = pkgs.libsForQt5.breeze-gtk;
     };
     icons = {
-      # package = tango-icon-theme;
-      # name = "Tango";
-      package = crystal-remix-icon-theme;
-      name = "crystal-remix";
-      size = 74;
+      name = "crystal-nova";
+      package = crystal-nova-icon-theme;
     };
     font = {
       system = {
-        package = noto-nerdfont;
-        name = "NotoSans Nerd Font";
-        size = 10;
+        package = oxygen-nerdfont;
+        name = "Oxygen Nerd Font";
+        size = 11;
       };
       monospace = {
         package = victor-mono-nerdfont;
@@ -66,9 +144,19 @@
       color13         = "#e01bd0";
       color6          = "#2d9574";
       color14         = "#2d9574";
-      color7          = "#cccccc";
-      color15         = "#cccccc";
+      color7          = "#ffffff";
+      color15         = "#ffffff";
     };
+  };
+
+  home-manager.users.cory.home.file.".config/gtk-3.0" = {
+    source = ./gtk-3.0;
+    recursive = true;
+  };
+
+  home-manager.users.cory.home.file.".config/qt5ct" = {
+    source = ./qt5ct;
+    recursive = true;
   };
 
   environment.systemPackages = with pkgs; [
@@ -76,7 +164,6 @@
   ];
 
   home-manager.users.cory.home.packages = with pkgs; [
-    libsForQt5.oxygen
-    oxygenfonts
+
   ];
 }
