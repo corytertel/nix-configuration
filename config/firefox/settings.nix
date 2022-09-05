@@ -7,8 +7,6 @@ in {
   "devtools.theme" = "light";
   # Enable userContent.css and userChrome.css for our theme modules
   "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-  # Middle-click for fast scrolling
-  "general.autoScroll" = false;
   # Don't use the built-in password manager; a nixos user is more likely
   # using an external one (you are using one, right?).
   "signon.rememberSignons" = false;
@@ -125,6 +123,12 @@ in {
   "dom.event.clipboardevents.enabled" = false;
   # Prevent sites from taking over right click
   "dom.event.contextmenu.enabled" = false;
+  # Scrolling
+  "mousewheel.acceleration.start" = 2;
+  "mousewheel.acceleration.factor" = 20;
+  "general.autoScroll" = true;
+  # Backspace goes back a page
+  "browser.backspace_action" = 0;
 
   # Extra security options
 

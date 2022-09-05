@@ -39,8 +39,8 @@ AddToMenu "Games"
 + "Airshipper" Exec airshipper
 + "Alien Swarm: Reactive Drop%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_563560.png%" Exec steam steam://rungameid/563560
 + "Aperture Desk Job%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_1902490.png%" Exec steam steam://rungameid/1902490
-+ "Borderlands 2%/home/cory/.local/share/icons/hicolor/256x256/apps/steam_icon_49520.png%" Exec steam steam://rungameid/49520
-+ "Borderlands: The Pre-Sequel%/home/cory/.local/share/icons/hicolor/256x256/apps/steam_icon_261640.png%" Exec steam steam://rungameid/261640
++ "Borderlands 2" Exec steam steam://rungameid/49520
++ "Borderlands: The Pre-Sequel" Exec steam steam://rungameid/261640
 + "Capcom Fighting Collection%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_1685750.png%" Exec steam steam://rungameid/1685750
 + "Cities: Skylines%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_255710.png%" Exec steam steam://rungameid/255710
 + "DEATH STRANDING%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_1190460.png%" Exec steam steam://rungameid/1190460
@@ -85,7 +85,7 @@ AddToMenu "Games"
 DestroyMenu "Graphics"
 AddToMenu "Graphics"
 + "Blender%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/blender.png%" Exec blender 
-+ "Flameshot%/run/current-system/sw/share/icons/hicolor/48x48/apps/org.flameshot.Flameshot.png%" Exec flameshot
++ "Flameshot" Exec flameshot
 + "Gwenview%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/gwenview.png%" Exec gwenview 
 + "Inkscape%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/org.inkscape.Inkscape.png%" Exec inkscape 
 + "PhotoGIMP%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/photogimp.png%" Exec gimp-2.10 
@@ -95,8 +95,8 @@ DestroyMenu "Multimedia"
 AddToMenu "Multimedia"
 + "Audacious%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/audacious.png%" Exec audacious 
 + "Media Player Classic Qute Theater%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/mpc-qt.png%" Exec mpc-qt 
-+ "OBS Studio%/etc/profiles/per-user/cory/share/icons/hicolor/256x256/apps/com.obsproject.Studio.png%" Exec obs
-+ "PulseAudio System Tray%/run/current-system/sw/share/pixmaps/pasystray.png%" Exec pasystray
++ "OBS Studio" Exec obs
++ "PulseAudio System Tray" Exec pasystray
 + "PulseAudio Volume Control%/org/gtk/libgtk/icons/16x16/actions/multimedia-volume-control.png%" Exec pavucontrol
 
 DestroyMenu "Network"
@@ -111,12 +111,18 @@ AddToMenu "Network"
 
 DestroyMenu "Office"
 AddToMenu "Office"
-+ "ONLYOFFICE Desktop Editors" Exec DesktopEditors 
++ "LibreOffice 7.3%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/startcenter.png%" Exec libreoffice 
++ "LibreOffice 7.3 Base%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/base.png%" Exec libreoffice --base 
++ "LibreOffice 7.3 Calc%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/calc.png%" Exec libreoffice --calc 
++ "LibreOffice 7.3 Draw%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/draw.png%" Exec libreoffice --draw 
++ "LibreOffice 7.3 Impress%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/impress.png%" Exec libreoffice --impress 
++ "LibreOffice 7.3 Math%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/mimetypes/math.png%" Exec libreoffice --math 
++ "LibreOffice 7.3 Writer%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/writer.png%" Exec libreoffice --writer 
 + "qpdfview" Exec qpdfview --unique 
 
 DestroyMenu "Other"
 AddToMenu "Other"
-+ "Ledger Live%/etc/profiles/per-user/cory/share/icons/hicolor/512x512/apps/ledger-live-desktop.png%" Exec ledger-live-desktop --no-sandbox 
++ "Ledger Live" Exec ledger-live-desktop --no-sandbox 
 + "Rofi Launcher%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/kde.png%" Exec rofi -show drun -modi drun,run -show-icons -scroll-method 0 -sort -hover-select -me-select-entry "" -me-accept-entry MousePrimary
 + "Rofi Theme Selector" Exec rofi-theme-selector
 + "Waydroid" Exec waydroid show-full-ui
@@ -124,7 +130,7 @@ AddToMenu "Other"
 DestroyMenu "Settings"
 AddToMenu "Settings"
 + "Advanced Network Configuration%/etc/profiles/per-user/cory/share/icons/crystal-nova/preferences/32x32/preferences-system-network.png%" Exec nm-connection-editor
-+ "NVIDIA X Server Settings%/run/current-system/sw/share/icons/hicolor/128x128/apps/nvidia-settings.png%" Exec nvidia-settings
++ "NVIDIA X Server Settings" Exec nvidia-settings
 + "Qt5 Settings%/etc/profiles/per-user/cory/share/icons/crystal-nova/preferences/32x32/preferences-desktop-theme.png%" Exec qt5ct
 + "Tint2 Settings" Exec tint2conf
 
@@ -139,6 +145,6 @@ AddToMenu "System"
 + "Oracle VM VirtualBox%/run/current-system/sw/share/icons/hicolor/32x32/apps/virtualbox.png%" Exec VirtualBox 
 + "System Monitor%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/utilities-system-monitor.png%" Exec plasma-systemmonitor
 + "Tint2" Exec tint2
-+ "XTerm%/run/current-system/sw/share/icons/hicolor/48x48/apps/xterm-color_48x48.xpm%" Exec xterm
-+ "btop++%/etc/profiles/per-user/cory/share/icons/hicolor/48x48/apps/btop.png%" Exec xterm -e btop
++ "XTerm" Exec xterm
++ "btop++" Exec xterm -e btop
 

@@ -90,6 +90,10 @@ in {
       lha
       p7zip
       libsForQt5.ffmpegthumbs
+      libsForQt5.kdegraphics-thumbnailers
+      libsForQt5.filelight
+      libsForQt5.kdf
+      partition-manager
     ];
   };
 }

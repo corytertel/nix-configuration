@@ -70,10 +70,6 @@
     cornerRadius = 5;
   };
 
-  # Dock
-  services.cory.plank.enable = true;
-  services.cory.tint2.enable = true;
-
   # Discord
   programs.cory.discord = {
     enable = true;

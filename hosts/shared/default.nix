@@ -143,6 +143,8 @@
     config.theme.font.monospace.package
     victor-mono
     oxygenfonts
+    corefonts
+    vistafonts
   ];
 
   virtualisation = {
@@ -195,6 +197,7 @@
       "x-scheme-handler/chrome" = browser.desktopFile;
       "x-scheme-handler/http" = browser.desktopFile;
       "x-scheme-handler/https" = browser.desktopFile;
+      "x-scheme-handler/ftp" = browser.desktopFile;
       "x-scheme-handler/unknown" = browser.desktopFile;
 
       "audio/aac" = musicPlayer.desktopFile;
@@ -210,6 +213,8 @@
       "image/jpeg" = photoViewer.desktopFile;
       "image/png" = photoViewer.desktopFile;
       "image/svg" = photoViewer.desktopFile;
+      "image/svg+xml" = photoViewer.desktopFile;
+      "image/svg-xml" = photoViewer.desktopFile;
       "image/webp" = photoViewer.desktopFile;
 
       "video/mp4" = videoPlayer.desktopFile;
@@ -348,7 +353,7 @@
         pciutils
         # peek # simple animated gif screen recorder
         # leafpad
-        onlyoffice-bin
+        # onlyoffice-bin
         ledger-live-desktop
         #ledger-udev-rules
         acpi
@@ -360,7 +365,7 @@
         klavaro
         obs-studio
         # okular
-        # libreoffice-qt
+        libreoffice-qt
         fd
         # citra-canary
         # protonvpn-gui
