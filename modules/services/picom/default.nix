@@ -81,7 +81,7 @@ in {
         transparent-clipping = false;
 
         # jonaburg
-        transition-length = 150;
+        # transition-length = 150;
       };
   };
   };

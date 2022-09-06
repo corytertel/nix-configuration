@@ -23,8 +23,6 @@
     #kernelPackages = pkgs.linuxPackages_latest;
     kernelPackages = pkgs.linuxPackages_5_15;
     kernelParams = [
-      "pcie_aspm.policy=performance"
-      "mitigations=off"
       "nohibernate"
       "elevator=none"
     ];
@@ -40,11 +38,11 @@
     font = "ter-132n";
   };
 
-  powerManagement = {
-    cpuFreqGovernor = "powersave";
-    enable = true;
-    powertop.enable = true;
-  };
+  # powerManagement = {
+  #   cpuFreqGovernor = "powersave";
+  #   enable = true;
+  #   powertop.enable = true;
+  # };
 
   services = {
     ananicy = {
@@ -52,7 +50,7 @@
       package = pkgs.ananicy-cpp;
     };
     # tlp.enable = true;
-    thermald.enable = true;
+    # thermald.enable = true;
     # gnome.gnome-keyring.enable = true;
     xserver = {
       displayManager.autoLogin = {

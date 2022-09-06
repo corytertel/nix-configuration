@@ -77,7 +77,6 @@ in {
         xbrightness
         imagemagick
         kde-gtk-config
-        xdotool
         trash-cli
 
         libsForQt5.kwallet
