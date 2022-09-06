@@ -1,9 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  # PC Stuff
-  programs.cory.discord.package = pkgs.discord-gpu;
-
+  # Cursor
   theme.cursor = {
     theme = "Oxygen_White";
     size = 72;

@@ -54,7 +54,7 @@ in {
       fvwm_music_player = config.apps.musicPlayer.command;
       fvwm_video_player = config.apps.videoPlayer.command;
       fvwm_launch = config.apps.launcher.command;
-      fvwm_ss = "${pkgs.flameshot}/bin/flameshot";
+      fvwm_mail = "${pkgs.thunderbird}/bin/thunderbird";
 
       QT_AUTO_SCREEN_SCALE_FACTOR = "0";
       PLASMA_USE_QT_SCALING = "1";
@@ -66,7 +66,7 @@ in {
         fvwm-config
         feh
         xorg.xwd
-        alock
+        xlockmore
 	      stalonetray
         flameshot
         pavucontrol
@@ -77,13 +77,15 @@ in {
         xbrightness
         imagemagick
         kde-gtk-config
-        xorg.xkill
         xdotool
+        trash-cli
 
         libsForQt5.kwallet
         libsForQt5.kwallet-pam
         libsForQt5.kwalletmanager
         libsForQt5.plasma-systemmonitor
+        libsForQt5.kirigami2
+        libsForQt5.kirigami-addons
       ];
     };
 

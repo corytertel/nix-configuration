@@ -237,6 +237,17 @@ AddToFunc Tile
 + I Move $2 $3
 + I Focus
 
+# Function: WindowListFunc
+#
+# Redefinition of WindowListFunc. 
+# Puts cursor in bottom right of newly focused window.
+DestroyFunc WindowListFunc
+AddToFunc   WindowListFunc
++ I Iconify off
++ I FlipFocus
++ I Raise
++ I WarpToWindow 99 90
+
 #############
 # 2: Styles #
 #############
@@ -285,12 +296,14 @@ MoveThreshold 3
 # Sets the focus style to SloppyFocus and a mouse click
 # in a window will Raise it.
 Style * SloppyFocus, MouseFocusClickRaises
+Module FvwmAuto 200
 
 # Default Font
 DefaultFont "xft:Oxygen-Sans:size=11:antialias=True"
 
 # Window Placement
-Style * MinOverlapPlacement, GrabFocusOff, !UsePPosition
+# Style * MinOverlapPlacement, GrabFocusOff, !UsePPosition
+Style * MinOverlapPlacement, !UsePPosition
 Style * PositionPlacement Center
 
 # Sets all windows to OpaqueMove (vs a wired frame) and  windows will
@@ -446,6 +459,7 @@ Test (f /home/cory/.local/share/Trash/files) + "Trash%$[fvwm_icon]/places/32x32/
 # This menu controls system functions.
 DestroyMenu MenuSystem
 AddToMenu   MenuSystem
++ "Toggle US/RU Keyboard%$[fvwm_icon]/devices/32x32/input-keyboard.png%" Exec exec "$[fvwm_scripts]/layout-switch"
 + "&Wallpapers%$[fvwm_icon]/actions/32x32/photo.png%" Popup BGMenu
 + "System Monitor%$[fvwm_icon]/apps/32x32/utilities-system-monitor.png%" Exec plasma-systemmonitor
 + "btop++" Exec exec $[fvwm_term] -e btop
@@ -628,7 +642,7 @@ AddToMenu MenuVolume
 # Silent supresses any errors (such as keyboards with no Menu key).
 Silent Key F1 A M Menu MenuFvwmRoot
 Silent Key Menu A A Menu MenuFvwmRoot
-Silent Key Tab A M WindowList Root c c NoDeskSort, SelectOnRelease Meta_L
+# Silent Key Tab A M WindowList Root c c NoDeskSort, SelectOnRelease Meta_L
 Silent Key F1 A C GotoDesk 0 0
 Silent Key F2 A C GotoDesk 0 1
 Silent Key F3 A C GotoDesk 0 2
@@ -636,17 +650,22 @@ Silent Key F4 A C GotoDesk 0 3
 Silent Key Super_L A A Exec exec $[fvwm_launch]
 Silent Key F4 A M Destroy
 # Xah Keybinds
-Silent Key F1 A A Maximize 100 100
+# F1: reserved, commonly used key
 # F2: reserved, universal key (rename)
 Silent Key F3 A A Next ($[w.class]) WarpToWindow 99 90
-Silent Key F4 A A Prev WarpToWindow 99 90
+# Silent Key F4 A A Prev (AcceptsFocus) WarpToWindow 99 90
+# Freaks out when the last focused window and the current focused window have the same title
+Silent Key F4 A A WindowList Root c c CurrentDesk, NoGeometry, CurrentAtEnd, IconifiedAtEnd, SelectOnRelease F4
 # F5: reserved, universal key (refresh)
 Silent Key F6 A A Close
-Silent Key F8 A A Next ("emacs") WarpToWindow 99 90
-Silent Key F9 A A Next ("firefox") WarpToWindow 99 90
-Silent Key F10 A A Next ("konsole") WarpToWindow 99 90
+Silent Key F7 A A Maximize 100 100
+Silent Key F8 A A NoWindow Next ("emacs") WarpToWindow 99 90
+Silent Key F9 A A NoWindow Next ("firefox") WarpToWindow 99 90
+Silent Key F10 A A NoWindow Next ("konsole") WarpToWindow 99 90
 # F11: reserved, universal key (fullscreen)
 # F12: reserved, universal key (open console)
+# Toggle keyboard layout between us/ru
+Silent Key F12 A A Exec exec "$[fvwm_scripts]/layout-switch"
 
 # Audio Controls
 Silent Key XF86AudioLowerVolume A A DecVolume
@@ -694,8 +713,8 @@ Mouse 3	R    A Menu MenuWindowOpsLong
 Mouse 1	I    A RaiseMoveX Move "Iconify off"
 Mouse 3	T    A Menu MenuWindowOps
 Mouse 3 I    A Menu MenuIconOps
-Mouse 9 A A Next WarpToWindow 99 90
-Mouse 8 A A Prev WarpToWindow 99 90
+Mouse 9 A A Next (AcceptsFocus, CurrentPage) WarpToWindow 99 90
+Mouse 8 A A Prev (AcceptsFocus, CurrentPage) WarpToWindow 99 90
 
 #######
 # 6: Window Decor

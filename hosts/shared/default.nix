@@ -49,6 +49,11 @@
           languages = [ "rus" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_programmer";
         };
+        ru_dvorak = {
+          description = "Russian implementation of dvorak layout";
+          languages = [ "rus" ];
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_dvorak";
+        };
       };
       # layout = "us_programmer";
       layout = "us_programmer(dvorak-emacs)";

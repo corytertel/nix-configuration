@@ -1549,6 +1549,7 @@ Lisp function does not specify a special indentation."
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "C-#") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c s") 'replace-string)
+(global-set-key (kbd "C-c w") 'woman)
 
 ;; FIXME
 (defun kill-ring-save-and-comment (BEG END)

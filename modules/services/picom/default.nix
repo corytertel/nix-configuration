@@ -35,10 +35,7 @@ in {
       backend = "glx";
       vSync = true;
 
-      fade = true;
-      fadeDelta = 5;
-      fadeSteps = [ 0.03 1.00 ];
-      fadeExclude = [ "class_g != 'Rofi'" ];
+      fade = false;
 
       opacityRules = [
         # "93:class_g = 'Emacs' && !_NET_WM_STATE@:32a" "0:_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"

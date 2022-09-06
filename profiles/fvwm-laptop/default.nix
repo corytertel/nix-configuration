@@ -60,12 +60,6 @@
     };
   };
 
-  # Gestures
-  services.cory.touchegg = {
-    enable = true;
-    config = ../../config/touchegg/fvwm.conf;
-  };
-
   # Notifications
   services.cory.dunst.enable = true;
 
