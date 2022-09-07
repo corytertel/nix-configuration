@@ -54,7 +54,8 @@ in {
       fvwm_music_player = config.apps.musicPlayer.command;
       fvwm_video_player = config.apps.videoPlayer.command;
       fvwm_launch = config.apps.launcher.command;
-      fvwm_mail = "${pkgs.thunderbird}/bin/thunderbird";
+      fvwm_chat = "discord";
+      fvwm_mail = "thunderbird";
 
       QT_AUTO_SCREEN_SCALE_FACTOR = "0";
       PLASMA_USE_QT_SCALING = "1";

@@ -296,7 +296,7 @@ MoveThreshold 3
 # Sets the focus style to SloppyFocus and a mouse click
 # in a window will Raise it.
 Style * SloppyFocus, MouseFocusClickRaises
-Module FvwmAuto 200
+Module FvwmAuto 300
 
 # Default Font
 DefaultFont "xft:Oxygen-Sans:size=11:antialias=True"
@@ -436,6 +436,7 @@ AddToMenu   MenuFvwmRoot
 + "&Editor%$[fvwm_icon]/apps/32x32/accessories-text-editor.png%" Exec exec $[fvwm_editor]
 + "&Browser%$[fvwm_icon]/apps/32x32/internet-web-browser.png%" Exec exec $[fvwm_browser]
 + "&Media%$[fvwm_icon]/categories/32x32/applications-multimedia.png%" Popup MenuMedia
++ "&Chat%$[fvwm_icon]/apps/32x32/internet-telephony.png%" Exec exec $[fvwm_chat]
 + "Ma&il%$[fvwm_icon]/apps/32x32/internet-mail.png%" Exec exec $[fvwm_mail]
 + "&System%$[fvwm_icon]/categories/32x32/applications-system.png%" Popup MenuSystem
 
@@ -659,13 +660,17 @@ Silent Key F4 A A WindowList Root c c CurrentDesk, NoGeometry, CurrentAtEnd, Ico
 # F5: reserved, universal key (refresh)
 Silent Key F6 A A Close
 Silent Key F7 A A Maximize 100 100
-Silent Key F8 A A NoWindow Next ("emacs") WarpToWindow 99 90
-Silent Key F9 A A NoWindow Next ("firefox") WarpToWindow 99 90
-Silent Key F10 A A NoWindow Next ("konsole") WarpToWindow 99 90
+Silent Key F8 A A Next ("emacs") WarpToWindow 99 90
+# Silent Key F9 A A Next ("firefox") WarpToWindow 99 90
+# Temporary hack
+Silent Key F9 A A WindowList ("firefox") Root c c CurrentDesk, NoGeometry, CurrentAtEnd, IconifiedAtEnd, SelectOnRelease F9
+Silent Key F10 A A Next ("konsole") WarpToWindow 99 90
 # F11: reserved, universal key (fullscreen)
 # F12: reserved, universal key (open console)
 # Toggle keyboard layout between us/ru
 Silent Key F12 A A Exec exec "$[fvwm_scripts]/layout-switch"
+Silent Key Scroll_Lock A A Next ("discord") WarpToWindow 99 90
+# Pause: bound through discord to toggle mic mute
 
 # Audio Controls
 Silent Key XF86AudioLowerVolume A A DecVolume
@@ -713,8 +718,8 @@ Mouse 3	R    A Menu MenuWindowOpsLong
 Mouse 1	I    A RaiseMoveX Move "Iconify off"
 Mouse 3	T    A Menu MenuWindowOps
 Mouse 3 I    A Menu MenuIconOps
-Mouse 9 A A Next (AcceptsFocus, CurrentPage) WarpToWindow 99 90
-Mouse 8 A A Prev (AcceptsFocus, CurrentPage) WarpToWindow 99 90
+Mouse 9 A A Next (AcceptsFocus, CurrentPage) WarpToWindow 50 50
+Mouse 8 A A Prev (AcceptsFocus, CurrentPage) WarpToWindow 50 50
 
 #######
 # 6: Window Decor
@@ -824,10 +829,10 @@ DestroyModuleConfig RightPanel:*
 *RightPanel: (120x200, Icon "$[fvwm_img]/nixos-logo.png", Frame 0)
 *RightPanel: (120x5, Frame 0)
 *RightPanel: (10x40, Frame 0)
-*RightPanel: (25x40, Id desk0, Title "0", Action (Mouse 1) GotoDesk 0 0, Colorset 11, ActiveColorset 12, Frame 0)
-*RightPanel: (25x40, Id desk1, Title "1", Action (Mouse 1) GotoDesk 0 1, ActiveColorset 12, Frame 0)
-*RightPanel: (25x40, Id desk2, Title "2", Action (Mouse 1) GotoDesk 0 2, ActiveColorset 12, Frame 0)
-*RightPanel: (25x40, Id desk3, Title "3", Action (Mouse 1) GotoDesk 0 3, ActiveColorset 12, Frame 0)
+*RightPanel: (25x40, Id desk0, Title "1", Action (Mouse 1) GotoDesk 0 0, Colorset 11, ActiveColorset 12, Frame 0)
+*RightPanel: (25x40, Id desk1, Title "2", Action (Mouse 1) GotoDesk 0 1, ActiveColorset 12, Frame 0)
+*RightPanel: (25x40, Id desk2, Title "3", Action (Mouse 1) GotoDesk 0 2, ActiveColorset 12, Frame 0)
+*RightPanel: (25x40, Id desk3, Title "4", Action (Mouse 1) GotoDesk 0 3, ActiveColorset 12, Frame 0)
 *RightPanel: (10x40, Frame 0)
 *RightPanel: (10x115, Frame 0)
 *RightPanel: (100x115, Swallow FvwmPager 'Module FvwmPager *', Frame 0)
