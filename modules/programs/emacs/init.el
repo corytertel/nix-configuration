@@ -1595,6 +1595,27 @@ Lisp function does not specify a special indentation."
 ;; Make ESC quit prompts
 ;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
+;;; Keybinds for Russian Layout
+;; The keybinds map to be in the same location on the board
+(global-set-key (kbd "C-н") #'next-line) ;; C-n
+(global-set-key (kbd "C-р") #'previous-line) ;; C-p
+(global-set-key (kbd "C-с") #'forward-char) ;; C-f
+(global-set-key (kbd "C-т") #'backward-char) ;; C-b
+(global-set-key (kbd "M-с") #'forward-word) ;; M-f
+(global-set-key (kbd "M-т") #'backward-word) ;; M-b
+(global-set-key (kbd "C-л") #'consult-line) ;; C-s
+(global-set-key (kbd "C-д") #'recenter-top-bottom) ;; C-l
+(global-set-key (kbd "C-к") #'sp-delete-char) ;; C-d
+(global-set-key (kbd "C-е") #'beginning-of-visual-line) ;; C-a
+(global-set-key (kbd "C-о") #'end-of-visual-line) ;; C-e
+(global-set-key (kbd "C-х") #'sp-kill-hybrid-sexp) ;; C-k
+(global-set-key (kbd "C-з") #'sp-kill-region) ;; C-w
+(global-set-key (kbd "C-б") #'keyboard-quit) ;; C-g
+(global-set-key (kbd "C-п") #'yank) ;; C-y
+(global-set-key (kbd "C-ж") #'scroll-up-command) ;; C-v
+(global-set-key (kbd "M-ж") #'scroll-down-command) ;; M-v
+(global-set-key (kbd "M-ё") #'execute-extended-command) ;; M-x
+
 ;;
 ;; --- ORG MODE ---
 ;;
