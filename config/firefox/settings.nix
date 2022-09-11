@@ -124,7 +124,8 @@ in {
   # Prevent sites from taking over right click
   "dom.event.contextmenu.enabled" = false;
   # Scrolling
-  "mousewheel.acceleration.start" = 2;
+  # "mousewheel.acceleration.start" = 2;
+  "mousewheel.acceleration.start" = 3;
   "mousewheel.acceleration.factor" = 20;
   "general.autoScroll" = true;
   # Backspace goes back a page

@@ -1838,4 +1838,17 @@ Lisp function does not specify a special indentation."
   (add-hook 'TeX-after-compilation-finished-functions
             #'TeX-revert-document-buffer))
 
+;; Emacs run launcher
+(defun emacs-run-launcher ()
+  "A frame to launch desktop applications."
+  (interactive)
+  (with-selected-frame
+      (make-frame '((name . "emacs-run-launcher")
+		    (minibuffer . only)
+		    (width . 100)
+		    (height . 11)))
+    (unwind-protect
+	(app-launcher-run-app)
+      (delete-frame))))
+
 ;;; init.el ends here

@@ -11,8 +11,8 @@ self: super: {
     src = pkgs.fetchFromGitHub {
       owner = "corytertel";
       repo = "keyboard-layouts";
-      rev = "c9339e9c8cf653db2345e023b64b8742fb07512b";
-      sha256 = "nUtoc6KytGiaSksmf50GYrulugt9ZzxDSs2yzzy44dg=";
+      rev = "803e3e93484944d0ab3b18b44d491f47f11df854";
+      sha256 = "O7EoINQpD3c6Ndxmo3d0OxEmuNpE657GhbJX+7KwGeY=";
     };
   };
 }

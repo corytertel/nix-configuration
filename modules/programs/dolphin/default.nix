@@ -60,15 +60,15 @@ in {
       ".local/share/user-places.xbel".source = ./user-places.xbel;
     };
 
-    # environment.variables = {
-    #   GTK_USE_PORTAL = "1";
-    #   XDG_DESKTOP_PORTAL = "1";
-    # };
+    environment.variables = {
+      GTK_USE_PORTAL = "1";
+      XDG_DESKTOP_PORTAL = "1";
+    };
 
-    # xdg.portal = {
-    #   enable = true;
-    #   extraPortals = [ pkgs.libsForQt5.xdg-desktop-portal-kde ];
-    # };
+    xdg.portal = {
+      enable = true;
+      extraPortals = [ pkgs.libsForQt5.xdg-desktop-portal-kde ];
+    };
 
     home-manager.users.cory.home.packages = with pkgs; [
       findutils

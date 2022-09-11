@@ -334,6 +334,7 @@ Style FvwmIdent WindowListSkip
 Style DesktopEditors NoTitle, !Borders, !Handles,
 Style Steam NoTitle, !Borders, !Handles
 Style TelegramDesktop NoTitle, !Borders, !Handles,
+Style emacs-run-launcher NoTitle, !Borders, !Handles,
 
 # Etc
 XorValue 	55555

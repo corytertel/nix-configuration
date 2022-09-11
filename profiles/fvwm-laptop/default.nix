@@ -35,9 +35,6 @@
   # PDF Viewer
   programs.cory.qpdfview.enable = true;
 
-  # Launcher
-  services.cory.rofi.enable = true;
-
   # Set other apps
   apps = {
     photoEditor = {
@@ -57,6 +54,12 @@
       command = "ark";
       desktopFile = "org.kde.ark.desktop";
       package = pkgs.libsForQt5.ark;
+    };
+    launcher = {
+      name = "emacs-run-launcher";
+      command = "emacsclient -e '(emacs-run-launcher)'";
+      desktopFile = "emacsclient.desktop";
+      package = pkgs.emacsNativeComp;
     };
   };
 

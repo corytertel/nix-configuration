@@ -33,7 +33,7 @@ in {
           width = 350;
           # height = 520;
           origin = "bottom-right";
-          offset = "170x30";
+          offset = "110x10";
 
           progress_bar = "true";
           progress_bar_height = 15;
@@ -74,7 +74,7 @@ in {
           # --- Text --- #
 
           # Set the font
-          font = "${font.system.name} ${toString (font.system.size + 1)}";
+          font = "${font.system.name} ${toString font.system.size}";
 
           # Set line height to font height
           line_height = 0;
