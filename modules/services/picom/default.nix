@@ -40,6 +40,7 @@ in {
       opacityRules = [
         # "93:class_g = 'Emacs' && !_NET_WM_STATE@:32a" "0:_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
         "70:class_g *?= 'FvwmButtons'"
+        "70:class_g *?= 'Conky'"
       ];
 
       settings = {
@@ -51,6 +52,7 @@ in {
         round-borders = if cfg.roundBorders then 1 else 0;
         rounded-corners-exclude = [
           "class_g *?= 'FvwmButtons'"
+          "class_g *?= 'Conky'"
         ];
 
         shadow = true;
@@ -58,6 +60,10 @@ in {
         shadow-opacity = 0.80;
         shadow-offset-x = -20;
         shadow-offset-y = -10;
+        shadow-exclude = [
+          "class_g *?= 'FvwmButtons'"
+          "class_g *?= 'Conky'"
+        ];
 
         blur = {
           method = "kernel";

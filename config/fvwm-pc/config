@@ -150,7 +150,6 @@ AddToFunc   SetBG
 # This function is run from FvwmIconMan when the button is clicked.
 DestroyFunc IconManClick
 AddToFunc   IconManClick
-+ I ThisWindow (Raised, !Shaded, !Iconic, CurrentPage) Thumbnail
 + I TestRc (Match) Break
 + I ThisWindow WindowShade off
 + I ThisWindow Iconify off
@@ -206,23 +205,6 @@ AddToFunc DecVolume
 DestroyFunc ToggleMute
 AddToFunc ToggleMute
 + I Exec exec amixer -q set Master toggle
-
-# Function: Thumbnail
-#
-# To create a thumbnail on minimize,
-# call the script to create a thumbnail using ImageMagick & xwd.
-DestroyFunc Thumbnail
-AddToFunc Thumbnail
-+ I ThisWindow (Shaded) WindowShade
-+ I PipeRead 'bash $[fvwm_scripts]/crthumb "$[w.id]" "$[fvwm_cache]"'
-
-# Function: DeThumbnail
-#
-# Restore the thumbnailed window.
-DestroyFunc DeThumbnail
-AddToFunc DeThumbnail
-+ I PipeRead 'bash $[fvwm_scripts]/dethumb "$[w.id]" "$[fvwm_cache]"'
-*FvwmEvent: deiconify DeThumbnail
 
 # Function: Tile $0 $1 $2 $3
 #
@@ -327,10 +309,6 @@ Style * BorderColorset 3, HilightBorderColorset 4
 # Disable Icons from appearing on desktop.
 # Comment this out or use Style * Icon to get the icons back.
 Style * !Icon
-
-# Minimize to Thumbnail Placeholder
-Style * IconBox 3700x2100+30-30, IconGrid 30 30, IconFill Bottom Left, \
-!IconTitle, IconBackgroundPadding 0, IconBackgroundRelief 0, IconSize -1 -1
 
 # Remove sticky stipples
 Style * !StickyStippledTitle
@@ -480,7 +458,6 @@ AddToMenu   MenuWindowOps
 + "Send To"                                                  Popup MenuSendTo
 + "Center%$[fvwm_icon]/actions/32x32/window.png%"            AnimatedMove 50-50w 50-50w
 + "Maximize%$[fvwm_icon]/actions/32x32/window-maximize.png%" Maximize
-+ "Iconify%$[fvwm_icon]/actions/32x32/window-minimize.png%"  Thumbnail
 + "Tile%$[fvwm_icon]/actions/32x32/window.png%"              Popup MenuTile
 + "More Actions"                                             Popup MenuWindowOpsLong
 + "Close%$[fvwm_icon]/actions/32x32/window-close.png%"       Close
@@ -508,7 +485,6 @@ AddToMenu   MenuWindowOpsLong
 
 DestroyMenu MenuIconOps
 AddToMenu   MenuIconOps
-+ "(De)Iconify"         Thumbnail
 + "(Un)Maximize"        Maximize
 + "(Un)Shade"           WindowShade
 + "(Un)Sticky"		Stick
@@ -685,14 +661,8 @@ Silent Key XF86MonBrightnessDown A A Exec exec xbrightness -5000
 # Window Buttons: [1 3 5 7 9  TTTTT  0 8 6 4 2]
 #   1 - Open the WindowOps menu.
 #   2 - Close on single click, Destory on double click.
-#   4 - Maximize (right/middle button will only maximize vertical/horizontal)
-#   6 - Iconify (minimize)
 Mouse 1 1 A Stick
 Mouse 1 2 A Close
-Mouse 1 4 A Maximize 100 100
-Mouse 2 4 A Maximize 0 100
-Mouse 3 4 A Maximize 100 0
-Mouse 1 6 A Thumbnail
 
 #   TitleBar: Click to Raise, Move, Double Click to Maximize
 #             Mouse Wheel Up/Down to WindowShade On/Off
@@ -761,21 +731,8 @@ ButtonStyle 2 \
       ActiveUp          (Pixmap $[fvwm_img]/button/close-activeup.png -- Flat) \
       ActiveDown        (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat) \
       Inactive          (Pixmap $[fvwm_img]/button/close-inactive.png -- Flat)
-ButtonStyle 4 \
-      ActiveUp          (Pixmap $[fvwm_img]/button/maximize-activeup.png -- Flat) \
-      ActiveDown        (Pixmap $[fvwm_img]/button/maximize-activedown.png -- Flat) \
-      Inactive          (Pixmap $[fvwm_img]/button/maximize-inactive.png -- Flat) \
-      ToggledActiveUp   (Pixmap $[fvwm_img]/button/unmaximize-activeup.png -- Flat) \
-      ToggledActiveDown (Pixmap $[fvwm_img]/button/unmaximize-activedown.png -- Flat) \
-      ToggledInactive   (Pixmap $[fvwm_img]/button/unmaximize-inactive.png -- Flat)
-ButtonStyle 6 \
-      ActiveUp          (Pixmap $[fvwm_img]/button/iconify-activeup.png -- Flat) \
-      ActiveDown        (Pixmap $[fvwm_img]/button/iconify-activedown.png -- Flat) \
-      Inactive          (Pixmap $[fvwm_img]/button/iconify-inactive.png -- Flat)
 ButtonStyle All - Clear
 ButtonStyle 1 - MwmDecorStick
-ButtonStyle 4 - MwmDecorMax
-ButtonStyle 6 - MwmDecorMin
 TitleStyle -- Flat
 BorderStyle Simple -- HiddenHandles NoInset Flat
 ButtonStyle All -- UseTitleStyle
@@ -813,28 +770,23 @@ DestroyModuleConfig FvwmScript:*
 #
 # Note - To use the system tray you must have "stalonetray" installed.
 DestroyModuleConfig RightPanel:*
-*RightPanel: Geometry 240x$[vp.height]-0+0
+*RightPanel: Geometry 240x382-0+0
 *RightPanel: Colorset 10
-*RightPanel: Rows $[vp.height]
+*RightPanel: Rows 380
 *RightPanel: Columns 120
 *RightPanel: Frame 0
 *RightPanel: Font "xft:Oxygen-Sans:size=13:antialias=True"
 *RightPanel: (120x200, Icon "$[fvwm_img]/nixos-logo.png", Frame 0)
 *RightPanel: (120x5, Frame 0)
-*RightPanel: (10x115, Frame 0)
-*RightPanel: (100x115, Swallow FvwmPager 'Module FvwmPager *', Frame 0)
-*RightPanel: (10x115, Frame 0)
+*RightPanel: (5x120, Frame 0)
+*RightPanel: (110x120, Swallow FvwmPager 'Module FvwmPager *', Frame 0)
+*RightPanel: (5x120, Frame 0)
 *RightPanel: (120x10, Frame 0)
 Test (x stalonetray) *RightPanel: (120x40, Swallow(NoClose,UseOld) \
     stalonetray 'Exec exec stalonetray --config \
     "$[FVWM_USERDIR]/stalonetrayrc"', Frame 0)
-Test (x stalonetray) PipeRead 'echo "*RightPanel: (120x$(($[vp.height]-480)), \
-    Top, Swallow FvwmIconMan \'Module FvwmIconMan\', Frame 0)"'
-Test (!x stalonetray) PipeRead 'echo "*RightPanel: (120x$(($[vp.height]-440)),\
-    Top, Swallow FvwmIconMan \'Module FvwmIconMan\', Frame 0)"'
-*RightPanel: (120x90, Swallow DateTime 'Module FvwmScript FvwmScript-DateTime',\
-    Frame 0)
-*RightPanel: (120x10, Frame 0)
+Test (x stalonetray) PipeRead 'echo "*RightPanel: (120x7, Frame 0)"'
+Test (!x stalonetray) PipeRead 'echo "*RightPanel: (120x47, Frame 0)"'
 
 # FvwmPager
 #

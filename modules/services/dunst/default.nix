@@ -54,7 +54,7 @@ in {
           # Draw a line between multiple notifications
           separator_height = 1;
 
-          separator_color = "${color.foreground}aa";
+          separator_color = "${"#141404"}aa";
 
           # Set notification padding
           padding = 24;
@@ -63,7 +63,7 @@ in {
           # Frame (border)
           frame_width = 0;
 
-          frame_color = color.foreground;
+          frame_color = "#141404";
 
           # Sort messages by urgency.
           sort = "no";
@@ -184,20 +184,20 @@ in {
         };
 
         urgency_low = {
-          background = color.background;
-          foreground = color.foreground;
+          background = "#dae9fa";
+          foreground = "#141404";
           timeout = 8;
         };
 
         urgency_normal = {
-          background = color.background;
-          foreground = color.foreground;
+          background = "#dae9fa";
+          foreground = "#141404";
           timeout = 8;
         };
 
         urgency_critical = {
-          background = color.background;
-          foreground = color.foreground;
+          background = "#dae9fa";
+          foreground = "#141404";
           timeout = 0;
           icon = "abrt";
         };

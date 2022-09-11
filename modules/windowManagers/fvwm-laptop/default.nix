@@ -80,6 +80,11 @@ in {
         kde-gtk-config
         trash-cli
 
+        conky
+        lua
+        lm_sensors
+        lsb-release
+
         libsForQt5.kwallet
         libsForQt5.kwallet-pam
         libsForQt5.kwalletmanager
