@@ -772,14 +772,6 @@ DestroyModuleConfig FvwmScript:*
 *FvwmScript: DefaultColorset 10
 *FvwmScript: Font "xft:Oxygen-Sans:size=13"
 
-DestroyModuleConfig FvwmConky:*
-*FvwmConky: Rows 1
-*FvwmConky: Frame 0
-*FvwmConky: Columns 1
-*FvwmConky: Colorset 0
-*FvwmConky: BoxSize fixed
-*FvwmConky: (Swallow "conky" 'Exec conky')
-
 # FvwmButtons - RightPanel
 #
 # FvwmButtons is a powerful module that can be used to build custom
