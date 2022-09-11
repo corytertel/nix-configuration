@@ -257,8 +257,8 @@ AddToFunc   WindowListFunc
 # Desktops and Pages
 #
 # Fvwm has both Virtual Desktops and Pages. Each Desktop is built from
-# a grid of Pages. The following sets the name of four Desktops and then
-# divides each Desktop into a 3x3 grid of Pages that are positioned as
+# a grid of Pages. The following divides each Desktop into a 3x3 grid 
+# of Pages that are positioned as
 #
 #   +---+---+---+
 #   |   |   |   |
@@ -268,10 +268,7 @@ AddToFunc   WindowListFunc
 #   |   |   |   |
 #   +---+---+---+
 #
-DesktopName 0 Main
-DesktopName 1 Desk1
-DesktopName 2 Desk2
-DesktopName 3 Desk3
+DesktopName 0 Desktop
 DesktopSize 3x3
 
 # EdgeScroll will move the view port between the Pages when the mouse
@@ -646,10 +643,6 @@ AddToMenu MenuVolume
 Silent Key F1 A M Menu MenuFvwmRoot
 Silent Key Menu A A Menu MenuFvwmRoot
 # Silent Key Tab A M WindowList Root c c NoDeskSort, SelectOnRelease Meta_L
-Silent Key F1 A C GotoDesk 0 0
-Silent Key F2 A C GotoDesk 0 1
-Silent Key F3 A C GotoDesk 0 2
-Silent Key F4 A C GotoDesk 0 3
 Silent Key Super_L A A Exec exec $[fvwm_launch]
 Silent Key F4 A M Destroy
 # Xah Keybinds
@@ -663,9 +656,9 @@ Silent Key F4 A A WindowList Root c c CurrentDesk, NoGeometry, CurrentAtEnd, Ico
 Silent Key F6 A A Close
 Silent Key F7 A A Maximize 100 100
 Silent Key F8 A A Next ("emacs") WarpToWindow 99 90
-# Silent Key F9 A A Next ("firefox") WarpToWindow 99 90
+# Silent Key F9 A A Next ("firefox|chromium-browser") WarpToWindow 99 90
 # Temporary hack
-Silent Key F9 A A WindowList ("firefox") Root c c CurrentDesk, NoGeometry, CurrentAtEnd, IconifiedAtEnd, SelectOnRelease F9
+Silent Key F9 A A WindowList ("firefox|chromium-browser") Root c c CurrentDesk, NoGeometry, CurrentAtEnd, IconifiedAtEnd, SelectOnRelease F9
 Silent Key F10 A A Next ("konsole") WarpToWindow 99 90
 # F11: reserved, universal key (fullscreen)
 # F12: reserved, universal key (open console)
@@ -692,10 +685,14 @@ Silent Key XF86MonBrightnessUp A A Exec exec xbrightness +5000
 Silent Key XF86MonBrightnessDown A A Exec exec xbrightness -5000
 
 # Workspaces
-Silent Key Up       A    M        GotoPage 0p -1p
-Silent Key Down     A    M        GotoPage 0p +1p
-Silent Key Left     A    M        GotoPage -1p 0p
-Silent Key Right    A    M        GotoPage +1p 0p
+Silent Key Up       A    M        GotoPage wrapx wrapy 0p -1p
+Silent Key Down     A    M        GotoPage wrapx wrapy 0p +1p
+Silent Key Left     A    M        GotoPage wrapx wrapy -1p 0p
+Silent Key Right    A    M        GotoPage wrapx wrapy +1p 0p
+
+# Window Switching
+Silent Key Next  A M Next (AcceptsFocus, CurrentPage) WarpToWindow 50 50
+Silent Key Prior A M Prev (AcceptsFocus, CurrentPage) WarpToWindow 50 50
 
 # Window Buttons: [1 3 5 7 9  TTTTT  0 8 6 4 2]
 #   1 - Open the WindowOps menu.
@@ -726,8 +723,6 @@ Mouse 3	R    A Menu MenuWindowOpsLong
 Mouse 1	I    A RaiseMoveX Move "Iconify off"
 Mouse 3	T    A Menu MenuWindowOps
 Mouse 3 I    A Menu MenuIconOps
-Mouse 9 A A Next (AcceptsFocus, CurrentPage) WarpToWindow 50 50
-Mouse 8 A A Prev (AcceptsFocus, CurrentPage) WarpToWindow 50 50
 
 #######
 # 6: Window Decor
@@ -836,12 +831,6 @@ DestroyModuleConfig RightPanel:*
 *RightPanel: Font "xft:Oxygen-Sans:size=13:antialias=True"
 *RightPanel: (120x200, Icon "$[fvwm_img]/nixos-logo.png", Frame 0)
 *RightPanel: (120x5, Frame 0)
-*RightPanel: (10x50, Frame 0)
-*RightPanel: (25x50, Id desk0, Title "1", Action (Mouse 1) GotoDesk 0 0, Colorset 11, ActiveColorset 12, Frame 0)
-*RightPanel: (25x50, Id desk1, Title "2", Action (Mouse 1) GotoDesk 0 1, ActiveColorset 12, Frame 0)
-*RightPanel: (25x50, Id desk2, Title "3", Action (Mouse 1) GotoDesk 0 2, ActiveColorset 12, Frame 0)
-*RightPanel: (25x50, Id desk3, Title "4", Action (Mouse 1) GotoDesk 0 3, ActiveColorset 12, Frame 0)
-*RightPanel: (10x50, Frame 0)
 *RightPanel: (10x115, Frame 0)
 *RightPanel: (100x115, Swallow FvwmPager 'Module FvwmPager *', Frame 0)
 *RightPanel: (10x115, Frame 0)
@@ -849,9 +838,9 @@ DestroyModuleConfig RightPanel:*
 Test (x stalonetray) *RightPanel: (120x40, Swallow(NoClose,UseOld) \
     stalonetray 'Exec exec stalonetray --config \
     "$[FVWM_USERDIR]/stalonetrayrc"', Frame 0)
-Test (x stalonetray) PipeRead 'echo "*RightPanel: (120x$(($[vp.height]-530)), \
+Test (x stalonetray) PipeRead 'echo "*RightPanel: (120x$(($[vp.height]-480)), \
     Top, Swallow FvwmIconMan \'Module FvwmIconMan\', Frame 0)"'
-Test (!x stalonetray) PipeRead 'echo "*RightPanel: (120x$(($[vp.height]-490)),\
+Test (!x stalonetray) PipeRead 'echo "*RightPanel: (120x$(($[vp.height]-440)),\
     Top, Swallow FvwmIconMan \'Module FvwmIconMan\', Frame 0)"'
 *RightPanel: (120x90, Swallow DateTime 'Module FvwmScript FvwmScript-DateTime',\
     Frame 0)

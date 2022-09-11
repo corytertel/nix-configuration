@@ -49,6 +49,9 @@ in {
 
         corner-radius = cfg.cornerRadius;
         round-borders = if cfg.roundBorders then 1 else 0;
+        rounded-corners-exclude = [
+          "class_g *?= 'FvwmButtons'"
+        ];
 
         shadow = true;
         shadow-radius = 20;

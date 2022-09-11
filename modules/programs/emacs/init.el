@@ -212,6 +212,9 @@
   :config
   (setq-default goggles-pulse nil))
 
+;; Smooth pixel scrolling
+(pixel-scroll-mode 1)
+
 ;;
 ;; --- WINDOW MANAGEMENT
 ;;
