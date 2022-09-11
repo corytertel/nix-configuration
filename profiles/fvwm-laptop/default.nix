@@ -151,6 +151,11 @@
     recursive = true;
   };
 
+  home-manager.users.cory.home.file.".config/conky" = {
+    source = ../../config/conky;
+    recursive = true;
+  };
+
   environment.systemPackages = with pkgs; [
 
   ];
