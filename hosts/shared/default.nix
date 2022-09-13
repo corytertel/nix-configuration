@@ -322,6 +322,7 @@
         # chicken scheme
         chicken
         chicken-lsp-server
+        egg2nix
 
         # racket
         racket

@@ -1,12 +1,15 @@
 { pkgs, ... }:
 
 final: prev: let
-  source = prev.discord.overrideAttrs (_: {
-    # src = builtins.fetchTarball {
-    #   url = "https://discord.com/api/download?platform=linux&format=tar.gz";
-    #   sha256 = "1kwqn1xr96kvrlbjd14m304g2finc5f5ljvnklg6fs5k4avrvmn4";
-    # };
-  });
+  # source = prev.discord.overrideAttrs (_: {
+  #   src = builtins.fetchTarball {
+  #     url = "https://discord.com/api/download?platform=linux&format=tar.gz";
+  #     sha256 = "1kwqn1xr96kvrlbjd14m304g2finc5f5ljvnklg6fs5k4avrvmn4";
+  #   };
+  # });
+  source = prev.discord.override {
+    nss = prev.nss_latest;
+  };
 
   commandLineArgs = toString [
     "--enable-accelerated-mjpeg-decode"
@@ -62,21 +65,21 @@ final: prev: let
             document.head.appendChild(style);
 
             fs.watch(confDir, {}, () => reload(style));
-          });
+                                          });
         }
 
         inject(require("electron").webFrame.context);
-      };
+                  };
 
       module.exports.mw = (mainWindow) => {
         mainWindow.setBackgroundColor("#00000000");
-      };
+        };
 
       module.exports.mo = (options) => {
         options.transparent = true;
         if (process.platform === "linux") {
           options.frame = true;
-        }
+            }
       };
       EOF
 

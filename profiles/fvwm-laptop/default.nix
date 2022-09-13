@@ -155,7 +155,7 @@
   };
 
   home-manager.users.cory.home.file.".config/conky" = {
-    source = ../../config/conky;
+    source = ../../config/conky/laptop;
     recursive = true;
   };
 

@@ -102,6 +102,7 @@ AddToFunc InitFunction
 + I Exec exec mkdir -p /tmp/fvwm-cache
 + I Exec exec emacs --daemon
 + I Exec exec dolphin --daemon
++ I Exec exec conky
 + I Exec exec kwalletd5
 + I Exec exec nm-applet
 + I Exec exec pasystray
@@ -230,6 +231,25 @@ AddToFunc   WindowListFunc
 + I Raise
 + I WarpToWindow 99 90
 
+# Function: LaunchApp
+#
+# Launches the app launcher.
+DestroyFunc LaunchApp
+AddToFunc   LaunchApp
++I Exec exec $[fvwm_launch]
++I Next ("emacs-run-launcher") WarpToWindow 99 90
+
+# Function: FullScreen
+#
+# Fullscreens the focused app.
+DestroyFunc FullScreen
+AddToFunc   FullScreen
++ I ThisWindow (Maximized) WindowStyle Title, Borders
++ I TestRc (!Match) WindowStyle !Title, !Borders
++ I TestRc (!Match) Raise
++ I TestRc (!Match) UpdateStyles
++ I Maximize 100 100
+
 #############
 # 2: Styles #
 #############
@@ -275,7 +295,7 @@ MoveThreshold 3
 # Sets the focus style to SloppyFocus and a mouse click
 # in a window will Raise it.
 Style * SloppyFocus, MouseFocusClickRaises
-Module FvwmAuto 300
+Module FvwmAuto 500
 
 # Default Font
 DefaultFont "xft:Oxygen-Sans:size=11:antialias=True"
@@ -331,6 +351,7 @@ Style FvwmIdent WindowListSkip
 Style DesktopEditors NoTitle, !Borders, !Handles,
 Style Steam NoTitle, !Borders, !Handles
 Style TelegramDesktop NoTitle, !Borders, !Handles,
+Style emacs-run-launcher NoTitle, !Borders, !Handles,
 
 # Etc
 XorValue 	55555
@@ -617,29 +638,40 @@ AddToMenu MenuVolume
 Silent Key F1 A M Menu MenuFvwmRoot
 Silent Key Menu A A Menu MenuFvwmRoot
 # Silent Key Tab A M WindowList Root c c NoDeskSort, SelectOnRelease Meta_L
-Silent Key Super_L A A Exec exec $[fvwm_launch]
-Silent Key F4 A M Destroy
+Silent Key Super_L A A LaunchApp
 # Xah Keybinds
 # F1: reserved, commonly used key
 # F2: reserved, universal key (rename)
-Silent Key F3 A A Next ($[w.class]) WarpToWindow 99 90
-# Silent Key F4 A A Prev (AcceptsFocus) WarpToWindow 99 90
+# If emacs is focused, then pass F3 to emacs and have it handle it.
+# Emacs will switch between internal emacs windows when F3 and focused.
+# Otherwise, F3 will cycle between the windows of the currently focused application.
+# Silent Key ("emacs") F3 A N --
+Silent Key F3 A N Next ($[w.class]) WarpToWindow 99 90
+Silent Key F4 A N Prev (AcceptsFocus) WarpToWindow 99 90
 # Freaks out when the last focused window and the current focused window have the same title
-Silent Key F4 A A WindowList Root c c CurrentDesk, NoGeometry, CurrentAtEnd, IconifiedAtEnd, SelectOnRelease F4
+# Silent Key F4 A A WindowList Root c c CurrentDesk, NoGeometry, CurrentAtEnd, IconifiedAtEnd, SelectOnRelease F4
 # F5: reserved, universal key (refresh)
-Silent Key F6 A A Close
-Silent Key F7 A A Maximize 100 100
-Silent Key F8 A A Next ("emacs") WarpToWindow 99 90
-# Silent Key F9 A A Next ("firefox|chromium-browser") WarpToWindow 99 90
+Silent Key F6 A N Close
+# F7: scales to "working" width/height
+# Silent Key F7 A N Tile 84 94 +8 +3
+Silent Key F7 A N FullScreen
+# If emacs isn't focused, warp to it
+# If it is, cycle between internal emacs windows (emacs will handle this)
+# Silent Key ("emacs") F8 A N --
+Silent Key F8 A N Next ("emacs") WarpToWindow 99 90
+Silent Key F9 A N Next ("firefox|chromium-browser") WarpToWindow 99 90
 # Temporary hack
-Silent Key F9 A A WindowList ("firefox|chromium-browser") Root c c CurrentDesk, NoGeometry, CurrentAtEnd, IconifiedAtEnd, SelectOnRelease F9
-Silent Key F10 A A Next ("konsole") WarpToWindow 99 90
+# Silent Key F9 A A WindowList ("firefox|chromium-browser") Root c c CurrentDesk, NoGeometry, CurrentAtEnd, IconifiedAtEnd, SelectOnRelease F9
+Silent Key F10 A N Next ("konsole") WarpToWindow 99 90
 # F11: reserved, universal key (fullscreen)
 # F12: reserved, universal key (open console)
 # Toggle keyboard layout between us/ru
-Silent Key F12 A A Exec exec "$[fvwm_scripts]/layout-switch"
-Silent Key Scroll_Lock A A Next ("discord") WarpToWindow 99 90
+Silent Key F12 A N Exec exec "$[fvwm_scripts]/layout-switch"
+Silent Key Scroll_Lock A N Next ("discord") WarpToWindow 99 90
 # Pause: bound through discord to toggle mic mute
+
+# Emacs Everywhere
+Silent Key Insert A N Exec exec emacsclient --eval "(emacs-everywhere)"
 
 # Audio Controls
 Silent Key XF86AudioLowerVolume A A DecVolume
@@ -689,10 +721,8 @@ Mouse 8 A A Prev (AcceptsFocus, CurrentPage) WarpToWindow 50 50
 #
 # Buttons Locations: [1 3 5 7 9  TTTTT  0 8 6 4 2]
 #
-#   1 - WindowOps Menu
+#   1 - Stick (pin)
 #   2 - Close
-#   4 - Maximize
-#   6 - Minimize
 ###########
 # TitleStyle Centered Height 36 -- Flat
 # ButtonStyle All ActiveUp Vector 5 15x15@4 15x85@3 85x85@3 85x15@3 \

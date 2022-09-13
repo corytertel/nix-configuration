@@ -508,7 +508,7 @@
   ("C-x p s" . consult-ripgrep) ; for use with project.el
   ("C-s" . consult-line)
   ("C-c i" . consult-imenu)
-  ("C-c t" . gtags-find-tag)
+  ;; ("C-c t" . gtags-find-tag)
   ("C-x b" . consult-buffer)
   ("C-c x" . consult-complex-command)
   ("C-c e" . consult-flymake)
@@ -527,6 +527,64 @@
   :config
   (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
   (marginalia-mode))
+
+(use-package embark
+  :ensure t
+  :bind
+  (("C-=" . embark-act)         ;; pick some comfortable binding
+   ([remap describe-bindings] . embark-bindings)
+   :map embark-file-map
+   ("C-d" . dragon-drop)
+   ("U"   . 0x0-upload-file)
+   :map embark-region-map
+   ("U"   . 0x0-dwim))
+  :custom
+  (embark-indicators
+   '(embark-highlight-indicator
+     embark-isearch-highlight-indicator
+     embark-minimal-indicator))
+  :init
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+  (setq embark-prompter 'embark-completing-read-prompter)
+  :config
+  (defun search-in-source-graph (text))
+  (defun dragon-drop (file)
+    (start-process-shell-command "dragon-drop" nil
+                                 (concat "dragon-drag-and-drop " file))))
+
+;; Templates
+(use-package tempel
+  ;; Require trigger prefix before template name when completing.
+  ;; :custom
+  ;; (tempel-trigger-prefix "<")
+
+  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
+         ("M-*" . tempel-insert))
+
+  :init
+
+  ;; Setup completion at point
+  (defun tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.
+    ;; `tempel-expand' only triggers on exact matches. Alternatively use
+    ;; `tempel-complete' if you want to see all matches, but then you
+    ;; should also configure `tempel-trigger-prefix', such that Tempel
+    ;; does not trigger too often when you don't expect it. NOTE: We add
+    ;; `tempel-expand' *before* the main programming mode Capf, such
+    ;; that it will be tried first.
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand
+                      completion-at-point-functions)))
+
+  (add-hook 'prog-mode-hook 'tempel-setup-capf)
+  (add-hook 'text-mode-hook 'tempel-setup-capf)
+
+  ;; Optionally make the Tempel templates available to Abbrev,
+  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
+  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+  ;; (global-tempel-abbrev-mode)
+  )
 
 ;; Undo
 (use-package undo-tree
@@ -1554,6 +1612,24 @@ Lisp function does not specify a special indentation."
 (global-set-key (kbd "C-c s") 'replace-string)
 (global-set-key (kbd "C-c w") 'woman)
 
+;; Window Management
+;; (global-set-key (kbd "<f3>") 'next-window-any-frame)
+;; (global-set-key (kbd "C-<f3>") 'next-window-any-frame)
+;; (global-set-key (kbd "M-<f3>") 'next-window-any-frame)
+;; (global-set-key (kbd "C-M-<f3>") 'next-window-any-frame)
+;; (global-set-key (kbd "<f8>") 'next-window-any-frame)
+;; (global-set-key (kbd "C-<f8>") 'next-window-any-frame)
+;; (global-set-key (kbd "M-<f8>") 'next-window-any-frame)
+;; (global-set-key (kbd "C-M-<f8>") 'next-window-any-frame)
+(global-set-key (kbd "<f1>") 'previous-window-any-frame)
+(global-set-key (kbd "C-<f1>") 'previous-window-any-frame)
+(global-set-key (kbd "M-<f1>") 'previous-window-any-frame)
+(global-set-key (kbd "C-M-<f1>") 'previous-window-any-frame)
+(global-set-key (kbd "<f2>") 'next-window-any-frame)
+(global-set-key (kbd "C-<f2>") 'next-window-any-frame)
+(global-set-key (kbd "M-<f2>") 'next-window-any-frame)
+(global-set-key (kbd "C-M-<f2>") 'next-window-any-frame)
+
 ;; FIXME
 (defun kill-ring-save-and-comment (BEG END)
   "Save the region to the kill ring, then comment it out."
@@ -1800,8 +1876,40 @@ Lisp function does not specify a special indentation."
   :after flyspell
   :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper)))
 
-(use-package flyspell-correct-popup
-  :after flyspell-correct)
+(use-package frog-menu
+  :custom
+  ;; Need to redefine keys to account for custom keyboard layout
+  (frog-menu-avy-keys (append (string-to-list "aoehsfnbid")
+			      (string-to-list "ulrptgy")
+			      (string-to-list "xcjzvwmqk")
+			      (string-to-list (upcase "aoehsfnbid"))
+			      (string-to-list (upcase "ulrptgy"))
+			      (string-to-list (upcase "xcjzvwmqk"))
+			      (number-sequence ?, ?@)))
+  :config
+  (defun frog-menu-flyspell-correct (candidates word)
+    "Run `frog-menu-read' for the given CANDIDATES.
+
+List of CANDIDATES is given by flyspell for the WORD.
+
+Return selected word to use as a replacement or a tuple
+of (command . word) to be used by `flyspell-do-correct'."
+    (let* ((corrects (if flyspell-sort-corrections
+			 (sort candidates 'string<)
+                       candidates))
+           (actions `(("C-s" "Save word"         (save    . ,word))
+                      ("C-a" "Accept (session)"  (session . ,word))
+                      ("C-b" "Accept (buffer)"   (buffer  . ,word))
+                      ("C-c" "Skip"              (skip    . ,word))))
+           (prompt   (format "Dictionary: [%s]"  (or ispell-local-dictionary
+                                                    ispell-dictionary
+                                                    "default")))
+           (res      (frog-menu-read prompt corrects actions)))
+      (unless res
+	(error "Quit"))
+      res))
+
+  (setq flyspell-correct-interface #'frog-menu-flyspell-correct))
 
 ;;
 ;; --- MISC ---
@@ -1850,5 +1958,22 @@ Lisp function does not specify a special indentation."
     (unwind-protect
 	(app-launcher-run-app)
       (delete-frame))))
+
+;; Edit anything with emacs
+(use-package emacs-everywhere)
+
+;; Transparency
+(defun toggle-transparency ()
+  (interactive)
+  (let ((alpha (frame-parameter nil 'alpha)))
+    (set-frame-parameter
+     nil 'alpha
+     (if (eql (cond ((numberp alpha) alpha)
+                    ((numberp (cdr alpha)) (cdr alpha))
+                    ;; Also handle undocumented (<active> <inactive>) form.
+                    ((numberp (cadr alpha)) (cadr alpha)))
+              100)
+         '(70 . 70) '(100 . 100)))))
+(global-set-key (kbd "C-c t") 'toggle-transparency)
 
 ;;; init.el ends here

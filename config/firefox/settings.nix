@@ -103,13 +103,13 @@ in {
   # "browser.theme.toolbar-theme" = if darkTheme then 0 else 1;
   # "extensions.activeThemeID" = if darkTheme then "firefox-compact-dark@mozilla.org" else "firefox-compact-light@mozilla.org";
   # System theme
-  # "browser.theme.content-theme" = 2;
-  # "browser.theme.toolbar-theme" = 2;
-  # "extensions.activeThemeID" = "default-theme@mozilla.org";
-  # FF 3.6 Theme
   "browser.theme.content-theme" = 2;
-  "browser.theme.toolbar-theme" = 1;
-  "extensions.activeThemeID" = "{dd0d4862-e183-44d4-9841-5db3c8a43d11}";
+  "browser.theme.toolbar-theme" = 2;
+  "extensions.activeThemeID" = "default-theme@mozilla.org";
+  # FF 3.6 Theme
+  # "browser.theme.content-theme" = 2;
+  # "browser.theme.toolbar-theme" = 1;
+  # "extensions.activeThemeID" = "{dd0d4862-e183-44d4-9841-5db3c8a43d11}";
   # "extensions.activeThemeID" = "{b71025ab-42c7-48a5-ba37-063efa0dee7e}";
   # Keybindings
   # https://searchcode.com/codesearch/view/26755902/
@@ -125,9 +125,14 @@ in {
   "dom.event.contextmenu.enabled" = false;
   # Scrolling
   # "mousewheel.acceleration.start" = 2;
-  "mousewheel.acceleration.start" = 3;
+  "mousewheel.acceleration.start" = -1; # off
   "mousewheel.acceleration.factor" = 20;
   "general.autoScroll" = true;
+  # Scrollbar
+  "widget.non-native-theme.enabled" = false;
+  "widget.non-native-theme.scrollbar.size.override" = 30;
+  "widget.non-native-theme.scrollbar.dark-themed" = false;
+  "widget.non-native-theme.scrollbar.style" = 0;
   # Backspace goes back a page
   "browser.backspace_action" = 0;
 
