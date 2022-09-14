@@ -233,14 +233,6 @@ AddToFunc   WindowListFunc
 + I Raise
 + I WarpToWindow 99 90
 
-# Function: LaunchApp
-#
-# Launches the app launcher.
-DestroyFunc LaunchApp
-AddToFunc   LaunchApp
-+I Exec exec $[fvwm_launch]
-+I Next ("emacs-run-launcher") WarpToWindow 99 90
-
 # Function: FullScreen
 #
 # Fullscreens the focused app.
@@ -640,27 +632,19 @@ AddToMenu MenuVolume
 Silent Key F1 A M Menu MenuFvwmRoot
 Silent Key Menu A A Menu MenuFvwmRoot
 # Silent Key Tab A M WindowList Root c c NoDeskSort, SelectOnRelease Meta_L
-Silent Key Super_L A A LaunchApp
+Silent Key Super_L A A Exec $[fvwm_launch]
 # Xah Keybinds
 # F1: reserved, commonly used key
 # F2: reserved, universal key (rename)
 Silent Key F3 A N Next ($[w.class]) WarpToWindow 99 90
-# Silent Key F4 A N Prev (AcceptsFocus) WarpToWindow 99 90
-# Freaks out when the last focused window and the current focused window have the same title
-Silent Key F4 A N WindowList Root c c CurrentDesk, NoGeometry, CurrentAtEnd, IconifiedAtEnd, SelectOnRelease F4
+Silent Key F4 A N Prev (AcceptsFocus) FlipFocus
 # F5: reserved, universal key (refresh)
 Silent Key F6 A N Close
-# F7: scales to "working" width/height
-# Silent Key F7 A N Tile 84 94 +8 +3
 Silent Key F7 A N FullScreen
 Silent Key F8 A N Next ("emacs") WarpToWindow 99 90
-# Silent Key F9 A N Next ("firefox|chromium-browser") WarpToWindow 99 90
-# Temporary hack
-Silent Key F9 A N WindowList ("firefox|chromium-browser") Root c c CurrentDesk, NoGeometry, CurrentAtEnd, IconifiedAtEnd, SelectOnRelease F9
+Silent Key F9 A N Next ("firefox|chromium-browser") WarpToWindow 99 90
 Silent Key F10 A N Next ("konsole") WarpToWindow 99 90
 # F11: reserved, universal key (fullscreen)
-# F12: reserved, universal key (open console)
-# Toggle keyboard layout between us/ru
 Silent Key F12 A N Exec exec "$[fvwm_scripts]/layout-switch"
 Silent Key Scroll_Lock A N Next ("discord") WarpToWindow 99 90
 # Pause: bound through discord to toggle mic mute

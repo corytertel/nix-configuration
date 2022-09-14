@@ -64,6 +64,10 @@ in {
           "class_g *?= 'FvwmButtons'"
           "class_g *?= 'Conky'"
         ];
+        clip-shadow-above  = [
+          "class_g *?= 'FvwmButtons'"
+          "class_g *?= 'Conky'"
+        ];
 
         blur = {
           method = "kernel";

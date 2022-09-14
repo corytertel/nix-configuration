@@ -79,6 +79,7 @@ in {
         imagemagick
         kde-gtk-config
         trash-cli
+        xdotool
 
         conky
         lua

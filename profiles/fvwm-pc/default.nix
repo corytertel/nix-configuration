@@ -57,7 +57,7 @@
     };
     launcher = {
       name = "emacs-run-launcher";
-      command = "emacsclient -e '(emacs-run-launcher)'";
+      command = "xdotool mousemove 1800 1080; emacsclient -e '(emacs-run-launcher)'";
       desktopFile = "emacsclient.desktop";
       package = pkgs.emacsNativeComp;
     };

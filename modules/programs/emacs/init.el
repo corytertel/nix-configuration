@@ -93,7 +93,8 @@
 ;; Theme
 (setq custom-safe-themes t) ; Treat all themes as safe
 (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
-(add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-light t)))
+;; (add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-light t)))
+(add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-dark t)))
 
 ;; Display Line numbers
 (column-number-mode)
@@ -1656,12 +1657,19 @@ Lisp function does not specify a special indentation."
                           :foreground "#141404"
                           :background "#ed9063"))
      (t
+      ;; (set-face-attribute 'mode-line nil
+      ;; 			  :foreground "#141404"
+      ;; 			  :background "#cccccc")
+      ;; (set-face-attribute 'mode-line-inactive nil
+      ;; 			  :foreground "#141404"
+      ;; 			  :background "#ffffff")
       (set-face-attribute 'mode-line nil
-			  :foreground "#141404"
-			  :background "#cccccc")
+			  :foreground "#ffffff"
+			  :background "#4d4d4d")
       (set-face-attribute 'mode-line-inactive nil
-			  :foreground "#141404"
-			  :background "#ffffff"))))
+			  :foreground "#ffffff"
+			  :background "#1a1a1a")
+      )))
   (add-hook 'post-command-hook 'my-god-mode-update-mode-line)
 
   (global-set-key (kbd "<escape>") #'god-mode-all)
@@ -1963,6 +1971,9 @@ of (command . word) to be used by `flyspell-do-correct'."
 (use-package emacs-everywhere)
 
 ;; Transparency
+(set-frame-parameter (selected-frame) 'alpha '(70 . 70))
+(add-to-list 'default-frame-alist '(alpha . (70 . 70)))
+
 (defun toggle-transparency ()
   (interactive)
   (let ((alpha (frame-parameter nil 'alpha)))

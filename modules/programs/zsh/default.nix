@@ -142,8 +142,7 @@ in {
         '';
         shellAliases = {
           nixos-update = "nix flake update";
-          # nixos-clean = "sudo nix-collect-garbage --delete-older-than";
-          nixos-clean = "${pkgs.trim-generations}/bin/trim-generations";
+          nixos-clean = "sudo nix-collect-garbage --delete-older-than";
           nixos-superclean = "sudo nix-collect-garbage --delete-old";
           cd = "z";
           cdi = "zi";

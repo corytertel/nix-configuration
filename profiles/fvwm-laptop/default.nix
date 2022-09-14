@@ -57,7 +57,7 @@
     };
     launcher = {
       name = "emacs-run-launcher";
-      command = "emacsclient -e '(emacs-run-launcher)'";
+      command = "xdotool mousemove 1800 1200; emacsclient -e '(emacs-run-launcher)'";
       desktopFile = "emacsclient.desktop";
       package = pkgs.emacsNativeComp;
     };
@@ -78,8 +78,8 @@
     #     sha256 = "4voCAYd0fzJHQjJo4x3RoWz5l3JJbRvgIXn1Kg6nz6Y=";
     #   };
     # });
-    roundBorders = true;
-    cornerRadius = 8;
+    roundBorders = false;
+    cornerRadius = 0;
   };
 
   # Discord
