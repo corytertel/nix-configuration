@@ -233,6 +233,16 @@ AddToFunc   WindowListFunc
 + I Raise
 + I WarpToWindow 99 90
 
+# Function: FocusWindow
+#
+# Focuses a window and adds it to the front of the window list.
+DestroyFunc FocusWindow
+AddToFunc   FocusWindow
++ I Iconify off
++ I FlipFocus
++ I Raise
++ I WarpToWindow 99 90
+
 # Function: FullScreen
 #
 # Fullscreens the focused app.
@@ -636,17 +646,17 @@ Silent Key Super_L A A Exec $[fvwm_launch]
 # Xah Keybinds
 # F1: reserved, commonly used key
 # F2: reserved, universal key (rename)
-Silent Key F3 A N Next ($[w.class]) WarpToWindow 99 90
-Silent Key F4 A N Prev (AcceptsFocus) FlipFocus
+Silent Key F3 A N Next ($[w.class]) FocusWindow
+Silent Key F4 A N Prev (AcceptsFocus) FocusWindow
 # F5: reserved, universal key (refresh)
 Silent Key F6 A N Close
 Silent Key F7 A N FullScreen
-Silent Key F8 A N Next ("emacs") WarpToWindow 99 90
-Silent Key F9 A N Next ("firefox|chromium-browser") WarpToWindow 99 90
-Silent Key F10 A N Next ("konsole") WarpToWindow 99 90
+Silent Key F8 A N Next ("emacs") FocusWindow
+Silent Key F9 A N Next ("firefox|chromium-browser") FocusWindow
+Silent Key F10 A N Next ("konsole") FocusWindow
 # F11: reserved, universal key (fullscreen)
 Silent Key F12 A N Exec exec "$[fvwm_scripts]/layout-switch"
-Silent Key Scroll_Lock A N Next ("discord") WarpToWindow 99 90
+Silent Key Scroll_Lock A N Next ("discord") FocusWindow
 # Pause: bound through discord to toggle mic mute
 
 # Emacs Everywhere
@@ -676,8 +686,8 @@ Silent Key Left     A    M        GotoPage wrapx wrapy -1p 0p
 Silent Key Right    A    M        GotoPage wrapx wrapy +1p 0p
 
 # Window Switching
-Silent Key Next  A M Next (AcceptsFocus, CurrentPage) WarpToWindow 50 50
-Silent Key Prior A M Prev (AcceptsFocus, CurrentPage) WarpToWindow 50 50
+Silent Key Next  A M Next (AcceptsFocus, CurrentPage) FocusWindow
+Silent Key Prior A M Prev (AcceptsFocus, CurrentPage) FocusWindow
 
 # Window Buttons: [1 3 5 7 9  TTTTT  0 8 6 4 2]
 #   1 - Stick (pin)

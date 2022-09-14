@@ -231,6 +231,16 @@ AddToFunc   WindowListFunc
 + I Raise
 + I WarpToWindow 99 90
 
+# Function: FocusWindow
+#
+# Focuses a window and adds it to the front of the window list.
+DestroyFunc FocusWindow
+AddToFunc   FocusWindow
++ I Iconify off
++ I FlipFocus
++ I Raise
++ I WarpToWindow 99 90
+
 # Function: FullScreen
 #
 # Fullscreens the focused app.
@@ -634,17 +644,17 @@ Silent Key Super_L A A Exec $[fvwm_launch]
 # Xah Keybinds
 # F1: reserved, commonly used key
 # F2: reserved, universal key (rename)
-Silent Key F3 A N Next ($[w.class]) WarpToWindow 99 90
-Silent Key F4 A N Prev (AcceptsFocus) FlipFocus
+Silent Key F3 A N Next ($[w.class]) FocusWindow
+Silent Key F4 A N Prev (AcceptsFocus) FocusWindow
 # F5: reserved, universal key (refresh)
 Silent Key F6 A N Close
 Silent Key F7 A N FullScreen
-Silent Key F8 A N Next ("emacs") WarpToWindow 99 90
-Silent Key F9 A N Next ("firefox|chromium-browser") WarpToWindow 99 90
-Silent Key F10 A N Next ("konsole") WarpToWindow 99 90
+Silent Key F8 A N Next ("emacs") FocusWindow
+Silent Key F9 A N Next ("firefox|chromium-browser") FocusWindow
+Silent Key F10 A N Next ("konsole") FocusWindow
 # F11: reserved, universal key (fullscreen)
 Silent Key F12 A N Exec exec "$[fvwm_scripts]/layout-switch"
-Silent Key Scroll_Lock A N Next ("discord") WarpToWindow 99 90
+Silent Key Scroll_Lock A N Next ("discord") FocusWindow
 # Pause: bound through discord to toggle mic mute
 
 # Emacs Everywhere
@@ -690,8 +700,8 @@ Mouse 3	R    A Menu MenuWindowOpsLong
 Mouse 1	I    A RaiseMoveX Move "Iconify off"
 Mouse 3	T    A Menu MenuWindowOps
 Mouse 3 I    A Menu MenuIconOps
-Mouse 9 A A Next (AcceptsFocus, CurrentPage) WarpToWindow 50 50
-Mouse 8 A A Prev (AcceptsFocus, CurrentPage) WarpToWindow 50 50
+Mouse 9 A A Next (AcceptsFocus, CurrentPage) FocusWindow
+Mouse 8 A A Prev (AcceptsFocus, CurrentPage) FocusWindow
 
 #######
 # 6: Window Decor
