@@ -258,6 +258,30 @@
 (global-set-key (kbd "C-x 3") 'split-and-follow-right)
 (global-set-key (kbd "C-x 4 q") 'kill-all-buffers-and-windows)
 (global-set-key (kbd "C-c b") 'balance-windows)
+(global-set-key (kbd "<f2>") 'other-window)
+(global-set-key (kbd "C-<f2>") 'other-window)
+(global-set-key (kbd "M-<f2>") 'other-window)
+(global-set-key (kbd "C-M-<f2>") 'other-window)
+
+(use-package yequake
+  :custom
+  (yequake-frames
+   '(("eshell"
+      (width . 0.5)
+      (height . 0.5)
+      (left . 0.5)
+      (top . 0.5)
+      (alpha . 0.7)
+      (buffer-fns . ("*eshell*<1>"))
+      (frame-parameters . ((undecorated . t))))
+     ("org-capture"
+      (width . 0.75)
+      (height . 0.5)
+      (alpha . 0.7)
+      (buffer-fns . (yequake-org-capture))
+      (frame-parameters . ((undecorated . t)
+                           (skip-taskbar . t)
+                           (sticky . t)))))))
 
 ;;
 ;; --- IDE Features (LSP, Completion, etc) ---
@@ -1635,12 +1659,6 @@ Lisp function does not specify a special indentation."
 (global-set-key (kbd "C-#") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c s") 'replace-string)
 (global-set-key (kbd "C-c w") 'woman)
-
-;; Window Management
-(global-set-key (kbd "<f2>") 'other-window)
-(global-set-key (kbd "C-<f2>") 'other-window)
-(global-set-key (kbd "M-<f2>") 'other-window)
-(global-set-key (kbd "C-M-<f2>") 'other-window)
 
 ;; FIXME
 (defun kill-ring-save-and-comment (BEG END)

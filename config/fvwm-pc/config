@@ -394,7 +394,7 @@ Colorset 1  fg #83aad8, bg #e0dfde, hi, sh, Plain, NoShape
 Colorset 2  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
 Colorset 3  fg #83aad8, bg #e0dfde, hi, sh, Plain, NoShape
 Colorset 4  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
-Colorset 5  fg #141404, bg #dae9fa, hi, sh, Plain, NoShape
+Colorset 5 RootTransparent, fg #e9eaea, bg #1a1a1a, hi, sh, Tint #1a1a1a 70, bgTint #1a1a1a 70
 Colorset 6  fg #141404, bg #c3dcf7, hi, sh, Plain, NoShape
 Colorset 7  fg grey30, bg #c3dcf7, hi, sh, Plain, NoShape
 Colorset 8  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
@@ -417,7 +417,7 @@ MenuStyle * PopupDelayed, PopupDelay 300, PopdownImmediately
 MenuStyle * PopupOffset -5 100, TitleWarpOff
 MenuStyle * TitleUnderlines2
 MenuStyle * AnimationOff, AutomaticHotkeysOff
-MenuStyle * BorderWidth 2
+MenuStyle * BorderWidth 0
 MenuStyle * PopupAsSubmenu, HoldSubmenus, SubmenusRight
 MenuStyle * VerticalItemSpacing 5 5, VerticalTitleSpacing 10 10
 MenuStyle * ActiveFore
@@ -652,6 +652,7 @@ Silent Key F7 A N FullScreen
 Silent Key F8 A N Next ("emacs") FocusWindow
 Silent Key F9 A N Next ("firefox|chromium-browser") FocusWindow
 Silent Key F10 A N Next ("konsole") FocusWindow
+# Silent Key F10 A N Exec emacsclient -n -e '(yequake-toggle "eshell")'
 # F11: reserved, universal key (fullscreen)
 Silent Key F12 A N Exec exec "$[fvwm_scripts]/layout-switch"
 Silent Key Scroll_Lock A N Next ("discord") FocusWindow
