@@ -97,19 +97,19 @@
 (add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-dark t)))
 
 ;; Display Line numbers
-(column-number-mode)
-(global-display-line-numbers-mode t)
+;; (column-number-mode)
+;; (global-display-line-numbers-mode t)
 
 ;; Disable line numbers for some modes
-(dolist (mode '(org-mode-hook
-		term-mode-hook
-		shell-mode-hook
-		eshell-mode-hook
-		vterm-mode-hook
-		cider-repl-mode-hook
-		racket-repl-mode-hook
-		geiser-repl-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+;; (dolist (mode '(org-mode-hook
+;; 		term-mode-hook
+;; 		shell-mode-hook
+;; 		eshell-mode-hook
+;; 		vterm-mode-hook
+;; 		cider-repl-mode-hook
+;; 		racket-repl-mode-hook
+;; 		geiser-repl-mode-hook))
+;;   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; Window dividers
 (setq window-divider-default-right-width 3)
@@ -121,8 +121,8 @@
 (window-divider-mode 1)
 
 ;; Icons
-(use-package all-the-icons
-  :ensure t)
+;; (use-package all-the-icons
+;;   :ensure t)
 
 ;; Modeline
 ;; (use-package smart-mode-line
@@ -942,6 +942,29 @@
 (setq help-at-pt-timer-delay 0.1)
 (setq help-at-pt-display-when-idle '(flymake-diagnostic))
 
+;; Workspaces
+(use-package eyebrowse
+  :init (eyebrowse-mode t))
+
+;; Sidebar (Project Explorer)
+(use-package dired-sidebar :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
+  :ensure t
+  :commands (dired-sidebar-toggle-sidebar)
+  :init
+  (add-hook 'dired-sidebar-mode-hook
+            (lambda ()
+              (unless (file-remote-p default-directory)
+                (auto-revert-mode))))
+  :custom
+  (dired-sidebar-subtree-line-prefix "   ")
+  (dired-sidebar-theme 'nerd)
+  (dired-sidebar-use-term-integration t)
+  (dired-sidebar-use-custom-font t)
+  :config
+  (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
+  (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
+  (set-face-attribute 'dired-sidebar-face nil :inherit 'variable-pitch))
+
 ;;
 ;; --- MODE CONFIGURATION ---
 ;;
@@ -1614,22 +1637,10 @@ Lisp function does not specify a special indentation."
 (global-set-key (kbd "C-c w") 'woman)
 
 ;; Window Management
-;; (global-set-key (kbd "<f3>") 'next-window-any-frame)
-;; (global-set-key (kbd "C-<f3>") 'next-window-any-frame)
-;; (global-set-key (kbd "M-<f3>") 'next-window-any-frame)
-;; (global-set-key (kbd "C-M-<f3>") 'next-window-any-frame)
-;; (global-set-key (kbd "<f8>") 'next-window-any-frame)
-;; (global-set-key (kbd "C-<f8>") 'next-window-any-frame)
-;; (global-set-key (kbd "M-<f8>") 'next-window-any-frame)
-;; (global-set-key (kbd "C-M-<f8>") 'next-window-any-frame)
-(global-set-key (kbd "<f1>") 'previous-window-any-frame)
-(global-set-key (kbd "C-<f1>") 'previous-window-any-frame)
-(global-set-key (kbd "M-<f1>") 'previous-window-any-frame)
-(global-set-key (kbd "C-M-<f1>") 'previous-window-any-frame)
-(global-set-key (kbd "<f2>") 'next-window-any-frame)
-(global-set-key (kbd "C-<f2>") 'next-window-any-frame)
-(global-set-key (kbd "M-<f2>") 'next-window-any-frame)
-(global-set-key (kbd "C-M-<f2>") 'next-window-any-frame)
+(global-set-key (kbd "<f2>") 'other-window)
+(global-set-key (kbd "C-<f2>") 'other-window)
+(global-set-key (kbd "M-<f2>") 'other-window)
+(global-set-key (kbd "C-M-<f2>") 'other-window)
 
 ;; FIXME
 (defun kill-ring-save-and-comment (BEG END)
@@ -1861,8 +1872,9 @@ Lisp function does not specify a special indentation."
   (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
 (use-package visual-fill-column
-  :after org
-  :hook (org-mode . visual-fill-column-mode)
+  :hook
+  (org-mode . visual-fill-column-mode)
+  (prog-mode . visual-fill-column-mode)
   :custom
   (visual-fill-column-width 100)
   (visual-fill-column-center-text t))

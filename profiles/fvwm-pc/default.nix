@@ -69,8 +69,8 @@
   # Compositor
   services.cory.picom = {
     enable = true;
-    roundBorders = true;
-    cornerRadius = 5;
+    # roundBorders = true;
+    # cornerRadius = 5;
   };
 
   # Discord
