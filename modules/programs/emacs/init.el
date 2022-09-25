@@ -249,6 +249,10 @@
   "Reverse direction of `other-window'."
   (other-window -1))
 
+(defun switch-to-last-buffer ()
+  (interactive)
+  (switch-to-buffer nil))
+
 (global-set-key (kbd "C-x o") 'other-window)
 (global-set-key (kbd "C-x S-o") 'previous-window)
 (global-set-key (kbd "C-x M-o") 'hydra-window-resize/body)
@@ -258,6 +262,10 @@
 (global-set-key (kbd "C-x 3") 'split-and-follow-right)
 (global-set-key (kbd "C-x 4 q") 'kill-all-buffers-and-windows)
 (global-set-key (kbd "C-c b") 'balance-windows)
+(global-set-key (kbd "<f1>") 'switch-to-last-buffer)
+(global-set-key (kbd "C-<f1>") 'switch-to-last-buffer)
+(global-set-key (kbd "M-<f1>") 'switch-to-last-buffer)
+(global-set-key (kbd "C-M-<f1>") 'switch-to-last-buffer)
 (global-set-key (kbd "<f2>") 'other-window)
 (global-set-key (kbd "C-<f2>") 'other-window)
 (global-set-key (kbd "M-<f2>") 'other-window)
@@ -334,33 +342,33 @@
           try-expand-line)))
 
 ;; Popups
-(use-package popper
-  :ensure t
-  :config
-  (setq popper-reference-buffers
-        '(;; "\\*Messages\\*"
-          "Output\\*$"
-	  "\\*eldoc\\*"
-	  "\\*Help\\*"
-	  flymake-diagnostics-buffer-mode
-	  calendar-mode
-	  help-mode
-	  compilation-mode
-	  eshell-mode
-	  vterm-mode))
-  (popper-mode)
-  ;; (popper-echo-mode)
-  :bind
-  (("C-`" . popper-toggle-latest)
-   ("C-~" . popper-toggle-type)
-   ("M-`" . popper-cycle))
-  :custom
-  ;; (popper-group-function #'popper-group-by-project) ; project.el projects
-  (popper-window-height (lambda (win)
-			  (fit-window-to-buffer
-			   win
-			   (frame-height)
-			   30))))
+;; (use-package popper
+;;   :ensure t
+;;   :config
+;;   (setq popper-reference-buffers
+;;         '(;; "\\*Messages\\*"
+;;           "Output\\*$"
+;; 	  "\\*eldoc\\*"
+;; 	  "\\*Help\\*"
+;; 	  flymake-diagnostics-buffer-mode
+;; 	  calendar-mode
+;; 	  help-mode
+;; 	  compilation-mode
+;; 	  eshell-mode
+;; 	  vterm-mode))
+;;   (popper-mode)
+;;   ;; (popper-echo-mode)
+;;   :bind
+;;   (("C-`" . popper-toggle-latest)
+;;    ("C-~" . popper-toggle-type)
+;;    ("M-`" . popper-cycle))
+;;   :custom
+;;   ;; (popper-group-function #'popper-group-by-project) ; project.el projects
+;;   (popper-window-height (lambda (win)
+;; 			  (fit-window-to-buffer
+;; 			   win
+;; 			   (frame-height)
+;; 			   30))))
 
 (use-package eldoc
   :ensure nil
@@ -493,7 +501,7 @@
   :ensure t
   :after corfu
   :custom
-  (kind-icon-use-icons nil) ; Don't use icons labels
+  (kind-icon-use-icons t) ; Use icons labels
   (kind-icon-default-face 'corfu-default)
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
@@ -541,10 +549,11 @@
    ("C-c h" . consult-history)))
 
 (use-package consult-eglot
-  :bind (("C-c v" . xref-find-references-and-replace)
-	 :map eglot-mode-map
+  :bind ((;; "C-c v" . xref-find-references-and-replace)
+	 ;; :map eglot-mode-map
 	 ([remap xref-find-apropos] . consult-eglot-symbols) ; "C-M-."
-	 ([remap xref-find-references-and-replace] . eglot-rename)))
+	 ;; ([remap xref-find-references-and-replace] . eglot-rename)
+	 ("C-c v" . eglot-rename)))
 
 (use-package marginalia
   :after vertico
@@ -954,7 +963,10 @@
 
 (use-package flymake-kondor
   :ensure t
-  :hook (clojure-mode . flymake-kondor-setup))
+  :hook
+  (clojure-mode . flymake-kondor-setup)
+  (clojurescript-mode . flymake-kondor-setup)
+  (clojurec-mode . flymake-kondor-setup))
 
 ;; (use-package flymake-joker
 ;;   :config
@@ -1537,6 +1549,11 @@ Lisp function does not specify a special indentation."
 
 (add-hook 'eshell-first-time-mode-hook 'cory/configure-eshell)
 
+;; Eshell popup
+;; (add-to-list 'display-buffer-alist
+;;              '("\`\eshell\\(?:<[[:digit:]]+>\)?\'"
+;;                (display-buffer-in-side-window (side . bottom))))
+
 ;; Use vterm for visual commands
 (use-package eshell-vterm
   :load-path "site-lisp/eshell-vterm"
@@ -1682,9 +1699,12 @@ Lisp function does not specify a special indentation."
       (set-face-attribute 'mode-line nil
                           :foreground "#141404"
                           :background "#ed8f23")
+      ;; (set-face-attribute 'mode-line-inactive nil
+      ;;                     :foreground "#141404"
+      ;;                     :background "#ed9063"))
       (set-face-attribute 'mode-line-inactive nil
-                          :foreground "#141404"
-                          :background "#ed9063"))
+                          :foreground "#ffffff"
+                          :background "#5e3608"))
      (t
       ;; (set-face-attribute 'mode-line nil
       ;; 			  :foreground "#141404"
@@ -1766,6 +1786,12 @@ Lisp function does not specify a special indentation."
   (org-startup-with-inline-images t)
   (org-image-actual-width nil)
   (org-return-follows-link t)
+  (org-latex-compiler "lualatex")
+  (org-preview-latex-default-process 'dvisvgm)
+  (org-latex-pdf-process
+   '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+     "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+     "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   (org-agenda-current-time-string "← now ----------")
   (org-agenda-timegrid-use-ampm 1) ;; 12-hour clock
   (org-todo-keywords
@@ -1891,8 +1917,11 @@ Lisp function does not specify a special indentation."
 
 (use-package visual-fill-column
   :hook
-  (org-mode . visual-fill-column-mode)
-  (prog-mode . visual-fill-column-mode)
+  (text-mode   . visual-fill-column-mode)
+  (prog-mode   . visual-fill-column-mode)
+  (conf-mode   . visual-fill-column-mode)
+  ;; (term-mode   . visual-fill-column-mode)
+  ;; (eshell-mode . visual-fill-column-mode)
   :custom
   (visual-fill-column-width 100)
   (visual-fill-column-center-text t))

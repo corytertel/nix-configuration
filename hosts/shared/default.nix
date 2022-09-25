@@ -278,16 +278,13 @@
           inherit (pkgs.texlive) scheme-basic
             dvisvgm dvipng # for preview and export as html
             wrapfig amsmath ulem hyperref capt-of;
-          #(setq org-latex-compiler "lualatex")
-          #(setq org-preview-latex-default-process 'dvisvgm)
         });
-
       in with pkgs; [
         # linux basics
         killall
         btop
 
-        # development basics
+        # c++
         ccls
         clang_12
         #llvmPackages_12.clang-unwrapped # clangd
@@ -301,16 +298,13 @@
         ncurses
         global
         gdb
-        nodejs
-        yarn
-        tex
 
         # clojure
         clisp
         clojure
         clojure-lsp
         leiningen
-        joker
+        # joker
         clj-kondo
         # babashka
 
@@ -330,6 +324,9 @@
         # raco pkg install racket-langserver
 
         # other programing languages
+        nodejs
+        yarn
+        tex
         python39Full
         python39Packages.pip
         rnix-lsp

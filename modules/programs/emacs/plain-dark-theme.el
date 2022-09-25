@@ -342,6 +342,9 @@ to 'auto, tags may not be properly aligned."
      `(ediff-odd-diff-B ((,class(:background ,bg4 :extend t))))
      `(ediff-odd-diff-C ((,class(:background ,bg4 :extend t))))
 
+;;;;; eglot
+     `(eglot-highlight-symbol-face ((,class (:inherit bold :background ,bg3))))
+
 ;;;;; ein
      `(ein:cell-input-area((,class (:background ,bg2))))
      `(ein:cell-input-prompt ((,class (:foreground ,suc))))

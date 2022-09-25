@@ -1,6 +1,12 @@
 { changeColor, config, invertedColor, secondaryColor, windowColor }:
 
 ''
+/* Always show tab close button on hover */
+
+.tabbrowser-tab:not([pinned]):hover .tab-close-button{
+    display:-moz-box !important;
+}
+
 /* replaces buttons with icon theme icons */
 
 #back-button{

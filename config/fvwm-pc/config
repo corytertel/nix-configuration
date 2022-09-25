@@ -478,7 +478,7 @@ AddToMenu   BGMenu
 # Window Operations Menus
 DestroyMenu MenuWindowOps
 AddToMenu   MenuWindowOps
-+ "Send To"                                                  Popup MenuSendTo
++ "Send To"                                                  Popup MenuSendToPage
 + "Center%$[fvwm_icon]/actions/32x32/window.png%"            AnimatedMove 50-50w 50-50w
 + "Maximize%$[fvwm_icon]/actions/32x32/window-maximize.png%" Maximize
 + "Tile%$[fvwm_icon]/actions/32x32/window.png%"              Popup MenuTile
@@ -512,7 +512,7 @@ AddToMenu   MenuIconOps
 + "(Un)Shade"           WindowShade
 + "(Un)Sticky"		Stick
 + "(No)TitleBar"	Pick (CirculateHit) ToggleTitle
-+ "Send To"             Popup MenuSendTo
++ "Send To"             Popup MenuSendToPage
 + "" Nop
 + "Close"               Close
 + "Destroy"             Destroy
@@ -525,18 +525,6 @@ AddToMenu   MenuIconOps
 + "StaysOnBottom"       Pick (CirculateHit) Layer 0 2
 + "" Nop
 + "Identify"            Module FvwmIdent
-
-DestroyMenu MenuSendTo
-AddToMenu MenuSendTo
-+ "Page" PopUp MenuSendToPage
-+ "Desk" PopUp MenuSendToDesk
-
-DestroyMenu MenuSendToDesk
-AddToMenu   MenuSendToDesk
-+ "   1   " MoveToDesk 0 0
-+ "   2   " MoveToDesk 0 1
-+ "   3   " MoveToDesk 0 2
-+ "   4   " MoveToDesk 0 3
 
 DestroyMenu MenuSendToPage
 AddToMenu   MenuSendToPage
@@ -655,7 +643,7 @@ Silent Key F10 A N Next ("konsole") FocusWindow
 # Silent Key F10 A N Exec emacsclient -n -e '(yequake-toggle "eshell")'
 # F11: reserved, universal key (fullscreen)
 Silent Key F12 A N Exec exec "$[fvwm_scripts]/layout-switch"
-Silent Key Scroll_Lock A N Next ("discord") FocusWindow
+Silent Key Scroll_Lock A N Next ("discord|telegram-desktop") FocusWindow
 # Pause: bound through discord to toggle mic mute
 
 # Emacs Everywhere
