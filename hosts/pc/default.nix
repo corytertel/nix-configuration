@@ -14,7 +14,6 @@
     kernelPackages = pkgs.linuxPackages_xanmod;
     kernelParams = [
       "pcie_aspm.policy=performance"
-      "mitigations=off"
       "intel_iommu=on"
       "iommu=pt"
       "nohibernate"

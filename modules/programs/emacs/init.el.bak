@@ -74,10 +74,6 @@
 ;; --- VISUALS ---
 ;;
 
-;; Emacs size of window
-(setq initial-frame-alist
-      '((top . 0) (left . 0) (width . 210) (height . 70)))
-
 (scroll-bar-mode -1) ; Disables the visible scrollbar
 (tool-bar-mode -1)   ; Disables the toolbar
 (menu-bar-mode -1)   ; Disables the menubar
@@ -85,7 +81,11 @@
 (set-fringe-mode 10) ; Gives some breathing room
 
 ;; Setting the font
-(set-face-attribute 'default nil :family "VictorMono Nerd Font Mono")
+(set-face-attribute 'default nil :family "Victor Mono")
+;; Set fixed pitch face
+(set-face-attribute 'fixed-pitch nil :font "Victor Mono")
+;; Set variable pitch face
+(set-face-attribute 'variable-pitch nil :font "Oxygen-Sans")
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
@@ -93,21 +93,23 @@
 ;; Theme
 (setq custom-safe-themes t) ; Treat all themes as safe
 (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
-(add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-light t)))
+;; (add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-light t)))
+(add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-dark t)))
 
 ;; Display Line numbers
-(column-number-mode)
-(global-display-line-numbers-mode t)
+;; (column-number-mode)
+;; (global-display-line-numbers-mode t)
 
 ;; Disable line numbers for some modes
-(dolist (mode '(org-mode-hook
-		term-mode-hook
-		shell-mode-hook
-		eshell-mode-hook
-		vterm-mode-hook
-		cider-repl-mode-hook
-		racket-repl-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+;; (dolist (mode '(org-mode-hook
+;; 		term-mode-hook
+;; 		shell-mode-hook
+;; 		eshell-mode-hook
+;; 		vterm-mode-hook
+;; 		cider-repl-mode-hook
+;; 		racket-repl-mode-hook
+;; 		geiser-repl-mode-hook))
+;;   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; Window dividers
 (setq window-divider-default-right-width 3)
@@ -119,19 +121,68 @@
 (window-divider-mode 1)
 
 ;; Icons
-(use-package all-the-icons
-  :ensure t)
+;; (use-package all-the-icons
+;;   :ensure t)
 
 ;; Modeline
-(use-package smart-mode-line
-  :config
-  (setq sml/theme 'cory)
-  (sml/setup))
+;; (use-package smart-mode-line
+;;   :config
+;;   (setq sml/theme 'cory)
+;;   (sml/setup))
 
-(use-package rich-minority
+;; (use-package rich-minority
+;;   :config
+;;   (rich-minority-mode 1)
+;;   (setf rm-blacklist ""))
+
+(defface my-narrow-face
+  '((t (:foreground "#141404" :background "#ed8f23")))
+  "Todo/fixme highlighting."
+  :group 'faces)
+
+(defface my-read-only-face
+  '((t (:foreground "#141404" :background "#1f8c35")))
+  "Read-only buffer highlighting."
+  :group 'faces)
+
+(defface my-modified-face
+  '((t (:foreground "#d8d8d8" :background "#e60909")))
+  "Modified buffer highlighting."
+  :group 'faces)
+
+(setq-default
+ mode-line-format
+ '("  "
+   (:eval (let ((str (if buffer-read-only
+                         (if (buffer-modified-p) "%%*" "%%%%")
+                       (if (buffer-modified-p) "**" "--"))))
+            (if buffer-read-only
+                (propertize str 'face 'my-read-only-face)
+              (if (buffer-modified-p)
+                  (propertize str 'face 'my-modified-face)
+                str))))
+   (list 'line-number-mode "  ")
+   (:eval (when line-number-mode
+            (let ((str "L%l"))
+              (if (/= (buffer-size) (- (point-max) (point-min)))
+                  (propertize str 'face 'my-narrow-face)
+                str))))
+   "  %p"
+   (list 'column-number-mode "  C%c")
+   "  " mode-line-buffer-identification
+   "  " mode-line-modes))
+
+(use-package moody
+  :custom
+  (moody-mode-line-height 40)
   :config
-  (rich-minority-mode 1)
-  (setf rm-blacklist ""))
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode)
+  (moody-replace-eldoc-minibuffer-message-function))
+
+(use-package minions
+  :config (minions-mode))
 
 ;; Add padding to the sides
 (require 'frame)
@@ -161,6 +212,9 @@
   :hook ((prog-mode text-mode) . goggles-mode)
   :config
   (setq-default goggles-pulse nil))
+
+;; Smooth pixel scrolling
+(pixel-scroll-mode 1)
 
 ;;
 ;; --- WINDOW MANAGEMENT
@@ -204,6 +258,30 @@
 (global-set-key (kbd "C-x 3") 'split-and-follow-right)
 (global-set-key (kbd "C-x 4 q") 'kill-all-buffers-and-windows)
 (global-set-key (kbd "C-c b") 'balance-windows)
+(global-set-key (kbd "<f2>") 'other-window)
+(global-set-key (kbd "C-<f2>") 'other-window)
+(global-set-key (kbd "M-<f2>") 'other-window)
+(global-set-key (kbd "C-M-<f2>") 'other-window)
+
+(use-package yequake
+  :custom
+  (yequake-frames
+   '(("eshell"
+      (width . 0.5)
+      (height . 0.5)
+      (left . 0.5)
+      (top . 0.5)
+      (alpha . 0.7)
+      (buffer-fns . ("*eshell*<1>"))
+      (frame-parameters . ((undecorated . t))))
+     ("org-capture"
+      (width . 0.75)
+      (height . 0.5)
+      (alpha . 0.7)
+      (buffer-fns . (yequake-org-capture))
+      (frame-parameters . ((undecorated . t)
+                           (skip-taskbar . t)
+                           (sticky . t)))))))
 
 ;;
 ;; --- IDE Features (LSP, Completion, etc) ---
@@ -213,8 +291,7 @@
       backup-directory-alist `((".*" . ,temporary-file-directory))
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
-(setq-default fill-column 80
-	      left-margin-width 1
+(setq-default left-margin-width 1
 	      sentence-end-double-space nil
 	      lisp-backquote-indentation nil
 	      blink-cursor-blinks 10
@@ -224,7 +301,7 @@
 	      bidi-paragraph-direction 'left-to-right
 	      bidi-inhibit-bpa t)
 
-(global-so-long-mode 1)
+;; (global-so-long-mode 1)
 (save-place-mode 1)
 
 ;; don't back up files
@@ -241,8 +318,7 @@
 (use-package hippie-exp
   :ensure nil
   :bind
-  ;; ([remap dabbrev-expand] . hippie-expand)
-  (("\M- " . hippie-expand))
+  ([remap dabbrev-expand] . hippie-expand)
   :commands (hippie-expand)
   :config
   (setq hippie-expand-try-functions-list
@@ -293,7 +369,7 @@
 
 ;; LSP
 (use-package eglot
-  :after flymake company
+  :after flymake corfu
   :defer t
   :ensure t
 
@@ -305,6 +381,7 @@
   (clojure-mode . eglot-ensure)
   (clojurescript-mode . eglot-ensure)
   (clojurec-mode . eglot-ensure)
+  (scheme-mode . eglot-ensure)
   (java-mode . eglot-ensure)
 
   :custom
@@ -317,62 +394,109 @@
 
   :config
   (define-key eglot-mode-map [remap display-local-help] nil)
+  (add-to-list 'eglot-server-programs
+               `(scheme-mode . ("chicken-lsp-server")))
 
   :bind (:map eglot-mode-map
 	 ("C-c C-a" . eglot-code-actions)
 	 ("C-c f" . eglot-format-buffer)))
 
 ;; Completion
-(use-package company
-  :diminish company-mode
-  :bind
-  (:map company-active-map
-   ([return] . nil)
-   ("RET" . nil)
-   ("TAB" . company-complete-selection)
-   ([tab] . company-complete-selection)
-   ("C-f" . company-complete-selection)
-   ("S-TAB" . company-select-previous)
-   ([backtab] . company-select-previous)
-   ("C-n" . company-select-next)
-   ("C-p" . company-select-previous)
-   ;; :map eglot-mode-map
-   ;; ("<tab>" . company-indent-or-complete-common)
-   )
+(use-package corfu
+  :ensure t
+  :custom
+  (corfu-cycle t)                  ; Allows cycling through candidates
+  (corfu-auto t)                   ; Enable auto completion
+  (corfu-auto-prefix 1)            ; Enable auto completion
+  (corfu-auto-delay 0.0)           ; Enable auto completion
+  (corfu-quit-at-boundary t)
+  (corfu-echo-documentation t)     ; Enable auto documentation in the minibuffer
+  (corfu-preview-current 'insert)
+  (corfu-preselect-first nil)
+
+  :init
+  ;; Need to recreate the map in order to preserve movement keys
+  ;; Don't touch my movement keys!!
+  ;; TAB cycles through completion options
+  (setq corfu-map
+	(let ((map (make-sparse-keymap)))
+	  (define-key map [remap completion-at-point] #'corfu-complete)
+	  (define-key map [remap keyboard-escape-quit] #'corfu-quit)
+	  (define-key map (kbd "C-g") #'corfu-quit)
+	  (define-key map [down] #'corfu-next)
+	  (define-key map [up] #'corfu-previous)
+	  (define-key map [tab] #'corfu-next)
+	  (define-key map [backtab] #'corfu-previous)
+	  (define-key map (kbd "TAB") #'corfu-next)
+	  (define-key map (kbd "S-TAB") #'corfu-previous)
+	  ;; (define-key map [return] #'corfu-insert)
+	  ;; (define-key map (kbd "RET") #'corfu-insert)
+	  (define-key map (kbd "M-l") 'corfu-info-location)
+	  (define-key map (kbd "C-h") 'corfu-info-documentation)
+	  (define-key map (kbd "M-SPC") #'corfu-insert-separator)
+	  map))
+  (global-corfu-mode))
+
+;; Add extensions
+(use-package cape
+  :ensure t
+  :init
+  ;; Add `completion-at-point-functions', used by `completion-at-point'.
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   :config
-  (setq company-idle-delay 0.0
-        company-minimum-prefix-length 1
-        company-show-numbers t
-        company-tooltip-maximum-width 100
-        company-tooltip-minimum-width 20
-	;; Allow me to keep typing even if company disapproves.
-        company-require-match nil)
-  (global-company-mode))
+  ;; Silence then pcomplete capf, no errors or messages!
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
 
-(use-package company-box
-  :hook (company-mode . company-box-mode)
+  ;; Ensure that pcomplete does not write to the buffer
+  ;; and behaves as a pure `completion-at-point-function'.
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify)
+  (add-hook 'eshell-mode-hook
+            (lambda () (setq-local corfu-quit-at-boundary t
+                              corfu-quit-no-match t
+                              corfu-auto t)
+              (corfu-mode))))
+
+;; Templates takes advantage of emacs's tempo
+;; (use-package tempel
+;;   :ensure t
+;;   :defer 10
+;;   :hook ((prog-mode text-mode) . tempel-setup-capf)
+;;   :bind (("M-+" . tempel-insert) ;; Alternative tempel-expand
+;;          :map tempel-map
+;;          ([remap keyboard-escape-quit] . tempel-done)
+;;          :map corfu-map
+;;          ("C-M-i" . tempel-expand))
+;;   :init
+;;   ;; Setup completion at point
+;;   (defun tempel-setup-capf ()
+;;     (setq-local completion-at-point-functions
+;;                 (cons #'tempel-expand
+;; 			completion-at-point-functions))))
+
+;; Documentation popup
+(use-package corfu-doc
+  :ensure t
+  :bind (:map corfu-map
+	 ([remap corfu-info-documentation] . corfu-doc-toggle)
+	 ("M-p" . corfu-doc-scroll-down)
+	 ("M-n" . corfu-doc-scroll-up))
+  :custom
+  (corfu-doc-auto nil) ; Disable auto-documentation
+  (corfu-doc-max-width 60)
+  (corfu-doc-max-height 30)
+  :hook
+  (corfu-mode . corfu-doc-mode))
+
+;; Icons for corfu
+(use-package kind-icon
+  :ensure t
+  :after corfu
+  :custom
+  (kind-icon-use-icons nil) ; Don't use icons labels
+  (kind-icon-default-face 'corfu-default)
   :config
-  (setq company-box-icons-alist 'company-box-icons-all-the-icons))
-
-;; Autocompletion for shell
-;; (use-package company-shell
-;;   :hook ((sh-mode shell-mode) . sh-mode-init)
-;;   :config
-;;   (defun sh-mode-init ()
-;;     (setq-local company-backends
-;; 		'((company-shell
-;;                    company-shell-env
-;;                    company-files
-;;                    company-dabbrev-code
-;;                    company-capf
-;;                    company-yasnippet)))))
-
-(use-package company-quickhelp
-  :config (company-quickhelp-mode))
-
-(use-package company-nixos-options
-  :config
-  (add-to-list 'company-backends 'company-nixos-options))
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 ;; Minibuffer completion
 (use-package vertico
@@ -398,13 +522,7 @@
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion))))
-  (orderless-component-separator "[ \\]")
-  :config
-  (defun just-one-face (fn &rest args)
-    (let ((orderless-match-faces [completions-common-part]))
-      (apply fn args)))
-
-  (advice-add 'company-capf--candidates :around #'just-one-face))
+  (orderless-component-separator "[ \\]"))
 
 ;; Minibuffer visual menu
 (use-package consult
@@ -415,7 +533,7 @@
   ("C-x p s" . consult-ripgrep) ; for use with project.el
   ("C-s" . consult-line)
   ("C-c i" . consult-imenu)
-  ("C-c t" . gtags-find-tag)
+  ;; ("C-c t" . gtags-find-tag)
   ("C-x b" . consult-buffer)
   ("C-c x" . consult-complex-command)
   ("C-c e" . consult-flymake)
@@ -435,6 +553,64 @@
   (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
   (marginalia-mode))
 
+(use-package embark
+  :ensure t
+  :bind
+  (("C-=" . embark-act)         ;; pick some comfortable binding
+   ([remap describe-bindings] . embark-bindings)
+   :map embark-file-map
+   ("C-d" . dragon-drop)
+   ("U"   . 0x0-upload-file)
+   :map embark-region-map
+   ("U"   . 0x0-dwim))
+  :custom
+  (embark-indicators
+   '(embark-highlight-indicator
+     embark-isearch-highlight-indicator
+     embark-minimal-indicator))
+  :init
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+  (setq embark-prompter 'embark-completing-read-prompter)
+  :config
+  (defun search-in-source-graph (text))
+  (defun dragon-drop (file)
+    (start-process-shell-command "dragon-drop" nil
+                                 (concat "dragon-drag-and-drop " file))))
+
+;; Templates
+(use-package tempel
+  ;; Require trigger prefix before template name when completing.
+  ;; :custom
+  ;; (tempel-trigger-prefix "<")
+
+  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
+         ("M-*" . tempel-insert))
+
+  :init
+
+  ;; Setup completion at point
+  (defun tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.
+    ;; `tempel-expand' only triggers on exact matches. Alternatively use
+    ;; `tempel-complete' if you want to see all matches, but then you
+    ;; should also configure `tempel-trigger-prefix', such that Tempel
+    ;; does not trigger too often when you don't expect it. NOTE: We add
+    ;; `tempel-expand' *before* the main programming mode Capf, such
+    ;; that it will be tried first.
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand
+                      completion-at-point-functions)))
+
+  (add-hook 'prog-mode-hook 'tempel-setup-capf)
+  (add-hook 'text-mode-hook 'tempel-setup-capf)
+
+  ;; Optionally make the Tempel templates available to Abbrev,
+  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
+  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+  ;; (global-tempel-abbrev-mode)
+  )
+
 ;; Undo
 (use-package undo-tree
   :defer 1
@@ -448,11 +624,14 @@
 
 ;; Visual Keybinding Info
 (use-package which-key
-  :init (which-key-mode)
+  :init
+  (which-key-mode)
+  (which-key-enable-god-mode-support)
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.00000001))
 
+;; Better help information
 (use-package helpful
   :ensure
   :bind
@@ -508,7 +687,7 @@
 ;; Word wrapping
 (global-visual-line-mode 1)
 (setq-default fill-column 80)
-(add-hook 'text-mode-hook #'turn-on-auto-fill)
+;; (add-hook 'text-mode-hook #'turn-on-auto-fill)
 
 ;; Turn ^L into pretty lines
 (use-package page-break-lines
@@ -521,9 +700,8 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; Show empty whitespace
-(global-whitespace-mode)
-;; (setq whitespace-style '(face trailing tabs lines empty big-indent))
 (setq whitespace-style '(face trailing tabs lines empty))
+(add-hook 'prog-mode-hook 'whitespace-mode)
 
 ;; Use hex mode for binary files
 (add-to-list 'auto-mode-alist '("\\.bin\\'" . hexl-mode))
@@ -539,29 +717,25 @@
 (use-package goggles
   :config (goggles-mode))
 
-;; DOESN'T EXIST
-;; Show the name of the current function definition in the modeline
-;; (use-package which-func
-;;  :config (which-function-mode 1))
-
 ;; Smartparens
 (use-package smartparens
   :defer 1
   :hook ((
           emacs-lisp-mode lisp-mode lisp-data-mode clojure-mode cider-repl-mode
-	  racket-mode racket-repl-mode hy-mode prolog-mode go-mode cc-mode
+	  racket-mode racket-repl-mode scheme-mode geiser-repl-mode
+	  hy-mode prolog-mode go-mode cc-mode
 	  python-mode typescript-mode json-mode javascript-mode ;java-mode
           ) . smartparens-strict-mode)
   ;; :hook (prog-mode . smartparens-strict-mode)
   :bind (:map smartparens-mode-map
          ;; This is the paredit mode map minus a few key bindings
          ;; that I use in other modes (e.g. M-?)
-         ("C-S-f" . sp-forward-sexp) ;; navigation
-         ("C-S-b" . sp-backward-sexp)
-         ("C-S-u" . sp-backward-up-sexp)
-         ("C-S-d" . sp-down-sexp)
-         ("C-S-p" . sp-backward-down-sexp)
-         ("C-S-n" . sp-up-sexp)
+         ("C-M-f" . sp-forward-sexp) ;; navigation
+         ("C-M-b" . sp-backward-sexp)
+         ("C-M-u" . sp-backward-up-sexp)
+         ("C-M-d" . sp-down-sexp)
+         ("C-M-p" . sp-backward-down-sexp)
+         ("C-M-n" . sp-up-sexp)
          ;; ("C-w" . whole-line-or-region-sp-kill-region)
          ("M-s" . sp-splice-sexp) ;; depth-changing commands
          ("M-r" . sp-splice-sexp-killing-around)
@@ -654,8 +828,8 @@
          ([(control shift down)] . move-text-down)
          ([(meta shift up)]      . move-text-up)
          ([(meta shift down)]    . move-text-down)
-	 ("C-S-n" . move-text-down)
-	 ("C-S-p" . move-text-up)))
+	 ("C-M-n" . move-text-down)
+	 ("C-M-p" . move-text-up)))
 
 ;; Copy text as Discord/GitHub/etc formatted code
 (use-package copy-as-format
@@ -776,7 +950,6 @@
   :ensure t
   :commands (flymake-racket-add-hook)
   :init
-  (add-hook 'scheme-mode-hook #'flymake-racket-add-hook)
   (add-hook 'racket-mode-hook #'flymake-racket-add-hook))
 
 (use-package flymake-kondor
@@ -792,6 +965,29 @@
 ;; Display help messages automatically in echo area
 (setq help-at-pt-timer-delay 0.1)
 (setq help-at-pt-display-when-idle '(flymake-diagnostic))
+
+;; Workspaces
+(use-package eyebrowse
+  :init (eyebrowse-mode t))
+
+;; Sidebar (Project Explorer)
+(use-package dired-sidebar :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
+  :ensure t
+  :commands (dired-sidebar-toggle-sidebar)
+  :init
+  (add-hook 'dired-sidebar-mode-hook
+            (lambda ()
+              (unless (file-remote-p default-directory)
+                (auto-revert-mode))))
+  :custom
+  (dired-sidebar-subtree-line-prefix "   ")
+  (dired-sidebar-theme 'nerd)
+  (dired-sidebar-use-term-integration t)
+  (dired-sidebar-use-custom-font t)
+  :config
+  (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
+  (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
+  (set-face-attribute 'dired-sidebar-face nil :inherit 'variable-pitch))
 
 ;;
 ;; --- MODE CONFIGURATION ---
@@ -840,10 +1036,10 @@ Lisp function does not specify a special indentation."
        (cond
         ;; car of form doesn't seem to be a symbol, or is a keyword
         ((and (elt state 2)
-              (or (not (looking-at "\\sw\\|\\s_"))
-                  (looking-at ":")))
+	    (or (not (looking-at "\\sw\\|\\s_"))
+	       (looking-at ":")))
          (if (not (> (save-excursion (forward-line 1) (point))
-                     calculate-lisp-indent-last-sexp))
+		   calculate-lisp-indent-last-sexp))
              (progn (goto-char calculate-lisp-indent-last-sexp)
                     (beginning-of-line)
                     (parse-partial-sexp (point)
@@ -855,12 +1051,12 @@ Lisp function does not specify a special indentation."
          (backward-prefix-chars)
          (current-column))
         ((and (save-excursion
-                (goto-char indent-point)
-                (skip-syntax-forward " ")
-                (not (looking-at ":")))
-              (save-excursion
-                (goto-char orig-point)
-                (looking-at ":")))
+	      (goto-char indent-point)
+	      (skip-syntax-forward " ")
+	      (not (looking-at ":")))
+	    (save-excursion
+	      (goto-char orig-point)
+	      (looking-at ":")))
          (save-excursion
            (goto-char (+ 2 (elt state 1)))
            (current-column)))
@@ -869,12 +1065,12 @@ Lisp function does not specify a special indentation."
                                            (progn (forward-sexp 1) (point))))
                method)
            (setq method (or (function-get (intern-soft function)
-                                          'lisp-indent-function)
-                            (get (intern-soft function) 'lisp-indent-hook)))
+					 'lisp-indent-function)
+			   (get (intern-soft function) 'lisp-indent-hook)))
            (cond ((or (eq method 'defun)
-                      (and (null method)
-                           (> (length function) 3)
-                           (string-match "\\`def" function)))
+		     (and (null method)
+			(> (length function) 3)
+			(string-match "\\`def" function)))
                   (lisp-indent-defform state indent-point))
                  ((integerp method)
                   (lisp-indent-specform method state
@@ -906,6 +1102,7 @@ Lisp function does not specify a special indentation."
 (define-key emacs-lisp-mode-map (kbd "C-c C-k") 'eval-buffer)
 (define-key emacs-lisp-mode-map (kbd "C-c C-;") 'eval-print-as-comment)
 
+;;; TODO Clean up clojure config
 ;;; Clojure
 (use-package clojure-mode
   :defer t
@@ -923,7 +1120,7 @@ Lisp function does not specify a special indentation."
          ("M-?" . cider-maybe-clojuredocs)
          :map cider-repl-mode-map
          ("M-?" . cider-doc))
-  :hook (((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
+  :hook ( ;; ((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
          (cider-mode . eldoc-mode))
   :config
   (defun cider-maybe-clojuredocs (&optional arg)
@@ -1068,53 +1265,9 @@ Lisp function does not specify a special indentation."
 
 (setq read-process-output-max (* 1024 1024))
 
-;;; C++
-(use-package yasnippet)
-(yas-global-mode 1)
-
-(use-package modern-cpp-font-lock
-  :ensure t)
-(modern-c++-font-lock-global-mode t)
-
-(use-package cpp-auto-include)
-
-(defun code-compile ()
-  (interactive)
-  (unless (file-exists-p "Makefile")
-    (set (make-local-variable 'compile-command)
-     (let ((file (file-name-nondirectory buffer-file-name)))
-       (format "%s -o %s %s"
-           (if  (equal (file-name-extension file) "cpp") "clang++" "clang" )
-           (file-name-sans-extension file)
-           file)))
-    (compile compile-command)))
-
-(use-package cmake-font-lock
-  :hook (cmake-mode . cmake-font-lock-activate))
-
-(use-package cmake-mode
-  :mode ("CMakeLists.txt" "\\.cmake\\'"))
-
-(use-package irony
-  :hook (((c++-mode c-mode objc-mode) . irony-mode-on-maybe)
-         (irony-mode . irony-cdb-autosetup-compile-options))
-  :config
-  (defun irony-mode-on-maybe ()
-    ;; avoid enabling irony-mode in modes that inherits c-mode, e.g: solidity-mode
-    (when (member major-mode irony-supported-major-modes)
-      (irony-mode 1))))
-
-(use-package company-irony
-  :after irony
-  :config (add-to-list 'company-backends 'company-irony))
-
-(use-package irony-eldoc
-  :hook (irony-mode))
-
-;;(global-set-key [f9] 'code-compile)
-
 ;;; Racket
 (use-package racket-mode
+  :mode "\\.rkt\\'"
   :bind
   (:map racket-mode-map
    ("C-c C-r" . racket-run)
@@ -1133,8 +1286,138 @@ Lisp function does not specify a special indentation."
 (use-package dr-racket-like-unicode)
 ;; (use-package bracketed-paste)
 
-;; (use-package geiser)
-;; (use-package geiser-racket)
+;;; Common Lisp
+
+(use-package sly
+  :commands (sly sly-connect)
+  :init
+  (setq sly-symbol-completion-mode nil)
+  (setq inferior-lisp-program "sbcl")
+  ;; (setq sly-default-lisp 'roswell)
+  ;; (setq ros-config (concat user-emacs-directory
+  ;;                          "ros-conf.lisp"))
+  ;; (setq sly-lisp-implementations
+  ;;       `((sbcl ("sbcl") :coding-system utf-8-unix)
+  ;;         (ccl ("ccl") :coding-system utf-8-unix)
+  ;;         (ecl ("ecl") :coding-system utf-8-unix)
+  ;;         (roswell ("ros" "-Q" "-l" ,ros-config "run"))
+  ;;         (qlot ("qlot" "exec" "ros" "-l" ,ros-config "run" "-S" ".")
+  ;;               :coding-system utf-8-unix)))
+  (setq sly-lisp-implementations
+        `((sbcl ("sbcl") :coding-system utf-8-unix)))
+
+  ;; (defun qlot-sly ()
+  ;;   "Start a sly repl using qlot at the projects root"
+  ;;   (interactive)
+  ;;   (let ((dir (cdr (project-current))))
+  ;;     (if (cd dir)
+  ;;         (sly 'qlot)
+  ;;       (error (format "Failed to cd to %s" dir)))))
+
+  ;; (defun sly-critique-defun ()
+  ;;   "Lint this file with lisp-critic"
+  ;;   (interactive)
+  ;;   ;; (sly-eval-async '(ql:quickload :lisp-critic))
+  ;;   (let ((form (apply #'buffer-substring-no-properties
+  ;;                      (sly-region-for-defun-at-point))))
+  ;;     (sly-eval-async
+  ;;      `(cl:format  "~a" (list ,(read form)))
+  ;;      nil (sly-current-package))))
+
+  ;; (defun sly-critique-file ()
+  ;;   "Lint this file with lisp-critic"
+  ;;   (interactive)
+  ;;   (sly-eval-async '(ql:quickload :lisp-critic))
+  ;;   (sly-eval-async `(lisp-critic:critique ,(buffer-file-name))))
+  )
+
+(use-package sly-asdf
+  :config
+  (add-to-list 'sly-contribs 'sly-asdf 'append))
+
+(use-package sly-repl-ansi-color
+  :config
+  (push 'sly-repl-ansi-color sly-contribs))
+
+(use-package common-lisp-snippets)
+
+(use-package lisp-extra-font-lock)
+
+;;; Chicken Scheme
+
+(custom-set-variables '(scheme-program-name "csi -R r7rs"))
+
+(add-to-list 'auto-mode-alist
+             '("\\.egg\\'" . scheme-mode))
+(add-to-list 'auto-mode-alist
+             '("\\.scm\\'" . scheme-mode))
+(add-to-list 'auto-mode-alist
+             '("\\.sld\\'" . scheme-mode))
+(add-hook 'scheme-mode-hook
+          (lambda ()
+            (setq open-paren-in-column-0-is-defun-start t)))
+
+(defun scheme-module-indent (state indent-point normal-indent) 0)
+
+(defun scheme-indent-hook ()
+  (put 'module 'scheme-indent-function 'scheme-module-indent)
+  (put 'define-library 'scheme-indent-function 'scheme-module-indent)
+  (put 'define-module 'scheme-indent-function 'scheme-module-indent))
+
+(add-hook 'scheme-mode-hook 'scheme-indent-hook)
+
+(use-package geiser
+  :hook
+  (scheme-mode . geiser-mode)
+  :custom
+  (geiser-active-implementations '(chicken)))
+
+(use-package geiser-chicken)
+
+;;; C++
+(use-package yasnippet)
+(yas-global-mode 1)
+
+(use-package modern-cpp-font-lock
+  :ensure t)
+(modern-c++-font-lock-global-mode t)
+
+(use-package cpp-auto-include)
+
+(defun code-compile ()
+  (interactive)
+  (unless (file-exists-p "Makefile")
+    (set (make-local-variable 'compile-command)
+	 (let ((file (file-name-nondirectory buffer-file-name)))
+	   (format "%s -o %s %s"
+		   (if  (equal (file-name-extension file) "cpp") "clang++" "clang" )
+		   (file-name-sans-extension file)
+		   file)))
+    (compile compile-command)))
+
+(use-package cmake-font-lock
+  :hook (cmake-mode . cmake-font-lock-activate))
+
+(use-package cmake-mode
+  :mode ("CMakeLists.txt" "\\.cmake\\'"))
+
+(use-package irony
+  :hook (((c++-mode c-mode objc-mode) . irony-mode-on-maybe)
+         (irony-mode . irony-cdb-autosetup-compile-options))
+  :config
+  (defun irony-mode-on-maybe ()
+    ;; avoid enabling irony-mode in modes that inherits c-mode, e.g: solidity-mode
+    (when (member major-mode irony-supported-major-modes)
+      (irony-mode 1))))
+
+;; (use-package company-irony
+;;   :after irony
+;;   :config (add-to-list 'company-backends 'company-irony))
+
+(use-package irony-eldoc
+  :hook (irony-mode))
+
+;;(global-set-key [f9] 'code-compile)
 
 ;;; Java
 
@@ -1174,18 +1457,6 @@ Lisp function does not specify a special indentation."
 
 (add-to-list 'file-name-handler-alist '("\\.class$" . javap-handler))
 
-;;; Common Lisp
-
-(use-package slime)
-
-;; (use-package slime-company)
-(use-package slime-repl-ansi-color)
-
-(use-package hippie-expand-slime)
-
-(use-package common-lisp-snippets)
-(use-package lisp-extra-font-lock)
-
 ;;; Latex
 ;; (use-package latex-preview-pane)
 
@@ -1199,7 +1470,9 @@ Lisp function does not specify a special indentation."
   (nix-mode . subword-mode)
   (nix-mode . nix-prettify-mode))
 
-(use-package fvwm-mode)
+(use-package fvwm-mode
+  ;; :mode "config"
+  :hook (fvwm-mode . subword-mode))
 
 ;;
 ;; --- TERMINALS ---
@@ -1213,13 +1486,12 @@ Lisp function does not specify a special indentation."
 ;;   ;;(setq explicit-zsh-args '())
 ;;   (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *"))
 
-;; BROKEN
-;; (use-package eterm-256color
-;;   :hook (term-mode . eterm-256color-mode))
-
 ;; Use local Emacs instance as $EDITOR (e.g. in `git commit' or `crontab -e')
 (use-package with-editor
   :hook ((shell-mode eshell-mode vterm-mode term-exec) . with-editor-export-editor))
+
+;; Enhanced shell completion
+;; (use-package pcmpl-args) ; slow?
 
 ;;; Eshell
 
@@ -1294,9 +1566,9 @@ Lisp function does not specify a special indentation."
 
 ;; Eshell auto-complete
 ;; `company-mode' backend to provide eshell history suggestion
-(use-package esh-autosuggest
-  :ensure t
-  :hook (eshell-mode . esh-autosuggest-mode))
+;; (use-package esh-autosuggest
+;;   :ensure t
+;;   :hook (eshell-mode . esh-autosuggest-mode))
 
 ;; Eshell up
 (use-package eshell-up
@@ -1386,6 +1658,7 @@ Lisp function does not specify a special indentation."
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "C-#") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c s") 'replace-string)
+(global-set-key (kbd "C-c w") 'woman)
 
 ;; FIXME
 (defun kill-ring-save-and-comment (BEG END)
@@ -1394,9 +1667,294 @@ Lisp function does not specify a special indentation."
   (comment-region BEG END))
 (global-set-key (kbd "M-#") 'kill-ring-save-and-comment)
 
+(use-package god-mode
+  :custom
+  (god-mode-alist
+   '((nil . "C-")
+     ("." . "M-")
+     (">" . "C-M-")))
+  (god-exempt-major-modes nil) ; for god-mode all
+  (god-exempt-predicates nil)  ; for god-mode-all
+  :config
+  (defun my-god-mode-update-mode-line ()
+    (cond
+     (god-local-mode
+      (set-face-attribute 'mode-line nil
+                          :foreground "#141404"
+                          :background "#ed8f23")
+      (set-face-attribute 'mode-line-inactive nil
+                          :foreground "#141404"
+                          :background "#ed9063"))
+     (t
+      ;; (set-face-attribute 'mode-line nil
+      ;; 			  :foreground "#141404"
+      ;; 			  :background "#cccccc")
+      ;; (set-face-attribute 'mode-line-inactive nil
+      ;; 			  :foreground "#141404"
+      ;; 			  :background "#ffffff")
+      (set-face-attribute 'mode-line nil
+			  :foreground "#ffffff"
+			  :background "#4d4d4d")
+      (set-face-attribute 'mode-line-inactive nil
+			  :foreground "#ffffff"
+			  :background "#1a1a1a")
+      )))
+  (add-hook 'post-command-hook 'my-god-mode-update-mode-line)
+
+  (global-set-key (kbd "<escape>") #'god-mode-all)
+  (global-set-key (kbd "C-x C-0") #'delete-window)
+  (global-set-key (kbd "C-x C-1") #'delete-other-windows)
+  (global-set-key (kbd "C-x C-2") #'split-and-follow-below)
+  (global-set-key (kbd "C-x C-3") #'split-and-follow-right)
+  (define-key god-local-mode-map (kbd "z") #'repeat))
+
+;; Make ESC quit prompts
+;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+;;; Keybinds for Russian Layout
+;; The keybinds map to be in the same location on the board
+(global-set-key (kbd "C-н") #'next-line) ;; C-n
+(global-set-key (kbd "C-р") #'previous-line) ;; C-p
+(global-set-key (kbd "C-с") #'forward-char) ;; C-f
+(global-set-key (kbd "C-т") #'backward-char) ;; C-b
+(global-set-key (kbd "M-с") #'forward-word) ;; M-f
+(global-set-key (kbd "M-т") #'backward-word) ;; M-b
+(global-set-key (kbd "C-л") #'consult-line) ;; C-s
+(global-set-key (kbd "C-д") #'recenter-top-bottom) ;; C-l
+(global-set-key (kbd "C-к") #'sp-delete-char) ;; C-d
+(global-set-key (kbd "C-е") #'beginning-of-visual-line) ;; C-a
+(global-set-key (kbd "C-о") #'end-of-visual-line) ;; C-e
+(global-set-key (kbd "C-х") #'sp-kill-hybrid-sexp) ;; C-k
+(global-set-key (kbd "C-з") #'sp-kill-region) ;; C-w
+(global-set-key (kbd "C-б") #'keyboard-quit) ;; C-g
+(global-set-key (kbd "C-п") #'yank) ;; C-y
+(global-set-key (kbd "C-ж") #'scroll-up-command) ;; C-v
+(global-set-key (kbd "M-ж") #'scroll-down-command) ;; M-v
+(global-set-key (kbd "M-ё") #'execute-extended-command) ;; M-x
+
+;;
+;; --- ORG MODE ---
+;;
+
+(use-package org
+  :defer
+  :hook
+  (org-mode . (lambda ()
+		(org-indent-mode)
+		(variable-pitch-mode)
+		;; (auto-fill-mode)
+		(visual-line-mode)))
+
+  :bind
+  (("C-c o a" . org-agenda-list)
+   ("C-c o A" . org-agenda)
+   ("C-c o g" . consult-org-agenda)
+   ("C-c o c" . org-capture)
+   ("C-c o r" . org-refile))
+
+  :custom
+  (org-ellipsis " ▼")
+  (org-hide-emphasis-markers t)
+  (org-agenda-files '("~/Code/Org/Tasks.org"
+		      "~/Code/Org/School.org"
+		      "~/Code/Org/Homework.org"))
+  (org-agenda-start-with-log-mode t)
+  (org-agenda-start-on-weekday nil)
+  (org-log-done 'time)
+  (org-log-into-drawer t)
+  (org-pretty-entities t)
+  (org-startup-with-inline-images t)
+  (org-image-actual-width nil)
+  (org-return-follows-link t)
+  (org-agenda-current-time-string "← now ----------")
+  (org-agenda-timegrid-use-ampm 1) ;; 12-hour clock
+  (org-todo-keywords
+   '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+     (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+  (org-refile-targets
+   '(("Archive.org" :maxlevel . 1)
+     ("Tasks.org" :maxlevel . 1)))
+  (org-tag-alist
+   '((:startgroup)
+     ;; Put mutually exclusive tags here
+     (:endgroup)
+     ("@errand" . ?E)
+     ("@home" . ?H)
+     ("@work" . ?W)
+     ("agenda" . ?a)
+     ("planning" . ?p)
+     ("publish" . ?P)
+     ("batch" . ?b)
+     ("note" . ?n)
+     ("idea" . ?i)))
+
+  ;; Configure custom agenda views
+  (org-agenda-custom-commands
+   '(("d" "Dashboard"
+      ((agenda "" ((org-deadline-warning-days 7)))
+       (todo "NEXT"
+	     ((org-agenda-overriding-header "Next Tasks")))
+       (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+
+     ("n" "Next Tasks"
+      ((todo "NEXT"
+	     ((org-agenda-overriding-header "Next Tasks")))))
+
+     ("W" "Work Tasks" tags-todo "+work")
+
+     ;; Low-effort next actions
+     ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+      ((org-agenda-overriding-header "Low Effort Tasks")
+       (org-agenda-max-todos 20)
+       (org-agenda-files org-agenda-files)))
+
+     ("w" "Workflow Status"
+      ((todo "WAIT"
+	     ((org-agenda-overriding-header "Waiting on External")
+	      (org-agenda-files org-agenda-files)))
+       (todo "REVIEW"
+	     ((org-agenda-overriding-header "In Review")
+	      (org-agenda-files org-agenda-files)))
+       (todo "PLAN"
+	     ((org-agenda-overriding-header "In Planning")
+	      (org-agenda-todo-list-sublevels nil)
+	      (org-agenda-files org-agenda-files)))
+       (todo "BACKLOG"
+	     ((org-agenda-overriding-header "Project Backlog")
+	      (org-agenda-todo-list-sublevels nil)
+	      (org-agenda-files org-agenda-files)))
+       (todo "READY"
+	     ((org-agenda-overriding-header "Ready for Work")
+	      (org-agenda-files org-agenda-files)))
+       (todo "ACTIVE"
+	     ((org-agenda-overriding-header "Active Projects")
+	      (org-agenda-files org-agenda-files)))
+       (todo "COMPLETED"
+	     ((org-agenda-overriding-header "Completed Projects")
+	      (org-agenda-files org-agenda-files)))
+       (todo "CANC"
+	     ((org-agenda-overriding-header "Cancelled Projects")
+	      (org-agenda-files org-agenda-files)))))))
+
+  (org-capture-templates
+   `(("t" "Tasks / Projects")
+     ("tt" "Task" entry (file+olp "~/Code/Org/Tasks.org" "Inbox")
+      "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+
+     ("j" "Journal Entries")
+     ("jj" "Journal" entry
+      (file+olp+datetree "~/Code/Org/Journal.org")
+      "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+      ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
+      :clock-in :clock-resume
+      :empty-lines 1)
+     ("jm" "Meeting" entry
+      (file+olp+datetree "~/Code/Org/Journal.org")
+      "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
+      :clock-in :clock-resume
+      :empty-lines 1)
+
+     ("w" "Workflows")
+     ("we" "Checking Email" entry (file+olp+datetree "~/Code/Org/Journal.org")
+      "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
+
+     ("m" "Metrics Capture")
+     ("mw" "Weight" table-line (file+headline "~/Code/Org/Metrics.org" "Weight")
+      "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+
+  :config
+  ;; Replace list hyphen with dot
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+  ;; (set-face-attribute 'org-indent nil   :inherit '(org-hide fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+  ;; Save Org buffers after refiling
+  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+  )
+
+(use-package org-bullets
+  :after org
+  :hook (org-mode . org-bullets-mode)
+  :custom
+  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+(use-package visual-fill-column
+  :hook
+  (org-mode . visual-fill-column-mode)
+  (prog-mode . visual-fill-column-mode)
+  :custom
+  (visual-fill-column-width 100)
+  (visual-fill-column-center-text t))
+
+;; Drag and drop
+(use-package org-download
+  :commands (org-mode org-download-clipboard)
+  :custom
+  (org-download-screenshot-method "flameshot gui -s --raw > %s")
+  :bind ("<f8>" . org-download-screenshot))
+
+;; Spelling
+(dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode -1))))
+
+(use-package flyspell-correct
+  :after flyspell
+  :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper)))
+
+(use-package frog-menu
+  :custom
+  ;; Need to redefine keys to account for custom keyboard layout
+  (frog-menu-avy-keys (append (string-to-list "aoehsfnbid")
+			      (string-to-list "ulrptgy")
+			      (string-to-list "xcjzvwmqk")
+			      (string-to-list (upcase "aoehsfnbid"))
+			      (string-to-list (upcase "ulrptgy"))
+			      (string-to-list (upcase "xcjzvwmqk"))
+			      (number-sequence ?, ?@)))
+  :config
+  (defun frog-menu-flyspell-correct (candidates word)
+    "Run `frog-menu-read' for the given CANDIDATES.
+
+List of CANDIDATES is given by flyspell for the WORD.
+
+Return selected word to use as a replacement or a tuple
+of (command . word) to be used by `flyspell-do-correct'."
+    (let* ((corrects (if flyspell-sort-corrections
+			 (sort candidates 'string<)
+                       candidates))
+           (actions `(("C-s" "Save word"         (save    . ,word))
+                      ("C-a" "Accept (session)"  (session . ,word))
+                      ("C-b" "Accept (buffer)"   (buffer  . ,word))
+                      ("C-c" "Skip"              (skip    . ,word))))
+           (prompt   (format "Dictionary: [%s]"  (or ispell-local-dictionary
+                                                    ispell-dictionary
+                                                    "default")))
+           (res      (frog-menu-read prompt corrects actions)))
+      (unless res
+	(error "Quit"))
+      res))
+
+  (setq flyspell-correct-interface #'frog-menu-flyspell-correct))
+
 ;;
 ;; --- MISC ---
 ;;
+
+;; Disable startup screen
+(setq inhibit-startup-message t)
 
 ;; Use UTF-8 Encoding
 (prefer-coding-system 'utf-8)
@@ -1414,7 +1972,49 @@ Lisp function does not specify a special indentation."
 (defalias 'yes-or-no-p #'y-or-n-p
   "Use `y-or-n-p' instead of a yes/no prompt.")
 
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+;; PDFs
+(use-package pdf-tools
+  :ensure t
+  :defer t
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :config
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+	TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+	TeX-source-correlate-start-server t)
+  (add-hook 'TeX-after-compilation-finished-functions
+            #'TeX-revert-document-buffer))
+
+;; Emacs run launcher
+(defun emacs-run-launcher ()
+  "A frame to launch desktop applications."
+  (interactive)
+  (with-selected-frame
+      (make-frame '((name . "emacs-run-launcher")
+		    (minibuffer . only)
+		    (width . 100)
+		    (height . 11)))
+    (unwind-protect
+	(app-launcher-run-app)
+      (delete-frame))))
+
+;; Edit anything with emacs
+(use-package emacs-everywhere)
+
+;; Transparency
+(set-frame-parameter (selected-frame) 'alpha '(70 . 70))
+(add-to-list 'default-frame-alist '(alpha . (70 . 70)))
+
+(defun toggle-transparency ()
+  (interactive)
+  (let ((alpha (frame-parameter nil 'alpha)))
+    (set-frame-parameter
+     nil 'alpha
+     (if (eql (cond ((numberp alpha) alpha)
+                    ((numberp (cdr alpha)) (cdr alpha))
+                    ;; Also handle undocumented (<active> <inactive>) form.
+                    ((numberp (cadr alpha)) (cadr alpha)))
+              100)
+         '(70 . 70) '(100 . 100)))))
+(global-set-key (kbd "C-c t") 'toggle-transparency)
 
 ;;; init.el ends here

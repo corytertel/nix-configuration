@@ -3,6 +3,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./xps9300.nix
     ../shared
     ../../profiles/fvwm-laptop
   ];
@@ -23,19 +24,15 @@
     #kernelPackages = pkgs.linuxPackages_latest;
     kernelPackages = pkgs.linuxPackages_5_15;
     kernelParams = [
+      # ZFS required flags
       "nohibernate"
       "elevator=none"
     ];
   };
 
   networking = {
-    hostId = "635976a6";
+    hostId = "635976a6"; # for zfs
     interfaces.wlp0s20f3.useDHCP = true;
-  };
-
-  console = {
-    packages = [ pkgs.terminus_font ];
-    font = "ter-132n";
   };
 
   # powerManagement = {
@@ -49,7 +46,7 @@
     #   enable = true;
     #   package = pkgs.ananicy-cpp;
     # };
-    tlp.enable = true;
+    # tlp.enable = true;
     # thermald.enable = true;
     # gnome.gnome-keyring.enable = true;
     xserver = {
@@ -94,21 +91,6 @@
     Xft.rgba: rgb
     Xft.lcdfilter: lcddefault
   '';
-
-    # home.pointerCursor = {
-    #   # name = "Numix-Cursor";
-    #   # name = "Vanilla-DMZ-AA";
-    #   name = "Oxygen_White";
-    #   size = 48;
-    #   gtk.enable = true;
-    #   # package = pkgs.numix-cursor-theme;
-    #   # package = pkgs.vanilla-dmz;
-    #   package = pkgs.libsForQt5.oxygen;
-    #   x11 = {
-    #     enable = true;
-    #     defaultCursor = "left_ptr";
-    #   };
-    # };
 
     home.packages = with pkgs; [
       zoom-us

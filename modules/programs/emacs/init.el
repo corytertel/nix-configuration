@@ -549,7 +549,7 @@
    ("C-c h" . consult-history)))
 
 (use-package consult-eglot
-  :bind ((;; "C-c v" . xref-find-references-and-replace)
+  :bind (;; ("C-c v" . xref-find-references-and-replace)
 	 ;; :map eglot-mode-map
 	 ([remap xref-find-apropos] . consult-eglot-symbols) ; "C-M-."
 	 ;; ([remap xref-find-references-and-replace] . eglot-rename)
