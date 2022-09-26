@@ -71,6 +71,20 @@
 ;; (setq use-package-always-ensure t)
 
 ;;
+;; --- ASYNC ---
+;;
+
+;; Emacs look SIGNIFICANTLY less often which is a good thing.
+;; asynchronous bytecode compilation and various other actions makes
+(use-package async
+  :ensure t
+  :defer t
+  :init
+  (dired-async-mode 1)
+  (async-bytecomp-package-mode 1)
+  :custom (async-bytecomp-allowed-packages '(all)))
+
+;;
 ;; --- VISUALS ---
 ;;
 
@@ -213,6 +227,11 @@
   :config
   (setq-default goggles-pulse nil))
 
+;; Smooth scrolling
+(setq scroll-step            1
+      scroll-conservatively  10000)
+(setq next-screen-context-lines 5)
+
 ;; Smooth pixel scrolling
 (pixel-scroll-mode 1)
 
@@ -303,11 +322,12 @@
 	      sentence-end-double-space nil
 	      lisp-backquote-indentation nil
 	      blink-cursor-blinks 10
-	      fast-but-imprecise-scrolling t
+	      ;; fast-but-imprecise-scrolling t
 	      auto-save-interval 60
 	      kill-do-not-save-duplicates t
 	      bidi-paragraph-direction 'left-to-right
-	      bidi-inhibit-bpa t)
+	      bidi-inhibit-bpa t
+	      delete-by-moving-to-trash t)
 
 ;; (global-so-long-mode 1)
 (save-place-mode 1)
@@ -2028,6 +2048,9 @@ of (command . word) to be used by `flyspell-do-correct'."
 
 ;; Edit anything with emacs
 (use-package emacs-everywhere)
+
+;; Use primary as clipboard in emacs
+(setq x-select-enable-primary t)
 
 ;; Transparency
 (set-frame-parameter (selected-frame) 'alpha '(70 . 70))

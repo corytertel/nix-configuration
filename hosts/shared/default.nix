@@ -402,6 +402,8 @@
         # srb2kart
         # crispyDoom
 
+        mesa-demos
+
         # wireshark
         # tcpdump
         # nmap

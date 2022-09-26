@@ -50,12 +50,6 @@
   # This will save you money and possibly your life!
   services.thermald.enable = lib.mkDefault true;
 
-  # Force S3 sleep mode.
-  # boot.kernelParams = [
-  #   "mem_sleep_default=deep"
-  #   "intel_iommu=off"
-  # ];
-
   # prevent early throttling
   services.throttled.enable = lib.mkDefault true;
 
@@ -69,5 +63,11 @@
   console = {
     packages = [ pkgs.terminus_font ];
     font = "ter-132n";
+  };
+
+  powerManagement = {
+    enable = true;
+    # cpuFreqGovernor = "ondemand";
+    cpuFreqGovernor = "performance";
   };
 }
