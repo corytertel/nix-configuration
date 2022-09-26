@@ -61,6 +61,8 @@ in {
       PLASMA_USE_QT_SCALING = "1";
     };
 
+    security.pam.services.cory.enableKwallet = true;
+
     environment = {
       systemPackages = with pkgs; [
         fvwm

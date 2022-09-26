@@ -8,8 +8,6 @@
     ../../profiles/fvwm-laptop
   ];
 
-  nix.settings.cores = 6;
-
   boot = {
     loader.grub = {
       version = 2;

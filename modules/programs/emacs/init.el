@@ -173,8 +173,8 @@
    "  " mode-line-modes))
 
 (use-package moody
-  :custom
-  (moody-mode-line-height 40)
+  ;; :custom
+  ;; (moody-mode-line-height 40)
   :config
   (setq x-underline-at-descent-line t)
   (moody-replace-mode-line-buffer-identification)

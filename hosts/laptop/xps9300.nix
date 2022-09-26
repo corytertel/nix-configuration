@@ -1,7 +1,9 @@
-{ config, lib, pkgs }:
+{ config, lib, pkgs, ... }:
 
 {
   ### XPS 9300 manual optimizations ###
+
+  nix.settings.cores = 8;
 
   # intel integrated gpu
   boot.initrd.kernelModules = [ "i915" ];
@@ -16,11 +18,15 @@
     intel-media-driver
   ];
 
-  # laptop specfic
+  # general laptop
 
-  boot.blacklistedKernelModules = lib.optionals (!config.hardware.enableRedistributableFirmware) [
+  boot.blacklistedKernelModules = (lib.optionals (!config.hardware.enableRedistributableFirmware) [
     "ath3k"
-  ];
+  ])
+  ++
+  # The touchpad uses I²C, so PS/2 is unnecessary
+  # Without this we get errors in dmesg on boot and hangs when shutting down.
+  [ "psmouse" ];
 
   services.xserver.libinput.enable = lib.mkDefault true;
 
@@ -38,10 +44,6 @@
   # Includes the Wi-Fi and Bluetooth firmware for the QCA6390.
   hardware.enableRedistributableFirmware = true;
 
-  # The touchpad uses I²C, so PS/2 is unnecessary
-  # Without this we get errors in dmesg on boot and hangs when shutting down.
-  boot.blacklistedKernelModules = [ "psmouse" ];
-
   # Allows for updating firmware via `fwupdmgr`.
   services.fwupd.enable = true;
 
@@ -49,10 +51,10 @@
   services.thermald.enable = lib.mkDefault true;
 
   # Force S3 sleep mode.
-  boot.kernelParams = [
-    "mem_sleep_default=deep"
-    "intel_iommu=off"
-  ];
+  # boot.kernelParams = [
+  #   "mem_sleep_default=deep"
+  #   "intel_iommu=off"
+  # ];
 
   # prevent early throttling
   services.throttled.enable = lib.mkDefault true;
