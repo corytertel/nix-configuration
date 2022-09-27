@@ -88,6 +88,7 @@ AddToMenu "Graphics"
 + "Flameshot" Exec flameshot
 + "Gwenview%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/gwenview.png%" Exec gwenview 
 + "Inkscape%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/org.inkscape.Inkscape.png%" Exec inkscape 
++ "Peek" Exec peek
 + "PhotoGIMP%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/photogimp.png%" Exec gimp-2.10 
 + "Slideshow" Exec slideshow
 

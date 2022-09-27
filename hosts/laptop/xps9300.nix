@@ -69,5 +69,6 @@
     enable = true;
     # cpuFreqGovernor = "ondemand";
     cpuFreqGovernor = "performance";
+    cpufreq.min = 1300000000;
   };
 }

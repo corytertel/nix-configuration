@@ -228,9 +228,11 @@
   (setq-default goggles-pulse nil))
 
 ;; Smooth scrolling
-(setq scroll-step            1
-      scroll-conservatively  10000)
-(setq next-screen-context-lines 5)
+;; (setq scroll-step            1
+;;       scroll-conservatively  10000)
+;; (setq next-screen-context-lines 5)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
+(setq mouse-wheel-progressive-speed nil)
 
 ;; Smooth pixel scrolling
 (pixel-scroll-mode 1)
@@ -463,7 +465,8 @@
 	  (define-key map (kbd "C-h") 'corfu-info-documentation)
 	  (define-key map (kbd "M-SPC") #'corfu-insert-separator)
 	  map))
-  (global-corfu-mode))
+  (global-corfu-mode)
+  (corfu-history-mode))
 
 ;; Add extensions
 (use-package cape
@@ -484,23 +487,6 @@
                               corfu-quit-no-match t
                               corfu-auto t)
               (corfu-mode))))
-
-;; Templates takes advantage of emacs's tempo
-;; (use-package tempel
-;;   :ensure t
-;;   :defer 10
-;;   :hook ((prog-mode text-mode) . tempel-setup-capf)
-;;   :bind (("M-+" . tempel-insert) ;; Alternative tempel-expand
-;;          :map tempel-map
-;;          ([remap keyboard-escape-quit] . tempel-done)
-;;          :map corfu-map
-;;          ("C-M-i" . tempel-expand))
-;;   :init
-;;   ;; Setup completion at point
-;;   (defun tempel-setup-capf ()
-;;     (setq-local completion-at-point-functions
-;;                 (cons #'tempel-expand
-;; 			completion-at-point-functions))))
 
 ;; Documentation popup
 (use-package corfu-doc
@@ -548,7 +534,8 @@
 (use-package orderless
   :ensure t
   :custom
-  (completion-styles '(orderless basic))
+  ;; (completion-styles '(orderless basic))
+  (completion-styles '(orderless flex))
   (completion-category-overrides '((file (styles basic partial-completion))))
   (orderless-component-separator "[ \\]"))
 
@@ -557,16 +544,35 @@
   :init
   (setq consult-preview-key nil)
   :bind
-  ("C-c r" . consult-recent-file)
-  ("C-x p s" . consult-ripgrep) ; for use with project.el
-  ("C-s" . consult-line)
-  ("C-c i" . consult-imenu)
-  ;; ("C-c t" . gtags-find-tag)
-  ("C-x b" . consult-buffer)
-  ("C-c x" . consult-complex-command)
-  ("C-c e" . consult-flymake)
+  ("C-c r"       . consult-recent-file)
+  ("C-x p s"     . consult-ripgrep) ; for use with project.el
+  ;; ("C-s"         . consult-line)
+  ("C-s"         . consult-line-multi)
+  ("C-S-s"       . consult-focus-lines)
+  ("C-c i"       . consult-imenu)
+  ("C-c t"       . gtags-find-tag)
+  ("C-x b"       . consult-buffer)
+  ("C-c x"       . consult-complex-command)
+  ("C-c e"       . consult-flymake)
+  ("C-x C-k C-k" . consult-kmacro)
+  ("M-y"         . consult-yank-pop)
+  ("M-g g"       . consult-goto-line)
+  ("M-g M-g"     . consult-goto-line)
+  ("M-g f"       . consult-flymake)
+  ("M-g i"       . consult-imenu)
+  ;; ("M-s l"       . consult-line)
+  ;; ("M-s L"       . consult-line-multi)
+  ;; ("M-s u"       . consult-focus-lines)
+  ;; ("M-s g"       . consult-grep)
+  ;; ("M-s M-g"     . consult-grep)
+  ("C-x C-SPC"   . consult-global-mark)
+  ("C-x M-:"     . consult-complex-command)
+  ("C-c n"       . consult-org-agenda)
   (:map comint-mode-map
-   ("C-c h" . consult-history)))
+   ("C-c h" . consult-history))
+  :custom
+  (completion-in-region-function #'consult-completion-in-region)
+  (add-hook 'completion-setup-hook #'hl-line-mode))
 
 (use-package consult-eglot
   :bind (;; ("C-c v" . xref-find-references-and-replace)
@@ -606,6 +612,19 @@
   (defun dragon-drop (file)
     (start-process-shell-command "dragon-drop" nil
                                  (concat "dragon-drag-and-drop " file))))
+
+(use-package 0x0
+  :ensure t
+  :commands (0x0-dwim 0x0-upload-file))
+
+(use-package embark-consult
+  :ensure t
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
 
 ;; Templates
 (use-package tempel
@@ -917,8 +936,10 @@
 
   :bind
   (:map flymake-mode-map
-   ("M-n" . flymake-goto-next-error)
-   ("M-p" . flymake-goto-prev-error))
+   ("M-g n"   . flymake-goto-next-error)
+   ("M-g p"   . flymake-goto-prev-error)
+   ("M-g M-n" . flymake-goto-next-error)
+   ("M-g M-p" . flymake-goto-prev-error))
 
   :init
   ;; Disable legacy diagnostic functions as some have bugs (mainly haskell)
@@ -2067,6 +2088,5 @@ of (command . word) to be used by `flyspell-do-correct'."
                     ((numberp (cadr alpha)) (cadr alpha)))
               100)
          '(70 . 70) '(100 . 100)))))
-(global-set-key (kbd "C-c t") 'toggle-transparency)
 
 ;;; init.el ends here

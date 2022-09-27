@@ -383,6 +383,7 @@
         libsForQt5.kcalc
         anki
         # anki-bin
+        peek
 
         # games
         libsForQt5.kpat
