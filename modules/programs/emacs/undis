@@ -1,0 +1,68 @@
+[38;2;20;20;4m{[0m[38;2;20;20;4m [0m[38;2;20;20;4mconfig[0m[38;2;20;20;4m,[0m[38;2;20;20;4m [0m[38;2;20;20;4mpkgs[0m[38;2;20;20;4m [0m[38;2;20;20;4m}[0m[38;2;20;20;4m:[0m
+[38;2;20;20;4mwith[0m[38;2;20;20;4m [0m[38;2;20;20;4mconfig[0m[38;2;20;20;4m.[0m[38;2;20;20;4mtheme[0m[38;2;20;20;4m.[0m[38;2;20;20;4mcolor[0m[38;2;20;20;4m;[0m
+
+[38;2;31;140;53m''[0m
+[38;2;31;140;53m;; Eshell prompt[0m
+[38;2;31;140;53m(use-package eshell-prompt-extras[0m
+[38;2;31;140;53m  :config[0m
+[38;2;31;140;53m  (defun epe-theme-cory ()[0m
+[38;2;31;140;53m    "Cory's prompt."[0m
+[38;2;31;140;53m    ;; If the prompt spans over multiple lines, the regexp should match[0m
+[38;2;31;140;53m    ;; last line only.[0m
+[38;2;31;140;53m    (setq eshell-prompt-regexp "^╰─λ ")[0m
+[38;2;31;140;53m    (concat[0m
+[38;2;31;140;53m     (epe-colorize-with-face (epe-status) 'epe-status-face)[0m
+[38;2;31;140;53m     (when (epe-remote-p)[0m
+[38;2;31;140;53m       (epe-colorize-with-face[0m
+[38;2;31;140;53m    (concat "(" (epe-remote-user) "@" (epe-remote-host) ")")[0m
+[38;2;31;140;53m    'epe-remote-face))[0m
+[38;2;31;140;53m     (when (and epe-show-python-info (bound-and-true-p venv-current-name))[0m
+[38;2;31;140;53m       (epe-colorize-with-face (concat "(" venv-current-name ") ") 'epe-venv-face))[0m
+[38;2;31;140;53m     (let ((f (cond ((eq epe-path-style 'fish) 'epe-fish-path)[0m
+[38;2;31;140;53m                    ((eq epe-path-style 'single) 'epe-abbrev-dir-name)[0m
+[38;2;31;140;53m                    ((eq epe-path-style 'full) 'abbreviate-file-name))))[0m
+[38;2;31;140;53m       (pcase (epe-extract-git-component (funcall f (eshell/pwd)))[0m
+[38;2;31;140;53m     (`(,prefix nil)[0m
+[38;2;31;140;53m          (format[0m
+[38;2;31;140;53m           (propertize "╭╴%s %s" 'face '(:weight regular))[0m
+[38;2;31;140;53m           (propertize "" 'face '(:weight bold :foreground "[0m[38;2;31;140;53m${[0m[38;2;20;20;4mcolor6[0m[38;2;31;140;53m}[0m[38;2;31;140;53m"))[0m
+[38;2;31;140;53m           (propertize prefix 'face '(:weight bold :foreground "[0m[38;2;31;140;53m${[0m[38;2;20;20;4mcolor4[0m[38;2;31;140;53m}[0m[38;2;31;140;53m"))))[0m
+[38;2;31;140;53m     (`(,prefix ,git-component)[0m
+[38;2;31;140;53m          (format[0m
+[38;2;31;140;53m           (epe-colorize-with-face "╭╴%s %s%s %s %s" '(:weight regular))[0m
+[38;2;31;140;53m       (epe-colorize-with-face "" '(:weight bold :foreground "[0m[38;2;31;140;53m${[0m[38;2;20;20;4mcolor6[0m[38;2;31;140;53m}[0m[38;2;31;140;53m"))[0m
+[38;2;31;140;53m           (epe-colorize-with-face prefix '(:weight bold :foreground "[0m[38;2;31;140;53m${[0m[38;2;20;20;4mcolor4[0m[38;2;31;140;53m}[0m[38;2;31;140;53m"))[0m
+[38;2;31;140;53m           (if (string-empty-p git-component)[0m
+[38;2;31;140;53m               ""[0m
+[38;2;31;140;53m             (concat "/"[0m
+[38;2;31;140;53m                     (epe-colorize-with-face git-component '(:weight bold :foreground "[0m[38;2;31;140;53m${[0m[38;2;20;20;4mcolor6[0m[38;2;31;140;53m}[0m[38;2;31;140;53m"))))[0m
+[38;2;31;140;53m           (epe-colorize-with-face[0m
+[38;2;31;140;53m            (concat (or (epe-git-branch)[0m
+[38;2;31;140;53m                       (epe-git-tag))[0m
+[38;2;31;140;53m                    (epe-git-dirty)[0m
+[38;2;31;140;53m                    (epe-git-untracked))[0m
+[38;2;31;140;53m            '(:weight italic :foreground "[0m[38;2;31;140;53m${[0m[38;2;20;20;4mcolor2[0m[38;2;31;140;53m}[0m[38;2;31;140;53m"))[0m
+[38;2;31;140;53m       (epe-colorize-with-face[0m
+[38;2;31;140;53m        (let ((unpushed (epe-git-unpushed-number)))[0m
+[38;2;31;140;53m                      (if (= unpushed 0) ""[0m
+[38;2;31;140;53m            (concat "↑" (number-to-string unpushed))))[0m
+[38;2;31;140;53m        '(:foreground "[0m[38;2;31;140;53m${[0m[38;2;20;20;4mcolor5[0m[38;2;31;140;53m}[0m[38;2;31;140;53m"))))))[0m
+[38;2;31;140;53m     (epe-colorize-with-face "\n╰─λ" '(:weight regular))[0m
+[38;2;31;140;53m     " "))[0m
+[38;2;31;140;53m  (with-eval-after-load "esh-opt"[0m
+[38;2;31;140;53m    (setq eshell-highlight-prompt nil[0m
+[38;2;31;140;53m          eshell-prompt-function 'epe-theme-cory)))[0m
+
+[38;2;31;140;53m;; Eshell undistract me[0m
+[38;2;31;140;53m;; (use-package eshell-undistract-me[0m
+[38;2;31;140;53m;;   :config[0m
+[38;2;31;140;53m;;   (setq eshell-undistract-me-play-sound t)[0m
+[38;2;31;140;53m;;   (setq eshell-undistract-me-sound-path "[0m[38;2;31;140;53m${[0m[38;2;20;20;4mpkgs[0m[38;2;20;20;4m.[0m[38;2;20;20;4msound-theme-freedesktop[0m[38;2;31;140;53m}[0m[38;2;31;140;53m/share/sounds/freedesktop/stereo/complete.oga")[0m
+[38;2;31;140;53m;;   (add-hook 'eshell-pre-command-hook #'eshell-undistract-me-pre-command)[0m
+[38;2;31;140;53m;;   (add-hook 'eshell-before-prompt-hook #'eshell-undistract-me-before-prompt))[0m
+
+[38;2;31;140;53m(setq eshell-undistract-me-play-sound t)[0m
+[38;2;31;140;53m(setq eshell-undistract-me-sound-path "[0m[38;2;31;140;53m${[0m[38;2;20;20;4mpkgs[0m[38;2;20;20;4m.[0m[38;2;20;20;4msound-theme-freedesktop[0m[38;2;31;140;53m}[0m[38;2;31;140;53m/share/sounds/freedesktop/stereo/complete.oga")[0m
+[38;2;31;140;53m(add-hook 'eshell-pre-command-hook #'eshell-undistract-me-pre-command)[0m
+[38;2;31;140;53m(add-hook 'eshell-before-prompt-hook #'eshell-undistract-me-before-prompt)[0m
+[38;2;31;140;53m''[0m

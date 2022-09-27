@@ -39,6 +39,13 @@
     xserver.videoDrivers = [ "nvidia" ];
   };
 
+  hardware.opengl = {
+    enable = true;
+    extraPackages = with pkgs; [
+      vaapiVdpau
+    ];
+  };
+
   environment.systemPackages = with pkgs; [
     xboxdrv
   ];
@@ -53,17 +60,6 @@
       Xft.rgba: rgb
       Xft.lcdfilter: lcddefault
     '';
-
-    # home.pointerCursor = {
-    #   name = "Vanilla-DMZ-AA";
-    #   size = 32;
-    #   gtk.enable = true;
-    #   package = pkgs.vanilla-dmz;
-    #   x11 = {
-    #     enable = true;
-    #     defaultCursor = "left_ptr";
-    #   };
-    # };
 
     home.packages = with pkgs; [
       airshipper

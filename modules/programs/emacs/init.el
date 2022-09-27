@@ -92,7 +92,7 @@
 (tool-bar-mode -1)   ; Disables the toolbar
 (menu-bar-mode -1)   ; Disables the menubar
 (tooltip-mode -1)    ; Disables tooltips
-(set-fringe-mode 10) ; Gives some breathing room
+(set-fringe-mode 20) ; Gives some breathing room
 
 ;; Setting the font
 (set-face-attribute 'default nil :family "Victor Mono")
@@ -231,7 +231,7 @@
 ;; (setq scroll-step            1
 ;;       scroll-conservatively  10000)
 ;; (setq next-screen-context-lines 5)
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
+(setq mouse-wheel-scroll-amount '(5 ((shift) . 5) ((control) . nil)))
 (setq mouse-wheel-progressive-speed nil)
 
 ;; Smooth pixel scrolling
@@ -430,6 +430,23 @@
   :bind (:map eglot-mode-map
 	 ("C-c C-a" . eglot-code-actions)
 	 ("C-c f" . eglot-format-buffer)))
+
+;; Tree-sitter
+(use-package tree-sitter
+  :hook
+  (nix-mode . tree-sitter-setup)
+  (c-mode . tree-sitter-setup)
+  (c++-mode . tree-sitter-setup)
+  (java-mode . tree-sitter-setup)
+
+  :config
+  (defun tree-sitter-setup ()
+    (require 'tree-sitter)
+    (require 'tree-sitter-langs)
+    (require 'tree-sitter-hl)
+    (tree-sitter-hl-mode)))
+
+(use-package tree-sitter-langs)
 
 ;; Completion
 (use-package corfu
@@ -966,6 +983,48 @@
             #b00000111
             #b00000111))
 
+  (define-fringe-bitmap 'cory-info-mark
+    (vector #b0000001111000000
+	    #b0000111000110000
+	    #b0000000000001000
+	    #b0000000000000100
+	    #b0000000000000010
+	    #b0000000000000010
+	    #b0000000000000001
+	    #b0000000000000001
+	    #b0000000000000001
+	    #b0000000000000001
+	    #b0000000000000000
+	    #b0000000000000000
+	    #b0000000000000000
+	    #b0000000000000000
+	    #b1111111111111111
+	    #b0000000000000000)
+    16
+    16
+    'center)
+
+  (define-fringe-bitmap 'cory-warning-mark
+    (vector #b0000000110000000
+	    #b0000000110000000
+	    #b0000001111000000
+	    #b0000001111000000
+	    #b0000011001100000
+	    #b0000011001100000
+	    #b0000110000110000
+	    #b0000110110110000
+	    #b0001100110011000
+	    #b0001100110011000
+	    #b0011000110001100
+	    #b0011000000001100
+	    #b0110000110000110
+	    #b0110000110000110
+	    #b1100000000000011
+	    #b1111111111111111)
+    16
+    16
+    'center)
+
   (define-fringe-bitmap 'cory-double-exclamation-mark
     (vector #b11100111
             #b11100111
@@ -986,8 +1045,8 @@
             #b11100111))
 
   (setq flymake-note-bitmap '(cory-exclamation-mark compilation-info)
-	flymake-warning-bitmap '(cory-exclamation-mark compilation-warning)
-	flymake-error-bitmap '(cory-double-exclamation-mark compilation-error)))
+	flymake-warning-bitmap '(cory-warning-mark compilation-warning)
+	flymake-error-bitmap '(cory-warning-mark compilation-error)))
 
 (use-package flymake-diagnostic-at-point
   :ensure t
@@ -1806,6 +1865,47 @@ Lisp function does not specify a special indentation."
 		;; (auto-fill-mode)
 		(visual-line-mode)))
 
+  (org-mode . (lambda () (interactive)
+                (setq prettify-symbols-alist '(("[#A]" . "")
+                                               ("[#B]" . "")
+                                               ("[#C]" . "")
+                                               ("[ ]" . "")
+                                               ("[X]" . "")
+                                               ("[-]" . "")
+                                               ("#+begin_src" . "")
+                                               ("#+end_src" . "―")
+                                               ("#+begin_collapsible" . "")
+                                               ("#+end_collapsible" . "―")
+                                               ("#+begin_aside" . "")
+                                               ("#+end_aside" . "―")
+                                               ("#+begin_quote" . "")
+                                               ("#+end_quote" . "―")
+                                               ("#+begin_defn" .  "")
+                                               ("#+end_defn" . "―")
+                                               ("#+begin_questionable" .  "")
+                                               ("#+end_questionable" . "―")
+                                               ("#+begin_problem" .  "")
+                                               ("#+end_problem" . "―")
+                                               ("#+EXCLUDE_TAGS:" . "")
+                                               (":PROPERTIES:" . "\n")
+                                               (":END:" . "―")
+                                               ("#+STARTUP:" . "")
+                                               ("#+TITLE: " . "")
+                                               ("#+title: " . "")
+                                               ("#+RESULTS:" . "")
+                                               ("#+NAME:" . "")
+                                               ("#+ROAM_TAGS:" . "")
+                                               ("#+FILETAGS:" . "")
+                                               ("#+HTML_HEAD:" . "")
+                                               ("#+SUBTITLE:" . "")
+                                               ("#+AUTHOR:" . "")
+                                               (":Effort:" . "")
+                                               ("SCHEDULED:" . "")
+                                               ("DEADLINE:" . "")
+                                               ("#+begin_defn" .  "")
+                                               ("#+end_defn" . "―")))
+                (prettify-symbols-mode)))
+
   :bind
   (("C-c o a" . org-agenda-list)
    ("C-c o A" . org-agenda)
@@ -1974,6 +2074,10 @@ Lisp function does not specify a special indentation."
   (org-download-screenshot-method "flameshot gui -s --raw > %s")
   :bind ("<f8>" . org-download-screenshot))
 
+;; Writing
+(use-package writegood-mode
+  :hook (flyspell-mode . writegood-mode))
+
 ;; Spelling
 (dolist (hook '(text-mode-hook))
   (add-hook hook (lambda () (flyspell-mode 1))))
@@ -1982,6 +2086,9 @@ Lisp function does not specify a special indentation."
 
 (use-package flyspell-correct
   :after flyspell
+  :init
+  (add-to-list 'ispell-skip-region-alist '("+begin_src" . "+end_src"))
+  (setq flyspell-use-meta-tab nil)
   :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper)))
 
 (use-package frog-menu
