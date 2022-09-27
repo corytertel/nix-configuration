@@ -964,43 +964,33 @@
   (remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake)
 
   :config
-  (define-fringe-bitmap 'cory-exclamation-mark
-    (vector #b00000111
-            #b00000111
-            #b00000111
-            #b00000111
-            #b00000111
-            #b00000111
-            #b00000111
-            #b00000111
-            #b00000111
-            #b00000111
-            #b00000111
-            #b00000010
-            #b00000000
-            #b00000000
-            #b00000111
-            #b00000111
-            #b00000111))
 
   (define-fringe-bitmap 'cory-info-mark
     (vector #b0000001111000000
-	    #b0000111000110000
-	    #b0000000000001000
-	    #b0000000000000100
-	    #b0000000000000010
-	    #b0000000000000010
-	    #b0000000000000001
-	    #b0000000000000001
-	    #b0000000000000001
-	    #b0000000000000001
+	    #b0000111111110000
+	    #b0001110000111000
+	    #b0011000000001100
+	    #b0110000000000110
+	    #b0110000000000110
+	    #b1100000000000011
+	    #b1100000000000011
+	    #b1100000000000011
+	    #b1100000000000011
+	    #b0110000000000110
+	    #b0110000000000110
+	    #b0011000000001100
+	    #b0001100000011000
+	    #b0000110000110000
+	    #b0000110000110000
+	    #b0000111111110000
+	    #b0000011111100000
 	    #b0000000000000000
 	    #b0000000000000000
-	    #b0000000000000000
-	    #b0000000000000000
-	    #b1111111111111111
-	    #b0000000000000000)
-    16
+	    #b0000011111100000
+	    #b0000011111100000
+	    #b0000001111000000
+	    #b0000001111000000)
+    23
     16
     'center)
 
@@ -1025,28 +1015,30 @@
     16
     'center)
 
-  (define-fringe-bitmap 'cory-double-exclamation-mark
-    (vector #b11100111
-            #b11100111
-            #b11100111
-            #b11100111
-            #b11100111
-            #b11100111
-            #b11100111
-            #b11100111
-            #b11100111
-            #b11100111
-            #b11100111
-            #b01000010
-            #b00000000
-            #b00000000
-            #b11100111
-            #b11100111
-            #b11100111))
+  (define-fringe-bitmap 'cory-error-mark
+    (vector #b0011000000001100
+	    #b0111100000011110
+	    #b1100110000110011
+	    #b1100011001100011
+	    #b0110001111000110
+	    #b0011000110001100
+	    #b0001100000011000
+	    #b0000110000110000
+	    #b0000110000110000
+	    #b0001100000011000
+	    #b0011000110001100
+	    #b0110001111000110
+	    #b1100011001100011
+	    #b1100110000110011
+	    #b0111100000011110
+	    #b0011000000001100)
+    16
+    16
+    'center)
 
-  (setq flymake-note-bitmap '(cory-exclamation-mark compilation-info)
+  (setq flymake-note-bitmap '(cory-info-mark compilation-info)
 	flymake-warning-bitmap '(cory-warning-mark compilation-warning)
-	flymake-error-bitmap '(cory-warning-mark compilation-error)))
+	flymake-error-bitmap '(cory-error-mark compilation-error)))
 
 (use-package flymake-diagnostic-at-point
   :ensure t
