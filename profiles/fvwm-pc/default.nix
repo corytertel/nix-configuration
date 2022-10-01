@@ -44,10 +44,10 @@
       package = pkgs.photogimp;
     };
     musicPlayer = {
-      name = "audacious";
-      command = "audacious";
-      desktopFile = "audacious.desktop";
-      package = pkgs.audacious;
+      name = "strawberry";
+      command = "strawberry";
+      desktopFile = "org.strawberrymusicplayer.strawberry.desktop";
+      package = pkgs.strawberry;
     };
     archiver = {
       name = "ark";

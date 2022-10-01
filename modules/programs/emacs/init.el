@@ -92,7 +92,6 @@
 (tool-bar-mode -1)   ; Disables the toolbar
 (menu-bar-mode -1)   ; Disables the menubar
 (tooltip-mode -1)    ; Disables tooltips
-(set-fringe-mode 20) ; Gives some breathing room
 
 ;; Setting the font
 (set-face-attribute 'default nil :family "Victor Mono")
@@ -956,7 +955,9 @@
    ("M-g n"   . flymake-goto-next-error)
    ("M-g p"   . flymake-goto-prev-error)
    ("M-g M-n" . flymake-goto-next-error)
-   ("M-g M-p" . flymake-goto-prev-error))
+   ("M-g M-p" . flymake-goto-prev-error)
+   ("M-g d"   . flymake-show-buffer-diagnostics)
+   ("M-g M-d" . flymake-show-project-diagnostics))
 
   :init
   ;; Disable legacy diagnostic functions as some have bugs (mainly haskell)
@@ -1592,7 +1593,10 @@ Lisp function does not specify a special indentation."
 
 ;; Use local Emacs instance as $EDITOR (e.g. in `git commit' or `crontab -e')
 (use-package with-editor
-  :hook ((shell-mode eshell-mode vterm-mode term-exec) . with-editor-export-editor))
+  :hook ((shell-mode-hook eshell-mode-hook term-exec-hook vterm-exec-hook)
+         . with-editor-export-editor)
+  :bind (([remap async-shell-command] . with-editor-async-shell-command)
+         ([remap shell-command] . with-editor-shell-command)))
 
 ;; Enhanced shell completion
 ;; (use-package pcmpl-args) ; slow?
@@ -2187,5 +2191,8 @@ of (command . word) to be used by `flyspell-do-correct'."
                     ((numberp (cadr alpha)) (cadr alpha)))
               100)
          '(70 . 70) '(100 . 100)))))
+
+;; Set the fringe to an big enough width
+(set-fringe-mode 20)
 
 ;;; init.el ends here

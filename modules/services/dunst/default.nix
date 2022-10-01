@@ -31,15 +31,15 @@ in {
           follow = "mouse";
 
           width = 350;
-          # height = 520;
-          origin = "bottom-right";
-          offset = "110x10";
+          height = 100;
+          origin = "top-right";
+          offset = "160x10";
 
           progress_bar = "true";
           progress_bar_height = 15;
           progress_bar_frame_width = 1;
           progress_bar_min_width = 225;
-          progress_bar_max_width = 450;
+          progress_bar_max_width = 300;
 
           # Show how many messages are hidden
           indicate_hidden = "yes";
@@ -57,11 +57,11 @@ in {
           separator_color = "${"#141404"}aa";
 
           # Set notification padding
-          padding = 24;
-          horizontal_padding = 24;
+          padding = 16;
+          horizontal_padding = 16;
 
           # Frame (border)
-          frame_width = 0;
+          frame_width = 2;
 
           frame_color = "#141404";
 

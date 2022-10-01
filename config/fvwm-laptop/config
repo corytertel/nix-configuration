@@ -243,6 +243,15 @@ AddToFunc   FocusWindow
 + I Raise
 + I WarpToWindow 99 90
 
+# Function: AutoRaise
+#
+# Focuses a window and adds it to the front of the window list.
+DestroyFunc AutoRaise
+AddToFunc   AutoRaise
++ I Iconify off
++ I FlipFocus
++ I Raise
+
 # Function: FullScreen
 #
 # Fullscreens the focused app.
@@ -299,7 +308,7 @@ MoveThreshold 3
 # Sets the focus style to SloppyFocus and a mouse click
 # in a window will Raise it.
 Style * SloppyFocus, MouseFocusClickRaises
-Module FvwmAuto 500
+Module FvwmAuto 500 "Silent AutoRaise"
 
 # Default Font
 DefaultFont "xft:Oxygen-Sans:size=11:antialias=True"
@@ -587,8 +596,8 @@ DestroyMenu MenuMedia
 AddToMenu   MenuMedia
 + "Open Player%$[fvwm_icon]/categories/32x32/applications-multimedia.png%" Exec exec $[fvwm_music_player]
 + "Play/Pause%$[fvwm_icon]/actions/32x32/media-playback-start.png%" Exec exec $[fvwm_music_player] --play-pause
-+ "Next Track%$[fvwm_icon]/actions/32x32/media-skip-forward.png%" Exec exec $[fvwm_music_player] --fwd
-+ "Previous Track%$[fvwm_icon]/actions/32x32/media-skip-backward.png%" Exec exec $[fvwm_music_player] --rew
++ "Next Track%$[fvwm_icon]/actions/32x32/media-skip-forward.png%" Exec exec $[fvwm_music_player] --next
++ "Previous Track%$[fvwm_icon]/actions/32x32/media-skip-backward.png%" Exec exec $[fvwm_music_player] --previous
 + "Stop%$[fvwm_icon]/actions/32x32/media-playback-stop.png%" Exec exec $[fvwm_music_player] --stop
 + "Volume%$[fvwm_icon]/preferences/32x32/preferences-desktop-sound.png%" Popup MenuVolume
 
@@ -659,14 +668,14 @@ Silent Key Insert A N Exec exec emacsclient --eval "(emacs-everywhere)"
 Silent Key XF86AudioLowerVolume A A DecVolume
 Silent Key XF86AudioRaiseVolume A A IncVolume
 Silent Key XF86AudioMute A A ToggleMute
-Silent Key XF86AudioNext A A Exec exec $[fvwm_music_player] --fwd
-Silent Key XF86AudioPrev A A Exec exec $[fvwm_music_player] --rew
+Silent Key XF86AudioNext A A Exec exec $[fvwm_music_player] --next
+Silent Key XF86AudioPrev A A Exec exec $[fvwm_music_player] --previous
 Silent Key XF86AudioPlay A A Exec exec $[fvwm_music_player] --play-pause
 Silent Key XF86AudioStop A A Exec exec $[fvwm_music_player] --stop
 
 # Screenshot
-Silent Key Print A S Exec exec flameshot full -p ~/Pictures/Screenshots
 Silent Key Print A N Exec exec flameshot gui
+Silent Key Print A S Exec exec flameshot full -p ~/Pictures/Screenshots
 
 # Brightness Buttons
 Silent Key XF86MonBrightnessUp A A Exec exec xbrightness +5000

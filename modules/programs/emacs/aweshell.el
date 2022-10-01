@@ -306,7 +306,7 @@ This advice can make `other-window' skip `aweshell' dedicated window."
             (face-remap-add-relative 'hl-line :background (face-background 'default))
 	    (display-line-numbers-mode 0)))
 
-;; (global-set-key (kbd "C-`") 'aweshell-dedicated-toggle)
+(global-set-key (kbd "C-`") 'aweshell-dedicated-toggle)
 (global-set-key (kbd "C-!") 'aweshell-new)
 
 ;;; aweshell.el ends here

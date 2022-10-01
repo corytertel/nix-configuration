@@ -372,7 +372,7 @@
         klavaro
         obs-studio
         # okular
-        libreoffice-qt
+        libreoffice
         fd
         # citra-canary
         # protonvpn-gui

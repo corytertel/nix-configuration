@@ -94,11 +94,11 @@ AddToMenu "Graphics"
 
 DestroyMenu "Multimedia"
 AddToMenu "Multimedia"
-+ "Audacious%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/audacious.png%" Exec audacious 
 + "Media Player Classic Qute Theater%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/mpc-qt.png%" Exec mpc-qt 
 + "OBS Studio" Exec obs
 + "PulseAudio System Tray" Exec pasystray
 + "PulseAudio Volume Control%/org/gtk/libgtk/icons/16x16/actions/multimedia-volume-control.png%" Exec pavucontrol
++ "Strawberry" Exec strawberry
 
 DestroyMenu "Network"
 AddToMenu "Network"
