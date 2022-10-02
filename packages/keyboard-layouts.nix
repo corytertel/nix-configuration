@@ -6,13 +6,13 @@ self: super: {
     dontBuild = true;
     installPhase = ''
       mkdir -p $out/share/X11/xkb/symbols
-      cp -a $src/v3/* $out/share/X11/xkb/symbols/
+      cp -a $src/v4/* $out/share/X11/xkb/symbols/
     '';
     src = pkgs.fetchFromGitHub {
       owner = "corytertel";
       repo = "keyboard-layouts";
-      rev = "803e3e93484944d0ab3b18b44d491f47f11df854";
-      sha256 = "O7EoINQpD3c6Ndxmo3d0OxEmuNpE657GhbJX+7KwGeY=";
+      rev = "3a6da871bd70f5e10c19ca865e5dbd4e132d2476";
+      sha256 = "9Qftla3G69Accrx8HzIg6DRHCqu5DQscvw7gw9VUKOI=";
     };
   };
 }

@@ -39,24 +39,23 @@
     xserver = {
       enable = true;
       extraLayouts = {
-        us_programmer = {
+        us_dvorak_emacs = {
           description = "US layout with numbers and characters flipped";
           languages = [ "eng" ];
-          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_programmer";
-        };
-        ru_programmer = {
-          description = "RU layout with numbers and characters flipped";
-          languages = [ "rus" ];
-          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_programmer";
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_dvorak_emacs";
         };
         ru_dvorak = {
           description = "Russian implementation of dvorak layout";
           languages = [ "rus" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_dvorak";
         };
+        ru_phonetic_dvorak = {
+          description = "Russian phonetic translation of the US dvorak emacs layout";
+          languages = [ "rus" ];
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_phonetic_dvorak";
+        };
       };
-      # layout = "us_programmer";
-      layout = "us_programmer(dvorak-emacs)";
+      layout = "us_dvorak_emacs";
       libinput = {
         enable = true;
         mouse = {

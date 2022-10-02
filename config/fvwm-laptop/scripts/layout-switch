@@ -1,3 +1,3 @@
 #!/bin/sh
 
-if [[ "$(setxkbmap -query | grep layout | awk 'END{print $2}')" == "us_programmer(dvorak-emacs)" ]]; then setxkbmap "ru_dvorak"; else setxkbmap "us_programmer(dvorak-emacs)"; fi
+if [[ "$(setxkbmap -query | grep layout | awk 'END{print $2}')" == "us_dvorak_emacs" ]]; then setxkbmap "ru_phonetic_dvorak"; else setxkbmap "us_dvorak_emacs"; fi
