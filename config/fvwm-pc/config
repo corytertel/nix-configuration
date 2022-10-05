@@ -261,6 +261,13 @@ AddToFunc   FullScreen
 + I TestRc (!Match) UpdateStyles
 + I Maximize 100 100
 
+# Function: WindowScreenshot
+#
+# Takes a screenshot of the focused window.
+DestroyFunc WindowScreenshot
+AddToFunc   WindowScreenshot
++I Exec xwd -silent -id "$[w.id]" -out "$(date '+%Y-%m-%d_%H-%M')"
+
 #############
 # 2: Styles #
 #############
@@ -494,6 +501,8 @@ AddToMenu   MenuWindowOps
 + "Center%$[fvwm_icon]/actions/32x32/window.png%"            AnimatedMove 50-50w 50-50w
 + "Maximize%$[fvwm_icon]/actions/32x32/window-maximize.png%" Maximize
 + "Tile%$[fvwm_icon]/actions/32x32/window.png%"              Popup MenuTile
++ "Always On Top%$[fvwm_icon]/actions/32x32/window.png%"     Pick (CirculateHit) Layer 0 6
++ "Take Screenshot%$[fvwm_icon]/actions/32x32/window.png%"   WindowScreenshot
 + "More Actions"                                             Popup MenuWindowOpsLong
 + "Close%$[fvwm_icon]/actions/32x32/window-close.png%"       Close
 

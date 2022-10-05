@@ -61,7 +61,7 @@ in {
           horizontal_padding = 16;
 
           # Frame (border)
-          frame_width = 2;
+          frame_width = 1;
 
           frame_color = "#141404";
 

@@ -562,25 +562,26 @@
   :bind
   ("C-c r"       . consult-recent-file)
   ("C-x p s"     . consult-ripgrep) ; for use with project.el
-  ;; ("C-s"         . consult-line)
-  ("C-s"         . consult-line-multi)
-  ("C-S-s"       . consult-focus-lines)
-  ("C-c i"       . consult-imenu)
-  ("C-c t"       . gtags-find-tag)
+  ;; ;; ("C-s"         . consult-line)
+  ;; ("C-s"         . consult-line-multi)
+  ;; ("C-S-s"       . consult-focus-lines)
+  ;; ("C-c i"       . consult-imenu)
+  ;; ("C-c t"       . gtags-find-tag)
   ("C-x b"       . consult-buffer)
-  ("C-c x"       . consult-complex-command)
-  ("C-c e"       . consult-flymake)
+  ;; ("C-c x"       . consult-complex-command)
+  ;; ("C-c e"       . consult-flymake)
+
   ("C-x C-k C-k" . consult-kmacro)
   ("M-y"         . consult-yank-pop)
   ("M-g g"       . consult-goto-line)
   ("M-g M-g"     . consult-goto-line)
   ("M-g f"       . consult-flymake)
   ("M-g i"       . consult-imenu)
-  ;; ("M-s l"       . consult-line)
-  ;; ("M-s L"       . consult-line-multi)
-  ;; ("M-s u"       . consult-focus-lines)
-  ;; ("M-s g"       . consult-grep)
-  ;; ("M-s M-g"     . consult-grep)
+  ("M-s l"       . consult-line)
+  ("M-s L"       . consult-line-multi)
+  ("M-s u"       . consult-focus-lines)
+  ("M-s g"       . consult-grep)
+  ("M-s M-g"     . consult-grep)
   ("C-x C-SPC"   . consult-global-mark)
   ("C-x M-:"     . consult-complex-command)
   ("C-c n"       . consult-org-agenda)
@@ -781,6 +782,17 @@
 (use-package goggles
   :config (goggles-mode))
 
+(use-package crux
+  :bind (("C-c U" . crux-view-url)
+         ("C-c f c" . write-file)
+         ("C-c f r" . crux-rename-buffer-and-file)
+         ("C-c f d" . crux-delete-file-and-buffer)
+         ;;("s-k"   . crux-kill-whole-line)
+         ;;("s-o"   . crux-smart-open-line-above)
+         ("C-a"   . crux-move-beginning-of-line)
+         ([(shift return)] . crux-smart-open-line)
+         ([(control shift return)] . crux-smart-open-line-above)))
+
 ;; Smartparens
 (use-package smartparens
   :defer 1
@@ -801,8 +813,8 @@
          ("C-M-p" . sp-backward-down-sexp)
          ("C-M-n" . sp-up-sexp)
          ;; ("C-w" . whole-line-or-region-sp-kill-region)
-         ("M-s" . sp-splice-sexp) ;; depth-changing commands
-         ("M-r" . sp-splice-sexp-killing-around)
+         ;; ("M-s" . sp-splice-sexp) ;; depth-changing commands
+         ;; ("M-r" . sp-splice-sexp-killing-around)
          ("M-(" . sp-wrap-round)
          ("C-)" . sp-forward-slurp-sexp) ;; barf/slurp
          ("M-<right>" . sp-forward-slurp-sexp)
@@ -813,7 +825,8 @@
          ("C-{" . sp-backward-barf-sexp)
          ("M-S-<right>" . sp-backward-barf-sexp)
          ("M-S" . sp-split-sexp) ;; misc
-         ("M-j" . sp-join-sexp))
+         ;; ("M-j" . sp-join-sexp)
+	 )
   :config
   (require 'smartparens-config)
   (setq sp-base-key-bindings 'paredit)
@@ -859,6 +872,9 @@
 
   ;; Don't include semicolon ; when slurping
   (add-to-list 'sp-sexp-suffix '(java-mode regexp ""))
+  (add-to-list 'sp-sexp-suffix '(c-mode regexp ""))
+  (add-to-list 'sp-sexp-suffix '(c++-mode regexp ""))
+  (add-to-list 'sp-sexp-suffix '(nix-mode regexp ""))
 
   ;; use smartparens-mode everywhere
   (smartparens-global-mode))
@@ -892,8 +908,198 @@
          ([(control shift down)] . move-text-down)
          ([(meta shift up)]      . move-text-up)
          ([(meta shift down)]    . move-text-down)
-	 ("C-M-n" . move-text-down)
-	 ("C-M-p" . move-text-up)))
+	 ("C-S-n" . move-text-down)
+	 ("C-S-p" . move-text-up)))
+
+;; Jump around
+(use-package avy
+  :ensure t
+  :config
+  (setq avy-timeout-seconds 1.0)
+  ;; (setq avy-all-windows nil)
+  ;; :bind
+  ;; ("M-g g" . avy-goto-line)
+  ;; ("M-g c" . avy-goto-char-in-line)
+  ;; ("M-g m" . avy-move-line)
+  ;; ("C-ö" . avy-goto-char-timer)
+
+  (setq avy-keys '(?q ?e ?r ?y ?u ?o ?p
+                      ?a ?s ?d ?f ?g ?h ?j
+                      ?k ?l ?' ?x ?c ?v ?b
+                      ?n ?, ?/))
+
+  (defun avy-show-dispatch-help ()
+    (let* ((len (length "avy-action-"))
+           (fw (frame-width))
+           (raw-strings (mapcar
+			 (lambda (x)
+			   (format "%2s: %-19s"
+				   (propertize
+				    (char-to-string (car x))
+				    'face 'aw-key-face)
+				   (substring (symbol-name (cdr x)) len)))
+			 avy-dispatch-alist))
+           (max-len (1+ (apply #'max (mapcar #'length raw-strings))))
+           (strings-len (length raw-strings))
+           (per-row (floor fw max-len))
+           display-strings)
+      (cl-loop for string in raw-strings
+               for N from 1 to strings-len do
+               (push (concat string " ") display-strings)
+               (when (= (mod N per-row) 0) (push "\n" display-strings)))
+      (message "%s" (apply #'concat (nreverse display-strings)))))
+
+  ;; Avy command
+  (global-set-key (kbd "M-j") 'avy-goto-char-timer)
+
+  ;; Kill text
+  (defun avy-action-kill-whole-line (pt)
+    (save-excursion
+      (goto-char pt)
+      (kill-whole-line))
+    (select-window
+     (cdr
+      (ring-ref avy-ring 0)))
+    t)
+
+  (setf (alist-get ?k avy-dispatch-alist) 'avy-action-kill-stay
+	(alist-get ?K avy-dispatch-alist) 'avy-action-kill-whole-line)
+
+  ;; Copy text
+  (defun avy-action-copy-whole-line (pt)
+    (save-excursion
+      (goto-char pt)
+      (cl-destructuring-bind (start . end)
+          (bounds-of-thing-at-point 'line)
+	(copy-region-as-kill start end)))
+    (select-window
+     (cdr
+      (ring-ref avy-ring 0)))
+    t)
+
+  (setf (alist-get ?w avy-dispatch-alist) 'avy-action-copy
+	(alist-get ?W avy-dispatch-alist) 'avy-action-copy-whole-line)
+
+  ;; Yank text
+  (defun avy-action-yank-whole-line (pt)
+    (avy-action-copy-whole-line pt)
+    (save-excursion (yank))
+    t)
+
+  (setf (alist-get ?y avy-dispatch-alist) 'avy-action-yank
+	(alist-get ?Y avy-dispatch-alist) 'avy-action-yank-whole-line)
+
+  ;; Transpose/Move text
+  (defun avy-action-teleport-whole-line (pt)
+    (avy-action-kill-whole-line pt)
+    (save-excursion (yank)) t)
+
+  (setf (alist-get ?t avy-dispatch-alist) 'avy-action-teleport
+	(alist-get ?T avy-dispatch-alist) 'avy-action-teleport-whole-line)
+
+  ;; Mark text
+  (defun avy-action-mark-to-char (pt)
+    (activate-mark)
+    (goto-char pt))
+
+  (setf (alist-get ?  avy-dispatch-alist) 'avy-action-mark-to-char)
+
+  ;; Flyspell words
+  (defun avy-action-flyspell (pt)
+    (save-excursion
+      (goto-char pt)
+      (when (require 'flyspell nil t)
+	(flyspell-auto-correct-word)))
+    (select-window
+     (cdr (ring-ref avy-ring 0)))
+    t)
+
+  ;; Bind to semicolon (flyspell uses C-;)
+  (setf (alist-get ?\; avy-dispatch-alist) 'avy-action-flyspell)
+
+  ;; Dictionary: define words
+  ;; Replace your package manager or preferred dict package
+  ;; (package-install 'dictionary)
+
+  (defun dictionary-search-dwim (&optional arg)
+    "Search for definition of word at point. If region is active,
+search for contents of region instead. If called with a prefix
+argument, query for word to search."
+    (interactive "P")
+    (if arg
+	(dictionary-search nil)
+      (if (use-region-p)
+          (dictionary-search (buffer-substring-no-properties
+                              (region-beginning)
+                              (region-end)))
+	(if (thing-at-point 'word)
+            (dictionary-lookup-definition)
+          (dictionary-search-dwim '(4))))))
+
+  (defun avy-action-define (pt)
+    (save-excursion
+      (goto-char pt)
+      (dictionary-search-dwim))
+    (select-window
+     (cdr (ring-ref avy-ring 0)))
+    t)
+
+  (setf (alist-get ?= avy-dispatch-alist) 'dictionary-search-dwim)
+
+  ;; Get Elisp Help
+  ;; Replace with your package manager or help library of choice
+  ;; (package-install 'helpful)
+
+  (defun avy-action-helpful (pt)
+    (save-excursion
+      (goto-char pt)
+      (helpful-at-point))
+    (select-window
+     (cdr (ring-ref avy-ring 0)))
+    t)
+
+  (setf (alist-get ?H avy-dispatch-alist) 'avy-action-helpful)
+
+  ;; Embark
+  ;; (package-install 'embark)
+
+  (defun avy-action-embark (pt)
+    (unwind-protect
+        (save-excursion
+          (goto-char pt)
+          (embark-act))
+      (select-window
+       (cdr (ring-ref avy-ring 0))))
+    t)
+
+  (setf (alist-get ?. avy-dispatch-alist) 'avy-action-embark)
+
+  ;; Avy + Isearch
+  (define-key isearch-mode-map (kbd "M-j") 'avy-isearch)
+
+  ;; Isearch in other windows
+  (defun isearch-forward-other-window (prefix)
+    "Function to isearch-forward in other-window."
+    (interactive "P")
+    (unless (one-window-p)
+      (save-excursion
+	(let ((next (if prefix -1 1)))
+          (other-window next)
+          (isearch-forward)
+          (other-window (- next))))))
+
+  (defun isearch-backward-other-window (prefix)
+    "Function to isearch-backward in other-window."
+    (interactive "P")
+    (unless (one-window-p)
+      (save-excursion
+	(let ((next (if prefix 1 -1)))
+          (other-window next)
+          (isearch-backward)
+          (other-window (- next))))))
+
+  (define-key global-map (kbd "C-M-s") 'isearch-forward-other-window)
+  (define-key global-map (kbd "C-M-r") 'isearch-backward-other-window))
 
 ;; Copy text as Discord/GitHub/etc formatted code
 (use-package copy-as-format
@@ -1768,6 +1974,11 @@ Lisp function does not specify a special indentation."
 ;;
 
 ;; Basic Keybind
+
+;; Swap "C-h" and "C-x", so it's easier to type on Dvorak layout
+;; (keyboard-translate (kbd "C-h") (kbd "C-x"))
+;; (keyboard-translate (kbd "C-x") (kbd "C-h"))
+
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "C-#") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c s") 'replace-string)
@@ -1780,73 +1991,208 @@ Lisp function does not specify a special indentation."
   (comment-region BEG END))
 (global-set-key (kbd "M-#") 'kill-ring-save-and-comment)
 
-(use-package god-mode
-  :custom
-  (god-mode-alist
-   '((nil . "C-")
-     ("." . "M-")
-     (">" . "C-M-")))
-  (god-exempt-major-modes nil) ; for god-mode all
-  (god-exempt-predicates nil)  ; for god-mode-all
-  :config
-  (defun my-god-mode-update-mode-line ()
-    (cond
-     (god-local-mode
-      (set-face-attribute 'mode-line nil
-                          :foreground "#141404"
-                          :background "#ed8f23")
-      ;; (set-face-attribute 'mode-line-inactive nil
-      ;;                     :foreground "#141404"
-      ;;                     :background "#ed9063"))
-      (set-face-attribute 'mode-line-inactive nil
-                          :foreground "#ffffff"
-                          :background "#5e3608"))
-     (t
-      ;; (set-face-attribute 'mode-line nil
-      ;; 			  :foreground "#141404"
-      ;; 			  :background "#cccccc")
-      ;; (set-face-attribute 'mode-line-inactive nil
-      ;; 			  :foreground "#141404"
-      ;; 			  :background "#ffffff")
-      (set-face-attribute 'mode-line nil
-			  :foreground "#ffffff"
-			  :background "#4d4d4d")
-      (set-face-attribute 'mode-line-inactive nil
-			  :foreground "#ffffff"
-			  :background "#1a1a1a")
-      )))
-  (add-hook 'post-command-hook 'my-god-mode-update-mode-line)
+;; God mode
+;; (use-package god-mode
+;;   :custom
+;;   (god-mode-alist
+;;    '((nil . "C-")
+;;      ("." . "M-")
+;;      (">" . "C-M-")))
+;;   (god-exempt-major-modes nil) ; for god-mode all
+;;   (god-exempt-predicates nil)  ; for god-mode-all
+;;   :config
+;;   (defun my-god-mode-update-mode-line ()
+;;     (cond
+;;      (god-local-mode
+;;       (set-face-attribute 'mode-line nil
+;; 			  :foreground "#141404"
+;; 			  :background "#ed8f23")
+;;       ;; (set-face-attribute 'mode-line-inactive nil
+;;       ;;                     :foreground "#141404"
+;;       ;;                     :background "#ed9063"))
+;;       (set-face-attribute 'mode-line-inactive nil
+;; 			  :foreground "#ffffff"
+;; 			  :background "#5e3608"))
+;;      (t
+;;       ;; (set-face-attribute 'mode-line nil
+;;       ;; 			  :foreground "#141404"
+;;       ;; 			  :background "#cccccc")
+;;       ;; (set-face-attribute 'mode-line-inactive nil
+;;       ;; 			  :foreground "#141404"
+;;       ;; 			  :background "#ffffff")
+;;       (set-face-attribute 'mode-line nil
+;; 			  :foreground "#ffffff"
+;; 			  :background "#4d4d4d")
+;;       (set-face-attribute 'mode-line-inactive nil
+;; 			  :foreground "#ffffff"
+;; 			  :background "#1a1a1a")
+;;       )))
+;;   (add-hook 'post-command-hook 'my-god-mode-update-mode-line)
 
-  (global-set-key (kbd "<escape>") #'god-mode-all)
-  (global-set-key (kbd "C-x C-0") #'delete-window)
-  (global-set-key (kbd "C-x C-1") #'delete-other-windows)
-  (global-set-key (kbd "C-x C-2") #'split-and-follow-below)
-  (global-set-key (kbd "C-x C-3") #'split-and-follow-right)
-  (define-key god-local-mode-map (kbd "z") #'repeat))
+;;   (global-set-key (kbd "<escape>") #'god-mode-all)
+;;   (global-set-key (kbd "C-x C-0") #'delete-window)
+;;   (global-set-key (kbd "C-x C-1") #'delete-other-windows)
+;;   (global-set-key (kbd "C-x C-2") #'split-and-follow-below)
+;;   (global-set-key (kbd "C-x C-3") #'split-and-follow-right)
+;;   (define-key god-local-mode-map (kbd "z") #'repeat))
+
+;; Meow
+(use-package meow
+  :config
+  (defconst meow-cheatsheet-layout-dvorak-emacs
+    '((<TLDE> "`"	"~")
+      (<AE01> "9"	"!")
+      (<AE02> "7"	"@")
+      (<AE03> "1"	"#")
+      (<AE04> "3"	"$")
+      (<AE05> "5"	"%")
+      (<AE06> "4"	"^")
+      (<AE07> "2"	"&")
+      (<AE08> "0"	"*")
+      (<AE09> "6"	"[")
+      (<AE10> "8"	"]")
+      (<AE11> "/"	"?")
+      (<AE12> "="	"+")
+      (<AD01> "'"	"\"")
+      (<AD02> ","	"<")
+      (<AD03> "."	">")
+      (<AD04> "u"	"U")
+      (<AD05> "y"	"Y")
+      (<AD06> "c"	"C")
+      (<AD07> "d"	"D")
+      (<AD08> "p"	"P")
+      (<AD09> "r"	"R")
+      (<AD10> "l"	"L")
+      (<AD11> "("	"{")
+      (<AD12> ")"	"}")
+      (<AC01> "a"	"A")
+      (<AC02> "o"	"O")
+      (<AC03> "e"	"E")
+      (<AC04> "h"	"H")
+      (<AC05> "i"	"I")
+      (<AC06> "t"	"T")
+      (<AC07> "b"	"B")
+      (<AC08> "n"	"N")
+      (<AC09> "F"	"F")
+      (<AC10> "s"	"S")
+      (<AC11> "-"	"_")
+      (<AB01> ";"	":")
+      (<AB02> "q"	"Q")
+      (<AB03> "j"	"J")
+      (<AB04> "k"	"K")
+      (<AB05> "x"	"X")
+      (<AB06> "g"	"G")
+      (<AB07> "m"	"M")
+      (<AB08> "w"	"W")
+      (<AB09> "v"	"V")
+      (<AB10> "z"	"Z")
+      (<BKSP> "\\"	"|")))
+  (defun meow-setup ()
+    (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak-emacs)
+    (meow-leader-define-key
+     '("1" . meow-digit-argument)
+     '("2" . meow-digit-argument)
+     '("3" . meow-digit-argument)
+     '("4" . meow-digit-argument)
+     '("5" . meow-digit-argument)
+     '("6" . meow-digit-argument)
+     '("7" . meow-digit-argument)
+     '("8" . meow-digit-argument)
+     '("9" . meow-digit-argument)
+     '("0" . meow-digit-argument)
+     '("/" . meow-keypad-describe-key)
+     '("?" . meow-cheatsheet))
+    (meow-motion-overwrite-define-key
+     ;; custom keybinding for motion state
+     '("<escape>" . ignore))
+    (meow-normal-define-key
+     '("0" . meow-expand-0)
+     '("9" . meow-expand-9)
+     '("8" . meow-expand-8)
+     '("7" . meow-expand-7)
+     '("6" . meow-expand-6)
+     '("5" . meow-expand-5)
+     '("4" . meow-expand-4)
+     '("3" . meow-expand-3)
+     '("2" . meow-expand-2)
+     '("1" . meow-expand-1)
+     '("-" . negative-argument)
+     '(";" . meow-reverse)
+     '("," . meow-inner-of-thing)
+     '("." . meow-bounds-of-thing)
+     '("<" . meow-beginning-of-thing)
+     '(">" . meow-end-of-thing)
+     '("a" . meow-append)
+     '("A" . meow-open-below)
+     '("b" . meow-left)
+     '("B" . meow-left-expand)
+     '("c" . meow-change)
+     '("d" . meow-delete)
+     '("D" . meow-backward-delete)
+     '("e" . meow-visit)
+     '("f" . meow-right)
+     '("F" . meow-right-expand)
+     '("g" . meow-cancel-selection)
+     '("G" . meow-grab)
+     '("h" . meow-find)
+     '("i" . meow-insert)
+     '("I" . meow-open-above)
+     '("j" . meow-join)
+     '("k" . meow-kill)
+     '("l" . meow-line)
+     '("L" . meow-goto-line)
+     '("m" . meow-back-word)
+     '("M" . meow-back-symbol)
+     '("n" . meow-next)
+     '("N" . meow-next-expand)
+     '("o" . meow-block)
+     '("O" . meow-to-block)
+     '("p" . meow-prev)
+     '("P" . meow-prev-expand)
+     '("q" . meow-quit)
+     '("Q" . meow-goto-line)
+     '("r" . meow-replace)
+     '("R" . meow-swap-grab)
+     '("s" . meow-search)
+     '("t" . meow-till)
+     '("u" . meow-undo)
+     '("U" . meow-undo-in-selection)
+     '("v" . meow-next-word)
+     '("V" . meow-next-symbol)
+     '("w" . meow-mark-word)
+     '("W" . meow-mark-symbol)
+     '("x" . meow-save)
+     '("X" . meow-sync-grab)
+     '("y" . meow-yank)
+     '("z" . meow-pop-selection)
+     '("'" . repeat)
+     '("<escape>" . ignore)))
+  (meow-setup)
+  (meow-global-mode 1))
 
 ;; Make ESC quit prompts
 ;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 ;;; Keybinds for Russian Layout
 ;; The keybinds map to be in the same location on the board
-(global-set-key (kbd "C-н") #'next-line) ;; C-n
-(global-set-key (kbd "C-р") #'previous-line) ;; C-p
-(global-set-key (kbd "C-с") #'forward-char) ;; C-f
-(global-set-key (kbd "C-т") #'backward-char) ;; C-b
-(global-set-key (kbd "M-с") #'forward-word) ;; M-f
-(global-set-key (kbd "M-т") #'backward-word) ;; M-b
-(global-set-key (kbd "C-л") #'consult-line) ;; C-s
-(global-set-key (kbd "C-д") #'recenter-top-bottom) ;; C-l
-(global-set-key (kbd "C-к") #'sp-delete-char) ;; C-d
-(global-set-key (kbd "C-е") #'beginning-of-visual-line) ;; C-a
-(global-set-key (kbd "C-о") #'end-of-visual-line) ;; C-e
-(global-set-key (kbd "C-х") #'sp-kill-hybrid-sexp) ;; C-k
-(global-set-key (kbd "C-з") #'sp-kill-region) ;; C-w
-(global-set-key (kbd "C-б") #'keyboard-quit) ;; C-g
-(global-set-key (kbd "C-п") #'yank) ;; C-y
-(global-set-key (kbd "C-ж") #'scroll-up-command) ;; C-v
-(global-set-key (kbd "M-ж") #'scroll-down-command) ;; M-v
-(global-set-key (kbd "M-ё") #'execute-extended-command) ;; M-x
+;; (global-set-key (kbd "C-н") #'next-line) ;; C-n
+;; (global-set-key (kbd "C-р") #'previous-line) ;; C-p
+;; (global-set-key (kbd "C-с") #'forward-char) ;; C-f
+;; (global-set-key (kbd "C-т") #'backward-char) ;; C-b
+;; (global-set-key (kbd "M-с") #'forward-word) ;; M-f
+;; (global-set-key (kbd "M-т") #'backward-word) ;; M-b
+;; (global-set-key (kbd "C-л") #'consult-line) ;; C-s
+;; (global-set-key (kbd "C-д") #'recenter-top-bottom) ;; C-l
+;; (global-set-key (kbd "C-к") #'sp-delete-char) ;; C-d
+;; (global-set-key (kbd "C-е") #'beginning-of-visual-line) ;; C-a
+;; (global-set-key (kbd "C-о") #'end-of-visual-line) ;; C-e
+;; (global-set-key (kbd "C-х") #'sp-kill-hybrid-sexp) ;; C-k
+;; (global-set-key (kbd "C-з") #'sp-kill-region) ;; C-w
+;; (global-set-key (kbd "C-б") #'keyboard-quit) ;; C-g
+;; (global-set-key (kbd "C-п") #'yank) ;; C-y
+;; (global-set-key (kbd "C-ж") #'scroll-up-command) ;; C-v
+;; (global-set-key (kbd "M-ж") #'scroll-down-command) ;; M-v
+;; (global-set-key (kbd "M-ё") #'execute-extended-command) ;; M-x
 
 ;;
 ;; --- ORG MODE ---
@@ -2057,6 +2403,7 @@ Lisp function does not specify a special indentation."
   (text-mode   . visual-fill-column-mode)
   (prog-mode   . visual-fill-column-mode)
   (conf-mode   . visual-fill-column-mode)
+  (fundamental-mode . visual-fill-column-mode)
   ;; (term-mode   . visual-fill-column-mode)
   ;; (eshell-mode . visual-fill-column-mode)
   :custom
@@ -2072,7 +2419,12 @@ Lisp function does not specify a special indentation."
 
 ;; Writing
 (use-package writegood-mode
-  :hook (flyspell-mode . writegood-mode))
+  :hook (flyspell-mode . writegood-mode)
+  :bind (:map flyspell-mode-map
+	 ("C-c C-g g" . writegood-grade-level)
+	 ("C-c C-g e" . writegood-reading-ease)))
+
+(use-package dictionary)
 
 ;; Spelling
 (dolist (hook '(text-mode-hook))
@@ -2090,12 +2442,12 @@ Lisp function does not specify a special indentation."
 (use-package frog-menu
   :custom
   ;; Need to redefine keys to account for custom keyboard layout
-  (frog-menu-avy-keys (append (string-to-list "aoehsfnbid")
-			      (string-to-list "ulrptgy")
-			      (string-to-list "xcjzvwmqk")
-			      (string-to-list (upcase "aoehsfnbid"))
-			      (string-to-list (upcase "ulrptgy"))
-			      (string-to-list (upcase "xcjzvwmqk"))
+  (frog-menu-avy-keys (append (string-to-list "aoehsfnbit")
+			      (string-to-list "ulrpdyc")
+			      (string-to-list "qjkzvwmqxg")
+			      (string-to-list (upcase "aoehsfnbit"))
+			      (string-to-list (upcase "ulrpdyc"))
+			      (string-to-list (upcase "qjkzvwmqxg"))
 			      (number-sequence ?, ?@)))
   :config
   (defun frog-menu-flyspell-correct (candidates word)
@@ -2145,6 +2497,9 @@ of (command . word) to be used by `flyspell-do-correct'."
 (defalias 'yes-or-no-p #'y-or-n-p
   "Use `y-or-n-p' instead of a yes/no prompt.")
 
+;; Add newlines when C-n at the end of file
+(setq next-line-add-newlines t)
+
 ;; PDFs
 (use-package pdf-tools
   :ensure t
@@ -2193,6 +2548,6 @@ of (command . word) to be used by `flyspell-do-correct'."
          '(70 . 70) '(100 . 100)))))
 
 ;; Set the fringe to an big enough width
-(set-fringe-mode 20)
+(custom-set-variables '(fringe-mode 20))
 
 ;;; init.el ends here
