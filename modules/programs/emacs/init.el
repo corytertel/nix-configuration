@@ -148,54 +148,108 @@
 ;;   (rich-minority-mode 1)
 ;;   (setf rm-blacklist ""))
 
-(defface my-narrow-face
-  '((t (:foreground "#141404" :background "#ed8f23")))
-  "Todo/fixme highlighting."
-  :group 'faces)
+;; Buffer state in modeline
+;; (defface my-narrow-face
+;;   '((t (:foreground "#141404" :background "#ed8f23")))
+;;   "Todo/fixme highlighting."
+;;   :group 'faces)
 
-(defface my-read-only-face
-  '((t (:foreground "#141404" :background "#1f8c35")))
-  "Read-only buffer highlighting."
-  :group 'faces)
+;; (defface my-read-only-face
+;;   '((t (:foreground "#141404" :background "#1f8c35")))
+;;   "Read-only buffer highlighting."
+;;   :group 'faces)
 
-(defface my-modified-face
-  '((t (:foreground "#d8d8d8" :background "#e60909")))
-  "Modified buffer highlighting."
-  :group 'faces)
+;; (defface my-modified-face
+;;   '((t (:foreground "#d8d8d8" :background "#e60909")))
+;;   "Modified buffer highlighting."
+;;   :group 'faces)
 
-(setq-default
- mode-line-format
- '("  "
-   (:eval (let ((str (if buffer-read-only
-                         (if (buffer-modified-p) "%%*" "%%%%")
-                       (if (buffer-modified-p) "**" "--"))))
-            (if buffer-read-only
-                (propertize str 'face 'my-read-only-face)
-              (if (buffer-modified-p)
-                  (propertize str 'face 'my-modified-face)
-                str))))
-   (list 'line-number-mode "  ")
-   (:eval (when line-number-mode
-            (let ((str "L%l"))
-              (if (/= (buffer-size) (- (point-max) (point-min)))
-                  (propertize str 'face 'my-narrow-face)
-                str))))
-   "  %p"
-   (list 'column-number-mode "  C%c")
-   "  " mode-line-buffer-identification
-   "  " mode-line-modes))
+;; (setq-default
+;;  mode-line-format
+;;  '("  "
+;;    (:eval (let ((str (if buffer-read-only
+;;                          (if (buffer-modified-p) "%%*" "%%%%")
+;;                        (if (buffer-modified-p) "**" "--"))))
+;;             (if buffer-read-only
+;;                 (propertize str 'face 'my-read-only-face)
+;;               (if (buffer-modified-p)
+;;                   (propertize str 'face 'my-modified-face)
+;;                 str))))
+;;    (list 'line-number-mode "  ")
+;;    (:eval (when line-number-mode
+;;             (let ((str "L%l"))
+;;               (if (/= (buffer-size) (- (point-max) (point-min)))
+;;                   (propertize str 'face 'my-narrow-face)
+;;                 str))))
+;;    "  %p"
+;;    (list 'column-number-mode "  C%c")
+;;    "  " mode-line-buffer-identification
+;;    "  " mode-line-modes))
 
-(use-package moody
-  ;; :custom
-  ;; (moody-mode-line-height 40)
-  :config
-  (setq x-underline-at-descent-line t)
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode)
-  (moody-replace-eldoc-minibuffer-message-function))
+;; (use-package moody
+;;   ;; :custom
+;;   ;; (moody-mode-line-height 40)
+;;   :config
+;;   (setq x-underline-at-descent-line t)
+;;   (moody-replace-mode-line-buffer-identification)
+;;   (moody-replace-vc-mode)
+;;   (moody-replace-eldoc-minibuffer-message-function))
 
-(use-package minions
-  :config (minions-mode))
+;; (use-package minions
+;;   :config (minions-mode))
+
+(defvar +smart-file-name-cache nil)
+
+(defun +shorten-long-path (path)
+  (let ((paths (split-string path "/")))
+    (if (< (length paths) 3)
+        path
+      (string-join (reverse (let ((rpaths (reverse paths)))
+                              (-concat
+                               (-take 2 rpaths)
+                               (->> (-drop 2 rpaths)
+                                  (--map (if (> (length it) 1)
+                                             (substring it 0 1)
+                                           it))))))
+                   "/"))))
+
+(defun +smart-file-name ()
+  "Get current file name, if we are in project, the return relative path to the project root, otherwise return absolute file path.
+This function is slow, so we have to use cache."
+  (let ((vc-dir (vc-root-dir))
+        (bfn (buffer-file-name (current-buffer))))
+    (cond
+     ((and bfn vc-dir)
+      (+shorten-long-path (file-relative-name bfn vc-dir)))
+     (bfn bfn)
+     (t (buffer-name)))))
+
+(defun +smart-file-name-cached ()
+  (if (eq (buffer-name) (car +smart-file-name-cache))
+      (cdr +smart-file-name-cache)
+    (let ((file-name (+smart-file-name)))
+      (setq +smart-file-name-cache
+            (cons (buffer-name) file-name))
+      file-name)))
+
+(defun +format-mode-line ()
+  (let* ((lhs '((:eval (when (bound-and-true-p meow-mode) (meow-indicator)))
+		(:eval " L%l C%C")
+		(:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format))))
+         (rhs '((:eval (+smart-file-name-cached))
+                " "
+                (:eval mode-name)))
+         (ww (window-width))
+         (lhs-str (format-mode-line lhs))
+         (rhs-str (format-mode-line rhs))
+         (rhs-w (string-width rhs-str)))
+    (format "%s%s%s"
+            lhs-str
+            (propertize " " 'display `((space :align-to (- (+ right right-fringe right-margin) (+ 1 ,rhs-w)))))
+            rhs-str)))
+
+(setq-default mode-line-format '((:eval (+format-mode-line))))
+(setq-default header-line-format nil)
 
 ;; Add padding to the sides
 (require 'frame)
@@ -226,15 +280,17 @@
   :config
   (setq-default goggles-pulse nil))
 
-;; Smooth scrolling
+;; Super smooth scrolling
 ;; (setq scroll-step            1
 ;;       scroll-conservatively  10000)
 ;; (setq next-screen-context-lines 5)
-(setq mouse-wheel-scroll-amount '(5 ((shift) . 5) ((control) . nil)))
-(setq mouse-wheel-progressive-speed nil)
+
+;; Smooth scrolling
+;; (setq mouse-wheel-scroll-amount '(5 ((shift) . 5) ((control) . nil)))
+;; (setq mouse-wheel-progressive-speed nil)
 
 ;; Smooth pixel scrolling
-(pixel-scroll-mode 1)
+;; (pixel-scroll-mode 1)
 
 ;;
 ;; --- WINDOW MANAGEMENT
@@ -2087,87 +2143,113 @@ Lisp function does not specify a special indentation."
       (<AB09> "v"	"V")
       (<AB10> "z"	"Z")
       (<BKSP> "\\"	"|")))
-  (defun meow-setup ()
-    (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak-emacs)
-    (meow-leader-define-key
-     '("1" . meow-digit-argument)
-     '("2" . meow-digit-argument)
-     '("3" . meow-digit-argument)
-     '("4" . meow-digit-argument)
-     '("5" . meow-digit-argument)
-     '("6" . meow-digit-argument)
-     '("7" . meow-digit-argument)
-     '("8" . meow-digit-argument)
-     '("9" . meow-digit-argument)
-     '("0" . meow-digit-argument)
-     '("/" . meow-keypad-describe-key)
-     '("?" . meow-cheatsheet))
-    (meow-motion-overwrite-define-key
-     ;; custom keybinding for motion state
-     '("<escape>" . ignore))
-    (meow-normal-define-key
-     '("0" . meow-expand-0)
-     '("9" . meow-expand-9)
-     '("8" . meow-expand-8)
-     '("7" . meow-expand-7)
-     '("6" . meow-expand-6)
-     '("5" . meow-expand-5)
-     '("4" . meow-expand-4)
-     '("3" . meow-expand-3)
-     '("2" . meow-expand-2)
-     '("1" . meow-expand-1)
-     '("-" . negative-argument)
-     '(";" . meow-reverse)
-     '("," . meow-inner-of-thing)
-     '("." . meow-bounds-of-thing)
-     '("<" . meow-beginning-of-thing)
-     '(">" . meow-end-of-thing)
-     '("a" . meow-append)
-     '("A" . meow-open-below)
-     '("b" . meow-left)
-     '("B" . meow-left-expand)
-     '("c" . meow-change)
-     '("d" . meow-delete)
-     '("D" . meow-backward-delete)
-     '("e" . meow-visit)
-     '("f" . meow-right)
-     '("F" . meow-right-expand)
-     '("g" . meow-cancel-selection)
-     '("G" . meow-grab)
-     '("h" . meow-find)
-     '("i" . meow-insert)
-     '("I" . meow-open-above)
-     '("j" . meow-join)
-     '("k" . meow-kill)
-     '("l" . meow-line)
-     '("L" . meow-goto-line)
-     '("m" . meow-back-word)
-     '("M" . meow-back-symbol)
-     '("n" . meow-next)
-     '("N" . meow-next-expand)
-     '("o" . meow-block)
-     '("O" . meow-to-block)
-     '("p" . meow-prev)
-     '("P" . meow-prev-expand)
-     '("q" . meow-quit)
-     '("Q" . meow-goto-line)
-     '("r" . meow-replace)
-     '("R" . meow-swap-grab)
-     '("s" . meow-search)
-     '("t" . meow-till)
-     '("u" . meow-undo)
-     '("U" . meow-undo-in-selection)
-     '("v" . meow-next-word)
-     '("V" . meow-next-symbol)
-     '("w" . meow-mark-word)
-     '("W" . meow-mark-symbol)
-     '("x" . meow-save)
-     '("X" . meow-sync-grab)
-     '("y" . meow-yank)
-     '("z" . meow-pop-selection)
-     '("'" . repeat)
-     '("<escape>" . ignore)))
-  (meow-setup)
+
+  (defun meow-C-x ()
+    "Pulls up the meow keypad with C-x already pressed."
+    (interactive)
+    (meow-keypad-start-with "C-x"))
+
+  (defun meow-C-h ()
+    "Pulls up the meow keypad with C-h already pressed."
+    (interactive)
+    (meow-keypad-start-with "C-h"))
+
+  (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak-emacs)
+  ;; (setq meow-cursor-type-beacon '(bar . 2))
+  ;; (setq meow-cursor-type-insert '(bar . 2))
+  ;; (setq meow-cursor-type-normal '(bar . 2))
+  ;; (setq meow-cursor-type-default '(bar . 2))
+  ;; (setq meow-cursor-type-motion '(bar . 2))
+  ;; (setq meow-cursor-type-keypad '(bar . 2))
+  ;; (setq meow-cursor-type-region-cursor '(bar . 2))
+
+  (meow-leader-define-key
+   '("1" . meow-digit-argument)
+   '("2" . meow-digit-argument)
+   '("3" . meow-digit-argument)
+   '("4" . meow-digit-argument)
+   '("5" . meow-digit-argument)
+   '("6" . meow-digit-argument)
+   '("7" . meow-digit-argument)
+   '("8" . meow-digit-argument)
+   '("9" . meow-digit-argument)
+   '("0" . meow-digit-argument)
+   '("/" . meow-keypad-describe-key)
+   '("?" . meow-cheatsheet))
+
+  (meow-motion-overwrite-define-key
+   ;; custom keybinding for motion state
+   '("<escape>" . ignore))
+
+  (meow-normal-define-key
+   '("0" . meow-expand-0)
+   '("9" . meow-expand-9)
+   '("8" . meow-expand-8)
+   '("7" . meow-expand-7)
+   '("6" . meow-expand-6)
+   '("5" . meow-expand-5)
+   '("4" . meow-expand-4)
+   '("3" . meow-expand-3)
+   '("2" . meow-expand-2)
+   '("1" . meow-expand-1)
+   '("-" . negative-argument)
+   '(";" . meow-reverse)
+   '("," . meow-inner-of-thing)
+   '("." . meow-bounds-of-thing)
+   '("<" . meow-beginning-of-thing)
+   '(">" . meow-end-of-thing)
+   '("a" . meow-append)
+   '("A" . meow-open-below)
+   '("b" . meow-left)
+   '("B" . meow-left-expand)
+   '("c" . meow-change)
+   '("d" . meow-delete)
+   '("D" . meow-backward-delete)
+   '("e" . meow-save)
+   '("E" . meow-sync-grab)
+   '("f" . meow-right)
+   '("F" . meow-right-expand)
+   '("g" . meow-cancel-selection)
+   '("G" . meow-grab)
+   '("h" . meow-C-h)
+   '("i" . meow-insert)
+   '("I" . meow-open-above)
+   '("j" . meow-join)
+   '("k" . meow-kill)
+   '("l" . meow-line)
+   '("L" . meow-goto-line)
+   '("m" . meow-back-word)
+   '("M" . meow-back-symbol)
+   '("n" . meow-next)
+   '("N" . meow-next-expand)
+   '("o" . meow-block)
+   '("O" . meow-to-block)
+   '("p" . meow-prev)
+   '("P" . meow-prev-expand)
+   '("q" . meow-quit)
+   '("Q" . meow-goto-line)
+   '("r" . meow-replace)
+   '("R" . meow-swap-grab)
+   '("s" . meow-search)
+   '("S" . meow-visit)
+   '("t" . meow-till)
+   '("T" . meow-find)
+   '("u" . meow-undo)
+   '("U" . meow-undo-in-selection)
+   '("v" . meow-next-word)
+   '("V" . meow-next-symbol)
+   '("w" . meow-mark-word)
+   '("W" . meow-mark-symbol)
+   '("x" . meow-C-x)
+   '("y" . meow-yank)
+   '("z" . meow-pop-selection)
+   '("'" . repeat)
+   '("<escape>" . ignore))
+
+  ;; use << and >> to select to bol/eol
+  (add-to-list 'meow-char-thing-table '(?> . line))
+  (add-to-list 'meow-char-thing-table '(?< . line))
+
   (meow-global-mode 1))
 
 ;; Make ESC quit prompts

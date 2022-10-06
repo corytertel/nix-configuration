@@ -703,6 +703,36 @@ to 'auto, tags may not be properly aligned."
      `(markdown-header-face-6 ((,class (:bold nil :foreground ,head2))))
      `(markdown-table-face ((,class (:foreground ,base :background ,head1-bg))))
 
+;;;;; meow
+     ;; meow-beacon-cursor                         ;; Keypad state cursor.
+     ;; meow-insert-cursor                         ;; Insert state cursor.
+     ;; meow-keypad-cursor                         ;; Keypad state cursor.
+     ;; meow-kmacro-cursor                         ;; Indicator for region direction.
+     ;; meow-motion-cursor                         ;; Motion state cursor.
+     ;; meow-normal-cursor                         ;; Normal state cursor.
+     ;; meow-unknown-cursor                        ;; Unknown state cursor.
+     ;; meow-region-cursor-1                       ;; Indicator for region direction.
+     ;; meow-region-cursor-2                       ;; Indicator for region direction.
+     ;; meow-region-cursor-3                       ;; Indicator for region direction.
+     ;; meow-beacon-indicator                      ;; Cursor state indicator.
+     ;; meow-insert-indicator                      ;; Insert state indicator.
+     ;; meow-keypad-indicator                      ;; Keypad state indicator.
+     ;; meow-motion-indicator                      ;; Motion state indicator.
+     ;; meow-normal-indicator                      ;; Normal state indicator.
+     ;; meow-search-highlight                      ;; Search target highlight.
+     ;; meow-search-indicator                      ;; Face for search indicator.
+     ;; meow-beacon-fake-cursor                    ;; BEACON selection face.
+     ;; meow-cheatsheet-command                    ;; Face for Meow cheatsheet command.
+     ;; meow-cheatsheet-highlight                  ;; Face for Meow cheatsheet highlight text.
+     ;; meow-beacon-fake-selection                 ;; BEACON selection face.
+     ;; meow-position-highlight-number             ;; Num position highlight.
+     ;; meow-position-highlight-number-1           ;; Num position highlight.
+     ;; meow-position-highlight-number-2           ;; Num position highlight.
+     ;; meow-position-highlight-number-3           ;; Num position highlight.
+     ;; meow-position-highlight-reverse-number-1   ;; Num position highlight.
+     ;; meow-position-highlight-reverse-number-2   ;; Num position highlight.
+     ;; meow-position-highlight-reverse-number-3   ;; Num position highlight.
+
 ;;;;; mode-line
      ;; `(mode-line           ((,class (:foreground ,base :background ,act1 :box (:color ,border :line-width 1)))))
      ;; `(mode-line-buffer-id ((,class (:inherit bold :foreground ,blue))))
@@ -850,14 +880,6 @@ to 'auto, tags may not be properly aligned."
      `(rainbow-delimiters-depth-6-face ((,class :foreground ,blue-dim)))
      `(rainbow-delimiters-depth-7-face ((,class :foreground ,cyan-dim)))
      `(rainbow-delimiters-depth-8-face ((,class :foreground ,green-dim)))
-     ;; `(rainbow-delimiters-depth-1-face ((,class :foreground ,base-dim)))
-     ;; `(rainbow-delimiters-depth-2-face ((,class :foreground ,base-dim)))
-     ;; `(rainbow-delimiters-depth-3-face ((,class :foreground ,base-dim)))
-     ;; `(rainbow-delimiters-depth-4-face ((,class :foreground ,base-dim)))
-     ;; `(rainbow-delimiters-depth-5-face ((,class :foreground ,base-dim)))
-     ;; `(rainbow-delimiters-depth-6-face ((,class :foreground ,base-dim)))
-     ;; `(rainbow-delimiters-depth-7-face ((,class :foreground ,base-dim)))
-     ;; `(rainbow-delimiters-depth-8-face ((,class :foreground ,base-dim)))
      `(rainbow-delimiters-mismatched-face ((,class :foreground ,err :overline t)))
      `(rainbow-delimiters-unmatched-face ((,class :foreground ,err :overline t)))
 
