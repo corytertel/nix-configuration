@@ -484,6 +484,8 @@
   (define-key eglot-mode-map [remap display-local-help] nil)
   (add-to-list 'eglot-server-programs
                `(scheme-mode . ("chicken-lsp-server")))
+  (add-to-list 'eglot-server-programs
+               `(clojure-mode . ("clojure-lsp")))
 
   :bind (:map eglot-mode-map
 	 ("C-c C-a" . eglot-code-actions)
@@ -1948,6 +1950,13 @@ Lisp function does not specify a special indentation."
 ;; (use-package esh-autosuggest
 ;;   :ensure t
 ;;   :hook (eshell-mode . esh-autosuggest-mode))
+
+;; Eshell fish completion
+(use-package fish-completion
+  :config
+  (when (and (executable-find "fish")
+           (require 'fish-completion nil t))
+    (global-fish-completion-mode)))
 
 ;; Eshell up
 (use-package eshell-up

@@ -162,6 +162,7 @@ in {
       xdotool
       xorg.xprop
       xorg.xwininfo
+      fish
     ] ++ shellScripts;
 
   };
