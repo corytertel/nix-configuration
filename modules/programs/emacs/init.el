@@ -149,107 +149,110 @@
 ;;   (setf rm-blacklist ""))
 
 ;; Buffer state in modeline
-;; (defface my-narrow-face
-;;   '((t (:foreground "#141404" :background "#ed8f23")))
-;;   "Todo/fixme highlighting."
-;;   :group 'faces)
+(defface modeline-narrow-face
+  '((t (:foreground "#141404" :background "#ed8f23")))
+  "Todo/fixme highlighting."
+  :group 'faces)
 
-;; (defface my-read-only-face
-;;   '((t (:foreground "#141404" :background "#1f8c35")))
-;;   "Read-only buffer highlighting."
-;;   :group 'faces)
+(defface modeline-read-only-face
+  '((t (:foreground "#141404" :background "#1f8c35")))
+  "Read-only buffer highlighting."
+  :group 'faces)
 
-;; (defface my-modified-face
-;;   '((t (:foreground "#d8d8d8" :background "#e60909")))
-;;   "Modified buffer highlighting."
-;;   :group 'faces)
+(defface modeline-modified-face
+  '((t (:foreground "#d8d8d8" :background "#e60909")))
+  "Modified buffer highlighting."
+  :group 'faces)
 
-;; (setq-default
-;;  mode-line-format
-;;  '("  "
-;;    (:eval (let ((str (if buffer-read-only
-;;                          (if (buffer-modified-p) "%%*" "%%%%")
-;;                        (if (buffer-modified-p) "**" "--"))))
-;;             (if buffer-read-only
-;;                 (propertize str 'face 'my-read-only-face)
-;;               (if (buffer-modified-p)
-;;                   (propertize str 'face 'my-modified-face)
-;;                 str))))
-;;    (list 'line-number-mode "  ")
-;;    (:eval (when line-number-mode
-;;             (let ((str "L%l"))
-;;               (if (/= (buffer-size) (- (point-max) (point-min)))
-;;                   (propertize str 'face 'my-narrow-face)
-;;                 str))))
-;;    "  %p"
-;;    (list 'column-number-mode "  C%c")
-;;    "  " mode-line-buffer-identification
-;;    "  " mode-line-modes))
+(setq-default
+ mode-line-format
+ '("  "
+   (:eval (when (bound-and-true-p meow-mode) (meow-indicator)))
+   " "
+   (:eval (let ((str (if buffer-read-only
+                         (if (buffer-modified-p) "%%*" "%%%%")
+                       (if (buffer-modified-p) "**" "--"))))
+            (if buffer-read-only
+                (propertize str 'face 'modeline-read-only-face)
+              (if (buffer-modified-p)
+                  (propertize str 'face 'modeline-modified-face)
+                str))))
+   (list 'line-number-mode "  ")
+   (:eval (when line-number-mode
+            (let ((str "L%l"))
+              (if (/= (buffer-size) (- (point-max) (point-min)))
+                  (propertize str 'face 'modeline-narrow-face)
+                str))))
+   "  %p"
+   (list 'column-number-mode "  C%c")
+   "  " mode-line-buffer-identification
+   "  " mode-line-modes
+   (:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format))))
 
-;; (use-package moody
-;;   ;; :custom
-;;   ;; (moody-mode-line-height 40)
-;;   :config
-;;   (setq x-underline-at-descent-line t)
-;;   (moody-replace-mode-line-buffer-identification)
-;;   (moody-replace-vc-mode)
-;;   (moody-replace-eldoc-minibuffer-message-function))
+(use-package moody
+  ;; :custom
+  ;; (moody-mode-line-height 40)
+  :config
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode)
+  (moody-replace-eldoc-minibuffer-message-function))
 
-;; (use-package minions
-;;   :config (minions-mode))
+(use-package minions
+  :config (minions-mode))
 
-(defvar +smart-file-name-cache nil)
+;; (defvar +smart-file-name-cache nil)
 
-(defun +shorten-long-path (path)
-  (let ((paths (split-string path "/")))
-    (if (< (length paths) 3)
-        path
-      (string-join (reverse (let ((rpaths (reverse paths)))
-                              (-concat
-                               (-take 2 rpaths)
-                               (->> (-drop 2 rpaths)
-                                  (--map (if (> (length it) 1)
-                                             (substring it 0 1)
-                                           it))))))
-                   "/"))))
+;; (defun +shorten-long-path (path)
+;;   (let ((paths (split-string path "/")))
+;;     (if (< (length paths) 3)
+;;         path
+;;       (string-join (reverse (let ((rpaths (reverse paths)))
+;;                               (-concat
+;;                                (-take 2 rpaths)
+;;                                (->> (-drop 2 rpaths)
+;;                                   (--map (if (> (length it) 1)
+;;                                              (substring it 0 1)
+;;                                            it))))))
+;;                    "/"))))
 
-(defun +smart-file-name ()
-  "Get current file name, if we are in project, the return relative path to the project root, otherwise return absolute file path.
-This function is slow, so we have to use cache."
-  (let ((vc-dir (vc-root-dir))
-        (bfn (buffer-file-name (current-buffer))))
-    (cond
-     ((and bfn vc-dir)
-      (+shorten-long-path (file-relative-name bfn vc-dir)))
-     (bfn bfn)
-     (t (buffer-name)))))
+;; (defun +smart-file-name ()
+;;   "Get current file name, if we are in project, the return relative path to the project root, otherwise return absolute file path.
+;; This function is slow, so we have to use cache."
+;;   (let ((vc-dir (vc-root-dir))
+;;         (bfn (buffer-file-name (current-buffer))))
+;;     (cond
+;;      ((and bfn vc-dir)
+;;       (+shorten-long-path (file-relative-name bfn vc-dir)))
+;;      (bfn bfn)
+;;      (t (buffer-name)))))
 
-(defun +smart-file-name-cached ()
-  (if (eq (buffer-name) (car +smart-file-name-cache))
-      (cdr +smart-file-name-cache)
-    (let ((file-name (+smart-file-name)))
-      (setq +smart-file-name-cache
-            (cons (buffer-name) file-name))
-      file-name)))
+;; (defun +smart-file-name-cached ()
+;;   (if (eq (buffer-name) (car +smart-file-name-cache))
+;;       (cdr +smart-file-name-cache)
+;;     (let ((file-name (+smart-file-name)))
+;;       (setq +smart-file-name-cache
+;;             (cons (buffer-name) file-name))
+;;       file-name)))
 
-(defun +format-mode-line ()
-  (let* ((lhs '((:eval (when (bound-and-true-p meow-mode) (meow-indicator)))
-		(:eval " L%l C%C")
-		(:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format))))
-         (rhs '((:eval (+smart-file-name-cached))
-                " "
-                (:eval mode-name)))
-         (ww (window-width))
-         (lhs-str (format-mode-line lhs))
-         (rhs-str (format-mode-line rhs))
-         (rhs-w (string-width rhs-str)))
-    (format "%s%s%s"
-            lhs-str
-            (propertize " " 'display `((space :align-to (- (+ right right-fringe right-margin) (+ 1 ,rhs-w)))))
-            rhs-str)))
+;; (defun +format-mode-line ()
+;;   (let* ((lhs '((:eval (when (bound-and-true-p meow-mode) (meow-indicator)))
+;; 		(:eval " L%l C%C")
+;; 		(:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format))))
+;;          (rhs '((:eval (+smart-file-name-cached))
+;;                 " "
+;;                 (:eval mode-name)))
+;;          (ww (window-width))
+;;          (lhs-str (format-mode-line lhs))
+;;          (rhs-str (format-mode-line rhs))
+;;          (rhs-w (string-width rhs-str)))
+;;     (format "%s%s%s"
+;;             lhs-str
+;;             (propertize " " 'display `((space :align-to (- (+ right right-fringe right-margin) (+ 1 ,rhs-w)))))
+;;             rhs-str)))
 
-(setq-default mode-line-format '((:eval (+format-mode-line))))
-(setq-default header-line-format nil)
+;; (setq-default mode-line-format '((:eval (+format-mode-line))))
+;; (setq-default header-line-format nil)
 
 ;; Add padding to the sides
 (require 'frame)
@@ -747,7 +750,7 @@ This function is slow, so we have to use cache."
 (use-package which-key
   :init
   (which-key-mode)
-  (which-key-enable-god-mode-support)
+  ;; (which-key-enable-god-mode-support)
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.00000001))
@@ -852,12 +855,12 @@ This function is slow, so we have to use cache."
 ;; Smartparens
 (use-package smartparens
   :defer 1
-  :hook ((
-          emacs-lisp-mode lisp-mode lisp-data-mode clojure-mode cider-repl-mode
-	  racket-mode racket-repl-mode scheme-mode geiser-repl-mode
-	  hy-mode prolog-mode go-mode cc-mode
-	  python-mode typescript-mode json-mode javascript-mode ;java-mode
-          ) . smartparens-strict-mode)
+  ;; :hook ((
+  ;;         emacs-lisp-mode lisp-mode lisp-data-mode clojure-mode cider-repl-mode
+  ;; 	  racket-mode racket-repl-mode scheme-mode geiser-repl-mode
+  ;; 	  hy-mode prolog-mode go-mode cc-mode
+  ;; 	  python-mode typescript-mode json-mode javascript-mode ;java-mode
+  ;;         ) . smartparens-strict-mode)
   ;; :hook (prog-mode . smartparens-strict-mode)
   :bind (:map smartparens-mode-map
          ;; This is the paredit mode map minus a few key bindings
@@ -936,27 +939,27 @@ This function is slow, so we have to use cache."
   (smartparens-global-mode))
 
 ;; Multiple cursors
-(use-package multiple-cursors
-  :bind (("C-c m" . mc/mark-all-dwim)
-         ("C->" . mc/mark-next-like-this)
-         ("C-<" . mc/mark-previous-like-this)
-	 ("C-M-<" . mc/mark-all-in-region-regexp)
-	 ("C-M->" . mc/edit-lines)
-         :map mc/keymap
-         ("C-x v" . mc/vertical-align-with-space)
-         ("C-x n" . mc-hide-unmatched-lines-mode))
-  :config
-  (global-unset-key (kbd "M-<down-mouse-1>"))
-  (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
+;; (use-package multiple-cursors
+;;   :bind (("C-c m" . mc/mark-all-dwim)
+;;          ("C->" . mc/mark-next-like-this)
+;;          ("C-<" . mc/mark-previous-like-this)
+;; 	 ("C-M-<" . mc/mark-all-in-region-regexp)
+;; 	 ("C-M->" . mc/edit-lines)
+;;          :map mc/keymap
+;;          ("C-x v" . mc/vertical-align-with-space)
+;;          ("C-x n" . mc-hide-unmatched-lines-mode))
+;;   :config
+;;   (global-unset-key (kbd "M-<down-mouse-1>"))
+;;   (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
 
-  (with-eval-after-load 'multiple-cursors-core
-    ;; Immediately load mc list, otherwise it will show as
-    ;; changed as empty in my git repo
-    (mc/load-lists)
+;;   (with-eval-after-load 'multiple-cursors-core
+;;     ;; Immediately load mc list, otherwise it will show as
+;;     ;; changed as empty in my git repo
+;;     (mc/load-lists)
 
-    (define-key mc/keymap (kbd "M-T") 'mc/reverse-regions)
-    (define-key mc/keymap (kbd "C-,") 'mc/unmark-next-like-this)
-    (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)))
+;;     (define-key mc/keymap (kbd "M-T") 'mc/reverse-regions)
+;;     (define-key mc/keymap (kbd "C-,") 'mc/unmark-next-like-this)
+;;     (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)))
 
 ;; Move text
 (use-package move-text
@@ -1211,9 +1214,10 @@ argument, query for word to search."
   :ensure t
   :hook
   (prog-mode . flymake-mode)
-
   :bind
   (:map flymake-mode-map
+   ("M-n"     . flymake-goto-next-error)
+   ("M-p"     . flymake-goto-prev-error)
    ("M-g n"   . flymake-goto-next-error)
    ("M-g p"   . flymake-goto-prev-error)
    ("M-g M-n" . flymake-goto-next-error)
@@ -1497,8 +1501,8 @@ Lisp function does not specify a special indentation."
         (cider-clojuredocs arg)
       (cider-doc)))
 
-  ;; Location of the jdk sources. In Arch Linux package `openjdk-src'
-  (setq cider-jdk-src-paths "/usr/lib/jvm/java-11-openjdk/lib/src.zip")
+  ;; Location of the jdk sources for NixOS
+  (setq cider-jdk-src-paths "/etc/profiles/per-user/cory/lib/openjdk/lib/src.zip")
 
   (require 's)
 
@@ -2094,6 +2098,11 @@ Lisp function does not specify a special indentation."
 
 ;; Meow
 (use-package meow
+  :custom
+  ;; TODO replace ?0 with an actual character that won't be used
+  (meow-keypad-meta-prefix ?0)
+  (meow-keypad-control-meta-prefix ?0)
+  (meow-keypad-start-keys '((?c . ?c)))
   :config
   (defconst meow-cheatsheet-layout-dvorak-emacs
     '((<TLDE> "`"	"~")
@@ -2154,6 +2163,22 @@ Lisp function does not specify a special indentation."
     (interactive)
     (meow-keypad-start-with "C-h"))
 
+  (defun meow-eshell-toggle ()
+    "Toggle eshell popup."
+    (interactive)
+    (meow--cancel-selection)
+    (meow--execute-kbd-macro "C-`"))
+
+  (defun meow-keypad-meta ()
+    (interactive)
+    (setq meow-keypad-leader-dispatch 'ESC-prefix)
+    (meow-keypad))
+
+  (defun meow-keypad-normal ()
+    (interactive)
+    (setq meow-keypad-leader-dispatch nil)
+    (meow-keypad))
+
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak-emacs)
   ;; (setq meow-cursor-type-beacon '(bar . 2))
   ;; (setq meow-cursor-type-insert '(bar . 2))
@@ -2162,6 +2187,12 @@ Lisp function does not specify a special indentation."
   ;; (setq meow-cursor-type-motion '(bar . 2))
   ;; (setq meow-cursor-type-keypad '(bar . 2))
   ;; (setq meow-cursor-type-region-cursor '(bar . 2))
+
+  ;; What is a good ergonomic command layout?
+  ;; - Keys that are often used together, should not be arranged on same fingers, or in two non-adjacent rows of one hand.
+  ;; - Keys that are often pressed continuously, should not be arranged for little fingers
+  ;; - Balance the frequency of use of left and right hand
+  ;; - Easy to remember
 
   (meow-leader-define-key
    '("1" . meow-digit-argument)
@@ -2242,9 +2273,21 @@ Lisp function does not specify a special indentation."
    '("W" . meow-mark-symbol)
    '("x" . meow-C-x)
    '("y" . meow-yank)
+   '("Y" . meow-yank-pop)
    '("z" . meow-pop-selection)
-   '("'" . repeat)
-   '("<escape>" . ignore))
+   ;; '("'" . repeat)
+   '("SPC" . meow-keypad-normal)
+   '("'" . meow-keypad-meta)
+   '("\"" . meow-M-x)
+   '("<escape>" . meow-insert)
+   '("#" . meow-comment)
+   '("(" . meow-backward-slurp)
+   '(")" . meow-forward-slurp)
+   '("{" . meow-backward-barf)
+   '("}" . meow-forward-barf)
+   '("&" . meow-query-replace-regexp)
+   '("%" . meow-query-replace)
+   '("`" . meow-eshell-toggle))
 
   ;; use << and >> to select to bol/eol
   (add-to-list 'meow-char-thing-table '(?> . line))
@@ -2290,43 +2333,43 @@ Lisp function does not specify a special indentation."
 		(visual-line-mode)))
 
   (org-mode . (lambda () (interactive)
-                (setq prettify-symbols-alist '(("[#A]" . "")
-                                               ("[#B]" . "")
-                                               ("[#C]" . "")
-                                               ("[ ]" . "")
-                                               ("[X]" . "")
-                                               ("[-]" . "")
-                                               ("#+begin_src" . "")
+                (setq prettify-symbols-alist '(("[#A]" . " ")
+                                               ("[#B]" . " ")
+                                               ("[#C]" . " ")
+                                               ("[ ]" . " ")
+                                               ("[X]" . " ")
+                                               ("[-]" . " ")
+                                               ("#+begin_src" . " ")
                                                ("#+end_src" . "―")
-                                               ("#+begin_collapsible" . "")
+                                               ("#+begin_collapsible" . " ")
                                                ("#+end_collapsible" . "―")
-                                               ("#+begin_aside" . "")
+                                               ("#+begin_aside" . " ")
                                                ("#+end_aside" . "―")
-                                               ("#+begin_quote" . "")
+                                               ("#+begin_quote" . " ")
                                                ("#+end_quote" . "―")
-                                               ("#+begin_defn" .  "")
+                                               ("#+begin_defn" .  " ")
                                                ("#+end_defn" . "―")
-                                               ("#+begin_questionable" .  "")
+                                               ("#+begin_questionable" .  " ")
                                                ("#+end_questionable" . "―")
-                                               ("#+begin_problem" .  "")
+                                               ("#+begin_problem" .  " ")
                                                ("#+end_problem" . "―")
-                                               ("#+EXCLUDE_TAGS:" . "")
+                                               ("#+EXCLUDE_TAGS:" . " ")
                                                (":PROPERTIES:" . "\n")
                                                (":END:" . "―")
-                                               ("#+STARTUP:" . "")
+                                               ("#+STARTUP:" . " ")
                                                ("#+TITLE: " . "")
                                                ("#+title: " . "")
-                                               ("#+RESULTS:" . "")
-                                               ("#+NAME:" . "")
-                                               ("#+ROAM_TAGS:" . "")
-                                               ("#+FILETAGS:" . "")
-                                               ("#+HTML_HEAD:" . "")
-                                               ("#+SUBTITLE:" . "")
-                                               ("#+AUTHOR:" . "")
-                                               (":Effort:" . "")
-                                               ("SCHEDULED:" . "")
-                                               ("DEADLINE:" . "")
-                                               ("#+begin_defn" .  "")
+                                               ("#+RESULTS:" . " ")
+                                               ("#+NAME:" . " ")
+                                               ("#+ROAM_TAGS:" . " ")
+                                               ("#+FILETAGS:" . " ")
+                                               ("#+HTML_HEAD:" . " ")
+                                               ("#+SUBTITLE:" . " ")
+                                               ("#+AUTHOR:" . " ")
+                                               (":Effort:" . " ")
+                                               ("SCHEDULED:" . " ")
+                                               ("DEADLINE:" . " ")
+                                               ("#+begin_defn" . " ")
                                                ("#+end_defn" . "―")))
                 (prettify-symbols-mode)))
 
@@ -2611,13 +2654,14 @@ of (command . word) to be used by `flyspell-do-correct'."
 (use-package emacs-everywhere)
 
 ;; Use primary as clipboard in emacs
-(setq x-select-enable-primary t)
+;; (setq x-select-enable-primary t)
 
 ;; Transparency
 (set-frame-parameter (selected-frame) 'alpha '(70 . 70))
 (add-to-list 'default-frame-alist '(alpha . (70 . 70)))
 
 (defun toggle-transparency ()
+  "Toggles emacs transparency."
   (interactive)
   (let ((alpha (frame-parameter nil 'alpha)))
     (set-frame-parameter
