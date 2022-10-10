@@ -653,16 +653,16 @@ Silent Key Super_L A A Exec $[fvwm_launch]
 # Xah Keybinds
 # F1: reserved, commonly used key
 # F2: reserved, universal key (rename)
-Silent Key F3 A N Next ($[w.class]) FocusWindow
-Silent Key F4 A N Prev (AcceptsFocus) FocusWindow
-# F5: reserved, universal key (refresh)
-Silent Key F6 A N Close
-Silent Key F7 A N FullScreen
-Silent Key F8 A N Next ("emacs") FocusWindow
-Silent Key F9 A N Next ("firefox|chromium-browser") FocusWindow
-Silent Key F10 A N Next ("konsole") FocusWindow
-# Silent Key F10 A N Exec emacsclient -n -e '(yequake-toggle "eshell")'
-# F11: reserved, universal key (fullscreen)
+# F3: reserved, commonly used key
+# F4: reserved, commonly used key
+Silent Key F5 A N Next ($[w.class]) FocusWindow
+Silent Key F6 A N Prev (AcceptsFocus) FocusWindow
+Silent Key F7 A N Close
+Silent Key F8 A N FullScreen
+Silent Key F9 A N Next ("emacs") FocusWindow
+Silent Key F10 A N Next ("firefox|chromium-browser") FocusWindow
+Silent Key F11 A N Next ("konsole") FocusWindow
+# Silent Key F11 A N Exec emacsclient -n -e '(yequake-toggle "eshell")'
 Silent Key F12 A N Exec exec "$[fvwm_scripts]/layout-switch"
 Silent Key Scroll_Lock A N Next ("discord|telegram-desktop") FocusWindow
 # Pause: bound through discord to toggle mic mute

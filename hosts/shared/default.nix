@@ -34,7 +34,6 @@
   services = {
     flatpak.enable = true;
     openssh.enable = true;
-    pcscd.enable = true;
     printing.enable = true;
     xserver = {
       enable = true;
@@ -43,6 +42,11 @@
           description = "US layout with numbers and characters flipped";
           languages = [ "eng" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_dvorak_emacs";
+        };
+        us_dvorak_emacs_kinesis = {
+          description = "US layout with numbers and characters flipped";
+          languages = [ "eng" ];
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_dvorak_emacs_kinesis";
         };
         ru_dvorak = {
           description = "Russian implementation of dvorak layout";
@@ -55,7 +59,6 @@
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_phonetic_dvorak";
         };
       };
-      layout = "us_dvorak_emacs";
       libinput = {
         enable = true;
         mouse = {
@@ -256,15 +259,6 @@
         userName  = "corytertel";
         userEmail = "ctertel@comcast.net";
       };
-    };
-
-    services.xcape = {
-      enable = true;
-      mapExpression = {
-        Shift_L = "Escape";
-        Shift_R = "Escape";
-      };
-      timeout = 300;
     };
 
     home = {

@@ -190,8 +190,9 @@
    (:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format))))
 
 (use-package moody
-  ;; :custom
-  ;; (moody-mode-line-height 40)
+  :custom
+  ;; (moody-mode-line-height (* (aref (font-info (face-font 'mode-line)) 2) 1.5))
+  (moody-mode-line-height 60)
   :config
   (setq x-underline-at-descent-line t)
   (moody-replace-mode-line-buffer-identification)
@@ -332,9 +333,9 @@
   (interactive)
   (switch-to-buffer nil))
 
-(global-set-key (kbd "C-x o") 'other-window)
-(global-set-key (kbd "C-x S-o") 'previous-window)
-(global-set-key (kbd "C-x M-o") 'hydra-window-resize/body)
+;; (global-set-key (kbd "C-x o") 'other-window)
+;; (global-set-key (kbd "C-x S-o") 'previous-window)
+;; (global-set-key (kbd "C-x M-o") 'hydra-window-resize/body)
 (global-set-key (kbd "C-x 0") 'delete-window)
 (global-set-key (kbd "C-x 1") 'delete-other-windows)
 (global-set-key (kbd "C-x 2") 'split-and-follow-below)
@@ -382,7 +383,7 @@
 	      sentence-end-double-space nil
 	      lisp-backquote-indentation nil
 	      blink-cursor-blinks 10
-	      ;; fast-but-imprecise-scrolling t
+	      fast-but-imprecise-scrolling t
 	      auto-save-interval 60
 	      kill-do-not-save-duplicates t
 	      bidi-paragraph-direction 'left-to-right
@@ -494,7 +495,6 @@
 ;; Tree-sitter
 (use-package tree-sitter
   :hook
-  (nix-mode . tree-sitter-setup)
   (c-mode . tree-sitter-setup)
   (c++-mode . tree-sitter-setup)
   (java-mode . tree-sitter-setup)
@@ -645,7 +645,7 @@
   ("M-s M-g"     . consult-grep)
   ("C-x C-SPC"   . consult-global-mark)
   ("C-x M-:"     . consult-complex-command)
-  ("C-c n"       . consult-org-agenda)
+  ;; ("C-c n"       . consult-org-agenda)
   (:map comint-mode-map
    ("C-c h" . consult-history))
   :custom
@@ -2108,10 +2108,14 @@ Lisp function does not specify a special indentation."
 ;; Meow
 (use-package meow
   :custom
-  ;; TODO replace ?0 with an actual character that won't be used
-  (meow-keypad-meta-prefix ?0)
-  (meow-keypad-control-meta-prefix ?0)
-  (meow-keypad-start-keys '((?c . ?c)))
+  (meow-keypad-meta-prefix 0)
+  (meow-keypad-ctrl-meta-prefix 0)
+  (meow-keypad-start-keys '())
+  (meow-expand-hint-counts '((word . 10)
+			     (line . 10)
+			     (block . 10)
+			     (find . 10)
+			     (till . 10)))
   :config
   (defconst meow-cheatsheet-layout-dvorak-emacs
     '((<TLDE> "`"	"~")
@@ -2172,6 +2176,11 @@ Lisp function does not specify a special indentation."
     (interactive)
     (meow-keypad-start-with "C-h"))
 
+  (defun meow-C-c ()
+    "Pulls up the meow keypad with C-c already pressed."
+    (interactive)
+    (meow-keypad-start-with "C-c"))
+
   (defun meow-eshell-toggle ()
     "Toggle eshell popup."
     (interactive)
@@ -2179,14 +2188,41 @@ Lisp function does not specify a special indentation."
     (meow--execute-kbd-macro "C-`"))
 
   (defun meow-keypad-meta ()
+    "Enter keypad state with meta already pressed."
     (interactive)
-    (setq meow-keypad-leader-dispatch 'ESC-prefix)
-    (meow-keypad))
+    (setq this-command last-command)
+    (setq meow--keypad-previous-state (meow--current-state))
+    (meow--switch-state 'keypad)
+    (setq overriding-local-map meow-keypad-state-keymap
+          overriding-terminal-local-map nil
+	  meow--use-meta t)
+    (meow--keypad-display-message))
 
-  (defun meow-keypad-normal ()
+  (defun meow-keypad-ctrl-meta ()
+    "Enter keypad state with control and meta already pressed."
     (interactive)
-    (setq meow-keypad-leader-dispatch nil)
-    (meow-keypad))
+    (setq this-command last-command)
+    (setq meow--keypad-previous-state (meow--current-state))
+    (meow--switch-state 'keypad)
+    (setq overriding-local-map meow-keypad-state-keymap
+          overriding-terminal-local-map nil
+	  meow--use-both t)
+    (meow--keypad-display-message))
+
+  (defvar meow--kbd-redo "C-?"
+    "KBD macro for command `redo'.")
+
+  (defun meow-undo-dwim ()
+    "If a selection is active, undoes on the selection.
+Else, undoes on the buffer."
+    (interactive)
+    (meow--execute-kbd-macro meow--kbd-undo))
+
+  (defun meow-redo-dwim ()
+    "If a selection is active, redoes on the selection.
+Else, redoes on the buffer."
+    (interactive)
+    (meow--execute-kbd-macro meow--kbd-redo))
 
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak-emacs)
   ;; (setq meow-cursor-type-beacon '(bar . 2))
@@ -2274,8 +2310,8 @@ Lisp function does not specify a special indentation."
    '("S" . meow-visit)
    '("t" . meow-till)
    '("T" . meow-find)
-   '("u" . meow-undo)
-   '("U" . meow-undo-in-selection)
+   '("u" . meow-undo-dwim)
+   '("U" . meow-redo-dwim)
    '("v" . meow-next-word)
    '("V" . meow-next-symbol)
    '("w" . meow-mark-word)
@@ -2285,9 +2321,9 @@ Lisp function does not specify a special indentation."
    '("Y" . meow-yank-pop)
    '("z" . meow-pop-selection)
    ;; '("'" . repeat)
-   '("SPC" . meow-keypad-normal)
+   '("SPC" . meow-C-c)
    '("'" . meow-keypad-meta)
-   '("\"" . meow-M-x)
+   '("\"" . meow-keypad-ctrl-meta)
    '("<escape>" . meow-insert)
    '("#" . meow-comment)
    '("(" . meow-backward-slurp)
@@ -2301,6 +2337,11 @@ Lisp function does not specify a special indentation."
   ;; use << and >> to select to bol/eol
   (add-to-list 'meow-char-thing-table '(?> . line))
   (add-to-list 'meow-char-thing-table '(?< . line))
+
+  (global-set-key (kbd "C-x C-0") #'delete-window)
+  (global-set-key (kbd "C-x C-1") #'delete-other-windows)
+  (global-set-key (kbd "C-x C-2") #'split-and-follow-below)
+  (global-set-key (kbd "C-x C-3") #'split-and-follow-right)
 
   (meow-global-mode 1))
 
@@ -2533,14 +2574,15 @@ Lisp function does not specify a special indentation."
   (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
 (use-package visual-fill-column
-  :hook
-  (text-mode   . visual-fill-column-mode)
-  (prog-mode   . visual-fill-column-mode)
-  (conf-mode   . visual-fill-column-mode)
-  (fundamental-mode . visual-fill-column-mode)
+  ;; :hook
+  ;; (text-mode   . visual-fill-column-mode)
+  ;; (prog-mode   . visual-fill-column-mode)
+  ;; (conf-mode   . visual-fill-column-mode)
+  ;; (fundamental-mode . visual-fill-column-mode)
   ;; (term-mode   . visual-fill-column-mode)
   ;; (eshell-mode . visual-fill-column-mode)
   :custom
+  (global-visual-fill-column-mode t)
   (visual-fill-column-width 100)
   (visual-fill-column-center-text t))
 
@@ -2550,6 +2592,22 @@ Lisp function does not specify a special indentation."
   :custom
   (org-download-screenshot-method "flameshot gui -s --raw > %s")
   :bind ("<f8>" . org-download-screenshot))
+
+;; Org roam
+(use-package org-roam
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "~/Code/Org/Roam")
+  (org-roam-complete-everywhere t)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+	 ("C-c n f" . org-roam-node-find)
+	 ("C-c n i" . org-roam-node-insert)
+	 :map org-mode-map
+	 ("C-M-i" . completion-at-point))
+  :config
+  (org-roam-setup))
 
 ;; Writing
 (use-package writegood-mode

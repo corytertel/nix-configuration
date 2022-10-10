@@ -733,54 +733,24 @@ to 'auto, tags may not be properly aligned."
      ;; meow-position-highlight-reverse-number-2   ;; Num position highlight.
      ;; meow-position-highlight-reverse-number-3   ;; Num position highlight.
 
+     `(meow-normal-indicator   ((,class (:foreground ,base))))
      `(meow-keypad-indicator   ((,class (:foreground "#801717" :background "#FF6666"))))
      `(meow-insert-indicator   ((,class (:foreground "#309030" :background "#AAE9A0"))))
-     ;; `(meow-normal-indicator   ((,class (:foreground "#6F5033" :background "#FFEE99"))))
+     `(meow-beacon-indicator   ((,class (:foreground "#6F5033" :background "#FFEE99"))))
      `(meow-motion-indicator   ((,class (:foreground "#505090" :background "#AACCEE"))))
      ;; `(meow-keypad-cursor      ((,class (:background ,yellow))))
      ;; `(meow-insert-cursor      ((,class (:background ,green))))
      ;; `(meow-normal-cursor      ((,class (:background ,magenta))))
      ;; `(meow-motion-cursor      ((,class (:background ,cyan))))
+     ;; `(meow-position-highlight-number ((,class (:foreground ,yellow :inherit bold))))
+     ;; `(meow-position-highlight-number-1 ((,class (:foreground ,yellow :inherit bold))))
+     ;; `(meow-position-highlight-number-2 ((,class (:foreground ,yellow :inherit bold))))
+     ;; `(meow-position-highlight-number-3 ((,class (:foreground ,yellow :inherit bold))))
+     ;; `(meow-position-highlight-reverse-number-1 ((,class (:foreground ,yellow :inherit bold))))
+     ;; `(meow-position-highlight-reverse-number-2 ((,class (:foreground ,yellow :inherit bold))))
+     ;; `(meow-position-highlight-reverse-number-3 ((,class (:foreground ,yellow :inherit bold))))
+     `(meow-search-highlight ((,class (:background ,aqua))))
 
-     ;; (meow-normal-indicator
-     ;;   '((((class color) (background dark))
-     ;; 	  ())
-     ;; 	 (((class color) (background light))
-     ;; 	  ()))
-     ;;   "Normal state indicator."
-     ;;   :group 'meow)
-
-     ;; `(meow-beacon-indicator
-     ;;   '((((class color) (background dark))
-     ;; 	  ())
-     ;; 	 (((class color) (background light))
-     ;; 	  ()))
-     ;;   "Cursor state indicator."
-     ;;   :group 'meow)
-
-     ;; `(meow-keypad-indicator
-     ;;   '((((class color) (background dark))
-     ;; 	  ())
-     ;; 	 (((class color) (background light))
-     ;; 	  ()))
-     ;;   "Keypad state indicator."
-     ;;   :group 'meow)
-
-     ;; `(meow-insert-indicator
-     ;;   '((((class color) (background dark))
-     ;; 	  ())
-     ;; 	 (((class color) (background light))
-     ;; 	  ()))
-     ;;   "Insert state indicator."
-     ;;   :group 'meow)
-
-     ;; `(meow-motion-indicator
-     ;;   '((((class color) (background dark))
-     ;; 	  ())
-     ;; 	 (((class color) (background light))
-     ;; 	  ()))
-     ;;   "Motion state indicator."
-     ;;   :group 'meow)
 
      ;; `(meow-normal-cursor
      ;;   '((((class color) (background dark))
@@ -1256,21 +1226,27 @@ to 'auto, tags may not be properly aligned."
      `(ansi-color-names-vector [,bg4 ,red ,green ,yellow ,blue ,magenta ,cyan ,base])
 
 ;;;;; hl-todo
-     `(hl-todo-keyword-faces '(("TODO"        . ,war)
-                               ("NEXT"        . ,war)
-                               ("THEM"        . ,aqua)
-                               ("PROG"        . ,blue)
+     `(hl-todo-keyword-faces '(("WAIT"        . ,war)
+                               ("HOLD"        . ,war)
+                               ("REVIEW"      . ,war)
+			       ("ACTIVE"      . ,war)
+                               ("FIXME"       . ,war)
+                               ("XXX+"        . ,war)
+			       ("\\?\\?\\?+"     . ,war)
+                               ("PLAN"        . ,aqua)
+			       ("NEXT"        . ,aqua)
+			       ("BACKLOG"     . ,aqua)
+                               ("TODO"        . ,blue)
+                               ("READY"       . ,blue)
                                ("OKAY"        . ,blue)
                                ("DONT"        . ,red)
                                ("FAIL"        . ,red)
+			       ("CANC"        . ,red)
                                ("DONE"        . ,suc)
+			       ("COMPLETED"   . ,suc)
                                ("NOTE"        . ,yellow)
-                               ("KLUDGE"      . ,yellow)
                                ("HACK"        . ,yellow)
-                               ("TEMP"        . ,yellow)
-                               ("FIXME"       . ,war)
-                               ("XXX+"        . ,war)
-                               ("\\?\\?\\?+"  . ,war)))
+                               ("TEMP"        . ,yellow)))
 ;;;;; org
      `(org-fontify-done-headline nil)
      `(org-fontify-todo-headline nil)

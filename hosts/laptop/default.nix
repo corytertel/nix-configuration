@@ -52,6 +52,7 @@
         enable = true;
         user = "cory";
       };
+      layout = "us_dvorak_emacs";
       libinput.touchpad = {
         accelProfile = "adaptive";
         accelSpeed = "0.5";
@@ -78,6 +79,15 @@
   environment.systemPackages = with pkgs; [
 
   ];
+
+  home-manager.users.cory.services.xcape = {
+    enable = true;
+    mapExpression = {
+      Shift_L = "Escape";
+      Shift_R = "Escape";
+    };
+    timeout = 300;
+  };
 
   home-manager.users.cory = {
     xresources.extraConfig = ''
