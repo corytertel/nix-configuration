@@ -37,7 +37,7 @@
 
   services = {
     xserver.videoDrivers = [ "nvidia" ];
-    xserver.layout = "us_dvorak_emacs_kinesis";
+    xserver.layout = "us";
   };
 
   hardware.opengl = {

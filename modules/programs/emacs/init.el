@@ -155,7 +155,7 @@
   :group 'faces)
 
 (defface modeline-read-only-face
-  '((t (:foreground "#141404" :background "#1f8c35")))
+  '((t (:foreground "#141404" :background "#9feaae")))
   "Read-only buffer highlighting."
   :group 'faces)
 
@@ -387,8 +387,7 @@
 	      auto-save-interval 60
 	      kill-do-not-save-duplicates t
 	      bidi-paragraph-direction 'left-to-right
-	      bidi-inhibit-bpa t
-	      delete-by-moving-to-trash t)
+	      bidi-inhibit-bpa t)
 
 ;; (global-so-long-mode 1)
 (save-place-mode 1)
@@ -672,10 +671,7 @@
   (("C-=" . embark-act)         ;; pick some comfortable binding
    ([remap describe-bindings] . embark-bindings)
    :map embark-file-map
-   ("C-d" . dragon-drop)
-   ("U"   . 0x0-upload-file)
-   :map embark-region-map
-   ("U"   . 0x0-dwim))
+   ("C-d" . dragon-drop))
   :custom
   (embark-indicators
    '(embark-highlight-indicator
@@ -690,10 +686,6 @@
   (defun dragon-drop (file)
     (start-process-shell-command "dragon-drop" nil
                                  (concat "dragon-drag-and-drop " file))))
-
-(use-package 0x0
-  :ensure t
-  :commands (0x0-dwim 0x0-upload-file))
 
 (use-package embark-consult
   :ensure t
@@ -2278,7 +2270,7 @@ Else, redoes on the buffer."
    '("A" . meow-open-below)
    '("b" . meow-left)
    '("B" . meow-left-expand)
-   '("c" . meow-change)
+   '("c" . meow-C-c)
    '("d" . meow-delete)
    '("D" . meow-backward-delete)
    '("e" . meow-save)
@@ -2321,7 +2313,7 @@ Else, redoes on the buffer."
    '("Y" . meow-yank-pop)
    '("z" . meow-pop-selection)
    ;; '("'" . repeat)
-   '("SPC" . meow-C-c)
+   '("SPC" . meow-change)
    '("'" . meow-keypad-meta)
    '("\"" . meow-keypad-ctrl-meta)
    '("<escape>" . meow-insert)
@@ -2601,6 +2593,19 @@ Else, redoes on the buffer."
   :custom
   (org-roam-directory "~/Code/Org/Roam")
   (org-roam-complete-everywhere t)
+  (org-roam-capture-templates
+   `(("d" "default" plain "%?"
+      :if-new (file+head
+	       "%<%Y%m%d%H%M%S>-${slug}.org"
+	       ,(let ((options '("#+options: _:{}"
+				 "#+options: ^:{}"
+				 "#+startup: latexpreview"
+				 "#+startup: entitiespretty"
+				 "#+startup: inlineimages"
+				 "#+title: ${title}"
+				 "#+date: %U")))
+		  (mapconcat 'identity options "\n")))
+      :unnarrowed t)))
   :bind (("C-c n l" . org-roam-buffer-toggle)
 	 ("C-c n f" . org-roam-node-find)
 	 ("C-c n i" . org-roam-node-insert)
@@ -2665,6 +2670,43 @@ of (command . word) to be used by `flyspell-do-correct'."
       res))
 
   (setq flyspell-correct-interface #'frog-menu-flyspell-correct))
+
+;;
+;; --- DIRED ---
+;;
+(use-package dired
+  :custom
+  (dired-listing-switches "-gho --group-directories-first")
+  (dired-dwim-target t)
+  (delete-by-moving-to-trash t)
+  ;; TODO set `dired-compress-file-alist' to include all archive types
+  )
+
+;; Use only one dired buffer at a time
+(use-package dired-single)
+
+;; Open certain file extensions in external programs
+(use-package dired-open
+  :custom
+  (dired-open-extensions '(("mp4" . "mpc-qt")
+			   ("mpeg" . "mpc-qt")
+			   ("ogg" . "mpc-qt")
+			   ("mkv" . "mpc-qt")
+			   ("webm" . "mpc-qt")
+			   ("mp3" . "strawberry")
+			   ("opus" . "strawberry")
+			   ("wav" . "strawberry")
+			   ("weba" . "strawberry")
+			   ("aac" . "strawberry")
+			   ("doc" . "libreoffice")
+			   ("docx" . "libreoffice")
+			   ("odt" . "libreoffice")
+			   ("ppt" . "libreoffice")
+			   ("pptx" . "libreoffice"))))
+
+(use-package dirvish
+  :config
+  (dirvish-override-dired-mode))
 
 ;;
 ;; --- MISC ---

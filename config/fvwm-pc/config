@@ -473,7 +473,7 @@ Test (f /home/cory/.local/share/Trash/files) + "Trash%$[fvwm_icon]/places/32x32/
 # This menu controls system functions.
 DestroyMenu MenuSystem
 AddToMenu   MenuSystem
-+ "Toggle US/RU Keyboard%$[fvwm_icon]/devices/32x32/input-keyboard.png%" Exec exec "$[fvwm_scripts]/layout-switch"
++ "Keyboard%$[fvwm_icon]/devices/32x32/input-keyboard.png%" Popup MenuKeyboard 
 + "&Wallpapers%$[fvwm_icon]/actions/32x32/photo.png%" Popup BGMenu
 + "System Monitor%$[fvwm_icon]/apps/32x32/utilities-system-monitor.png%" Exec plasma-systemmonitor
 + "btop++" Exec exec $[fvwm_term] -e btop
@@ -608,7 +608,7 @@ AddToMenu   MenuMedia
 + "Volume%$[fvwm_icon]/preferences/32x32/preferences-desktop-sound.png%" Popup MenuVolume
 
 DestroyMenu MenuVolume
-AddToMenu MenuVolume
+AddToMenu   MenuVolume
 + "100%%" SetVolume 100
 + " 90%%" SetVolume 90
 + " 80%%" SetVolume 80
@@ -620,6 +620,13 @@ AddToMenu MenuVolume
 + " 20%%" SetVolume 20
 + " 10%%" SetVolume 10
 + "  0%%" SetVolume 0
+
+DestroyMenu MenuKeyboard
+AddToMenu   MenuKeyboard
++ "US (Dvorak Emacs)" Exec setxkbmap "us_dvorak_emacs"
++ "US (QWERTY)" Exec setxkbmap "us"
++ "RU (Phonetic Dvorak Emacs)" Exec setxkbmap "ru_phonetic_dvorak"
++ "RU (Phonetic)" Exec setxkbmap "ru_phonetic"
 
 #######
 # 5: Mouse and Key bindings
@@ -650,6 +657,7 @@ Silent Key F1 A M Menu MenuFvwmRoot
 Silent Key Menu A A Menu MenuFvwmRoot
 # Silent Key Tab A M WindowList Root c c NoDeskSort, SelectOnRelease Meta_L
 Silent Key Super_L A A Exec $[fvwm_launch]
+Silent Key Super_R A A Exec $[fvwm_launch]
 # Xah Keybinds
 # F1: reserved, commonly used key
 # F2: reserved, universal key (rename)
@@ -657,8 +665,8 @@ Silent Key Super_L A A Exec $[fvwm_launch]
 # F4: reserved, commonly used key
 Silent Key F5 A N Next ($[w.class]) FocusWindow
 Silent Key F6 A N Prev (AcceptsFocus) FocusWindow
-Silent Key F7 A N Close
-Silent Key F8 A N FullScreen
+Silent Key F7 A N FullScreen
+Silent Key F8 A N Close
 Silent Key F9 A N Next ("emacs") FocusWindow
 Silent Key F10 A N Next ("firefox|chromium-browser") FocusWindow
 Silent Key F11 A N Next ("konsole") FocusWindow

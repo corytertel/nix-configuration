@@ -157,6 +157,25 @@ in {
       ripgrep
       ispell
       flameshot
+      # dired archive utilities
+      gnutar
+      gzip
+      bzip2
+      xz
+      zip
+      unzip
+      rar
+      rpm
+      dpkg
+      arj
+      lha
+      p7zip
+      # dirvish utilities
+      fd
+      imagemagick
+      poppler
+      ffmpegthumbnailer
+      mediainfo
       # for emacs-everywhere
       xclip
       xdotool
