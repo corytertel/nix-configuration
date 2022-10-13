@@ -192,7 +192,7 @@
 (use-package moody
   :custom
   ;; (moody-mode-line-height (* (aref (font-info (face-font 'mode-line)) 2) 1.5))
-  (moody-mode-line-height 60)
+  (moody-mode-line-height 40)
   :config
   (setq x-underline-at-descent-line t)
   (moody-replace-mode-line-buffer-identification)
@@ -333,9 +333,6 @@
   (interactive)
   (switch-to-buffer nil))
 
-;; (global-set-key (kbd "C-x o") 'other-window)
-;; (global-set-key (kbd "C-x S-o") 'previous-window)
-;; (global-set-key (kbd "C-x M-o") 'hydra-window-resize/body)
 (global-set-key (kbd "C-x 0") 'delete-window)
 (global-set-key (kbd "C-x 1") 'delete-other-windows)
 (global-set-key (kbd "C-x 2") 'split-and-follow-below)
@@ -637,8 +634,8 @@
   ("M-g M-g"     . consult-goto-line)
   ("M-g f"       . consult-flymake)
   ("M-g i"       . consult-imenu)
-  ("M-s l"       . consult-line)
-  ("M-s L"       . consult-line-multi)
+  ("M-s o"       . consult-line)
+  ;; ("M-s L"       . consult-line-multi)
   ("M-s u"       . consult-focus-lines)
   ("M-s g"       . consult-grep)
   ("M-s M-g"     . consult-grep)
@@ -697,37 +694,37 @@
   (embark-collect-mode . consult-preview-at-point-mode))
 
 ;; Templates
-(use-package tempel
-  ;; Require trigger prefix before template name when completing.
-  ;; :custom
-  ;; (tempel-trigger-prefix "<")
+;; (use-package tempel
+;;   ;; Require trigger prefix before template name when completing.
+;;   ;; :custom
+;;   ;; (tempel-trigger-prefix "<")
 
-  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
-         ("M-*" . tempel-insert))
+;;   :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
+;;          ("M-*" . tempel-insert))
 
-  :init
+;;   :init
 
-  ;; Setup completion at point
-  (defun tempel-setup-capf ()
-    ;; Add the Tempel Capf to `completion-at-point-functions'.
-    ;; `tempel-expand' only triggers on exact matches. Alternatively use
-    ;; `tempel-complete' if you want to see all matches, but then you
-    ;; should also configure `tempel-trigger-prefix', such that Tempel
-    ;; does not trigger too often when you don't expect it. NOTE: We add
-    ;; `tempel-expand' *before* the main programming mode Capf, such
-    ;; that it will be tried first.
-    (setq-local completion-at-point-functions
-                (cons #'tempel-expand
-                      completion-at-point-functions)))
+;;   ;; Setup completion at point
+;;   (defun tempel-setup-capf ()
+;;     ;; Add the Tempel Capf to `completion-at-point-functions'.
+;;     ;; `tempel-expand' only triggers on exact matches. Alternatively use
+;;     ;; `tempel-complete' if you want to see all matches, but then you
+;;     ;; should also configure `tempel-trigger-prefix', such that Tempel
+;;     ;; does not trigger too often when you don't expect it. NOTE: We add
+;;     ;; `tempel-expand' *before* the main programming mode Capf, such
+;;     ;; that it will be tried first.
+;;     (setq-local completion-at-point-functions
+;;                 (cons #'tempel-expand
+;;                       completion-at-point-functions)))
 
-  (add-hook 'prog-mode-hook 'tempel-setup-capf)
-  (add-hook 'text-mode-hook 'tempel-setup-capf)
+;;   (add-hook 'prog-mode-hook 'tempel-setup-capf)
+;;   (add-hook 'text-mode-hook 'tempel-setup-capf)
 
-  ;; Optionally make the Tempel templates available to Abbrev,
-  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
-  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
-  ;; (global-tempel-abbrev-mode)
-  )
+;;   ;; Optionally make the Tempel templates available to Abbrev,
+;;   ;; either locally or globally. `expand-abbrev' is bound to C-x '.
+;;   ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+;;   ;; (global-tempel-abbrev-mode)
+;;   )
 
 ;; Undo
 (use-package undo-tree
@@ -746,8 +743,8 @@
   (which-key-mode)
   ;; (which-key-enable-god-mode-support)
   :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay 0.00000001))
+  :custom
+  (which-key-idle-delay 0.00000001))
 
 ;; Better help information
 (use-package helpful
@@ -1354,6 +1351,39 @@ argument, query for word to search."
   (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
   (set-face-attribute 'dired-sidebar-face nil :inherit 'variable-pitch))
 
+;; Snippets
+(use-package yasnippet
+  :config
+  ;; Don't touch TAB!!!
+
+  ;; The active keymap while a snippet expansion is in progress.
+  (setq yas-keymap
+	(let ((map (make-sparse-keymap)))
+	  (define-key map (kbd "M-TAB")   (yas-filtered-definition 'yas-next-field-or-maybe-expand))
+	  (define-key map (kbd "C-M-TAB") (yas-filtered-definition 'yas-prev-field))
+	  (define-key map (kbd "C-g")   (yas-filtered-definition 'yas-abort-snippet))
+	  (define-key map (kbd "C-d")   (yas-filtered-definition yas-maybe-skip-and-clear-field))
+	  (define-key map (kbd "DEL")   (yas-filtered-definition yas-maybe-clear-field))
+	  map))
+
+  ;; The keymap used when `yas-minor-mode' is active.
+  (setq yas-minor-mode-map
+	(let ((map (make-sparse-keymap)))
+	  (define-key map (kbd "M-TAB") yas-maybe-expand)
+	  (define-key map "\C-c&\C-s" 'yas-insert-snippet)
+	  (define-key map "\C-c&\C-n" 'yas-new-snippet)
+	  (define-key map "\C-c&\C-v" 'yas-visit-snippet-file)
+	  map))
+
+  (yas-global-mode 1))
+
+(use-package common-lisp-snippets)
+
+(use-package clojure-snippets)
+
+(use-package gitignore-snippets
+  :config (gitignore-snippets-init))
+
 ;;
 ;; --- MODE CONFIGURATION ---
 ;;
@@ -1740,9 +1770,6 @@ Lisp function does not specify a special indentation."
 (use-package geiser-chicken)
 
 ;;; C++
-(use-package yasnippet)
-(yas-global-mode 1)
-
 (use-package modern-cpp-font-lock
   :ensure t)
 (modern-c++-font-lock-global-mode t)
@@ -2216,6 +2243,13 @@ Else, redoes on the buffer."
     (interactive)
     (meow--execute-kbd-macro meow--kbd-redo))
 
+  (defun meow-insert-or-change ()
+    "If there is no selection, then `meow-insert', else `meow-change'."
+    (interactive)
+    (if (region-active-p)
+	(meow-change)
+      (meow-insert)))
+
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak-emacs)
   ;; (setq meow-cursor-type-beacon '(bar . 2))
   ;; (setq meow-cursor-type-insert '(bar . 2))
@@ -2271,6 +2305,7 @@ Else, redoes on the buffer."
    '("b" . meow-left)
    '("B" . meow-left-expand)
    '("c" . meow-C-c)
+   '("C" . meow-change)
    '("d" . meow-delete)
    '("D" . meow-backward-delete)
    '("e" . meow-save)
@@ -2309,11 +2344,12 @@ Else, redoes on the buffer."
    '("w" . meow-mark-word)
    '("W" . meow-mark-symbol)
    '("x" . meow-C-x)
+   '("X" . meow-M-x)
    '("y" . meow-yank)
    '("Y" . meow-yank-pop)
    '("z" . meow-pop-selection)
    ;; '("'" . repeat)
-   '("SPC" . meow-change)
+   '("SPC" . meow-insert-or-change)
    '("'" . meow-keypad-meta)
    '("\"" . meow-keypad-ctrl-meta)
    '("<escape>" . meow-insert)
@@ -2576,7 +2612,8 @@ Else, redoes on the buffer."
   :custom
   (global-visual-fill-column-mode t)
   (visual-fill-column-width 100)
-  (visual-fill-column-center-text t))
+  (visual-fill-column-center-text t)
+  (add-hook pdf-view-mode-hook (lambda () (flyspell-mode -1))))
 
 ;; Drag and drop
 (use-package org-download
@@ -2674,13 +2711,10 @@ of (command . word) to be used by `flyspell-do-correct'."
 ;;
 ;; --- DIRED ---
 ;;
-(use-package dired
-  :custom
-  (dired-listing-switches "-gho --group-directories-first")
-  (dired-dwim-target t)
-  (delete-by-moving-to-trash t)
-  ;; TODO set `dired-compress-file-alist' to include all archive types
-  )
+(custom-set-variables '(dired-listing-switches "-gho --group-directories-first"))
+(custom-set-variables '(dired-dwim-target t))
+(custom-set-variables '(delete-by-moving-to-trash t))
+;; TODO set `dired-compress-file-alist' to include all archive types
 
 ;; Use only one dired buffer at a time
 (use-package dired-single)
