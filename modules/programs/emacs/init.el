@@ -489,20 +489,20 @@
 	 ("C-c f" . eglot-format-buffer)))
 
 ;; Tree-sitter
-(use-package tree-sitter
-  :hook
-  (c-mode . tree-sitter-setup)
-  (c++-mode . tree-sitter-setup)
-  (java-mode . tree-sitter-setup)
+;; (use-package tree-sitter
+;;   :hook
+;;   (c-mode . tree-sitter-setup)
+;;   (c++-mode . tree-sitter-setup)
+;;   (java-mode . tree-sitter-setup)
 
-  :config
-  (defun tree-sitter-setup ()
-    (require 'tree-sitter)
-    (require 'tree-sitter-langs)
-    (require 'tree-sitter-hl)
-    (tree-sitter-hl-mode)))
+;;   :config
+;;   (defun tree-sitter-setup ()
+;;     (require 'tree-sitter)
+;;     (require 'tree-sitter-langs)
+;;     (require 'tree-sitter-hl)
+;;     (tree-sitter-hl-mode)))
 
-(use-package tree-sitter-langs)
+;; (use-package tree-sitter-langs)
 
 ;; Completion
 (use-package corfu
@@ -544,11 +544,29 @@
 ;; Add extensions
 (use-package cape
   :ensure t
+  :custom
+  (cape-dict-file "~/.local/share/dict/words")
+  :bind
+  (("C-c p i" . cape-ispell)
+   ("C-c p w" . cape-dict)
+   ("C-c p d" . cape-dabbrev)
+   ("C-c p l" . cape-line))
   :init
   ;; Add `completion-at-point-functions', used by `completion-at-point'.
-  (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  ;; (add-to-list 'completion-at-point-functions #'cape-dict)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+
   :config
+  ;; (setq-local completion-at-point-functions
+  ;;             (list (cape-super-capf #'cape-dabbrev #'cape-dict #'cape-keyword #'cape-symbol)))
+
+  ;; Add dictionary just to text modes
+  (add-hook 'text-mode-hook (lambda ()
+			      (setq-local completion-at-point-functions
+			                  (cons #'cape-dict
+						completion-at-point-functions))))
+
   ;; Silence then pcomplete capf, no errors or messages!
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
 
@@ -617,33 +635,39 @@
   :init
   (setq consult-preview-key nil)
   :bind
-  ("C-c r"       . consult-recent-file)
-  ("C-x p s"     . consult-ripgrep) ; for use with project.el
-  ;; ;; ("C-s"         . consult-line)
-  ;; ("C-s"         . consult-line-multi)
-  ;; ("C-S-s"       . consult-focus-lines)
-  ;; ("C-c i"       . consult-imenu)
-  ;; ("C-c t"       . gtags-find-tag)
-  ("C-x b"       . consult-buffer)
-  ;; ("C-c x"       . consult-complex-command)
-  ;; ("C-c e"       . consult-flymake)
+  (("C-c r"       . consult-recent-file)
+   ("C-x p s"     . consult-ripgrep) ; for use with project.el
+   ;; ;; ("C-s"         . consult-line)
+   ;; ("C-s"         . consult-line-multi)
+   ;; ("C-S-s"       . consult-focus-lines)
+   ;; ("C-c i"       . consult-imenu)
+   ;; ("C-c t"       . gtags-find-tag)
+   ("C-x b"       . consult-buffer)
+   ;; ("C-c x"       . consult-complex-command)
+   ;; ("C-c e"       . consult-flymake)
 
-  ("C-x C-k C-k" . consult-kmacro)
-  ("M-y"         . consult-yank-pop)
-  ("M-g g"       . consult-goto-line)
-  ("M-g M-g"     . consult-goto-line)
-  ("M-g f"       . consult-flymake)
-  ("M-g i"       . consult-imenu)
-  ("M-s o"       . consult-line)
-  ;; ("M-s L"       . consult-line-multi)
-  ("M-s u"       . consult-focus-lines)
-  ("M-s g"       . consult-grep)
-  ("M-s M-g"     . consult-grep)
-  ("C-x C-SPC"   . consult-global-mark)
-  ("C-x M-:"     . consult-complex-command)
-  ;; ("C-c n"       . consult-org-agenda)
-  (:map comint-mode-map
-   ("C-c h" . consult-history))
+   ("C-x C-k C-k" . consult-kmacro)
+   ("M-y"         . consult-yank-pop)
+   ("M-g g"       . consult-goto-line)
+   ("M-g M-g"     . consult-goto-line)
+   ("M-g f"       . consult-flymake)
+   ("M-g i"       . consult-imenu)
+   ("M-s o"       . consult-line)
+   ;; ("M-s L"       . consult-line-multi)
+   ("M-s u"       . consult-focus-lines)
+   ("M-s g"       . consult-grep)
+   ("M-s M-g"     . consult-grep)
+   ("C-x C-SPC"   . consult-global-mark)
+   ("C-x M-:"     . consult-complex-command)
+   ;; ("C-c n"       . consult-org-agenda)
+   :map comint-mode-map
+   ("C-c h" . consult-history)
+   :map dired-mode-map
+   ("O" . consult-file-externally)
+   :map help-map
+   ("a" . consult-apropos)
+   :map minibuffer-local-map
+   ("M-r" . consult-history))
   :custom
   (completion-in-region-function #'consult-completion-in-region)
   (add-hook 'completion-setup-hook #'hl-line-mode))
@@ -665,7 +689,7 @@
 (use-package embark
   :ensure t
   :bind
-  (("C-=" . embark-act)         ;; pick some comfortable binding
+  (("C-\\" . embark-act)         ;; pick some comfortable binding
    ([remap describe-bindings] . embark-bindings)
    :map embark-file-map
    ("C-d" . dragon-drop))
@@ -699,12 +723,17 @@
 ;;   ;; :custom
 ;;   ;; (tempel-trigger-prefix "<")
 
+;;   :hook ((prog-mode text-mode) . tempel-setup-capf)
+
 ;;   :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
-;;          ("M-*" . tempel-insert))
+;;          ("M-*" . tempel-insert)
+;; 	 :map tempel-map
+;; 	 ("C-<tab>" . tempel-next)
+;; 	 ("C-S-<tab>" . tempel-previous)
+;; 	 ([remap keyboard-escape-quit] . tempel-done))
 
 ;;   :init
-
-;;   ;; Setup completion at point
+;;   Setup completion at point
 ;;   (defun tempel-setup-capf ()
 ;;     ;; Add the Tempel Capf to `completion-at-point-functions'.
 ;;     ;; `tempel-expand' only triggers on exact matches. Alternatively use
@@ -714,11 +743,8 @@
 ;;     ;; `tempel-expand' *before* the main programming mode Capf, such
 ;;     ;; that it will be tried first.
 ;;     (setq-local completion-at-point-functions
-;;                 (cons #'tempel-expand
+;;                 (cons #'tempel-complete
 ;;                       completion-at-point-functions)))
-
-;;   (add-hook 'prog-mode-hook 'tempel-setup-capf)
-;;   (add-hook 'text-mode-hook 'tempel-setup-capf)
 
 ;;   ;; Optionally make the Tempel templates available to Abbrev,
 ;;   ;; either locally or globally. `expand-abbrev' is bound to C-x '.
@@ -727,15 +753,15 @@
 ;;   )
 
 ;; Undo
-(use-package undo-tree
-  :defer 1
-  :diminish undo-tree-mode
-  :commands (global-undo-tree-mode)
-  :config
-  (setq undo-tree-visualizer-relative-timestamps t
-        undo-tree-visualizer-timestamps t
-        undo-tree-enable-undo-in-region t)
-  (global-undo-tree-mode))
+;; (use-package undo-tree
+;;   :defer 1
+;;   :diminish undo-tree-mode
+;;   :commands (global-undo-tree-mode)
+;;   :config
+;;   (setq undo-tree-visualizer-relative-timestamps t
+;;         undo-tree-visualizer-timestamps t
+;;         undo-tree-enable-undo-in-region t)
+;;   (global-undo-tree-mode))
 
 ;; Visual Keybinding Info
 (use-package which-key
@@ -846,13 +872,10 @@
 ;; Smartparens
 (use-package smartparens
   :defer 1
-  ;; :hook ((
-  ;;         emacs-lisp-mode lisp-mode lisp-data-mode clojure-mode cider-repl-mode
-  ;; 	  racket-mode racket-repl-mode scheme-mode geiser-repl-mode
-  ;; 	  hy-mode prolog-mode go-mode cc-mode
-  ;; 	  python-mode typescript-mode json-mode javascript-mode ;java-mode
-  ;;         ) . smartparens-strict-mode)
-  ;; :hook (prog-mode . smartparens-strict-mode)
+  :hook ((
+          emacs-lisp-mode lisp-mode lisp-data-mode clojure-mode cider-repl-mode
+	  racket-mode racket-repl-mode scheme-mode geiser-repl-mode json-mode
+          ) . smartparens-strict-mode)
   :bind (:map smartparens-mode-map
          ;; This is the paredit mode map minus a few key bindings
          ;; that I use in other modes (e.g. M-?)
@@ -1359,8 +1382,8 @@ argument, query for word to search."
   ;; The active keymap while a snippet expansion is in progress.
   (setq yas-keymap
 	(let ((map (make-sparse-keymap)))
-	  (define-key map (kbd "M-TAB")   (yas-filtered-definition 'yas-next-field-or-maybe-expand))
-	  (define-key map (kbd "C-M-TAB") (yas-filtered-definition 'yas-prev-field))
+	  (define-key map (kbd "C-<tab>")   (yas-filtered-definition 'yas-next-field-or-maybe-expand))
+	  (define-key map (kbd "C-M-<tab>") (yas-filtered-definition 'yas-prev-field))
 	  (define-key map (kbd "C-g")   (yas-filtered-definition 'yas-abort-snippet))
 	  (define-key map (kbd "C-d")   (yas-filtered-definition yas-maybe-skip-and-clear-field))
 	  (define-key map (kbd "DEL")   (yas-filtered-definition yas-maybe-clear-field))
@@ -1369,7 +1392,7 @@ argument, query for word to search."
   ;; The keymap used when `yas-minor-mode' is active.
   (setq yas-minor-mode-map
 	(let ((map (make-sparse-keymap)))
-	  (define-key map (kbd "M-TAB") yas-maybe-expand)
+	  (define-key map (kbd "C-<tab>") yas-maybe-expand)
 	  (define-key map "\C-c&\C-s" 'yas-insert-snippet)
 	  (define-key map "\C-c&\C-n" 'yas-new-snippet)
 	  (define-key map "\C-c&\C-v" 'yas-visit-snippet-file)
@@ -1381,8 +1404,32 @@ argument, query for word to search."
 
 (use-package clojure-snippets)
 
+(use-package java-snippets)
+
 (use-package gitignore-snippets
   :config (gitignore-snippets-init))
+
+;; Code folding
+;; (dolist (mode '(c-mode-common-hook
+;; 		emacs-lisp-mode-hook
+;; 		lisp-mode-hook
+;; 		clojure-mode-hook
+;; 		clojurescript-mode-hook
+;; 		clojurec-mode-hook
+;; 		java-mode-hook
+;; 		perl-mode-hook
+;; 		sh-mode-hook
+;; 		nix-mode-hook))
+;;   (add-hook mode 'hs-minor-mode))
+;; (global-set-key (kbd "C-+") 'hs-toggle-hiding)
+
+(use-package origami
+  :bind
+  (("C-=" . origami-toggle-node)
+   ;; ("C-+" . origami-show-only-node)
+   ("C-+" . origami-recursively-toggle-node))
+  :config
+  (global-origami-mode))
 
 ;;
 ;; --- MODE CONFIGURATION ---
@@ -1776,38 +1823,43 @@ Lisp function does not specify a special indentation."
 
 (use-package cpp-auto-include)
 
-(defun code-compile ()
-  (interactive)
-  (unless (file-exists-p "Makefile")
-    (set (make-local-variable 'compile-command)
-	 (let ((file (file-name-nondirectory buffer-file-name)))
-	   (format "%s -o %s %s"
-		   (if  (equal (file-name-extension file) "cpp") "clang++" "clang" )
-		   (file-name-sans-extension file)
-		   file)))
-    (compile compile-command)))
-
 (use-package cmake-font-lock
   :hook (cmake-mode . cmake-font-lock-activate))
 
 (use-package cmake-mode
   :mode ("CMakeLists.txt" "\\.cmake\\'"))
 
-(use-package irony
-  :hook (((c++-mode c-mode objc-mode) . irony-mode-on-maybe)
-         (irony-mode . irony-cdb-autosetup-compile-options))
+;; (use-package irony
+;;   :hook (((c++-mode c-mode objc-mode) . irony-mode-on-maybe)
+;;          (irony-mode . irony-cdb-autosetup-compile-options))
+;;   :config
+;;   (defun irony-mode-on-maybe ()
+;;     ;; avoid enabling irony-mode in modes that inherits c-mode, e.g: solidity-mode
+;;     (when (member major-mode irony-supported-major-modes)
+;;       (irony-mode 1))))
+
+;; (use-package irony-eldoc
+;;   :hook (irony-mode . irony-eldoc))
+
+(use-package srefactor
+  :bind
+  (:map c-mode-map
+   ("C-c C-r" . srefactor-refactor-at-point)
+   :map c++-mode-map
+   ("C-c C-r" . srefactor-refactor-at-point))
   :config
-  (defun irony-mode-on-maybe ()
-    ;; avoid enabling irony-mode in modes that inherits c-mode, e.g: solidity-mode
-    (when (member major-mode irony-supported-major-modes)
-      (irony-mode 1))))
+  (semantic-mode 1))
 
-;; (use-package company-irony
-;;   :after irony
-;;   :config (add-to-list 'company-backends 'company-irony))
-
-(use-package irony-eldoc
-  :hook (irony-mode))
+;; (defun code-compile ()
+;;   (interactive)
+;;   (unless (file-exists-p "Makefile")
+;;     (set (make-local-variable 'compile-command)
+;; 	 (let ((file (file-name-nondirectory buffer-file-name)))
+;; 	   (format "%s -o %s %s"
+;; 		   (if  (equal (file-name-extension file) "cpp") "clang++" "clang" )
+;; 		   (file-name-sans-extension file)
+;; 		   file)))
+;;     (compile compile-command)))
 
 ;;(global-set-key [f9] 'code-compile)
 
@@ -2071,6 +2123,12 @@ Lisp function does not specify a special indentation."
 (global-set-key (kbd "C-#") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c s") 'replace-string)
 (global-set-key (kbd "C-c w") 'woman)
+(global-set-key (kbd "C-x u") 'undo-only)
+(global-set-key (kbd "C-/") 'undo-only)
+(global-set-key (kbd "C-z") 'undo-only)
+(global-set-key (kbd "C-S-z") 'undo-redo)
+(global-set-key (kbd "C-x C-u") 'undo-redo)
+(global-set-key (kbd "C-?") 'undo-redo)
 
 ;; FIXME
 (defun kill-ring-save-and-comment (BEG END)
@@ -2228,6 +2286,22 @@ Lisp function does not specify a special indentation."
 	  meow--use-both t)
     (meow--keypad-display-message))
 
+  (defvar meow--kbd-fold "C-="
+    "KBD macro for command `origami-toggle-node'.")
+
+  (defvar meow--kbd-cycle "C-+"
+    "KBD macro for command `origami-recursively-toggle-node'.")
+
+  (defun meow-fold ()
+    "Collapse the code block under the point."
+    (interactive)
+    (meow--execute-kbd-macro meow--kbd-fold))
+
+  (defun meow-cycle ()
+    "Cycle through collapsing every code block."
+    (interactive)
+    (meow--execute-kbd-macro meow--kbd-cycle))
+
   (defvar meow--kbd-redo "C-?"
     "KBD macro for command `redo'.")
 
@@ -2243,8 +2317,8 @@ Else, redoes on the buffer."
     (interactive)
     (meow--execute-kbd-macro meow--kbd-redo))
 
-  (defun meow-insert-or-change ()
-    "If there is no selection, then `meow-insert', else `meow-change'."
+  (defun meow-change-dwim ()
+    "If there is no selection, then `meow-append', else `meow-change'."
     (interactive)
     (if (region-active-p)
 	(meow-change)
@@ -2349,10 +2423,11 @@ Else, redoes on the buffer."
    '("Y" . meow-yank-pop)
    '("z" . meow-pop-selection)
    ;; '("'" . repeat)
-   '("SPC" . meow-insert-or-change)
+   '("SPC" . meow-change-dwim)
    '("'" . meow-keypad-meta)
    '("\"" . meow-keypad-ctrl-meta)
-   '("<escape>" . meow-insert)
+   ;; '("<escape>" . meow-insert)
+   '("<escape>" . ignore)
    '("#" . meow-comment)
    '("(" . meow-backward-slurp)
    '(")" . meow-forward-slurp)
@@ -2360,11 +2435,16 @@ Else, redoes on the buffer."
    '("}" . meow-forward-barf)
    '("&" . meow-query-replace-regexp)
    '("%" . meow-query-replace)
-   '("`" . meow-eshell-toggle))
+   '("`" . meow-eshell-toggle)
+   '("=" . meow-fold)
+   '("+" . meow-cycle))
 
   ;; use << and >> to select to bol/eol
   (add-to-list 'meow-char-thing-table '(?> . line))
   (add-to-list 'meow-char-thing-table '(?< . line))
+
+  ;; start `srefactor-ui-menu-mode' in motion mode
+  (add-to-list 'meow-mode-state-list '(srefactor-ui-menu-mode . motion))
 
   (global-set-key (kbd "C-x C-0") #'delete-window)
   (global-set-key (kbd "C-x C-1") #'delete-other-windows)

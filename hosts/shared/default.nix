@@ -291,6 +291,7 @@
         ncurses
         global
         gdb
+        # irony-server
 
         # clojure
         clisp

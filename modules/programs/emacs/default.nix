@@ -150,12 +150,13 @@ in {
       ".emacs.d/themes/smart-mode-line-cory-theme.el".source = ./smart-mode-line-cory-theme.el;
       ".emacs.d/logo.png".source = ./logo.png;
       ".emacs.d/eshell/alias".text = import ./eshell-alias.nix { inherit config pkgs; };
+      ".emacs.d/templates".source = ./templates;
+      ".local/share/dict/words".source = "${pkgs.scowl}/share/dict/words.txt";
     };
 
     environment.systemPackages = with pkgs; [
       git
       ripgrep
-      ispell
       flameshot
       # dired archive utilities
       gnutar
@@ -176,6 +177,9 @@ in {
       poppler
       ffmpegthumbnailer
       mediainfo
+      # dictionary
+      scowl
+      ispell
       # for emacs-everywhere
       xclip
       xdotool

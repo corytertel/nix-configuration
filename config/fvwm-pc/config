@@ -369,6 +369,8 @@ Style FvwmIdent WindowListSkip
 Style DesktopEditors NoTitle, !Borders, !Handles,
 Style Steam NoTitle, !Borders, !Handles
 Style emacs-run-launcher NoTitle, !Borders, !Handles,
+Style Conky NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
+  CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
 
 # Etc
 XorValue 	55555
