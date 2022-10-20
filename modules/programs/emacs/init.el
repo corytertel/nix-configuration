@@ -333,6 +333,58 @@
   (interactive)
   (switch-to-buffer nil))
 
+
+
+(defun rotate-windows ()
+  "Rotate your windows"
+  (interactive)
+  (cond ((not (> (count-windows)1))
+         (message "You can't rotate a single window!"))
+        (t
+         (setq i 1)
+         (setq numWindows (count-windows))
+         (while  (< i numWindows)
+           (let* (
+                  (w1 (elt (window-list) i))
+                  (w2 (elt (window-list) (+ (% i numWindows) 1)))
+
+                  (b1 (window-buffer w1))
+                  (b2 (window-buffer w2))
+
+                  (s1 (window-start w1))
+                  (s2 (window-start w2))
+                  )
+             (set-window-buffer w1  b2)
+             (set-window-buffer w2 b1)
+             (set-window-start w1 s2)
+             (set-window-start w2 s1)
+             (setq i (1+ i)))))))
+
+(defun toggle-window-split ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                    (car next-win-edges))
+                                 (<= (cadr this-win-edges)
+                                    (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
+
 (global-set-key (kbd "C-x 0") 'delete-window)
 (global-set-key (kbd "C-x 1") 'delete-other-windows)
 (global-set-key (kbd "C-x 2") 'split-and-follow-below)
@@ -390,7 +442,15 @@
 (save-place-mode 1)
 
 ;; don't back up files
-(setq make-backup-files nil)
+;; (setq make-backup-files nil)
+
+;; Write backup files to own directory
+(setq backup-directory-alist
+      `(("." . ,(expand-file-name
+                 (concat user-emacs-directory "backups")))))
+
+;; Make backups of files, even when they're in version control
+(setq vc-make-backup-files t)
 
 ;; Minimap
 ;; (use-package minimap
@@ -767,10 +827,10 @@
 (use-package which-key
   :init
   (which-key-mode)
-  ;; (which-key-enable-god-mode-support)
   :diminish which-key-mode
   :custom
-  (which-key-idle-delay 0.00000001))
+  ;; (which-key-idle-delay 0.00000001)
+  (which-key-idle-delay 1.0))
 
 ;; Better help information
 (use-package helpful
@@ -801,10 +861,28 @@
 
 ;; Git Management
 (use-package magit
-  :bind (("C-c g s" . magit-status))
+  :bind (("C-c g s" . magit-status)
+	 :map magit-stash-mode-map
+	 ("W" . magit-toggle-whitespace))
   :commands (magit-status magit-get-current-branch)
   :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  :config
+  (defun magit-toggle-whitespace ()
+    (interactive)
+    (if (member "-w" magit-diff-options)
+	(magit-dont-ignore-whitespace)
+      (magit-ignore-whitespace)))
+
+  (defun magit-ignore-whitespace ()
+    (interactive)
+    (add-to-list 'magit-diff-options "-w")
+    (magit-refresh))
+
+  (defun magit-dont-ignore-whitespace ()
+    (interactive)
+    (setq magit-diff-options (remove "-w" magit-diff-options))
+    (magit-refresh)))
 
 (use-package forge)
 
@@ -1353,7 +1431,14 @@ argument, query for word to search."
 
 ;; Workspaces
 (use-package eyebrowse
-  :init (eyebrowse-mode t))
+  :diminish eyebrowse-mode
+  :config (progn
+            (define-key eyebrowse-mode-map (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
+            (define-key eyebrowse-mode-map (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
+            (define-key eyebrowse-mode-map (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
+            (define-key eyebrowse-mode-map (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
+            (eyebrowse-mode t)
+            (setq eyebrowse-new-workspace t)))
 
 ;; Sidebar (Project Explorer)
 (use-package dired-sidebar :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
@@ -1426,8 +1511,9 @@ argument, query for word to search."
 (use-package origami
   :bind
   (("C-=" . origami-toggle-node)
-   ;; ("C-+" . origami-show-only-node)
-   ("C-+" . origami-recursively-toggle-node))
+   ("C-+" . origami-show-only-node)
+   ;; ("C-+" . origami-recursively-toggle-node)
+   )
   :config
   (global-origami-mode))
 
@@ -2184,6 +2270,7 @@ Lisp function does not specify a special indentation."
 
 ;; Meow
 (use-package meow
+  ;; :disabled t
   :custom
   (meow-keypad-meta-prefix 0)
   (meow-keypad-ctrl-meta-prefix 0)
@@ -2324,6 +2411,17 @@ Else, redoes on the buffer."
 	(meow-change)
       (meow-insert)))
 
+  (defun meow-activate-select ()
+    "Activate char selection, then move left."
+    (interactive)
+    (if (region-active-p)
+	(thread-first
+          (meow--make-selection '(expand . char) (mark) (point))
+          (meow--select))
+      (thread-first
+	(meow--make-selection '(expand . char) (point) (point))
+	(meow--select))))
+
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-dvorak-emacs)
   ;; (setq meow-cursor-type-beacon '(bar . 2))
   ;; (setq meow-cursor-type-insert '(bar . 2))
@@ -2374,23 +2472,23 @@ Else, redoes on the buffer."
    '("." . meow-bounds-of-thing)
    '("<" . meow-beginning-of-thing)
    '(">" . meow-end-of-thing)
-   '("a" . meow-append)
-   '("A" . meow-open-below)
+   '("a" . crux-move-beginning-of-line)
+   '("A" . meow-open-above)
    '("b" . meow-left)
    '("B" . meow-left-expand)
    '("c" . meow-C-c)
    '("C" . meow-change)
    '("d" . meow-delete)
    '("D" . meow-backward-delete)
-   '("e" . meow-save)
-   '("E" . meow-sync-grab)
+   '("e" . end-of-line)
+   '("E" . meow-open-below)
    '("f" . meow-right)
    '("F" . meow-right-expand)
    '("g" . meow-cancel-selection)
    '("G" . meow-grab)
    '("h" . meow-C-h)
-   '("i" . meow-insert)
-   '("I" . meow-open-above)
+   '("i" . meow-save)
+   '("I" . meow-sync-grab)
    '("j" . meow-join)
    '("k" . meow-kill)
    '("l" . meow-line)
@@ -2423,11 +2521,11 @@ Else, redoes on the buffer."
    '("Y" . meow-yank-pop)
    '("z" . meow-pop-selection)
    ;; '("'" . repeat)
-   '("SPC" . meow-change-dwim)
+   '("SPC" . meow-activate-select)
    '("'" . meow-keypad-meta)
    '("\"" . meow-keypad-ctrl-meta)
-   ;; '("<escape>" . meow-insert)
-   '("<escape>" . ignore)
+   '("<escape>" . meow-insert)
+   '("C-<escape>" . meow-append)
    '("#" . meow-comment)
    '("(" . meow-backward-slurp)
    '(")" . meow-forward-slurp)
@@ -2451,7 +2549,770 @@ Else, redoes on the buffer."
   (global-set-key (kbd "C-x C-2") #'split-and-follow-below)
   (global-set-key (kbd "C-x C-3") #'split-and-follow-right)
 
-  (meow-global-mode 1))
+  ;; (meow-global-mode 1)
+  )
+
+;;; Cory's Custom Emacs Keybinds
+
+;; These keybinds were inspired by meow. Most of these functions come from meow
+;; and have been modified to fit this config.
+;; All credit goes to the creators of meow for inspiration and these functions.
+
+;; Joins all selected lines into one line
+;; (global-set-key (kbd "M-j")
+;; 		(lambda ()
+;;                   (interactive)
+;;                   (join-line -1)))
+
+(defun cory/next-line-expand ()
+  (interactive)
+  (unless (region-active-p)
+    (set-mark-command nil))
+  (next-line))
+
+(defun cory/previous-line-expand ()
+  (interactive)
+  (unless (region-active-p)
+    (set-mark-command nil))
+  (previous-line))
+
+(defun cory/backward-char-expand ()
+  (interactive)
+  (unless (region-active-p)
+    (set-mark-command nil))
+  (backward-char))
+
+(defun cory/forward-char-expand ()
+  (interactive)
+  (unless (region-active-p)
+    (set-mark-command nil))
+  (forward-char))
+
+(defun cory/kill (beg end &optional region)
+  "Kill region."
+  (interactive (progn
+                 (let ((beg (mark))
+                       (end (point)))
+                   (unless (and beg end)
+                     (user-error "The mark is not set now, so there is no region"))
+                   (list beg end 'region))))
+  (let ((select-enable-clipboard nil))
+    (when (not buffer-read-only)
+      (when (region-active-p)
+	(when (and (and (region-active-p)
+		    (<= (mark) (point)))
+		 (< (point) (point-max)))
+	  (forward-char 1)))
+      (kill-region beg end region))))
+
+(defun second-sel-set-string (string)
+  (cond
+   ((second-sel-buffer)
+    (with-current-buffer (overlay-buffer mouse-secondary-overlay)
+      (goto-char (overlay-start mouse-secondary-overlay))
+      (delete-region (overlay-start mouse-secondary-overlay) (overlay-end mouse-secondary-overlay))
+      (insert string)))
+   ((markerp mouse-secondary-start)
+    (with-current-buffer (marker-buffer mouse-secondary-start)
+      (goto-char (marker-position mouse-secondary-start))
+      (insert string)))))
+
+(defun second-sel-get-string ()
+  (when (second-sel-buffer)
+    (with-current-buffer (overlay-buffer mouse-secondary-overlay)
+      (buffer-substring-no-properties
+       (overlay-start mouse-secondary-overlay)
+       (overlay-end mouse-secondary-overlay)))))
+
+(defun second-sel-buffer ()
+  (and (overlayp mouse-secondary-overlay)
+     (overlay-buffer mouse-secondary-overlay)))
+
+(defun cory/grab ()
+  "Create secondary selection or a marker if no region available."
+  (interactive)
+  (if (region-active-p)
+      (secondary-selection-from-region)
+    (progn
+      (delete-overlay mouse-secondary-overlay)
+      (setq mouse-secondary-start (make-marker))
+      (move-marker mouse-secondary-start (point))))
+  (deactivate-mark t))
+
+(defun swap-grab ()
+  "Swap region and secondary selection."
+  (interactive)
+  (let* ((rbeg (region-beginning))
+         (rend (region-end))
+         (region-str (when (region-active-p) (buffer-substring-no-properties rbeg rend)))
+         (sel-str (second-sel-get-string))
+         (next-marker (make-marker)))
+    (when region-str (delete-region rbeg rend))
+    (when sel-str (insert sel-str))
+    (move-marker next-marker (point))
+    (second-sel-set-string (or region-str ""))
+    (when (overlayp mouse-secondary-overlay)
+      (delete-overlay mouse-secondary-overlay))
+    (setq mouse-secondary-start next-marker)
+    (deactivate-mark t)))
+
+(defun sync-grab ()
+  "Sync secondary selection with current region."
+  (interactive)
+  (when (region-active-p)
+    (let* ((rbeg (region-beginning))
+           (rend (region-end))
+           (region-str (buffer-substring-no-properties rbeg rend))
+           (next-marker (make-marker)))
+      (move-marker next-marker (point))
+      (second-sel-set-string region-str)
+      (when (overlayp mouse-secondary-overlay)
+	(delete-overlay mouse-secondary-overlay))
+      (setq mouse-secondary-start next-marker)
+      (deactivate-mark t))))
+
+(defun make-selection (type mark pos &optional expand)
+  "Make a selection with TYPE, MARK and POS.
+
+The direction of selection is MARK -> POS."
+  (if (and (region-active-p) expand)
+      (let ((orig-mark (mark))
+            (orig-pos (point)))
+        (if (< mark pos)
+            (list type (min orig-mark orig-pos) pos)
+          (list type (max orig-mark orig-pos) pos)))
+    (list type mark pos)))
+
+(defun select-region (selection &optional backward)
+  "Mark the SELECTION."
+  (let ((sel-type (car selection))
+        (mark (cadr selection))
+        (pos (caddr selection)))
+    (goto-char (if backward mark pos))
+    (if (not sel-type)
+	(progn
+          (deactivate-mark)
+          (message "No previous selection.")
+          (deactivate-mark t))
+      (push-mark (if backward pos mark) t t))))
+
+(defun join-forward ()
+  (let (mark pos)
+    (save-mark-and-excursion
+      (goto-char (line-end-position))
+      (setq pos (point))
+      (when (re-search-forward "[[:space:]\n\r]*" nil t)
+        (setq mark (point))))
+    (when pos
+      (thread-first
+        (make-selection '(expand . join) pos mark)
+        (select-region)))))
+
+(defun join-backward ()
+  (let* (mark
+         pos)
+    (save-mark-and-excursion
+      (back-to-indentation)
+      (setq pos (point))
+      (goto-char (line-beginning-position))
+      (while (looking-back "[[:space:]\n\r]" 1 t)
+        (forward-char -1))
+      (setq mark (point)))
+    (thread-first
+      (make-selection '(expand . join) mark pos)
+      (select-region))))
+
+(defun join-both ()
+  (let* (mark
+         pos)
+    (save-mark-and-excursion
+      (while (looking-back "[[:space:]\n\r]" 1 t)
+        (forward-char -1))
+      (setq mark (point)))
+    (save-mark-and-excursion
+      (while (looking-at "[[:space:]\n\r]")
+        (forward-char 1))
+      (setq pos (point)))
+    (thread-first
+      (make-selection '(expand . join) mark pos)
+      (select-region))))
+
+(defun select-joining-region (arg)
+  "Select the indentation between this line to the non empty previous line.
+
+Will create selection with type (select . join)
+
+Prefix:
+with NEGATIVE ARGUMENT, forward search indentation to select.
+with UNIVERSAL ARGUMENT, search both side."
+  (interactive "P")
+  (cond
+   ((equal '(4) arg)
+    (join-both))
+   ((< (prefix-numeric-value arg) 0)
+    (join-forward))
+   (t
+    (join-backward))))
+
+(defun select-line (n &optional expand)
+  "Select the current line, eol is not included.
+
+Create selection with type (expand . line).
+For the selection with type (expand . line), expand it by line.
+For the selection with other types, cancel it.
+
+Prefix:
+numeric, repeat times.
+"
+  (interactive "p")
+  (let* ((orig (mark t))
+         (n (if (and (region-active-p)
+		   (> (mark) (point)))
+                (- n)
+	      n))
+         (forward (> n 0)))
+    (cond
+     ((region-active-p)
+      (let (p)
+        (save-mark-and-excursion
+          (forward-line n)
+          (goto-char
+           (if forward
+               (setq p (line-end-position))
+             (setq p (line-beginning-position)))))
+        (thread-first
+          (make-selection '(expand . line) orig p expand)
+          (select-region))))
+     (t
+      (let ((m (if forward
+                   (line-beginning-position)
+                 (line-end-position)))
+            (p (save-mark-and-excursion
+                 (if forward
+                     (progn
+                       (forward-line (1- n))
+                       (line-end-position))
+                   (progn
+                     (forward-line (1+ n))
+                     (when (string-match-p
+			    "^ *$" (buffer-substring-no-properties
+				    (line-beginning-position)
+				    (line-end-position)))
+		       (backward-char 1))
+                     (line-beginning-position))))))
+        (thread-first
+          (make-selection '(expand . line) m p expand)
+          (select-region)))))))
+
+(defun goto-line-with-feedback ()
+  "Goto line, recenter and select that line.
+
+This command will expand line selection."
+  (interactive)
+  (consult-goto-line)
+  (recenter))
+
+(defun push-search (search)
+  (unless (string-equal search (car regexp-search-ring))
+    (add-to-history 'regexp-search-ring search regexp-search-ring-max)))
+
+(defun search-symbol (arg)
+  " Search and select with the car of current `regexp-search-ring'.
+
+If the contents of selection doesn't match the regexp, will push it to `regexp-search-ring' before searching.
+
+To search backward, use \\[negative-argument]."
+  (interactive "P")
+  ;; Test if we add current region as search target.
+  (when (and (region-active-p)
+           (let ((search (car regexp-search-ring)))
+             (or (not search)
+                (not (string-match-p
+                    (format "^%s$" search)
+                    (buffer-substring-no-properties (region-beginning) (region-end)))))))
+    (push-search (regexp-quote (buffer-substring-no-properties (region-beginning) (region-end)))))
+  (when-let ((search (car regexp-search-ring)))
+    (let ((reverse (xor (< (prefix-numeric-value arg) 0) (and (region-active-p)
+							    (> (mark) (point)))))
+          (case-fold-search nil))
+      (if (or (if reverse
+                 (re-search-backward search nil t 1)
+               (re-search-forward search nil t 1))
+             ;; Try research from buffer beginning/end
+             ;; if we are already at the last/first matched
+             (save-mark-and-excursion
+               ;; Recalculate search indicator
+               (goto-char (if reverse (point-max) (point-min)))
+               (if reverse
+                   (re-search-backward search nil t 1)
+                 (re-search-forward search nil t 1))))
+          (let* ((m (match-data))
+                 (marker-beg (car m))
+                 (marker-end (cadr m))
+                 (beg (if reverse (marker-position marker-end) (marker-position marker-beg)))
+                 (end (if reverse (marker-position marker-beg) (marker-position marker-end))))
+            (thread-first
+              (make-selection '(select . visit) beg end)
+              (select-region))
+            (if reverse
+                (message "Reverse search: %s" search)
+              (message "Search: %s" search))
+            (let ((overlays (overlays-at (1- (point))))
+		  ov expose)
+	      (while (setq ov (pop overlays))
+		(if (and (invisible-p (overlay-get ov 'invisible))
+		       (setq expose (overlay-get ov 'isearch-open-invisible)))
+		    (funcall expose ov)))))
+        (message "Searching %s failed" search)))))
+
+(defun visit-point (text reverse)
+  "Return the point of text for visit command.
+Argument TEXT current search text.
+Argument REVERSE if selection is reversed."
+  (let ((func (if reverse #'re-search-backward #'re-search-forward))
+        (func-2 (if reverse #'re-search-forward #'re-search-backward))
+        (case-fold-search nil))
+    (save-mark-and-excursion
+      (or (funcall func text nil t 1)
+         (funcall func-2 text nil t 1)))))
+
+(defun prompt-symbol-and-words (prompt beg end)
+  "Completion with PROMPT for symbols and words from BEG to END."
+  (let ((completions))
+    (save-mark-and-excursion
+      (goto-char beg)
+      (while (re-search-forward "\\_<\\(\\sw\\|\\s_\\)+\\_>" end t)
+        (let ((result (match-string-no-properties 0)))
+          (when (>= (length result) 1)
+            (push (cons result (format "\\_<%s\\_>" (regexp-quote result))) completions)))))
+    (setq completions (delete-dups completions))
+    (let ((selected (completing-read prompt completions nil nil)))
+      (or (cdr (assoc selected completions))
+         (regexp-quote selected)))))
+
+(defun visit-symbol (arg)
+  "Read a regexp from minibuffer, then search and select it.
+
+The input will be pushed into `regexp-search-ring'.  So
+\\[meow-search] can be used for further searching with the same condition.
+
+A list of occurred regexps will be provided for completion, the regexps will
+be sanitized by default. To display them in raw format, set
+`meow-visit-sanitize-completion' to nil.
+
+To search backward, use \\[negative-argument]."
+  (interactive "P")
+  (let* ((reverse arg)
+         (pos (point))
+         (text (prompt-symbol-and-words
+                (if arg "Visit backward: " "Visit: ")
+                (point-min) (point-max)))
+         (visit-point (visit-point text reverse)))
+    (if visit-point
+        (let* ((m (match-data))
+               (marker-beg (car m))
+               (marker-end (cadr m))
+               (beg (if (> pos visit-point) (marker-position marker-end) (marker-position marker-beg)))
+               (end (if (> pos visit-point) (marker-position marker-beg) (marker-position marker-end))))
+          (thread-first
+            (make-selection '(select . visit) beg end)
+            (select-region))
+          (push-search text)
+	  (let ((overlays (overlays-at (1- (point))))
+		ov expose)
+	    (while (setq ov (pop overlays))
+	      (if (and (invisible-p (overlay-get ov 'invisible))
+		     (setq expose (overlay-get ov 'isearch-open-invisible)))
+		  (funcall expose ov)))))
+      (message "Visit: %s failed" text))))
+
+(defun mark-word (n)
+  "Mark current word under cursor.
+
+A expandable word selection will be created. `meow-next-word' and
+`meow-back-word' can be used for expanding.
+
+The content of selection will be quoted to regexp, then pushed into
+`regexp-search-ring' which be read by `meow-search' and other commands.
+
+This command will also provide highlighting for same occurs.
+
+Use negative argument to create a backward selection."
+  (interactive "p")
+  (let* ((bounds (bounds-of-thing-at-point 'word))
+         (beg (car bounds))
+         (end (cdr bounds)))
+    (when beg
+      (thread-first
+        (make-selection '(expand . word) beg end)
+        (select-region (< n 0)))
+      (let ((search (format "\\<%s\\>" (regexp-quote (buffer-substring-no-properties beg end)))))
+        (push-search search)))))
+
+(defun mark-symbol (n)
+      "Mark current symbol under cursor.
+
+This command works similar to `mark-word'."
+      (interactive "p")
+      (let* ((bounds (bounds-of-thing-at-point 'symbol))
+         (beg (car bounds))
+         (end (cdr bounds)))
+    (when beg
+      (thread-first
+            (make-selection '(expand . word) beg end)
+            (select-region (< n 0)))
+      (let ((search (format "\\_<%s\\_>" (regexp-quote (buffer-substring-no-properties beg end)))))
+        (push-search search)))))
+
+(defun backward-symbol (arg)
+          (interactive "p")
+          (forward-symbol
+   (if arg (* -1 arg) -1)))
+
+(defun select-block (arg)
+  "Mark the block or expand to parent block."
+  (interactive "P")
+  (let ((ra (region-active-p))
+        (back (xor (and (region-active-p)
+		      (> (mark) (point)))
+		   (< (prefix-numeric-value arg) 0)))
+        (depth (car (syntax-ppss)))
+        (orig-pos (point))
+        p m)
+    (save-mark-and-excursion
+      (while (and (if back (re-search-backward "\\s(" nil t) (re-search-forward "\\s)" nil t))
+                (or (save-mark-and-excursion
+		     (nth 3 (syntax-ppss)))
+                   (if ra (>= (car (syntax-ppss)) depth) (> (car (syntax-ppss)) depth)))))
+      (when (and (if ra (< (car (syntax-ppss)) depth) (<= (car (syntax-ppss)) depth))
+               (not (= (point) orig-pos)))
+        (setq p (point))
+        (when (ignore-errors (forward-list (if back 1 -1)))
+          (setq m (point)))))
+    (when (and p m)
+      (thread-first
+        (make-selection '(expand . block) m p)
+        (select-region)))))
+
+(defun to-block (arg)
+  "Expand to next block.
+
+Will create selection with type (expand . block)."
+  (interactive "P")
+  ;; We respect the direction of block selection.
+  (let ((back (or (and (region-active-p)
+		    (> (mark) (point)))
+		 (< (prefix-numeric-value arg) 0)))
+        (depth (car (syntax-ppss)))
+        (orig-pos (point))
+        p m)
+    (save-mark-and-excursion
+      (while (and (if back (re-search-backward "\\s(" nil t) (re-search-forward "\\s)" nil t))
+                (or (save-mark-and-excursion
+		     (nth 3 (syntax-ppss)))
+                   (> (car (syntax-ppss)) depth))))
+      (when (and (= (car (syntax-ppss)) depth)
+               (not (= (point) orig-pos)))
+        (setq p (point))
+        (when (ignore-errors (forward-list (if back 1 -1)))
+          (setq m (point)))))
+    (when (and p m)
+      (thread-first
+        (make-selection '(expand . block) orig-pos p t)
+        (select-region)))))
+
+(defun quit-window-or-buffer ()
+  "Quit current window or buffer."
+  (interactive)
+  (if (> (seq-length (window-list (selected-frame))) 1)
+      (delete-window)
+    (previous-buffer)))
+
+(defun replace-selection ()
+  "Replace current selection with yank.
+
+This command supports `meow-selection-command-fallback'."
+  (interactive)
+  (when (region-active-p)
+    (let ((select-enable-clipboard nil))
+      (when (not buffer-read-only)
+	(when-let ((s (string-trim-right (current-kill 0 t) "\n")))
+          (delete-region (region-beginning) (region-end))
+          (insert s))))))
+
+(defvar char-thing-table
+  '((?r . round)
+    (?s . square)
+    (?c . curly)
+    (?g . string)
+    (?e . symbol)
+    (?w . window)
+    (?b . buffer)
+    (?p . paragraph)
+    (?l . line)
+    (?d . defun)
+    (?. . sentence)))
+
+(defvar selection-directions
+  '((inner . forward)
+    (bounds . backward)
+    (beginning . backward)
+    (end . forward)))
+
+(defun thing-prompt (prompt-text)
+  (read-char
+   prompt-text))
+
+(defun meow--thing-get-direction (cmd)
+  (or
+   (alist-get cmd selection-directions)
+   'forward))
+
+(defun meow-beginning-of-thing (thing)
+  "Select to the beginning of THING."
+  (interactive (list (thing-prompt "Beginning of: ")))
+  (save-window-excursion
+    (let ((back (equal 'backward (meow--thing-get-direction 'beginning)))
+          (bounds (meow--parse-inner-of-thing-char thing)))
+      (when bounds
+        (thread-first
+          (meow--make-selection '(select . transient)
+                                (if back (point) (car bounds))
+                                (if back (car bounds) (point)))
+          (meow--select))))))
+
+(defun meow-end-of-thing (thing)
+  "Select to the end of THING."
+  (interactive (list (thing-prompt "End of: ")))
+  (save-window-excursion
+    (let ((back (equal 'backward (meow--thing-get-direction 'end)))
+          (bounds (meow--parse-inner-of-thing-char thing)))
+      (when bounds
+        (thread-first
+          (meow--make-selection '(select . transient)
+                                (if back (cdr bounds) (point))
+                                (if back (point) (cdr bounds)))
+          (meow--select))))))
+
+(defun meow--select-range (back bounds)
+  (when bounds
+    (thread-first
+      (meow--make-selection '(select . transient)
+                            (if back (cdr bounds) (car bounds))
+                            (if back (car bounds) (cdr bounds)))
+      (meow--select))))
+
+(defun meow-inner-of-thing (thing)
+  "Select inner (excluding delimiters) of THING."
+  (interactive (list (thing-prompt "Inner of: ")))
+  (save-window-excursion
+    (let ((back (equal 'backward (meow--thing-get-direction 'inner)))
+          (bounds (meow--parse-inner-of-thing-char thing)))
+      (meow--select-range back bounds))))
+
+(defun meow-bounds-of-thing (thing)
+  "Select bounds (including delimiters) of THING."
+  (interactive (list (thing-prompt "Bounds of: ")))
+  (save-window-excursion
+    (let ((back (equal 'backward (meow--thing-get-direction 'bounds)))
+          (bounds (meow--parse-bounds-of-thing-char thing)))
+      (meow--select-range back bounds))))
+
+;; (defun open-line-below ()
+;;   (interactive)
+;;   (end-of-line)
+;;   (newline)
+;;   (indent-for-tab-command))
+
+;; (defun open-line-above ()
+;;   (interactive)
+;;   (beginning-of-line)
+;;   (newline)
+;;   (forward-line -1)
+;;   (indent-for-tab-command))
+
+;; (global-set-key (kbd "<C-return>") 'open-line-below)
+;; (global-set-key (kbd "<C-S-return>") 'open-line-above)
+
+;; (defun move-line-down ()
+;;   (interactive)
+;;   (let ((col (current-column)))
+;;     (save-excursion
+;;       (forward-line)
+;;       (transpose-lines 1))
+;;     (forward-line)
+;;     (move-to-column col)))
+
+;; (defun move-line-up ()
+;;   (interactive)
+;;   (let ((col (current-column)))
+;;     (save-excursion
+;;       (forward-line)
+;;       (transpose-lines -1))
+;;     (move-to-column col)))
+
+;; (global-set-key (kbd "<C-S-down>") 'move-line-down)
+;; (global-set-key (kbd "<C-S-up>") 'move-line-up)
+
+;; Move more quickly
+;; (global-set-key (kbd "C-S-n")
+;;                 (lambda ()
+;;                   (interactive)
+;;                   (ignore-errors (next-line 5))))
+
+;; (global-set-key (kbd "C-S-p")
+;;                 (lambda ()
+;;                   (interactive)
+;;                   (ignore-errors (previous-line 5))))
+
+;; (global-set-key (kbd "C-S-f")
+;;                 (lambda ()
+;;                   (interactive)
+;;                   (ignore-errors (forward-char 5))))
+
+;; (global-set-key (kbd "C-S-b")
+;;                 (lambda ()
+;;                   (interactive)
+;;                   (ignore-errors (backward-char 5))))
+
+;; Unbind <C-i> from the TAB key and bind it to indent-region.
+;; Since TAB and <C-i> cannot be differentiated in TTY emacs,
+;; the workaround is to conditionally bind TAB to indent-region
+;; when there is an active region selected.
+(if (window-system)
+    (progn
+      (define-key input-decode-map [?\C-i] [C-i])
+      (global-set-key (kbd "<C-i>") 'indent-region))
+  (defun cory/tab-replacement (&optional START END)
+    (interactive "r")
+    (if (use-region-p)
+        (indent-region START END)
+      (indent-for-tab-command)))
+  (global-set-key (kbd "TAB") 'cory/tab-replacement))
+
+;; Do the same with <C-m> and RET
+(if (window-system)
+    (progn
+      (define-key input-decode-map [?\C-m] [C-m])
+      (global-set-key (kbd "<C-m>") 'newline))
+  (define-key text-mode-map (kbd "RET") 'newline)
+  (define-key prog-mode-map (kbd "RET") 'newline))
+
+;; Now:
+;; (equal (kbd "TAB") (kbd "C-i"))   ; -> t
+;; (equal (kbd "TAB") (kbd "<C-i>")) ; -> nil
+;; (equal (kbd "RET") (kbd "C-m"))   ; -> t
+;; (equal (kbd "RET") (kbd "<C-m>")) ; -> nil
+
+(dolist (pair '(("C-;"   exchange-point-and-mark)
+		("C-a"   crux-move-beginning-of-line)
+		("C-S-a" crux-smart-open-line-above)
+		("C-S-b" cory/backward-char-expand)
+		("C-d"   delete-char)
+		("C-S-d" sp-backward-delete-char)
+		("C-e"   move-end-of-line)
+		("C-S-e" crux-smart-open-line)
+		("C-f"   forward-char)
+		("C-S-f" cory/forward-char-expand)
+		("C-g"   keyboard-quit)
+		("C-S-g" cory/grab)
+		("<C-i>" kill-ring-save)
+		("C-S-i" sync-grab)
+		("C-j"   select-joining-region)
+		("C-k"   cory/kill)
+		("C-l"   select-line)
+		("C-S-l" goto-line-with-feedback)
+		("<C-m>"   backward-word)
+		("C-S-m" backward-symbol)
+		("C-n"   next-line)
+		("C-S-n" cory/next-line-expand)
+		("C-o"   select-block)
+		("C-S-o" to-block)
+		("C-p"   previous-line)
+		("C-S-p" cory/previous-line-expand)
+		("C-q"   quit-window-or-buffer)
+		("C-S-q" goto-line-with-feedback)
+		("C-r"   replace-selection)
+		("C-S-r" swap-grab)
+		("C-s"   search-symbol)
+		("C-S-s" visit-symbol)
+		("C-t"   avy-goto-char)
+		("C-S-t" avy-goto-word-0)
+		("C-v"   forward-word)
+		("C-S-v" forward-symbol)
+		("C-w"   mark-word)
+		("C-S-w" mark-symbol)
+		("C-y"   yank)
+		("C-S-y" consult-yank-pop)
+		("C-'"   repeat)
+		("C-/"   undo-only)
+		("C-?"   undo-redo)
+		;; ("<return>" newline)
+		))
+  (global-set-key (kbd (car pair)) (cadr pair)))
+
+;; (add-hook 'ielm-mode-hook
+;; 	  (lambda ()
+;; 	    (define-key ielm-map (kbd "<return>") 'ielm-return)))
+
+;; (define-key minibuffer-local-map (kbd "<return>") 'exit-minibuffer)
+
+;; (eval-after-load 'help-mode
+;;   '(define-key help-mode-map (kbd "<return>") 'help-follow-symbol))
+
+;; (define-key button-map (kbd "<return>") 'push-button)
+
+;;; Misc useful functions
+
+(defun describe-all-keymaps ()
+  "Describe all keymaps in currently-defined variables."
+  (interactive)
+  (with-output-to-temp-buffer "*keymaps*"
+    (let (symbs seen)
+      (mapatoms (lambda (s)
+                  (when (and (boundp s) (keymapp (symbol-value s)))
+                    (push (indirect-variable s) symbs))))
+      (dolist (keymap symbs)
+        (unless (memq keymap seen)
+          (princ (format "* %s\n\n" keymap))
+          (princ (substitute-command-keys (format "\\{%s}" keymap)))
+          (princ (format "\f\n%s\n\n" (make-string (min 80 (window-width)) ?-)))
+          (push keymap seen))))
+    (with-current-buffer standard-output ;; temp buffer
+      (setq help-xref-stack-item (list #'describe-all-keymaps)))))
+
+(defun delete-current-buffer-file ()
+  "Removes file connected to current buffer and kills buffer."
+  (interactive)
+  (let ((filename (buffer-file-name))
+        (buffer (current-buffer))
+        (name (buffer-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (ido-kill-buffer)
+      (when (yes-or-no-p "Are you sure you want to remove this file? ")
+        (delete-file filename)
+        (kill-buffer buffer)
+        (message "File '%s' successfully removed" filename)))))
+
+(defun rename-current-buffer-file ()
+  "Renames current buffer and file it is visiting."
+  (interactive)
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (error "Buffer '%s' is not visiting a file!" name)
+      (let ((new-name (read-file-name "New name: " filename)))
+        (if (get-buffer new-name)
+            (error "A buffer named '%s' already exists!" new-name)
+          (rename-file filename new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil)
+          (message "File '%s' successfully renamed to '%s'"
+                   name (file-name-nondirectory new-name)))))))
+
+(global-set-key (kbd "C-x x k") 'delete-current-buffer-file)
+(global-set-key (kbd "C-x x r") 'rename-current-buffer-file)
 
 ;; Make ESC quit prompts
 ;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -2796,6 +3657,30 @@ of (command . word) to be used by `flyspell-do-correct'."
 (custom-set-variables '(delete-by-moving-to-trash t))
 ;; TODO set `dired-compress-file-alist' to include all archive types
 
+;; Auto refresh buffers
+(global-auto-revert-mode 1)
+
+;; Also auto refresh dired, but be quiet about it
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil)
+
+;; Make M-> and M-< work in dired
+(defun dired-back-to-top ()
+  (interactive)
+  (beginning-of-buffer)
+  (dired-next-line 4))
+
+(define-key dired-mode-map
+  (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
+
+(defun dired-jump-to-bottom ()
+  (interactive)
+  (end-of-buffer)
+  (dired-next-line -1))
+
+(define-key dired-mode-map
+  (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
+
 ;; Use only one dired buffer at a time
 (use-package dired-single)
 
@@ -2858,7 +3743,23 @@ of (command . word) to be used by `flyspell-do-correct'."
 	TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
 	TeX-source-correlate-start-server t)
   (add-hook 'TeX-after-compilation-finished-functions
-            #'TeX-revert-document-buffer))
+            #'TeX-revert-document-buffer)
+
+  ;; open pdfs scaled to fit page
+  (setq-default pdf-view-display-size 'fit-page)
+  ;; automatically annotate highlights
+  (setq pdf-annot-activate-created-annotations t)
+  ;; use normal isearch
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+  ;; turn off cua so copy works
+  (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))
+  ;; more fine-grained zooming
+  (setq pdf-view-resize-factor 1.1)
+  ;; keyboard shortcuts
+  (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
+  (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
+  (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete)
+  )
 
 ;; Emacs run launcher
 (defun emacs-run-launcher ()
