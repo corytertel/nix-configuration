@@ -3175,28 +3175,38 @@ This command supports `meow-selection-command-fallback'."
 ;;                   (interactive)
 ;;                   (ignore-errors (backward-char 5))))
 
+;; FIXME Only works when launching a new instance, not in a server.
 ;; Unbind <C-i> from the TAB key and bind it to indent-region.
 ;; Since TAB and <C-i> cannot be differentiated in TTY emacs,
 ;; the workaround is to conditionally bind TAB to indent-region
 ;; when there is an active region selected.
-(if (window-system)
-    (progn
-      (define-key input-decode-map [?\C-i] [C-i])
-      (global-set-key (kbd "<C-i>") 'indent-region))
-  (defun cory/tab-replacement (&optional START END)
-    (interactive "r")
-    (if (use-region-p)
-        (indent-region START END)
-      (indent-for-tab-command)))
-  (global-set-key (kbd "TAB") 'cory/tab-replacement))
+;; (if (window-system)
+;;     (progn
+;;       (define-key input-decode-map [?\C-i] [C-i])
+;;       (global-set-key (kbd "<C-i>") 'indent-region))
+;;   (defun cory/tab-replacement (&optional START END)
+;;     (interactive "r")
+;;     (if (use-region-p)
+;;         (indent-region START END)
+;;       (indent-for-tab-command)))
+;;   (global-set-key (kbd "TAB") 'cory/tab-replacement))
 
-;; Do the same with <C-m> and RET
-(if (window-system)
-    (progn
-      (define-key input-decode-map [?\C-m] [C-m])
-      (global-set-key (kbd "<C-m>") 'newline))
-  (define-key text-mode-map (kbd "RET") 'newline)
-  (define-key prog-mode-map (kbd "RET") 'newline))
+;; ;; Do the same with <C-m> and RET
+;; (if (window-system)
+;;     (progn
+;;       (define-key input-decode-map [?\C-m] [C-m])
+;;       (global-set-key (kbd "<C-m>") 'newline))
+;;   (define-key text-mode-map (kbd "RET") 'newline)
+;;   (define-key prog-mode-map (kbd "RET") 'newline))
+
+;; (define-key input-decode-map [?\C-m] [C-m])
+;; (global-set-key (kbd "<C-m>") 'newline)
+;; (define-key input-decode-map [?\C-i] [C-i])
+;; (global-set-key (kbd "<C-i>") 'indent-region)
+(add-hook 'before-make-frame-hook
+	  (lambda ()
+	    (define-key input-decode-map [?\C-m] [C-m])
+	    (define-key input-decode-map [?\C-i] [C-i])))
 
 ;; Now:
 ;; (equal (kbd "TAB") (kbd "C-i"))   ; -> t
