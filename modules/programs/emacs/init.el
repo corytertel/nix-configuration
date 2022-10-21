@@ -1074,10 +1074,14 @@
   ;; ("M-g m" . avy-move-line)
   ;; ("C-ö" . avy-goto-char-timer)
 
-  (setq avy-keys '(?q ?e ?r ?y ?u ?o ?p
-                      ?a ?s ?d ?f ?g ?h ?j
-                      ?k ?l ?' ?x ?c ?v ?b
-                      ?n ?, ?/))
+  ;; (setq avy-keys '(?q ?e ?r ?y ?u ?o ?p
+  ;;                     ?a ?s ?d ?f ?g ?h ?j
+  ;;                     ?k ?l ?' ?x ?c ?v ?b
+  ;;                     ?n ?, ?/))
+  (setq avy-keys (append (string-to-list "aoehsfb")
+			 (string-to-list "ulrpdc")
+			 (string-to-list "qjvqg")
+			 (number-sequence ?, ?')))
 
   (defun avy-show-dispatch-help ()
     (let* ((len (length "avy-action-"))
@@ -2554,6 +2558,8 @@ Else, redoes on the buffer."
 
 ;;; Cory's Custom Emacs Keybinds
 
+(delete-selection-mode 1)
+
 ;; These keybinds were inspired by meow. Most of these functions come from meow
 ;; and have been modified to fit this config.
 ;; All credit goes to the creators of meow for inspiration and these functions.
@@ -2589,7 +2595,9 @@ Else, redoes on the buffer."
   (forward-char))
 
 (defun cory/kill (beg end &optional region)
-  "Kill region."
+  "If region is active, then kills the region.
+Else if at the end of the line, joins the next line.
+Else, kills the rest of the line."
   (interactive (progn
                  (let ((beg (mark))
                        (end (point)))
@@ -2598,14 +2606,18 @@ Else, redoes on the buffer."
                    (list beg end 'region))))
   (let ((select-enable-clipboard nil))
     (when (not buffer-read-only)
-      (when (region-active-p)
-	(when (and (and (region-active-p)
-		    (<= (mark) (point)))
-		 (< (point) (point-max)))
-	  (forward-char 1)))
-      (kill-region beg end region))))
+      (if (region-active-p)
+	  (progn
+	    (when (and (and (region-active-p)
+			(<= (mark) (point)))
+		     (< (point) (point-max)))
+	      (forward-char 1))
+	    (kill-region beg end region))
+	(if (and (eolp) (not (bolp)))
+	    (delete-indentation 1)
+	  (kill-line nil))))))
 
-(defun second-sel-set-string (string)
+(defun cory/second-sel-set-string (string)
   (cond
    ((second-sel-buffer)
     (with-current-buffer (overlay-buffer mouse-secondary-overlay)
@@ -2617,14 +2629,14 @@ Else, redoes on the buffer."
       (goto-char (marker-position mouse-secondary-start))
       (insert string)))))
 
-(defun second-sel-get-string ()
+(defun cory/second-sel-get-string ()
   (when (second-sel-buffer)
     (with-current-buffer (overlay-buffer mouse-secondary-overlay)
       (buffer-substring-no-properties
        (overlay-start mouse-secondary-overlay)
        (overlay-end mouse-secondary-overlay)))))
 
-(defun second-sel-buffer ()
+(defun cory/second-sel-buffer ()
   (and (overlayp mouse-secondary-overlay)
      (overlay-buffer mouse-secondary-overlay)))
 
@@ -2639,24 +2651,24 @@ Else, redoes on the buffer."
       (move-marker mouse-secondary-start (point))))
   (deactivate-mark t))
 
-(defun swap-grab ()
+(defun cory/swap-grab ()
   "Swap region and secondary selection."
   (interactive)
   (let* ((rbeg (region-beginning))
          (rend (region-end))
          (region-str (when (region-active-p) (buffer-substring-no-properties rbeg rend)))
-         (sel-str (second-sel-get-string))
+         (sel-str (cory/second-sel-get-string))
          (next-marker (make-marker)))
     (when region-str (delete-region rbeg rend))
     (when sel-str (insert sel-str))
     (move-marker next-marker (point))
-    (second-sel-set-string (or region-str ""))
+    (cory/second-sel-set-string (or region-str ""))
     (when (overlayp mouse-secondary-overlay)
       (delete-overlay mouse-secondary-overlay))
     (setq mouse-secondary-start next-marker)
     (deactivate-mark t)))
 
-(defun sync-grab ()
+(defun cory/sync-grab ()
   "Sync secondary selection with current region."
   (interactive)
   (when (region-active-p)
@@ -2665,13 +2677,13 @@ Else, redoes on the buffer."
            (region-str (buffer-substring-no-properties rbeg rend))
            (next-marker (make-marker)))
       (move-marker next-marker (point))
-      (second-sel-set-string region-str)
+      (cory/second-sel-set-string region-str)
       (when (overlayp mouse-secondary-overlay)
 	(delete-overlay mouse-secondary-overlay))
       (setq mouse-secondary-start next-marker)
       (deactivate-mark t))))
 
-(defun make-selection (type mark pos &optional expand)
+(defun cory/make-selection (type mark pos &optional expand)
   "Make a selection with TYPE, MARK and POS.
 
 The direction of selection is MARK -> POS."
@@ -2683,7 +2695,7 @@ The direction of selection is MARK -> POS."
           (list type (max orig-mark orig-pos) pos)))
     (list type mark pos)))
 
-(defun select-region (selection &optional backward)
+(defun cory/select (selection &optional backward)
   "Mark the SELECTION."
   (let ((sel-type (car selection))
         (mark (cadr selection))
@@ -2696,7 +2708,7 @@ The direction of selection is MARK -> POS."
           (deactivate-mark t))
       (push-mark (if backward pos mark) t t))))
 
-(defun join-forward ()
+(defun cory/join-forward ()
   (let (mark pos)
     (save-mark-and-excursion
       (goto-char (line-end-position))
@@ -2705,10 +2717,10 @@ The direction of selection is MARK -> POS."
         (setq mark (point))))
     (when pos
       (thread-first
-        (make-selection '(expand . join) pos mark)
-        (select-region)))))
+        (cory/make-selection '(expand . join) pos mark)
+        (cory/select)))))
 
-(defun join-backward ()
+(defun cory/join-backward ()
   (let* (mark
          pos)
     (save-mark-and-excursion
@@ -2719,10 +2731,10 @@ The direction of selection is MARK -> POS."
         (forward-char -1))
       (setq mark (point)))
     (thread-first
-      (make-selection '(expand . join) mark pos)
-      (select-region))))
+      (cory/make-selection '(expand . join) mark pos)
+      (cory/select))))
 
-(defun join-both ()
+(defun cory/join-both ()
   (let* (mark
          pos)
     (save-mark-and-excursion
@@ -2734,10 +2746,10 @@ The direction of selection is MARK -> POS."
         (forward-char 1))
       (setq pos (point)))
     (thread-first
-      (make-selection '(expand . join) mark pos)
-      (select-region))))
+      (cory/make-selection '(expand . join) mark pos)
+      (cory/select))))
 
-(defun select-joining-region (arg)
+(defun cory/join (arg)
   "Select the indentation between this line to the non empty previous line.
 
 Will create selection with type (select . join)
@@ -2748,13 +2760,13 @@ with UNIVERSAL ARGUMENT, search both side."
   (interactive "P")
   (cond
    ((equal '(4) arg)
-    (join-both))
+    (cory/join-both))
    ((< (prefix-numeric-value arg) 0)
-    (join-forward))
+    (cory/join-forward))
    (t
-    (join-backward))))
+    (cory/join-backward))))
 
-(defun select-line (n &optional expand)
+(defun cory/line (n &optional expand)
   "Select the current line, eol is not included.
 
 Create selection with type (expand . line).
@@ -2781,8 +2793,8 @@ numeric, repeat times.
                (setq p (line-end-position))
              (setq p (line-beginning-position)))))
         (thread-first
-          (make-selection '(expand . line) orig p expand)
-          (select-region))))
+          (cory/make-selection '(expand . line) orig p expand)
+          (cory/select))))
      (t
       (let ((m (if forward
                    (line-beginning-position)
@@ -2801,10 +2813,10 @@ numeric, repeat times.
 		       (backward-char 1))
                      (line-beginning-position))))))
         (thread-first
-          (make-selection '(expand . line) m p expand)
-          (select-region)))))))
+          (cory/make-selection '(expand . line) m p expand)
+          (cory/select)))))))
 
-(defun goto-line-with-feedback ()
+(defun cory/goto-line ()
   "Goto line, recenter and select that line.
 
 This command will expand line selection."
@@ -2812,11 +2824,11 @@ This command will expand line selection."
   (consult-goto-line)
   (recenter))
 
-(defun push-search (search)
+(defun cory/push-search (search)
   (unless (string-equal search (car regexp-search-ring))
     (add-to-history 'regexp-search-ring search regexp-search-ring-max)))
 
-(defun search-symbol (arg)
+(defun cory/search (arg)
   " Search and select with the car of current `regexp-search-ring'.
 
 If the contents of selection doesn't match the regexp, will push it to `regexp-search-ring' before searching.
@@ -2830,7 +2842,7 @@ To search backward, use \\[negative-argument]."
                 (not (string-match-p
                     (format "^%s$" search)
                     (buffer-substring-no-properties (region-beginning) (region-end)))))))
-    (push-search (regexp-quote (buffer-substring-no-properties (region-beginning) (region-end)))))
+    (cory/push-search (regexp-quote (buffer-substring-no-properties (region-beginning) (region-end)))))
   (when-let ((search (car regexp-search-ring)))
     (let ((reverse (xor (< (prefix-numeric-value arg) 0) (and (region-active-p)
 							    (> (mark) (point)))))
@@ -2852,8 +2864,8 @@ To search backward, use \\[negative-argument]."
                  (beg (if reverse (marker-position marker-end) (marker-position marker-beg)))
                  (end (if reverse (marker-position marker-beg) (marker-position marker-end))))
             (thread-first
-              (make-selection '(select . visit) beg end)
-              (select-region))
+              (cory/make-selection '(select . visit) beg end)
+              (cory/select))
             (if reverse
                 (message "Reverse search: %s" search)
               (message "Search: %s" search))
@@ -2865,7 +2877,7 @@ To search backward, use \\[negative-argument]."
 		    (funcall expose ov)))))
         (message "Searching %s failed" search)))))
 
-(defun visit-point (text reverse)
+(defun cory/visit-point (text reverse)
   "Return the point of text for visit command.
 Argument TEXT current search text.
 Argument REVERSE if selection is reversed."
@@ -2876,7 +2888,7 @@ Argument REVERSE if selection is reversed."
       (or (funcall func text nil t 1)
          (funcall func-2 text nil t 1)))))
 
-(defun prompt-symbol-and-words (prompt beg end)
+(defun cory/prompt-symbol-and-words (prompt beg end)
   "Completion with PROMPT for symbols and words from BEG to END."
   (let ((completions))
     (save-mark-and-excursion
@@ -2890,7 +2902,7 @@ Argument REVERSE if selection is reversed."
       (or (cdr (assoc selected completions))
          (regexp-quote selected)))))
 
-(defun visit-symbol (arg)
+(defun cory/visit (arg)
   "Read a regexp from minibuffer, then search and select it.
 
 The input will be pushed into `regexp-search-ring'.  So
@@ -2904,20 +2916,20 @@ To search backward, use \\[negative-argument]."
   (interactive "P")
   (let* ((reverse arg)
          (pos (point))
-         (text (prompt-symbol-and-words
+         (text (cory/prompt-symbol-and-words
                 (if arg "Visit backward: " "Visit: ")
                 (point-min) (point-max)))
-         (visit-point (visit-point text reverse)))
-    (if visit-point
+         (cory/visit-point (cory/visit-point text reverse)))
+    (if cory/visit-point
         (let* ((m (match-data))
                (marker-beg (car m))
                (marker-end (cadr m))
-               (beg (if (> pos visit-point) (marker-position marker-end) (marker-position marker-beg)))
-               (end (if (> pos visit-point) (marker-position marker-beg) (marker-position marker-end))))
+               (beg (if (> pos cory/visit-point) (marker-position marker-end) (marker-position marker-beg)))
+               (end (if (> pos cory/visit-point) (marker-position marker-beg) (marker-position marker-end))))
           (thread-first
-            (make-selection '(select . visit) beg end)
-            (select-region))
-          (push-search text)
+            (cory/make-selection '(select . visit) beg end)
+            (cory/select))
+          (cory/push-search text)
 	  (let ((overlays (overlays-at (1- (point))))
 		ov expose)
 	    (while (setq ov (pop overlays))
@@ -2926,7 +2938,7 @@ To search backward, use \\[negative-argument]."
 		  (funcall expose ov)))))
       (message "Visit: %s failed" text))))
 
-(defun mark-word (n)
+(defun cory/mark-word (n)
   "Mark current word under cursor.
 
 A expandable word selection will be created. `meow-next-word' and
@@ -2944,32 +2956,32 @@ Use negative argument to create a backward selection."
          (end (cdr bounds)))
     (when beg
       (thread-first
-        (make-selection '(expand . word) beg end)
-        (select-region (< n 0)))
+        (cory/make-selection '(expand . word) beg end)
+        (cory/select (< n 0)))
       (let ((search (format "\\<%s\\>" (regexp-quote (buffer-substring-no-properties beg end)))))
-        (push-search search)))))
+        (cory/push-search search)))))
 
-(defun mark-symbol (n)
-      "Mark current symbol under cursor.
+(defun cory/mark-symbol (n)
+  "Mark current symbol under cursor.
 
-This command works similar to `mark-word'."
-      (interactive "p")
-      (let* ((bounds (bounds-of-thing-at-point 'symbol))
+This command works similar to `cory/mark-word'."
+  (interactive "p")
+  (let* ((bounds (bounds-of-thing-at-point 'symbol))
          (beg (car bounds))
          (end (cdr bounds)))
     (when beg
       (thread-first
-            (make-selection '(expand . word) beg end)
-            (select-region (< n 0)))
+        (cory/make-selection '(expand . word) beg end)
+        (cory/select (< n 0)))
       (let ((search (format "\\_<%s\\_>" (regexp-quote (buffer-substring-no-properties beg end)))))
-        (push-search search)))))
+        (cory/push-search search)))))
 
-(defun backward-symbol (arg)
-          (interactive "p")
-          (forward-symbol
+(defun cory/backward-symbol (arg)
+  (interactive "p")
+  (forward-symbol
    (if arg (* -1 arg) -1)))
 
-(defun select-block (arg)
+(defun cory/block (arg)
   "Mark the block or expand to parent block."
   (interactive "P")
   (let ((ra (region-active-p))
@@ -2991,10 +3003,10 @@ This command works similar to `mark-word'."
           (setq m (point)))))
     (when (and p m)
       (thread-first
-        (make-selection '(expand . block) m p)
-        (select-region)))))
+        (cory/make-selection '(expand . block) m p)
+        (cory/select)))))
 
-(defun to-block (arg)
+(defun cory/to-block (arg)
   "Expand to next block.
 
 Will create selection with type (expand . block)."
@@ -3018,17 +3030,17 @@ Will create selection with type (expand . block)."
           (setq m (point)))))
     (when (and p m)
       (thread-first
-        (make-selection '(expand . block) orig-pos p t)
-        (select-region)))))
+        (cory/make-selection '(expand . block) orig-pos p t)
+        (cory/select)))))
 
-(defun quit-window-or-buffer ()
+(defun cory/quit-window-or-buffer ()
   "Quit current window or buffer."
   (interactive)
   (if (> (seq-length (window-list (selected-frame))) 1)
       (delete-window)
     (previous-buffer)))
 
-(defun replace-selection ()
+(defun cory/replace-selection ()
   "Replace current selection with yank.
 
 This command supports `meow-selection-command-fallback'."
@@ -3040,7 +3052,7 @@ This command supports `meow-selection-command-fallback'."
           (delete-region (region-beginning) (region-end))
           (insert s))))))
 
-(defvar char-thing-table
+(defvar cory/char-thing-table
   '((?r . round)
     (?s . square)
     (?c . curly)
@@ -3053,70 +3065,443 @@ This command supports `meow-selection-command-fallback'."
     (?d . defun)
     (?. . sentence)))
 
-(defvar selection-directions
+(defvar cory/selection-directions
   '((inner . forward)
     (bounds . backward)
     (beginning . backward)
     (end . forward)))
 
-(defun thing-prompt (prompt-text)
-  (read-char
-   prompt-text))
+(defun cory/thing-prompt (prompt-text)
+  (read-char prompt-text))
 
-(defun meow--thing-get-direction (cmd)
+(defun cory/thing-get-direction (cmd)
   (or
-   (alist-get cmd selection-directions)
+   (alist-get cmd cory/selection-directions)
    'forward))
 
-(defun meow-beginning-of-thing (thing)
+(defun cory/bounds-of-symbol ()
+  (when-let (bounds (bounds-of-thing-at-point 'symbol))
+    (let ((beg (car bounds))
+          (end (cdr bounds)))
+      (save-mark-and-excursion
+        (goto-char end)
+        (if (not (looking-at-p "\\s)"))
+            (while (looking-at-p " \\|,")
+              (goto-char (cl-incf end)))
+          (goto-char beg)
+          (while (looking-back " \\|," 1)
+            (goto-char (cl-decf beg))))
+        (cons beg end)))))
+
+(defun cory/bounds-of-string-1 ()
+  "Return the bounds of the string under the cursor.
+
+The thing `string' is not available in Emacs 27.'"
+  (if (version< emacs-version "28")
+      (when (cory/in-string-p)
+        (let (beg end)
+          (save-mark-and-excursion
+            (while (cory/in-string-p)
+              (backward-char 1))
+            (setq beg (point)))
+          (save-mark-and-excursion
+            (while (cory/in-string-p)
+              (forward-char 1))
+            (setq end (point)))
+          (cons beg end)))
+    (bounds-of-thing-at-point 'string)))
+
+(defun cory/inner-of-symbol ()
+  (bounds-of-thing-at-point 'symbol))
+
+(defun cory/bounds-of-string (&optional inner)
+  (when-let (bounds (cory/bounds-of-string-1))
+    (let ((beg (car bounds))
+          (end (cdr bounds)))
+      (cons
+       (save-mark-and-excursion
+         (goto-char beg)
+         (funcall (if inner #'skip-syntax-forward #'skip-syntax-backward) "\"|")
+         (point))
+       (save-mark-and-excursion
+         (goto-char end)
+         (funcall (if inner #'skip-syntax-backward #'skip-syntax-forward) "\"|")
+         (point))))))
+
+(defun cory/inner-of-string ()
+  (cory/bounds-of-string t))
+
+(defun cory/inner-of-window ()
+  (cons (window-start) (window-end)))
+
+(defun cory/inner-of-line ()
+  (cons (save-mark-and-excursion (back-to-indentation) (point))
+        (line-end-position)))
+
+;;; Registry
+
+(defvar cory/thing-registry nil
+  "Thing registry.
+
+This is a plist mapping from thing to (inner-fn . bounds-fn).
+Both inner-fn and bounds-fn returns a cons of (start . end) for that thing.")
+
+(defun cory/thing-register (thing inner-fn bounds-fn)
+  "Register INNER-FN and BOUNDS-FN to a THING."
+  (setq cory/thing-registry
+        (plist-put cory/thing-registry
+                   thing
+                   (cons inner-fn bounds-fn))))
+
+(defun cory/thing-syntax-function (syntax)
+  (cons
+   (save-mark-and-excursion
+     (when (use-region-p)
+       (goto-char (region-beginning)))
+     (skip-syntax-backward (cdr syntax))
+     (point))
+   (save-mark-and-excursion
+     (when (use-region-p)
+       (goto-char (region-end)))
+     (skip-syntax-forward (cdr syntax))
+     (point))))
+
+(defun cory/thing-regexp-function (b-re f-re near)
+  (let ((beg (save-mark-and-excursion
+               (when (use-region-p)
+                 (goto-char (region-beginning)))
+               (when (re-search-backward b-re nil t)
+                 (if near (match-end 0) (point)))))
+        (end (save-mark-and-excursion
+               (when (use-region-p)
+                 (goto-char (region-end)))
+               (when (re-search-forward f-re nil t)
+                 (if near (match-beginning 0) (point))))))
+    (when (and beg end)
+      (cons beg end))))
+
+(defun cory/thing-parse-pair-search (push-token pop-token back near)
+  (let* ((search-fn (if back #'re-search-backward #'re-search-forward))
+         (match-fn (if back #'match-end #'match-beginning))
+         (cmp-fn (if back #'> #'<))
+         (push-next-pos nil)
+         (pop-next-pos nil)
+         (push-pos (save-mark-and-excursion
+                     (when (funcall search-fn push-token nil t)
+                       (setq push-next-pos (point))
+                       (if near (funcall match-fn 0) (point)))))
+         (pop-pos (save-mark-and-excursion
+                    (when (funcall search-fn pop-token nil t)
+                      (setq pop-next-pos (point))
+                      (if near (funcall match-fn 0) (point))))))
+    (cond
+     ((and (not pop-pos) (not push-pos))
+      nil)
+     ((not pop-pos)
+      (goto-char push-next-pos)
+      (cons 'push push-pos))
+     ((not push-pos)
+      (goto-char pop-next-pos)
+      (cons 'pop pop-pos))
+     ((funcall cmp-fn push-pos pop-pos)
+      (goto-char push-next-pos)
+      (cons 'push push-pos))
+     (t
+      (goto-char pop-next-pos)
+      (cons 'pop pop-pos)))))
+
+(defun cory/thing-pair-function (push-token pop-token near)
+  (let* ((found nil)
+         (depth  0)
+         (beg (save-mark-and-excursion
+                (prog1
+                    (let ((case-fold-search nil))
+                      (while (and (<= depth 0)
+                                (setq found (cory/thing-parse-pair-search push-token pop-token t near)))
+                        (let ((push-or-pop (car found)))
+                          (if (eq 'push push-or-pop)
+                              (cl-incf depth)
+                            (cl-decf depth))))
+                      (when (> depth 0) (cdr found)))
+                  (setq depth 0
+                        found nil))))
+         (end (save-mark-and-excursion
+                (let ((case-fold-search nil))
+                  (while (and (>= depth 0)
+                            (setq found (cory/thing-parse-pair-search push-token pop-token nil near)))
+                    (let ((push-or-pop (car found)))
+                      (if (eq 'push push-or-pop)
+                          (cl-incf depth)
+                        (cl-decf depth))))
+                  (when (< depth 0) (cdr found))))))
+    (when (and beg end)
+      (cons beg end))))
+
+
+(defun cory/thing-make-syntax-function (x)
+  (lambda () (cory/thing-syntax-function x)))
+
+(defun cory/thing-make-regexp-function (x near)
+  (let* ((b-re (cadr x))
+         (f-re (caddr x)))
+    (lambda () (cory/thing-regexp-function b-re f-re near))))
+
+(defun cory/thing-make-pair-function (x near)
+  (let* ((push-token (let ((tokens (cadr x)))
+                       (string-join (mapcar #'regexp-quote tokens) "\\|")))
+         (pop-token (let ((tokens (caddr x)))
+                      (string-join (mapcar #'regexp-quote tokens) "\\|"))))
+    (lambda () (cory/thing-pair-function push-token pop-token near))))
+
+(defun cory/thing-parse-multi (xs near)
+  (let ((chained-fns (mapcar (lambda (x) (cory/thing-parse x near)) xs)))
+    (lambda ()
+      (let ((fns chained-fns)
+            ret)
+        (while (and fns (not ret))
+          (setq ret (funcall (car fns))
+                fns (cdr fns)))
+        ret))))
+
+(defun cory/thing-parse (x near)
+  (cond
+   ((functionp x)
+    x)
+   ((symbolp x)
+    (lambda () (bounds-of-thing-at-point x)))
+   ((equal 'syntax (car x))
+    (cory/thing-make-syntax-function x))
+   ((equal 'regexp (car x))
+    (cory/thing-make-regexp-function x near))
+   ((equal 'pair (car x))
+    (cory/thing-make-pair-function x near))
+   ((listp x)
+    (cory/thing-parse-multi x near))
+   (t
+    (lambda ()
+      (message "Meow: THING definition broken")
+      (cons (point) (point))))))
+
+(defun cory/thing-register (thing inner bounds)
+  "Register a THING with INNER and BOUNDS.
+
+Argument THING should be symbol, which specified in `cory/char-thing-table'.
+Argument INNER and BOUNDS support following expressions:
+
+  EXPR ::= FUNCTION | SYMBOL | SYNTAX-EXPR | REGEXP-EXPR
+         | PAIRED-EXPR | MULTI-EXPR
+  SYNTAX-EXPR ::= (syntax . STRING)
+  REGEXP-EXPR ::= (regexp STRING STRING)
+  PAIRED-EXPR ::= (pair TOKENS TOKENS)
+  MULTI-EXPR ::= (EXPR ...)
+  TOKENS ::= (STRING ...)
+
+FUNCTION is a function receives no arguments, return a cons which
+  the car is the beginning of thing, and the cdr is the end of
+  thing.
+
+SYMBOL is a symbol represent a builtin thing.
+
+  Example: url
+
+    (cory/thing-register 'url 'url 'url)
+
+SYNTAX-EXPR contains a syntax description used by `skip-syntax-forward'
+
+  Example: non-whitespaces
+
+    (cory/thing-register 'non-whitespace
+                         '(syntax . \"^-\")
+                         '(syntax . \"^-\"))
+
+  You can find the description for syntax in current buffer with
+  \\[describe-syntax].
+
+REGEXP-EXPR contains two regexps, the first is used for
+  beginning, the second is used for end. For inner/beginning/end
+  function, the point of near end of match will be used.  For
+  bounds function, the point of far end of match will be used.
+
+  Example: quoted
+
+    (cory/thing-register 'quoted
+                         '(regexp \"`\" \"`\\\\|'\")
+                         '(regexp \"`\" \"`\\\\|'\"))
+
+PAIR-EXPR contains two string token lists. The tokens in first
+  list are used for finding beginning, the tokens in second list
+  are used for finding end.  A depth variable will be used while
+  searching, thus only matched pair will be found.
+
+  Example: do/end block
+
+    (cory/thing-register 'do/end
+                         '(pair (\"do\") (\"end\"))
+                         '(pair (\"do\") (\"end\")))"
+  (let ((inner-fn (cory/thing-parse inner t))
+        (bounds-fn (cory/thing-parse bounds nil)))
+    (cory/thing-register thing inner-fn bounds-fn)))
+
+(cory/thing-register 'round
+                     '(pair ("(") (")"))
+                     '(pair ("(") (")")))
+
+(cory/thing-register 'square
+                     '(pair ("[") ("]"))
+                     '(pair ("[") ("]")))
+
+(cory/thing-register 'curly
+                     '(pair ("{") ("}"))
+                     '(pair ("{") ("}")))
+
+(cory/thing-register 'paragraph 'paragraph 'paragraph)
+
+(cory/thing-register 'sentence 'sentence 'sentence)
+
+(cory/thing-register 'buffer 'buffer 'buffer)
+
+(cory/thing-register 'defun 'defun 'defun)
+
+(cory/thing-register 'symbol #'cory/inner-of-symbol #'cory/bounds-of-symbol)
+
+(cory/thing-register 'string #'cory/inner-of-string #'cory/bounds-of-string)
+
+(cory/thing-register 'window #'cory/inner-of-window #'cory/inner-of-window)
+
+(cory/thing-register 'line #'cory/inner-of-line 'line)
+
+(defun cory/parse-inner-of-thing-char (ch)
+  (when-let ((ch-to-thing (assoc ch cory/char-thing-table)))
+    (cory/parse-range-of-thing (cdr ch-to-thing) t)))
+
+(defun cory/parse-bounds-of-thing-char (ch)
+  (when-let ((ch-to-thing (assoc ch cory/char-thing-table)))
+    (cory/parse-range-of-thing (cdr ch-to-thing) nil)))
+
+(defun cory/parse-range-of-thing (thing inner)
+  "Parse either inner or bounds of THING. If INNER is non-nil then parse inner."
+  (when-let (bounds-fn-pair (plist-get cory/thing-registry thing))
+    (if inner
+        (funcall (car bounds-fn-pair))
+      (funcall (cdr bounds-fn-pair)))))
+
+(defun cory/beginning-of-thing (thing)
   "Select to the beginning of THING."
-  (interactive (list (thing-prompt "Beginning of: ")))
+  (interactive (list (cory/thing-prompt "Beginning of: ")))
   (save-window-excursion
-    (let ((back (equal 'backward (meow--thing-get-direction 'beginning)))
-          (bounds (meow--parse-inner-of-thing-char thing)))
+    (let ((back (equal 'backward (cory/thing-get-direction 'beginning)))
+          (bounds (cory/parse-inner-of-thing-char thing)))
       (when bounds
         (thread-first
-          (meow--make-selection '(select . transient)
-                                (if back (point) (car bounds))
-                                (if back (car bounds) (point)))
-          (meow--select))))))
+          (cory/make-selection '(select . transient)
+                               (if back (point) (car bounds))
+                               (if back (car bounds) (point)))
+          (cory/select))))))
 
-(defun meow-end-of-thing (thing)
+(defun cory/end-of-thing (thing)
   "Select to the end of THING."
-  (interactive (list (thing-prompt "End of: ")))
+  (interactive (list (cory/thing-prompt "End of: ")))
   (save-window-excursion
-    (let ((back (equal 'backward (meow--thing-get-direction 'end)))
-          (bounds (meow--parse-inner-of-thing-char thing)))
+    (let ((back (equal 'backward (cory/thing-get-direction 'end)))
+          (bounds (cory/parse-inner-of-thing-char thing)))
       (when bounds
         (thread-first
-          (meow--make-selection '(select . transient)
-                                (if back (cdr bounds) (point))
-                                (if back (point) (cdr bounds)))
-          (meow--select))))))
+          (cory/make-selection '(select . transient)
+                               (if back (cdr bounds) (point))
+                               (if back (point) (cdr bounds)))
+          (cory/select))))))
 
-(defun meow--select-range (back bounds)
+(defun cory/select-range (back bounds)
   (when bounds
     (thread-first
-      (meow--make-selection '(select . transient)
-                            (if back (cdr bounds) (car bounds))
-                            (if back (car bounds) (cdr bounds)))
-      (meow--select))))
+      (cory/make-selection '(select . transient)
+			   (if back (cdr bounds) (car bounds))
+			   (if back (car bounds) (cdr bounds)))
+      (cory/select))))
 
-(defun meow-inner-of-thing (thing)
+(defun cory/inner-of-thing (thing)
   "Select inner (excluding delimiters) of THING."
-  (interactive (list (thing-prompt "Inner of: ")))
+  (interactive (list (cory/thing-prompt "Inner of: ")))
   (save-window-excursion
-    (let ((back (equal 'backward (meow--thing-get-direction 'inner)))
-          (bounds (meow--parse-inner-of-thing-char thing)))
-      (meow--select-range back bounds))))
+    (let ((back (equal 'backward (cory/thing-get-direction 'inner)))
+          (bounds (cory/parse-inner-of-thing-char thing)))
+      (cory/select-range back bounds))))
 
-(defun meow-bounds-of-thing (thing)
+(defun cory/bounds-of-thing (thing)
   "Select bounds (including delimiters) of THING."
-  (interactive (list (thing-prompt "Bounds of: ")))
+  (interactive (list (cory/thing-prompt "Bounds of: ")))
   (save-window-excursion
-    (let ((back (equal 'backward (meow--thing-get-direction 'bounds)))
-          (bounds (meow--parse-bounds-of-thing-char thing)))
-      (meow--select-range back bounds))))
+    (let ((back (equal 'backward (cory/thing-get-direction 'bounds)))
+          (bounds (cory/parse-bounds-of-thing-char thing)))
+      (cory/select-range back bounds))))
+
+(defmacro defun-beginning-of (name char)
+  `(defun ,name ()
+     (interactive)
+     (cory/bounds-of-thing ,char)))
+
+(defmacro defun-end-of (name char)
+  `(defun ,name ()
+     (interactive)
+     (cory/bounds-of-thing ,char)))
+
+(defmacro defun-inner-of (name char)
+  `(defun ,name ()
+     (interactive)
+     (cory/bounds-of-thing ,char)))
+
+(defmacro defun-bounds-of (name char)
+  `(defun ,name ()
+     (interactive)
+     (cory/bounds-of-thing ,char)))
+
+(defun-beginning-of cory/beginning-of-parens    ?r)
+(defun-beginning-of cory/beginning-of-brackets  ?s)
+(defun-beginning-of cory/beginning-of-braces    ?c)
+(defun-beginning-of cory/beginning-of-string    ?g)
+(defun-beginning-of cory/beginning-of-symbol    ?e)
+(defun-beginning-of cory/beginning-of-window    ?w)
+(defun-beginning-of cory/beginning-of-buffer    ?b)
+(defun-beginning-of cory/beginning-of-paragraph ?p)
+(defun-beginning-of cory/beginning-of-braces    ?l)
+(defun-beginning-of cory/beginning-of-defun     ?d)
+(defun-beginning-of cory/beginning-of-sentence  ?.)
+
+(defun-end-of cory/end-of-parens    ?r)
+(defun-end-of cory/end-of-brackets  ?s)
+(defun-end-of cory/end-of-braces    ?c)
+(defun-end-of cory/end-of-string    ?g)
+(defun-end-of cory/end-of-symbol    ?e)
+(defun-end-of cory/end-of-window    ?w)
+(defun-end-of cory/end-of-buffer    ?b)
+(defun-end-of cory/end-of-paragraph ?p)
+(defun-end-of cory/end-of-braces    ?l)
+(defun-end-of cory/end-of-defun     ?d)
+(defun-end-of cory/end-of-sentence  ?.)
+
+(defun-inner-of cory/inner-of-parens    ?r)
+(defun-inner-of cory/inner-of-brackets  ?s)
+(defun-inner-of cory/inner-of-braces    ?c)
+(defun-inner-of cory/inner-of-string    ?g)
+(defun-inner-of cory/inner-of-symbol    ?e)
+(defun-inner-of cory/inner-of-window    ?w)
+(defun-inner-of cory/inner-of-buffer    ?b)
+(defun-inner-of cory/inner-of-paragraph ?p)
+(defun-inner-of cory/inner-of-braces    ?l)
+(defun-inner-of cory/inner-of-defun     ?d)
+(defun-inner-of cory/inner-of-sentence  ?.)
+
+(defun-bounds-of cory/bounds-of-parens    ?r)
+(defun-bounds-of cory/bounds-of-brackets  ?s)
+(defun-bounds-of cory/bounds-of-braces    ?c)
+(defun-bounds-of cory/bounds-of-string    ?g)
+(defun-bounds-of cory/bounds-of-symbol    ?e)
+(defun-bounds-of cory/bounds-of-window    ?w)
+(defun-bounds-of cory/bounds-of-buffer    ?b)
+(defun-bounds-of cory/bounds-of-paragraph ?p)
+(defun-bounds-of cory/bounds-of-braces    ?l)
+(defun-bounds-of cory/bounds-of-defun     ?d)
+(defun-bounds-of cory/bounds-of-sentence  ?.)
 
 ;; (defun open-line-below ()
 ;;   (interactive)
@@ -3203,7 +3588,7 @@ This command supports `meow-selection-command-fallback'."
 ;; (global-set-key (kbd "<C-m>") 'newline)
 ;; (define-key input-decode-map [?\C-i] [C-i])
 ;; (global-set-key (kbd "<C-i>") 'indent-region)
-(add-hook 'before-make-frame-hook
+(add-hook 'server-after-make-frame-hook
 	  (lambda ()
 	    (define-key input-decode-map [?\C-m] [C-m])
 	    (define-key input-decode-map [?\C-i] [C-i])))
@@ -3227,38 +3612,84 @@ This command supports `meow-selection-command-fallback'."
 		("C-g"   keyboard-quit)
 		("C-S-g" cory/grab)
 		("<C-i>" kill-ring-save)
-		("C-S-i" sync-grab)
-		("C-j"   select-joining-region)
+		("C-S-i" cory/sync-grab)
+		("C-j"   cory/join)
 		("C-k"   cory/kill)
-		("C-l"   select-line)
-		("C-S-l" goto-line-with-feedback)
-		("<C-m>"   backward-word)
-		("C-S-m" backward-symbol)
+		("C-l"   cory/line)
+		("C-S-l" cory/goto-line)
+		("<C-m>" backward-word)
+		("C-S-m" cory/backward-symbol)
 		("C-n"   next-line)
 		("C-S-n" cory/next-line-expand)
-		("C-o"   select-block)
-		("C-S-o" to-block)
+		("C-o"   cory/block)
+		("C-S-o" cory/to-block)
 		("C-p"   previous-line)
 		("C-S-p" cory/previous-line-expand)
-		("C-q"   quit-window-or-buffer)
-		("C-S-q" goto-line-with-feedback)
-		("C-r"   replace-selection)
-		("C-S-r" swap-grab)
-		("C-s"   search-symbol)
-		("C-S-s" visit-symbol)
+		("C-q"   cory/quit-window-or-buffer)
+		("C-S-q" cory/goto-line)
+		("C-r"   cory/replace-selection)
+		("C-S-r" cory/swap-grab)
+		("C-s"   cory/search)
+		("C-S-s" cory/visit)
 		("C-t"   avy-goto-char)
 		("C-S-t" avy-goto-word-0)
 		("C-v"   forward-word)
 		("C-S-v" forward-symbol)
-		("C-w"   mark-word)
-		("C-S-w" mark-symbol)
+		("C-w"   cory/mark-word)
+		("C-S-w" cory/mark-symbol)
 		("C-y"   yank)
 		("C-S-y" consult-yank-pop)
 		("C-'"   repeat)
 		("C-/"   undo-only)
 		("C-?"   undo-redo)
-		;; ("<return>" newline)
-		))
+
+		("C-< r" cory/beginning-of-parens)
+		("C-< s" cory/beginning-of-brackets)
+		("C-< c" cory/beginning-of-braces)
+		("C-< g" cory/beginning-of-string)
+		("C-< e" cory/beginning-of-symbol)
+		("C-< w" cory/beginning-of-window)
+		("C-< b" cory/beginning-of-buffer)
+		("C-< p" cory/beginning-of-paragraph)
+		("C-< l" cory/beginning-of-braces)
+		("C-< d" cory/beginning-of-defun)
+		("C-< ." cory/beginning-of-sentence)
+
+		("C-> r" cory/end-of-parens)
+		("C-> s" cory/end-of-brackets)
+		("C-> c" cory/end-of-braces)
+		("C-> g" cory/end-of-string)
+		("C-> e" cory/end-of-symbol)
+		("C-> w" cory/end-of-window)
+		("C-> b" cory/end-of-buffer)
+		("C-> p" cory/end-of-paragraph)
+		("C-> l" cory/end-of-braces)
+		("C-> d" cory/end-of-defun)
+		("C-> ." cory/end-of-sentence)
+
+		("C-, r" cory/inner-of-parens)
+		("C-, s" cory/inner-of-brackets)
+		("C-, c" cory/inner-of-braces)
+		("C-, g" cory/inner-of-string)
+		("C-, e" cory/inner-of-symbol)
+		("C-, w" cory/inner-of-window)
+		("C-, b" cory/inner-of-buffer)
+		("C-, p" cory/inner-of-paragraph)
+		("C-, l" cory/inner-of-braces)
+		("C-, d" cory/inner-of-defun)
+		("C-, ." cory/inner-of-sentence)
+
+		("C-. r" cory/bounds-of-parens)
+		("C-. s" cory/bounds-of-brackets)
+		("C-. c" cory/bounds-of-braces)
+		("C-. g" cory/bounds-of-string)
+		("C-. e" cory/bounds-of-symbol)
+		("C-. w" cory/bounds-of-window)
+		("C-. b" cory/bounds-of-buffer)
+		("C-. p" cory/bounds-of-paragraph)
+		("C-. l" cory/bounds-of-braces)
+		("C-. d" cory/bounds-of-defun)
+		("C-. ." cory/bounds-of-sentence)))
   (global-set-key (kbd (car pair)) (cadr pair)))
 
 ;; (add-hook 'ielm-mode-hook

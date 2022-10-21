@@ -83,8 +83,8 @@
   home-manager.users.cory.services.xcape = {
     enable = true;
     mapExpression = {
-      Shift_L = "Escape";
-      Shift_R = "Escape";
+      # Shift_L = "Escape";
+      # Shift_R = "Escape";
     };
     timeout = 300;
   };
