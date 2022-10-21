@@ -37,6 +37,9 @@
   (makunbound 'hm/file-name-handler-alist))
 (add-hook 'emacs-startup-hook #'hm/restore-file-name-handler-alist)
 
+(setq max-specpdl-size 7000)
+(setq max-lisp-eval-depth 4000)
+
 ;;
 ;; -- PACKAGE SETUP ---
 ;;
@@ -2274,7 +2277,7 @@ Lisp function does not specify a special indentation."
 
 ;; Meow
 (use-package meow
-  ;; :disabled t
+  :disabled t
   :custom
   (meow-keypad-meta-prefix 0)
   (meow-keypad-ctrl-meta-prefix 0)
@@ -3146,7 +3149,7 @@ The thing `string' is not available in Emacs 27.'"
 This is a plist mapping from thing to (inner-fn . bounds-fn).
 Both inner-fn and bounds-fn returns a cons of (start . end) for that thing.")
 
-(defun cory/thing-register (thing inner-fn bounds-fn)
+(defun cory/thing-register-helper (thing inner-fn bounds-fn)
   "Register INNER-FN and BOUNDS-FN to a THING."
   (setq cory/thing-registry
         (plist-put cory/thing-registry
@@ -3217,7 +3220,7 @@ Both inner-fn and bounds-fn returns a cons of (start . end) for that thing.")
                 (prog1
                     (let ((case-fold-search nil))
                       (while (and (<= depth 0)
-                                (setq found (cory/thing-parse-pair-search push-token pop-token t near)))
+                                  (setq found (cory/thing-parse-pair-search push-token pop-token t near)))
                         (let ((push-or-pop (car found)))
                           (if (eq 'push push-or-pop)
                               (cl-incf depth)
@@ -3228,7 +3231,7 @@ Both inner-fn and bounds-fn returns a cons of (start . end) for that thing.")
          (end (save-mark-and-excursion
                 (let ((case-fold-search nil))
                   (while (and (>= depth 0)
-                            (setq found (cory/thing-parse-pair-search push-token pop-token nil near)))
+                              (setq found (cory/thing-parse-pair-search push-token pop-token nil near)))
                     (let ((push-or-pop (car found)))
                       (if (eq 'push push-or-pop)
                           (cl-incf depth)
@@ -3279,7 +3282,7 @@ Both inner-fn and bounds-fn returns a cons of (start . end) for that thing.")
     (cory/thing-parse-multi x near))
    (t
     (lambda ()
-      (message "Meow: THING definition broken")
+      (message "THING definition broken")
       (cons (point) (point))))))
 
 (defun cory/thing-register (thing inner bounds)
@@ -3340,7 +3343,7 @@ PAIR-EXPR contains two string token lists. The tokens in first
                          '(pair (\"do\") (\"end\")))"
   (let ((inner-fn (cory/thing-parse inner t))
         (bounds-fn (cory/thing-parse bounds nil)))
-    (cory/thing-register thing inner-fn bounds-fn)))
+    (cory/thing-register-helper thing inner-fn bounds-fn)))
 
 (cory/thing-register 'round
                      '(pair ("(") (")"))
@@ -3438,17 +3441,17 @@ PAIR-EXPR contains two string token lists. The tokens in first
 (defmacro defun-beginning-of (name char)
   `(defun ,name ()
      (interactive)
-     (cory/bounds-of-thing ,char)))
+     (cory/beginning-of-thing ,char)))
 
 (defmacro defun-end-of (name char)
   `(defun ,name ()
      (interactive)
-     (cory/bounds-of-thing ,char)))
+     (cory/end-of-thing ,char)))
 
 (defmacro defun-inner-of (name char)
   `(defun ,name ()
      (interactive)
-     (cory/bounds-of-thing ,char)))
+     (cory/inner-of-thing ,char)))
 
 (defmacro defun-bounds-of (name char)
   `(defun ,name ()
@@ -3502,6 +3505,182 @@ PAIR-EXPR contains two string token lists. The tokens in first
 (defun-bounds-of cory/bounds-of-braces    ?l)
 (defun-bounds-of cory/bounds-of-defun     ?d)
 (defun-bounds-of cory/bounds-of-sentence  ?.)
+
+;; (defun cory/beginning-of-parens ()
+;;   (interactive)
+;;   (cory/beginning-of-thing ?r))
+
+;; (defun cory/beginning-of-bracket()
+;;   (interactive)
+;;   (cory/beginning-of-thing ?s))
+
+;; (defun cory/beginning-of-braces ()
+;;   (interactive)
+;;   (cory/beginning-of-thing ?c))
+
+;; (defun cory/beginning-of-string ()
+;;   (interactive)
+;;   (cory/beginning-of-thing ?g))
+
+;; (defun cory/beginning-of-symbol ()
+;;   (interactive)
+;;   (cory/beginning-of-thing ?e))
+
+;; (defun cory/beginning-of-window ()
+;;   (interactive)
+;;   (cory/beginning-of-thing ?w))
+
+;; (defun cory/beginning-of-buffer ()
+;;   (interactive)
+;;   (cory/beginning-of-thing ?b))
+
+;; (defun cory/beginning-of-paragraph ()
+;;   (interactive)
+;;   (cory/beginning-of-thing ?p))
+
+;; (defun cory/beginning-of-braces ()
+;;   (interactive)
+;;   (cory/beginning-of-thing ?l))
+
+;; (defun cory/beginning-of-defun  ()
+;;   (interactive)
+;;   (cory/beginning-of-thing ?d))
+
+;; (defun cory/beginning-of-sentence ()
+;;   (interactive)
+;;   (cory/beginning-of-thing ?.))
+
+;; (defun cory/end-of-parens ()
+;;   (interactive)
+;;   (cory/end-of-thing ?r))
+
+;; (defun cory/end-of-bracket()
+;;   (interactive)
+;;   (cory/end-of-thing ?s))
+
+;; (defun cory/end-of-braces ()
+;;   (interactive)
+;;   (cory/end-of-thing ?c))
+
+;; (defun cory/end-of-string ()
+;;   (interactive)
+;;   (cory/end-of-thing ?g))
+
+;; (defun cory/end-of-symbol ()
+;;   (interactive)
+;;   (cory/end-of-thing ?e))
+
+;; (defun cory/end-of-window ()
+;;   (interactive)
+;;   (cory/end-of-thing ?w))
+
+;; (defun cory/end-of-buffer ()
+;;   (interactive)
+;;   (cory/end-of-thing ?b))
+
+;; (defun cory/end-of-paragraph ()
+;;   (interactive)
+;;   (cory/end-of-thing ?p))
+
+;; (defun cory/end-of-braces ()
+;;   (interactive)
+;;   (cory/end-of-thing ?l))
+
+;; (defun cory/end-of-defun  ()
+;;   (interactive)
+;;   (cory/end-of-thing ?d))
+
+;; (defun cory/end-of-sentence ()
+;;   (interactive)
+;;   (cory/end-of-thing ?.))
+
+;; (defun cory/inner-of-parens ()
+;;   (interactive)
+;;   (cory/inner-of-thing ?r))
+
+;; (defun cory/inner-of-bracket()
+;;   (interactive)
+;;   (cory/inner-of-thing ?s))
+
+;; (defun cory/inner-of-braces ()
+;;   (interactive)
+;;   (cory/inner-of-thing ?c))
+
+;; (defun cory/inner-of-string ()
+;;   (interactive)
+;;   (cory/inner-of-thing ?g))
+
+;; (defun cory/inner-of-symbol ()
+;;   (interactive)
+;;   (cory/inner-of-thing ?e))
+
+;; (defun cory/inner-of-window ()
+;;   (interactive)
+;;   (cory/inner-of-thing ?w))
+
+;; (defun cory/inner-of-buffer ()
+;;   (interactive)
+;;   (cory/inner-of-thing ?b))
+
+;; (defun cory/inner-of-paragraph ()
+;;   (interactive)
+;;   (cory/inner-of-thing ?p))
+
+;; (defun cory/inner-of-braces ()
+;;   (interactive)
+;;   (cory/inner-of-thing ?l))
+
+;; (defun cory/inner-of-defun  ()
+;;   (interactive)
+;;   (cory/inner-of-thing ?d))
+
+;; (defun cory/inner-of-sentence ()
+;;   (interactive)
+;;   (cory/inner-of-thing ?.))
+
+;; (defun cory/bounds-of-parens ()
+;;   (interactive)
+;;   (cory/bounds-of-thing ?r))
+
+;; (defun cory/bounds-of-bracket()
+;;   (interactive)
+;;   (cory/bounds-of-thing ?s))
+
+;; (defun cory/bounds-of-braces ()
+;;   (interactive)
+;;   (cory/bounds-of-thing ?c))
+
+;; (defun cory/bounds-of-string ()
+;;   (interactive)
+;;   (cory/bounds-of-thing ?g))
+
+;; (defun cory/bounds-of-symbol ()
+;;   (interactive)
+;;   (cory/bounds-of-thing ?e))
+
+;; (defun cory/bounds-of-window ()
+;;   (interactive)
+;;   (cory/bounds-of-thing ?w))
+
+;; (defun cory/bounds-of-buffer ()
+;;   (interactive)
+;;   (cory/bounds-of-thing ?b))
+
+;; (defun cory/bounds-of-paragraph ()
+;;   (interactive)
+;;   (cory/bounds-of-thing ?p))
+
+;; (defun cory/bounds-of-braces ()
+;;   (interactive)
+;;   (cory/bounds-of-thing ?l))
+
+;; (defun cory/bounds-of-defun  ()
+;;   (interactive)
+;;   (cory/bounds-of-thing ?d))
+
+;; (defun cory/bounds-of-sentence ()
+;;   (interactive)
+;;   (cory/bounds-of-thing ?.))
 
 ;; (defun open-line-below ()
 ;;   (interactive)
