@@ -37,9 +37,6 @@
   (makunbound 'hm/file-name-handler-alist))
 (add-hook 'emacs-startup-hook #'hm/restore-file-name-handler-alist)
 
-(setq max-specpdl-size 7000)
-(setq max-lisp-eval-depth 4000)
-
 ;;
 ;; -- PACKAGE SETUP ---
 ;;
@@ -1034,27 +1031,30 @@
   (smartparens-global-mode))
 
 ;; Multiple cursors
-;; (use-package multiple-cursors
-;;   :bind (("C-c m" . mc/mark-all-dwim)
-;;          ("C->" . mc/mark-next-like-this)
-;;          ("C-<" . mc/mark-previous-like-this)
-;; 	 ("C-M-<" . mc/mark-all-in-region-regexp)
-;; 	 ("C-M->" . mc/edit-lines)
-;;          :map mc/keymap
-;;          ("C-x v" . mc/vertical-align-with-space)
-;;          ("C-x n" . mc-hide-unmatched-lines-mode))
-;;   :config
-;;   (global-unset-key (kbd "M-<down-mouse-1>"))
-;;   (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
+(use-package multiple-cursors
+  :bind (("C-c m" . mc/mark-all-dwim)
+         ("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)
+	 ("C-M-<" . mc/mark-all-in-region-regexp)
+	 ("C-M->" . mc/edit-lines)
+         :map mc/keymap
+         ("C-x v" . mc/vertical-align-with-space)
+         ("C-x n" . mc-hide-unmatched-lines-mode))
+  :config
+  (global-unset-key (kbd "M-<down-mouse-1>"))
+  (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
 
-;;   (with-eval-after-load 'multiple-cursors-core
-;;     ;; Immediately load mc list, otherwise it will show as
-;;     ;; changed as empty in my git repo
-;;     (mc/load-lists)
+  (with-eval-after-load 'multiple-cursors-core
+    ;; Immediately load mc list, otherwise it will show as
+    ;; changed as empty in my git repo
+    (mc/load-lists)
 
-;;     (define-key mc/keymap (kbd "M-T") 'mc/reverse-regions)
-;;     (define-key mc/keymap (kbd "C-,") 'mc/unmark-next-like-this)
-;;     (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)))
+    (define-key mc/keymap (kbd "M-T") 'mc/reverse-regions)
+    (define-key mc/keymap (kbd "C-,") 'mc/unmark-next-like-this)
+    (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)))
+
+;; Phi search
+(use-package phi-search)
 
 ;; Move text
 (use-package move-text
@@ -2941,6 +2941,48 @@ To search backward, use \\[negative-argument]."
 		  (funcall expose ov)))))
       (message "Visit: %s failed" text))))
 
+(defun cory/search-dwim ()
+  (interactive)
+  ;; Are we using multiple cursors?
+  (cond ((and (boundp 'multiple-cursors-mode)
+	    multiple-cursors-mode
+	    (fboundp  'phi-search))
+         (call-interactively 'phi-search))
+        ;; Are we defining a macro?
+        (defining-kbd-macro
+          (call-interactively 'isearch-forward))
+        ;; Fall back to swiper.
+        (t
+         ;; Wrap around swiper results.
+         (let ((consult-line-point-placement #'match-end))
+	   ;; If region is active, prepopulate swiper's search term.
+	   (if (and transient-mark-mode mark-active (not (eq (mark) (point))))
+	       (let ((region (buffer-substring-no-properties (mark) (point))))
+                 (deactivate-mark)
+                 (consult-line region))
+	     (consult-line))))))
+
+(defun cory/search-backward-dwim ()
+  (interactive)
+  ;; Are we using multiple cursors?
+  (cond ((and (boundp 'multiple-cursors-mode)
+            multiple-cursors-mode
+            (fboundp  'phi-search-backward))
+         (call-interactively 'phi-search-backward))
+        ;; Are we defining a macro?
+        (defining-kbd-macro
+          (call-interactively 'isearch-backward))
+        ;; Fall back to swiper.
+        (t
+         ;; Wrap around swiper results.
+         (let ((consult-line-point-placement #'match-end))
+           ;; If region is active, prepopulate swiper's search term.
+           (if (and transient-mark-mode mark-active (not (eq (mark) (point))))
+               (let ((region (buffer-substring-no-properties (mark) (point))))
+                 (deactivate-mark)
+                 (consult-line region))
+             (consult-line))))))
+
 (defun cory/mark-word (n)
   "Mark current word under cursor.
 
@@ -3505,182 +3547,6 @@ PAIR-EXPR contains two string token lists. The tokens in first
 (defun-bounds-of cory/bounds-of-braces    ?l)
 (defun-bounds-of cory/bounds-of-defun     ?d)
 (defun-bounds-of cory/bounds-of-sentence  ?.)
-
-;; (defun cory/beginning-of-parens ()
-;;   (interactive)
-;;   (cory/beginning-of-thing ?r))
-
-;; (defun cory/beginning-of-bracket()
-;;   (interactive)
-;;   (cory/beginning-of-thing ?s))
-
-;; (defun cory/beginning-of-braces ()
-;;   (interactive)
-;;   (cory/beginning-of-thing ?c))
-
-;; (defun cory/beginning-of-string ()
-;;   (interactive)
-;;   (cory/beginning-of-thing ?g))
-
-;; (defun cory/beginning-of-symbol ()
-;;   (interactive)
-;;   (cory/beginning-of-thing ?e))
-
-;; (defun cory/beginning-of-window ()
-;;   (interactive)
-;;   (cory/beginning-of-thing ?w))
-
-;; (defun cory/beginning-of-buffer ()
-;;   (interactive)
-;;   (cory/beginning-of-thing ?b))
-
-;; (defun cory/beginning-of-paragraph ()
-;;   (interactive)
-;;   (cory/beginning-of-thing ?p))
-
-;; (defun cory/beginning-of-braces ()
-;;   (interactive)
-;;   (cory/beginning-of-thing ?l))
-
-;; (defun cory/beginning-of-defun  ()
-;;   (interactive)
-;;   (cory/beginning-of-thing ?d))
-
-;; (defun cory/beginning-of-sentence ()
-;;   (interactive)
-;;   (cory/beginning-of-thing ?.))
-
-;; (defun cory/end-of-parens ()
-;;   (interactive)
-;;   (cory/end-of-thing ?r))
-
-;; (defun cory/end-of-bracket()
-;;   (interactive)
-;;   (cory/end-of-thing ?s))
-
-;; (defun cory/end-of-braces ()
-;;   (interactive)
-;;   (cory/end-of-thing ?c))
-
-;; (defun cory/end-of-string ()
-;;   (interactive)
-;;   (cory/end-of-thing ?g))
-
-;; (defun cory/end-of-symbol ()
-;;   (interactive)
-;;   (cory/end-of-thing ?e))
-
-;; (defun cory/end-of-window ()
-;;   (interactive)
-;;   (cory/end-of-thing ?w))
-
-;; (defun cory/end-of-buffer ()
-;;   (interactive)
-;;   (cory/end-of-thing ?b))
-
-;; (defun cory/end-of-paragraph ()
-;;   (interactive)
-;;   (cory/end-of-thing ?p))
-
-;; (defun cory/end-of-braces ()
-;;   (interactive)
-;;   (cory/end-of-thing ?l))
-
-;; (defun cory/end-of-defun  ()
-;;   (interactive)
-;;   (cory/end-of-thing ?d))
-
-;; (defun cory/end-of-sentence ()
-;;   (interactive)
-;;   (cory/end-of-thing ?.))
-
-;; (defun cory/inner-of-parens ()
-;;   (interactive)
-;;   (cory/inner-of-thing ?r))
-
-;; (defun cory/inner-of-bracket()
-;;   (interactive)
-;;   (cory/inner-of-thing ?s))
-
-;; (defun cory/inner-of-braces ()
-;;   (interactive)
-;;   (cory/inner-of-thing ?c))
-
-;; (defun cory/inner-of-string ()
-;;   (interactive)
-;;   (cory/inner-of-thing ?g))
-
-;; (defun cory/inner-of-symbol ()
-;;   (interactive)
-;;   (cory/inner-of-thing ?e))
-
-;; (defun cory/inner-of-window ()
-;;   (interactive)
-;;   (cory/inner-of-thing ?w))
-
-;; (defun cory/inner-of-buffer ()
-;;   (interactive)
-;;   (cory/inner-of-thing ?b))
-
-;; (defun cory/inner-of-paragraph ()
-;;   (interactive)
-;;   (cory/inner-of-thing ?p))
-
-;; (defun cory/inner-of-braces ()
-;;   (interactive)
-;;   (cory/inner-of-thing ?l))
-
-;; (defun cory/inner-of-defun  ()
-;;   (interactive)
-;;   (cory/inner-of-thing ?d))
-
-;; (defun cory/inner-of-sentence ()
-;;   (interactive)
-;;   (cory/inner-of-thing ?.))
-
-;; (defun cory/bounds-of-parens ()
-;;   (interactive)
-;;   (cory/bounds-of-thing ?r))
-
-;; (defun cory/bounds-of-bracket()
-;;   (interactive)
-;;   (cory/bounds-of-thing ?s))
-
-;; (defun cory/bounds-of-braces ()
-;;   (interactive)
-;;   (cory/bounds-of-thing ?c))
-
-;; (defun cory/bounds-of-string ()
-;;   (interactive)
-;;   (cory/bounds-of-thing ?g))
-
-;; (defun cory/bounds-of-symbol ()
-;;   (interactive)
-;;   (cory/bounds-of-thing ?e))
-
-;; (defun cory/bounds-of-window ()
-;;   (interactive)
-;;   (cory/bounds-of-thing ?w))
-
-;; (defun cory/bounds-of-buffer ()
-;;   (interactive)
-;;   (cory/bounds-of-thing ?b))
-
-;; (defun cory/bounds-of-paragraph ()
-;;   (interactive)
-;;   (cory/bounds-of-thing ?p))
-
-;; (defun cory/bounds-of-braces ()
-;;   (interactive)
-;;   (cory/bounds-of-thing ?l))
-
-;; (defun cory/bounds-of-defun  ()
-;;   (interactive)
-;;   (cory/bounds-of-thing ?d))
-
-;; (defun cory/bounds-of-sentence ()
-;;   (interactive)
-;;   (cory/bounds-of-thing ?.))
 
 ;; (defun open-line-below ()
 ;;   (interactive)
