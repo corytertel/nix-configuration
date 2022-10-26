@@ -1076,7 +1076,11 @@
    ("C-S-t" . avy-pop-mark)
    ("M-z" . avy-zap-up-to-char)
    ("M-SPC" . avy-goto-end-of-line)
-   ("M-S-SPC" . avy-goto-line))
+   ("M-S-SPC" . avy-goto-line)
+   ("C-M-s" . isearch-forward-other-window)
+   ("C-M-r" . isearch-backward-other-window)
+   :map isearch-mode-map
+   ("C-t" . avy-isearch))
 
   :custom
   ;; (setq avy-keys '(?q ?e ?r ?y ?u ?o ?p
@@ -1095,12 +1099,18 @@
   (avy-timeout-seconds 0.25)
 
   :config
+
+  ;; Most of the below was copied from and/or inspired by
+  ;; https://github.com/xl666/avy-conf/blob/main/avy.org
+
   ;; Need to use C- now because all letters of the alphabet are taken
+  ;; Rebind default avy actions
   (setf (alist-get ?\C-y avy-dispatch-alist) 'avy-action-yank
 	(alist-get ?\M-w avy-dispatch-alist) 'avy-action-copy
 	(alist-get ?\C-k avy-dispatch-alist) 'avy-action-kill-move
 	(alist-get ?\C-t avy-dispatch-alist) 'avy-action-teleport)
 
+  ;; Avy helper functions for both generic and complex avy actions
   (defun avy-generic-command-action (action-f)
     "Excecutes action-f at point and stays"
     (save-excursion
@@ -1116,6 +1126,8 @@
     (funcall action-f)
     t)
 
+  ;;; Actions from "Avy can do anything"
+
   (defun avy-action-mark-to-char (pt)
     (activate-mark)
     (goto-char (+ 1 pt)))
@@ -1127,159 +1139,197 @@
 
   (defun avy-action-flyspell (pt)
     (avy-generic-command-action #'flyspell-auto-correct-word))
-  (setf (alist-get ?\C-. avy-dispatch-alist) 'avy-action-flyspell)
+  (setf (alist-get 67108923 avy-dispatch-alist) 'avy-action-flyspell) ; C-;
 
-
-
-  (defun avy-show-dispatch-help ()
-    (let* ((len (length "avy-action-"))
-           (fw (frame-width))
-           (raw-strings (mapcar
-			 (lambda (x)
-			   (format "%2s: %-19s"
-				   (propertize
-				    (char-to-string (car x))
-				    'face 'aw-key-face)
-				   (substring (symbol-name (cdr x)) len)))
-			 avy-dispatch-alist))
-           (max-len (1+ (apply #'max (mapcar #'length raw-strings))))
-           (strings-len (length raw-strings))
-           (per-row (floor fw max-len))
-           display-strings)
-      (cl-loop for string in raw-strings
-               for N from 1 to strings-len do
-               (push (concat string " ") display-strings)
-               (when (= (mod N per-row) 0) (push "\n" display-strings)))
-      (message "%s" (apply #'concat (nreverse display-strings)))))
-
-  ;; Avy command
-  (global-set-key (kbd "M-j") 'avy-goto-char-timer)
-
-  ;; Kill text
   (defun avy-action-kill-whole-line (pt)
-    (save-excursion
-      (goto-char pt)
-      (kill-whole-line))
-    (select-window
-     (cdr
-      (ring-ref avy-ring 0)))
-    t)
+    (avy-generic-command-action #'kill-whole-line))
+  (setf (alist-get (kbd "C-M-k") avy-dispatch-alist) 'avy-action-kill-whole-line)
 
-  (setf (alist-get ?k avy-dispatch-alist) 'avy-action-kill-stay
-	(alist-get ?K avy-dispatch-alist) 'avy-action-kill-whole-line)
-
-  ;; Copy text
   (defun avy-action-copy-whole-line (pt)
-    (save-excursion
-      (goto-char pt)
-      (cl-destructuring-bind (start . end)
-          (bounds-of-thing-at-point 'line)
-	(copy-region-as-kill start end)))
-    (select-window
-     (cdr
-      (ring-ref avy-ring 0)))
-    t)
+    (avy-generic-command-action (lambda () (cl-destructuring-bind (start . end)
+					  (bounds-of-thing-at-point 'line)
+					(copy-region-as-kill start end)))))
+  (setf (alist-get (kbd "C-M-w") avy-dispatch-alist) 'avy-action-copy-whole-line)
 
-  (setf (alist-get ?w avy-dispatch-alist) 'avy-action-copy
-	(alist-get ?W avy-dispatch-alist) 'avy-action-copy-whole-line)
-
-  ;; Yank text
   (defun avy-action-yank-whole-line (pt)
     (avy-action-copy-whole-line pt)
-    (save-excursion (yank))
-    t)
+    (save-excursion (yank)) t)
+  (setf (alist-get (kbd "C-M-y") avy-dispatch-alist) 'avy-action-yank-whole-line)
 
-  (setf (alist-get ?y avy-dispatch-alist) 'avy-action-yank
-	(alist-get ?Y avy-dispatch-alist) 'avy-action-yank-whole-line)
-
-  ;; Transpose/Move text
   (defun avy-action-teleport-whole-line (pt)
     (avy-action-kill-whole-line pt)
     (save-excursion (yank)) t)
-
-  (setf (alist-get ?t avy-dispatch-alist) 'avy-action-teleport
-	(alist-get ?T avy-dispatch-alist) 'avy-action-teleport-whole-line)
-
-  ;; Mark text
-  (defun avy-action-mark-to-char (pt)
-    (activate-mark)
-    (goto-char pt))
-
-  (setf (alist-get ?  avy-dispatch-alist) 'avy-action-mark-to-char)
-
-  ;; Flyspell words
-  (defun avy-action-flyspell (pt)
-    (save-excursion
-      (goto-char pt)
-      (when (require 'flyspell nil t)
-	(flyspell-auto-correct-word)))
-    (select-window
-     (cdr (ring-ref avy-ring 0)))
-    t)
-
-  ;; Bind to semicolon (flyspell uses C-;)
-  (setf (alist-get ?\; avy-dispatch-alist) 'avy-action-flyspell)
-
-  ;; Dictionary: define words
-  ;; Replace your package manager or preferred dict package
-  ;; (package-install 'dictionary)
-
-  (defun dictionary-search-dwim (&optional arg)
-    "Search for definition of word at point. If region is active,
-search for contents of region instead. If called with a prefix
-argument, query for word to search."
-    (interactive "P")
-    (if arg
-	(dictionary-search nil)
-      (if (use-region-p)
-          (dictionary-search (buffer-substring-no-properties
-                              (region-beginning)
-                              (region-end)))
-	(if (thing-at-point 'word)
-            (dictionary-lookup-definition)
-          (dictionary-search-dwim '(4))))))
+  (setf (alist-get (kbd "C-M-t") avy-dispatch-alist) 'avy-action-teleport-whole-line)
 
   (defun avy-action-define (pt)
-    (save-excursion
-      (goto-char pt)
-      (dictionary-search-dwim))
-    (select-window
-     (cdr (ring-ref avy-ring 0)))
-    t)
-
-  (setf (alist-get ?= avy-dispatch-alist) 'dictionary-search-dwim)
-
-  ;; Get Elisp Help
-  ;; Replace with your package manager or help library of choice
-  ;; (package-install 'helpful)
-
-  (defun avy-action-helpful (pt)
-    (save-excursion
-      (goto-char pt)
-      (helpful-at-point))
-    (select-window
-     (cdr (ring-ref avy-ring 0)))
-    t)
-
-  (setf (alist-get ?H avy-dispatch-alist) 'avy-action-helpful)
-
-  ;; Embark
-  ;; (package-install 'embark)
+    (avy-generic-command-action #'dictionary-search-dwim))
+  (setf (alist-get (kbd "C-=") avy-dispatch-alist) 'avy-action-define)
 
   (defun avy-action-embark (pt)
-    (unwind-protect
-        (save-excursion
-          (goto-char pt)
-          (embark-act))
-      (select-window
-       (cdr (ring-ref avy-ring 0))))
-    t)
+    (unwind-protect (avy-generic-command-action #'embark-act)) t)
+  (setf (alist-get (kbd "C-.") avy-dispatch-alist) 'avy-action-embark)
 
-  (setf (alist-get ?. avy-dispatch-alist) 'avy-action-embark)
+  ;;; New behavior
+
+  ;; Open org link (only relevant for org files)
+  (defun avy-action-open-at-point (pt)
+    (goto-char pt)
+    (org-open-at-point)
+    t)
+  (setf (alist-get ?\C-o avy-dispatch-alist) 'avy-action-open-at-point)
+
+  ;; Clone line below
+  (defun avy-action-clone-line (pt)
+    (goto-char pt)
+    (move-beginning-of-line 1)
+    (cl-destructuring-bind (start . end)
+        (bounds-of-thing-at-point 'line)
+      (copy-region-as-kill start end))
+    (yank)
+    (indent-for-tab-command)
+    t)
+  (setf (alist-get ?\C-l avy-dispatch-alist) 'avy-action-clone-line)
+
+  ;;; Regions
+
+  ;; - The idea is to be able to act in arbitrary regions without the need of manually marking a region
+  ;; - It relies on two basic operations:
+  ;;   - First mark the beginning of the region with a set-point action
+  ;;   - Then apply a region action selecting the end of the region
+  ;; - Region actions are the same as Original actions but for regions
+  ;; - Region actions take the original code of avy actions as much as possible
+  ;; - A necessary hack is to simulate region selection instead of using direct functions like `copy-region-as-kill' as those functions do not allow to manipulate regions if parenthesis or other syntax elements are not balanced. This has a weird behavior in modes like emacs-lisp so I’m not sure if it is a syntax problem
+
+  ;; set-point-action
+  (defun avy-action-mark-point (pt)
+    "Sets a point for other commands"
+    (setq my-avy-point pt)
+    (select-window
+     (cdr
+      (ring-ref avy-ring 0)))
+    (message "Point set!"))
+  (setf (alist-get ?. avy-dispatch-alist) 'avy-action-mark-point)
+
+  ;; Common region functions
+  (defun avy--quick-mark-region (pt)
+    "Intermediate function to mark regions, used in region actions"
+    (when (> my-avy-point pt)
+      (progn
+	(setf aux pt)
+	(setf pt my-avy-point)
+	(setf my-avy-point aux)))
+    (goto-char my-avy-point)
+    (set-mark my-avy-point)
+    (activate-mark)
+    (goto-char (+ 1 pt))
+    (setq my-avy-point nil))
+
+  (defun avy--return-point-region-action ()
+    "Makes sure that the point returns to its original place even if it is in another window"
+    (let ((dat (ring-ref avy-ring 0)))
+      (select-frame-set-input-focus
+       (window-frame (cdr dat)))
+      (select-window (cdr dat))
+      (goto-char (car dat))))
+
+  (defun avy--check-for-region-errors ()
+    "Cheks if set point action was previously made, cleans action otherwise"
+    (progn (message "No point set")
+           (avy--return-point-region-action)
+           nil))
+
+  ;; Region actions
+  (defun avy-action-copy-region (pt)
+    "Copy region and stays"
+    (if my-avy-point
+	(progn
+          (save-excursion
+            (avy--quick-mark-region pt)
+            (call-interactively 'kill-ring-save))
+          (avy--return-point-region-action)
+          (message "Copied: %s" (current-kill 0))
+          t)
+      (avy--check-for-region-errors)))
+  (setf (alist-get ?\M-W avy-dispatch-alist) 'avy-action-copy-region)
+
+  (defun avy-action-yank-region (pt)
+    "Yank region and stays"
+    (avy-action-copy-region pt)
+    (yank)
+    t)
+  (setf (alist-get 33554457 avy-dispatch-alist) 'avy-action-yank-region) ; C-Y
+
+  (defun avy-action-kill-region-move (pt)
+    "Kills a region and moves"
+    (if my-avy-point
+	(progn
+          (avy--quick-mark-region pt)
+          (call-interactively 'kill-region)
+          (message "Killed: %s" (current-kill 0))
+          (point)
+          t)
+      (avy--check-for-region-errors)))
+  (setf (alist-get 33554443 avy-dispatch-alist) 'avy-action-kill-region-move) ; C-K
+
+  (defun avy-action-teleport-region (pt)
+    "Teleports an arbitrary region using my-avy-point"
+    (if my-avy-point
+	(progn
+	  (save-excursion
+            (avy--quick-mark-region pt)
+            (call-interactively 'kill-region))
+	  (select-window
+	   (cdr
+            (ring-ref avy-ring 0)))
+	  (yank)
+	  t)
+      (avy--check-for-region-errors)))
+  (setf (alist-get 33554452 avy-dispatch-alist) 'avy-action-teleport-region) ; C-T
+
+  ;;; Quick char actions
+  ;; For some modes it is useful to have a shortcut for a common character, for example parenthesis in emacs-lisp
+
+  ;; Basic funcion
+  (defun avy-goto-quick-char (char &optional arg)
+    "Simulates char press for filtering"
+    (interactive (list char
+                       current-prefix-arg))
+    (avy-with avy-goto-char
+      (avy-jump
+
+       (regexp-quote (string char)))))
+
+  ;; `emacs-lisp-mode'
+  (defun avy-goto-parenthesis ()
+    "Filter avy selecton with open parenthesis"
+    (interactive)
+    (avy-goto-quick-char 40)) ;; (
+  (define-key emacs-lisp-mode-map (kbd "S-SPC") 'avy-goto-parenthesis)
+
+  ;;; TODO Auto actions and compounds
+
+  ;;; LSP
+
+  ;; (defun avy-action-lsp-help (pt)
+  ;;   (avy-generic-command-action #'lsp-describe-thing-at-point))
+  ;; (setf (alist-get 16777320 avy-dispatch-alist) 'avy-action-lsp-help) ; H-h
+
+  (defun avy-action-lsp-goto-definition (pt)
+    (avy-generic-command-action-no-stay #'xref-find-definitions))
+  (setf (alist-get (kbd "M-.") avy-dispatch-alist) 'avy-action-lsp-goto-definition) ; M-.
+
+  (defun avy-action-lsp-goto-references (pt)
+    (avy-generic-command-action-no-stay #'xref-find-references))
+  (setf (alist-get (kbd "M-?") avy-dispatch-alist) 'avy-action-lsp-goto-references) ; M-?
+
+  (defun avy-action-lsp-rename (pt)
+    (avy-generic-command-action
+     (lambda () (call-interactively 'eglot-rename))))
+  (setf (alist-get 16777330 avy-dispatch-alist) 'avy-action-lsp-rename) ; C-r
+
+  ;;; Functions
 
   ;; Avy + Isearch
-  (define-key isearch-mode-map (kbd "M-j") 'avy-isearch)
-
   ;; Isearch in other windows
   (defun isearch-forward-other-window (prefix)
     "Function to isearch-forward in other-window."
@@ -1301,8 +1351,43 @@ argument, query for word to search."
           (isearch-backward)
           (other-window (- next))))))
 
-  (define-key global-map (kbd "C-M-s") 'isearch-forward-other-window)
-  (define-key global-map (kbd "C-M-r") 'isearch-backward-other-window))
+  ;; Dictionary search dwim
+  (defun dictionary-search-dwim (&optional arg)
+    "Search for definition of word at point. If region is active,
+search for contents of region instead. If called with a prefix
+argument, query for word to search."
+    (interactive "P")
+    (if arg
+	(dictionary-search nil)
+      (if (use-region-p)
+          (dictionary-search (buffer-substring-no-properties
+                              (region-beginning)
+                              (region-end)))
+	(if (thing-at-point 'word)
+            (dictionary-lookup-definition)
+          (dictionary-search-dwim '(4))))))
+
+  ;; Show help in avy dispatch with ?
+  (defun avy-show-dispatch-help ()
+    (let* ((len (length "avy-action-"))
+           (fw (frame-width))
+           (raw-strings (mapcar
+			 (lambda (x)
+			   (format "%2s: %-19s"
+				   (propertize
+				    (char-to-string (car x))
+				    'face 'aw-key-face)
+				   (substring (symbol-name (cdr x)) len)))
+			 avy-dispatch-alist))
+           (max-len (1+ (apply #'max (mapcar #'length raw-strings))))
+           (strings-len (length raw-strings))
+           (per-row (floor fw max-len))
+           display-strings)
+      (cl-loop for string in raw-strings
+               for N from 1 to strings-len do
+               (push (concat string " ") display-strings)
+               (when (= (mod N per-row) 0) (push "\n" display-strings)))
+      (message "%s" (apply #'concat (nreverse display-strings))))))
 
 ;; Copy text as Discord/GitHub/etc formatted code
 (use-package copy-as-format
@@ -3689,98 +3774,109 @@ PAIR-EXPR contains two string token lists. The tokens in first
 ;; (equal (kbd "RET") (kbd "C-m"))   ; -> t
 ;; (equal (kbd "RET") (kbd "<C-m>")) ; -> nil
 
-;; (dolist (pair '(("C-;"   exchange-point-and-mark)
-;; 		("C-a"   crux-move-beginning-of-line)
-;; 		("C-S-a" crux-smart-open-line-above)
-;; 		("C-S-b" cory/backward-char-expand)
-;; 		("C-d"   delete-char)
-;; 		("C-S-d" sp-backward-delete-char)
-;; 		("C-e"   move-end-of-line)
-;; 		("C-S-e" crux-smart-open-line)
-;; 		("C-f"   forward-char)
-;; 		("C-S-f" cory/forward-char-expand)
-;; 		("C-g"   keyboard-quit)
-;; 		("C-S-g" cory/grab)
-;; 		("<C-i>" kill-ring-save)
-;; 		("C-S-i" cory/sync-grab)
-;; 		("C-j"   cory/join)
-;; 		("C-k"   cory/kill)
-;; 		("C-l"   cory/line)
-;; 		("C-S-l" cory/goto-line)
-;; 		("<C-m>" backward-word)
-;; 		("C-S-m" cory/backward-symbol)
-;; 		("C-n"   next-line)
-;; 		("C-S-n" cory/next-line-expand)
-;; 		("C-o"   cory/block)
-;; 		("C-S-o" cory/to-block)
-;; 		("C-p"   previous-line)
-;; 		("C-S-p" cory/previous-line-expand)
-;; 		("C-q"   cory/quit-window-or-buffer)
-;; 		("C-S-q" cory/goto-line)
-;; 		("C-r"   cory/replace-selection)
-;; 		("C-S-r" cory/swap-grab)
-;; 		("C-s"   cory/search)
-;; 		("C-S-s" cory/visit)
-;; 		("C-t"   avy-goto-char-timer)
-;; 		("C-S-t" avy-goto-word-1)
-;; 		("C-v"   forward-word)
-;; 		("C-S-v" forward-symbol)
-;; 		("C-w"   cory/mark-word)
-;; 		("C-S-w" cory/mark-symbol)
-;; 		("C-y"   yank)
-;; 		("C-S-y" consult-yank-pop)
-;; 		("C-'"   repeat)
-;; 		("C-/"   undo-only)
-;; 		("C-?"   undo-redo)
+(dolist (pair '(("C-;"   exchange-point-and-mark)
+		("C-a"   crux-move-beginning-of-line)
+		("C-S-a" crux-smart-open-line-above)
+		("C-S-b" cory/backward-char-expand)
+		("C-d"   delete-char)
+		("C-S-d" sp-backward-delete-char)
+		("C-e"   move-end-of-line)
+		("C-S-e" crux-smart-open-line)
+		("C-f"   forward-char)
+		("C-S-f" cory/forward-char-expand)
+		("C-g"   keyboard-quit)
+		("C-S-g" cory/grab)
+		("<C-i>" kill-ring-save)
+		("C-S-i" cory/sync-grab)
+		("C-j"   cory/join)
+		("C-k"   cory/kill)
+		("C-l"   cory/line)
+		("C-S-l" cory/goto-line)
+		("<C-m>" backward-word)
+		("C-S-m" cory/backward-symbol)
+		("C-n"   next-line)
+		("C-S-n" cory/next-line-expand)
+		("C-o"   cory/block)
+		("C-S-o" cory/to-block)
+		("C-p"   previous-line)
+		("C-S-p" cory/previous-line-expand)
+		("C-q"   cory/quit-window-or-buffer)
+		("C-S-q" cory/goto-line)
+		("C-r"   cory/replace-selection)
+		("C-S-r" cory/swap-grab)
+		("C-s"   cory/search)
+		("C-S-s" cory/visit)
+		("C-t"   avy-goto-char)
+		("C-S-t" avy-goto-word-0)
+		("C-v"   forward-word)
+		("C-S-v" forward-symbol)
+		("C-w"   cory/mark-word)
+		("C-S-w" cory/mark-symbol)
+		("C-y"   yank)
+		("C-S-y" consult-yank-pop)
+		("C-'"   repeat)
+		("C-/"   undo-only)
+		("C-?"   undo-redo)
 
-;; 		("C-< r" cory/beginning-of-parens)
-;; 		("C-< s" cory/beginning-of-brackets)
-;; 		("C-< c" cory/beginning-of-braces)
-;; 		("C-< g" cory/beginning-of-string)
-;; 		("C-< e" cory/beginning-of-symbol)
-;; 		("C-< w" cory/beginning-of-window)
-;; 		("C-< b" cory/beginning-of-buffer)
-;; 		("C-< p" cory/beginning-of-paragraph)
-;; 		("C-< l" cory/beginning-of-braces)
-;; 		("C-< d" cory/beginning-of-defun)
-;; 		("C-< ." cory/beginning-of-sentence)
+		("C-< r" cory/beginning-of-parens)
+		("C-< s" cory/beginning-of-brackets)
+		("C-< c" cory/beginning-of-braces)
+		("C-< g" cory/beginning-of-string)
+		("C-< e" cory/beginning-of-symbol)
+		("C-< w" cory/beginning-of-window)
+		("C-< b" cory/beginning-of-buffer)
+		("C-< p" cory/beginning-of-paragraph)
+		("C-< l" cory/beginning-of-braces)
+		("C-< d" cory/beginning-of-defun)
+		("C-< ." cory/beginning-of-sentence)
 
-;; 		("C-> r" cory/end-of-parens)
-;; 		("C-> s" cory/end-of-brackets)
-;; 		("C-> c" cory/end-of-braces)
-;; 		("C-> g" cory/end-of-string)
-;; 		("C-> e" cory/end-of-symbol)
-;; 		("C-> w" cory/end-of-window)
-;; 		("C-> b" cory/end-of-buffer)
-;; 		("C-> p" cory/end-of-paragraph)
-;; 		("C-> l" cory/end-of-braces)
-;; 		("C-> d" cory/end-of-defun)
-;; 		("C-> ." cory/end-of-sentence)
+		("C-> r" cory/end-of-parens)
+		("C-> s" cory/end-of-brackets)
+		("C-> c" cory/end-of-braces)
+		("C-> g" cory/end-of-string)
+		("C-> e" cory/end-of-symbol)
+		("C-> w" cory/end-of-window)
+		("C-> b" cory/end-of-buffer)
+		("C-> p" cory/end-of-paragraph)
+		("C-> l" cory/end-of-braces)
+		("C-> d" cory/end-of-defun)
+		("C-> ." cory/end-of-sentence)
 
-;; 		("C-, r" cory/inner-of-parens)
-;; 		("C-, s" cory/inner-of-brackets)
-;; 		("C-, c" cory/inner-of-braces)
-;; 		("C-, g" cory/inner-of-string)
-;; 		("C-, e" cory/inner-of-symbol)
-;; 		("C-, w" cory/inner-of-window)
-;; 		("C-, b" cory/inner-of-buffer)
-;; 		("C-, p" cory/inner-of-paragraph)
-;; 		("C-, l" cory/inner-of-braces)
-;; 		("C-, d" cory/inner-of-defun)
-;; 		("C-, ." cory/inner-of-sentence)
+		("C-, r" cory/inner-of-parens)
+		("C-, s" cory/inner-of-brackets)
+		("C-, c" cory/inner-of-braces)
+		("C-, g" cory/inner-of-string)
+		("C-, e" cory/inner-of-symbol)
+		("C-, w" cory/inner-of-window)
+		("C-, b" cory/inner-of-buffer)
+		("C-, p" cory/inner-of-paragraph)
+		("C-, l" cory/inner-of-braces)
+		("C-, d" cory/inner-of-defun)
+		("C-, ." cory/inner-of-sentence)
 
-;; 		("C-. r" cory/bounds-of-parens)
-;; 		("C-. s" cory/bounds-of-brackets)
-;; 		("C-. c" cory/bounds-of-braces)
-;; 		("C-. g" cory/bounds-of-string)
-;; 		("C-. e" cory/bounds-of-symbol)
-;; 		("C-. w" cory/bounds-of-window)
-;; 		("C-. b" cory/bounds-of-buffer)
-;; 		("C-. p" cory/bounds-of-paragraph)
-;; 		("C-. l" cory/bounds-of-braces)
-;; 		("C-. d" cory/bounds-of-defun)
-;; 		("C-. ." cory/bounds-of-sentence)))
-;;   (global-set-key (kbd (car pair)) (cadr pair)))
+		("C-. r" cory/bounds-of-parens)
+		("C-. s" cory/bounds-of-brackets)
+		("C-. c" cory/bounds-of-braces)
+		("C-. g" cory/bounds-of-string)
+		("C-. e" cory/bounds-of-symbol)
+		("C-. w" cory/bounds-of-window)
+		("C-. b" cory/bounds-of-buffer)
+		("C-. p" cory/bounds-of-paragraph)
+		("C-. l" cory/bounds-of-braces)
+		("C-. d" cory/bounds-of-defun)
+		("C-. ." cory/bounds-of-sentence)))
+  (global-set-key (kbd (car pair)) (cadr pair)))
+
+;; (add-hook 'ielm-mode-hook
+;; 	  (lambda ()
+;; 	    (define-key ielm-map (kbd "<return>") 'ielm-return)))
+
+;; (define-key minibuffer-local-map (kbd "<return>") 'exit-minibuffer)
+
+;; (eval-after-load 'help-mode
+;;   '(define-key help-mode-map (kbd "<return>") 'help-follow-symbol))
+
+;; (define-key button-map (kbd "<return>") 'push-button)
 
 ;;; Misc useful functions
 
