@@ -79,6 +79,14 @@
         };
       };
     };
+    # redshift = {
+    #   enable = true;
+    # };
+  };
+
+  location = {
+    latitude = 33.4484;
+    longitude = -112.0740;
   };
 
   systemd = {

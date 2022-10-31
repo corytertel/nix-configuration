@@ -93,7 +93,7 @@ to 'auto, tags may not be properly aligned."
 (defun create-plaindark-theme (theme-name)
   (let ((class '((class color) (min-colors 89)))
 	(act1          "#444444")
-        (act2          "#444444")
+        (act2          "#90caf9")
         (base          "#ffffff")
         (base-dim      "#505050")
         (bg1           "#1a1a1a")
@@ -224,10 +224,14 @@ to 'auto, tags may not be properly aligned."
      `(ac-completion-face ((,class (:background ,ttip-bg :foreground ,ttip))))
 
 ;;;;; avy
-     `(avy-lead-face   ((,class (:background ,green-bg :foreground ,green))))
-     `(avy-lead-face-0 ((,class (:background ,green-bg :foreground ,yellow))))
-     `(avy-lead-face-1 ((,class (:background ,green-bg :foreground ,magenta))))
-     `(avy-lead-face-2 ((,class (:background ,green-bg :foreground ,blue))))
+     ;; `(avy-lead-face   ((,class (:background ,green-bg :foreground ,green))))
+     ;; `(avy-lead-face-0 ((,class (:background ,green-bg :foreground ,yellow))))
+     ;; `(avy-lead-face-1 ((,class (:background ,green-bg :foreground ,magenta))))
+     ;; `(avy-lead-face-2 ((,class (:background ,green-bg :foreground ,blue))))
+     `(avy-lead-face   ((,class (:background ,magenta :foreground ,green :inherit bold))))
+     `(avy-lead-face-0 ((,class (:background ,magenta :foreground ,yellow :inherit bold))))
+     `(avy-lead-face-1 ((,class (:background ,magenta :foreground ,base :inherit bold))))
+     `(avy-lead-face-2 ((,class (:background ,magenta :foreground ,blue :inherit bold))))
 
 ;;;;; calfw
      `(cfw:face-title               ((,class (:foreground ,head1 :height 2.0 :weight bold :inherit variable-pitch))))

@@ -81,6 +81,7 @@ in {
         kde-gtk-config
         trash-cli
         xdotool
+        xbrightness
 
         conky
         lua
