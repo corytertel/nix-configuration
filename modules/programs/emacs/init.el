@@ -709,7 +709,7 @@
   :init
   (setq consult-preview-key nil)
   :bind
-  (("C-c r"       . consult-recent-file)
+  (("C-c f"       . consult-recent-file)
    ("C-x p s"     . consult-ripgrep) ; for use with project.el
    ;; ;; ("C-s"         . consult-line)
    ;; ("C-s"         . consult-line-multi)
@@ -979,6 +979,10 @@
 	(crux-kill-and-join-backward)
       (crux-kill-and-join-forward))))
 
+;; better comment-dwim
+(use-package comment-dwim-2
+  :bind ("M-;" . comment-dwim-2))
+
 ;; Smartparens
 (use-package smartparens
   :defer 1
@@ -995,9 +999,8 @@
          ("C-M-d" . sp-down-sexp)
          ("C-M-p" . sp-backward-down-sexp)
          ("C-M-n" . sp-up-sexp)
-         ;; ("C-w" . whole-line-or-region-sp-kill-region)
-         ;; ("M-s" . sp-splice-sexp) ;; depth-changing commands
-         ;; ("M-r" . sp-splice-sexp-killing-around)
+         ("M-S" . sp-splice-sexp) ;; depth-changing commands
+         ("M-R" . sp-splice-sexp-killing-around)
          ("M-(" . sp-wrap-round)
          ("C-)" . sp-forward-slurp-sexp) ;; barf/slurp
          ("M-<right>" . sp-forward-slurp-sexp)
@@ -1008,7 +1011,7 @@
          ("C-{" . sp-backward-barf-sexp)
          ("M-S-<right>" . sp-backward-barf-sexp)
          ("M-S" . sp-split-sexp) ;; misc
-         ;; ("M-j" . sp-join-sexp)
+         ("M-j" . sp-join-sexp)
 	 )
   :config
   (require 'smartparens-config)
@@ -1062,6 +1065,22 @@
   ;; use smartparens-mode everywhere
   (smartparens-global-mode))
 
+;; Smart-region: Smart region selection
+;; Smart region guesses what you want to select by one command:
+;; - If you call this command multiple times at the same position,
+;;   it expands the selected region (with `er/expand-region’).
+;; - Else, if you move from the mark and call this command,
+;;   it selects the region rectangular (with `rectangle-mark-mode’).
+;; - Else, if you move from the mark and call this command at the same column as
+;;   mark, it adds a cursor to each line (with `mc/edit-lines’).
+
+(use-package expand-region
+  :defer t)
+
+(use-package smart-region
+  ;; C-SPC is smart-region
+  :bind (([remap set-mark-command] . smart-region)))
+
 ;; Multiple cursors
 (use-package multiple-cursors
   :bind (("C-c m" . mc/mark-all-dwim)
@@ -1087,6 +1106,14 @@
 
 ;; Phi search
 (use-package phi-search)
+
+;; Visual regex replacement
+(use-package visual-regexp
+  :bind
+  (("C-c r" . vr/replace)
+   ("C-c q" . vr/query-replace)
+   ;; for multiple-cursors
+   ("C-c M" . vr/mc-mark)))
 
 ;; Move text
 (use-package move-text
