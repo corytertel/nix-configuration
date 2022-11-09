@@ -122,8 +122,8 @@
 ;; Theme
 (setq custom-safe-themes t) ; Treat all themes as safe
 (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
-;; (add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-light t)))
-(add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-dark t)))
+;; (add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-dark t)))
+(add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-light t)))
 
 ;; Display Line numbers
 ;; (column-number-mode)
@@ -287,7 +287,8 @@
 (add-hook 'before-make-frame-hook 'window-divider-mode)
 
 ;; Make the cursor a bar
-(setq-default cursor-type 'bar)
+;; (setq-default cursor-type 'bar)
+(setq-default cursor-type 'hollow)
 
 ;; Beacon
 (use-package beacon
@@ -533,7 +534,7 @@
   :ensure t
 
   :hook
-  ;; (nix-mode . eglot-ensure)
+  (nix-mode . eglot-ensure)
   (c-mode . eglot-ensure)
   (c++-mode . eglot-ensure)
   (racket-mode . eglot-ensure)
@@ -557,6 +558,8 @@
                `(scheme-mode . ("chicken-lsp-server")))
   (add-to-list 'eglot-server-programs
                `(clojure-mode . ("clojure-lsp")))
+  ;; (add-to-list 'eglot-server-programs
+  ;;              `(nix-mode . ("nil")))
 
   :bind (:map eglot-mode-map
 	 ("C-c C-a" . eglot-code-actions)
@@ -2399,6 +2402,8 @@ Lisp function does not specify a special indentation."
 ;; --- GENERAL KEYBINDS ---
 ;;
 
+;;; Search functions
+
 (require 's)
 
 (defun cory/visual-isearch-forward ()
@@ -2453,6 +2458,33 @@ Lisp function does not specify a special indentation."
                (isearch-resume region nil nil nil region nil))
            (cory/visual-isearch-backward)))))
 
+;;; Scroll functions
+
+(defun cory/scroll-down-half-page ()
+  "scroll down half a page while keeping the cursor centered"
+  (interactive)
+  (let ((ln (line-number-at-pos (point)))
+	(lmax (line-number-at-pos (point-max))))
+    (cond ((= ln 1) (move-to-window-line nil))
+	  ((= ln lmax) (recenter (window-end)))
+	  (t (progn
+               (move-to-window-line -1)
+               (recenter))))))
+
+(defun cory/scroll-up-half-page ()
+  "scroll up half a page while keeping the cursor centered"
+  (interactive)
+  (let ((ln (line-number-at-pos (point)))
+	(lmax (line-number-at-pos (point-max))))
+    (cond ((= ln 1) nil)
+	  ((= ln lmax) (move-to-window-line nil))
+	  (t (progn
+               (move-to-window-line 0)
+               (recenter))))))
+
+(put 'cory/scroll-down-half-page 'scroll-command t)
+(put 'cory/scroll-up-half-page 'scroll-command t)
+
 ;; Basic Keybind
 
 ;; Swap "C-h" and "C-x", so it's easier to type on Dvorak layout
@@ -2460,8 +2492,8 @@ Lisp function does not specify a special indentation."
 ;; (keyboard-translate (kbd "C-x") (kbd "C-h"))
 
 (dolist (pair '(("C-x k"   kill-this-buffer)
-		("C-#"     comment-or-uncomment-region)
-		("C-c s"   replace-string)
+		;; ("C-#"     comment-or-uncomment-region)
+		;; ("C-c s"   replace-string)
 		("C-c w"   woman)
 		("C-x u"   undo-only)
 		("C-/"     undo-only)
@@ -2471,7 +2503,9 @@ Lisp function does not specify a special indentation."
 		("C-?"     undo-redo)
 		("C-'"     repeat)
 		("C-s"     cory/search-forward-dwim)
-		("C-r"     cory/search-backward-dwim)))
+		("C-r"     cory/search-backward-dwim)
+		("C-v"     cory/scroll-down-half-page)
+		("M-v"     cory/scroll-up-half-page)))
   (global-set-key (kbd (car pair)) (cadr pair)))
 
 (defun repeaters-define-maps (rlist)
@@ -2701,7 +2735,10 @@ together in sequence."
 
     ("word-nav"
      backward-word                     "M-b" "b"
-     forward-word                      "M-f" "f"))
+     forward-word                      "M-f" "f")
+
+    ("set-mark"
+     smart-region                      "C-SPC" "SPC"))
 
   "List of lists containing repeater-map definitions.
 This must be in the form required by the
@@ -4470,7 +4507,8 @@ PAIR-EXPR contains two string token lists. The tokens in first
   (global-visual-fill-column-mode t)
   (visual-fill-column-width 100)
   (visual-fill-column-center-text t)
-  (add-hook pdf-view-mode-hook (lambda () (flyspell-mode -1))))
+  :config
+  (add-hook 'pdf-view-mode-hook (lambda () (visual-fill-column-mode 0))))
 
 ;; Drag and drop
 (use-package org-download
@@ -4697,8 +4735,8 @@ of (command . word) to be used by `flyspell-do-correct'."
 ;; (setq x-select-enable-primary t)
 
 ;; Transparency
-(set-frame-parameter (selected-frame) 'alpha '(70 . 70))
-(add-to-list 'default-frame-alist '(alpha . (70 . 70)))
+;; (set-frame-parameter (selected-frame) 'alpha '(70 . 70))
+;; (add-to-list 'default-frame-alist '(alpha . (70 . 70)))
 
 (defun toggle-transparency ()
   "Toggles emacs transparency."

@@ -148,6 +148,7 @@ in {
       ".emacs.d/themes/plain-grey-theme.el".source = ./plain-grey-theme.el;
       ".emacs.d/themes/plain-dark-theme.el".source = ./plain-dark-theme.el;
       ".emacs.d/themes/plain-summer-theme.el".source = ./plain-summer-theme.el;
+      ".emacs.d/themes/plain-ocean-theme.el".source = ./plain-ocean-theme.el;
       ".emacs.d/themes/smart-mode-line-cory-theme.el".source = ./smart-mode-line-cory-theme.el;
       ".emacs.d/logo.png".source = ./logo.png;
       ".emacs.d/eshell/alias".text = import ./eshell-alias.nix { inherit config pkgs; };

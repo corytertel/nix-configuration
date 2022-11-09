@@ -1,4 +1,4 @@
-;;; plain-light-theme.el --- Light theme without the distractions.
+;;; plain-ocean-theme.el --- Light theme without the distractions.
 
 ;; Author: Cory Tertel
 ;;
@@ -27,77 +27,77 @@
 ;;; Commentary:
 ;;; Code:
 
-(defgroup plainlight-theme nil
-  "Plainlight-theme options."
+(defgroup plainocean-theme nil
+  "Plainocean-theme options."
   :group 'faces)
 
-(defcustom plainlight-theme-comment-bg nil
+(defcustom plainocean-theme-comment-bg nil
   "Use a background for comment lines."
   :type 'boolean
-  :group 'plainlight-theme)
+  :group 'plainocean-theme)
 
-(defcustom plainlight-theme-comment-italic t
+(defcustom plainocean-theme-comment-italic t
   "Enable italics for comments and also disable background."
   :type 'boolean
-  :group 'plainlight-theme)
+  :group 'plainocean-theme)
 
-(defcustom plainlight-theme-keyword-italic nil
+(defcustom plainocean-theme-keyword-italic nil
   "Enable italics for keywords."
   :type 'boolean
-  :group 'plainlight-theme)
+  :group 'plainocean-theme)
 
-(defcustom plainlight-theme-org-agenda-height nil
+(defcustom plainocean-theme-org-agenda-height nil
   "If non-nil, use varying text heights for agenda items.
 
 Note that if you change this to a non-nil value, you may want to
 also adjust the value of `org-agenda-tags-column'.  If that is set
 to 'auto, tags may not be properly aligned."
   :type 'boolean
-  :group 'plainlight-theme)
+  :group 'plainocean-theme)
 
-(defcustom plainlight-theme-org-height t
+(defcustom plainocean-theme-org-height t
   "Use varying text heights for org headings."
   :type 'boolean
-  :group 'plainlight-theme)
+  :group 'plainocean-theme)
 
-(defcustom plainlight-theme-org-bold t
+(defcustom plainocean-theme-org-bold t
   "Inherit text bold for org headings."
   :type 'boolean
-  :group 'plainlight-theme)
+  :group 'plainocean-theme)
 
-(defcustom plainlight-theme-org-priority-bold t
+(defcustom plainocean-theme-org-priority-bold t
   "Inherit text bold for priority items in agenda view."
   :type 'boolean
-  :group 'plainlight-theme)
+  :group 'plainocean-theme)
 
-(defcustom plainlight-theme-org-highlight nil
+(defcustom plainocean-theme-org-highlight nil
   "Highlight org headings."
   :type 'boolean
-  :group 'plainlight-theme)
+  :group 'plainocean-theme)
 
-(defcustom plainlight-theme-custom-colors nil
+(defcustom plainocean-theme-custom-colors nil
   "Specify a list of custom colors."
   :type 'alist
-  :group 'plainlight-theme)
+  :group 'plainocean-theme)
 
-(defcustom plainlight-theme-underline-parens t
+(defcustom plainocean-theme-underline-parens t
   "If non-nil, underline matching parens when using `show-paren-mode' or similar."
   :type 'boolean
-  :group 'plainlight-theme)
+  :group 'plainocean-theme)
 
 (defun true-color-p ()
   (or
    (display-graphic-p)
    (= (tty-display-color-cells) 16777216)))
 
-(defun create-plainlight-theme (theme-name)
+(defun create-plainocean-theme (theme-name)
   (let ((class '((class color) (min-colors 89)))
 	(act1          "#d8d8d8")
         (act2          "#3647d9")
         (base          "#141404")
         (base-dim      "#b0b0b0")
-        (bg1           "#fdf6e3")
-        (bg2           "#fdf6e3")
+        (bg1           "#e3f6fd")
+        (bg2           "#e3f6fd")
         (bg3           "#dddddd")
         (bg4           "#cccccc")
         (bg-alt        "#bbbbbb")
@@ -110,18 +110,18 @@ to 'auto, tags may not be properly aligned."
         (const         "#141404")
         (comment       "#3647d9")
         (comment-light "#3647d9")
-        (comment-bg    "#fdf6e3")
+        (comment-bg    "#e3f6fd")
         (comp          "#ed8f23")
         (err           "#e60909")
         (func          "#ed8f23")
         (head1         "#141404")
-        (head1-bg      "#fdf6e3")
+        (head1-bg      "#e3f6fd")
         (head2         "#141404")
-        (head2-bg      "#fdf6e3")
+        (head2-bg      "#e3f6fd")
         (head3         "#141404")
-        (head3-bg      "#fdf6e3")
+        (head3-bg      "#e3f6fd")
         (head4         "#141404")
-        (head4-bg      "#fdf6e3")
+        (head4-bg      "#e3f6fd")
         (highlight     "#e8e8e8")
         (highlight-dim "#e8e8e8")
         (keyword       "#141404")
@@ -139,26 +139,26 @@ to 'auto, tags may not be properly aligned."
 
         ;; colors
         (aqua          "#2d9574")
-        (aqua-bg       "#fdf6e3")
+        (aqua-bg       "#e3f6fd")
         (green         "#1f8c35")
 	(green-dim     "#114f1e")
-        (green-bg      "#fdf6e3")
-        (green-bg-s    "#fdf6e3")
+        (green-bg      "#e3f6fd")
+        (green-bg-s    "#e3f6fd")
         (cyan          "#2d9574")
 	(cyan-dim      "#247a5f")
         (red           "#e60909")
-        (red-bg        "#fdf6e3")
-        (red-bg-s      "#fdf6e3")
+        (red-bg        "#e3f6fd")
+        (red-bg-s      "#e3f6fd")
         (blue          "#3647d9")
         (blue-dim      "#085696")
-	(blue-bg       "#fdf6e3")
-        (blue-bg-s     "#fdf6e3")
+	(blue-bg       "#e3f6fd")
+        (blue-bg-s     "#e3f6fd")
         (magenta       "#e01bd0")
         (yellow        "#ed8f23")
 	(yellow-dim    "#92540c")
-        (yellow-bg     "#fdf6e3"))
+        (yellow-bg     "#e3f6fd"))
 
-    (cl-loop for (cvar . val) in plainlight-theme-custom-colors
+    (cl-loop for (cvar . val) in plainocean-theme-custom-colors
              do (set cvar val))
 
     (custom-theme-set-faces
@@ -173,11 +173,11 @@ to 'auto, tags may not be properly aligned."
      `(eval-sexp-fu-flash ((,class (:background ,suc :foreground ,bg1))))
      `(eval-sexp-fu-flash-error ((,class (:background ,err :foreground ,bg1))))
      `(font-lock-builtin-face ((,class (:foreground ,keyword))))
-     `(font-lock-comment-face ((,class (:foreground ,(if plainlight-theme-comment-italic comment-light comment) :background ,(when plainlight-theme-comment-bg comment-bg) :slant ,(if plainlight-theme-comment-italic 'italic 'normal)))))
+     `(font-lock-comment-face ((,class (:foreground ,(if plainocean-theme-comment-italic comment-light comment) :background ,(when plainocean-theme-comment-bg comment-bg) :slant ,(if plainocean-theme-comment-italic 'italic 'normal)))))
      `(font-lock-constant-face ((,class (:foreground ,const))))
      `(font-lock-doc-face ((,class (:foreground ,meta))))
      `(font-lock-function-name-face ((,class (:foreground ,func :inherit bold))))
-     `(font-lock-keyword-face ((,class (:inherit bold :foreground ,keyword :slant ,(if plainlight-theme-keyword-italic 'italic 'normal)))))
+     `(font-lock-keyword-face ((,class (:inherit bold :foreground ,keyword :slant ,(if plainocean-theme-keyword-italic 'italic 'normal)))))
      `(font-lock-negation-char-face ((,class (:foreground ,const))))
      `(font-lock-preprocessor-face ((,class (:foreground ,func))))
      `(font-lock-reference-face ((,class (:foreground ,const))))
@@ -228,9 +228,9 @@ to 'auto, tags may not be properly aligned."
      ;; `(avy-lead-face-0 ((,class (:background ,green-bg :foreground ,yellow))))
      ;; `(avy-lead-face-1 ((,class (:background ,green-bg :foreground ,magenta))))
      ;; `(avy-lead-face-2 ((,class (:background ,green-bg :foreground ,blue))))
-     `(avy-lead-face   ((,class (:background ,magenta :foreground ,base :inherit bold))))
+     `(avy-lead-face   ((,class (:background ,magenta :foreground ,green :inherit bold))))
      `(avy-lead-face-0 ((,class (:background ,magenta :foreground ,yellow :inherit bold))))
-     `(avy-lead-face-1 ((,class (:background ,magenta :foreground ,green :inherit bold))))
+     `(avy-lead-face-1 ((,class (:background ,magenta :foreground ,base :inherit bold))))
      `(avy-lead-face-2 ((,class (:background ,magenta :foreground ,blue :inherit bold))))
 
 ;;;;; calfw
@@ -618,12 +618,12 @@ to 'auto, tags may not be properly aligned."
      `(font-latex-italic-face ((,class (:foreground ,keyword :italic t))))
      `(font-latex-match-reference-keywords ((,class (:foreground ,const))))
      `(font-latex-match-variable-keywords ((,class (:foreground ,var))))
-     `(font-latex-sectioning-0-face ((,class (:inherit bold :foreground ,head3 :height ,(if plainlight-theme-org-height 1.3 1.0) :background ,(when plainlight-theme-org-highlight head3-bg)))))
-     `(font-latex-sectioning-1-face ((,class (:inherit bold :foreground ,head4 :height ,(if plainlight-theme-org-height 1.3 1.0) :background ,(when plainlight-theme-org-highlight head4-bg)))))
-     `(font-latex-sectioning-2-face ((,class (:inherit bold :foreground ,head1 :height ,(if plainlight-theme-org-height 1.3 1.0) :background ,(when plainlight-theme-org-highlight head1-bg)))))
-     `(font-latex-sectioning-3-face ((,class (:inherit bold :foreground ,head2 :height ,(if plainlight-theme-org-height 1.2 1.0) :background ,(when plainlight-theme-org-highlight head2-bg)))))
-     `(font-latex-sectioning-4-face ((,class (:bold nil :foreground ,head3 :height ,(if plainlight-theme-org-height 1.1 1.0) :background ,(when plainlight-theme-org-highlight head3-bg)))))
-     `(font-latex-sectioning-5-face ((,class (:bold nil :foreground ,head4 :background ,(when plainlight-theme-org-highlight head4-bg)))))
+     `(font-latex-sectioning-0-face ((,class (:inherit bold :foreground ,head3 :height ,(if plainocean-theme-org-height 1.3 1.0) :background ,(when plainocean-theme-org-highlight head3-bg)))))
+     `(font-latex-sectioning-1-face ((,class (:inherit bold :foreground ,head4 :height ,(if plainocean-theme-org-height 1.3 1.0) :background ,(when plainocean-theme-org-highlight head4-bg)))))
+     `(font-latex-sectioning-2-face ((,class (:inherit bold :foreground ,head1 :height ,(if plainocean-theme-org-height 1.3 1.0) :background ,(when plainocean-theme-org-highlight head1-bg)))))
+     `(font-latex-sectioning-3-face ((,class (:inherit bold :foreground ,head2 :height ,(if plainocean-theme-org-height 1.2 1.0) :background ,(when plainocean-theme-org-highlight head2-bg)))))
+     `(font-latex-sectioning-4-face ((,class (:bold nil :foreground ,head3 :height ,(if plainocean-theme-org-height 1.1 1.0) :background ,(when plainocean-theme-org-highlight head3-bg)))))
+     `(font-latex-sectioning-5-face ((,class (:bold nil :foreground ,head4 :background ,(when plainocean-theme-org-highlight head4-bg)))))
      `(font-latex-string-face ((,class (:foreground ,str))))
      `(font-latex-warning-face ((,class (:foreground ,war))))
 
@@ -699,15 +699,44 @@ to 'auto, tags may not be properly aligned."
      `(Man-underline ((,class (:foreground ,comp :underline t))))
 
 ;;;;; markdown
-     `(markdown-header-face-1 ((,class (:inherit bold :foreground ,head1 :height ,(if plainlight-theme-org-height 1.3 1.0) :background ,(when plainlight-theme-org-highlight head1-bg)))))
-     `(markdown-header-face-2 ((,class (:inherit bold :foreground ,head2 :height ,(if plainlight-theme-org-height 1.2 1.0) :background ,(when plainlight-theme-org-highlight head2-bg)))))
-     `(markdown-header-face-3 ((,class (:bold nil :foreground ,head3 :height ,(if plainlight-theme-org-height 1.1 1.0) :background ,(when plainlight-theme-org-highlight head3-bg)))))
-     `(markdown-header-face-4 ((,class (:bold nil :foreground ,head4 :background ,(when plainlight-theme-org-highlight head4-bg)))))
+     `(markdown-header-face-1 ((,class (:inherit bold :foreground ,head1 :height ,(if plainocean-theme-org-height 1.3 1.0) :background ,(when plainocean-theme-org-highlight head1-bg)))))
+     `(markdown-header-face-2 ((,class (:inherit bold :foreground ,head2 :height ,(if plainocean-theme-org-height 1.2 1.0) :background ,(when plainocean-theme-org-highlight head2-bg)))))
+     `(markdown-header-face-3 ((,class (:bold nil :foreground ,head3 :height ,(if plainocean-theme-org-height 1.1 1.0) :background ,(when plainocean-theme-org-highlight head3-bg)))))
+     `(markdown-header-face-4 ((,class (:bold nil :foreground ,head4 :background ,(when plainocean-theme-org-highlight head4-bg)))))
      `(markdown-header-face-5 ((,class (:bold nil :foreground ,head1))))
      `(markdown-header-face-6 ((,class (:bold nil :foreground ,head2))))
      `(markdown-table-face ((,class (:foreground ,base :background ,head1-bg))))
 
 ;;;;; meow
+     ;; meow-beacon-cursor                         ;; Keypad state cursor.
+     ;; meow-insert-cursor                         ;; Insert state cursor.
+     ;; meow-keypad-cursor                         ;; Keypad state cursor.
+     ;; meow-kmacro-cursor                         ;; Indicator for region direction.
+     ;; meow-motion-cursor                         ;; Motion state cursor.
+     ;; meow-normal-cursor                         ;; Normal state cursor.
+     ;; meow-unknown-cursor                        ;; Unknown state cursor.
+     ;; meow-region-cursor-1                       ;; Indicator for region direction.
+     ;; meow-region-cursor-2                       ;; Indicator for region direction.
+     ;; meow-region-cursor-3                       ;; Indicator for region direction.
+     ;; meow-beacon-indicator                      ;; Cursor state indicator.
+     ;; meow-insert-indicator                      ;; Insert state indicator.
+     ;; meow-keypad-indicator                      ;; Keypad state indicator.
+     ;; meow-motion-indicator                      ;; Motion state indicator.
+     ;; meow-normal-indicator                      ;; Normal state indicator.
+     ;; meow-search-highlight                      ;; Search target highlight.
+     ;; meow-search-indicator                      ;; Face for search indicator.
+     ;; meow-beacon-fake-cursor                    ;; BEACON selection face.
+     ;; meow-cheatsheet-command                    ;; Face for Meow cheatsheet command.
+     ;; meow-cheatsheet-highlight                  ;; Face for Meow cheatsheet highlight text.
+     ;; meow-beacon-fake-selection                 ;; BEACON selection face.
+     ;; meow-position-highlight-number             ;; Num position highlight.
+     ;; meow-position-highlight-number-1           ;; Num position highlight.
+     ;; meow-position-highlight-number-2           ;; Num position highlight.
+     ;; meow-position-highlight-number-3           ;; Num position highlight.
+     ;; meow-position-highlight-reverse-number-1   ;; Num position highlight.
+     ;; meow-position-highlight-reverse-number-2   ;; Num position highlight.
+     ;; meow-position-highlight-reverse-number-3   ;; Num position highlight.
+
      `(meow-normal-indicator   ((,class (:foreground ,base))))
      `(meow-keypad-indicator   ((,class (:foreground "#801717" :background "#FF6666"))))
      `(meow-insert-indicator   ((,class (:foreground "#309030" :background "#AAE9A0"))))
@@ -725,6 +754,150 @@ to 'auto, tags may not be properly aligned."
      `(meow-position-highlight-reverse-number-2 ((,class (:foreground ,bg1 :background ,yellow :inherit bold))))
      `(meow-position-highlight-reverse-number-3 ((,class (:foreground ,bg1 :background ,yellow :inherit bold))))
      `(meow-search-highlight ((,class (:background ,aqua))))
+
+
+     ;; `(meow-normal-cursor
+     ;;   '((((class color) (background dark))
+     ;; 	  (:inherit cursor))
+     ;; 	 (((class color) (background light))
+     ;; 	  (:inherit cursor)))
+     ;;   "Normal state cursor."
+     ;;   :group 'meow)
+
+     ;; `(meow-insert-cursor
+     ;;   '((((class color) (background dark))
+     ;; 	  (:inherit cursor))
+     ;; 	 (((class color) (background light))
+     ;; 	  (:inherit cursor)))
+     ;;   "Insert state cursor."
+     ;;   :group 'meow)
+
+     ;; `(meow-motion-cursor
+     ;;   '((((class color) (background dark))
+     ;; 	  (:inherit cursor))
+     ;; 	 (((class color) (background light))
+     ;; 	  (:inherit cursor)))
+     ;;   "Motion state cursor."
+     ;;   :group 'meow)
+
+     ;; `(meow-keypad-cursor
+     ;;   '((((class color) (background dark))
+     ;; 	  (:inherit cursor))
+     ;; 	 (((class color) (background light))
+     ;; 	  (:inherit cursor)))
+     ;;   "Keypad state cursor."
+     ;;   :group 'meow)
+
+     ;; `(meow-beacon-cursor
+     ;;   '((((class color) (background dark))
+     ;; 	  (:inherit cursor))
+     ;; 	 (((class color) (background light))
+     ;; 	  (:inherit cursor)))
+     ;;   "Keypad state cursor."
+     ;;   :group 'meow)
+
+     ;; `(meow-beacon-cursor
+     ;;   '((t (:inherit cursor)))
+     ;;   "BEACON cursor face."
+     ;;   :group 'meow)
+
+     ;; `(meow-beacon-fake-selection
+     ;;   '((t (:inherit region)))
+     ;;   "BEACON selection face."
+     ;;   :group 'meow)
+
+     ;; `(meow-beacon-fake-cursor
+     ;;   '((t (:inherit region :extend nil)))
+     ;;   "BEACON selection face."
+     ;;   :group 'meow)
+
+     ;; `(meow-unknown-cursor
+     ;;   '((((class color) (background dark))
+     ;; 	  (:inherit cursor))
+     ;; 	 (((class color) (background light))
+     ;; 	  (:inherit cursor)))
+     ;;   "Unknown state cursor."
+     ;;   :group 'meow)
+
+     ;; `(meow-region-cursor-1
+     ;;   `((((class color) (background dark)))
+     ;; 	 (((class color) (background light))))
+     ;;   "Indicator for region direction."
+     ;;   :group 'meow)
+
+     ;; `(meow-region-cursor-2
+     ;;   `((((class color) (background dark)))
+     ;; 	 (((class color) (background light))))
+     ;;   "Indicator for region direction."
+     ;;   :group 'meow)
+
+     ;; `(meow-region-cursor-3
+     ;;   `((((class color) (background dark)))
+     ;; 	 (((class color) (background light))))
+     ;;   "Indicator for region direction."
+     ;;   :group 'meow)
+
+     ;; `(meow-kmacro-cursor
+     ;;   `((t (:underline t)))
+     ;;   "Indicator for region direction."
+     ;;   :group 'meow)
+
+     ;; `(meow-search-highlight
+     ;;   '((t (:inherit lazy-highlight)))
+     ;;   "Search target highlight."
+     ;;   :group 'meow)
+
+     ;; `(meow-position-highlight-number
+     ;;   '((((class color) (background dark))
+     ;; 	  (:inherit default))
+     ;; 	 (((class color) (background light))
+     ;; 	  (:inherit default)))
+     ;;   "Num position highlight."
+     ;;   :group 'meow)
+
+     ;; `(meow-position-highlight-number-1
+     ;;   '((t (:inherit meow-position-highlight-number)))
+     ;;   "Num position highlight."
+     ;;   :group 'meow)
+
+     ;; `(meow-position-highlight-number-2
+     ;;   '((t (:inherit meow-position-highlight-number)))
+     ;;   "Num position highlight."
+     ;;   :group 'meow)
+
+     ;; `(meow-position-highlight-number-3
+     ;;   '((t (:inherit meow-position-highlight-number)))
+     ;;   "Num position highlight."
+     ;;   :group 'meow)
+
+     ;; `(meow-position-highlight-reverse-number-1
+     ;;   '((t (:inherit meow-position-highlight-number-1)))
+     ;;   "Num position highlight."
+     ;;   :group 'meow)
+
+     ;; `(meow-position-highlight-reverse-number-2
+     ;;   '((t (:inherit meow-position-highlight-number-2))))
+
+     ;; `(meow-position-highlight-reverse-number-3
+     ;;   '((t (:inherit meow-position-highlight-number-3))))
+
+     ;; `(meow-search-indicator
+     ;;   '((((class color) (background dark))
+     ;; 	  (:foreground "grey40"))
+     ;; 	 (((class color) (background light))
+     ;; 	  (:foreground "grey60"))))
+
+     ;; `(meow-cheatsheet-command
+     ;;   '((((class color) (background dark))
+     ;; 	  (:height 0.7 :foreground "grey90"))
+     ;; 	 (((class color) (background light))
+     ;; 	  (:height 0.7 :foreground "grey10"))))
+
+     ;; `(meow-cheatsheet-highlight
+     ;;   '((((class color) (background dark))
+     ;; 	  (:foreground "grey90"))
+     ;; 	 (((class color) (background light))
+     ;; 	  (:foreground "grey10"))))
 
 ;;;;; mode-line
      ;; `(mode-line           ((,class (:foreground ,base :background ,act1 :box (:color ,border :line-width 1)))))
@@ -778,22 +951,22 @@ to 'auto, tags may not be properly aligned."
 
 ;;;;; org
      `(org-agenda-clocking ((,class (:background ,highlight :foreground ,comp))))
-     `(org-agenda-date ((,class (:foreground ,var :height ,(if plainlight-theme-org-agenda-height 1.1 1.0)))))
-     `(org-agenda-date-today ((,class (:foreground ,keyword :inherit bold :height ,(if plainlight-theme-org-agenda-height 1.3 1.0)))))
+     `(org-agenda-date ((,class (:foreground ,var :height ,(if plainocean-theme-org-agenda-height 1.1 1.0)))))
+     `(org-agenda-date-today ((,class (:foreground ,keyword :inherit bold :height ,(if plainocean-theme-org-agenda-height 1.3 1.0)))))
      `(org-agenda-date-weekend ((,class (:inherit bold :foreground ,var))))
-     `(org-agenda-done ((,class (:foreground ,suc :height ,(if plainlight-theme-org-agenda-height 1.2 1.0)))))
+     `(org-agenda-done ((,class (:foreground ,suc :height ,(if plainocean-theme-org-agenda-height 1.2 1.0)))))
      `(org-agenda-structure ((,class (:inherit bold :foreground ,comp))))
      `(org-block ((,class (:background ,cblk-bg :foreground ,cblk :extend t))))
      `(org-block-begin-line ((,class (:background ,cblk-ln-bg :foreground ,cblk-ln :extend t))))
      `(org-block-end-line ((,class (:background ,cblk-ln-bg :foreground ,cblk-ln :extend t))))
      `(org-clock-overlay ((,class (:foreground ,comp))))
      `(org-code ((,class (:foreground ,cyan))))
-     `(org-column ((,class (:background ,highlight :inherit ,(if plainlight-theme-org-height 'default)))))
+     `(org-column ((,class (:background ,highlight :inherit ,(if plainocean-theme-org-height 'default)))))
      `(org-column-title ((,class (:background ,highlight))))
      `(org-date ((,class (:underline t :foreground ,var))))
      `(org-date-selected ((,class (:background ,func :foreground ,bg1))))
      `(org-document-info-keyword ((,class (:foreground ,meta))))
-     `(org-document-title ((,class (:foreground ,func :inherit bold :height ,(if plainlight-theme-org-height 1.4 1.0) :underline t))))
+     `(org-document-title ((,class (:foreground ,func :inherit bold :height ,(if plainocean-theme-org-height 1.4 1.0) :underline t))))
      `(org-done ((,class (:foreground ,suc :inherit bold :background ,green-bg))))
      `(org-ellipsis ((,class (:foreground ,keyword))))
      `(org-footnote  ((,class (:underline t :foreground ,base))))
@@ -801,21 +974,21 @@ to 'auto, tags may not be properly aligned."
      `(org-headline-todo ((,class (:foreground ,meta))))
      `(org-hide ((,class (:foreground ,base))))
      `(org-kbd ((,class (:inherit region :foreground ,base :box (:line-width 1 :style released-button)))))
-     `(org-level-1 ((,class (:inherit bold :bold ,(if plainlight-theme-org-bold 'unspecified nil) :foreground ,head1 :height ,(if plainlight-theme-org-height 1.2 1.0) :background ,(when plainlight-theme-org-highlight head1-bg)))))
-     `(org-level-2 ((,class (:bold nil :foreground ,head2 :height ,(if plainlight-theme-org-height 1.1 1.0) :background ,(when plainlight-theme-org-highlight head2-bg)))))
-     `(org-level-3 ((,class (:bold nil :foreground ,head3 :height ,(if plainlight-theme-org-height 1.05 1.0) :background ,(when plainlight-theme-org-highlight head3-bg)))))
-     `(org-level-4 ((,class (:bold nil :foreground ,head4 :height ,(if plainlight-theme-org-height 1.0 1.0) :background ,(when plainlight-theme-org-highlight head4-bg)))))
-     `(org-level-5 ((,class (:bold nil :foreground ,head1 :height ,(if plainlight-theme-org-height 1.1 1.0)))))
-     `(org-level-6 ((,class (:bold nil :foreground ,head2 :height ,(if plainlight-theme-org-height 1.1 1.0)))))
-     `(org-level-7 ((,class (:bold nil :foreground ,head3 :height ,(if plainlight-theme-org-height 1.1 1.0)))))
-     `(org-level-8 ((,class (:bold nil :foreground ,head4 :height ,(if plainlight-theme-org-height 1.1 1.0)))))
+     `(org-level-1 ((,class (:inherit bold :bold ,(if plainocean-theme-org-bold 'unspecified nil) :foreground ,head1 :height ,(if plainocean-theme-org-height 1.2 1.0) :background ,(when plainocean-theme-org-highlight head1-bg)))))
+     `(org-level-2 ((,class (:bold nil :foreground ,head2 :height ,(if plainocean-theme-org-height 1.1 1.0) :background ,(when plainocean-theme-org-highlight head2-bg)))))
+     `(org-level-3 ((,class (:bold nil :foreground ,head3 :height ,(if plainocean-theme-org-height 1.05 1.0) :background ,(when plainocean-theme-org-highlight head3-bg)))))
+     `(org-level-4 ((,class (:bold nil :foreground ,head4 :height ,(if plainocean-theme-org-height 1.0 1.0) :background ,(when plainocean-theme-org-highlight head4-bg)))))
+     `(org-level-5 ((,class (:bold nil :foreground ,head1 :height ,(if plainocean-theme-org-height 1.1 1.0)))))
+     `(org-level-6 ((,class (:bold nil :foreground ,head2 :height ,(if plainocean-theme-org-height 1.1 1.0)))))
+     `(org-level-7 ((,class (:bold nil :foreground ,head3 :height ,(if plainocean-theme-org-height 1.1 1.0)))))
+     `(org-level-8 ((,class (:bold nil :foreground ,head4 :height ,(if plainocean-theme-org-height 1.1 1.0)))))
      `(org-link ((,class (:underline t :foreground ,comment))))
      `(org-meta-line ((,class (:foreground ,meta))))
      `(org-mode-line-clock-overrun ((,class (:foreground ,err))))
-     `(org-priority ((,class (:foreground ,war :inherit bold :bold ,(if plainlight-theme-org-priority-bold 'unspecified nil)))))
+     `(org-priority ((,class (:foreground ,war :inherit bold :bold ,(if plainocean-theme-org-priority-bold 'unspecified nil)))))
      `(org-quote ((,class (:inherit org-block :slant italic))))
      `(org-scheduled ((,class (:foreground ,comp))))
-     `(org-scheduled-today ((,class (:foreground ,func :height ,(if plainlight-theme-org-agenda-height 1.2 1.0)))))
+     `(org-scheduled-today ((,class (:foreground ,func :height ,(if plainocean-theme-org-agenda-height 1.2 1.0)))))
      `(org-scheduled-previously ((,class (:foreground ,base :slant italic))))
      `(org-sexp-date ((,class (:foreground ,base))))
      `(org-special-keyword ((,class (:foreground ,func))))
@@ -893,13 +1066,13 @@ to 'auto, tags may not be properly aligned."
      `(shm-quarantine-face ((,class (:background ,red-bg-s))))
 
 ;;;;; show-paren
-     `(show-paren-match ((,class (:foreground ,mat :inherit bold  :underline ,(when plainlight-theme-underline-parens t)))))
+     `(show-paren-match ((,class (:foreground ,mat :inherit bold  :underline ,(when plainocean-theme-underline-parens t)))))
      `(show-paren-match-expression ((,class (:background ,green-bg-s))))
-     `(show-paren-mismatch ((,class (:foreground ,err :inherit bold :underline ,(when plainlight-theme-underline-parens t)))))
+     `(show-paren-mismatch ((,class (:foreground ,err :inherit bold :underline ,(when plainocean-theme-underline-parens t)))))
 
 ;;;;; smartparens
      `(sp-pair-overlay-face ((,class (:background ,highlight :foreground nil))))
-     `(sp-show-pair-match-face ((,class (:foreground ,mat :inherit bold  :underline ,(when plainlight-theme-underline-parens t)))))
+     `(sp-show-pair-match-face ((,class (:foreground ,mat :inherit bold  :underline ,(when plainocean-theme-underline-parens t)))))
 
 ;;;;; smerge
      `(smerge-base ((,class (:background ,yellow-bg :extend t))))
@@ -922,8 +1095,8 @@ to 'auto, tags may not be properly aligned."
      `(spaceline-flycheck-warning((,class (:foreground ,war))))
      `(spaceline-python-venv ((,class (:foreground ,comp))))
 
-;;;;; plainlight-specific
-     `(plainlight-transient-state-title-face ((,class (:background nil :foreground ,comp :box nil :inherit bold))))
+;;;;; plainocean-specific
+     `(plainocean-transient-state-title-face ((,class (:background nil :foreground ,comp :box nil :inherit bold))))
 
 ;;;;; swiper
      `(swiper-line-face ((,class (:background ,highlight :inherit bold))))
@@ -1096,10 +1269,10 @@ to 'auto, tags may not be properly aligned."
 ;; no-byte-compile: t
 ;; End:
 
-(deftheme plain-light "Ditch the rainbow of distraction.")
+(deftheme plain-ocean "Ditch the rainbow of distraction.")
 
-(create-plainlight-theme 'plain-light)
+(create-plainocean-theme 'plain-ocean)
 
-(provide-theme 'plain-light)
+(provide-theme 'plain-ocean)
 
-;;; plain-light-theme.el ends here
+;;; plain-ocean-theme.el ends here

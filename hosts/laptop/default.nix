@@ -52,7 +52,7 @@
         enable = true;
         user = "cory";
       };
-      layout = "us_dvorak_emacs";
+      layout = "us_beakl_emacs";
       libinput.touchpad = {
         accelProfile = "adaptive";
         accelSpeed = "0.5";
@@ -90,15 +90,15 @@
   };
 
   home-manager.users.cory = {
+    # Xft.antialias: 1
+    # Xft.hinting: 1
+    # Xft.autohint: 0
+    # Xft.hintstyle: hintslight
+    # Xft.rgba: rgb
+    # Xft.lcdfilter: lcddefault
     xresources.extraConfig = ''
-    Xft.dpi: 225
-    Xft.antialias: 1
-    Xft.hinting: 1
-    Xft.autohint: 0
-    Xft.hintstyle: hintslight
-    Xft.rgba: rgb
-    Xft.lcdfilter: lcddefault
-  '';
+      Xft.dpi: 225
+    '';
 
     home.packages = with pkgs; [
       zoom-us

@@ -43,10 +43,10 @@
           languages = [ "eng" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_dvorak_emacs";
         };
-        us_dvorak_emacs_kinesis = {
+        us_beakl_emacs = {
           description = "US layout with numbers and characters flipped";
           languages = [ "eng" ];
-          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_dvorak_emacs_kinesis";
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_beakl_emacs";
         };
         ru_dvorak = {
           description = "Russian implementation of dvorak layout";
@@ -57,6 +57,11 @@
           description = "Russian phonetic translation of the US dvorak emacs layout";
           languages = [ "rus" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_phonetic_dvorak";
+        };
+        ru_beakl_emacs = {
+          description = "Russian phonetic translation of the US beakl emacs layout";
+          languages = [ "rus" ];
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_beakl_emacs";
         };
       };
       libinput = {
@@ -331,10 +336,12 @@
         tex
         python39Full
         python39Packages.pip
-        rnix-lsp
+        # rnix-lsp
+        # nil
         javaPackages.openjfx17
         maven
         gradle
+        # dotnet-sdk
 
         # essential user apps
         tdesktop
