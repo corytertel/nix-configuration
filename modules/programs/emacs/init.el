@@ -534,7 +534,7 @@
   :ensure t
 
   :hook
-  (nix-mode . eglot-ensure)
+  ;; (nix-mode . eglot-ensure)
   (c-mode . eglot-ensure)
   (c++-mode . eglot-ensure)
   (racket-mode . eglot-ensure)
@@ -2076,7 +2076,8 @@ Lisp function does not specify a special indentation."
 
 ;;; Chicken Scheme
 
-(custom-set-variables '(scheme-program-name "csi -R r7rs"))
+;; (custom-set-variables '(scheme-program-name "csi -R r7rs"))
+(custom-set-variables '(scheme-program-name "scheme"))
 
 (add-to-list 'auto-mode-alist
              '("\\.egg\\'" . scheme-mode))
@@ -2101,9 +2102,12 @@ Lisp function does not specify a special indentation."
   :hook
   (scheme-mode . geiser-mode)
   :custom
-  (geiser-active-implementations '(chicken)))
+  ;; (geiser-active-implementations '(chicken))
+  (geiser-active-implementations '(chez)))
 
 (use-package geiser-chicken)
+
+(use-package geiser-chez)
 
 ;;; C++
 (use-package modern-cpp-font-lock

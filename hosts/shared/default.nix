@@ -320,6 +320,9 @@
         sbcl
         asdf
 
+        # scheme
+        chez
+
         # chicken scheme
         chicken
         chicken-lsp-server
