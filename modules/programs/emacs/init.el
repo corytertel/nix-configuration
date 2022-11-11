@@ -541,7 +541,7 @@
   (clojure-mode . eglot-ensure)
   (clojurescript-mode . eglot-ensure)
   (clojurec-mode . eglot-ensure)
-  (scheme-mode . eglot-ensure)
+  ;; (scheme-mode . eglot-ensure)
   (java-mode . eglot-ensure)
 
   :custom
@@ -554,8 +554,8 @@
 
   :config
   (define-key eglot-mode-map [remap display-local-help] nil)
-  (add-to-list 'eglot-server-programs
-               `(scheme-mode . ("chicken-lsp-server")))
+  ;; (add-to-list 'eglot-server-programs
+  ;;              `(scheme-mode . ("chicken-lsp-server")))
   (add-to-list 'eglot-server-programs
                `(clojure-mode . ("clojure-lsp")))
   ;; (add-to-list 'eglot-server-programs
@@ -2076,8 +2076,8 @@ Lisp function does not specify a special indentation."
 
 ;;; Chicken Scheme
 
-;; (custom-set-variables '(scheme-program-name "csi -R r7rs"))
-(custom-set-variables '(scheme-program-name "scheme"))
+(custom-set-variables '(scheme-program-name "csi -R r7rs"))
+;; (custom-set-variables '(scheme-program-name "scheme"))
 
 (add-to-list 'auto-mode-alist
              '("\\.egg\\'" . scheme-mode))
@@ -2102,12 +2102,19 @@ Lisp function does not specify a special indentation."
   :hook
   (scheme-mode . geiser-mode)
   :custom
-  ;; (geiser-active-implementations '(chicken))
-  (geiser-active-implementations '(chez)))
+  (geiser-active-implementations '(chicken))
+  ;; (geiser-active-implementations '(chez))
+  :config
+  ;; Add geiser capfs to capf
+  (add-hook 'scheme-mode-hook
+	    (lambda ()
+	      (setq-local completion-at-point-functions
+			  (append geiser-capf--capfs
+				  completion-at-point-functions)))))
 
 (use-package geiser-chicken)
 
-(use-package geiser-chez)
+;; (use-package geiser-chez)
 
 ;;; C++
 (use-package modern-cpp-font-lock

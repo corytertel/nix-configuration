@@ -322,8 +322,6 @@
 
         # scheme
         chez
-
-        # chicken scheme
         chicken
         chicken-lsp-server
         egg2nix
