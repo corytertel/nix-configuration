@@ -38,6 +38,11 @@
     xserver = {
       enable = true;
       extraLayouts = {
+        us_qwerty = {
+          description = "US layout with numbers and characters flipped";
+          languages = [ "eng" ];
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_qwerty";
+        };
         us_dvorak_emacs = {
           description = "US layout with numbers and characters flipped";
           languages = [ "eng" ];
@@ -52,6 +57,11 @@
           description = "Russian implementation of dvorak layout";
           languages = [ "rus" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_dvorak";
+        };
+        ru_phonetic_qwerty = {
+          description = "Russian phonetic translation of the US dvorak emacs layout";
+          languages = [ "rus" ];
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_phonetic_qwerty";
         };
         ru_phonetic_dvorak = {
           description = "Russian phonetic translation of the US dvorak emacs layout";

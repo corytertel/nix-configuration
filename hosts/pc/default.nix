@@ -37,7 +37,7 @@
 
   services = {
     xserver.videoDrivers = [ "nvidia" ];
-    xserver.layout = "us";
+    xserver.layout = "us_qwerty";
   };
 
   hardware.opengl = {

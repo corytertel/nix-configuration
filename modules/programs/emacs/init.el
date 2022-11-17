@@ -1726,6 +1726,27 @@ argument, query for word to search."
 
 ;;; Lisps
 
+;; Keybinds
+(defun cory/move-forward-paren (&optional arg)
+  "Move forward parenthesis"
+  (interactive "P")
+  (if (looking-at ")") (forward-char 1))
+  (while (not (looking-at ")")) (forward-char 1)))
+
+(defun cory/move-backward-paren (&optional arg)
+  "Move backward parenthesis"
+  (interactive "P")
+  (if (looking-at "(") (forward-char -1))
+  (while (not (looking-at "(")) (backward-char 1)))
+
+(dolist (map (list emacs-lisp-mode-map
+		   lisp-mode-map lisp-data-mode-map
+		   clojure-mode-map cider-repl-mode-map
+		   ;; racket-mode-map racket-repl-mode-map
+		   scheme-mode-map geiser-repl-mode-map))
+  (define-key map (kbd "M-a") 'cory/move-backward-paren)
+  (define-key map (kbd "M-e") 'cory/move-forward-paren))
+
 ;; Nicer elisp regex syntax highlighting
 (use-package easy-escape
   :hook ((emacs-lisp-mode lisp-mode) . easy-escape-minor-mode))
