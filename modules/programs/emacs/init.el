@@ -1113,10 +1113,22 @@
 ;; Visual regex replacement
 (use-package visual-regexp
   :bind
-  (("C-c r" . vr/replace)
+  (("C-c r" . cory/replace)
    ("C-c q" . vr/query-replace)
    ;; for multiple-cursors
-   ("C-c M" . vr/mc-mark)))
+   ("C-c M" . vr/mc-mark))
+  :config
+  (defun cory/replace ()
+    (interactive)
+    (let ((a (vr--interactive-get-args
+	      'vr--mode-regexp-replace
+	      'vr--calling-func-replace)))
+      (apply 'vr/replace
+	     (list
+	      (car a)
+	      (cadr a)
+	      0
+	      (cadddr a))))))
 
 ;; Move text
 (use-package move-text
@@ -1725,27 +1737,6 @@ argument, query for word to search."
 ;;
 
 ;;; Lisps
-
-;; Keybinds
-(defun cory/move-forward-paren (&optional arg)
-  "Move forward parenthesis"
-  (interactive "P")
-  (if (looking-at ")") (forward-char 1))
-  (while (not (looking-at ")")) (forward-char 1)))
-
-(defun cory/move-backward-paren (&optional arg)
-  "Move backward parenthesis"
-  (interactive "P")
-  (if (looking-at "(") (forward-char -1))
-  (while (not (looking-at "(")) (backward-char 1)))
-
-(dolist (map (list emacs-lisp-mode-map
-		   lisp-mode-map lisp-data-mode-map
-		   clojure-mode-map cider-repl-mode-map
-		   ;; racket-mode-map racket-repl-mode-map
-		   scheme-mode-map geiser-repl-mode-map))
-  (define-key map (kbd "M-a") 'cory/move-backward-paren)
-  (define-key map (kbd "M-e") 'cory/move-forward-paren))
 
 ;; Nicer elisp regex syntax highlighting
 (use-package easy-escape
@@ -2517,7 +2508,7 @@ Lisp function does not specify a special indentation."
 (put 'cory/scroll-down-half-page 'scroll-command t)
 (put 'cory/scroll-up-half-page 'scroll-command t)
 
-;; Basic Keybind
+;;; Basic Keybinds
 
 ;; Swap "C-h" and "C-x", so it's easier to type on Dvorak layout
 ;; (keyboard-translate (kbd "C-h") (kbd "C-x"))
@@ -2539,6 +2530,30 @@ Lisp function does not specify a special indentation."
 		("C-v"     cory/scroll-down-half-page)
 		("M-v"     cory/scroll-up-half-page)))
   (global-set-key (kbd (car pair)) (cadr pair)))
+
+;;; Lisp Keybinds
+
+(defun cory/move-forward-paren (&optional arg)
+  "Move forward parenthesis"
+  (interactive "P")
+  (if (looking-at ")") (forward-char 1))
+  (while (not (looking-at ")")) (forward-char 1)))
+
+(defun cory/move-backward-paren (&optional arg)
+  "Move backward parenthesis"
+  (interactive "P")
+  (if (looking-at "(") (forward-char -1))
+  (while (not (looking-at "(")) (backward-char 1)))
+
+(dolist (map (list emacs-lisp-mode-map
+		   lisp-mode-map lisp-data-mode-map
+		   clojure-mode-map ;; cider-repl-mode-map
+		   ;; racket-mode-map racket-repl-mode-map
+		   scheme-mode-map geiser-repl-mode-map))
+  (define-key map (kbd "M-a") 'cory/move-backward-paren)
+  (define-key map (kbd "M-e") 'cory/move-forward-paren))
+
+;;; Repeat Maps
 
 (defun repeaters-define-maps (rlist)
   "Define an arbitrary number of repeater maps.
