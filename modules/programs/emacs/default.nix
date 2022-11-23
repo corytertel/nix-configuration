@@ -153,6 +153,7 @@ in {
       ".emacs.d/logo.png".source = ./logo.png;
       ".emacs.d/eshell/alias".text = import ./eshell-alias.nix { inherit config pkgs; };
       ".emacs.d/templates".source = ./templates;
+      # ".emacs.d/snippets".source = ./snippets;
       ".local/share/dict/words".source = "${pkgs.scowl}/share/dict/words.txt";
     };
 

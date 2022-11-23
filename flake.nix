@@ -16,41 +16,44 @@
     nur.url = "github:nix-community/NUR";
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
+    epkg-skempo.inputs.emacs-overlay.follows = "emacs-overlay";
+    epkg-skempo.inputs.nixpkgs.follows = "nixpkgs";
+    epkg-skempo.url = "github:xFA25E/skempo";
   };
 
-  outputs = { nixpkgs, home-manager, nur, emacs-overlay, ... }:
-  let
-    system = "x86_64-linux";
+  outputs = { nixpkgs, home-manager, nur, emacs-overlay, epkg-skempo, ... }:
+    let
+      system = "x86_64-linux";
 
-    config = nixpkgs.config;
-    lib = nixpkgs.lib;
+      config = nixpkgs.config;
+      lib = nixpkgs.lib;
 
-    pkgs = import nixpkgs {
-      inherit system;
-      config = { allowUnfree = true; };
-      overlays = [ nur.overlay emacs-overlay.overlay ]
-        ++ import ./overlays { inherit pkgs; }
-        ++ import ./packages { inherit config lib pkgs; };
+      pkgs = import nixpkgs {
+        inherit system;
+        config = { allowUnfree = true; };
+        overlays = [ nur.overlay emacs-overlay.overlay ]
+                   ++ import ./overlays { inherit pkgs; }
+                   ++ import ./packages { inherit config lib pkgs; };
+      };
+
+      mkHost = hostModules: lib.nixosSystem {
+        inherit system pkgs;
+        modules = hostModules ++ [
+          ./modules
+          home-manager.nixosModules.home-manager {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+          }
+        ];
+      };
+
+    in {
+      devShell.${system} = import ./shell.nix { inherit pkgs; };
+
+      nixosConfigurations = {
+        pc = mkHost [ ./hosts/pc  ];
+        laptop = mkHost [ ./hosts/laptop ];
+        vm = mkHost [ ./hosts/vm ];
+      };
     };
-
-    mkHost = hostModules: lib.nixosSystem {
-      inherit system pkgs;
-      modules = hostModules ++ [
-        ./modules
-        home-manager.nixosModules.home-manager {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-        }
-      ];
-    };
-
-  in {
-    devShell.${system} = import ./shell.nix { inherit pkgs; };
-
-    nixosConfigurations = {
-      pc = mkHost [ ./hosts/pc  ];
-      laptop = mkHost [ ./hosts/laptop ];
-      vm = mkHost [ ./hosts/vm ];
-    };
-  };
 }

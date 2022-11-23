@@ -100,6 +100,13 @@
 ;; (equal (kbd "RET") (kbd "C-m"))   ; -> t
 ;; (equal (kbd "RET") (kbd "<C-m>")) ; -> nil
 
+(define-key function-key-map
+  [(control shift iso-lefttab)] [(control shift tab)])
+(define-key function-key-map
+  [(meta shift iso-lefttab)] [(meta shift tab)])
+(define-key function-key-map
+  [(meta control shift iso-lefttab)] [(meta control shift tab)])
+
 ;;
 ;; --- VISUALS ---
 ;;
@@ -405,7 +412,7 @@
 (global-set-key (kbd "C-x 2") 'split-and-follow-below)
 (global-set-key (kbd "C-x 3") 'split-and-follow-right)
 (global-set-key (kbd "C-x 4 q") 'kill-all-buffers-and-windows)
-(global-set-key (kbd "C-c b") 'balance-windows)
+;; (global-set-key (kbd "C-c b") 'balance-windows)
 (global-set-key (kbd "<f1>") 'switch-to-last-buffer)
 (global-set-key (kbd "C-<f1>") 'switch-to-last-buffer)
 (global-set-key (kbd "M-<f1>") 'switch-to-last-buffer)
@@ -543,6 +550,7 @@
   (clojurec-mode . eglot-ensure)
   ;; (scheme-mode . eglot-ensure)
   (java-mode . eglot-ensure)
+  (eglot--managed-mode . eglot-super-capf)
 
   :custom
   (eglot-autoshutdown t)
@@ -561,9 +569,17 @@
   ;; (add-to-list 'eglot-server-programs
   ;;              `(nix-mode . ("nil")))
 
+  (defun eglot-super-capf ()
+    (setq-local completion-at-point-functions
+		(list (cape-super-capf
+		       #'tempel-complete
+		       #'eglot-completion-at-point)
+		      #'cape-dabbrev
+		      #'cape-file)))
+
   :bind (:map eglot-mode-map
 	 ("C-c C-a" . eglot-code-actions)
-	 ("C-c f" . eglot-format-buffer)))
+	 ("C-c b" . eglot-format-buffer)))
 
 ;; Tree-sitter
 ;; (use-package tree-sitter
@@ -609,8 +625,8 @@
 	  (define-key map [backtab] #'corfu-previous)
 	  (define-key map (kbd "TAB") #'corfu-next)
 	  (define-key map (kbd "S-TAB") #'corfu-previous)
-	  ;; (define-key map [return] #'corfu-insert)
-	  ;; (define-key map (kbd "RET") #'corfu-insert)
+	  (define-key map [(shift return)] #'corfu-insert)
+	  (define-key map (kbd "S-<return>") #'corfu-insert)
 	  (define-key map (kbd "M-l") 'corfu-info-location)
 	  (define-key map (kbd "C-h") 'corfu-info-documentation)
 	  (define-key map (kbd "M-SPC") #'corfu-insert-separator)
@@ -631,7 +647,6 @@
   :init
   ;; Add `completion-at-point-functions', used by `completion-at-point'.
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  ;; (add-to-list 'completion-at-point-functions #'cape-dict)
   (add-to-list 'completion-at-point-functions #'cape-file)
 
   :config
@@ -653,8 +668,11 @@
   (add-hook 'eshell-mode-hook
             (lambda () (setq-local corfu-quit-at-boundary t
                               corfu-quit-no-match t
-                              corfu-auto t)
-              (corfu-mode))))
+                              corfu-auto t
+			      completion-at-point-functions
+			      (cons #'cape-history
+				    completion-at-point-functions))
+              (corfu-mode 1))))
 
 ;; Documentation popup
 (use-package corfu-doc
@@ -796,39 +814,39 @@
   (embark-collect-mode . consult-preview-at-point-mode))
 
 ;; Templates
-;; (use-package tempel
-;;   ;; Require trigger prefix before template name when completing.
-;;   ;; :custom
-;;   ;; (tempel-trigger-prefix "<")
+(use-package tempel
+  ;; Require trigger prefix before template name when completing.
+  ;; :custom
+  ;; (tempel-trigger-prefix "")
 
-;;   :hook ((prog-mode text-mode) . tempel-setup-capf)
+  :hook ((prog-mode text-mode) . tempel-setup-capf)
 
-;;   :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
-;;          ("M-*" . tempel-insert)
-;; 	 :map tempel-map
-;; 	 ("C-<tab>" . tempel-next)
-;; 	 ("C-S-<tab>" . tempel-previous)
-;; 	 ([remap keyboard-escape-quit] . tempel-done))
+  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
+         ("M-*" . tempel-insert)
+	 :map tempel-map
+	 ("C-<tab>" . tempel-next)
+	 ("C-S-<tab>" . tempel-previous)
+	 ([remap keyboard-quit] . tempel-done))
 
-;;   :init
-;;   Setup completion at point
-;;   (defun tempel-setup-capf ()
-;;     ;; Add the Tempel Capf to `completion-at-point-functions'.
-;;     ;; `tempel-expand' only triggers on exact matches. Alternatively use
-;;     ;; `tempel-complete' if you want to see all matches, but then you
-;;     ;; should also configure `tempel-trigger-prefix', such that Tempel
-;;     ;; does not trigger too often when you don't expect it. NOTE: We add
-;;     ;; `tempel-expand' *before* the main programming mode Capf, such
-;;     ;; that it will be tried first.
-;;     (setq-local completion-at-point-functions
-;;                 (cons #'tempel-complete
-;;                       completion-at-point-functions)))
+  :init
+  ;; Setup completion at point
+  (defun tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.
+    ;; `tempel-expand' only triggers on exact matches. Alternatively use
+    ;; `tempel-complete' if you want to see all matches, but then you
+    ;; should also configure `tempel-trigger-prefix', such that Tempel
+    ;; does not trigger too often when you don't expect it. NOTE: We add
+    ;; `tempel-expand' *before* the main programming mode Capf, such
+    ;; that it will be tried first.
+    (setq-local completion-at-point-functions
+                (cons #'tempel-complete
+                      completion-at-point-functions)))
 
-;;   ;; Optionally make the Tempel templates available to Abbrev,
-;;   ;; either locally or globally. `expand-abbrev' is bound to C-x '.
-;;   ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
-;;   ;; (global-tempel-abbrev-mode)
-;;   )
+  ;; Optionally make the Tempel templates available to Abbrev,
+  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
+  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+  ;; (global-tempel-abbrev-mode)
+  )
 
 ;; Undo
 ;; (use-package undo-tree
@@ -955,7 +973,7 @@
   :config (goggles-mode))
 
 (use-package crux
-  :bind (([(shift return)] . crux-smart-open-line)
+  :bind (([(control return)] . crux-smart-open-line)
          ([(control shift return)] . crux-smart-open-line-above)
 	 ("C-c u" . crux-view-url)
 	 ("C-c e" . crux-eval-and-replace)
@@ -1120,15 +1138,19 @@
   :config
   (defun cory/replace ()
     (interactive)
-    (let ((a (vr--interactive-get-args
-	      'vr--mode-regexp-replace
-	      'vr--calling-func-replace)))
-      (apply 'vr/replace
-	     (list
-	      (car a)
-	      (cadr a)
-	      0
-	      (cadddr a))))))
+    ;; If region is active, only replace the region
+    (if (and transient-mark-mode mark-active (not (eq (mark) (point))))
+        (let ((region (buffer-substring-no-properties (mark) (point))))
+          (call-interactively 'vr/replace))
+      (let ((a (vr--interactive-get-args
+		'vr--mode-regexp-replace
+		'vr--calling-func-replace)))
+	(apply 'vr/replace
+	       (list
+		(car a)
+		(cadr a)
+		0
+		(cadddr a)))))))
 
 ;; Move text
 (use-package move-text
@@ -1148,8 +1170,8 @@
    ;; ("M-g m" . avy-move-line)
    ("<C-m>" . avy-goto-char-timer)
    ("C-S-m" . avy-pop-mark)
-   ("M-SPC" . avy-goto-end-of-line)
-   ("M-S-SPC" . avy-goto-line)
+   ("C-j" . avy-goto-end-of-line-num)
+   ("C-S-j" . avy-goto-line-num)
    ("C-M-s" . isearch-forward-other-window)
    ("C-M-r" . isearch-backward-other-window)
    :map isearch-mode-map
@@ -1460,7 +1482,17 @@ argument, query for word to search."
                for N from 1 to strings-len do
                (push (concat string " ") display-strings)
                (when (= (mod N per-row) 0) (push "\n" display-strings)))
-      (message "%s" (apply #'concat (nreverse display-strings))))))
+      (message "%s" (apply #'concat (nreverse display-strings)))))
+
+  (defun avy-goto-line-num (&optional arg)
+    (interactive "p")
+    (let ((avy-keys (number-sequence ?0 ?9)))
+      (avy-goto-line arg)))
+
+  (defun avy-goto-end-of-line-num (&optional arg)
+    (interactive "p")
+    (let ((avy-keys (number-sequence ?0 ?9)))
+      (avy-goto-end-of-line arg))))
 
 (use-package avy-zap
   :bind
@@ -1675,39 +1707,39 @@ argument, query for word to search."
   (set-face-attribute 'dired-sidebar-face nil :inherit 'variable-pitch))
 
 ;; Snippets
-(use-package yasnippet
-  :config
-  ;; Don't touch TAB!!!
+;; (use-package yasnippet
+;;   :config
+;;   ;; Don't touch TAB!!!
 
-  ;; The active keymap while a snippet expansion is in progress.
-  (setq yas-keymap
-	(let ((map (make-sparse-keymap)))
-	  (define-key map (kbd "C-<tab>")   (yas-filtered-definition 'yas-next-field-or-maybe-expand))
-	  (define-key map (kbd "C-M-<tab>") (yas-filtered-definition 'yas-prev-field))
-	  (define-key map (kbd "C-g")   (yas-filtered-definition 'yas-abort-snippet))
-	  (define-key map (kbd "C-d")   (yas-filtered-definition yas-maybe-skip-and-clear-field))
-	  (define-key map (kbd "DEL")   (yas-filtered-definition yas-maybe-clear-field))
-	  map))
+;;   ;; The active keymap while a snippet expansion is in progress.
+;;   (setq yas-keymap
+;; 	(let ((map (make-sparse-keymap)))
+;; 	  (define-key map (kbd "C-<tab>")   (yas-filtered-definition 'yas-next-field-or-maybe-expand))
+;; 	  (define-key map (kbd "C-M-<tab>") (yas-filtered-definition 'yas-prev-field))
+;; 	  (define-key map (kbd "C-g")   (yas-filtered-definition 'yas-abort-snippet))
+;; 	  (define-key map (kbd "C-d")   (yas-filtered-definition yas-maybe-skip-and-clear-field))
+;; 	  (define-key map (kbd "DEL")   (yas-filtered-definition yas-maybe-clear-field))
+;; 	  map))
 
-  ;; The keymap used when `yas-minor-mode' is active.
-  (setq yas-minor-mode-map
-	(let ((map (make-sparse-keymap)))
-	  (define-key map (kbd "C-<tab>") yas-maybe-expand)
-	  (define-key map "\C-c&\C-s" 'yas-insert-snippet)
-	  (define-key map "\C-c&\C-n" 'yas-new-snippet)
-	  (define-key map "\C-c&\C-v" 'yas-visit-snippet-file)
-	  map))
+;;   ;; The keymap used when `yas-minor-mode' is active.
+;;   (setq yas-minor-mode-map
+;; 	(let ((map (make-sparse-keymap)))
+;; 	  (define-key map (kbd "C-<tab>") yas-maybe-expand)
+;; 	  (define-key map "\C-c&\C-s" 'yas-insert-snippet)
+;; 	  (define-key map "\C-c&\C-n" 'yas-new-snippet)
+;; 	  (define-key map "\C-c&\C-v" 'yas-visit-snippet-file)
+;; 	  map))
 
-  (yas-global-mode 1))
+;;   (yas-global-mode 1))
 
-(use-package common-lisp-snippets)
+;; (use-package common-lisp-snippets)
 
-(use-package clojure-snippets)
+;; (use-package clojure-snippets)
 
-(use-package java-snippets)
+;; (use-package java-snippets)
 
-(use-package gitignore-snippets
-  :config (gitignore-snippets-init))
+;; (use-package gitignore-snippets
+;;   :config (gitignore-snippets-init))
 
 ;; Code folding
 ;; (dolist (mode '(c-mode-common-hook
@@ -2429,19 +2461,27 @@ Lisp function does not specify a special indentation."
 
 (require 's)
 
+(defun cory/isearch-forward-resume ()
+  (interactive)
+  (let ((string (car (s-split " " (car consult--line-history)))))
+    (isearch-resume string nil nil t string t)))
+
+(defun cory/isearch-backward-resume ()
+  (interactive)
+  (let ((string (car (s-split " " (car consult--line-history)))))
+    (isearch-resume string nil nil nil string t)))
+
 (defun cory/visual-isearch-forward ()
   (interactive)
   (consult-line)
   (beginning-of-line)
-  (let ((string (car (s-split " " (car consult--line-history)))))
-    (isearch-resume string nil nil t string t)))
+  (cory/isearch-forward-resume))
 
 (defun cory/visual-isearch-backward ()
   (interactive)
   (consult-line)
   (end-of-line)
-  (let ((string (car (s-split " " (car consult--line-history)))))
-    (isearch-resume string nil nil nil string t)))
+  (cory/isearch-backward-resume))
 
 (defun cory/search-forward-dwim ()
   (interactive)
@@ -2527,6 +2567,8 @@ Lisp function does not specify a special indentation."
 		("C-'"     repeat)
 		("C-s"     cory/search-forward-dwim)
 		("C-r"     cory/search-backward-dwim)
+		("C-M-s"   cory/isearch-forward-resume)
+		("C-M-r"   cory/isearch-backward-resume)
 		("C-v"     cory/scroll-down-half-page)
 		("M-v"     cory/scroll-up-half-page)))
   (global-set-key (kbd (car pair)) (cadr pair)))
@@ -2537,7 +2579,8 @@ Lisp function does not specify a special indentation."
   "Move forward parenthesis"
   (interactive "P")
   (if (looking-at ")") (forward-char 1))
-  (while (not (looking-at ")")) (forward-char 1)))
+  (while (not (looking-at ")")) (forward-char 1))
+  (forward-char 1))
 
 (defun cory/move-backward-paren (&optional arg)
   "Move backward parenthesis"
@@ -2545,13 +2588,20 @@ Lisp function does not specify a special indentation."
   (if (looking-at "(") (forward-char -1))
   (while (not (looking-at "(")) (backward-char 1)))
 
+(defun cory/mark-list ()
+  (interactive)
+  (backward-up-list)
+  (set-mark-command nil)
+  (forward-list))
+
 (dolist (map (list emacs-lisp-mode-map
 		   lisp-mode-map lisp-data-mode-map
 		   clojure-mode-map ;; cider-repl-mode-map
 		   ;; racket-mode-map racket-repl-mode-map
 		   scheme-mode-map geiser-repl-mode-map))
-  (define-key map (kbd "M-a") 'cory/move-backward-paren)
-  (define-key map (kbd "M-e") 'cory/move-forward-paren))
+  (define-key map (kbd "M-a") 'backward-list)
+  (define-key map (kbd "M-e") 'forward-list)
+  (define-key map (kbd "M-h") 'cory/mark-list))
 
 ;;; Repeat Maps
 

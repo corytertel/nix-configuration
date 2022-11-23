@@ -94,7 +94,7 @@ in {
         }
       ''
         + builtins.readFile ./colors.css
-        + builtins.readFile ./tabbar/debloat-tabbar.css
+        # + builtins.readFile ./tabbar/debloat-tabbar.css
         + builtins.readFile ./tabbar/tabbar-layout.css
         + builtins.readFile ./tabbar/tabs-fill-available-width.css
         # + builtins.readFile ./tabbar/numbered-tabs.css
