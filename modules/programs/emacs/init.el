@@ -353,9 +353,17 @@
   "Reverse direction of `other-window'."
   (other-window -1))
 
-(defun switch-to-last-buffer ()
+(defun cory/last-real-buffer (buffers)
+  (if buffers
+      (let ((name (buffer-name (car buffers))))
+	(if (equal name (string-trim name "[ \*]+" "\*"))
+	    (car buffers)
+	  (cory/last-real-buffer (cdr buffers))))
+    nil))
+
+(defun cory/toggle-last-buffer ()
   (interactive)
-  (switch-to-buffer nil))
+  (switch-to-buffer (cory/last-real-buffer (cdr (buffer-list)))))
 
 (defun rotate-windows ()
   "Rotate your windows"
@@ -413,10 +421,10 @@
 (global-set-key (kbd "C-x 3") 'split-and-follow-right)
 (global-set-key (kbd "C-x 4 q") 'kill-all-buffers-and-windows)
 ;; (global-set-key (kbd "C-c b") 'balance-windows)
-(global-set-key (kbd "<f1>") 'switch-to-last-buffer)
-(global-set-key (kbd "C-<f1>") 'switch-to-last-buffer)
-(global-set-key (kbd "M-<f1>") 'switch-to-last-buffer)
-(global-set-key (kbd "C-M-<f1>") 'switch-to-last-buffer)
+(global-set-key (kbd "<f1>") 'cory/toggle-last-buffer)
+(global-set-key (kbd "C-<f1>") 'cory/toggle-last-buffer)
+(global-set-key (kbd "M-<f1>") 'cory/toggle-last-buffer)
+(global-set-key (kbd "C-M-<f1>") 'cory/toggle-last-buffer)
 (global-set-key (kbd "<f2>") 'other-window)
 (global-set-key (kbd "C-<f2>") 'other-window)
 (global-set-key (kbd "M-<f2>") 'other-window)
@@ -501,33 +509,36 @@
           try-expand-line)))
 
 ;; Popups
-;; (use-package popper
-;;   :ensure t
-;;   :config
-;;   (setq popper-reference-buffers
-;;         '(;; "\\*Messages\\*"
-;;           "Output\\*$"
-;; 	  "\\*eldoc\\*"
-;; 	  "\\*Help\\*"
-;; 	  flymake-diagnostics-buffer-mode
-;; 	  calendar-mode
-;; 	  help-mode
-;; 	  compilation-mode
-;; 	  eshell-mode
-;; 	  vterm-mode))
-;;   (popper-mode)
-;;   ;; (popper-echo-mode)
-;;   :bind
-;;   (("C-`" . popper-toggle-latest)
-;;    ("C-~" . popper-toggle-type)
-;;    ("M-`" . popper-cycle))
-;;   :custom
-;;   ;; (popper-group-function #'popper-group-by-project) ; project.el projects
-;;   (popper-window-height (lambda (win)
-;; 			  (fit-window-to-buffer
-;; 			   win
-;; 			   (frame-height)
-;; 			   30))))
+(use-package popper
+  :ensure t
+  :custom
+  (popper-reference-buffers
+   '("\\*Messages\\*"
+     "Output\\*$"
+     "\\*Async Shell Command\\*"
+     "\\*eldoc\\*"
+     "\\*Ibuffer\\*"
+     "\\*vc-git"
+     "\\*Help\\*"
+     flymake-diagnostics-buffer-mode
+     calendar-mode
+     help-mode
+     compilation-mode
+     eshell-mode
+     vterm-mode))
+  ;; (popper-group-function #'popper-group-by-project) ; project.el projects
+  (popper-window-height (lambda (win)
+			  (fit-window-to-buffer
+			   win
+			   (frame-height)
+			   30)))
+  :config
+  (popper-mode)
+  ;; (popper-echo-mode)
+  :bind
+  (("C-`" . popper-toggle-latest)
+   ("C-~" . popper-toggle-type)
+   ("M-`" . popper-cycle)))
 
 (use-package eldoc
   :ensure nil
@@ -550,6 +561,7 @@
   (clojurec-mode . eglot-ensure)
   ;; (scheme-mode . eglot-ensure)
   (java-mode . eglot-ensure)
+  (python-mode . eglot-ensure)
   (eglot--managed-mode . eglot-super-capf)
 
   :custom
@@ -579,7 +591,7 @@
 
   :bind (:map eglot-mode-map
 	 ("C-c C-a" . eglot-code-actions)
-	 ("C-c b" . eglot-format-buffer)))
+	 ("C-c C-f" . eglot-format-buffer)))
 
 ;; Tree-sitter
 ;; (use-package tree-sitter
@@ -704,6 +716,10 @@
   (recentf-mode t)
   (vertico-mode t))
 
+(use-package vertico-posframe
+  :after vertico
+  :config (vertico-posframe-mode 1))
+
 ;; Configure directory extension.
 (use-package vertico-directory
   :after vertico
@@ -819,7 +835,9 @@
   ;; :custom
   ;; (tempel-trigger-prefix "")
 
-  :hook ((prog-mode text-mode) . tempel-setup-capf)
+  :hook
+  ((prog-mode text-mode) . tempel-setup-capf)
+  (emacs-lisp-mode . elisp-super-capf)
 
   :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
          ("M-*" . tempel-insert)
@@ -840,7 +858,15 @@
     ;; that it will be tried first.
     (setq-local completion-at-point-functions
                 (cons #'tempel-complete
-                      completion-at-point-functions)))
+			completion-at-point-functions)))
+
+  (defun elisp-super-capf ()
+    (setq-local completion-at-point-functions
+		(list (cape-super-capf
+		       #'tempel-complete
+		       #'elisp-completion-at-point)
+		      #'cape-dabbrev
+		      #'cape-file)))
 
   ;; Optionally make the Tempel templates available to Abbrev,
   ;; either locally or globally. `expand-abbrev' is bound to C-x '.
@@ -861,6 +887,7 @@
 
 ;; Visual Keybinding Info
 (use-package which-key
+  :disabled t
   :init
   (which-key-mode)
   :diminish which-key-mode
@@ -1548,6 +1575,43 @@ argument, query for word to search."
                            (nil "atomx" "/ssh:%h:")))
     (add-to-list 'tramp-default-proxies-alist tramp-proxies)))
 
+;; SSH Functions
+(defun cory/write-ssh-address-to-history (address)
+  (write-region (concat address "
+") nil "~/.emacs.d/ssh_history" t))
+
+(defun cory/read-ssh-history ()
+  "Returns a list of ssh addresses previously connected to."
+  (with-temp-buffer
+    (insert-file-contents "~/.emacs.d/ssh_history")
+    (split-string (buffer-string) "\n" t)))
+
+(defun cory/clean-ssh-history ()
+  (interactive)
+  (write-region "" nil "~/.emacs.d/ssh_history"))
+
+(defun cory/connect-ssh ()
+  "Requires sshfs to be installed."
+  (interactive)
+  (let* ((server (completing-read "user@server.address:" (cory/read-ssh-history)))
+	 (mount-path (concat "/tmp/.emacs-sshfs-mount-" server))
+	 (user (string-trim-right server "@.*")))
+    (cory/write-ssh-address-to-history server)
+    (unless (file-directory-p mount-path)
+      (make-directory mount-path))
+    (unless (file-exists-p (concat mount-path "/home"))
+      (shell-command (concat "sshfs -o idmap=user,transform_symlinks "
+			     server ":/ " mount-path)))
+    (find-file (read-file-name "Find file:"
+			       (concat mount-path "/home/" user "/")))))
+
+(defun cory/disconnect-ssh ()
+  "Requires fusemount"
+  (interactive)
+  (let ((server (completing-read "user@server.address:" (cory/read-ssh-history)))
+	(mount-path (concat "/tmp/.emacs-sshfs-mount-" server)))
+    (shell-command (concat "fusermount -u " mount-path))))
+
 ;; Syntax checking
 (use-package flymake
   :ensure t
@@ -1877,6 +1941,27 @@ Lisp function does not specify a special indentation."
 (define-key emacs-lisp-mode-map (kbd "C-c C-k") 'eval-buffer)
 (define-key emacs-lisp-mode-map (kbd "C-c C-;") 'eval-print-as-comment)
 
+;; Make the faces of code only inside elisp code styled in such a way that
+;; elisp appears like its "literally programmed"
+
+;; (copy-face 'font-lock-comment-face
+;; 	   'elisp-font-lock-comment-face)
+;; (copy-face 'font-lock-comment-delimiter-face
+;; 	   'elisp-font-lock-comment-delimiter-face)
+
+;; (set-face-attribute 'elisp-font-lock-comment-face nil
+;;                     :inherit 'variable-pitch)
+;; (set-face-attribute 'elisp-font-lock-comment-delimiter-face nil
+;;                     :inherit 'variable-pitch)
+
+;; (add-hook
+;;  'emacs-lisp-mode-hook
+;;  (lambda ()
+;;    (set (make-local-variable 'font-lock-comment-face)
+;; 	'elisp-font-lock-comment-face)
+;;    (set (make-local-variable 'font-lock-comment-delimiter-face)
+;; 	'elisp-font-lock-comment-delimiter-face)))
+
 ;;; TODO Clean up clojure config
 ;;; Clojure
 (use-package clojure-mode
@@ -2145,16 +2230,19 @@ Lisp function does not specify a special indentation."
 (use-package geiser
   :hook
   (scheme-mode . geiser-mode)
+  (scheme-mode . scheme-super-capf)
   :custom
   (geiser-active-implementations '(chicken))
-  ;; (geiser-active-implementations '(chez))
   :config
-  ;; Add geiser capfs to capf
-  (add-hook 'scheme-mode-hook
-	    (lambda ()
-	      (setq-local completion-at-point-functions
-			  (append geiser-capf--capfs
-				  completion-at-point-functions)))))
+  (defun scheme-super-capf ()
+    (setq-local completion-at-point-functions
+		(list (cape-super-capf
+		       #'tempel-complete
+		       #'geiser-capf--for-filename
+		       #'geiser-capf--for-module
+		       #'geiser-capf--for-symbol)
+		      #'cape-dabbrev
+		      #'cape-file))))
 
 (use-package geiser-chicken)
 
@@ -2247,6 +2335,59 @@ Lisp function does not specify a special indentation."
 
 ;;; Latex
 ;; (use-package latex-preview-pane)
+
+;;; Python
+
+;; python.el' provides python-mode' which is the builtin major-mode for the
+;; Python language.
+
+(use-package python
+  :config
+  ;; Remove guess indent python message
+  (setq python-indent-guess-indent-offset-verbose nil))
+
+;; Hide the modeline for inferior python processes.  This is not a necessary
+;; package but it's helpful to make better use of the screen real-estate at our
+;; disposal. See: https://github.com/hlissner/emacs-hide-mode-line.
+
+(use-package hide-mode-line
+  :ensure t
+  :defer t
+  :hook (inferior-python-mode . hide-mode-line-mode))
+
+;;<OPTIONAL> I use poetry (https://python-poetry.org/) to manage my python environments.
+;; See: https://github.com/galaunay/poetry.el.
+;; There are alternatives like https://github.com/jorgenschaefer/pyvenv.
+(use-package poetry
+  :ensure t
+  :defer t
+  :config
+  ;; Checks for the correct virtualenv. Better strategy IMO because the default
+  ;; one is quite slow.
+  (setq poetry-tracking-strategy 'switch-buffer)
+  :hook (python-mode . poetry-tracking-mode))
+
+;; <OPTIONAL> Buffer formatting on save using black.
+;; See: https://github.com/pythonic-emacs/blacken.
+(use-package blacken
+  :ensure t
+  :defer t
+  :custom
+  (blacken-allow-py36 t)
+  (blacken-skip-string-normalization t)
+  :hook (python-mode-hook . blacken-mode))
+
+;; <OPTIONAL> Numpy style docstring for Python.  See:
+;; https://github.com/douglasdavis/numpydoc.el.  There are other packages
+;; available for docstrings, see: https://github.com/naiquevin/sphinx-doc.el
+(use-package numpydoc
+  :ensure t
+  :defer t
+  :custom
+  (numpydoc-insert-examples-block nil)
+  (numpydoc-template-long nil)
+  :bind (:map python-mode-map
+         ("C-c C-n" . numpydoc-generate)))
 
 ;;; Other Modes
 (use-package haskell-mode
@@ -2860,14 +3001,14 @@ This must be in the form required by the
 ;;     (cond
 ;;      (god-local-mode
 ;;       (set-face-attribute 'mode-line nil
-;; 			  :foreground "#141404"
-;; 			  :background "#ed8f23")
+;; 			   :foreground "#141404"
+;; 			   :background "#ed8f23")
 ;;       ;; (set-face-attribute 'mode-line-inactive nil
 ;;       ;;                     :foreground "#141404"
 ;;       ;;                     :background "#ed9063"))
 ;;       (set-face-attribute 'mode-line-inactive nil
-;; 			  :foreground "#ffffff"
-;; 			  :background "#5e3608"))
+;; 			   :foreground "#ffffff"
+;; 			   :background "#5e3608"))
 ;;      (t
 ;;       ;; (set-face-attribute 'mode-line nil
 ;;       ;; 			  :foreground "#141404"
@@ -2876,11 +3017,11 @@ This must be in the form required by the
 ;;       ;; 			  :foreground "#141404"
 ;;       ;; 			  :background "#ffffff")
 ;;       (set-face-attribute 'mode-line nil
-;; 			  :foreground "#ffffff"
-;; 			  :background "#4d4d4d")
+;; 			   :foreground "#ffffff"
+;; 			   :background "#4d4d4d")
 ;;       (set-face-attribute 'mode-line-inactive nil
-;; 			  :foreground "#ffffff"
-;; 			  :background "#1a1a1a")
+;; 			   :foreground "#ffffff"
+;; 			   :background "#1a1a1a")
 ;;       )))
 ;;   (add-hook 'post-command-hook 'my-god-mode-update-mode-line)
 
@@ -4582,9 +4723,7 @@ PAIR-EXPR contains two string token lists. The tokens in first
   (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 
   ;; Save Org buffers after refiling
-  (advice-add 'org-refile :after 'org-save-all-org-buffers)
-
-  )
+  (advice-add 'org-refile :after 'org-save-all-org-buffers))
 
 (use-package org-bullets
   :after org
@@ -4811,6 +4950,10 @@ of (command . word) to be used by `flyspell-do-correct'."
   (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
   (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete)
   )
+
+;; Eww
+
+(setq eww-search-prefix "https://searx.be/?preferences=eJxtVk1z3DYM_TXWRWNPk7TT5rAnz_TaziQ9ayASK8EiCYUfuyv_-oIryaJWPmRjPpAg9AA8UEHEjj1hOHXo0IOpDLguQYcndM___agMKzB5UUGKrNiOBiOeOubOYEVWdjaj59t0-ukTVhZjz_r07z8_flYBzhgQvOpPv1WxR4unQPl85TEkE0PDrnF4bSK0p7_BBKw0UyNGNhf0JwZZvrDvKg4K_HOIk0RiuCPFGi_V7KxZYOr6WCl0EX0DsrLy5-IV9AWcQt0s0czor4R-asg1kaI4uIdP7kyOojhVno1Zo6IArZHz6DpywhWMQ23Je_ZNcyaD4enra_ZMF6wpNM3C5R2NpJrmzlPe1ZLrSnte17P1YVd9IY0s6Pz_HY1tUgNG2RllrZR6jpdiA4_ohLiAhasJx_I-lbwhLBGN-C6UNTYFUvf1hcBFCbzwgp6vpJuGJY1e1lcaSEOE0tGXW3HgrD3nAys7Z0Nq8OUGj1gHPscreKw1eVSRJR_zp509uYGgZK6jTpIAIZZ3dpI6aFc-pCpa9N2ynEv0SOOCjwamGsYxbEGWFssXwt2xkbUuieqh9ZB_lvvI6nZjiBwUh98o9LwZByEDQnGzIfHlpzp_WaDC8P68mI57-Vwrdp20S1k6htsQ8cWHJSp4N5MnFba43WgXm5sANr-5ejyOXNw-gsTZUVgrbkzti9THsvp1lTops3EHjtU8w4c8BBwJ5o7coRnIqazzz0c9gIX84SsQ0IpTUnVQPRuQHARFKE2ebbl4xyxMRWyRh4kjSxoGcNsXJhck3aEvOwZ65vLoxCmmFosgP5CPpgEyk-VIomjbtgtZ5GJ9pXbaiYPBGzjtaddHubda5iE8giKVguXfBfiVOOLjrsDJqwOaZYHidIB5euBJk4rv7HbYl2_f_rxtnOmk0W3FHPDdgS33W35DHErEwSW3zgb41E4d2rVKR0T_wLFFTSBXDNKH1yu2hcknK3JcEss3GthJbdZhcuwmi0V8T69_PP31la-Ohvrt6fX3p-_f36cB6pFNGEjm317XrEyAnUR7Cb4ERox5LMyF-yl87IHSuOWxQvcwWLLdkEu3Ooey9rC_0aWs8FaqRoEdtwLMu8fM2GG47KqmjZq6bkulTLkQPJ5L5zIivPy5qxWtu1rjfTZKie8qU7OMJF_3aZVhLTMq_-t2TbShR3KifPu0oxijdJMTIoo8ipVSoWOyjrlRZ7GnuEUw6_huTszKfrh5wXccLdgnwtIvfme5d1J-xKmUtAJbo7R0U4aTLhCQ0Ybr1MiqCzL98jQNKG-i4r7VJrIr4xMW6vf2EGWQRgu5FmDMlaZzG22bxl5kz31YycuTr4Vinoh36bXdkWmkUuP3_EismkT3AysCU9_7NLcZJynK_aeKEquBpfXPhq9rMYchtcnFtCp5GtGn8EGIPP5Iy1NAajAWo-iuyvWjBGZK7sPxo4HZzLNi7GFDrQiClddFHT24YISB8i3DXos0LMD22BtNkqYMp9y1t5dl9cLQzI_Uq5d34jKwNrNIfiOEDzhtzf25oz5PnXlx8NJziKKpKNfIdFLHaxb1kbyq-QU_ydvWyBPqk53mLI_cMx8swkXu3EZehHKPzWmqZEpKSZ3-B66kkdQ=&q=")
 
 ;; Emacs run launcher
 (defun emacs-run-launcher ()

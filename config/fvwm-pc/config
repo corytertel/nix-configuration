@@ -625,10 +625,10 @@ AddToMenu   MenuVolume
 
 DestroyMenu MenuKeyboard
 AddToMenu   MenuKeyboard
-+ "US (Dvorak Emacs)" Exec setxkbmap "us_dvorak_emacs"
-+ "US (QWERTY)" Exec setxkbmap "us"
-+ "RU (Phonetic Dvorak Emacs)" Exec setxkbmap "ru_phonetic_dvorak"
-+ "RU (Phonetic)" Exec setxkbmap "ru_phonetic"
++ "US (QWERTY)" Exec setxkbmap "us_qwerty"
++ "US (BEAKL Emacs)" Exec setxkbmap "us_beakl_emacs"
++ "RU (Phonetic)" Exec setxkbmap "ru_phonetic_qwerty"
++ "RU (Phonetic BEAKL Emacs)" Exec setxkbmap "ru_beakl_emacs"
 
 #######
 # 5: Mouse and Key bindings

@@ -353,6 +353,9 @@
         maven
         gradle
         # dotnet-sdk
+        # python39
+        # (python39.withPackages (ps: [ ps.epc ps.python-lsp-server ]))
+        python39Packages.python-lsp-server
 
         # essential user apps
         tdesktop
@@ -404,6 +407,7 @@
         anki
         # anki-bin
         peek
+        sshfs
 
         # games
         libsForQt5.kpat
