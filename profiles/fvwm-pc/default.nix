@@ -59,7 +59,7 @@
       name = "emacs-run-launcher";
       command = "xdotool mousemove 1800 1080; emacsclient -e '(emacs-run-launcher)'";
       desktopFile = "emacsclient.desktop";
-      package = pkgs.emacsNativeComp;
+      package = pkgs.emacsGit;
     };
   };
 
@@ -99,13 +99,13 @@
     };
     font = {
       system = {
-        package = oxygen-nerdfont;
-        name = "Oxygen Nerd Font";
+        package = oxygenfonts;
+        name = "Oxygen-Sans";
         size = 11;
       };
       monospace = {
-        package = victor-mono-nerdfont;
-        name = "VictorMono Nerd Font";
+        package = victor-mono;
+        name = "Victor Mono";
         size = 10;
       };
     };

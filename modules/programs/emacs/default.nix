@@ -26,7 +26,7 @@ let
   emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
     config = initFile;
     alwaysEnsure = true;
-    package = pkgs.emacsNativeComp;
+    package = pkgs.emacsGit;
     extraEmacsPackages = emacsPackages;
   };
 

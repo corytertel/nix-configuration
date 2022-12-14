@@ -16,13 +16,13 @@
       name = "emacs";
       command = "emacsclient -e '(eshell)'";
       desktopFile = "emacsclient.desktop";
-      package = pkgs.emacsNativeComp;
+      package = pkgs.emacsGit;
     };
     photoViewer = {
       name = "emacs";
       command = "emacsclient";
       desktopFile = "emacsclient.desktop";
-      package = pkgs.emacsNativeComp;
+      package = pkgs.emacsGit;
     };
     photoEditor = {
       # No need to compile photogimp here
@@ -47,7 +47,7 @@
       name = "emacs";
       command = "emacsclient -e '(dired \"/home/cory\")'";
       desktopFile = "emacsclient.desktop";
-      package = pkgs.emacsNativeComp;
+      package = pkgs.emacsGit;
     };
     archiver = {
       name = "lxqt-archiver";
@@ -59,7 +59,7 @@
       name = "emacs";
       command = "emacsclient -e '(async-shell-command)'";
       desktopFile = "emacsclient.desktop";
-      package = pkgs.emacsNativeComp;
+      package = pkgs.emacsGit;
     };
   };
 

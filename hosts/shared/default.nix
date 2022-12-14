@@ -171,8 +171,6 @@
   fonts.fonts = with pkgs; [
     config.theme.font.system.package
     config.theme.font.monospace.package
-    victor-mono
-    oxygenfonts
     corefonts
     vistafonts
   ];
@@ -345,8 +343,6 @@
         nodejs
         yarn
         tex
-        python39Full
-        python39Packages.pip
         # rnix-lsp
         # nil
         javaPackages.openjfx17
@@ -355,7 +351,9 @@
         # dotnet-sdk
         # python39
         # (python39.withPackages (ps: [ ps.epc ps.python-lsp-server ]))
-        python39Packages.python-lsp-server
+        # python39Full
+        # python39Packages.pip
+        # python39Packages.python-lsp-server
 
         # essential user apps
         tdesktop

@@ -11,7 +11,8 @@
 
   boot = {
     # kernelPackages = pkgs.linuxPackages_5_15;
-    kernelPackages = pkgs.linuxPackages_xanmod;
+    # kernelPackages = pkgs.linuxPackages_xanmod;
+    kernelPackages = pkgs.linuxPackages_xanmod_latest;
     kernelParams = [
       "pcie_aspm.policy=performance"
       "intel_iommu=on"

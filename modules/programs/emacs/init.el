@@ -520,6 +520,8 @@
      "\\*Ibuffer\\*"
      "\\*vc-git"
      "\\*Help\\*"
+     "\\*Compile-Log\\*"
+     "\\*Warnings\\*"
      flymake-diagnostics-buffer-mode
      calendar-mode
      help-mode
@@ -562,7 +564,7 @@
   ;; (scheme-mode . eglot-ensure)
   (java-mode . eglot-ensure)
   (python-mode . eglot-ensure)
-  (eglot--managed-mode . eglot-super-capf)
+  (eglot-managed-mode . eglot-super-capf)
 
   :custom
   (eglot-autoshutdown t)
@@ -621,6 +623,9 @@
   (corfu-echo-documentation t)     ; Enable auto documentation in the minibuffer
   (corfu-preview-current 'insert)
   (corfu-preselect-first nil)
+  (corfu-popupinfo-max-width 60)
+  (corfu-popupinfo-max-height 30)
+  (corfu-popupinfo-delay nil)
 
   :init
   ;; Need to recreate the map in order to preserve movement keys
@@ -640,11 +645,17 @@
 	  (define-key map [(shift return)] #'corfu-insert)
 	  (define-key map (kbd "S-<return>") #'corfu-insert)
 	  (define-key map (kbd "M-l") 'corfu-info-location)
-	  (define-key map (kbd "C-h") 'corfu-info-documentation)
 	  (define-key map (kbd "M-SPC") #'corfu-insert-separator)
 	  map))
+
   (global-corfu-mode)
-  (corfu-history-mode))
+  (corfu-history-mode)
+  (corfu-popupinfo-mode)
+
+  :config
+  ;; (set-face-attribute 'corfu-popupinfo nil
+  ;; 		      :inherit 'corfu-default)
+  (copy-face 'corfu-default 'corfu-popupinfo))
 
 ;; Add extensions
 (use-package cape
@@ -685,20 +696,6 @@
 			      (cons #'cape-history
 				    completion-at-point-functions))
               (corfu-mode 1))))
-
-;; Documentation popup
-(use-package corfu-doc
-  :ensure t
-  :bind (:map corfu-map
-	 ([remap corfu-info-documentation] . corfu-doc-toggle)
-	 ("M-p" . corfu-doc-scroll-down)
-	 ("M-n" . corfu-doc-scroll-up))
-  :custom
-  (corfu-doc-auto nil) ; Disable auto-documentation
-  (corfu-doc-max-width 60)
-  (corfu-doc-max-height 30)
-  :hook
-  (corfu-mode . corfu-doc-mode))
 
 ;; Icons for corfu
 (use-package kind-icon
@@ -1543,37 +1540,37 @@ argument, query for word to search."
   (add-to-list 'copy-as-format-format-alist '("markdown-table" copy-as-format--markdown-table)))
 
 ;; Tramp
-(use-package tramp
-  :defer t
-  :config
-  (setq tramp-default-method "ssh")
+;; (use-package tramp
+;;   :defer t
+;;   :config
+;;   (setq tramp-default-method "ssh")
 
-  ;; Only for debugging slow tramp connections
-  ;;(setq tramp-verbose 7)
+;;   ;; Only for debugging slow tramp connections
+;;   ;;(setq tramp-verbose 7)
 
-  ;; Skip version control for tramp files
-  (setq vc-ignore-dir-regexp
-        (format "\\(%s\\)\\|\\(%s\\)"
-                vc-ignore-dir-regexp
-                tramp-file-name-regexp))
+;;   ;; Skip version control for tramp files
+;;   (setq vc-ignore-dir-regexp
+;;         (format "\\(%s\\)\\|\\(%s\\)"
+;;                 vc-ignore-dir-regexp
+;;                 tramp-file-name-regexp))
 
-  ;; Use ControlPath from .ssh/config
-  (setq tramp-ssh-controlmaster-options "")
+;;   ;; Use ControlPath from .ssh/config
+;;   (setq tramp-ssh-controlmaster-options "")
 
-  ;; Backup tramp files like local files and don't litter the remote
-  ;; file system with my emacs backup files
-  (setq tramp-backup-directory-alist backup-directory-alist)
+;;   ;; Backup tramp files like local files and don't litter the remote
+;;   ;; file system with my emacs backup files
+;;   (setq tramp-backup-directory-alist backup-directory-alist)
 
-  ;; See https://www.gnu.org/software/tramp/#Ad_002dhoc-multi_002dhops
-  ;; For all hosts, except my local one, first connect via ssh, and then apply sudo -u root:
-  (dolist (tramp-proxies '((nil "\\`root\\'" "/ssh:%h:")
-                           ((regexp-quote (system-name)) nil nil)
-                           ("localhost" nil nil)
-                           ("blif\\.vpn" nil nil)
-                           ("skor-pi" nil nil)
-                           ;; Add tramp proxy for atomx user
-                           (nil "atomx" "/ssh:%h:")))
-    (add-to-list 'tramp-default-proxies-alist tramp-proxies)))
+;;   ;; See https://www.gnu.org/software/tramp/#Ad_002dhoc-multi_002dhops
+;;   ;; For all hosts, except my local one, first connect via ssh, and then apply sudo -u root:
+;;   (dolist (tramp-proxies '((nil "\\`root\\'" "/ssh:%h:")
+;;                            ((regexp-quote (system-name)) nil nil)
+;;                            ("localhost" nil nil)
+;;                            ("blif\\.vpn" nil nil)
+;;                            ("skor-pi" nil nil)
+;;                            ;; Add tramp proxy for atomx user
+;;                            (nil "atomx" "/ssh:%h:")))
+;;     (add-to-list 'tramp-default-proxies-alist tramp-proxies)))
 
 ;; SSH Functions
 (defun cory/write-ssh-address-to-history (address)
@@ -2298,8 +2295,16 @@ Lisp function does not specify a special indentation."
 ;;; Java
 
 (use-package eglot-java
-  :init
-  (eglot-java-init))
+  :hook
+  (java-mode . eglot-java-mode)
+  :bind
+  (:map eglot-java-mode-map
+   ("C-c C-l n" . eglot-java-file-new)
+   ("C-c C-l x" . eglot-java-run-main)
+   ("C-c C-l t" . eglot-java-run-test)
+   ("C-c C-l N" . eglot-java-project-new)
+   ("C-c C-l T" . eglot-java-project-build-task)
+   ("C-c C-l R" . eglot-java-project-build-refresh)))
 
 ;; For groovy and gradle support
 (use-package groovy-mode :defer t)
@@ -2689,6 +2694,12 @@ Lisp function does not specify a special indentation."
 (put 'cory/scroll-down-half-page 'scroll-command t)
 (put 'cory/scroll-up-half-page 'scroll-command t)
 
+;;; Misc functions
+
+(defun cory/create-tmp-file ()
+  (interactive)
+  (find-file (read-file-name "Find tmp file:" "/tmp/")))
+
 ;;; Basic Keybinds
 
 ;; Swap "C-h" and "C-x", so it's easier to type on Dvorak layout
@@ -2711,7 +2722,8 @@ Lisp function does not specify a special indentation."
 		("C-M-s"   cory/isearch-forward-resume)
 		("C-M-r"   cory/isearch-backward-resume)
 		("C-v"     cory/scroll-down-half-page)
-		("M-v"     cory/scroll-up-half-page)))
+		("M-v"     cory/scroll-up-half-page)
+		("C-c F"  cory/create-tmp-file)))
   (global-set-key (kbd (car pair)) (cadr pair)))
 
 ;;; Lisp Keybinds
@@ -4612,6 +4624,9 @@ PAIR-EXPR contains two string token lists. The tokens in first
      "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   (org-agenda-current-time-string "← now ----------")
   (org-agenda-timegrid-use-ampm 1) ;; 12-hour clock
+  (org-src-fontify-natively t)
+  (org-src-tab-acts-natively t)
+  (org-edit-src-content-indentation 0)
   (org-todo-keywords
    '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
      (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))

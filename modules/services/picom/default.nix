@@ -10,10 +10,6 @@ in {
       type = types.package;
       default = pkgs.picom;
     };
-    experimentalBackends = mkOption {
-      type = types.bool;
-      default = false;
-    };
     roundBorders = mkOption {
       type = types.bool;
       default = false;
@@ -27,7 +23,6 @@ in {
   config = mkIf cfg.enable {
     home-manager.users.cory.services.picom = {
       enable = true;
-      experimentalBackends = cfg.experimentalBackends;
       package = cfg.package;
 
       # inactiveDim = "0.02";
