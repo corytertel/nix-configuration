@@ -373,6 +373,7 @@
         tree
         imagemagick
         yt-dlp
+        ffmpeg
         # qemu
         # qutebrowser
         wine64

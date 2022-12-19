@@ -17,6 +17,8 @@ let
     cp ${pkgs.writeText "default.el" initFile} $out/share/emacs/site-lisp/default.el
   '';
 
+  # sunrise-commander = pkgs.callPackage ./sunrise-commander.nix {};
+
   emacsPackages = epkgs: with epkgs; [
     init
     use-package
@@ -28,6 +30,9 @@ let
     alwaysEnsure = true;
     package = pkgs.emacsGit;
     extraEmacsPackages = emacsPackages;
+    override = epkgs: epkgs // {
+      sunrise = pkgs.callPackage ./sunrise-commander.nix {};
+    };
   };
 
   shellScripts = [

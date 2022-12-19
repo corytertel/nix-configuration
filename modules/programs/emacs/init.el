@@ -3,6 +3,38 @@
 ;;; Code:
 
 ;;
+;; -- PACKAGE SETUP ---
+;;
+
+;; For Nix
+(require 'package)
+
+;; optional. makes impure packages archives unavailable
+(setq package-archives nil)
+
+(setq package-enable-at-startup nil)
+(package-initialize)
+
+(require 'use-package)
+(setq use-package-always-ensure t)
+
+;; For non Nix Setups
+;; (require 'package)
+
+;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+;; 			    ("elpa" . "https://elpa.gnu.org/packages/")))
+
+;; (package-initialize)
+;; (unless package-archive-contents
+;;   (package-refresh-contents))
+
+;; (unless (package-installed-p 'use-package)
+;;   (package-install 'use-package))
+
+;; (require 'use-package)
+;; (setq use-package-always-ensure t)
+
+;;
 ;; --- GARBAGE COLLECTION ---
 ;;
 
@@ -38,39 +70,6 @@
 (add-hook 'emacs-startup-hook #'hm/restore-file-name-handler-alist)
 
 ;;
-;; -- PACKAGE SETUP ---
-;;
-
-;; For Nix
-(require 'package)
-
-;; optional. makes impure packages archives unavailable
-(setq package-archives nil)
-
-(setq package-enable-at-startup nil)
-(package-initialize)
-
-(require 'use-package)
-(setq use-package-always-ensure t)
-
-;; For non Nix Setups
-;; (require 'package)
-
-;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-;; 			 ("org" . "https://orgmode.org/elpa/")
-;; 			 ("elpa" . "https://elpa.gnu.org/packages/")))
-
-;; (package-initialize)
-;; (unless package-archive-contents
-;;   (package-refresh-contents))
-
-;; (unless (package-installed-p 'use-package)
-;;   (package-install 'use-package))
-
-;; (require 'use-package)
-;; (setq use-package-always-ensure t)
-
-;;
 ;; --- ASYNC ---
 ;;
 
@@ -83,6 +82,23 @@
   (dired-async-mode 1)
   (async-bytecomp-package-mode 1)
   :custom (async-bytecomp-allowed-packages '(all)))
+
+;;
+;; --- NATIVE COMP ---
+;;
+
+;; Silence compiler warnings as they can be pretty disruptive
+;; (setq comp-async-report-warnings-errors nil)
+
+;; Silence compiler warnings as they can be pretty disruptive
+(if (boundp 'comp-deferred-compilation)
+    (setq comp-deferred-compilation nil)
+  (setq inhibit-automatic-native-compilation nil))
+
+;; In noninteractive sessions, prioritize non-byte-compiled source files to
+;; prevent the use of stale byte-code. Otherwise, it saves us a little IO time
+;; to skip the mtime checks on every *.elc file.
+(setq load-prefer-newer noninteractive)
 
 ;;
 ;; --- KEYBINDING FIX ---
@@ -455,7 +471,6 @@
 ;;
 
 (setq visible-bell nil
-      backup-directory-alist `((".*" . ,temporary-file-directory))
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
 (setq-default left-margin-width 1
@@ -474,7 +489,10 @@
 ;; don't back up files
 ;; (setq make-backup-files nil)
 
-;; Write backup files to own directory
+;; Write backup files to tmp dir
+;; (setq backup-directory-alist `((".*" . ,temporary-file-directory)) )
+
+;; Write backup files to backup directory instead of editing directory
 (setq backup-directory-alist
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
@@ -522,6 +540,8 @@
      "\\*Help\\*"
      "\\*Compile-Log\\*"
      "\\*Warnings\\*"
+     "\\*Chicken Documentation\\*"
+     geiser-repl-mode
      flymake-diagnostics-buffer-mode
      calendar-mode
      help-mode
@@ -855,7 +875,7 @@
     ;; that it will be tried first.
     (setq-local completion-at-point-functions
                 (cons #'tempel-complete
-			completion-at-point-functions)))
+		      completion-at-point-functions)))
 
   (defun elisp-super-capf ()
     (setq-local completion-at-point-functions
@@ -872,15 +892,27 @@
   )
 
 ;; Undo
-;; (use-package undo-tree
-;;   :defer 1
-;;   :diminish undo-tree-mode
-;;   :commands (global-undo-tree-mode)
-;;   :config
-;;   (setq undo-tree-visualizer-relative-timestamps t
-;;         undo-tree-visualizer-timestamps t
-;;         undo-tree-enable-undo-in-region t)
-;;   (global-undo-tree-mode))
+(use-package undo-tree
+  :defer 1
+  :diminish undo-tree-mode
+  :bind
+  (:map undo-tree-map
+   ("C-x u"   . undo-tree-visualize)
+   ("C-/"     . undo-tree-undo)
+   ("C-z"     . undo-tree-undo)
+   ("C-S-z"   . undo-tree-redo)
+   ("C-x C-u" . undo-tree-visualize-redo)
+   ("C-?"     . undo-tree-redo))
+  :custom
+  (undo-tree-visualizer-timestamps t)
+  (undo-tree-visualizer-relative-timestamps t)
+  (undo-tree-visualizer-diff t)
+  (undo-tree-enable-undo-in-region t)
+  (undo-tree-history-directory-alist
+   `(("." . ,(expand-file-name
+	      (concat user-emacs-directory "undo")))))
+  :init
+  (global-undo-tree-mode))
 
 ;; Visual Keybinding Info
 (use-package which-key
@@ -947,9 +979,60 @@
 (use-package forge)
 
 ;; Ligatures and Indicators
-(use-package pretty-mode
-  :config
-  (add-hook 'prog-mode-hook 'pretty-mode))
+;; (use-package pretty-mode
+;;   :config
+;;   (add-hook 'prog-mode-hook 'pretty-mode))
+
+(add-hook 'prog-mode-hook 'prettify-symbols-mode)
+
+;; Ligatures for Scheme (arrows and lambda)
+
+;; (defvar pretty-scheme-keywords
+;;   (mapcar (lambda (pair)
+;;             (cons (concat "\\(" (regexp-quote (car pair)) "\\)")
+;;                   (cdr pair)))
+;;           '(("->"  . #x2192)
+;;             ("<="  . #x2264)
+;;             ("<==" . #x21D0)
+;;             (">="  . #x2265)
+;;             ("==>" . #x21D2)))
+;;   "Alist from regexps to Unicode code points.")
+
+;; (defun prettify-scheme ()
+;;   (add-to-list 'prettify-symbols-alist '("lambda" . #x3BB))
+;;   (font-lock-add-keywords
+;;    nil
+;;    (mapcar (lambda (keyword)
+;;              `(,(car keyword)
+;;                (0 (progn (compose-region (match-beginning 1) (match-end 1)
+;;                                          ,(cdr keyword)
+;;                                          'decompose-region)
+;;                          nil))))
+;;            pretty-scheme-keywords))
+;;   (turn-on-font-lock))
+
+;; (add-hook 'scheme-mode-hook 'prettify-scheme)
+
+;; APL-like characters for scheme
+(add-hook
+ 'scheme-mode-hook
+ (lambda ()
+   (setq prettify-symbols-alist
+         (seq-concatenate
+          'list
+          '(("<="       . #x2264)
+            (">="       . #x2265)
+            ("define"   . #x225d)
+            ("set!"     . #x2250)
+            ("set-car!" . #x2254)
+            ("set-cdr!" . #x2255)
+            ("#t"       . #x2713)
+            ("#f"       . #x2717)
+            ("'()"      . #x2205)
+            ("if"       . #x2047)
+            ("or"       . #x2228)
+            ("and"      . #x2227))
+          prettify-symbols-alist))))
 
 ;; Automatically remove trailing whitespace if user put it there
 (use-package ws-butler
@@ -1000,7 +1083,7 @@
   :bind (([(control return)] . crux-smart-open-line)
          ([(control shift return)] . crux-smart-open-line-above)
 	 ("C-c u" . crux-view-url)
-	 ("C-c e" . crux-eval-and-replace)
+	 ;; ("C-c e" . crux-eval-and-replace)
 	 ("C-x 4 t" . crux-transpose-windows)
 	 ("C-c d" . crux-duplicate-current-line-or-region)
 	 ("C-c D" . crux-duplicate-and-comment-current-line-or-region)
@@ -1156,7 +1239,7 @@
 (use-package visual-regexp
   :bind
   (("C-c r" . cory/replace)
-   ("C-c q" . vr/query-replace)
+   ("C-c R" . vr/query-replace)
    ;; for multiple-cursors
    ("C-c M" . vr/mc-mark))
   :config
@@ -1194,8 +1277,8 @@
    ;; ("M-g m" . avy-move-line)
    ("<C-m>" . avy-goto-char-timer)
    ("C-S-m" . avy-pop-mark)
-   ("C-j" . avy-goto-end-of-line-num)
-   ("C-S-j" . avy-goto-line-num)
+   ;; ("C-j" . avy-goto-end-of-line-num)
+   ;; ("C-S-j" . avy-goto-line-num)
    ("C-M-s" . isearch-forward-other-window)
    ("C-M-r" . isearch-backward-other-window)
    :map isearch-mode-map
@@ -1213,8 +1296,10 @@
   ;; 		    (string-to-list (upcase "ulrpdc"))
   ;; 		    (string-to-list (upcase "qjvg"))
   ;; 		    (number-sequence ?, ?')))
-  (avy-keys (nconc (number-sequence ?a ?z)
-		   (number-sequence ?A ?Z)))
+  ;; (avy-keys (nconc (number-sequence ?a ?z)
+  ;; 		   (number-sequence ?A ?Z)))
+  (avy-keys (append (string-to-list "atenisubopyflmc")
+		    (string-to-list (upcase "atenisubopyflmc"))))
   (avy-timeout-seconds 0.25)
 
   :config
@@ -1423,7 +1508,8 @@
     "Filter avy selecton with open parenthesis"
     (interactive)
     (avy-goto-quick-char 40)) ;; (
-  (define-key emacs-lisp-mode-map (kbd "S-SPC") 'avy-goto-parenthesis)
+  ;; TODO Pick another keybind for paren jump
+  ;; (define-key emacs-lisp-mode-map (kbd "S-SPC") 'avy-goto-parenthesis)
 
   ;;; TODO Auto actions and compounds
 
@@ -1578,7 +1664,7 @@ argument, query for word to search."
 ") nil "~/.emacs.d/ssh_history" t))
 
 (defun cory/read-ssh-history ()
-  "Returns a list of ssh addresses previously connected to."
+  "Return a list of ssh addresses previously connected to."
   (with-temp-buffer
     (insert-file-contents "~/.emacs.d/ssh_history")
     (split-string (buffer-string) "\n" t)))
@@ -1591,7 +1677,7 @@ argument, query for word to search."
   "Requires sshfs to be installed."
   (interactive)
   (let* ((server (completing-read "user@server.address:" (cory/read-ssh-history)))
-	 (mount-path (concat "/tmp/.emacs-sshfs-mount-" server))
+	 (mount-path (concat temporary-file-directory ".emacs-sshfs-mount-" server))
 	 (user (string-trim-right server "@.*")))
     (cory/write-ssh-address-to-history server)
     (unless (file-directory-p mount-path)
@@ -1603,11 +1689,14 @@ argument, query for word to search."
 			       (concat mount-path "/home/" user "/")))))
 
 (defun cory/disconnect-ssh ()
-  "Requires fusemount"
+  "Manually disconnects the ssh connection to the server. Requires fusemount."
   (interactive)
-  (let ((server (completing-read "user@server.address:" (cory/read-ssh-history)))
-	(mount-path (concat "/tmp/.emacs-sshfs-mount-" server)))
-    (shell-command (concat "fusermount -u " mount-path))))
+  (shell-command
+   (concat "fusermount -u "
+	   (concat temporary-file-directory
+		   ".emacs-sshfs-mount-"
+		   (completing-read "user@server.address:"
+				    (cory/read-ssh-history))))))
 
 ;; Syntax checking
 (use-package flymake
@@ -2148,7 +2237,7 @@ Lisp function does not specify a special indentation."
 (use-package sly
   :commands (sly sly-connect)
   :init
-  (setq sly-symbol-completion-mode nil)
+  (setq-default sly-symbol-completion-mode nil)
   (setq inferior-lisp-program "sbcl")
   ;; (setq sly-default-lisp 'roswell)
   ;; (setq ros-config (concat user-emacs-directory
@@ -2203,7 +2292,6 @@ Lisp function does not specify a special indentation."
 ;;; Chicken Scheme
 
 (custom-set-variables '(scheme-program-name "csi -R r7rs"))
-;; (custom-set-variables '(scheme-program-name "scheme"))
 
 (add-to-list 'auto-mode-alist
              '("\\.egg\\'" . scheme-mode))
@@ -2226,8 +2314,15 @@ Lisp function does not specify a special indentation."
 
 (use-package geiser
   :hook
-  (scheme-mode . geiser-mode)
+  (geiser-mode . (lambda () (geiser-capf-setup nil)))
   (scheme-mode . scheme-super-capf)
+  ;; (scheme-mode . cory/run-geiser-p)
+  :bind
+  (:map geiser-mode-map
+   ("C-c C-d d" . cory/chicken-doc-look-up-manual)
+   ("C-c C-d C-d" . cory/chicken-doc-look-up-manual)
+   ("C-c C-d i" . cory/chicken-doc-look-up-manual)
+   ("C-c C-d TAB" . cory/chicken-doc-look-up-manual))
   :custom
   (geiser-active-implementations '(chicken))
   :config
@@ -2239,11 +2334,33 @@ Lisp function does not specify a special indentation."
 		       #'geiser-capf--for-module
 		       #'geiser-capf--for-symbol)
 		      #'cape-dabbrev
-		      #'cape-file))))
+		      #'cape-file)))
 
-(use-package geiser-chicken)
+  (defun cory/run-geiser-p ()
+    "Asks the user whether they want to start the geiser repl or not."
+    (when (y-or-n-p "Start geiser repl?")
+      (call-interactively 'geiser)))
 
-;; (use-package geiser-chez)
+  (defun cory/chicken-doc-look-up-manual (&optional arg)
+    "Look up manual for symbol at point.
+With prefix argument, ask for the lookup symbol (with completion)."
+    (interactive "P")
+    (unless (geiser-doc--manual-available-p)
+      (error "No manual available"))
+    (let ((symbol (or (and (not arg) (geiser--symbol-at-point))
+                     (geiser-completion--read-symbol "Symbol: ")))
+	  (current (buffer-name (current-buffer))))
+      (eww (concat "http://api.call-cc.org/5/cdoc/?q="
+		   (symbol-name symbol)
+		   "&query-name=Look+up")
+	   t)
+      (kill-buffer "*Chicken Documentation*")
+      (rename-buffer "*Chicken Documentation*")
+      (switch-to-buffer current)
+      (display-buffer "*Chicken Documentation*"))))
+
+(use-package geiser-chicken
+  :after geiser)
 
 ;;; C++
 (use-package modern-cpp-font-lock
@@ -2670,7 +2787,7 @@ Lisp function does not specify a special indentation."
 ;;; Scroll functions
 
 (defun cory/scroll-down-half-page ()
-  "scroll down half a page while keeping the cursor centered"
+  "Scroll down half a page while keeping the cursor centered."
   (interactive)
   (let ((ln (line-number-at-pos (point)))
 	(lmax (line-number-at-pos (point-max))))
@@ -2681,8 +2798,9 @@ Lisp function does not specify a special indentation."
                (recenter))))))
 
 (defun cory/scroll-up-half-page ()
-  "scroll up half a page while keeping the cursor centered"
+  "Scroll up half a page while keeping the cursor centered."
   (interactive)
+  (previous-line)
   (let ((ln (line-number-at-pos (point)))
 	(lmax (line-number-at-pos (point-max))))
     (cond ((= ln 1) nil)
@@ -2698,7 +2816,13 @@ Lisp function does not specify a special indentation."
 
 (defun cory/create-tmp-file ()
   (interactive)
-  (find-file (read-file-name "Find tmp file:" "/tmp/")))
+  (find-file (concat temporary-file-directory (read-string "New tmp file:"))))
+
+(defun cory/insert-space ()
+  "Insert a space."
+  (interactive)
+  (self-insert-command 1 ? )
+  (backward-char))
 
 ;;; Basic Keybinds
 
@@ -2707,15 +2831,14 @@ Lisp function does not specify a special indentation."
 ;; (keyboard-translate (kbd "C-x") (kbd "C-h"))
 
 (dolist (pair '(("C-x k"   kill-this-buffer)
-		;; ("C-#"     comment-or-uncomment-region)
-		;; ("C-c s"   replace-string)
+		("C-x K"   kill-buffer)
 		("C-c w"   woman)
-		("C-x u"   undo-only)
-		("C-/"     undo-only)
-		("C-z"     undo-only)
-		("C-S-z"   undo-redo)
-		("C-x C-u" undo-redo)
-		("C-?"     undo-redo)
+		;; ("C-x u"   undo-only)
+		;; ("C-/"     undo-only)
+		;; ("C-z"     undo-only)
+		;; ("C-S-z"   undo-redo)
+		;; ("C-x C-u" undo-redo)
+		;; ("C-?"     undo-redo)
 		("C-'"     repeat)
 		("C-s"     cory/search-forward-dwim)
 		("C-r"     cory/search-backward-dwim)
@@ -2723,7 +2846,11 @@ Lisp function does not specify a special indentation."
 		("C-M-r"   cory/isearch-backward-resume)
 		("C-v"     cory/scroll-down-half-page)
 		("M-v"     cory/scroll-up-half-page)
-		("C-c F"  cory/create-tmp-file)))
+		("C-c F"   cory/create-tmp-file)
+		("C-c e"   eww)
+		("S-SPC"   cory/insert-space)
+		("C-c q"   quit-window)
+		("C-j"     join-line)))
   (global-set-key (kbd (car pair)) (cadr pair)))
 
 ;;; Lisp Keybinds
@@ -2747,11 +2874,13 @@ Lisp function does not specify a special indentation."
   (set-mark-command nil)
   (forward-list))
 
+;; FIXME
 (dolist (map (list emacs-lisp-mode-map
 		   lisp-mode-map lisp-data-mode-map
 		   clojure-mode-map ;; cider-repl-mode-map
 		   ;; racket-mode-map racket-repl-mode-map
-		   scheme-mode-map geiser-repl-mode-map))
+		   ;; scheme-mode-map geiser-repl-mode-map
+		   ))
   (define-key map (kbd "M-a") 'backward-list)
   (define-key map (kbd "M-e") 'forward-list)
   (define-key map (kbd "M-h") 'cory/mark-list))
@@ -4372,10 +4501,10 @@ PAIR-EXPR contains two string token lists. The tokens in first
 ;; 		("C-f"   forward-char)
 ;; 		("C-S-f" cory/forward-char-expand)
 ;; 		("C-g"   keyboard-quit)
-;; 		("C-S-g" cory/grab)
+;; 		("C-S-g" cory/grab) 👦
 ;; 		("<C-i>" kill-ring-save)
-;; 		("C-S-i" cory/sync-grab)
-;; 		("C-j"   cory/join)
+;; 		("C-S-i" cory/sync-grab) 👦
+;; 		("C-j"   cory/join) 👦
 ;; 		("C-k"   cory/kill)
 ;; 		("C-l"   cory/line)
 ;; 		("C-S-l" cory/goto-line)
@@ -4390,7 +4519,7 @@ PAIR-EXPR contains two string token lists. The tokens in first
 ;; 		("C-q"   cory/quit-window-or-buffer)
 ;; 		("C-S-q" cory/goto-line)
 ;; 		("C-r"   cory/replace-selection)
-;; 		("C-S-r" cory/swap-grab)
+;; 		("C-S-r" cory/swap-grab) 👦
 ;; 		("C-s"   cory/search)
 ;; 		("C-S-s" cory/visit)
 ;; 		("C-t"   avy-goto-char)
@@ -4822,12 +4951,8 @@ PAIR-EXPR contains two string token lists. The tokens in first
 (use-package frog-menu
   :custom
   ;; Need to redefine keys to account for custom keyboard layout
-  (frog-menu-avy-keys (append (string-to-list "aoehsfnbit")
-			      (string-to-list "ulrpdyc")
-			      (string-to-list "qjkzvwmqxg")
-			      (string-to-list (upcase "aoehsfnbit"))
-			      (string-to-list (upcase "ulrpdyc"))
-			      (string-to-list (upcase "qjkzvwmqxg"))
+  (frog-menu-avy-keys (append (string-to-list "atenisubopyflmc")
+			      (string-to-list (upcase "atenisubopyflmc"))
 			      (number-sequence ?, ?@)))
   :config
   (defun frog-menu-flyspell-correct (candidates word)
@@ -4912,6 +5037,11 @@ of (command . word) to be used by `flyspell-do-correct'."
   :config
   (dirvish-override-dired-mode))
 
+;; TODO try out sunrise-commander
+(use-package sunrise
+  :bind
+  (("C-c s" . sunrise)))
+
 ;;
 ;; --- MISC ---
 ;;
@@ -4963,8 +5093,7 @@ of (command . word) to be used by `flyspell-do-correct'."
   ;; keyboard shortcuts
   (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
   (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
-  (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete)
-  )
+  (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))
 
 ;; Eww
 
