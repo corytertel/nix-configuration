@@ -982,57 +982,7 @@
 ;; (use-package pretty-mode
 ;;   :config
 ;;   (add-hook 'prog-mode-hook 'pretty-mode))
-
 (add-hook 'prog-mode-hook 'prettify-symbols-mode)
-
-;; Ligatures for Scheme (arrows and lambda)
-
-;; (defvar pretty-scheme-keywords
-;;   (mapcar (lambda (pair)
-;;             (cons (concat "\\(" (regexp-quote (car pair)) "\\)")
-;;                   (cdr pair)))
-;;           '(("->"  . #x2192)
-;;             ("<="  . #x2264)
-;;             ("<==" . #x21D0)
-;;             (">="  . #x2265)
-;;             ("==>" . #x21D2)))
-;;   "Alist from regexps to Unicode code points.")
-
-;; (defun prettify-scheme ()
-;;   (add-to-list 'prettify-symbols-alist '("lambda" . #x3BB))
-;;   (font-lock-add-keywords
-;;    nil
-;;    (mapcar (lambda (keyword)
-;;              `(,(car keyword)
-;;                (0 (progn (compose-region (match-beginning 1) (match-end 1)
-;;                                          ,(cdr keyword)
-;;                                          'decompose-region)
-;;                          nil))))
-;;            pretty-scheme-keywords))
-;;   (turn-on-font-lock))
-
-;; (add-hook 'scheme-mode-hook 'prettify-scheme)
-
-;; APL-like characters for scheme
-(add-hook
- 'scheme-mode-hook
- (lambda ()
-   (setq prettify-symbols-alist
-         (seq-concatenate
-          'list
-          '(("<="       . #x2264)
-            (">="       . #x2265)
-            ("define"   . #x225d)
-            ("set!"     . #x2250)
-            ("set-car!" . #x2254)
-            ("set-cdr!" . #x2255)
-            ("#t"       . #x2713)
-            ("#f"       . #x2717)
-            ("'()"      . #x2205)
-            ("if"       . #x2047)
-            ("or"       . #x2228)
-            ("and"      . #x2227))
-          prettify-symbols-alist))))
 
 ;; Automatically remove trailing whitespace if user put it there
 (use-package ws-butler
@@ -2362,6 +2312,30 @@ With prefix argument, ask for the lookup symbol (with completion)."
 (use-package geiser-chicken
   :after geiser)
 
+;; APL-like characters for scheme
+(add-hook
+ 'scheme-mode-hook
+ (lambda ()
+   (setq prettify-symbols-alist '(("lambda" . #x3BB)
+				  ("->"    . #x2192)
+				  ("<="    . #x2264)
+				  ("<=="   . #x21D0)
+				  (">="    . #x2265)
+				  ("==>"   . #x21D2)
+				  ("<="       . "≤")
+				  (">="       . "≥")
+				  ("define"   . "≝")
+				  ("set!"     . "≐")
+				  ("set-car!" . "≔")
+				  ("set-cdr!" . "≕")
+				  ("#t"       . "✓")
+				  ("#f"       . "✗")
+				  ("'()"      . "∅")
+				  ("if"       . "⁇")
+				  ("or"       . "∨")
+				  ("and"      . "∧")))
+   (prettify-symbols-mode 1)))
+
 ;;; C++
 (use-package modern-cpp-font-lock
   :ensure t)
@@ -2724,15 +2698,40 @@ With prefix argument, ask for the lookup symbol (with completion)."
 
 (require 's)
 
+(defun cory/regex-combos (l)
+  "Return a list of regexes that will match combitations of the strings in `L'."
+  (if (not (cdr l))
+      l
+    (cl-reduce
+     #'append
+     (mapcar
+      (lambda (e)
+	(mapcar
+	 (lambda (f) (concat e ".*" f))
+	 (cory/regex-combos (remove e l))))
+      l))))
+
+(defun cory/isearch-string ()
+  "Return the string to isearch for."
+  (let ((search-args (s-split " " (car consult--line-history))))
+    (if (cdr search-args)
+	(concat
+	 "^.*\\("
+	 (cl-reduce
+	  (lambda (x y) (concat x "\\|" y))
+	  (cory/regex-combos search-args))
+	 "\\).*$")
+      (car search-args))))
+
 (defun cory/isearch-forward-resume ()
   (interactive)
-  (let ((string (car (s-split " " (car consult--line-history)))))
-    (isearch-resume string nil nil t string t)))
+  (let ((search-str (cory/isearch-string)))
+    (isearch-resume search-str t nil t search-str t)))
 
 (defun cory/isearch-backward-resume ()
   (interactive)
-  (let ((string (car (s-split " " (car consult--line-history)))))
-    (isearch-resume string nil nil nil string t)))
+  (let ((search-str (cory/isearch-string)))
+    (isearch-resume search-str t nil nil search-str t)))
 
 (defun cory/visual-isearch-forward ()
   (interactive)
@@ -5012,7 +5011,7 @@ of (command . word) to be used by `flyspell-do-correct'."
   (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
 
 ;; Use only one dired buffer at a time
-(use-package dired-single)
+;; (use-package dired-single)
 
 ;; Open certain file extensions in external programs
 (use-package dired-open
@@ -5033,14 +5032,14 @@ of (command . word) to be used by `flyspell-do-correct'."
 			   ("ppt" . "libreoffice")
 			   ("pptx" . "libreoffice"))))
 
-(use-package dirvish
-  :config
-  (dirvish-override-dired-mode))
+;; (use-package dirvish
+;;   :config
+;;   (dirvish-override-dired-mode))
 
 ;; TODO try out sunrise-commander
 (use-package sunrise
   :bind
-  (("C-c s" . sunrise)))
+  (("C-z" . sunrise)))
 
 ;;
 ;; --- MISC ---

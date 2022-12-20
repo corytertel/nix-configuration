@@ -17,8 +17,6 @@ let
     cp ${pkgs.writeText "default.el" initFile} $out/share/emacs/site-lisp/default.el
   '';
 
-  # sunrise-commander = pkgs.callPackage ./sunrise-commander.nix {};
-
   emacsPackages = epkgs: with epkgs; [
     init
     use-package
@@ -167,6 +165,7 @@ in {
       ripgrep
       flameshot
       # dired archive utilities
+      avfs
       gnutar
       gzip
       bzip2
