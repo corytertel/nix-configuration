@@ -6,7 +6,7 @@ let
   cfg = config.programs.cory.emacs;
 
   initFile = (builtins.readFile ./init.el)
-             + (builtins.readFile ./aweshell.el)
+             # + (builtins.readFile ./aweshell.el)
              + (builtins.readFile ./eshell-undistract-me.el)
              + (builtins.readFile ./app-launcher.el)
              + (import ./eshell-extras.nix { inherit config pkgs; })
@@ -30,6 +30,7 @@ let
     extraEmacsPackages = emacsPackages;
     override = epkgs: epkgs // {
       sunrise = pkgs.callPackage ./sunrise-commander.nix {};
+      macrursors = pkgs.callPackage ./macrursors.nix {};
     };
   };
 

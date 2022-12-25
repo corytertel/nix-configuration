@@ -173,8 +173,14 @@
 (window-divider-mode 1)
 
 ;; Icons
-;; (use-package all-the-icons
-;;   :ensure t)
+(use-package all-the-icons
+  :custom
+  (all-the-icons-scale-factor 1.0)
+  (all-the-icons-default-adjust 0.0)
+  :config
+  (when (and (not (if (find-font (font-spec :name "all-the-icons")) t nil))
+             (window-system))
+    (all-the-icons-install-fonts t)))
 
 ;; Modeline
 ;; (use-package smart-mode-line
@@ -203,11 +209,86 @@
   "Modified buffer highlighting."
   :group 'faces)
 
+;; Git diff in modeline
+;; https://cocktailmake.github.io/posts/emacs-modeline-enhancement-for-git-diff/
+;; (defadvice vc-git-mode-line-string (after plus-minus (file) compile activate)
+;;   "Show the information of git diff in status-line"
+;;   (setq ad-return-value
+;;         (concat ad-return-value
+;;                 (let ((plus-minus (vc-git--run-command-string
+;;                                    file "diff" "--numstat" "--")))
+;;                   (if (and plus-minus
+;;                            (string-match "^\\([0-9]+\\)\t\\([0-9]+\\)\t" plus-minus))
+;;                       (concat
+;;                        " "
+;;                        (format "+%s" (match-string 1 plus-minus))
+;;                        (format "-%s" (match-string 2 plus-minus)))
+;;                     "")))))
+
+;; Git Parse Repo Status
+;; See https://kitchingroup.cheme.cmu.edu/blog/2014/09/19/A-git-status-Emacs-modeline/
+(defun cory/mode-line-git-parse-status ()
+  "Display the status of the repo."
+  (interactive)
+  (let ((U 0)   ; untracked files
+        (M 0)   ; modified files
+        (O 0)   ; other files
+        (U-files "")
+        (M-files "")
+        (O-files ""))
+    (dolist (line (split-string
+                   (shell-command-to-string "git status --porcelain")
+                   "\n"))
+      (cond
+
+       ;; ignore empty line at end
+       ((string= "" line) nil)
+
+       ((string-match "^\\?\\?" line)
+        (setq U (+ 1 U))
+        (setq U-files (concat U-files "\n" line)))
+
+       ((string-match "^ M" line)
+        (setq M (+ 1 M))
+        (setq M-files (concat M-files "\n" line))
+        )))
+
+    ;; construct propertized string
+    (concat
+     "Git["
+     (propertize
+      (format "M:%d" M)
+      'face (if (> M 0)
+                'error
+              'success)
+      'help-echo M-files)
+     (propertize "|" 'face 'magit-dimmed)
+     (propertize
+      (format "?:%d" U)
+      'face (if (> U 0)
+                'warning
+              'success)
+      'help-echo U-files)
+     "]")))
+
 (setq-default
  mode-line-format
  '("  "
-   (:eval (when (bound-and-true-p meow-mode) (meow-indicator)))
-   " "
+   ;; (:eval (when (bound-and-true-p meow-mode) (meow-indicator)))
+   (:eval (let ((icon (all-the-icons-icon-for-mode major-mode)))
+	    (propertize
+	     icon
+	     'face
+	     (plist-put
+	      (get-text-property 0 'face icon)
+	      :height 1.0)
+	     'font-lock-face
+	     (plist-put
+	      (get-text-property 0 'font-lock-face icon)
+	      :height 1.0)
+	     'display
+	     '(raise 0))))
+   "  "
    (:eval (let ((str (if buffer-read-only
                          (if (buffer-modified-p) "%%*" "%%%%")
                        (if (buffer-modified-p) "**" "--"))))
@@ -226,7 +307,9 @@
    (list 'column-number-mode "  C%c")
    "  " mode-line-buffer-identification
    "  " mode-line-modes
-   (:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format))))
+   (:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format))
+   "  "
+   (:eval (cory/mode-line-git-parse-status))))
 
 (use-package moody
   :custom
@@ -500,6 +583,17 @@
 ;; Make backups of files, even when they're in version control
 (setq vc-make-backup-files t)
 
+;; Automatically purge backup files not accessed in a week:
+(message "Deleting old backup files...")
+(let ((week (* 60 60 24 7))
+      (current (float-time (current-time))))
+  (dolist (file (directory-files temporary-file-directory t))
+    (when (and (backup-file-name-p file)
+             (> (- current (float-time (fifth (file-attributes file))))
+                week))
+      (message "%s" file)
+      (delete-file file))))
+
 ;; Minimap
 ;; (use-package minimap
 ;;   :custom
@@ -599,7 +693,7 @@
   ;; (add-to-list 'eglot-server-programs
   ;;              `(scheme-mode . ("chicken-lsp-server")))
   (add-to-list 'eglot-server-programs
-               `(clojure-mode . ("clojure-lsp")))
+		`(clojure-mode . ("clojure-lsp")))
   ;; (add-to-list 'eglot-server-programs
   ;;              `(nix-mode . ("nil")))
 
@@ -613,7 +707,8 @@
 
   :bind (:map eglot-mode-map
 	 ("C-c C-a" . eglot-code-actions)
-	 ("C-c C-f" . eglot-format-buffer)))
+	 ("C-c C-f" . eglot-format-buffer)
+	 ("C-c x"   . eglot-rename)))
 
 ;; Tree-sitter
 ;; (use-package tree-sitter
@@ -673,6 +768,7 @@
   (corfu-popupinfo-mode)
 
   :config
+  ;; FIXME fix popupinfo font size
   ;; (set-face-attribute 'corfu-popupinfo nil
   ;; 		      :inherit 'corfu-default)
   (copy-face 'corfu-default 'corfu-popupinfo))
@@ -718,14 +814,105 @@
               (corfu-mode 1))))
 
 ;; Icons for corfu
-(use-package kind-icon
-  :ensure t
-  :after corfu
-  :custom
-  (kind-icon-use-icons t) ; Use icons labels
-  (kind-icon-default-face 'corfu-default)
-  :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+;; (use-package kind-icon
+;;   :ensure t
+;;   :after corfu
+;;   :custom
+;;   (kind-icon-use-icons t) ; Use icons labels
+;;   (kind-icon-default-face 'corfu-default)
+;;   :config
+;;   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+
+(defvar kind-all-the-icons--cache nil
+  "The cache of styled and padded label (text or icon).
+An alist.")
+
+(defun kind-all-the-icons-reset-cache ()
+  "Remove all cached icons from `kind-all-the-icons-mapping'."
+  (interactive)
+  (setq kind-all-the-icons--cache nil))
+
+(defun kind-all-the-icons--set-default-clear-cache (&rest args)
+  (kind-all-the-icons-reset-cache)
+  (apply #'set-default args))
+
+(defvar kind-all-the-icons--icons
+  `((unknown . ,(all-the-icons-material "find_in_page" :height 0.8 :v-adjust -0.15))
+    (text . ,(all-the-icons-faicon "text-width" :height 0.8 :v-adjust -0.02))
+    (method . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+    (function . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+    (fun . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+    (constructor . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+    (ctor . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+    (field . ,(all-the-icons-octicon "tag" :height 0.85 :v-adjust 0 :face 'all-the-icons-lblue))
+    (variable . ,(all-the-icons-octicon "tag" :height 0.85 :v-adjust 0 :face 'all-the-icons-lblue))
+    (var . ,(all-the-icons-octicon "tag" :height 0.85 :v-adjust 0 :face 'all-the-icons-lblue))
+    (class . ,(all-the-icons-material "settings_input_component" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
+    (interface . ,(all-the-icons-material "share" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
+    (i/f . ,(all-the-icons-material "share" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
+    (module . ,(all-the-icons-material "view_module" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
+    (mod . ,(all-the-icons-material "view_module" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
+    (property . ,(all-the-icons-faicon "wrench" :height 0.8 :v-adjust -0.02))
+    (prop . ,(all-the-icons-faicon "wrench" :height 0.8 :v-adjust -0.02))
+    (unit . ,(all-the-icons-material "settings_system_daydream" :height 0.8 :v-adjust -0.15))
+    (value . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
+    (enum . ,(all-the-icons-material "storage" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
+    (keyword . ,(all-the-icons-material "filter_center_focus" :height 0.8 :v-adjust -0.15))
+    (k/w . ,(all-the-icons-material "filter_center_focus" :height 0.8 :v-adjust -0.15))
+    (snippet . ,(all-the-icons-material "format_align_center" :height 0.8 :v-adjust -0.15))
+    (sn . ,(all-the-icons-material "format_align_center" :height 0.8 :v-adjust -0.15))
+    (color . ,(all-the-icons-material "palette" :height 0.8 :v-adjust -0.15))
+    (file . ,(all-the-icons-faicon "file-o" :height 0.8 :v-adjust -0.02))
+    (reference . ,(all-the-icons-material "collections_bookmark" :height 0.8 :v-adjust -0.15))
+    (ref . ,(all-the-icons-material "collections_bookmark" :height 0.8 :v-adjust -0.15))
+    (folder . ,(all-the-icons-faicon "folder-open" :height 0.8 :v-adjust -0.02))
+    (dir . ,(all-the-icons-faicon "folder-open" :height 0.8 :v-adjust -0.02))
+    (enum-member . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15))
+    (enummember . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15))
+    (member . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15))
+    (constant . ,(all-the-icons-faicon "square-o" :height 0.8 :v-adjust -0.1))
+    (const . ,(all-the-icons-faicon "square-o" :height 0.8 :v-adjust -0.1))
+    (struct . ,(all-the-icons-material "settings_input_component" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
+    (event . ,(all-the-icons-octicon "zap" :height 0.8 :v-adjust 0 :face 'all-the-icons-orange))
+    (operator . ,(all-the-icons-material "control_point" :height 0.8 :v-adjust -0.15))
+    (op . ,(all-the-icons-material "control_point" :height 0.8 :v-adjust -0.15))
+    (type-parameter . ,(all-the-icons-faicon "arrows" :height 0.8 :v-adjust -0.02))
+    (param . ,(all-the-icons-faicon "arrows" :height 0.8 :v-adjust -0.02))
+    (template . ,(all-the-icons-material "format_align_left" :height 0.8 :v-adjust -0.15))
+    (t . ,(all-the-icons-material "find_in_page" :height 0.8 :v-adjust -0.15))))
+
+
+(defsubst kind-all-the-icons--metadata-get (metadata type-name)
+  (or
+   (plist-get completion-extra-properties (intern (format ":%s" type-name)))
+   (cdr (assq (intern type-name) metadata))))
+
+(defun kind-all-the-icons-formatted (kind)
+  "Format icon kind with all-the-icons"
+  (or (alist-get kind kind-all-the-icons--cache)
+      (let ((map (assq kind kind-all-the-icons--icons)))
+        (let*  ((icon (if map
+                          (cdr map)
+                        (cdr (assq t kind-all-the-icons--icons))))
+                (half (/ (default-font-width) 2))
+                (pad (propertize " " 'display `(space :width (,half))))
+                (disp (concat pad icon pad)))
+          (setf (alist-get kind kind-all-the-icons--cache) disp)
+          disp))))
+
+(defun kind-all-the-icons-margin-formatter (metadata)
+  "Return a margin-formatter function which produces kind icons.
+METADATA is the completion metadata supplied by the caller (see
+info node `(elisp)Programmed Completion').  To use, add this
+function to the relevant margin-formatters list."
+  (if-let ((kind-func (kind-all-the-icons--metadata-get metadata "company-kind")))
+      (lambda (cand)
+	(if-let ((kind (funcall kind-func cand)))
+	    (kind-all-the-icons-formatted kind)
+	  (kind-all-the-icons-formatted t))))) ;; as a backup
+
+(add-to-list 'corfu-margin-formatters
+	     #'kind-all-the-icons-margin-formatter)
 
 ;; Minibuffer completion
 (use-package vertico
@@ -797,15 +984,14 @@
    :map minibuffer-local-map
    ("M-r" . consult-history))
   :custom
-  (completion-in-region-function #'consult-completion-in-region)
-  (add-hook 'completion-setup-hook #'hl-line-mode))
+  (completion-in-region-function #'consult-completion-in-region))
 
 (use-package consult-eglot
-  :bind (;; ("C-c v" . xref-find-references-and-replace)
-	 ;; :map eglot-mode-map
-	 ([remap xref-find-apropos] . consult-eglot-symbols) ; "C-M-."
-	 ;; ([remap xref-find-references-and-replace] . eglot-rename)
-	 ("C-c v" . eglot-rename)))
+  ;; :bind (:map eglot-mode-map
+  ;; 	 ("C-M-." . consult-eglot-symbols))
+  ;; FIXME bind isn't binding
+  :config
+  (define-key eglot-mode-map [remap xref-find-apropos] 'consult-eglot-symbols))
 
 (use-package marginalia
   :after vertico
@@ -891,6 +1077,12 @@
   ;; (global-tempel-abbrev-mode)
   )
 
+(use-package all-the-icons-completion
+  :disabled t
+  :config
+  (all-the-icons-completion-mode)
+  (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
+
 ;; Undo
 (use-package undo-tree
   :defer 1
@@ -899,8 +1091,6 @@
   (:map undo-tree-map
    ("C-x u"   . undo-tree-visualize)
    ("C-/"     . undo-tree-undo)
-   ("C-z"     . undo-tree-undo)
-   ("C-S-z"   . undo-tree-redo)
    ("C-x C-u" . undo-tree-visualize-redo)
    ("C-?"     . undo-tree-redo))
   :custom
@@ -928,8 +1118,10 @@
 (use-package helpful
   :ensure
   :bind
-  ([remap describe-command] . helpful-command)
-  ([remap describe-key] . helpful-key))
+  ([remap describe-command]  . helpful-command)
+  ([remap describe-key]      . helpful-key)
+  ([remap describe-variable] . helpful-variable)
+  ([remap describe-function] . helpful-callable))
 
 ;; Hydras
 (use-package hydra)
@@ -1037,7 +1229,7 @@
 	 ("C-x 4 t" . crux-transpose-windows)
 	 ("C-c d" . crux-duplicate-current-line-or-region)
 	 ("C-c D" . crux-duplicate-and-comment-current-line-or-region)
-	 ("C-c k" . crux-kill-other-buffers)
+	 ;; ("C-c k" . crux-kill-other-buffers)
 	 ("C-^" . crux-top-join-line)
 	 ("C-k" . crux-kill-and-join-forward-2)
 	 ([remap kill-whole-line]. crux-kill-whole-line)
@@ -1046,16 +1238,23 @@
   ;; TODO need to detect when the point is at the beginning of indentation
   (defun crux-kill-and-join-backward ()
     (interactive)
-    (if (and (bolp) (not (eolp)))
+    (if (and (save-mark-and-excursion
+	       (let ((orig-point (point)))
+		 (move-beginning-of-line 1)
+		 (while (looking-at "[[:space:]\t]")
+		   (forward-char 1))
+		 (= orig-point (point))))
+	     (not (eolp)))
 	(delete-indentation)
       (kill-line 0)
       (indent-according-to-mode)))
 
   (defun crux-kill-and-join-forward-2 (&optional arg)
+    "If ARG is given, kill backwards. Otherwise kill forwards."
     (interactive "P")
-    (if (< (prefix-numeric-value arg) 0)
-	(crux-kill-and-join-backward)
-      (crux-kill-and-join-forward))))
+    (if (not arg)
+	(crux-kill-and-join-forward)
+      (crux-kill-and-join-backward))))
 
 ;; better comment-dwim
 (use-package comment-dwim-2
@@ -1159,28 +1358,164 @@
   ;; C-SPC is smart-region
   :bind (([remap set-mark-command] . smart-region)))
 
+;; Personal custom multi-edit package
+;; Very similar to meow's beacon-mode
+(use-package macrursors
+  :bind
+  (("C-;" . macrursors-mark-all-instances-of)
+   ("C-c SPC" . macrursors-grab))
+  :custom
+  (macrursors-preapply-command
+   (lambda ()
+     (corfu-mode -1)
+     (goggles-mode -1)
+     (beacon-mode -1)))
+  (macrursors-postapply-command
+   (lambda ()
+     (corfu-mode 1)
+     (goggles-mode 1)
+     (beacon-mode 1))))
+
 ;; Multiple cursors
-(use-package multiple-cursors
-  :bind (("C-c m" . mc/mark-all-dwim)
-         ("C->" . mc/mark-next-like-this)
-         ("C-<" . mc/mark-previous-like-this)
-	 ("C-M-<" . mc/mark-all-in-region-regexp)
-	 ("C-M->" . mc/edit-lines)
-         :map mc/keymap
-         ("C-x v" . mc/vertical-align-with-space)
-         ("C-x n" . mc-hide-unmatched-lines-mode))
-  :config
-  (global-unset-key (kbd "M-<down-mouse-1>"))
-  (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
+;; (use-package multiple-cursors
+;;   :bind (;; ("C-c m" . mc/mark-all-dwim)
+;; 	 ("C-c m" . mc/mark-all-like-this)
+;;          ("C->" . mc/mark-next-like-this)
+;;          ("C-<" . mc/mark-previous-like-this)
+;; 	 ("C-M-<" . mc/mark-all-in-region-regexp)
+;; 	 ("C-M->" . mc/edit-lines)
+;;          :map mc/keymap
+;;          ("C-x v" . mc/vertical-align-with-space)
+;;          ("C-x n" . mc-hide-unmatched-lines-mode))
+;;   :custom
+;;   (mc/always-run-for-all t)
+;;   :config
+;;   (global-unset-key (kbd "M-<down-mouse-1>"))
+;;   (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
 
-  (with-eval-after-load 'multiple-cursors-core
-    ;; Immediately load mc list, otherwise it will show as
-    ;; changed as empty in my git repo
-    (mc/load-lists)
+;;   (with-eval-after-load 'multiple-cursors-core
+;;     ;; Immediately load mc list
+;;     (mc/load-lists)
+;;     ;; Define keys
+;;     (define-key mc/keymap (kbd "M-T") 'mc/reverse-regions)
+;;     (define-key mc/keymap (kbd "C-,") 'mc/unmark-next-like-this)
+;;     (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)
+;;     (define-key mc/keymap (kbd "<return>") nil))
 
-    (define-key mc/keymap (kbd "M-T") 'mc/reverse-regions)
-    (define-key mc/keymap (kbd "C-,") 'mc/unmark-next-like-this)
-    (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)))
+;;   (setq mc/max-cursors 201)
+;;   (defun mc/create-fake-cursor-at-point (&optional id)
+;;     "Overriding mc/create-fake-cursor-at-point to save hidden cursors"
+;;     (unless mc--max-cursors-original
+;;       (setq mc--max-cursors-original mc/max-cursors))
+;;     (if mc/max-cursors
+;; 	(if (< (mc/num-cursors) mc/max-cursors)
+;;             (let ((overlay (mc/make-cursor-overlay-at-point)))
+;; 	      (overlay-put overlay 'mc-id (or id (mc/create-cursor-id)))
+;; 	      (overlay-put overlay 'type 'fake-cursor)
+;; 	      (overlay-put overlay 'priority 100)
+;; 	      (mc/store-current-state-in-overlay overlay)
+;; 	      (when (use-region-p)
+;; 		(overlay-put overlay 'region-overlay
+;;                              (mc/make-region-overlay-between-point-and-mark)))
+;; 	      overlay)
+;;           (if (use-region-p)
+;; 	      (progn (setq-local cory/mc-hidden-cursors (cons (cons (point-marker) (copy-marker (mark-marker))) cory/mc-hidden-cursors)))
+;;             (setq-local cory/mc-hidden-cursors (cons (cons (point-marker) (point-marker)) cory/mc-hidden-cursors))))
+;;       (let ((overlay (mc/make-cursor-overlay-at-point)))
+;; 	(overlay-put overlay 'mc-id (or id (mc/create-cursor-id)))
+;; 	(overlay-put overlay 'type 'fake-cursor)
+;; 	(overlay-put overlay 'priority 100)
+;; 	(mc/store-current-state-in-overlay overlay)
+;; 	(when (use-region-p)
+;;           (overlay-put overlay 'region-overlay
+;; 		       (mc/make-region-overlay-between-point-and-mark)))
+;; 	overlay)))
+
+
+;;   (defun mc--maybe-set-killed-rectangle ()
+;;     "There are some bugs regarding saving to kill ring for
+;;  rectangle editing, but I don't use it, so just ignore it")
+
+;;   (defun cory/apply-macro-for-the-next-hidden-cursor ()
+;;     "Apply kmacro to the next hidden cursor"
+;;     (interactive)
+;;     (let* ((next-cursor (car cory/mc-hidden-cursors))
+;;            (p (car next-cursor))
+;;            (m (cdr next-cursor)))
+;;       (if (not (= p m))
+;;           (progn
+;;             (push-mark m t nil)
+;;             (goto-char p)
+;;             (activate-mark))
+;; 	(goto-char p))
+;;       (call-last-kbd-macro)
+;;       (setq-local cory/mc-hidden-cursors (cdr cory/mc-hidden-cursors))))
+
+;;   (defun mc/remove-cursor-at-point-if-exist ()
+;;     "Remove cursors at point, either fake or real."
+;;     (interactive)
+;;     (let ((removed nil))
+;;       (cl-loop for cursor in (mc/all-fake-cursors)
+;;                for start = (overlay-start cursor)
+;;                do (when (= start (point))
+;; 		    (mc/remove-fake-cursor cursor)
+;; 		    (setq-local removed t)))
+;;       removed))
+
+;;   (defun cory/mc-remove-current-cursor ()
+;;     "blabla"
+;;     (interactive)
+;;     (let ((old-point (point)))
+;;       (when (not (call-interactively 'mc/remove-cursor-at-point-if-exist))
+;; 	(if (mc/last-fake-cursor-before (point))
+;;             (call-interactively 'mc/cycle-backward)
+;;           (call-interactively 'mc/cycle-forward))
+;; 	(setq-local new-point (point))
+;; 	(goto-char old-point)
+;; 	(call-interactively 'mc/remove-cursor-at-point-if-exist)
+;; 	(goto-char new-point))))
+
+;;   (defun cory/apply-macro-for-all-hidden-cursors ()
+;;     "Apply kmacro to all hidden cursors"
+;;     (interactive)
+;;     (while cory/mc-hidden-cursors
+;;       (let* ((next-cursor (car cory/mc-hidden-cursors))
+;;              (p (car next-cursor))
+;;              (m (cdr next-cursor)))
+;; 	(if (not (= p m))
+;;             (progn
+;; 	      (push-mark m t t)
+;; 	      (goto-char p))
+;;           (goto-char p))
+;; 	(call-last-kbd-macro)
+;; 	(setq-local cory/mc-hidden-cursors (cdr cory/mc-hidden-cursors)))))
+
+;;   (defun mc/mark-all-like-this ()
+;;     "example: override mc/mark-all-like-this to make it work with hidden cursors"
+;;     (interactive)
+;;     (unless (region-active-p)
+;;       (error "Mark a region to match first."))
+;;     (mc/remove-fake-cursors)
+;;     (setq-local cory/mc-hidden-cursors nil)
+;;     (let ((master (point))
+;;           (case-fold-search nil)
+;;           (point-first (< (point) (mark)))
+;;           (re (regexp-opt (mc/region-strings) mc/enclose-search-term)))
+;;       (mc/save-excursion
+;;        (goto-char 0)
+;;        (while (search-forward-regexp re nil t)
+;; 	 (push-mark (match-beginning 0))
+;; 	 (when point-first (exchange-point-and-mark))
+;; 	 (unless (and (= master (point)))
+;;            (mc/create-fake-cursor-at-point))
+;; 	 (when point-first (exchange-point-and-mark)))))
+;;     (if (> (mc/num-cursors) 1)
+;; 	(multiple-cursors-mode 1)
+;;       (mc/disable-multiple-cursors-mode))
+;;     (when cory/mc-hidden-cursors
+;;       (cory/mc-remove-current-cursor)
+;;       (setq-local cory/mc-hidden-cursors (reverse cory/mc-hidden-cursors))
+;;       (message "Visible cursors threshold is hit, hidden cursors created, please record macro to apply changes to them"))))
 
 ;; Phi search
 (use-package phi-search)
@@ -1188,8 +1523,8 @@
 ;; Visual regex replacement
 (use-package visual-regexp
   :bind
-  (("C-c r" . cory/replace)
-   ("C-c R" . vr/query-replace)
+  (("C-c c" . cory/replace)
+   ("C-c C" . vr/query-replace)
    ;; for multiple-cursors
    ("C-c M" . vr/mc-mark))
   :config
@@ -1197,17 +1532,10 @@
     (interactive)
     ;; If region is active, only replace the region
     (if (and transient-mark-mode mark-active (not (eq (mark) (point))))
-        (let ((region (buffer-substring-no-properties (mark) (point))))
-          (call-interactively 'vr/replace))
-      (let ((a (vr--interactive-get-args
-		'vr--mode-regexp-replace
-		'vr--calling-func-replace)))
-	(apply 'vr/replace
-	       (list
-		(car a)
-		(cadr a)
-		0
-		(cadddr a)))))))
+        (call-interactively 'vr/replace)
+      (save-excursion
+	(goto-char 0)
+	(call-interactively 'vr/replace)))))
 
 ;; Move text
 (use-package move-text
@@ -1559,21 +1887,28 @@ argument, query for word to search."
   (("M-z" . avy-zap-to-char-dwim)
    ("M-Z" . avy-zap-up-to-char-dwim)))
 
-;; Copy text as Discord/GitHub/etc formatted code
-(use-package copy-as-format
+(use-package ace-link
   :bind
-  (("C-c c c" . copy-as-format)
-   ("C-c c g" . copy-as-format-github)
-   ("C-c c t" . copy-as-format-markdown-table)
-   ("C-c c m" . copy-as-format-markdown)
-   ("C-c c o" . copy-as-format-org-mode)
-   ("C-c c d" . copy-as-format-slack)
-   ("C-c c v" . org-copy-visible))
+  (("M-o" . ace-link))
   :config
-  (setq copy-as-format-default "slack")
-  (defun copy-as-format--markdown-table (text _multiline)
-    (s-replace "--+--" "--|--" text))
-  (add-to-list 'copy-as-format-format-alist '("markdown-table" copy-as-format--markdown-table)))
+  ;; Binds `o' to ace-link in the supported modes
+  (ace-link-setup-default))
+
+;; ;; Copy text as Discord/GitHub/etc formatted code
+;; (use-package copy-as-format
+;;   :bind
+;;   (("C-c c c" . copy-as-format)
+;;    ("C-c c g" . copy-as-format-github)
+;;    ("C-c c t" . copy-as-format-markdown-table)
+;;    ("C-c c m" . copy-as-format-markdown)
+;;    ("C-c c o" . copy-as-format-org-mode)
+;;    ("C-c c d" . copy-as-format-slack)
+;;    ("C-c c v" . org-copy-visible))
+;;   :config
+;;   (setq copy-as-format-default "slack")
+;;   (defun copy-as-format--markdown-table (text _multiline)
+;;     (s-replace "--+--" "--|--" text))
+;;   (add-to-list 'copy-as-format-format-alist '("markdown-table" copy-as-format--markdown-table)))
 
 ;; Tramp
 ;; (use-package tramp
@@ -1670,7 +2005,6 @@ argument, query for word to search."
   (remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake)
 
   :config
-
   (define-fringe-bitmap 'cory-info-mark
     (vector #b0000001111000000
 	    #b0000111111110000
@@ -1742,9 +2076,10 @@ argument, query for word to search."
     16
     'center)
 
-  (setq flymake-note-bitmap '(cory-info-mark compilation-info)
-	flymake-warning-bitmap '(cory-warning-mark compilation-warning)
-	flymake-error-bitmap '(cory-error-mark compilation-error)))
+  (setq ;; flymake-fringe-indicator-position 'right-fringe
+   flymake-note-bitmap '(cory-info-mark compilation-info)
+   flymake-warning-bitmap '(cory-warning-mark compilation-warning)
+   flymake-error-bitmap '(cory-error-mark compilation-error)))
 
 (use-package flymake-diagnostic-at-point
   :ensure t
@@ -1787,24 +2122,24 @@ argument, query for word to search."
             (eyebrowse-mode t)
             (setq eyebrowse-new-workspace t)))
 
-;; Sidebar (Project Explorer)
-(use-package dired-sidebar :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
-  :ensure t
-  :commands (dired-sidebar-toggle-sidebar)
-  :init
-  (add-hook 'dired-sidebar-mode-hook
-            (lambda ()
-              (unless (file-remote-p default-directory)
-                (auto-revert-mode))))
-  :custom
-  (dired-sidebar-subtree-line-prefix "   ")
-  (dired-sidebar-theme 'nerd)
-  (dired-sidebar-use-term-integration t)
-  (dired-sidebar-use-custom-font t)
-  :config
-  (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
-  (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
-  (set-face-attribute 'dired-sidebar-face nil :inherit 'variable-pitch))
+;; ;; Sidebar (Project Explorer)
+;; (use-package dired-sidebar :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
+;;   :ensure t
+;;   :commands (dired-sidebar-toggle-sidebar)
+;;   :init
+;;   (add-hook 'dired-sidebar-mode-hook
+;;             (lambda ()
+;;               (unless (file-remote-p default-directory)
+;;                 (auto-revert-mode))))
+;;   :custom
+;;   (dired-sidebar-subtree-line-prefix "   ")
+;;   (dired-sidebar-theme 'nerd)
+;;   (dired-sidebar-use-term-integration t)
+;;   (dired-sidebar-use-custom-font t)
+;;   :config
+;;   (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
+;;   (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
+;;   (set-face-attribute 'dired-sidebar-face nil :inherit 'variable-pitch))
 
 ;; Snippets
 ;; (use-package yasnippet
@@ -1997,6 +2332,25 @@ Lisp function does not specify a special indentation."
 ;; 	'elisp-font-lock-comment-face)
 ;;    (set (make-local-variable 'font-lock-comment-delimiter-face)
 ;; 	'elisp-font-lock-comment-delimiter-face)))
+
+;; APL-like characters for elisp
+(add-hook
+ 'emacs-lisp-mode-hook
+ (lambda ()
+   (setq prettify-symbols-alist '(("lambda" . #x3BB)
+				  ("->"    . #x2192)
+				  ("<=="   . #x21D0)
+				  ("==>"   . #x21D2)
+				  ("<="       . "≤")
+				  (">="       . "≥")
+				  ("t"        . "✓")
+				  ("'()"      . "∅")
+				  ("nil"      . "∅")
+				  ("if"       . "⁇")
+				  ("or"       . "∨")
+				  ("and"      . "∧")
+				  ("not"      . "¬")))
+   (prettify-symbols-mode 1)))
 
 ;;; TODO Clean up clojure config
 ;;; Clojure
@@ -2267,15 +2621,25 @@ Lisp function does not specify a special indentation."
   (geiser-mode . (lambda () (geiser-capf-setup nil)))
   (scheme-mode . scheme-super-capf)
   ;; (scheme-mode . cory/run-geiser-p)
-  :bind
-  (:map geiser-mode-map
-   ("C-c C-d d" . cory/chicken-doc-look-up-manual)
-   ("C-c C-d C-d" . cory/chicken-doc-look-up-manual)
-   ("C-c C-d i" . cory/chicken-doc-look-up-manual)
-   ("C-c C-d TAB" . cory/chicken-doc-look-up-manual))
+  ;; :bind
+  ;; (:map geiser-mode-map
+  ;;  ("C-c C-d d" . cory/chicken-doc-look-up-manual)
+  ;;  ("C-c C-d C-d" . cory/chicken-doc-look-up-manual)
+  ;;  ("C-c C-d i" . cory/chicken-doc-look-up-manual)
+  ;;  ("C-c C-d TAB" . cory/chicken-doc-look-up-manual))
   :custom
   (geiser-active-implementations '(chicken))
   :config
+  (with-eval-after-load 'geiser-mode
+    (dolist (bind '("C-c C-d d"
+		    "C-c C-d C-d"
+		    "C-c C-d i"
+		    "C-c C-d TAB"))
+      (define-key
+	geiser-mode-map
+	(kbd bind)
+	#'cory/chicken-doc-look-up-manual)))
+
   (defun scheme-super-capf ()
     (setq-local completion-at-point-functions
 		(list (cape-super-capf
@@ -2298,7 +2662,7 @@ With prefix argument, ask for the lookup symbol (with completion)."
     (unless (geiser-doc--manual-available-p)
       (error "No manual available"))
     (let ((symbol (or (and (not arg) (geiser--symbol-at-point))
-                     (geiser-completion--read-symbol "Symbol: ")))
+                      (geiser-completion--read-symbol "Symbol: ")))
 	  (current (buffer-name (current-buffer))))
       (eww (concat "http://api.call-cc.org/5/cdoc/?q="
 		   (symbol-name symbol)
@@ -2307,7 +2671,8 @@ With prefix argument, ask for the lookup symbol (with completion)."
       (kill-buffer "*Chicken Documentation*")
       (rename-buffer "*Chicken Documentation*")
       (switch-to-buffer current)
-      (display-buffer "*Chicken Documentation*"))))
+      ;; (display-buffer "*Chicken Documentation*")
+      (switch-to-buffer-other-window "*Chicken Documentation*"))))
 
 (use-package geiser-chicken
   :after geiser)
@@ -2318,9 +2683,7 @@ With prefix argument, ask for the lookup symbol (with completion)."
  (lambda ()
    (setq prettify-symbols-alist '(("lambda" . #x3BB)
 				  ("->"    . #x2192)
-				  ("<="    . #x2264)
 				  ("<=="   . #x21D0)
-				  (">="    . #x2265)
 				  ("==>"   . #x21D2)
 				  ("<="       . "≤")
 				  (">="       . "≥")
@@ -2331,9 +2694,11 @@ With prefix argument, ask for the lookup symbol (with completion)."
 				  ("#t"       . "✓")
 				  ("#f"       . "✗")
 				  ("'()"      . "∅")
+				  ("null"     . "∅")
 				  ("if"       . "⁇")
 				  ("or"       . "∨")
-				  ("and"      . "∧")))
+				  ("and"      . "∧")
+				  ("not"      . "¬")))
    (prettify-symbols-mode 1)))
 
 ;;; C++
@@ -2442,15 +2807,6 @@ With prefix argument, ask for the lookup symbol (with completion)."
   ;; Remove guess indent python message
   (setq python-indent-guess-indent-offset-verbose nil))
 
-;; Hide the modeline for inferior python processes.  This is not a necessary
-;; package but it's helpful to make better use of the screen real-estate at our
-;; disposal. See: https://github.com/hlissner/emacs-hide-mode-line.
-
-(use-package hide-mode-line
-  :ensure t
-  :defer t
-  :hook (inferior-python-mode . hide-mode-line-mode))
-
 ;;<OPTIONAL> I use poetry (https://python-poetry.org/) to manage my python environments.
 ;; See: https://github.com/galaunay/poetry.el.
 ;; There are alternatives like https://github.com/jorgenschaefer/pyvenv.
@@ -2489,15 +2845,33 @@ With prefix argument, ask for the lookup symbol (with completion)."
 (use-package haskell-mode
   :hook (haskell-mode . haskell-indentation-mode))
 
+(use-package fvwm-mode
+  ;; :mode "config"
+  :hook (fvwm-mode . subword-mode))
+
+;;
+;; --- NIXOS ---
+;;
+
 (use-package nix-mode
   :mode "\\.nix\\'"
   :hook
   (nix-mode . subword-mode)
   (nix-mode . nix-prettify-mode))
 
-(use-package fvwm-mode
-  ;; :mode "config"
-  :hook (fvwm-mode . subword-mode))
+(defvar cory/nixos-config-location "/home/cory/.config/nix")
+
+(defun cory/nixos-flake-rebuild ()
+  "Rebuilds a NixOS system."
+  (interactive)
+  (async-shell-command
+   (concat "nixos-rebuild switch --flake "
+	   cory/nixos-config-location
+	   "#"
+	   (completing-read "System name:" '("pc" "laptop"))
+	   " --use-remote-sudo")))
+
+(global-set-key (kbd "C-c n") #'cory/nixos-flake-rebuild)
 
 ;;
 ;; --- TERMINALS ---
@@ -2605,9 +2979,10 @@ With prefix argument, ask for the lookup symbol (with completion)."
 
 ;; Eshell fish completion
 (use-package fish-completion
+  :disabled t
   :config
   (when (and (executable-find "fish")
-           (require 'fish-completion nil t))
+             (require 'fish-completion nil t))
     (global-fish-completion-mode)))
 
 ;; Eshell up
@@ -2679,6 +3054,71 @@ With prefix argument, ask for the lookup symbol (with completion)."
 ;; (with-eval-after-load 'esh-opt
 ;;   (setq eshell-destroy-buffer-when-process-dies t)
 ;;   (setq eshell-visual-commands '("htop" "zsh" "vim")))
+
+;;; Give eshell/ls icons
+(defun lem-eshell-prettify (file)
+  "Add features to listings in `eshell/ls' output.
+The features are:
+1. Add decoration like 'ls -F':
+ * Mark directories with a `/'
+ * Mark executables with a `*'
+2. Make each listing into a clickable link to open the
+corresponding file or directory.
+3. Add icons (requires `all-the-icons`)
+This function is meant to be used as advice around
+`eshell-ls-annotate', where FILE is the cons describing the file."
+  (let* ((name (car file))
+         (icon (if (eq (cadr file) t)
+                   (all-the-icons-icon-for-dir name)
+                 (all-the-icons-icon-for-file name)))
+         (suffix
+          (cond
+           ;; Directory
+           ((eq (cadr file) t)
+            "/")
+           ;; Executable
+           ((and (/= (user-uid) 0) ; root can execute anything
+		 (eshell-ls-applicable (cdr file) 3 #'file-executable-p (car file)))
+            "*"))))
+    (cons
+     (concat " "
+             icon
+             " "
+             (propertize name
+                         'keymap eshell-ls-file-keymap
+                         'mouse-face 'highlight
+                         'file-name (expand-file-name (substring-no-properties (car file)) default-directory))
+             (when (and suffix (not (string-suffix-p suffix name)))
+               (propertize suffix 'face 'shadow)))
+     (cdr file)
+     )))
+
+(defun eshell-ls-file-at-point ()
+  "Get the full path of the Eshell listing at point."
+  (get-text-property (point) 'file-name))
+
+(defun eshell-ls-find-file ()
+  "Open the Eshell listing at point."
+  (interactive)
+  (find-file (eshell-ls-file-at-point)))
+
+(defun eshell-ls-delete-file ()
+  "Delete the Eshell listing at point."
+  (interactive)
+  (let ((file (eshell-ls-file-at-point)))
+    (when (yes-or-no-p (format "Delete file %s?" file))
+      (delete-file file 'trash))))
+
+(defvar eshell-ls-file-keymap
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "RET") #'eshell-ls-find-file)
+    (define-key map (kbd "<return>") #'eshell-ls-find-file)
+    (define-key map [mouse-1] #'eshell-ls-find-file)
+    (define-key map (kbd "D") #'eshell-ls-delete-file)
+    map)
+  "Keys in effect when point is over a file from `eshell/ls'.")
+
+(advice-add #'eshell-ls-annotate :filter-return #'lem-eshell-prettify)
 
 ;; Vterm
 (use-package vterm
@@ -2761,6 +3201,7 @@ With prefix argument, ask for the lookup symbol (with completion)."
 	 (if (and transient-mark-mode mark-active (not (eq (mark) (point))))
 	     (let ((region (buffer-substring-no-properties (mark) (point))))
                (deactivate-mark)
+	       (setq consult--line-history (cons region consult--line-history))
                (isearch-resume region nil nil t region nil))
 	   (cory/visual-isearch-forward)))))
 
@@ -2780,6 +3221,7 @@ With prefix argument, ask for the lookup symbol (with completion)."
          (if (and transient-mark-mode mark-active (not (eq (mark) (point))))
              (let ((region (buffer-substring-no-properties (mark) (point))))
                (deactivate-mark)
+	       (setq consult--line-history (cons region consult--line-history))
                (isearch-resume region nil nil nil region nil))
            (cory/visual-isearch-backward)))))
 
@@ -2834,8 +3276,6 @@ With prefix argument, ask for the lookup symbol (with completion)."
 		("C-c w"   woman)
 		;; ("C-x u"   undo-only)
 		;; ("C-/"     undo-only)
-		;; ("C-z"     undo-only)
-		;; ("C-S-z"   undo-redo)
 		;; ("C-x C-u" undo-redo)
 		;; ("C-?"     undo-redo)
 		("C-'"     repeat)
@@ -2849,7 +3289,8 @@ With prefix argument, ask for the lookup symbol (with completion)."
 		("C-c e"   eww)
 		("S-SPC"   cory/insert-space)
 		("C-c q"   quit-window)
-		("C-j"     join-line)))
+		("C-j"     join-line)
+		("C-c x"   xref-find-references-and-replace)))
   (global-set-key (kbd (car pair)) (cadr pair)))
 
 ;;; Lisp Keybinds
@@ -2869,9 +3310,10 @@ With prefix argument, ask for the lookup symbol (with completion)."
 
 (defun cory/mark-list ()
   (interactive)
-  (backward-up-list)
-  (set-mark-command nil)
-  (forward-list))
+  (let ((bounds (bounds-of-thing-at-point 'list)))
+    (goto-char (car bounds))
+    (set-mark-command nil)
+    (goto-char (cdr bounds))))
 
 ;; FIXME
 (dolist (map (list emacs-lisp-mode-map
@@ -2883,6 +3325,12 @@ With prefix argument, ask for the lookup symbol (with completion)."
   (define-key map (kbd "M-a") 'backward-list)
   (define-key map (kbd "M-e") 'forward-list)
   (define-key map (kbd "M-h") 'cory/mark-list))
+
+;;; Easier macro handling
+(use-package kmacro-x
+  :ensure t
+  :init (kmacro-x-atomic-undo-mode 1)
+  :bind ("C-c k" . kmacro-x-mc-region))
 
 ;;; Repeat Maps
 
@@ -4503,7 +4951,7 @@ PAIR-EXPR contains two string token lists. The tokens in first
 ;; 		("C-S-g" cory/grab) 👦
 ;; 		("<C-i>" kill-ring-save)
 ;; 		("C-S-i" cory/sync-grab) 👦
-;; 		("C-j"   cory/join) 👦
+;; 		("C-j"   cory/join)
 ;; 		("C-k"   cory/kill)
 ;; 		("C-l"   cory/line)
 ;; 		("C-S-l" cory/goto-line)
@@ -4852,8 +5300,8 @@ PAIR-EXPR contains two string token lists. The tokens in first
   :config
   ;; Replace list hyphen with dot
   (font-lock-add-keywords 'org-mode
-                          '(("^ *\\([-]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+                           '(("^ *\\([-]\\) "
+                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
@@ -4874,27 +5322,40 @@ PAIR-EXPR contains two string token lists. The tokens in first
   :custom
   (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
-(use-package visual-fill-column
-  ;; :hook
-  ;; (text-mode   . visual-fill-column-mode)
-  ;; (prog-mode   . visual-fill-column-mode)
-  ;; (conf-mode   . visual-fill-column-mode)
-  ;; (fundamental-mode . visual-fill-column-mode)
-  ;; (term-mode   . visual-fill-column-mode)
-  ;; (eshell-mode . visual-fill-column-mode)
+;; (use-package visual-fill-column
+;;   ;; :hook
+;;   ;; (text-mode   . visual-fill-column-mode)
+;;   ;; (prog-mode   . visual-fill-column-mode)
+;;   ;; (conf-mode   . visual-fill-column-mode)
+;;   ;; (fundamental-mode . visual-fill-column-mode)
+;;   ;; (term-mode   . visual-fill-column-mode)
+;;   ;; (eshell-mode . visual-fill-column-mode)
+;;   :custom
+;;   (global-visual-fill-column-mode t)
+;;   (visual-fill-column-width 100)
+;;   (visual-fill-column-center-text t)
+;;   :config
+;;   (add-hook 'pdf-view-mode-hook (lambda () (visual-fill-column-mode 0))))
+
+;; Center text in the frame
+(use-package olivetti
+  :hook ((text-mode         . olivetti-mode)
+         (prog-mode         . olivetti-mode)
+         (Info-mode         . olivetti-mode)
+	 (woman-mode        . olivetti-mode)
+         (org-mode          . olivetti-mode)
+         (mu4e-view-mode    . olivetti-mode)
+         (elfeed-show-mode  . olivetti-mode)
+         (mu4e-compose-mode . olivetti-mode))
   :custom
-  (global-visual-fill-column-mode t)
-  (visual-fill-column-width 100)
-  (visual-fill-column-center-text t)
-  :config
-  (add-hook 'pdf-view-mode-hook (lambda () (visual-fill-column-mode 0))))
+  (olivetti-body-width 100))
 
 ;; Drag and drop
 (use-package org-download
   :commands (org-mode org-download-clipboard)
   :custom
-  (org-download-screenshot-method "flameshot gui -s --raw > %s")
-  :bind ("<f8>" . org-download-screenshot))
+  (org-download-screenshot-method "sleep 1 && flameshot gui -s --raw > %s")
+  :bind ("C-c o s" . org-download-screenshot))
 
 ;; Org roam
 (use-package org-roam
@@ -4917,9 +5378,9 @@ PAIR-EXPR contains two string token lists. The tokens in first
 				 "#+date: %U")))
 		  (mapconcat 'identity options "\n")))
       :unnarrowed t)))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-	 ("C-c n f" . org-roam-node-find)
-	 ("C-c n i" . org-roam-node-insert)
+  :bind (("C-c o n l" . org-roam-buffer-toggle)
+	 ("C-c o n f" . org-roam-node-find)
+	 ("C-c o n i" . org-roam-node-insert)
 	 :map org-mode-map
 	 ("C-M-i" . completion-at-point))
   :config
@@ -4945,7 +5406,7 @@ PAIR-EXPR contains two string token lists. The tokens in first
   :init
   (add-to-list 'ispell-skip-region-alist '("+begin_src" . "+end_src"))
   (setq flyspell-use-meta-tab nil)
-  :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper)))
+  :bind (:map flyspell-mode-map ("C-\"" . flyspell-correct-wrapper)))
 
 (use-package frog-menu
   :custom
@@ -5036,10 +5497,42 @@ of (command . word) to be used by `flyspell-do-correct'."
 ;;   :config
 ;;   (dirvish-override-dired-mode))
 
-;; TODO try out sunrise-commander
+;; FIXME fix sunrise creating new buffers every time it is toggled
 (use-package sunrise
+  :custom
+  (sunrise-set-use-commander-keys nil)
   :bind
-  (("C-z" . sunrise)))
+  ;; NOTE Sunrise uses "C-c s", "C-c t", "C-c r", "C-c v",
+  ;; "C-c p", and "C-c b", from the user's space
+  (("C-z" . sunrise)
+   :map sunrise-mode-map
+   ;; Remap traditional "commander keys" to non-function keys
+   ("C-c 2"     . sunrise-goto-dir)
+   ("C-c 3"     . sunrise-quick-view)
+   ("C-c 4"     . sunrise-advertised-find-file)
+   ("C-c 5"     . sunrise-do-copy)
+   ("C-c 6"     . sunrise-do-rename)
+   ("C-c 7"     . dired-create-directory)
+   ("C-c 8"     . sunrise-do-delete)
+   ("C-c 0"     . sunrise-quit)
+   ("C-c C-3"   . sunrise-sort-by-name)
+   ("C-c C-4"   . sunrise-sort-by-extension)
+   ("C-c C-5"   . sunrise-sort-by-time)
+   ("C-c C-6"   . sunrise-sort-by-size)
+   ("C-c C-7"   . sunrise-sort-by-number)
+   ("C-c &"     . sunrise-do-symlink)
+   ("<insert>"  . sunrise-mark-toggle)
+   ("C-<prior>" . sunrise-dired-prev-subdir)
+   ;; Remove binds to function keys
+   ("<f2>"  . other-window)
+   ("<f3>"  . kmacro-start-macro-or-insert-counter)
+   ("<f4>"  . kmacro-end-or-call-macro)
+   ("<f10>" . menu-bar-open))
+  :hook
+  (sunrise-mode . hl-line-mode)
+  (sunrise-mode . (lambda () (setq-local cursor-type nil)))
+  :config
+  (set-face-attribute 'hl-line nil :background nil :inherit 'highlight))
 
 ;;
 ;; --- MISC ---

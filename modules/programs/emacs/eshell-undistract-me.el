@@ -107,7 +107,7 @@
   "Convert `SECS' to human readable time format of HH:MM:SS."
   (let ((hours (/ secs 3600))
 	(minutes (/ (% secs 3600) 60))
-	 (seconds (% secs 60)))
+	(seconds (% secs 60)))
     (format "%s%s%s"
             (if (> hours 0)
 		(format "%sh " hours)
@@ -119,6 +119,7 @@
 		(format "%ss" seconds)
               ""))))
 
+;;;###autoload
 (defun eshell-undistract-me-before-prompt ()
   "Hook this command into `eshell-before-prompt-hook'."
   (if eshell-undistract-me-last-command-started
@@ -145,6 +146,7 @@
 			  eshell-undistract-me-sound-command " " eshell-undistract-me-sound-path)))))))))
   nil)
 
+;;;###autoload
 (defun eshell-undistract-me-pre-command ()
   "Hook this command into `eshell-pre-command-hook'."
   (setq

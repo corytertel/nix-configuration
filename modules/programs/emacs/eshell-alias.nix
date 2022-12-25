@@ -1,15 +1,20 @@
 { config, pkgs, ... }:
 
+# alias ls ${pkgs.exa}/bin/exa --icons --all --git --binary --group-directories-first $*
+# alias ls eshell/ls --all --group-directories-first
+# alias l ls --classify $*
+# alias ll ls -l -h $*
+# alias tree ${pkgs.exa}/bin/exa --icons --tree $*
+
 ''
 alias nixos-update nix flake update
 alias nixos-clean sudo nix-collect-garbage --delete-older-than $1
 alias nixos-superclean sudo nix-collect-garbage --delete-old
 alias n cd $HOME/.config/nix
 alias nd nix develop $*
-alias ls ${pkgs.exa}/bin/exa --icons --all --git --binary --group-directories-first $*
-alias l ls --classify $*
+alias ls eshell/ls -A
+alias l ls $*
 alias ll ls -l -h $*
-alias tree ${pkgs.exa}/bin/exa --icons --tree $*
 alias c clear-scrollback
 alias clear clear-scrollback
 alias grep grep -i --color=auto $*
