@@ -4,13 +4,13 @@ pkgs.emacsPackages.melpaBuild rec {
   pname = "macrursors";
   version = "1.0.0";
 
-  commit = "e29c782a069f4d0ce584edef1af2d9d4508a96fe";
+  commit = "5c0a5052118b8dd2c1787dba9b06cb0a1514c268";
 
   src = pkgs.fetchFromGitHub {
     owner = "corytertel";
     repo = "macrursors";
-    rev = "e29c782a069f4d0ce584edef1af2d9d4508a96fe";
-    sha256 = "2E7PSOiUXjKJeA8yTSaYWqRKe+G7wyyVsMipeXHFuP4=";
+    rev = "5c0a5052118b8dd2c1787dba9b06cb0a1514c268";
+    sha256 = "GTi0iS3300yZm/uu4KkN9+c3Pv1aTk5OpcKYgurlAuE=";
   };
 
   buildInputs = with pkgs; [

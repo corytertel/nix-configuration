@@ -3,6 +3,38 @@
 ;;; Code:
 
 ;;
+;; -- PACKAGE SETUP ---
+;;
+
+;; For Nix
+(require 'package)
+
+;; optional. makes impure packages archives unavailable
+(setq package-archives nil)
+
+(setq package-enable-at-startup nil)
+(package-initialize)
+
+(require 'use-package)
+(setq use-package-always-ensure t)
+
+;; For non Nix Setups
+;; (require 'package)
+
+;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+;; 			    ("elpa" . "https://elpa.gnu.org/packages/")))
+
+;; (package-initialize)
+;; (unless package-archive-contents
+;;   (package-refresh-contents))
+
+;; (unless (package-installed-p 'use-package)
+;;   (package-install 'use-package))
+
+;; (require 'use-package)
+;; (setq use-package-always-ensure t)
+
+;;
 ;; --- GARBAGE COLLECTION ---
 ;;
 
@@ -38,39 +70,6 @@
 (add-hook 'emacs-startup-hook #'hm/restore-file-name-handler-alist)
 
 ;;
-;; -- PACKAGE SETUP ---
-;;
-
-;; For Nix
-(require 'package)
-
-;; optional. makes impure packages archives unavailable
-(setq package-archives nil)
-
-(setq package-enable-at-startup nil)
-(package-initialize)
-
-(require 'use-package)
-(setq use-package-always-ensure t)
-
-;; For non Nix Setups
-;; (require 'package)
-
-;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-;; 			 ("org" . "https://orgmode.org/elpa/")
-;; 			 ("elpa" . "https://elpa.gnu.org/packages/")))
-
-;; (package-initialize)
-;; (unless package-archive-contents
-;;   (package-refresh-contents))
-
-;; (unless (package-installed-p 'use-package)
-;;   (package-install 'use-package))
-
-;; (require 'use-package)
-;; (setq use-package-always-ensure t)
-
-;;
 ;; --- ASYNC ---
 ;;
 
@@ -83,6 +82,46 @@
   (dired-async-mode 1)
   (async-bytecomp-package-mode 1)
   :custom (async-bytecomp-allowed-packages '(all)))
+
+;;
+;; --- NATIVE COMP ---
+;;
+
+;; Silence compiler warnings as they can be pretty disruptive
+;; (setq comp-async-report-warnings-errors nil)
+
+;; Silence compiler warnings as they can be pretty disruptive
+(if (boundp 'comp-deferred-compilation)
+    (setq comp-deferred-compilation nil)
+  (setq inhibit-automatic-native-compilation nil))
+
+;; In noninteractive sessions, prioritize non-byte-compiled source files to
+;; prevent the use of stale byte-code. Otherwise, it saves us a little IO time
+;; to skip the mtime checks on every *.elc file.
+(setq load-prefer-newer noninteractive)
+
+;;
+;; --- KEYBINDING FIX ---
+;;
+(define-key input-decode-map [?\C-m] [C-m])
+(define-key input-decode-map [?\C-i] [C-i])
+(add-hook 'server-after-make-frame-hook
+	  (lambda ()
+	    (define-key input-decode-map [?\C-m] [C-m])
+	    (define-key input-decode-map [?\C-i] [C-i])))
+
+;; Now:
+;; (equal (kbd "TAB") (kbd "C-i"))   ; -> t
+;; (equal (kbd "TAB") (kbd "<C-i>")) ; -> nil
+;; (equal (kbd "RET") (kbd "C-m"))   ; -> t
+;; (equal (kbd "RET") (kbd "<C-m>")) ; -> nil
+
+(define-key function-key-map
+  [(control shift iso-lefttab)] [(control shift tab)])
+(define-key function-key-map
+  [(meta shift iso-lefttab)] [(meta shift tab)])
+(define-key function-key-map
+  [(meta control shift iso-lefttab)] [(meta control shift tab)])
 
 ;;
 ;; --- VISUALS ---
@@ -106,8 +145,8 @@
 ;; Theme
 (setq custom-safe-themes t) ; Treat all themes as safe
 (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
-;; (add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-light t)))
-(add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-dark t)))
+;; (add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-dark t)))
+(add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-light t)))
 
 ;; Display Line numbers
 ;; (column-number-mode)
@@ -134,8 +173,14 @@
 (window-divider-mode 1)
 
 ;; Icons
-;; (use-package all-the-icons
-;;   :ensure t)
+(use-package all-the-icons
+  :custom
+  (all-the-icons-scale-factor 1.0)
+  (all-the-icons-default-adjust 0.0)
+  :config
+  (when (and (not (if (find-font (font-spec :name "all-the-icons")) t nil))
+             (window-system))
+    (all-the-icons-install-fonts t)))
 
 ;; Modeline
 ;; (use-package smart-mode-line
@@ -164,11 +209,84 @@
   "Modified buffer highlighting."
   :group 'faces)
 
+;; Git diff in modeline
+;; https://cocktailmake.github.io/posts/emacs-modeline-enhancement-for-git-diff/
+;; (defadvice vc-git-mode-line-string (after plus-minus (file) compile activate)
+;;   "Show the information of git diff in status-line"
+;;   (setq ad-return-value
+;;         (concat ad-return-value
+;;                 (let ((plus-minus (vc-git--run-command-string
+;;                                    file "diff" "--numstat" "--")))
+;;                   (if (and plus-minus
+;;                            (string-match "^\\([0-9]+\\)\t\\([0-9]+\\)\t" plus-minus))
+;;                       (concat
+;;                        " "
+;;                        (format "+%s" (match-string 1 plus-minus))
+;;                        (format "-%s" (match-string 2 plus-minus)))
+;;                     "")))))
+
+;; Git Parse Repo Status
+;; See https://kitchingroup.cheme.cmu.edu/blog/2014/09/19/A-git-status-Emacs-modeline/
+(defun cory/mode-line-git-parse-status ()
+  "Display the status of the repo."
+  (interactive)
+  (let ((U 0)   ; untracked files
+        (M 0)   ; modified files
+        (O 0)   ; other files
+        (U-files "")
+        (M-files "")
+        (O-files ""))
+    (dolist (line (split-string
+                   (shell-command-to-string "git status --porcelain")
+                   "\n"))
+      (cond
+
+       ;; ignore empty line at end
+       ((string= "" line) nil)
+
+       ((string-match "^\\?\\?" line)
+        (setq U (+ 1 U))
+        (setq U-files (concat U-files "\n" line)))
+
+       ((string-match "^ M" line)
+        (setq M (+ 1 M))
+        (setq M-files (concat M-files "\n" line)))))
+
+    ;; construct propertized string
+    (concat
+     "Git["
+     (propertize
+      (format "M:%d" M)
+      'face (if (> M 0)
+                'error
+              'success)
+      'help-echo M-files)
+     (propertize "|" 'face 'magit-dimmed)
+     (propertize
+      (format "?:%d" U)
+      'face (if (> U 0)
+                'warning
+              'success)
+      'help-echo U-files)
+     "]")))
+
 (setq-default
  mode-line-format
  '("  "
-   (:eval (when (bound-and-true-p meow-mode) (meow-indicator)))
-   " "
+   (:eval (let ((icon (all-the-icons-icon-for-mode major-mode)))
+	    (propertize
+	     icon
+	     'face
+	     (plist-put
+	      (get-text-property 0 'face icon)
+	      :height 1.0)
+	     'font-lock-face
+	     (plist-put
+	      (get-text-property 0 'font-lock-face icon)
+	      :height 1.0)
+	     'display
+	     '(raise 0))))
+   "  "
    (:eval (let ((str (if buffer-read-only
                          (if (buffer-modified-p) "%%*" "%%%%")
                        (if (buffer-modified-p) "**" "--"))))
@@ -187,7 +305,9 @@
    (list 'column-number-mode "  C%c")
    "  " mode-line-buffer-identification
    "  " mode-line-modes
-   (:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format))))
+   (:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format))
+   "  "
+   (:eval (cory/mode-line-git-parse-status))))
 
 (use-package moody
   :custom
@@ -271,7 +391,8 @@
 (add-hook 'before-make-frame-hook 'window-divider-mode)
 
 ;; Make the cursor a bar
-(setq-default cursor-type 'bar)
+;; (setq-default cursor-type 'bar)
+(setq-default cursor-type 'hollow)
 
 ;; Beacon
 (use-package beacon
@@ -329,11 +450,17 @@
   "Reverse direction of `other-window'."
   (other-window -1))
 
-(defun switch-to-last-buffer ()
+(defun cory/last-real-buffer (buffers)
+  (if buffers
+      (let ((name (buffer-name (car buffers))))
+	(if (equal name (string-trim name "[ \*]+" "\*"))
+	    (car buffers)
+	  (cory/last-real-buffer (cdr buffers))))
+    nil))
+
+(defun cory/toggle-last-buffer ()
   (interactive)
-  (switch-to-buffer nil))
-
-
+  (switch-to-buffer (cory/last-real-buffer (cdr (buffer-list)))))
 
 (defun rotate-windows ()
   "Rotate your windows"
@@ -390,11 +517,11 @@
 (global-set-key (kbd "C-x 2") 'split-and-follow-below)
 (global-set-key (kbd "C-x 3") 'split-and-follow-right)
 (global-set-key (kbd "C-x 4 q") 'kill-all-buffers-and-windows)
-(global-set-key (kbd "C-c b") 'balance-windows)
-(global-set-key (kbd "<f1>") 'switch-to-last-buffer)
-(global-set-key (kbd "C-<f1>") 'switch-to-last-buffer)
-(global-set-key (kbd "M-<f1>") 'switch-to-last-buffer)
-(global-set-key (kbd "C-M-<f1>") 'switch-to-last-buffer)
+;; (global-set-key (kbd "C-c b") 'balance-windows)
+(global-set-key (kbd "<f1>") 'cory/toggle-last-buffer)
+(global-set-key (kbd "C-<f1>") 'cory/toggle-last-buffer)
+(global-set-key (kbd "M-<f1>") 'cory/toggle-last-buffer)
+(global-set-key (kbd "C-M-<f1>") 'cory/toggle-last-buffer)
 (global-set-key (kbd "<f2>") 'other-window)
 (global-set-key (kbd "C-<f2>") 'other-window)
 (global-set-key (kbd "M-<f2>") 'other-window)
@@ -425,7 +552,6 @@
 ;;
 
 (setq visible-bell nil
-      backup-directory-alist `((".*" . ,temporary-file-directory))
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
 (setq-default left-margin-width 1
@@ -444,13 +570,27 @@
 ;; don't back up files
 ;; (setq make-backup-files nil)
 
-;; Write backup files to own directory
+;; Write backup files to tmp dir
+;; (setq backup-directory-alist `((".*" . ,temporary-file-directory)) )
+
+;; Write backup files to backup directory instead of editing directory
 (setq backup-directory-alist
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
 
 ;; Make backups of files, even when they're in version control
 (setq vc-make-backup-files t)
+
+;; Automatically purge backup files not accessed in a week:
+(message "Deleting old backup files...")
+(let ((week (* 60 60 24 7))
+      (current (float-time (current-time))))
+  (dolist (file (directory-files temporary-file-directory t))
+    (when (and (backup-file-name-p file)
+             (> (- current (float-time (fifth (file-attributes file))))
+                week))
+      (message "%s" file)
+      (delete-file file))))
 
 ;; Minimap
 ;; (use-package minimap
@@ -479,33 +619,40 @@
           try-expand-line)))
 
 ;; Popups
-;; (use-package popper
-;;   :ensure t
-;;   :config
-;;   (setq popper-reference-buffers
-;;         '(;; "\\*Messages\\*"
-;;           "Output\\*$"
-;; 	  "\\*eldoc\\*"
-;; 	  "\\*Help\\*"
-;; 	  flymake-diagnostics-buffer-mode
-;; 	  calendar-mode
-;; 	  help-mode
-;; 	  compilation-mode
-;; 	  eshell-mode
-;; 	  vterm-mode))
-;;   (popper-mode)
-;;   ;; (popper-echo-mode)
-;;   :bind
-;;   (("C-`" . popper-toggle-latest)
-;;    ("C-~" . popper-toggle-type)
-;;    ("M-`" . popper-cycle))
-;;   :custom
-;;   ;; (popper-group-function #'popper-group-by-project) ; project.el projects
-;;   (popper-window-height (lambda (win)
-;; 			  (fit-window-to-buffer
-;; 			   win
-;; 			   (frame-height)
-;; 			   30))))
+(use-package popper
+  :ensure t
+  :custom
+  (popper-reference-buffers
+   '("\\*Messages\\*"
+     "Output\\*$"
+     "\\*Async Shell Command\\*"
+     "\\*eldoc\\*"
+     "\\*Ibuffer\\*"
+     "\\*vc-git"
+     "\\*Help\\*"
+     "\\*Compile-Log\\*"
+     "\\*Warnings\\*"
+     "\\*Chicken Documentation\\*"
+     geiser-repl-mode
+     flymake-diagnostics-buffer-mode
+     calendar-mode
+     help-mode
+     compilation-mode
+     eshell-mode
+     vterm-mode))
+  ;; (popper-group-function #'popper-group-by-project) ; project.el projects
+  (popper-window-height (lambda (win)
+			  (fit-window-to-buffer
+			   win
+			   (frame-height)
+			   30)))
+  :config
+  (popper-mode)
+  ;; (popper-echo-mode)
+  :bind
+  (("C-`" . popper-toggle-latest)
+   ("C-~" . popper-toggle-type)
+   ("M-`" . popper-cycle)))
 
 (use-package eldoc
   :ensure nil
@@ -526,8 +673,10 @@
   (clojure-mode . eglot-ensure)
   (clojurescript-mode . eglot-ensure)
   (clojurec-mode . eglot-ensure)
-  (scheme-mode . eglot-ensure)
+  ;; (scheme-mode . eglot-ensure)
   (java-mode . eglot-ensure)
+  (python-mode . eglot-ensure)
+  (eglot-managed-mode . eglot-super-capf)
 
   :custom
   (eglot-autoshutdown t)
@@ -539,14 +688,25 @@
 
   :config
   (define-key eglot-mode-map [remap display-local-help] nil)
+  ;; (add-to-list 'eglot-server-programs
+  ;;              `(scheme-mode . ("chicken-lsp-server")))
   (add-to-list 'eglot-server-programs
-               `(scheme-mode . ("chicken-lsp-server")))
-  (add-to-list 'eglot-server-programs
-               `(clojure-mode . ("clojure-lsp")))
+		`(clojure-mode . ("clojure-lsp")))
+  ;; (add-to-list 'eglot-server-programs
+  ;;              `(nix-mode . ("nil")))
+
+  (defun eglot-super-capf ()
+    (setq-local completion-at-point-functions
+		(list (cape-super-capf
+		       #'tempel-complete
+		       #'eglot-completion-at-point)
+		      #'cape-dabbrev
+		      #'cape-file)))
 
   :bind (:map eglot-mode-map
 	 ("C-c C-a" . eglot-code-actions)
-	 ("C-c f" . eglot-format-buffer)))
+	 ("C-c C-f" . eglot-format-buffer)
+	 ("C-c x"   . eglot-rename)))
 
 ;; Tree-sitter
 ;; (use-package tree-sitter
@@ -576,6 +736,9 @@
   (corfu-echo-documentation t)     ; Enable auto documentation in the minibuffer
   (corfu-preview-current 'insert)
   (corfu-preselect-first nil)
+  (corfu-popupinfo-max-width 60)
+  (corfu-popupinfo-max-height 30)
+  (corfu-popupinfo-delay nil)
 
   :init
   ;; Need to recreate the map in order to preserve movement keys
@@ -592,14 +755,21 @@
 	  (define-key map [backtab] #'corfu-previous)
 	  (define-key map (kbd "TAB") #'corfu-next)
 	  (define-key map (kbd "S-TAB") #'corfu-previous)
-	  ;; (define-key map [return] #'corfu-insert)
-	  ;; (define-key map (kbd "RET") #'corfu-insert)
+	  (define-key map [(shift return)] #'corfu-insert)
+	  (define-key map (kbd "S-<return>") #'corfu-insert)
 	  (define-key map (kbd "M-l") 'corfu-info-location)
-	  (define-key map (kbd "C-h") 'corfu-info-documentation)
 	  (define-key map (kbd "M-SPC") #'corfu-insert-separator)
 	  map))
+
   (global-corfu-mode)
-  (corfu-history-mode))
+  (corfu-history-mode)
+  (corfu-popupinfo-mode)
+
+  :config
+  ;; FIXME fix popupinfo font size
+  ;; (set-face-attribute 'corfu-popupinfo nil
+  ;; 		      :inherit 'corfu-default)
+  (copy-face 'corfu-default 'corfu-popupinfo))
 
 ;; Add extensions
 (use-package cape
@@ -614,7 +784,6 @@
   :init
   ;; Add `completion-at-point-functions', used by `completion-at-point'.
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  ;; (add-to-list 'completion-at-point-functions #'cape-dict)
   (add-to-list 'completion-at-point-functions #'cape-file)
 
   :config
@@ -636,38 +805,122 @@
   (add-hook 'eshell-mode-hook
             (lambda () (setq-local corfu-quit-at-boundary t
                               corfu-quit-no-match t
-                              corfu-auto t)
-              (corfu-mode))))
-
-;; Documentation popup
-(use-package corfu-doc
-  :ensure t
-  :bind (:map corfu-map
-	 ([remap corfu-info-documentation] . corfu-doc-toggle)
-	 ("M-p" . corfu-doc-scroll-down)
-	 ("M-n" . corfu-doc-scroll-up))
-  :custom
-  (corfu-doc-auto nil) ; Disable auto-documentation
-  (corfu-doc-max-width 60)
-  (corfu-doc-max-height 30)
-  :hook
-  (corfu-mode . corfu-doc-mode))
+                              corfu-auto t
+			      completion-at-point-functions
+			      (cons #'cape-history
+				    completion-at-point-functions))
+              (corfu-mode 1))))
 
 ;; Icons for corfu
-(use-package kind-icon
-  :ensure t
-  :after corfu
-  :custom
-  (kind-icon-use-icons t) ; Use icons labels
-  (kind-icon-default-face 'corfu-default)
-  :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+;; (use-package kind-icon
+;;   :ensure t
+;;   :after corfu
+;;   :custom
+;;   (kind-icon-use-icons t) ; Use icons labels
+;;   (kind-icon-default-face 'corfu-default)
+;;   :config
+;;   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+
+(defvar kind-all-the-icons--cache nil
+  "The cache of styled and padded label (text or icon).
+An alist.")
+
+(defun kind-all-the-icons-reset-cache ()
+  "Remove all cached icons from `kind-all-the-icons-mapping'."
+  (interactive)
+  (setq kind-all-the-icons--cache nil))
+
+(defun kind-all-the-icons--set-default-clear-cache (&rest args)
+  (kind-all-the-icons-reset-cache)
+  (apply #'set-default args))
+
+(defvar kind-all-the-icons--icons
+  `((unknown . ,(all-the-icons-material "find_in_page" :height 0.8 :v-adjust -0.15))
+    (text . ,(all-the-icons-faicon "text-width" :height 0.8 :v-adjust -0.02))
+    (method . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+    (function . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+    (fun . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+    (constructor . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+    (ctor . ,(all-the-icons-faicon "cube" :height 0.8 :v-adjust -0.02 :face 'all-the-icons-purple))
+    (field . ,(all-the-icons-octicon "tag" :height 0.85 :v-adjust 0 :face 'all-the-icons-lblue))
+    (variable . ,(all-the-icons-octicon "tag" :height 0.85 :v-adjust 0 :face 'all-the-icons-lblue))
+    (var . ,(all-the-icons-octicon "tag" :height 0.85 :v-adjust 0 :face 'all-the-icons-lblue))
+    (class . ,(all-the-icons-material "settings_input_component" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
+    (interface . ,(all-the-icons-material "share" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
+    (i/f . ,(all-the-icons-material "share" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
+    (module . ,(all-the-icons-material "view_module" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
+    (mod . ,(all-the-icons-material "view_module" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
+    (property . ,(all-the-icons-faicon "wrench" :height 0.8 :v-adjust -0.02))
+    (prop . ,(all-the-icons-faicon "wrench" :height 0.8 :v-adjust -0.02))
+    (unit . ,(all-the-icons-material "settings_system_daydream" :height 0.8 :v-adjust -0.15))
+    (value . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-lblue))
+    (enum . ,(all-the-icons-material "storage" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
+    (keyword . ,(all-the-icons-material "filter_center_focus" :height 0.8 :v-adjust -0.15))
+    (k/w . ,(all-the-icons-material "filter_center_focus" :height 0.8 :v-adjust -0.15))
+    (snippet . ,(all-the-icons-material "format_align_center" :height 0.8 :v-adjust -0.15))
+    (sn . ,(all-the-icons-material "format_align_center" :height 0.8 :v-adjust -0.15))
+    (color . ,(all-the-icons-material "palette" :height 0.8 :v-adjust -0.15))
+    (file . ,(all-the-icons-faicon "file-o" :height 0.8 :v-adjust -0.02))
+    (reference . ,(all-the-icons-material "collections_bookmark" :height 0.8 :v-adjust -0.15))
+    (ref . ,(all-the-icons-material "collections_bookmark" :height 0.8 :v-adjust -0.15))
+    (folder . ,(all-the-icons-faicon "folder-open" :height 0.8 :v-adjust -0.02))
+    (dir . ,(all-the-icons-faicon "folder-open" :height 0.8 :v-adjust -0.02))
+    (enum-member . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15))
+    (enummember . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15))
+    (member . ,(all-the-icons-material "format_align_right" :height 0.8 :v-adjust -0.15))
+    (constant . ,(all-the-icons-faicon "square-o" :height 0.8 :v-adjust -0.1))
+    (const . ,(all-the-icons-faicon "square-o" :height 0.8 :v-adjust -0.1))
+    (struct . ,(all-the-icons-material "settings_input_component" :height 0.8 :v-adjust -0.15 :face 'all-the-icons-orange))
+    (event . ,(all-the-icons-octicon "zap" :height 0.8 :v-adjust 0 :face 'all-the-icons-orange))
+    (operator . ,(all-the-icons-material "control_point" :height 0.8 :v-adjust -0.15))
+    (op . ,(all-the-icons-material "control_point" :height 0.8 :v-adjust -0.15))
+    (type-parameter . ,(all-the-icons-faicon "arrows" :height 0.8 :v-adjust -0.02))
+    (param . ,(all-the-icons-faicon "arrows" :height 0.8 :v-adjust -0.02))
+    (template . ,(all-the-icons-material "format_align_left" :height 0.8 :v-adjust -0.15))
+    (t . ,(all-the-icons-material "find_in_page" :height 0.8 :v-adjust -0.15))))
+
+
+(defsubst kind-all-the-icons--metadata-get (metadata type-name)
+  (or
+   (plist-get completion-extra-properties (intern (format ":%s" type-name)))
+   (cdr (assq (intern type-name) metadata))))
+
+(defun kind-all-the-icons-formatted (kind)
+  "Format icon kind with all-the-icons"
+  (or (alist-get kind kind-all-the-icons--cache)
+      (let ((map (assq kind kind-all-the-icons--icons)))
+        (let*  ((icon (if map
+                          (cdr map)
+                        (cdr (assq t kind-all-the-icons--icons))))
+                (half (/ (default-font-width) 2))
+                (pad (propertize " " 'display `(space :width (,half))))
+                (disp (concat pad icon pad)))
+          (setf (alist-get kind kind-all-the-icons--cache) disp)
+          disp))))
+
+(defun kind-all-the-icons-margin-formatter (metadata)
+  "Return a margin-formatter function which produces kind icons.
+METADATA is the completion metadata supplied by the caller (see
+info node `(elisp)Programmed Completion').  To use, add this
+function to the relevant margin-formatters list."
+  (if-let ((kind-func (kind-all-the-icons--metadata-get metadata "company-kind")))
+      (lambda (cand)
+	(if-let ((kind (funcall kind-func cand)))
+	    (kind-all-the-icons-formatted kind)
+	  (kind-all-the-icons-formatted t))))) ;; as a backup
+
+(add-to-list 'corfu-margin-formatters
+	     #'kind-all-the-icons-margin-formatter)
 
 ;; Minibuffer completion
 (use-package vertico
   :config
   (recentf-mode t)
   (vertico-mode t))
+
+(use-package vertico-posframe
+  :after vertico
+  :config (vertico-posframe-mode 1))
 
 ;; Configure directory extension.
 (use-package vertico-directory
@@ -695,7 +948,7 @@
   :init
   (setq consult-preview-key nil)
   :bind
-  (("C-c r"       . consult-recent-file)
+  (("C-c f"       . consult-recent-file)
    ("C-x p s"     . consult-ripgrep) ; for use with project.el
    ;; ;; ("C-s"         . consult-line)
    ;; ("C-s"         . consult-line-multi)
@@ -729,15 +982,14 @@
    :map minibuffer-local-map
    ("M-r" . consult-history))
   :custom
-  (completion-in-region-function #'consult-completion-in-region)
-  (add-hook 'completion-setup-hook #'hl-line-mode))
+  (completion-in-region-function #'consult-completion-in-region))
 
 (use-package consult-eglot
-  :bind (;; ("C-c v" . xref-find-references-and-replace)
-	 ;; :map eglot-mode-map
-	 ([remap xref-find-apropos] . consult-eglot-symbols) ; "C-M-."
-	 ;; ([remap xref-find-references-and-replace] . eglot-rename)
-	 ("C-c v" . eglot-rename)))
+  ;; :bind (:map eglot-mode-map
+  ;; 	 ("C-M-." . consult-eglot-symbols))
+  ;; FIXME bind isn't binding
+  :config
+  (define-key eglot-mode-map [remap xref-find-apropos] 'consult-eglot-symbols))
 
 (use-package marginalia
   :after vertico
@@ -749,7 +1001,7 @@
 (use-package embark
   :ensure t
   :bind
-  (("C-\\" . embark-act)         ;; pick some comfortable binding
+  (("<C-i>" . embark-act) ; pick some comfortable binding
    ([remap describe-bindings] . embark-bindings)
    :map embark-file-map
    ("C-d" . dragon-drop))
@@ -758,6 +1010,7 @@
    '(embark-highlight-indicator
      embark-isearch-highlight-indicator
      embark-minimal-indicator))
+  (embark-quit-after-action nil)
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
@@ -766,7 +1019,7 @@
   (defun search-in-source-graph (text))
   (defun dragon-drop (file)
     (start-process-shell-command "dragon-drop" nil
-                                 (concat "dragon-drag-and-drop " file))))
+				 (concat "dragon-drag-and-drop " file))))
 
 (use-package embark-consult
   :ensure t
@@ -778,53 +1031,80 @@
   (embark-collect-mode . consult-preview-at-point-mode))
 
 ;; Templates
-;; (use-package tempel
-;;   ;; Require trigger prefix before template name when completing.
-;;   ;; :custom
-;;   ;; (tempel-trigger-prefix "<")
+(use-package tempel
+  ;; Require trigger prefix before template name when completing.
+  ;; :custom
+  ;; (tempel-trigger-prefix "")
 
-;;   :hook ((prog-mode text-mode) . tempel-setup-capf)
+  :hook
+  ((prog-mode text-mode) . tempel-setup-capf)
+  (emacs-lisp-mode . elisp-super-capf)
 
-;;   :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
-;;          ("M-*" . tempel-insert)
-;; 	 :map tempel-map
-;; 	 ("C-<tab>" . tempel-next)
-;; 	 ("C-S-<tab>" . tempel-previous)
-;; 	 ([remap keyboard-escape-quit] . tempel-done))
+  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
+         ("M-*" . tempel-insert)
+	 :map tempel-map
+	 ("C-<tab>" . tempel-next)
+	 ("C-S-<tab>" . tempel-previous)
+	 ([remap keyboard-quit] . tempel-done))
 
-;;   :init
-;;   Setup completion at point
-;;   (defun tempel-setup-capf ()
-;;     ;; Add the Tempel Capf to `completion-at-point-functions'.
-;;     ;; `tempel-expand' only triggers on exact matches. Alternatively use
-;;     ;; `tempel-complete' if you want to see all matches, but then you
-;;     ;; should also configure `tempel-trigger-prefix', such that Tempel
-;;     ;; does not trigger too often when you don't expect it. NOTE: We add
-;;     ;; `tempel-expand' *before* the main programming mode Capf, such
-;;     ;; that it will be tried first.
-;;     (setq-local completion-at-point-functions
-;;                 (cons #'tempel-complete
-;;                       completion-at-point-functions)))
+  :init
+  ;; Setup completion at point
+  (defun tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.
+    ;; `tempel-expand' only triggers on exact matches. Alternatively use
+    ;; `tempel-complete' if you want to see all matches, but then you
+    ;; should also configure `tempel-trigger-prefix', such that Tempel
+    ;; does not trigger too often when you don't expect it. NOTE: We add
+    ;; `tempel-expand' *before* the main programming mode Capf, such
+    ;; that it will be tried first.
+    (setq-local completion-at-point-functions
+                (cons #'tempel-complete
+		      completion-at-point-functions)))
 
-;;   ;; Optionally make the Tempel templates available to Abbrev,
-;;   ;; either locally or globally. `expand-abbrev' is bound to C-x '.
-;;   ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
-;;   ;; (global-tempel-abbrev-mode)
-;;   )
+  (defun elisp-super-capf ()
+    (setq-local completion-at-point-functions
+		(list (cape-super-capf
+		       #'tempel-complete
+		       #'elisp-completion-at-point)
+		      #'cape-dabbrev
+		      #'cape-file)))
+
+  ;; Optionally make the Tempel templates available to Abbrev,
+  ;; either locally or globally. `expand-abbrev' is bound to C-x '.
+  ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
+  ;; (global-tempel-abbrev-mode)
+  )
+
+(use-package all-the-icons-completion
+  :disabled t
+  :config
+  (all-the-icons-completion-mode)
+  (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
 
 ;; Undo
-;; (use-package undo-tree
-;;   :defer 1
-;;   :diminish undo-tree-mode
-;;   :commands (global-undo-tree-mode)
-;;   :config
-;;   (setq undo-tree-visualizer-relative-timestamps t
-;;         undo-tree-visualizer-timestamps t
-;;         undo-tree-enable-undo-in-region t)
-;;   (global-undo-tree-mode))
+(use-package undo-tree
+  :defer 1
+  :diminish undo-tree-mode
+  :bind
+  (:map undo-tree-map
+   ("C-x u"   . undo-tree-visualize)
+   ("C-/"     . undo-tree-undo)
+   ("C-x C-u" . undo-tree-visualize-redo)
+   ("C-?"     . undo-tree-redo))
+  :custom
+  (undo-tree-visualizer-timestamps t)
+  (undo-tree-visualizer-relative-timestamps t)
+  (undo-tree-visualizer-diff t)
+  (undo-tree-enable-undo-in-region t)
+  (undo-tree-history-directory-alist
+   `(("." . ,(expand-file-name
+	      (concat user-emacs-directory "undo")))))
+  :init
+  (global-undo-tree-mode))
 
 ;; Visual Keybinding Info
 (use-package which-key
+  :disabled t
   :init
   (which-key-mode)
   :diminish which-key-mode
@@ -836,8 +1116,10 @@
 (use-package helpful
   :ensure
   :bind
-  ([remap describe-command] . helpful-command)
-  ([remap describe-key] . helpful-key))
+  ([remap describe-command]  . helpful-command)
+  ([remap describe-key]      . helpful-key)
+  ([remap describe-variable] . helpful-variable)
+  ([remap describe-function] . helpful-callable))
 
 ;; Hydras
 (use-package hydra)
@@ -887,9 +1169,10 @@
 (use-package forge)
 
 ;; Ligatures and Indicators
-(use-package pretty-mode
-  :config
-  (add-hook 'prog-mode-hook 'pretty-mode))
+;; (use-package pretty-mode
+;;   :config
+;;   (add-hook 'prog-mode-hook 'pretty-mode))
+(add-hook 'prog-mode-hook 'prettify-symbols-mode)
 
 ;; Automatically remove trailing whitespace if user put it there
 (use-package ws-butler
@@ -937,15 +1220,43 @@
   :config (goggles-mode))
 
 (use-package crux
-  :bind (("C-c U" . crux-view-url)
-         ("C-c f c" . write-file)
-         ("C-c f r" . crux-rename-buffer-and-file)
-         ("C-c f d" . crux-delete-file-and-buffer)
-         ;;("s-k"   . crux-kill-whole-line)
-         ;;("s-o"   . crux-smart-open-line-above)
-         ("C-a"   . crux-move-beginning-of-line)
-         ([(shift return)] . crux-smart-open-line)
-         ([(control shift return)] . crux-smart-open-line-above)))
+  :bind (([(control return)] . crux-smart-open-line)
+         ([(control shift return)] . crux-smart-open-line-above)
+	 ("C-c u" . crux-view-url)
+	 ;; ("C-c e" . crux-eval-and-replace)
+	 ("C-x 4 t" . crux-transpose-windows)
+	 ("C-c d" . crux-duplicate-current-line-or-region)
+	 ("C-c D" . crux-duplicate-and-comment-current-line-or-region)
+	 ;; ("C-c k" . crux-kill-other-buffers)
+	 ("C-^" . crux-top-join-line)
+	 ("C-k" . crux-kill-and-join-forward-2)
+	 ([remap kill-whole-line]. crux-kill-whole-line)
+         ("C-a"   . crux-move-beginning-of-line))
+  :config
+  ;; TODO need to detect when the point is at the beginning of indentation
+  (defun crux-kill-and-join-backward ()
+    (interactive)
+    (if (and (save-mark-and-excursion
+	       (let ((orig-point (point)))
+		 (move-beginning-of-line 1)
+		 (while (looking-at "[[:space:]\t]")
+		   (forward-char 1))
+		 (= orig-point (point))))
+	     (not (eolp)))
+	(delete-indentation)
+      (kill-line 0)
+      (indent-according-to-mode)))
+
+  (defun crux-kill-and-join-forward-2 (&optional arg)
+    "If ARG is given, kill backwards. Otherwise kill forwards."
+    (interactive "P")
+    (if (not arg)
+	(crux-kill-and-join-forward)
+      (crux-kill-and-join-backward))))
+
+;; better comment-dwim
+(use-package comment-dwim-2
+  :bind ("M-;" . comment-dwim-2))
 
 ;; Smartparens
 (use-package smartparens
@@ -963,9 +1274,8 @@
          ("C-M-d" . sp-down-sexp)
          ("C-M-p" . sp-backward-down-sexp)
          ("C-M-n" . sp-up-sexp)
-         ;; ("C-w" . whole-line-or-region-sp-kill-region)
-         ;; ("M-s" . sp-splice-sexp) ;; depth-changing commands
-         ;; ("M-r" . sp-splice-sexp-killing-around)
+         ("M-S" . sp-splice-sexp) ;; depth-changing commands
+         ("M-R" . sp-splice-sexp-killing-around)
          ("M-(" . sp-wrap-round)
          ("C-)" . sp-forward-slurp-sexp) ;; barf/slurp
          ("M-<right>" . sp-forward-slurp-sexp)
@@ -976,7 +1286,7 @@
          ("C-{" . sp-backward-barf-sexp)
          ("M-S-<right>" . sp-backward-barf-sexp)
          ("M-S" . sp-split-sexp) ;; misc
-         ;; ("M-j" . sp-join-sexp)
+         ("M-j" . sp-join-sexp)
 	 )
   :config
   (require 'smartparens-config)
@@ -1030,31 +1340,210 @@
   ;; use smartparens-mode everywhere
   (smartparens-global-mode))
 
-;; Multiple cursors
-(use-package multiple-cursors
-  :bind (("C-c m" . mc/mark-all-dwim)
-         ("C->" . mc/mark-next-like-this)
-         ("C-<" . mc/mark-previous-like-this)
-	 ("C-M-<" . mc/mark-all-in-region-regexp)
-	 ("C-M->" . mc/edit-lines)
-         :map mc/keymap
-         ("C-x v" . mc/vertical-align-with-space)
-         ("C-x n" . mc-hide-unmatched-lines-mode))
+;; Smart-region: Smart region selection
+;; Smart region guesses what you want to select by one command:
+;; - If you call this command multiple times at the same position,
+;;   it expands the selected region (with `er/expand-region’).
+;; - Else, if you move from the mark and call this command,
+;;   it selects the region rectangular (with `rectangle-mark-mode’).
+;; - Else, if you move from the mark and call this command at the same column as
+;;   mark, it adds a cursor to each line (with `mc/edit-lines’).
+
+(use-package expand-region
+  :defer t)
+
+(use-package smart-region
+  ;; C-SPC is smart-region
+  :bind (([remap set-mark-command] . smart-region)))
+
+;; Personal custom multi-edit package
+;; Very similar to meow's beacon-mode
+(use-package macrursors
+  :custom
+  (macrursors-preapply-command
+   (lambda ()
+     (corfu-mode -1)
+     (goggles-mode -1)
+     (beacon-mode -1)))
+  (macrursors-postapply-command
+   (lambda ()
+     (corfu-mode 1)
+     (goggles-mode 1)
+     (beacon-mode 1)))
   :config
-  (global-unset-key (kbd "M-<down-mouse-1>"))
-  (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
+  (define-prefix-command 'macrursors-mark-map)
+  (global-set-key (kbd "C-;") 'macrursors-mark-map)
+  (define-key macrursors-mark-map (kbd "C-;") #'macrursors-mark-all-instances-of)
+  (define-key macrursors-mark-map (kbd ";") #'macrursors-mark-all-instances-of)
+  (define-key macrursors-mark-map (kbd "l") #'macrursors-mark-all-lists)
+  (define-key macrursors-mark-map (kbd "s") #'macrursors-mark-all-symbols)
+  (define-key macrursors-mark-map (kbd "e") #'macrursors-mark-all-sexps)
+  (define-key macrursors-mark-map (kbd "f") #'macrursors-mark-all-defuns)
+  (define-key macrursors-mark-map (kbd "n") #'macrursors-mark-all-numbers)
+  (define-key macrursors-mark-map (kbd ".") #'macrursors-mark-all-sentences)
+  (define-key macrursors-mark-map (kbd "r") #'macrursors-mark-all-lines))
 
-  (with-eval-after-load 'multiple-cursors-core
-    ;; Immediately load mc list, otherwise it will show as
-    ;; changed as empty in my git repo
-    (mc/load-lists)
 
-    (define-key mc/keymap (kbd "M-T") 'mc/reverse-regions)
-    (define-key mc/keymap (kbd "C-,") 'mc/unmark-next-like-this)
-    (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)))
+;; Multiple cursors
+;; (use-package multiple-cursors
+;;   :bind (;; ("C-c m" . mc/mark-all-dwim)
+;; 	 ("C-c m" . mc/mark-all-like-this)
+;;          ("C->" . mc/mark-next-like-this)
+;;          ("C-<" . mc/mark-previous-like-this)
+;; 	 ("C-M-<" . mc/mark-all-in-region-regexp)
+;; 	 ("C-M->" . mc/edit-lines)
+;;          :map mc/keymap
+;;          ("C-x v" . mc/vertical-align-with-space)
+;;          ("C-x n" . mc-hide-unmatched-lines-mode))
+;;   :custom
+;;   (mc/always-run-for-all t)
+;;   :config
+;;   (global-unset-key (kbd "M-<down-mouse-1>"))
+;;   (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
+
+;;   (with-eval-after-load 'multiple-cursors-core
+;;     ;; Immediately load mc list
+;;     (mc/load-lists)
+;;     ;; Define keys
+;;     (define-key mc/keymap (kbd "M-T") 'mc/reverse-regions)
+;;     (define-key mc/keymap (kbd "C-,") 'mc/unmark-next-like-this)
+;;     (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)
+;;     (define-key mc/keymap (kbd "<return>") nil))
+
+;;   (setq mc/max-cursors 201)
+;;   (defun mc/create-fake-cursor-at-point (&optional id)
+;;     "Overriding mc/create-fake-cursor-at-point to save hidden cursors"
+;;     (unless mc--max-cursors-original
+;;       (setq mc--max-cursors-original mc/max-cursors))
+;;     (if mc/max-cursors
+;; 	(if (< (mc/num-cursors) mc/max-cursors)
+;;             (let ((overlay (mc/make-cursor-overlay-at-point)))
+;; 	      (overlay-put overlay 'mc-id (or id (mc/create-cursor-id)))
+;; 	      (overlay-put overlay 'type 'fake-cursor)
+;; 	      (overlay-put overlay 'priority 100)
+;; 	      (mc/store-current-state-in-overlay overlay)
+;; 	      (when (use-region-p)
+;; 		(overlay-put overlay 'region-overlay
+;;                              (mc/make-region-overlay-between-point-and-mark)))
+;; 	      overlay)
+;;           (if (use-region-p)
+;; 	      (progn (setq-local cory/mc-hidden-cursors (cons (cons (point-marker) (copy-marker (mark-marker))) cory/mc-hidden-cursors)))
+;;             (setq-local cory/mc-hidden-cursors (cons (cons (point-marker) (point-marker)) cory/mc-hidden-cursors))))
+;;       (let ((overlay (mc/make-cursor-overlay-at-point)))
+;; 	(overlay-put overlay 'mc-id (or id (mc/create-cursor-id)))
+;; 	(overlay-put overlay 'type 'fake-cursor)
+;; 	(overlay-put overlay 'priority 100)
+;; 	(mc/store-current-state-in-overlay overlay)
+;; 	(when (use-region-p)
+;;           (overlay-put overlay 'region-overlay
+;; 		       (mc/make-region-overlay-between-point-and-mark)))
+;; 	overlay)))
+
+
+;;   (defun mc--maybe-set-killed-rectangle ()
+;;     "There are some bugs regarding saving to kill ring for
+;;  rectangle editing, but I don't use it, so just ignore it")
+
+;;   (defun cory/apply-macro-for-the-next-hidden-cursor ()
+;;     "Apply kmacro to the next hidden cursor"
+;;     (interactive)
+;;     (let* ((next-cursor (car cory/mc-hidden-cursors))
+;;            (p (car next-cursor))
+;;            (m (cdr next-cursor)))
+;;       (if (not (= p m))
+;;           (progn
+;;             (push-mark m t nil)
+;;             (goto-char p)
+;;             (activate-mark))
+;; 	(goto-char p))
+;;       (call-last-kbd-macro)
+;;       (setq-local cory/mc-hidden-cursors (cdr cory/mc-hidden-cursors))))
+
+;;   (defun mc/remove-cursor-at-point-if-exist ()
+;;     "Remove cursors at point, either fake or real."
+;;     (interactive)
+;;     (let ((removed nil))
+;;       (cl-loop for cursor in (mc/all-fake-cursors)
+;;                for start = (overlay-start cursor)
+;;                do (when (= start (point))
+;; 		    (mc/remove-fake-cursor cursor)
+;; 		    (setq-local removed t)))
+;;       removed))
+
+;;   (defun cory/mc-remove-current-cursor ()
+;;     "blabla"
+;;     (interactive)
+;;     (let ((old-point (point)))
+;;       (when (not (call-interactively 'mc/remove-cursor-at-point-if-exist))
+;; 	(if (mc/last-fake-cursor-before (point))
+;;             (call-interactively 'mc/cycle-backward)
+;;           (call-interactively 'mc/cycle-forward))
+;; 	(setq-local new-point (point))
+;; 	(goto-char old-point)
+;; 	(call-interactively 'mc/remove-cursor-at-point-if-exist)
+;; 	(goto-char new-point))))
+
+;;   (defun cory/apply-macro-for-all-hidden-cursors ()
+;;     "Apply kmacro to all hidden cursors"
+;;     (interactive)
+;;     (while cory/mc-hidden-cursors
+;;       (let* ((next-cursor (car cory/mc-hidden-cursors))
+;;              (p (car next-cursor))
+;;              (m (cdr next-cursor)))
+;; 	(if (not (= p m))
+;;             (progn
+;; 	      (push-mark m t t)
+;; 	      (goto-char p))
+;;           (goto-char p))
+;; 	(call-last-kbd-macro)
+;; 	(setq-local cory/mc-hidden-cursors (cdr cory/mc-hidden-cursors)))))
+
+;;   (defun mc/mark-all-like-this ()
+;;     "example: override mc/mark-all-like-this to make it work with hidden cursors"
+;;     (interactive)
+;;     (unless (region-active-p)
+;;       (error "Mark a region to match first."))
+;;     (mc/remove-fake-cursors)
+;;     (setq-local cory/mc-hidden-cursors nil)
+;;     (let ((master (point))
+;;           (case-fold-search nil)
+;;           (point-first (< (point) (mark)))
+;;           (re (regexp-opt (mc/region-strings) mc/enclose-search-term)))
+;;       (mc/save-excursion
+;;        (goto-char 0)
+;;        (while (search-forward-regexp re nil t)
+;; 	 (push-mark (match-beginning 0))
+;; 	 (when point-first (exchange-point-and-mark))
+;; 	 (unless (and (= master (point)))
+;;            (mc/create-fake-cursor-at-point))
+;; 	 (when point-first (exchange-point-and-mark)))))
+;;     (if (> (mc/num-cursors) 1)
+;; 	(multiple-cursors-mode 1)
+;;       (mc/disable-multiple-cursors-mode))
+;;     (when cory/mc-hidden-cursors
+;;       (cory/mc-remove-current-cursor)
+;;       (setq-local cory/mc-hidden-cursors (reverse cory/mc-hidden-cursors))
+;;       (message "Visible cursors threshold is hit, hidden cursors created, please record macro to apply changes to them"))))
 
 ;; Phi search
 (use-package phi-search)
+
+;; Visual regex replacement
+(use-package visual-regexp
+  :bind
+  (("C-c c" . cory/replace)
+   ("C-c C" . vr/query-replace)
+   ;; for multiple-cursors
+   ("C-c M" . vr/mc-mark))
+  :config
+  (defun cory/replace ()
+    (interactive)
+    ;; If region is active, only replace the region
+    (if (and transient-mark-mode mark-active (not (eq (mark) (point))))
+        (call-interactively 'vr/replace)
+      (save-excursion
+	(goto-char 0)
+	(call-interactively 'vr/replace)))))
 
 ;; Move text
 (use-package move-text
@@ -1072,15 +1561,14 @@
   (;; ("M-g g" . avy-goto-line)
    ;; ("M-g c" . avy-goto-char-in-line)
    ;; ("M-g m" . avy-move-line)
-   ("C-t" . avy-goto-char-timer)
-   ("C-S-t" . avy-pop-mark)
-   ("M-z" . avy-zap-up-to-char)
-   ("M-SPC" . avy-goto-end-of-line)
-   ("M-S-SPC" . avy-goto-line)
+   ("<C-m>" . avy-goto-char-timer)
+   ("C-S-m" . avy-pop-mark)
+   ;; ("C-j" . avy-goto-end-of-line-num)
+   ;; ("C-S-j" . avy-goto-line-num)
    ("C-M-s" . isearch-forward-other-window)
    ("C-M-r" . isearch-backward-other-window)
    :map isearch-mode-map
-   ("C-t" . avy-isearch))
+   ("<C-m>" . avy-isearch))
 
   :custom
   ;; (setq avy-keys '(?q ?e ?r ?y ?u ?o ?p
@@ -1094,8 +1582,10 @@
   ;; 		    (string-to-list (upcase "ulrpdc"))
   ;; 		    (string-to-list (upcase "qjvg"))
   ;; 		    (number-sequence ?, ?')))
-  (avy-keys (nconc (number-sequence ?a ?z)
-		   (number-sequence ?A ?Z)))
+  ;; (avy-keys (nconc (number-sequence ?a ?z)
+  ;; 		   (number-sequence ?A ?Z)))
+  (avy-keys (append (string-to-list "atenisubopyflmc")
+		    (string-to-list (upcase "atenisubopyflmc"))))
   (avy-timeout-seconds 0.25)
 
   :config
@@ -1108,7 +1598,7 @@
   (setf (alist-get ?\C-y avy-dispatch-alist) 'avy-action-yank
 	(alist-get ?\M-w avy-dispatch-alist) 'avy-action-copy
 	(alist-get ?\C-k avy-dispatch-alist) 'avy-action-kill-move
-	(alist-get ?\C-t avy-dispatch-alist) 'avy-action-teleport)
+	(alist-get (kbd "<C-m>") avy-dispatch-alist) 'avy-action-teleport)
 
   ;; Avy helper functions for both generic and complex avy actions
   (defun avy-generic-command-action (action-f)
@@ -1167,7 +1657,7 @@
 
   (defun avy-action-embark (pt)
     (unwind-protect (avy-generic-command-action #'embark-act)) t)
-  (setf (alist-get (kbd "C-.") avy-dispatch-alist) 'avy-action-embark)
+  (setf (alist-get (kbd "<C-i>") avy-dispatch-alist) 'avy-action-embark)
 
   ;;; New behavior
 
@@ -1198,7 +1688,7 @@
   ;;   - Then apply a region action selecting the end of the region
   ;; - Region actions are the same as Original actions but for regions
   ;; - Region actions take the original code of avy actions as much as possible
-  ;; - A necessary hack is to simulate region selection instead of using direct functions like `copy-region-as-kill' as those functions do not allow to manipulate regions if parenthesis or other syntax elements are not balanced (this has a weird behavior in modes like emacs-lisp so I’m not sure if it is a syntax problem)
+  ;; - A necessary hack is to simulate region selection instead of using direct functions like `copy-region-as-kill' as those functions do not allow to manipulate regions if parenthesis or other syntax elements are not balanced. This has a weird behavior in modes like emacs-lisp so I’m not sure if it is a syntax problem
 
   ;; set-point-action
   (defun avy-action-mark-point (pt)
@@ -1304,7 +1794,8 @@
     "Filter avy selecton with open parenthesis"
     (interactive)
     (avy-goto-quick-char 40)) ;; (
-  (define-key emacs-lisp-mode-map (kbd "S-SPC") 'avy-goto-parenthesis)
+  ;; TODO Pick another keybind for paren jump
+  ;; (define-key emacs-lisp-mode-map (kbd "S-SPC") 'avy-goto-parenthesis)
 
   ;;; TODO Auto actions and compounds
 
@@ -1387,56 +1878,118 @@ argument, query for word to search."
                for N from 1 to strings-len do
                (push (concat string " ") display-strings)
                (when (= (mod N per-row) 0) (push "\n" display-strings)))
-      (message "%s" (apply #'concat (nreverse display-strings))))))
+      (message "%s" (apply #'concat (nreverse display-strings)))))
 
-;; Copy text as Discord/GitHub/etc formatted code
-(use-package copy-as-format
+  (defun avy-goto-line-num (&optional arg)
+    (interactive "p")
+    (let ((avy-keys (number-sequence ?0 ?9)))
+      (avy-goto-line arg)))
+
+  (defun avy-goto-end-of-line-num (&optional arg)
+    (interactive "p")
+    (let ((avy-keys (number-sequence ?0 ?9)))
+      (avy-goto-end-of-line arg))))
+
+(use-package avy-zap
   :bind
-  (("C-c c c" . copy-as-format)
-   ("C-c c g" . copy-as-format-github)
-   ("C-c c t" . copy-as-format-markdown-table)
-   ("C-c c m" . copy-as-format-markdown)
-   ("C-c c o" . copy-as-format-org-mode)
-   ("C-c c d" . copy-as-format-slack)
-   ("C-c c v" . org-copy-visible))
-  :config
-  (setq copy-as-format-default "slack")
-  (defun copy-as-format--markdown-table (text _multiline)
-    (s-replace "--+--" "--|--" text))
-  (add-to-list 'copy-as-format-format-alist '("markdown-table" copy-as-format--markdown-table)))
+  (("M-z" . avy-zap-to-char-dwim)
+   ("M-Z" . avy-zap-up-to-char-dwim)))
+
+(use-package ace-link
+  :bind
+  (("M-o" . ace-link))
+  :init
+  ;; Binds `o' to ace-link in the supported modes
+  (ace-link-setup-default))
+
+;; ;; Copy text as Discord/GitHub/etc formatted code
+;; (use-package copy-as-format
+;;   :bind
+;;   (("C-c c c" . copy-as-format)
+;;    ("C-c c g" . copy-as-format-github)
+;;    ("C-c c t" . copy-as-format-markdown-table)
+;;    ("C-c c m" . copy-as-format-markdown)
+;;    ("C-c c o" . copy-as-format-org-mode)
+;;    ("C-c c d" . copy-as-format-slack)
+;;    ("C-c c v" . org-copy-visible))
+;;   :config
+;;   (setq copy-as-format-default "slack")
+;;   (defun copy-as-format--markdown-table (text _multiline)
+;;     (s-replace "--+--" "--|--" text))
+;;   (add-to-list 'copy-as-format-format-alist '("markdown-table" copy-as-format--markdown-table)))
 
 ;; Tramp
-(use-package tramp
-  :defer t
-  :config
-  (setq tramp-default-method "ssh")
+;; (use-package tramp
+;;   :defer t
+;;   :config
+;;   (setq tramp-default-method "ssh")
 
-  ;; Only for debugging slow tramp connections
-  ;;(setq tramp-verbose 7)
+;;   ;; Only for debugging slow tramp connections
+;;   ;;(setq tramp-verbose 7)
 
-  ;; Skip version control for tramp files
-  (setq vc-ignore-dir-regexp
-        (format "\\(%s\\)\\|\\(%s\\)"
-                vc-ignore-dir-regexp
-                tramp-file-name-regexp))
+;;   ;; Skip version control for tramp files
+;;   (setq vc-ignore-dir-regexp
+;;         (format "\\(%s\\)\\|\\(%s\\)"
+;;                 vc-ignore-dir-regexp
+;;                 tramp-file-name-regexp))
 
-  ;; Use ControlPath from .ssh/config
-  (setq tramp-ssh-controlmaster-options "")
+;;   ;; Use ControlPath from .ssh/config
+;;   (setq tramp-ssh-controlmaster-options "")
 
-  ;; Backup tramp files like local files and don't litter the remote
-  ;; file system with my emacs backup files
-  (setq tramp-backup-directory-alist backup-directory-alist)
+;;   ;; Backup tramp files like local files and don't litter the remote
+;;   ;; file system with my emacs backup files
+;;   (setq tramp-backup-directory-alist backup-directory-alist)
 
-  ;; See https://www.gnu.org/software/tramp/#Ad_002dhoc-multi_002dhops
-  ;; For all hosts, except my local one, first connect via ssh, and then apply sudo -u root:
-  (dolist (tramp-proxies '((nil "\\`root\\'" "/ssh:%h:")
-                           ((regexp-quote (system-name)) nil nil)
-                           ("localhost" nil nil)
-                           ("blif\\.vpn" nil nil)
-                           ("skor-pi" nil nil)
-                           ;; Add tramp proxy for atomx user
-                           (nil "atomx" "/ssh:%h:")))
-    (add-to-list 'tramp-default-proxies-alist tramp-proxies)))
+;;   ;; See https://www.gnu.org/software/tramp/#Ad_002dhoc-multi_002dhops
+;;   ;; For all hosts, except my local one, first connect via ssh, and then apply sudo -u root:
+;;   (dolist (tramp-proxies '((nil "\\`root\\'" "/ssh:%h:")
+;;                            ((regexp-quote (system-name)) nil nil)
+;;                            ("localhost" nil nil)
+;;                            ("blif\\.vpn" nil nil)
+;;                            ("skor-pi" nil nil)
+;;                            ;; Add tramp proxy for atomx user
+;;                            (nil "atomx" "/ssh:%h:")))
+;;     (add-to-list 'tramp-default-proxies-alist tramp-proxies)))
+
+;; SSH Functions
+(defun cory/write-ssh-address-to-history (address)
+  (write-region (concat address "
+") nil "~/.emacs.d/ssh_history" t))
+
+(defun cory/read-ssh-history ()
+  "Return a list of ssh addresses previously connected to."
+  (with-temp-buffer
+    (insert-file-contents "~/.emacs.d/ssh_history")
+    (split-string (buffer-string) "\n" t)))
+
+(defun cory/clean-ssh-history ()
+  (interactive)
+  (write-region "" nil "~/.emacs.d/ssh_history"))
+
+(defun cory/connect-ssh ()
+  "Requires sshfs to be installed."
+  (interactive)
+  (let* ((server (completing-read "user@server.address:" (cory/read-ssh-history)))
+	 (mount-path (concat temporary-file-directory ".emacs-sshfs-mount-" server))
+	 (user (string-trim-right server "@.*")))
+    (cory/write-ssh-address-to-history server)
+    (unless (file-directory-p mount-path)
+      (make-directory mount-path))
+    (unless (file-exists-p (concat mount-path "/home"))
+      (shell-command (concat "sshfs -o idmap=user,transform_symlinks "
+			     server ":/ " mount-path)))
+    (find-file (read-file-name "Find file:"
+			       (concat mount-path "/home/" user "/")))))
+
+(defun cory/disconnect-ssh ()
+  "Manually disconnects the ssh connection to the server. Requires fusemount."
+  (interactive)
+  (shell-command
+   (concat "fusermount -u "
+	   (concat temporary-file-directory
+		   ".emacs-sshfs-mount-"
+		   (completing-read "user@server.address:"
+				    (cory/read-ssh-history))))))
 
 ;; Syntax checking
 (use-package flymake
@@ -1460,7 +2013,6 @@ argument, query for word to search."
   (remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake)
 
   :config
-
   (define-fringe-bitmap 'cory-info-mark
     (vector #b0000001111000000
 	    #b0000111111110000
@@ -1532,9 +2084,10 @@ argument, query for word to search."
     16
     'center)
 
-  (setq flymake-note-bitmap '(cory-info-mark compilation-info)
-	flymake-warning-bitmap '(cory-warning-mark compilation-warning)
-	flymake-error-bitmap '(cory-error-mark compilation-error)))
+  (setq ;; flymake-fringe-indicator-position 'right-fringe
+   flymake-note-bitmap '(cory-info-mark compilation-info)
+   flymake-warning-bitmap '(cory-warning-mark compilation-warning)
+   flymake-error-bitmap '(cory-error-mark compilation-error)))
 
 (use-package flymake-diagnostic-at-point
   :ensure t
@@ -1577,59 +2130,59 @@ argument, query for word to search."
             (eyebrowse-mode t)
             (setq eyebrowse-new-workspace t)))
 
-;; Sidebar (Project Explorer)
-(use-package dired-sidebar :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
-  :ensure t
-  :commands (dired-sidebar-toggle-sidebar)
-  :init
-  (add-hook 'dired-sidebar-mode-hook
-            (lambda ()
-              (unless (file-remote-p default-directory)
-                (auto-revert-mode))))
-  :custom
-  (dired-sidebar-subtree-line-prefix "   ")
-  (dired-sidebar-theme 'nerd)
-  (dired-sidebar-use-term-integration t)
-  (dired-sidebar-use-custom-font t)
-  :config
-  (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
-  (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
-  (set-face-attribute 'dired-sidebar-face nil :inherit 'variable-pitch))
+;; ;; Sidebar (Project Explorer)
+;; (use-package dired-sidebar :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
+;;   :ensure t
+;;   :commands (dired-sidebar-toggle-sidebar)
+;;   :init
+;;   (add-hook 'dired-sidebar-mode-hook
+;;             (lambda ()
+;;               (unless (file-remote-p default-directory)
+;;                 (auto-revert-mode))))
+;;   :custom
+;;   (dired-sidebar-subtree-line-prefix "   ")
+;;   (dired-sidebar-theme 'nerd)
+;;   (dired-sidebar-use-term-integration t)
+;;   (dired-sidebar-use-custom-font t)
+;;   :config
+;;   (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
+;;   (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
+;;   (set-face-attribute 'dired-sidebar-face nil :inherit 'variable-pitch))
 
 ;; Snippets
-(use-package yasnippet
-  :config
-  ;; Don't touch TAB!!!
+;; (use-package yasnippet
+;;   :config
+;;   ;; Don't touch TAB!!!
 
-  ;; The active keymap while a snippet expansion is in progress.
-  (setq yas-keymap
-	(let ((map (make-sparse-keymap)))
-	  (define-key map (kbd "C-<tab>")   (yas-filtered-definition 'yas-next-field-or-maybe-expand))
-	  (define-key map (kbd "C-M-<tab>") (yas-filtered-definition 'yas-prev-field))
-	  (define-key map (kbd "C-g")   (yas-filtered-definition 'yas-abort-snippet))
-	  (define-key map (kbd "C-d")   (yas-filtered-definition yas-maybe-skip-and-clear-field))
-	  (define-key map (kbd "DEL")   (yas-filtered-definition yas-maybe-clear-field))
-	  map))
+;;   ;; The active keymap while a snippet expansion is in progress.
+;;   (setq yas-keymap
+;; 	(let ((map (make-sparse-keymap)))
+;; 	  (define-key map (kbd "C-<tab>")   (yas-filtered-definition 'yas-next-field-or-maybe-expand))
+;; 	  (define-key map (kbd "C-M-<tab>") (yas-filtered-definition 'yas-prev-field))
+;; 	  (define-key map (kbd "C-g")   (yas-filtered-definition 'yas-abort-snippet))
+;; 	  (define-key map (kbd "C-d")   (yas-filtered-definition yas-maybe-skip-and-clear-field))
+;; 	  (define-key map (kbd "DEL")   (yas-filtered-definition yas-maybe-clear-field))
+;; 	  map))
 
-  ;; The keymap used when `yas-minor-mode' is active.
-  (setq yas-minor-mode-map
-	(let ((map (make-sparse-keymap)))
-	  (define-key map (kbd "C-<tab>") yas-maybe-expand)
-	  (define-key map "\C-c&\C-s" 'yas-insert-snippet)
-	  (define-key map "\C-c&\C-n" 'yas-new-snippet)
-	  (define-key map "\C-c&\C-v" 'yas-visit-snippet-file)
-	  map))
+;;   ;; The keymap used when `yas-minor-mode' is active.
+;;   (setq yas-minor-mode-map
+;; 	(let ((map (make-sparse-keymap)))
+;; 	  (define-key map (kbd "C-<tab>") yas-maybe-expand)
+;; 	  (define-key map "\C-c&\C-s" 'yas-insert-snippet)
+;; 	  (define-key map "\C-c&\C-n" 'yas-new-snippet)
+;; 	  (define-key map "\C-c&\C-v" 'yas-visit-snippet-file)
+;; 	  map))
 
-  (yas-global-mode 1))
+;;   (yas-global-mode 1))
 
-(use-package common-lisp-snippets)
+;; (use-package common-lisp-snippets)
 
-(use-package clojure-snippets)
+;; (use-package clojure-snippets)
 
-(use-package java-snippets)
+;; (use-package java-snippets)
 
-(use-package gitignore-snippets
-  :config (gitignore-snippets-init))
+;; (use-package gitignore-snippets
+;;   :config (gitignore-snippets-init))
 
 ;; Code folding
 ;; (dolist (mode '(c-mode-common-hook
@@ -1766,6 +2319,46 @@ Lisp function does not specify a special indentation."
 (define-key emacs-lisp-mode-map (kbd "C-c C-b") 'eval-buffer)
 (define-key emacs-lisp-mode-map (kbd "C-c C-k") 'eval-buffer)
 (define-key emacs-lisp-mode-map (kbd "C-c C-;") 'eval-print-as-comment)
+
+;; Make the faces of code only inside elisp code styled in such a way that
+;; elisp appears like its "literally programmed"
+
+;; (copy-face 'font-lock-comment-face
+;; 	   'elisp-font-lock-comment-face)
+;; (copy-face 'font-lock-comment-delimiter-face
+;; 	   'elisp-font-lock-comment-delimiter-face)
+
+;; (set-face-attribute 'elisp-font-lock-comment-face nil
+;;                     :inherit 'variable-pitch)
+;; (set-face-attribute 'elisp-font-lock-comment-delimiter-face nil
+;;                     :inherit 'variable-pitch)
+
+;; (add-hook
+;;  'emacs-lisp-mode-hook
+;;  (lambda ()
+;;    (set (make-local-variable 'font-lock-comment-face)
+;; 	'elisp-font-lock-comment-face)
+;;    (set (make-local-variable 'font-lock-comment-delimiter-face)
+;; 	'elisp-font-lock-comment-delimiter-face)))
+
+;; APL-like characters for elisp
+(add-hook
+ 'emacs-lisp-mode-hook
+ (lambda ()
+   (setq prettify-symbols-alist '(("lambda" . #x3BB)
+				  ("->"    . #x2192)
+				  ("<=="   . #x21D0)
+				  ("==>"   . #x21D2)
+				  ("<="       . "≤")
+				  (">="       . "≥")
+				  ("t"        . "✓")
+				  ("'()"      . "∅")
+				  ("nil"      . "∅")
+				  ("if"       . "⁇")
+				  ("or"       . "∨")
+				  ("and"      . "∧")
+				  ("not"      . "¬")))
+   (prettify-symbols-mode 1)))
 
 ;;; TODO Clean up clojure config
 ;;; Clojure
@@ -1956,7 +2549,7 @@ Lisp function does not specify a special indentation."
 (use-package sly
   :commands (sly sly-connect)
   :init
-  (setq sly-symbol-completion-mode nil)
+  (setq-default sly-symbol-completion-mode nil)
   (setq inferior-lisp-program "sbcl")
   ;; (setq sly-default-lisp 'roswell)
   ;; (setq ros-config (concat user-emacs-directory
@@ -2033,11 +2626,88 @@ Lisp function does not specify a special indentation."
 
 (use-package geiser
   :hook
-  (scheme-mode . geiser-mode)
+  (geiser-mode . (lambda () (geiser-capf-setup nil)))
+  (scheme-mode . scheme-super-capf)
+  ;; (scheme-mode . cory/run-geiser-p)
+  ;; :bind
+  ;; (:map geiser-mode-map
+  ;;  ("C-c C-d d" . cory/chicken-doc-look-up-manual)
+  ;;  ("C-c C-d C-d" . cory/chicken-doc-look-up-manual)
+  ;;  ("C-c C-d i" . cory/chicken-doc-look-up-manual)
+  ;;  ("C-c C-d TAB" . cory/chicken-doc-look-up-manual))
   :custom
-  (geiser-active-implementations '(chicken)))
+  (geiser-active-implementations '(chicken))
+  :config
+  (with-eval-after-load 'geiser-mode
+    (dolist (bind '("C-c C-d d"
+		    "C-c C-d C-d"
+		    "C-c C-d i"
+		    "C-c C-d TAB"))
+      (define-key
+	geiser-mode-map
+	(kbd bind)
+	#'cory/chicken-doc-look-up-manual)))
 
-(use-package geiser-chicken)
+  (defun scheme-super-capf ()
+    (setq-local completion-at-point-functions
+		(list (cape-super-capf
+		       #'tempel-complete
+		       #'geiser-capf--for-filename
+		       #'geiser-capf--for-module
+		       #'geiser-capf--for-symbol)
+		      #'cape-dabbrev
+		      #'cape-file)))
+
+  (defun cory/run-geiser-p ()
+    "Asks the user whether they want to start the geiser repl or not."
+    (when (y-or-n-p "Start geiser repl?")
+      (call-interactively 'geiser)))
+
+  (defun cory/chicken-doc-look-up-manual (&optional arg)
+    "Look up manual for symbol at point.
+With prefix argument, ask for the lookup symbol (with completion)."
+    (interactive "P")
+    (unless (geiser-doc--manual-available-p)
+      (error "No manual available"))
+    (let ((symbol (or (and (not arg) (geiser--symbol-at-point))
+                      (geiser-completion--read-symbol "Symbol: ")))
+	  (current (buffer-name (current-buffer))))
+      (eww (concat "http://api.call-cc.org/5/cdoc/?q="
+		   (symbol-name symbol)
+		   "&query-name=Look+up")
+	   t)
+      (kill-buffer "*Chicken Documentation*")
+      (rename-buffer "*Chicken Documentation*")
+      (switch-to-buffer current)
+      ;; (display-buffer "*Chicken Documentation*")
+      (switch-to-buffer-other-window "*Chicken Documentation*"))))
+
+(use-package geiser-chicken
+  :after geiser)
+
+;; APL-like characters for scheme
+(add-hook
+ 'scheme-mode-hook
+ (lambda ()
+   (setq prettify-symbols-alist '(("lambda" . #x3BB)
+				  ("->"    . #x2192)
+				  ("<=="   . #x21D0)
+				  ("==>"   . #x21D2)
+				  ("<="       . "≤")
+				  (">="       . "≥")
+				  ("define"   . "≝")
+				  ("set!"     . "≐")
+				  ("set-car!" . "≔")
+				  ("set-cdr!" . "≕")
+				  ("#t"       . "✓")
+				  ("#f"       . "✗")
+				  ("'()"      . "∅")
+				  ("null"     . "∅")
+				  ("if"       . "⁇")
+				  ("or"       . "∨")
+				  ("and"      . "∧")
+				  ("not"      . "¬")))
+   (prettify-symbols-mode 1)))
 
 ;;; C++
 (use-package modern-cpp-font-lock
@@ -2089,8 +2759,16 @@ Lisp function does not specify a special indentation."
 ;;; Java
 
 (use-package eglot-java
-  :init
-  (eglot-java-init))
+  :hook
+  (java-mode . eglot-java-mode)
+  :bind
+  (:map eglot-java-mode-map
+   ("C-c C-l n" . eglot-java-file-new)
+   ("C-c C-l x" . eglot-java-run-main)
+   ("C-c C-l t" . eglot-java-run-test)
+   ("C-c C-l N" . eglot-java-project-new)
+   ("C-c C-l T" . eglot-java-project-build-task)
+   ("C-c C-l R" . eglot-java-project-build-refresh)))
 
 ;; For groovy and gradle support
 (use-package groovy-mode :defer t)
@@ -2127,9 +2805,61 @@ Lisp function does not specify a special indentation."
 ;;; Latex
 ;; (use-package latex-preview-pane)
 
+;;; Python
+
+;; python.el' provides python-mode' which is the builtin major-mode for the
+;; Python language.
+
+(use-package python
+  :config
+  ;; Remove guess indent python message
+  (setq python-indent-guess-indent-offset-verbose nil))
+
+;;<OPTIONAL> I use poetry (https://python-poetry.org/) to manage my python environments.
+;; See: https://github.com/galaunay/poetry.el.
+;; There are alternatives like https://github.com/jorgenschaefer/pyvenv.
+(use-package poetry
+  :ensure t
+  :defer t
+  :config
+  ;; Checks for the correct virtualenv. Better strategy IMO because the default
+  ;; one is quite slow.
+  (setq poetry-tracking-strategy 'switch-buffer)
+  :hook (python-mode . poetry-tracking-mode))
+
+;; <OPTIONAL> Buffer formatting on save using black.
+;; See: https://github.com/pythonic-emacs/blacken.
+(use-package blacken
+  :ensure t
+  :defer t
+  :custom
+  (blacken-allow-py36 t)
+  (blacken-skip-string-normalization t)
+  :hook (python-mode-hook . blacken-mode))
+
+;; <OPTIONAL> Numpy style docstring for Python.  See:
+;; https://github.com/douglasdavis/numpydoc.el.  There are other packages
+;; available for docstrings, see: https://github.com/naiquevin/sphinx-doc.el
+(use-package numpydoc
+  :ensure t
+  :defer t
+  :custom
+  (numpydoc-insert-examples-block nil)
+  (numpydoc-template-long nil)
+  :bind (:map python-mode-map
+         ("C-c C-n" . numpydoc-generate)))
+
 ;;; Other Modes
 (use-package haskell-mode
   :hook (haskell-mode . haskell-indentation-mode))
+
+(use-package fvwm-mode
+  ;; :mode "config"
+  :hook (fvwm-mode . subword-mode))
+
+;;
+;; --- NIXOS ---
+;;
 
 (use-package nix-mode
   :mode "\\.nix\\'"
@@ -2137,9 +2867,19 @@ Lisp function does not specify a special indentation."
   (nix-mode . subword-mode)
   (nix-mode . nix-prettify-mode))
 
-(use-package fvwm-mode
-  ;; :mode "config"
-  :hook (fvwm-mode . subword-mode))
+(defvar cory/nixos-config-location "/home/cory/.config/nix")
+
+(defun cory/nixos-flake-rebuild ()
+  "Rebuilds a NixOS system."
+  (interactive)
+  (async-shell-command
+   (concat "nixos-rebuild switch --flake "
+	   cory/nixos-config-location
+	   "#"
+	   (completing-read "System name:" '("pc" "laptop"))
+	   " --use-remote-sudo")))
+
+(global-set-key (kbd "C-c n") #'cory/nixos-flake-rebuild)
 
 ;;
 ;; --- TERMINALS ---
@@ -2247,9 +2987,10 @@ Lisp function does not specify a special indentation."
 
 ;; Eshell fish completion
 (use-package fish-completion
+  :disabled t
   :config
   (when (and (executable-find "fish")
-           (require 'fish-completion nil t))
+             (require 'fish-completion nil t))
     (global-fish-completion-mode)))
 
 ;; Eshell up
@@ -2322,6 +3063,71 @@ Lisp function does not specify a special indentation."
 ;;   (setq eshell-destroy-buffer-when-process-dies t)
 ;;   (setq eshell-visual-commands '("htop" "zsh" "vim")))
 
+;;; Give eshell/ls icons
+(defun lem-eshell-prettify (file)
+  "Add features to listings in `eshell/ls' output.
+The features are:
+1. Add decoration like 'ls -F':
+ * Mark directories with a `/'
+ * Mark executables with a `*'
+2. Make each listing into a clickable link to open the
+corresponding file or directory.
+3. Add icons (requires `all-the-icons`)
+This function is meant to be used as advice around
+`eshell-ls-annotate', where FILE is the cons describing the file."
+  (let* ((name (car file))
+         (icon (if (eq (cadr file) t)
+                   (all-the-icons-icon-for-dir name)
+                 (all-the-icons-icon-for-file name)))
+         (suffix
+          (cond
+           ;; Directory
+           ((eq (cadr file) t)
+            "/")
+           ;; Executable
+           ((and (/= (user-uid) 0) ; root can execute anything
+		 (eshell-ls-applicable (cdr file) 3 #'file-executable-p (car file)))
+            "*"))))
+    (cons
+     (concat " "
+             icon
+             " "
+             (propertize name
+                         'keymap eshell-ls-file-keymap
+                         'mouse-face 'highlight
+                         'file-name (expand-file-name (substring-no-properties (car file)) default-directory))
+             (when (and suffix (not (string-suffix-p suffix name)))
+               (propertize suffix 'face 'shadow)))
+     (cdr file)
+     )))
+
+(defun eshell-ls-file-at-point ()
+  "Get the full path of the Eshell listing at point."
+  (get-text-property (point) 'file-name))
+
+(defun eshell-ls-find-file ()
+  "Open the Eshell listing at point."
+  (interactive)
+  (find-file (eshell-ls-file-at-point)))
+
+(defun eshell-ls-delete-file ()
+  "Delete the Eshell listing at point."
+  (interactive)
+  (let ((file (eshell-ls-file-at-point)))
+    (when (yes-or-no-p (format "Delete file %s?" file))
+      (delete-file file 'trash))))
+
+(defvar eshell-ls-file-keymap
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "RET") #'eshell-ls-find-file)
+    (define-key map (kbd "<return>") #'eshell-ls-find-file)
+    (define-key map [mouse-1] #'eshell-ls-find-file)
+    (define-key map (kbd "D") #'eshell-ls-delete-file)
+    map)
+  "Keys in effect when point is over a file from `eshell/ls'.")
+
+(advice-add #'eshell-ls-annotate :filter-return #'lem-eshell-prettify)
+
 ;; Vterm
 (use-package vterm
   :ensure t
@@ -2336,29 +3142,605 @@ Lisp function does not specify a special indentation."
 ;; --- GENERAL KEYBINDS ---
 ;;
 
-;; Basic Keybind
+;;; Search functions
+
+(require 's)
+
+(defun cory/regex-combos (l)
+  "Return a list of regexes that will match combitations of the strings in `L'."
+  (if (not (cdr l))
+      l
+    (cl-reduce
+     #'append
+     (mapcar
+      (lambda (e)
+	(mapcar
+	 (lambda (f) (concat e ".*" f))
+	 (cory/regex-combos (remove e l))))
+      l))))
+
+(defun cory/isearch-string ()
+  "Return the string to isearch for."
+  (let ((search-args (s-split " " (car consult--line-history))))
+    (if (cdr search-args)
+	(concat
+	 "^.*\\("
+	 (cl-reduce
+	  (lambda (x y) (concat x "\\|" y))
+	  (cory/regex-combos search-args))
+	 "\\).*$")
+      (car search-args))))
+
+(defun cory/isearch-forward-resume ()
+  (interactive)
+  (let ((search-str (cory/isearch-string)))
+    (isearch-resume search-str t nil t search-str t)))
+
+(defun cory/isearch-backward-resume ()
+  (interactive)
+  (let ((search-str (cory/isearch-string)))
+    (isearch-resume search-str t nil nil search-str t)))
+
+(defun cory/visual-isearch-forward ()
+  (interactive)
+  (consult-line)
+  (beginning-of-line)
+  (cory/isearch-forward-resume))
+
+(defun cory/visual-isearch-backward ()
+  (interactive)
+  (consult-line)
+  (end-of-line)
+  (cory/isearch-backward-resume))
+
+(defun cory/search-forward-dwim ()
+  (interactive)
+  ;; Are we using multiple cursors?
+  (cond ((and (boundp 'multiple-cursors-mode)
+	    multiple-cursors-mode
+	    (fboundp  'phi-search))
+         (call-interactively 'phi-search))
+        ;; Are we defining a macro?
+        (defining-kbd-macro
+          (call-interactively 'isearch-forward))
+        ;; Fall back to isearch.
+        (t
+         ;; If region is active, prepopulate the isearch term.
+	 (if (and transient-mark-mode mark-active (not (eq (mark) (point))))
+	     (let ((region (buffer-substring-no-properties (mark) (point))))
+               (deactivate-mark)
+	       (setq consult--line-history (cons region consult--line-history))
+               (isearch-resume region nil nil t region nil))
+	   (cory/visual-isearch-forward)))))
+
+(defun cory/search-backward-dwim ()
+  (interactive)
+  ;; Are we using multiple cursors?
+  (cond ((and (boundp 'multiple-cursors-mode)
+            multiple-cursors-mode
+            (fboundp  'phi-search-backward))
+         (call-interactively 'phi-search-backward))
+        ;; Are we defining a macro?
+        (defining-kbd-macro
+          (call-interactively 'isearch-backward))
+        ;; Fall back to isearch.
+        (t
+         ;; If region is active, prepopulate the isearch term.
+         (if (and transient-mark-mode mark-active (not (eq (mark) (point))))
+             (let ((region (buffer-substring-no-properties (mark) (point))))
+               (deactivate-mark)
+	       (setq consult--line-history (cons region consult--line-history))
+               (isearch-resume region nil nil nil region nil))
+           (cory/visual-isearch-backward)))))
+
+;;; Scroll functions
+
+(defun cory/scroll-down-half-page ()
+  "Scroll down half a page while keeping the cursor centered."
+  (interactive)
+  (let ((ln (line-number-at-pos (point)))
+	(lmax (line-number-at-pos (point-max))))
+    (cond ((= ln 1) (move-to-window-line nil))
+	  ((= ln lmax) (recenter (window-end)))
+	  (t (progn
+               (move-to-window-line -1)
+               (recenter))))))
+
+(defun cory/scroll-up-half-page ()
+  "Scroll up half a page while keeping the cursor centered."
+  (interactive)
+  (previous-line)
+  (let ((ln (line-number-at-pos (point)))
+	(lmax (line-number-at-pos (point-max))))
+    (cond ((= ln 1) nil)
+	  ((= ln lmax) (move-to-window-line nil))
+	  (t (progn
+               (move-to-window-line 0)
+               (recenter))))))
+
+(put 'cory/scroll-down-half-page 'scroll-command t)
+(put 'cory/scroll-up-half-page 'scroll-command t)
+
+;;; Selection functions
+
+(defmacro cory/def-bounds-of-thing (name thing)
+  `(defun ,name ()
+     (interactive)
+     (let ((bounds (bounds-of-thing-at-point ,thing)))
+       (when bounds
+	 (goto-char (car bounds))
+	 (set-mark-command nil)
+	 (goto-char (cdr bounds))))))
+
+(defmacro cory/def-beginning-of-thing (name thing)
+  `(defun ,name ()
+     (interactive)
+     (let ((bounds (bounds-of-thing-at-point ,thing)))
+       (when bounds
+	 (goto-char (car bounds))))))
+
+(defmacro cory/def-end-of-thing (name thing)
+  `(defun ,name ()
+     (interactive)
+     (let ((bounds (bounds-of-thing-at-point ,thing)))
+       (when bounds
+	 (goto-char (cdr bounds))))))
+
+(cory/def-bounds-of-thing cory/mark-word 'word)
+(cory/def-bounds-of-thing cory/mark-list 'list)
+(cory/def-bounds-of-thing cory/mark-symbol 'symbol)
+(cory/def-bounds-of-thing cory/mark-sexp 'sexp)
+(cory/def-bounds-of-thing cory/mark-number 'number)
+(cory/def-bounds-of-thing cory/mark-sentence 'sentence)
+(cory/def-bounds-of-thing cory/mark-url 'url)
+(cory/def-bounds-of-thing cory/mark-email 'email)
+(cory/def-bounds-of-thing cory/mark-line 'line)
+
+(cory/def-beginning-of-thing cory/beginning-of-word 'word)
+(cory/def-beginning-of-thing cory/beginning-of-list 'list)
+(cory/def-beginning-of-thing cory/beginning-of-symbol 'symbol)
+(cory/def-beginning-of-thing cory/beginning-of-sexp 'sexp)
+(cory/def-beginning-of-thing cory/beginning-of-number 'number)
+(cory/def-beginning-of-thing cory/beginning-of-sentence 'sentence)
+(cory/def-beginning-of-thing cory/beginning-of-url 'url)
+(cory/def-beginning-of-thing cory/beginning-of-email 'email)
+(cory/def-beginning-of-thing cory/beginning-of-line 'line)
+
+(cory/def-end-of-thing cory/end-of-word 'word)
+(cory/def-end-of-thing cory/end-of-list 'list)
+(cory/def-end-of-thing cory/end-of-symbol 'symbol)
+(cory/def-end-of-thing cory/end-of-sexp 'sexp)
+(cory/def-end-of-thing cory/end-of-number 'number)
+(cory/def-end-of-thing cory/end-of-sentence 'sentence)
+(cory/def-end-of-thing cory/end-of-url 'url)
+(cory/def-end-of-thing cory/end-of-email 'email)
+(cory/def-end-of-thing cory/end-of-line 'line)
+
+;;; Grab functions
+
+(defun cory/second-sel-set-string (string)
+  (cond
+   ((cory/second-sel-buffer)
+    (with-current-buffer (overlay-buffer mouse-secondary-overlay)
+      (goto-char (overlay-start mouse-secondary-overlay))
+      (delete-region (overlay-start mouse-secondary-overlay) (overlay-end mouse-secondary-overlay))
+      (insert string)))
+   ((markerp mouse-secondary-start)
+    (with-current-buffer (marker-buffer mouse-secondary-start)
+      (goto-char (marker-position mouse-secondary-start))
+      (insert string)))))
+
+(defun cory/second-sel-get-string ()
+  (when (cory/second-sel-buffer)
+    (with-current-buffer (overlay-buffer mouse-secondary-overlay)
+      (buffer-substring-no-properties
+       (overlay-start mouse-secondary-overlay)
+       (overlay-end mouse-secondary-overlay)))))
+
+(defun cory/second-sel-buffer ()
+  (and (overlayp mouse-secondary-overlay)
+     (overlay-buffer mouse-secondary-overlay)))
+
+(defun cory/grab ()
+  "Create secondary selection or a marker if no region available."
+  (interactive)
+  (if (region-active-p)
+      (secondary-selection-from-region)
+    (progn
+      (delete-overlay mouse-secondary-overlay)
+      (setq mouse-secondary-start (make-marker))
+      (move-marker mouse-secondary-start (point))))
+  (deactivate-mark t))
+
+(defun cory/swap-grab ()
+  "Swap region and secondary selection."
+  (interactive)
+  (let* ((rbeg (region-beginning))
+         (rend (region-end))
+         (region-str (when (region-active-p) (buffer-substring-no-properties rbeg rend)))
+         (sel-str (cory/second-sel-get-string))
+         (next-marker (make-marker)))
+    (when region-str (delete-region rbeg rend))
+    (when sel-str (insert sel-str))
+    (move-marker next-marker (point))
+    (cory/second-sel-set-string (or region-str ""))
+    (when (overlayp mouse-secondary-overlay)
+      (delete-overlay mouse-secondary-overlay))
+    (setq mouse-secondary-start next-marker)
+    (deactivate-mark t)))
+
+(defun cory/sync-grab ()
+  "Sync secondary selection with current region."
+  (interactive)
+  (when (region-active-p)
+    (let* ((rbeg (region-beginning))
+           (rend (region-end))
+           (region-str (buffer-substring-no-properties rbeg rend))
+           (next-marker (make-marker)))
+      (move-marker next-marker (point))
+      (cory/second-sel-set-string region-str)
+      (when (overlayp mouse-secondary-overlay)
+	(delete-overlay mouse-secondary-overlay))
+      (setq mouse-secondary-start next-marker)
+      (deactivate-mark t))))
+
+;;; Misc functions
+
+(defun cory/create-tmp-file ()
+  (interactive)
+  (find-file (concat temporary-file-directory (read-string "New tmp file:"))))
+
+(defun cory/insert-space ()
+  "Insert a space."
+  (interactive)
+  (self-insert-command 1 ? )
+  (backward-char))
+
+;;; Basic Keybinds
 
 ;; Swap "C-h" and "C-x", so it's easier to type on Dvorak layout
 ;; (keyboard-translate (kbd "C-h") (kbd "C-x"))
 ;; (keyboard-translate (kbd "C-x") (kbd "C-h"))
 
-(global-set-key (kbd "C-x k") 'kill-this-buffer)
-(global-set-key (kbd "C-#") 'comment-or-uncomment-region)
-(global-set-key (kbd "C-c s") 'replace-string)
-(global-set-key (kbd "C-c w") 'woman)
-(global-set-key (kbd "C-x u") 'undo-only)
-(global-set-key (kbd "C-/") 'undo-only)
-(global-set-key (kbd "C-z") 'undo-only)
-(global-set-key (kbd "C-S-z") 'undo-redo)
-(global-set-key (kbd "C-x C-u") 'undo-redo)
-(global-set-key (kbd "C-?") 'undo-redo)
+(dolist (pair '(("C-x k"   kill-this-buffer)
+		("C-x K"   kill-buffer)
+		("C-c w"   woman)
+		;; ("C-x u"   undo-only)
+		;; ("C-/"     undo-only)
+		;; ("C-x C-u" undo-redo)
+		;; ("C-?"     undo-redo)
+		("C-'"     repeat)
+		("C-s"     cory/search-forward-dwim)
+		("C-r"     cory/search-backward-dwim)
+		("C-M-s"   cory/isearch-forward-resume)
+		("C-M-r"   cory/isearch-backward-resume)
+		("C-v"     cory/scroll-down-half-page)
+		("M-v"     cory/scroll-up-half-page)
+		("C-c F"   cory/create-tmp-file)
+		("C-c e"   eww)
+		("S-SPC"   cory/insert-space)
+		("C-c q"   quit-window)
+		("C-j"     join-line)
+		("C-c x"   xref-find-references-and-replace)))
+  (global-set-key (kbd (car pair)) (cadr pair)))
+
+;;; Selection Keybinds
+
+(define-prefix-command 'bounds-of-thing-map)
+(global-set-key (kbd "C-.") 'bounds-of-thing-map)
+(define-key bounds-of-thing-map (kbd "w") #'cory/mark-word)
+(define-key bounds-of-thing-map (kbd "l") #'cory/mark-list)
+(define-key bounds-of-thing-map (kbd "s") #'cory/mark-symbol)
+(define-key bounds-of-thing-map (kbd "e") #'cory/mark-sexp)
+(define-key bounds-of-thing-map (kbd "f") #'mark-defun)
+(define-key bounds-of-thing-map (kbd "n") #'cory/mark-number)
+(define-key bounds-of-thing-map (kbd ".") #'cory/mark-sentence)
+(define-key bounds-of-thing-map (kbd "u") #'cory/mark-url)
+(define-key bounds-of-thing-map (kbd "m") #'cory/mark-email)
+(define-key bounds-of-thing-map (kbd "r") #'cory/mark-line)
+(define-key bounds-of-thing-map (kbd "b") #'mark-whole-buffer)
+(define-key bounds-of-thing-map (kbd "p") #'mark-paragraph)
+
+(define-prefix-command 'beginning-of-thing-map)
+(global-set-key (kbd "C-<") 'beginning-of-thing-map)
+(define-key beginning-of-thing-map (kbd "w") #'cory/beginning-of-word)
+(define-key beginning-of-thing-map (kbd "l") #'cory/beginning-of-list)
+(define-key beginning-of-thing-map (kbd "s") #'cory/beginning-of-symbol)
+(define-key beginning-of-thing-map (kbd "e") #'cory/beginning-of-sexp)
+(define-key beginning-of-thing-map (kbd "f") #'beginning-of-defun)
+(define-key beginning-of-thing-map (kbd "n") #'cory/beginning-of-number)
+(define-key beginning-of-thing-map (kbd ".") #'cory/beginning-of-sentence)
+(define-key beginning-of-thing-map (kbd "u") #'cory/beginning-of-url)
+(define-key beginning-of-thing-map (kbd "m") #'cory/beginning-of-email)
+(define-key beginning-of-thing-map (kbd "r") #'beginning-of-line)
+(define-key beginning-of-thing-map (kbd "b") #'beginning-of-buffer)
+(define-key beginning-of-thing-map (kbd "p") #'cory/beginning-of-paragraph)
+
+(define-prefix-command 'end-of-thing-map)
+(global-set-key (kbd "C->") 'end-of-thing-map)
+(define-key end-of-thing-map (kbd "w") #'cory/end-of-word)
+(define-key end-of-thing-map (kbd "l") #'cory/end-of-list)
+(define-key end-of-thing-map (kbd "s") #'cory/end-of-symbol)
+(define-key end-of-thing-map (kbd "e") #'cory/end-of-sexp)
+(define-key end-of-thing-map (kbd "f") #'end-of-defun)
+(define-key end-of-thing-map (kbd "n") #'cory/end-of-number)
+(define-key end-of-thing-map (kbd ".") #'cory/end-of-sentence)
+(define-key end-of-thing-map (kbd "u") #'cory/end-of-url)
+(define-key end-of-thing-map (kbd "m") #'cory/end-of-email)
+(define-key end-of-thing-map (kbd "r") #'end-of-line)
+(define-key end-of-thing-map (kbd "b") #'end-of-buffer)
+(define-key end-of-thing-map (kbd "p") #'cory/end-of-paragraph)
+
+;;; Grab Keybinds
+
+(global-set-key (kbd "C-c SPC") #'cory/grab)
+(global-set-key (kbd "C-c C-SPC") #'cory/swap-grab)
+(global-set-key (kbd "C-c M-SPC") #'cory/sync-grab)
+
+;;; Lisp Keybinds
 
 ;; FIXME
-(defun kill-ring-save-and-comment (BEG END)
-  "Save the region to the kill ring, then comment it out."
-  (kill-ring-save BEG END)
-  (comment-region BEG END))
-(global-set-key (kbd "M-#") 'kill-ring-save-and-comment)
+(dolist (map (list emacs-lisp-mode-map
+		   lisp-mode-map lisp-data-mode-map
+		   clojure-mode-map ;; cider-repl-mode-map
+		   ;; racket-mode-map racket-repl-mode-map
+		   ;; scheme-mode-map geiser-repl-mode-map
+		   ))
+  (define-key map (kbd "M-a") 'backward-list)
+  (define-key map (kbd "M-e") 'forward-list)
+  (define-key map (kbd "M-h") 'cory/mark-list))
+
+;;; Easier macro handling
+;; (use-package kmacro-x
+;;   :ensure t
+;;   :init (kmacro-x-atomic-undo-mode 1)
+;;   :bind ("C-c k" . kmacro-x-mc-region))
+
+;;; Delete selection mode
+(delete-selection-mode 1)
+
+;;; Repeat Maps
+
+(defun repeaters-define-maps (rlist)
+  "Define an arbitrary number of repeater maps.
+Maps are defined based on the lists passed through RLIST, a
+quoted list containing ‘repeat-map’ definitions.  Each definition
+is itself a list containing the following items:
+NAME is a string designating the unique portion of the
+repeat-map’s name (to be constructed into the form
+‘repeaters-NAME-rep-map’ as the name of the symbol for the map).
+One or more command ENTRIES made up of the following:
+    The COMMAND’s symbol;
+    One or more string representations of KEY-SEQUENCES which
+    may be used to invoke the command when the ‘repeat-map’ is
+    active;
+    Optionally, the KEYWORD ‘:exitonly’ may follow the key sequences.
+A single map definition may include any number of these command
+entry constructs.
+If a command construct ends with the ‘:exitonly’ keyword, the map
+can invoke the command, but the command will *not* invoke that
+map.
+However, if the keyword is omitted, the command will bring up the
+‘repeat-map’ whenever it is called using one of the keysequences
+given in the ‘repeat-map’.  A given command may only store a
+single map within its ‘repeat-map’ property, although a command
+can be called from multiple repeat-maps.
+Taking advantage of this fact, one may chain related repeat-maps
+together in sequence."
+  (while rlist
+    (let* ((block (pop rlist))
+           (mapname (concat "repeaters-" (pop block) "-rep-map")))
+      (set (intern mapname)
+           (let ((map (make-sparse-keymap))
+                 (thing (pop block)))
+             (while block
+               (let ((thingnext (pop block)))
+                 (while (stringp thingnext)
+                   (define-key map (kbd thingnext) thing)
+                   (setq thingnext (pop block)))
+                 (if (eq thingnext :exitonly)
+                     (setq thing (pop block))
+                   (progn (put thing 'repeat-map (intern mapname))
+                          (setq thing thingnext)))))
+             map)))))
+
+(defvar repeaters-maps
+  '(("buffer-switch"
+     previous-buffer                   "C-x C-<left>" "C-x <left>" "C-<left>" "<left>" "p"
+     next-buffer                       "C-x C-<right>" "C-x <right>" "C-<right>" "<right>" "n")
+
+    ("calendar-nav"
+     calendar-forward-day              "C-f" "f"
+     calendar-backward-day             "C-b" "b"
+     calendar-forward-week             "C-n" "n"
+     calendar-backward-week            "C-p" "p"
+     calendar-forward-month            "M-}" "}" "]"
+     calendar-backward-month           "M-{" "{" "["
+     calendar-forward-year             "C-x ]"
+     calendar-backward-year            "C-x [")
+
+    ("char-line-nav"
+     backward-char                     "C-b" "b"
+     forward-char                      "C-f" "f"
+     next-line                         "C-n" "n"
+     previous-line                     "C-p" "p")
+
+    ("defun-nav"
+     beginning-of-defun                "C-M-a" "M-a" "a" "ESC M-a"
+     end-of-defun                      "C-M-e" "M-e" "e" "ESC M-e")
+
+    ("del-char"
+     delete-char                       "C-d" "d")
+
+    ("sexp-nav"
+     backward-sexp                     "C-M-b" "b" "ESC M-b"
+     forward-sexp                      "C-M-f" "f" "ESC M-f")
+
+    ("paragraph-nav"
+     backward-paragraph                "C-<up>" "<up>" "M-{" "M-[" "{" "["
+     forward-paragraph                 "C-<down>" "<down>" "M-}" "M-]" "}" "]")
+
+    ("sentence-nav"
+     backward-sentence                 "M-a" "a"
+     forward-sentence                  "M-e" "e"
+     back-to-indentation               "M-m" "m"                     :exitonly)
+
+    ("in-line-nav"
+     move-end-of-line                  "C-a" "a"
+     move-end-of-line                  "C-e" "e")
+
+    ("page-nav"
+     backward-page                     "C-x [" "["
+     forward-page                      "C-x ]" "]")
+
+    ("list-nav"
+     backward-list                     "C-M-p" "p" "ESC M-p"
+     forward-list                      "C-M-n" "n" "ESC M-n"
+     backward-up-list                  "C-M-<up>" "C-M-u" "<up>" "u" "ESC M-u"
+     down-list                         "C-M-<down>" "C-M-d" "<down>" "d" "ESC M-d")
+
+    ("error-nav"
+     next-error                        "C-x `" "`" "M-g M-n" "M-g n" "n"
+     previous-error                    "M-g M-p" "M-p" "p")
+
+    ("mid-top-bottom-move"
+     recenter-top-bottom               "C-l" "l"
+     move-to-window-line-top-bottom    "M-r" "r"
+     back-to-indentation               "M-m" "m"                     :exitonly)
+
+    ("fix-case"
+     upcase-word                       "M-u" "u"
+
+     ;; Easy way to manually set title case
+     downcase-word                     "M-l" "l" "d"
+     capitalize-word                   "M-c" "c")
+
+    ("kill-word"
+     kill-word                         "M-d" "M-<delete>" "d")
+
+    ("kill-line"
+     kill-line                         "C-k" "k")
+
+    ("kill-sentence"
+     kill-sentence                     "M-k" "k"
+     backward-kill-sentence            "C-x DEL" "DEL")
+
+    ("kill-sexp"
+     kill-sexp                         "C-M-k" "k" "ESC M-k")
+
+    ;; Yank same text repeatedly with “C-y y y y”...
+    ("yank-only"
+     yank                              "C-y" "y"
+     yank-pop                          "M-y" "n"                     :exitonly)
+
+    ;; Cycle through the kill-ring with “C-y n n n”...
+    ;; You can reverse direction too “C-y n n C-- n n”
+    ("yank-popping"
+     yank-pop                          "M-y" "y" "n")
+
+    ("kmacro-cycle"
+     kmacro-cycle-ring-next            "C-x C-k C-n" "C-n" "n"
+     kmacro-cycle-ring-previous        "C-x C-k C-p" "C-p" "p")
+
+    ("tab-bar-nav"
+     tab-next                          "C-x t o" "o" "n"
+     tab-previous                      "C-x t O" "O" "p")
+
+    ("transpose-chars"
+     transpose-chars                    "C-t" "t")
+
+    ("transpose-words"
+     transpose-words                   "M-t" "t")
+
+    ("transpose-sexps"
+     transpose-sexps                   "C-M-t" "t" "ESC M-t")
+
+    ("transpose-lines"
+     transpose-lines                   "C-x C-t" "t")
+
+    ;; M-< for beginning-of-buffer brings up this map, since you can
+    ;; only scroll a buffer up when at its beginning.
+    ("scroll-up"
+     scroll-up-command                 "C-v" "v"
+     beginning-of-buffer               "M-<" "<"
+     end-of-buffer                     "M->" ">"                     :exitonly
+     scroll-down-command               "M-v"                         :exitonly)
+
+    ;; M-> for end-of buffer brings up this map, since you can only
+    ;; scroll a buffer down when at its end.
+    ("scroll-down"
+     scroll-down-command               "M-v" "v"
+     end-of-buffer                     "M->" ">"
+     beginning-of-buffer               "M-<" "<"                     :exitonly
+     scroll-up-command                 "C-v"                         :exitonly)
+
+    ("scroll-otherwin"
+     scroll-other-window               "C-M-v" "v" "ESC M-v"
+     beginning-of-buffer-other-window  "M-<home>" "<"
+     end-of-buffer-other-window        "M-<end>" ">"                 :exitonly
+     scroll-other-window-down          "C-M-S-v" "M-v" "ESC M-V" "V" :exitonly)
+
+    ("scroll-otherwin-down"
+     scroll-other-window-down          "C-M-S-v" "M-v" "v" "ESC M-V" "V"
+     end-of-buffer-other-window        "M-<end>" ">"
+     beginning-of-buffer-other-window  "M-<home>" "<"                :exitonly
+     scroll-other-window               "C-M-v" "C-v" "ESC M-v"       :exitonly)
+
+    ("scroll-sideways"
+     scroll-left                       "C-x <" "<"
+     scroll-right                      "C-x >" ">")
+
+    ("hippie-exp"
+     ;; For navigating through expansion candidates. You can revert
+     ;; to the original string by prefixing the next hippie-expand
+     ;; invocation with universal-argument (“C-u /”).
+     hippie-expand                     "M-/" "/")
+
+    ("search-nav"
+     isearch-repeat-forward            "C-s" "s" "C-M-s" "ESC M-s"
+     isearch-repeat-backward           "C-r" "r" "C-M-r" "ESC M-r"
+     isearch-exit                      "<enter>" "<return>" "RET"    :exitonly)
+
+    ("undo-only-redo"
+     undo-only                         "C-x u" "C-_" "_" "C-/" "/"
+     undo-redo                         "C-?" "?" "r")
+
+    ;; Repeat Maps for Org-Mode
+    ("org-nav"
+     org-backward-heading-same-level   "C-c C-b" "C-b" "b"
+     org-forward-heading-same-level    "C-c C-f" "C-f" "f"
+     org-previous-visible-heading      "C-c C-p" "C-p" "p"
+     org-next-visible-heading          "C-c C-n" "C-n" "n"
+     outline-up-heading                "C-c C-u" "C-u" "u")
+
+    ("org-editing"
+     org-metadown                      "M-<down>" "<down>"
+     org-metaup                        "M-<up>" "<up>"
+     org-demote-subtree                "C->" ">"
+     org-promote-subtree               "C-<" "<")
+
+    ("org-task"
+     org-todo                          "C-c C-t" "C-t" "t"
+     org-priority                      "C-c ," ","
+     org-time-stamp                    "C-c ." "."
+     org-schedule                      "C-c C-s" "C-s" "s"
+     org-deadline                      "C-c C-d" "C-d" "d")
+
+    ("word-nav"
+     backward-word                     "M-b" "b"
+     forward-word                      "M-f" "f")
+
+    ("set-mark"
+     smart-region                      "C-SPC" "SPC"))
+
+  "List of lists containing repeater-map definitions.
+This must be in the form required by the
+‘repeaters-define-maps’ function.")
+
+(repeaters-define-maps repeaters-maps)
+(setq repeat-exit-key "g"
+      repeat-exit-timeout 30)
+(repeat-mode)
 
 ;; God mode
 ;; (use-package god-mode
@@ -2374,14 +3756,14 @@ Lisp function does not specify a special indentation."
 ;;     (cond
 ;;      (god-local-mode
 ;;       (set-face-attribute 'mode-line nil
-;; 			  :foreground "#141404"
-;; 			  :background "#ed8f23")
+;; 			   :foreground "#141404"
+;; 			   :background "#ed8f23")
 ;;       ;; (set-face-attribute 'mode-line-inactive nil
 ;;       ;;                     :foreground "#141404"
 ;;       ;;                     :background "#ed9063"))
 ;;       (set-face-attribute 'mode-line-inactive nil
-;; 			  :foreground "#ffffff"
-;; 			  :background "#5e3608"))
+;; 			   :foreground "#ffffff"
+;; 			   :background "#5e3608"))
 ;;      (t
 ;;       ;; (set-face-attribute 'mode-line nil
 ;;       ;; 			  :foreground "#141404"
@@ -2390,11 +3772,11 @@ Lisp function does not specify a special indentation."
 ;;       ;; 			  :foreground "#141404"
 ;;       ;; 			  :background "#ffffff")
 ;;       (set-face-attribute 'mode-line nil
-;; 			  :foreground "#ffffff"
-;; 			  :background "#4d4d4d")
+;; 			   :foreground "#ffffff"
+;; 			   :background "#4d4d4d")
 ;;       (set-face-attribute 'mode-line-inactive nil
-;; 			  :foreground "#ffffff"
-;; 			  :background "#1a1a1a")
+;; 			   :foreground "#ffffff"
+;; 			   :background "#1a1a1a")
 ;;       )))
 ;;   (add-hook 'post-command-hook 'my-god-mode-update-mode-line)
 
@@ -2691,8 +4073,6 @@ Else, redoes on the buffer."
 
 ;;; Cory's Custom Emacs Keybinds
 
-(delete-selection-mode 1)
-
 ;; These keybinds were inspired by meow. Most of these functions come from meow
 ;; and have been modified to fit this config.
 ;; All credit goes to the creators of meow for inspiration and these functions.
@@ -2703,980 +4083,872 @@ Else, redoes on the buffer."
 ;;                   (interactive)
 ;;                   (join-line -1)))
 
-(defun cory/next-line-expand ()
-  (interactive)
-  (unless (region-active-p)
-    (set-mark-command nil))
-  (next-line))
-
-(defun cory/previous-line-expand ()
-  (interactive)
-  (unless (region-active-p)
-    (set-mark-command nil))
-  (previous-line))
-
-(defun cory/backward-char-expand ()
-  (interactive)
-  (unless (region-active-p)
-    (set-mark-command nil))
-  (backward-char))
-
-(defun cory/forward-char-expand ()
-  (interactive)
-  (unless (region-active-p)
-    (set-mark-command nil))
-  (forward-char))
-
-(defun cory/kill (beg end &optional region)
-  "If region is active, then kills the region.
-Else if at the end of the line, joins the next line.
-Else, kills the rest of the line."
-  (interactive (progn
-                 (let ((beg (mark))
-                       (end (point)))
-                   (unless (and beg end)
-                     (user-error "The mark is not set now, so there is no region"))
-                   (list beg end 'region))))
-  (let ((select-enable-clipboard nil))
-    (when (not buffer-read-only)
-      (if (region-active-p)
-	  (progn
-	    (when (and (and (region-active-p)
-			(<= (mark) (point)))
-		     (< (point) (point-max)))
-	      (forward-char 1))
-	    (kill-region beg end region))
-	(if (and (eolp) (not (bolp)))
-	    (delete-indentation 1)
-	  (kill-line nil))))))
-
-(defun cory/second-sel-set-string (string)
-  (cond
-   ((second-sel-buffer)
-    (with-current-buffer (overlay-buffer mouse-secondary-overlay)
-      (goto-char (overlay-start mouse-secondary-overlay))
-      (delete-region (overlay-start mouse-secondary-overlay) (overlay-end mouse-secondary-overlay))
-      (insert string)))
-   ((markerp mouse-secondary-start)
-    (with-current-buffer (marker-buffer mouse-secondary-start)
-      (goto-char (marker-position mouse-secondary-start))
-      (insert string)))))
-
-(defun cory/second-sel-get-string ()
-  (when (second-sel-buffer)
-    (with-current-buffer (overlay-buffer mouse-secondary-overlay)
-      (buffer-substring-no-properties
-       (overlay-start mouse-secondary-overlay)
-       (overlay-end mouse-secondary-overlay)))))
-
-(defun cory/second-sel-buffer ()
-  (and (overlayp mouse-secondary-overlay)
-     (overlay-buffer mouse-secondary-overlay)))
-
-(defun cory/grab ()
-  "Create secondary selection or a marker if no region available."
-  (interactive)
-  (if (region-active-p)
-      (secondary-selection-from-region)
-    (progn
-      (delete-overlay mouse-secondary-overlay)
-      (setq mouse-secondary-start (make-marker))
-      (move-marker mouse-secondary-start (point))))
-  (deactivate-mark t))
-
-(defun cory/swap-grab ()
-  "Swap region and secondary selection."
-  (interactive)
-  (let* ((rbeg (region-beginning))
-         (rend (region-end))
-         (region-str (when (region-active-p) (buffer-substring-no-properties rbeg rend)))
-         (sel-str (cory/second-sel-get-string))
-         (next-marker (make-marker)))
-    (when region-str (delete-region rbeg rend))
-    (when sel-str (insert sel-str))
-    (move-marker next-marker (point))
-    (cory/second-sel-set-string (or region-str ""))
-    (when (overlayp mouse-secondary-overlay)
-      (delete-overlay mouse-secondary-overlay))
-    (setq mouse-secondary-start next-marker)
-    (deactivate-mark t)))
-
-(defun cory/sync-grab ()
-  "Sync secondary selection with current region."
-  (interactive)
-  (when (region-active-p)
-    (let* ((rbeg (region-beginning))
-           (rend (region-end))
-           (region-str (buffer-substring-no-properties rbeg rend))
-           (next-marker (make-marker)))
-      (move-marker next-marker (point))
-      (cory/second-sel-set-string region-str)
-      (when (overlayp mouse-secondary-overlay)
-	(delete-overlay mouse-secondary-overlay))
-      (setq mouse-secondary-start next-marker)
-      (deactivate-mark t))))
-
-(defun cory/make-selection (type mark pos &optional expand)
-  "Make a selection with TYPE, MARK and POS.
-
-The direction of selection is MARK -> POS."
-  (if (and (region-active-p) expand)
-      (let ((orig-mark (mark))
-            (orig-pos (point)))
-        (if (< mark pos)
-            (list type (min orig-mark orig-pos) pos)
-          (list type (max orig-mark orig-pos) pos)))
-    (list type mark pos)))
-
-(defun cory/select (selection &optional backward)
-  "Mark the SELECTION."
-  (let ((sel-type (car selection))
-        (mark (cadr selection))
-        (pos (caddr selection)))
-    (goto-char (if backward mark pos))
-    (if (not sel-type)
-	(progn
-          (deactivate-mark)
-          (message "No previous selection.")
-          (deactivate-mark t))
-      (push-mark (if backward pos mark) t t))))
-
-(defun cory/join-forward ()
-  (let (mark pos)
-    (save-mark-and-excursion
-      (goto-char (line-end-position))
-      (setq pos (point))
-      (when (re-search-forward "[[:space:]\n\r]*" nil t)
-        (setq mark (point))))
-    (when pos
-      (thread-first
-        (cory/make-selection '(expand . join) pos mark)
-        (cory/select)))))
-
-(defun cory/join-backward ()
-  (let* (mark
-         pos)
-    (save-mark-and-excursion
-      (back-to-indentation)
-      (setq pos (point))
-      (goto-char (line-beginning-position))
-      (while (looking-back "[[:space:]\n\r]" 1 t)
-        (forward-char -1))
-      (setq mark (point)))
-    (thread-first
-      (cory/make-selection '(expand . join) mark pos)
-      (cory/select))))
-
-(defun cory/join-both ()
-  (let* (mark
-         pos)
-    (save-mark-and-excursion
-      (while (looking-back "[[:space:]\n\r]" 1 t)
-        (forward-char -1))
-      (setq mark (point)))
-    (save-mark-and-excursion
-      (while (looking-at "[[:space:]\n\r]")
-        (forward-char 1))
-      (setq pos (point)))
-    (thread-first
-      (cory/make-selection '(expand . join) mark pos)
-      (cory/select))))
-
-(defun cory/join (arg)
-  "Select the indentation between this line to the non empty previous line.
-
-Will create selection with type (select . join)
-
-Prefix:
-with NEGATIVE ARGUMENT, forward search indentation to select.
-with UNIVERSAL ARGUMENT, search both side."
-  (interactive "P")
-  (cond
-   ((equal '(4) arg)
-    (cory/join-both))
-   ((< (prefix-numeric-value arg) 0)
-    (cory/join-forward))
-   (t
-    (cory/join-backward))))
-
-(defun cory/line (n &optional expand)
-  "Select the current line, eol is not included.
-
-Create selection with type (expand . line).
-For the selection with type (expand . line), expand it by line.
-For the selection with other types, cancel it.
-
-Prefix:
-numeric, repeat times.
-"
-  (interactive "p")
-  (let* ((orig (mark t))
-         (n (if (and (region-active-p)
-		   (> (mark) (point)))
-                (- n)
-	      n))
-         (forward (> n 0)))
-    (cond
-     ((region-active-p)
-      (let (p)
-        (save-mark-and-excursion
-          (forward-line n)
-          (goto-char
-           (if forward
-               (setq p (line-end-position))
-             (setq p (line-beginning-position)))))
-        (thread-first
-          (cory/make-selection '(expand . line) orig p expand)
-          (cory/select))))
-     (t
-      (let ((m (if forward
-                   (line-beginning-position)
-                 (line-end-position)))
-            (p (save-mark-and-excursion
-                 (if forward
-                     (progn
-                       (forward-line (1- n))
-                       (line-end-position))
-                   (progn
-                     (forward-line (1+ n))
-                     (when (string-match-p
-			    "^ *$" (buffer-substring-no-properties
-				    (line-beginning-position)
-				    (line-end-position)))
-		       (backward-char 1))
-                     (line-beginning-position))))))
-        (thread-first
-          (cory/make-selection '(expand . line) m p expand)
-          (cory/select)))))))
-
-(defun cory/goto-line ()
-  "Goto line, recenter and select that line.
-
-This command will expand line selection."
-  (interactive)
-  (consult-goto-line)
-  (recenter))
-
-(defun cory/push-search (search)
-  (unless (string-equal search (car regexp-search-ring))
-    (add-to-history 'regexp-search-ring search regexp-search-ring-max)))
-
-(defun cory/search (arg)
-  " Search and select with the car of current `regexp-search-ring'.
-
-If the contents of selection doesn't match the regexp, will push it to `regexp-search-ring' before searching.
-
-To search backward, use \\[negative-argument]."
-  (interactive "P")
-  ;; Test if we add current region as search target.
-  (when (and (region-active-p)
-           (let ((search (car regexp-search-ring)))
-             (or (not search)
-                (not (string-match-p
-                    (format "^%s$" search)
-                    (buffer-substring-no-properties (region-beginning) (region-end)))))))
-    (cory/push-search (regexp-quote (buffer-substring-no-properties (region-beginning) (region-end)))))
-  (when-let ((search (car regexp-search-ring)))
-    (let ((reverse (xor (< (prefix-numeric-value arg) 0) (and (region-active-p)
-							    (> (mark) (point)))))
-          (case-fold-search nil))
-      (if (or (if reverse
-                 (re-search-backward search nil t 1)
-               (re-search-forward search nil t 1))
-             ;; Try research from buffer beginning/end
-             ;; if we are already at the last/first matched
-             (save-mark-and-excursion
-               ;; Recalculate search indicator
-               (goto-char (if reverse (point-max) (point-min)))
-               (if reverse
-                   (re-search-backward search nil t 1)
-                 (re-search-forward search nil t 1))))
-          (let* ((m (match-data))
-                 (marker-beg (car m))
-                 (marker-end (cadr m))
-                 (beg (if reverse (marker-position marker-end) (marker-position marker-beg)))
-                 (end (if reverse (marker-position marker-beg) (marker-position marker-end))))
-            (thread-first
-              (cory/make-selection '(select . visit) beg end)
-              (cory/select))
-            (if reverse
-                (message "Reverse search: %s" search)
-              (message "Search: %s" search))
-            (let ((overlays (overlays-at (1- (point))))
-		  ov expose)
-	      (while (setq ov (pop overlays))
-		(if (and (invisible-p (overlay-get ov 'invisible))
-		       (setq expose (overlay-get ov 'isearch-open-invisible)))
-		    (funcall expose ov)))))
-        (message "Searching %s failed" search)))))
-
-(defun cory/visit-point (text reverse)
-  "Return the point of text for visit command.
-Argument TEXT current search text.
-Argument REVERSE if selection is reversed."
-  (let ((func (if reverse #'re-search-backward #'re-search-forward))
-        (func-2 (if reverse #'re-search-forward #'re-search-backward))
-        (case-fold-search nil))
-    (save-mark-and-excursion
-      (or (funcall func text nil t 1)
-         (funcall func-2 text nil t 1)))))
-
-(defun cory/prompt-symbol-and-words (prompt beg end)
-  "Completion with PROMPT for symbols and words from BEG to END."
-  (let ((completions))
-    (save-mark-and-excursion
-      (goto-char beg)
-      (while (re-search-forward "\\_<\\(\\sw\\|\\s_\\)+\\_>" end t)
-        (let ((result (match-string-no-properties 0)))
-          (when (>= (length result) 1)
-            (push (cons result (format "\\_<%s\\_>" (regexp-quote result))) completions)))))
-    (setq completions (delete-dups completions))
-    (let ((selected (completing-read prompt completions nil nil)))
-      (or (cdr (assoc selected completions))
-         (regexp-quote selected)))))
-
-(defun cory/visit (arg)
-  "Read a regexp from minibuffer, then search and select it.
-
-The input will be pushed into `regexp-search-ring'.  So
-\\[meow-search] can be used for further searching with the same condition.
-
-A list of occurred regexps will be provided for completion, the regexps will
-be sanitized by default. To display them in raw format, set
-`meow-visit-sanitize-completion' to nil.
-
-To search backward, use \\[negative-argument]."
-  (interactive "P")
-  (let* ((reverse arg)
-         (pos (point))
-         (text (cory/prompt-symbol-and-words
-                (if arg "Visit backward: " "Visit: ")
-                (point-min) (point-max)))
-         (cory/visit-point (cory/visit-point text reverse)))
-    (if cory/visit-point
-        (let* ((m (match-data))
-               (marker-beg (car m))
-               (marker-end (cadr m))
-               (beg (if (> pos cory/visit-point) (marker-position marker-end) (marker-position marker-beg)))
-               (end (if (> pos cory/visit-point) (marker-position marker-beg) (marker-position marker-end))))
-          (thread-first
-            (cory/make-selection '(select . visit) beg end)
-            (cory/select))
-          (cory/push-search text)
-	  (let ((overlays (overlays-at (1- (point))))
-		ov expose)
-	    (while (setq ov (pop overlays))
-	      (if (and (invisible-p (overlay-get ov 'invisible))
-		     (setq expose (overlay-get ov 'isearch-open-invisible)))
-		  (funcall expose ov)))))
-      (message "Visit: %s failed" text))))
-
-(defun cory/search-dwim ()
-  (interactive)
-  ;; Are we using multiple cursors?
-  (cond ((and (boundp 'multiple-cursors-mode)
-	    multiple-cursors-mode
-	    (fboundp  'phi-search))
-         (call-interactively 'phi-search))
-        ;; Are we defining a macro?
-        (defining-kbd-macro
-          (call-interactively 'isearch-forward))
-        ;; Fall back to swiper.
-        (t
-         ;; Wrap around swiper results.
-         (let ((consult-line-point-placement #'match-end))
-	   ;; If region is active, prepopulate swiper's search term.
-	   (if (and transient-mark-mode mark-active (not (eq (mark) (point))))
-	       (let ((region (buffer-substring-no-properties (mark) (point))))
-                 (deactivate-mark)
-                 (consult-line region))
-	     (consult-line))))))
-
-(defun cory/search-backward-dwim ()
-  (interactive)
-  ;; Are we using multiple cursors?
-  (cond ((and (boundp 'multiple-cursors-mode)
-            multiple-cursors-mode
-            (fboundp  'phi-search-backward))
-         (call-interactively 'phi-search-backward))
-        ;; Are we defining a macro?
-        (defining-kbd-macro
-          (call-interactively 'isearch-backward))
-        ;; Fall back to swiper.
-        (t
-         ;; Wrap around swiper results.
-         (let ((consult-line-point-placement #'match-end))
-           ;; If region is active, prepopulate swiper's search term.
-           (if (and transient-mark-mode mark-active (not (eq (mark) (point))))
-               (let ((region (buffer-substring-no-properties (mark) (point))))
-                 (deactivate-mark)
-                 (consult-line region))
-             (consult-line))))))
-
-(defun cory/mark-word (n)
-  "Mark current word under cursor.
-
-A expandable word selection will be created. `meow-next-word' and
-`meow-back-word' can be used for expanding.
-
-The content of selection will be quoted to regexp, then pushed into
-`regexp-search-ring' which be read by `meow-search' and other commands.
-
-This command will also provide highlighting for same occurs.
-
-Use negative argument to create a backward selection."
-  (interactive "p")
-  (let* ((bounds (bounds-of-thing-at-point 'word))
-         (beg (car bounds))
-         (end (cdr bounds)))
-    (when beg
-      (thread-first
-        (cory/make-selection '(expand . word) beg end)
-        (cory/select (< n 0)))
-      (let ((search (format "\\<%s\\>" (regexp-quote (buffer-substring-no-properties beg end)))))
-        (cory/push-search search)))))
-
-(defun cory/mark-symbol (n)
-  "Mark current symbol under cursor.
-
-This command works similar to `cory/mark-word'."
-  (interactive "p")
-  (let* ((bounds (bounds-of-thing-at-point 'symbol))
-         (beg (car bounds))
-         (end (cdr bounds)))
-    (when beg
-      (thread-first
-        (cory/make-selection '(expand . word) beg end)
-        (cory/select (< n 0)))
-      (let ((search (format "\\_<%s\\_>" (regexp-quote (buffer-substring-no-properties beg end)))))
-        (cory/push-search search)))))
-
-(defun cory/backward-symbol (arg)
-  (interactive "p")
-  (forward-symbol
-   (if arg (* -1 arg) -1)))
-
-(defun cory/block (arg)
-  "Mark the block or expand to parent block."
-  (interactive "P")
-  (let ((ra (region-active-p))
-        (back (xor (and (region-active-p)
-		      (> (mark) (point)))
-		   (< (prefix-numeric-value arg) 0)))
-        (depth (car (syntax-ppss)))
-        (orig-pos (point))
-        p m)
-    (save-mark-and-excursion
-      (while (and (if back (re-search-backward "\\s(" nil t) (re-search-forward "\\s)" nil t))
-                (or (save-mark-and-excursion
-		     (nth 3 (syntax-ppss)))
-                   (if ra (>= (car (syntax-ppss)) depth) (> (car (syntax-ppss)) depth)))))
-      (when (and (if ra (< (car (syntax-ppss)) depth) (<= (car (syntax-ppss)) depth))
-               (not (= (point) orig-pos)))
-        (setq p (point))
-        (when (ignore-errors (forward-list (if back 1 -1)))
-          (setq m (point)))))
-    (when (and p m)
-      (thread-first
-        (cory/make-selection '(expand . block) m p)
-        (cory/select)))))
-
-(defun cory/to-block (arg)
-  "Expand to next block.
-
-Will create selection with type (expand . block)."
-  (interactive "P")
-  ;; We respect the direction of block selection.
-  (let ((back (or (and (region-active-p)
-		    (> (mark) (point)))
-		 (< (prefix-numeric-value arg) 0)))
-        (depth (car (syntax-ppss)))
-        (orig-pos (point))
-        p m)
-    (save-mark-and-excursion
-      (while (and (if back (re-search-backward "\\s(" nil t) (re-search-forward "\\s)" nil t))
-                (or (save-mark-and-excursion
-		     (nth 3 (syntax-ppss)))
-                   (> (car (syntax-ppss)) depth))))
-      (when (and (= (car (syntax-ppss)) depth)
-               (not (= (point) orig-pos)))
-        (setq p (point))
-        (when (ignore-errors (forward-list (if back 1 -1)))
-          (setq m (point)))))
-    (when (and p m)
-      (thread-first
-        (cory/make-selection '(expand . block) orig-pos p t)
-        (cory/select)))))
-
-(defun cory/quit-window-or-buffer ()
-  "Quit current window or buffer."
-  (interactive)
-  (if (> (seq-length (window-list (selected-frame))) 1)
-      (delete-window)
-    (previous-buffer)))
-
-(defun cory/replace-selection ()
-  "Replace current selection with yank.
-
-This command supports `meow-selection-command-fallback'."
-  (interactive)
-  (when (region-active-p)
-    (let ((select-enable-clipboard nil))
-      (when (not buffer-read-only)
-	(when-let ((s (string-trim-right (current-kill 0 t) "\n")))
-          (delete-region (region-beginning) (region-end))
-          (insert s))))))
-
-(defvar cory/char-thing-table
-  '((?r . round)
-    (?s . square)
-    (?c . curly)
-    (?g . string)
-    (?e . symbol)
-    (?w . window)
-    (?b . buffer)
-    (?p . paragraph)
-    (?l . line)
-    (?d . defun)
-    (?. . sentence)))
-
-(defvar cory/selection-directions
-  '((inner . forward)
-    (bounds . backward)
-    (beginning . backward)
-    (end . forward)))
-
-(defun cory/thing-prompt (prompt-text)
-  (read-char prompt-text))
-
-(defun cory/thing-get-direction (cmd)
-  (or
-   (alist-get cmd cory/selection-directions)
-   'forward))
-
-(defun cory/bounds-of-symbol ()
-  (when-let (bounds (bounds-of-thing-at-point 'symbol))
-    (let ((beg (car bounds))
-          (end (cdr bounds)))
-      (save-mark-and-excursion
-        (goto-char end)
-        (if (not (looking-at-p "\\s)"))
-            (while (looking-at-p " \\|,")
-              (goto-char (cl-incf end)))
-          (goto-char beg)
-          (while (looking-back " \\|," 1)
-            (goto-char (cl-decf beg))))
-        (cons beg end)))))
-
-(defun cory/bounds-of-string-1 ()
-  "Return the bounds of the string under the cursor.
-
-The thing `string' is not available in Emacs 27.'"
-  (if (version< emacs-version "28")
-      (when (cory/in-string-p)
-        (let (beg end)
-          (save-mark-and-excursion
-            (while (cory/in-string-p)
-              (backward-char 1))
-            (setq beg (point)))
-          (save-mark-and-excursion
-            (while (cory/in-string-p)
-              (forward-char 1))
-            (setq end (point)))
-          (cons beg end)))
-    (bounds-of-thing-at-point 'string)))
-
-(defun cory/inner-of-symbol ()
-  (bounds-of-thing-at-point 'symbol))
-
-(defun cory/bounds-of-string (&optional inner)
-  (when-let (bounds (cory/bounds-of-string-1))
-    (let ((beg (car bounds))
-          (end (cdr bounds)))
-      (cons
-       (save-mark-and-excursion
-         (goto-char beg)
-         (funcall (if inner #'skip-syntax-forward #'skip-syntax-backward) "\"|")
-         (point))
-       (save-mark-and-excursion
-         (goto-char end)
-         (funcall (if inner #'skip-syntax-backward #'skip-syntax-forward) "\"|")
-         (point))))))
-
-(defun cory/inner-of-string ()
-  (cory/bounds-of-string t))
-
-(defun cory/inner-of-window ()
-  (cons (window-start) (window-end)))
-
-(defun cory/inner-of-line ()
-  (cons (save-mark-and-excursion (back-to-indentation) (point))
-        (line-end-position)))
-
-;;; Registry
-
-(defvar cory/thing-registry nil
-  "Thing registry.
-
-This is a plist mapping from thing to (inner-fn . bounds-fn).
-Both inner-fn and bounds-fn returns a cons of (start . end) for that thing.")
-
-(defun cory/thing-register-helper (thing inner-fn bounds-fn)
-  "Register INNER-FN and BOUNDS-FN to a THING."
-  (setq cory/thing-registry
-        (plist-put cory/thing-registry
-                   thing
-                   (cons inner-fn bounds-fn))))
-
-(defun cory/thing-syntax-function (syntax)
-  (cons
-   (save-mark-and-excursion
-     (when (use-region-p)
-       (goto-char (region-beginning)))
-     (skip-syntax-backward (cdr syntax))
-     (point))
-   (save-mark-and-excursion
-     (when (use-region-p)
-       (goto-char (region-end)))
-     (skip-syntax-forward (cdr syntax))
-     (point))))
-
-(defun cory/thing-regexp-function (b-re f-re near)
-  (let ((beg (save-mark-and-excursion
-               (when (use-region-p)
-                 (goto-char (region-beginning)))
-               (when (re-search-backward b-re nil t)
-                 (if near (match-end 0) (point)))))
-        (end (save-mark-and-excursion
-               (when (use-region-p)
-                 (goto-char (region-end)))
-               (when (re-search-forward f-re nil t)
-                 (if near (match-beginning 0) (point))))))
-    (when (and beg end)
-      (cons beg end))))
-
-(defun cory/thing-parse-pair-search (push-token pop-token back near)
-  (let* ((search-fn (if back #'re-search-backward #'re-search-forward))
-         (match-fn (if back #'match-end #'match-beginning))
-         (cmp-fn (if back #'> #'<))
-         (push-next-pos nil)
-         (pop-next-pos nil)
-         (push-pos (save-mark-and-excursion
-                     (when (funcall search-fn push-token nil t)
-                       (setq push-next-pos (point))
-                       (if near (funcall match-fn 0) (point)))))
-         (pop-pos (save-mark-and-excursion
-                    (when (funcall search-fn pop-token nil t)
-                      (setq pop-next-pos (point))
-                      (if near (funcall match-fn 0) (point))))))
-    (cond
-     ((and (not pop-pos) (not push-pos))
-      nil)
-     ((not pop-pos)
-      (goto-char push-next-pos)
-      (cons 'push push-pos))
-     ((not push-pos)
-      (goto-char pop-next-pos)
-      (cons 'pop pop-pos))
-     ((funcall cmp-fn push-pos pop-pos)
-      (goto-char push-next-pos)
-      (cons 'push push-pos))
-     (t
-      (goto-char pop-next-pos)
-      (cons 'pop pop-pos)))))
-
-(defun cory/thing-pair-function (push-token pop-token near)
-  (let* ((found nil)
-         (depth  0)
-         (beg (save-mark-and-excursion
-                (prog1
-                    (let ((case-fold-search nil))
-                      (while (and (<= depth 0)
-                                  (setq found (cory/thing-parse-pair-search push-token pop-token t near)))
-                        (let ((push-or-pop (car found)))
-                          (if (eq 'push push-or-pop)
-                              (cl-incf depth)
-                            (cl-decf depth))))
-                      (when (> depth 0) (cdr found)))
-                  (setq depth 0
-                        found nil))))
-         (end (save-mark-and-excursion
-                (let ((case-fold-search nil))
-                  (while (and (>= depth 0)
-                              (setq found (cory/thing-parse-pair-search push-token pop-token nil near)))
-                    (let ((push-or-pop (car found)))
-                      (if (eq 'push push-or-pop)
-                          (cl-incf depth)
-                        (cl-decf depth))))
-                  (when (< depth 0) (cdr found))))))
-    (when (and beg end)
-      (cons beg end))))
-
-
-(defun cory/thing-make-syntax-function (x)
-  (lambda () (cory/thing-syntax-function x)))
-
-(defun cory/thing-make-regexp-function (x near)
-  (let* ((b-re (cadr x))
-         (f-re (caddr x)))
-    (lambda () (cory/thing-regexp-function b-re f-re near))))
-
-(defun cory/thing-make-pair-function (x near)
-  (let* ((push-token (let ((tokens (cadr x)))
-                       (string-join (mapcar #'regexp-quote tokens) "\\|")))
-         (pop-token (let ((tokens (caddr x)))
-                      (string-join (mapcar #'regexp-quote tokens) "\\|"))))
-    (lambda () (cory/thing-pair-function push-token pop-token near))))
-
-(defun cory/thing-parse-multi (xs near)
-  (let ((chained-fns (mapcar (lambda (x) (cory/thing-parse x near)) xs)))
-    (lambda ()
-      (let ((fns chained-fns)
-            ret)
-        (while (and fns (not ret))
-          (setq ret (funcall (car fns))
-                fns (cdr fns)))
-        ret))))
-
-(defun cory/thing-parse (x near)
-  (cond
-   ((functionp x)
-    x)
-   ((symbolp x)
-    (lambda () (bounds-of-thing-at-point x)))
-   ((equal 'syntax (car x))
-    (cory/thing-make-syntax-function x))
-   ((equal 'regexp (car x))
-    (cory/thing-make-regexp-function x near))
-   ((equal 'pair (car x))
-    (cory/thing-make-pair-function x near))
-   ((listp x)
-    (cory/thing-parse-multi x near))
-   (t
-    (lambda ()
-      (message "THING definition broken")
-      (cons (point) (point))))))
-
-(defun cory/thing-register (thing inner bounds)
-  "Register a THING with INNER and BOUNDS.
-
-Argument THING should be symbol, which specified in `cory/char-thing-table'.
-Argument INNER and BOUNDS support following expressions:
-
-  EXPR ::= FUNCTION | SYMBOL | SYNTAX-EXPR | REGEXP-EXPR
-         | PAIRED-EXPR | MULTI-EXPR
-  SYNTAX-EXPR ::= (syntax . STRING)
-  REGEXP-EXPR ::= (regexp STRING STRING)
-  PAIRED-EXPR ::= (pair TOKENS TOKENS)
-  MULTI-EXPR ::= (EXPR ...)
-  TOKENS ::= (STRING ...)
-
-FUNCTION is a function receives no arguments, return a cons which
-  the car is the beginning of thing, and the cdr is the end of
-  thing.
-
-SYMBOL is a symbol represent a builtin thing.
-
-  Example: url
-
-    (cory/thing-register 'url 'url 'url)
-
-SYNTAX-EXPR contains a syntax description used by `skip-syntax-forward'
-
-  Example: non-whitespaces
-
-    (cory/thing-register 'non-whitespace
-                         '(syntax . \"^-\")
-                         '(syntax . \"^-\"))
-
-  You can find the description for syntax in current buffer with
-  \\[describe-syntax].
-
-REGEXP-EXPR contains two regexps, the first is used for
-  beginning, the second is used for end. For inner/beginning/end
-  function, the point of near end of match will be used.  For
-  bounds function, the point of far end of match will be used.
-
-  Example: quoted
-
-    (cory/thing-register 'quoted
-                         '(regexp \"`\" \"`\\\\|'\")
-                         '(regexp \"`\" \"`\\\\|'\"))
-
-PAIR-EXPR contains two string token lists. The tokens in first
-  list are used for finding beginning, the tokens in second list
-  are used for finding end.  A depth variable will be used while
-  searching, thus only matched pair will be found.
-
-  Example: do/end block
-
-    (cory/thing-register 'do/end
-                         '(pair (\"do\") (\"end\"))
-                         '(pair (\"do\") (\"end\")))"
-  (let ((inner-fn (cory/thing-parse inner t))
-        (bounds-fn (cory/thing-parse bounds nil)))
-    (cory/thing-register-helper thing inner-fn bounds-fn)))
-
-(cory/thing-register 'round
-                     '(pair ("(") (")"))
-                     '(pair ("(") (")")))
-
-(cory/thing-register 'square
-                     '(pair ("[") ("]"))
-                     '(pair ("[") ("]")))
-
-(cory/thing-register 'curly
-                     '(pair ("{") ("}"))
-                     '(pair ("{") ("}")))
-
-(cory/thing-register 'paragraph 'paragraph 'paragraph)
-
-(cory/thing-register 'sentence 'sentence 'sentence)
-
-(cory/thing-register 'buffer 'buffer 'buffer)
-
-(cory/thing-register 'defun 'defun 'defun)
-
-(cory/thing-register 'symbol #'cory/inner-of-symbol #'cory/bounds-of-symbol)
-
-(cory/thing-register 'string #'cory/inner-of-string #'cory/bounds-of-string)
-
-(cory/thing-register 'window #'cory/inner-of-window #'cory/inner-of-window)
-
-(cory/thing-register 'line #'cory/inner-of-line 'line)
-
-(defun cory/parse-inner-of-thing-char (ch)
-  (when-let ((ch-to-thing (assoc ch cory/char-thing-table)))
-    (cory/parse-range-of-thing (cdr ch-to-thing) t)))
-
-(defun cory/parse-bounds-of-thing-char (ch)
-  (when-let ((ch-to-thing (assoc ch cory/char-thing-table)))
-    (cory/parse-range-of-thing (cdr ch-to-thing) nil)))
-
-(defun cory/parse-range-of-thing (thing inner)
-  "Parse either inner or bounds of THING. If INNER is non-nil then parse inner."
-  (when-let (bounds-fn-pair (plist-get cory/thing-registry thing))
-    (if inner
-        (funcall (car bounds-fn-pair))
-      (funcall (cdr bounds-fn-pair)))))
-
-(defun cory/beginning-of-thing (thing)
-  "Select to the beginning of THING."
-  (interactive (list (cory/thing-prompt "Beginning of: ")))
-  (save-window-excursion
-    (let ((back (equal 'backward (cory/thing-get-direction 'beginning)))
-          (bounds (cory/parse-inner-of-thing-char thing)))
-      (when bounds
-        (thread-first
-          (cory/make-selection '(select . transient)
-                               (if back (point) (car bounds))
-                               (if back (car bounds) (point)))
-          (cory/select))))))
-
-(defun cory/end-of-thing (thing)
-  "Select to the end of THING."
-  (interactive (list (cory/thing-prompt "End of: ")))
-  (save-window-excursion
-    (let ((back (equal 'backward (cory/thing-get-direction 'end)))
-          (bounds (cory/parse-inner-of-thing-char thing)))
-      (when bounds
-        (thread-first
-          (cory/make-selection '(select . transient)
-                               (if back (cdr bounds) (point))
-                               (if back (point) (cdr bounds)))
-          (cory/select))))))
-
-(defun cory/select-range (back bounds)
-  (when bounds
-    (thread-first
-      (cory/make-selection '(select . transient)
-			   (if back (cdr bounds) (car bounds))
-			   (if back (car bounds) (cdr bounds)))
-      (cory/select))))
-
-(defun cory/inner-of-thing (thing)
-  "Select inner (excluding delimiters) of THING."
-  (interactive (list (cory/thing-prompt "Inner of: ")))
-  (save-window-excursion
-    (let ((back (equal 'backward (cory/thing-get-direction 'inner)))
-          (bounds (cory/parse-inner-of-thing-char thing)))
-      (cory/select-range back bounds))))
-
-(defun cory/bounds-of-thing (thing)
-  "Select bounds (including delimiters) of THING."
-  (interactive (list (cory/thing-prompt "Bounds of: ")))
-  (save-window-excursion
-    (let ((back (equal 'backward (cory/thing-get-direction 'bounds)))
-          (bounds (cory/parse-bounds-of-thing-char thing)))
-      (cory/select-range back bounds))))
-
-(defmacro defun-beginning-of (name char)
-  `(defun ,name ()
-     (interactive)
-     (cory/beginning-of-thing ,char)))
-
-(defmacro defun-end-of (name char)
-  `(defun ,name ()
-     (interactive)
-     (cory/end-of-thing ,char)))
-
-(defmacro defun-inner-of (name char)
-  `(defun ,name ()
-     (interactive)
-     (cory/inner-of-thing ,char)))
-
-(defmacro defun-bounds-of (name char)
-  `(defun ,name ()
-     (interactive)
-     (cory/bounds-of-thing ,char)))
-
-(defun-beginning-of cory/beginning-of-parens    ?r)
-(defun-beginning-of cory/beginning-of-brackets  ?s)
-(defun-beginning-of cory/beginning-of-braces    ?c)
-(defun-beginning-of cory/beginning-of-string    ?g)
-(defun-beginning-of cory/beginning-of-symbol    ?e)
-(defun-beginning-of cory/beginning-of-window    ?w)
-(defun-beginning-of cory/beginning-of-buffer    ?b)
-(defun-beginning-of cory/beginning-of-paragraph ?p)
-(defun-beginning-of cory/beginning-of-braces    ?l)
-(defun-beginning-of cory/beginning-of-defun     ?d)
-(defun-beginning-of cory/beginning-of-sentence  ?.)
-
-(defun-end-of cory/end-of-parens    ?r)
-(defun-end-of cory/end-of-brackets  ?s)
-(defun-end-of cory/end-of-braces    ?c)
-(defun-end-of cory/end-of-string    ?g)
-(defun-end-of cory/end-of-symbol    ?e)
-(defun-end-of cory/end-of-window    ?w)
-(defun-end-of cory/end-of-buffer    ?b)
-(defun-end-of cory/end-of-paragraph ?p)
-(defun-end-of cory/end-of-braces    ?l)
-(defun-end-of cory/end-of-defun     ?d)
-(defun-end-of cory/end-of-sentence  ?.)
-
-(defun-inner-of cory/inner-of-parens    ?r)
-(defun-inner-of cory/inner-of-brackets  ?s)
-(defun-inner-of cory/inner-of-braces    ?c)
-(defun-inner-of cory/inner-of-string    ?g)
-(defun-inner-of cory/inner-of-symbol    ?e)
-(defun-inner-of cory/inner-of-window    ?w)
-(defun-inner-of cory/inner-of-buffer    ?b)
-(defun-inner-of cory/inner-of-paragraph ?p)
-(defun-inner-of cory/inner-of-braces    ?l)
-(defun-inner-of cory/inner-of-defun     ?d)
-(defun-inner-of cory/inner-of-sentence  ?.)
-
-(defun-bounds-of cory/bounds-of-parens    ?r)
-(defun-bounds-of cory/bounds-of-brackets  ?s)
-(defun-bounds-of cory/bounds-of-braces    ?c)
-(defun-bounds-of cory/bounds-of-string    ?g)
-(defun-bounds-of cory/bounds-of-symbol    ?e)
-(defun-bounds-of cory/bounds-of-window    ?w)
-(defun-bounds-of cory/bounds-of-buffer    ?b)
-(defun-bounds-of cory/bounds-of-paragraph ?p)
-(defun-bounds-of cory/bounds-of-braces    ?l)
-(defun-bounds-of cory/bounds-of-defun     ?d)
-(defun-bounds-of cory/bounds-of-sentence  ?.)
+;; (defun cory/next-line-expand ()
+;;   (interactive)
+;;   (unless (region-active-p)
+;;     (set-mark-command nil))
+;;   (next-line))
+
+;; (defun cory/previous-line-expand ()
+;;   (interactive)
+;;   (unless (region-active-p)
+;;     (set-mark-command nil))
+;;   (previous-line))
+
+;; (defun cory/backward-char-expand ()
+;;   (interactive)
+;;   (unless (region-active-p)
+;;     (set-mark-command nil))
+;;   (backward-char))
+
+;; (defun cory/forward-char-expand ()
+;;   (interactive)
+;;   (unless (region-active-p)
+;;     (set-mark-command nil))
+;;   (forward-char))
+
+;; (defun cory/kill (beg end &optional region)
+;;   "If region is active, then kills the region.
+;; Else if at the end of the line, joins the next line.
+;; Else, kills the rest of the line."
+;;   (interactive (progn
+;;                  (let ((beg (mark))
+;;                        (end (point)))
+;;                    (unless (and beg end)
+;;                      (user-error "The mark is not set now, so there is no region"))
+;;                    (list beg end 'region))))
+;;   (let ((select-enable-clipboard nil))
+;;     (when (not buffer-read-only)
+;;       (if (region-active-p)
+;; 	  (progn
+;; 	    (when (and (and (region-active-p)
+;; 			(<= (mark) (point)))
+;; 		     (< (point) (point-max)))
+;; 	      (forward-char 1))
+;; 	    (kill-region beg end region))
+;; 	(if (and (eolp) (not (bolp)))
+;; 	    (delete-indentation 1)
+;; 	  (kill-line nil))))))
+
+;; (defun cory/make-selection (type mark pos &optional expand)
+;;   "Make a selection with TYPE, MARK and POS.
+
+;; The direction of selection is MARK -> POS."
+;;   (if (and (region-active-p) expand)
+;;       (let ((orig-mark (mark))
+;;             (orig-pos (point)))
+;;         (if (< mark pos)
+;;             (list type (min orig-mark orig-pos) pos)
+;;           (list type (max orig-mark orig-pos) pos)))
+;;     (list type mark pos)))
+
+;; (defun cory/select (selection &optional backward)
+;;   "Mark the SELECTION."
+;;   (let ((sel-type (car selection))
+;;         (mark (cadr selection))
+;;         (pos (caddr selection)))
+;;     (goto-char (if backward mark pos))
+;;     (if (not sel-type)
+;; 	(progn
+;;           (deactivate-mark)
+;;           (message "No previous selection.")
+;;           (deactivate-mark t))
+;;       (push-mark (if backward pos mark) t t))))
+
+;; (defun cory/join-forward ()
+;;   (let (mark pos)
+;;     (save-mark-and-excursion
+;;       (goto-char (line-end-position))
+;;       (setq pos (point))
+;;       (when (re-search-forward "[[:space:]\n\r]*" nil t)
+;;         (setq mark (point))))
+;;     (when pos
+;;       (thread-first
+;;         (cory/make-selection '(expand . join) pos mark)
+;;         (cory/select)))))
+
+;; (defun cory/join-backward ()
+;;   (let* (mark
+;;          pos)
+;;     (save-mark-and-excursion
+;;       (back-to-indentation)
+;;       (setq pos (point))
+;;       (goto-char (line-beginning-position))
+;;       (while (looking-back "[[:space:]\n\r]" 1 t)
+;;         (forward-char -1))
+;;       (setq mark (point)))
+;;     (thread-first
+;;       (cory/make-selection '(expand . join) mark pos)
+;;       (cory/select))))
+
+;; (defun cory/join-both ()
+;;   (let* (mark
+;;          pos)
+;;     (save-mark-and-excursion
+;;       (while (looking-back "[[:space:]\n\r]" 1 t)
+;;         (forward-char -1))
+;;       (setq mark (point)))
+;;     (save-mark-and-excursion
+;;       (while (looking-at "[[:space:]\n\r]")
+;;         (forward-char 1))
+;;       (setq pos (point)))
+;;     (thread-first
+;;       (cory/make-selection '(expand . join) mark pos)
+;;       (cory/select))))
+
+;; (defun cory/join (arg)
+;;   "Select the indentation between this line to the non empty previous line.
+
+;; Will create selection with type (select . join)
+
+;; Prefix:
+;; with NEGATIVE ARGUMENT, forward search indentation to select.
+;; with UNIVERSAL ARGUMENT, search both side."
+;;   (interactive "P")
+;;   (cond
+;;    ((equal '(4) arg)
+;;     (cory/join-both))
+;;    ((< (prefix-numeric-value arg) 0)
+;;     (cory/join-forward))
+;;    (t
+;;     (cory/join-backward))))
+
+;; (defun cory/line (n &optional expand)
+;;   "Select the current line, eol is not included.
+
+;; Create selection with type (expand . line).
+;; For the selection with type (expand . line), expand it by line.
+;; For the selection with other types, cancel it.
+
+;; Prefix:
+;; numeric, repeat times.
+;; "
+;;   (interactive "p")
+;;   (let* ((orig (mark t))
+;;          (n (if (and (region-active-p)
+;; 		   (> (mark) (point)))
+;;                 (- n)
+;; 	      n))
+;;          (forward (> n 0)))
+;;     (cond
+;;      ((region-active-p)
+;;       (let (p)
+;;         (save-mark-and-excursion
+;;           (forward-line n)
+;;           (goto-char
+;;            (if forward
+;;                (setq p (line-end-position))
+;;              (setq p (line-beginning-position)))))
+;;         (thread-first
+;;           (cory/make-selection '(expand . line) orig p expand)
+;;           (cory/select))))
+;;      (t
+;;       (let ((m (if forward
+;;                    (line-beginning-position)
+;;                  (line-end-position)))
+;;             (p (save-mark-and-excursion
+;;                  (if forward
+;;                      (progn
+;;                        (forward-line (1- n))
+;;                        (line-end-position))
+;;                    (progn
+;;                      (forward-line (1+ n))
+;;                      (when (string-match-p
+;; 			    "^ *$" (buffer-substring-no-properties
+;; 				    (line-beginning-position)
+;; 				    (line-end-position)))
+;; 		       (backward-char 1))
+;;                      (line-beginning-position))))))
+;;         (thread-first
+;;           (cory/make-selection '(expand . line) m p expand)
+;;           (cory/select)))))))
+
+;; (defun cory/goto-line ()
+;;   "Goto line, recenter and select that line.
+
+;; This command will expand line selection."
+;;   (interactive)
+;;   (consult-goto-line)
+;;   (recenter))
+
+;; (defun cory/push-search (search)
+;;   (unless (string-equal search (car regexp-search-ring))
+;;     (add-to-history 'regexp-search-ring search regexp-search-ring-max)))
+
+;; (defun cory/search (arg)
+;;   " Search and select with the car of current `regexp-search-ring'.
+
+;; If the contents of selection doesn't match the regexp, will push it to `regexp-search-ring' before searching.
+
+;; To search backward, use \\[negative-argument]."
+;;   (interactive "P")
+;;   ;; Test if we add current region as search target.
+;;   (when (and (region-active-p)
+;;            (let ((search (car regexp-search-ring)))
+;;              (or (not search)
+;;                 (not (string-match-p
+;;                     (format "^%s$" search)
+;;                     (buffer-substring-no-properties (region-beginning) (region-end)))))))
+;;     (cory/push-search (regexp-quote (buffer-substring-no-properties (region-beginning) (region-end)))))
+;;   (when-let ((search (car regexp-search-ring)))
+;;     (let ((reverse (xor (< (prefix-numeric-value arg) 0) (and (region-active-p)
+;; 							    (> (mark) (point)))))
+;;           (case-fold-search nil))
+;;       (if (or (if reverse
+;;                  (re-search-backward search nil t 1)
+;;                (re-search-forward search nil t 1))
+;;              ;; Try research from buffer beginning/end
+;;              ;; if we are already at the last/first matched
+;;              (save-mark-and-excursion
+;;                ;; Recalculate search indicator
+;;                (goto-char (if reverse (point-max) (point-min)))
+;;                (if reverse
+;;                    (re-search-backward search nil t 1)
+;;                  (re-search-forward search nil t 1))))
+;;           (let* ((m (match-data))
+;;                  (marker-beg (car m))
+;;                  (marker-end (cadr m))
+;;                  (beg (if reverse (marker-position marker-end) (marker-position marker-beg)))
+;;                  (end (if reverse (marker-position marker-beg) (marker-position marker-end))))
+;;             (thread-first
+;;               (cory/make-selection '(select . visit) beg end)
+;;               (cory/select))
+;;             (if reverse
+;;                 (message "Reverse search: %s" search)
+;;               (message "Search: %s" search))
+;;             (let ((overlays (overlays-at (1- (point))))
+;; 		  ov expose)
+;; 	      (while (setq ov (pop overlays))
+;; 		(if (and (invisible-p (overlay-get ov 'invisible))
+;; 		       (setq expose (overlay-get ov 'isearch-open-invisible)))
+;; 		    (funcall expose ov)))))
+;;         (message "Searching %s failed" search)))))
+
+;; (defun cory/visit-point (text reverse)
+;;   "Return the point of text for visit command.
+;; Argument TEXT current search text.
+;; Argument REVERSE if selection is reversed."
+;;   (let ((func (if reverse #'re-search-backward #'re-search-forward))
+;;         (func-2 (if reverse #'re-search-forward #'re-search-backward))
+;;         (case-fold-search nil))
+;;     (save-mark-and-excursion
+;;       (or (funcall func text nil t 1)
+;;          (funcall func-2 text nil t 1)))))
+
+;; (defun cory/prompt-symbol-and-words (prompt beg end)
+;;   "Completion with PROMPT for symbols and words from BEG to END."
+;;   (let ((completions))
+;;     (save-mark-and-excursion
+;;       (goto-char beg)
+;;       (while (re-search-forward "\\_<\\(\\sw\\|\\s_\\)+\\_>" end t)
+;;         (let ((result (match-string-no-properties 0)))
+;;           (when (>= (length result) 1)
+;;             (push (cons result (format "\\_<%s\\_>" (regexp-quote result))) completions)))))
+;;     (setq completions (delete-dups completions))
+;;     (let ((selected (completing-read prompt completions nil nil)))
+;;       (or (cdr (assoc selected completions))
+;;          (regexp-quote selected)))))
+
+;; (defun cory/visit (arg)
+;;   "Read a regexp from minibuffer, then search and select it.
+
+;; The input will be pushed into `regexp-search-ring'.  So
+;; \\[meow-search] can be used for further searching with the same condition.
+
+;; A list of occurred regexps will be provided for completion, the regexps will
+;; be sanitized by default. To display them in raw format, set
+;; `meow-visit-sanitize-completion' to nil.
+
+;; To search backward, use \\[negative-argument]."
+;;   (interactive "P")
+;;   (let* ((reverse arg)
+;;          (pos (point))
+;;          (text (cory/prompt-symbol-and-words
+;;                 (if arg "Visit backward: " "Visit: ")
+;;                 (point-min) (point-max)))
+;;          (cory/visit-point (cory/visit-point text reverse)))
+;;     (if cory/visit-point
+;;         (let* ((m (match-data))
+;;                (marker-beg (car m))
+;;                (marker-end (cadr m))
+;;                (beg (if (> pos cory/visit-point) (marker-position marker-end) (marker-position marker-beg)))
+;;                (end (if (> pos cory/visit-point) (marker-position marker-beg) (marker-position marker-end))))
+;;           (thread-first
+;;             (cory/make-selection '(select . visit) beg end)
+;;             (cory/select))
+;;           (cory/push-search text)
+;; 	  (let ((overlays (overlays-at (1- (point))))
+;; 		ov expose)
+;; 	    (while (setq ov (pop overlays))
+;; 	      (if (and (invisible-p (overlay-get ov 'invisible))
+;; 		     (setq expose (overlay-get ov 'isearch-open-invisible)))
+;; 		  (funcall expose ov)))))
+;;       (message "Visit: %s failed" text))))
+
+;; (defun cory/mark-word (n)
+;;   "Mark current word under cursor.
+
+;; A expandable word selection will be created. `meow-next-word' and
+;; `meow-back-word' can be used for expanding.
+
+;; The content of selection will be quoted to regexp, then pushed into
+;; `regexp-search-ring' which be read by `meow-search' and other commands.
+
+;; This command will also provide highlighting for same occurs.
+
+;; Use negative argument to create a backward selection."
+;;   (interactive "p")
+;;   (let* ((bounds (bounds-of-thing-at-point 'word))
+;;          (beg (car bounds))
+;;          (end (cdr bounds)))
+;;     (when beg
+;;       (thread-first
+;;         (cory/make-selection '(expand . word) beg end)
+;;         (cory/select (< n 0)))
+;;       (let ((search (format "\\<%s\\>" (regexp-quote (buffer-substring-no-properties beg end)))))
+;;         (cory/push-search search)))))
+
+;; (defun cory/mark-symbol (n)
+;;   "Mark current symbol under cursor.
+
+;; This command works similar to `cory/mark-word'."
+;;   (interactive "p")
+;;   (let* ((bounds (bounds-of-thing-at-point 'symbol))
+;;          (beg (car bounds))
+;;          (end (cdr bounds)))
+;;     (when beg
+;;       (thread-first
+;;         (cory/make-selection '(expand . word) beg end)
+;;         (cory/select (< n 0)))
+;;       (let ((search (format "\\_<%s\\_>" (regexp-quote (buffer-substring-no-properties beg end)))))
+;;         (cory/push-search search)))))
+
+;; (defun cory/backward-symbol (arg)
+;;   (interactive "p")
+;;   (forward-symbol
+;;    (if arg (* -1 arg) -1)))
+
+;; (defun cory/block (arg)
+;;   "Mark the block or expand to parent block."
+;;   (interactive "P")
+;;   (let ((ra (region-active-p))
+;;         (back (xor (and (region-active-p)
+;; 		      (> (mark) (point)))
+;; 		   (< (prefix-numeric-value arg) 0)))
+;;         (depth (car (syntax-ppss)))
+;;         (orig-pos (point))
+;;         p m)
+;;     (save-mark-and-excursion
+;;       (while (and (if back (re-search-backward "\\s(" nil t) (re-search-forward "\\s)" nil t))
+;;                 (or (save-mark-and-excursion
+;; 		     (nth 3 (syntax-ppss)))
+;;                    (if ra (>= (car (syntax-ppss)) depth) (> (car (syntax-ppss)) depth)))))
+;;       (when (and (if ra (< (car (syntax-ppss)) depth) (<= (car (syntax-ppss)) depth))
+;;                (not (= (point) orig-pos)))
+;;         (setq p (point))
+;;         (when (ignore-errors (forward-list (if back 1 -1)))
+;;           (setq m (point)))))
+;;     (when (and p m)
+;;       (thread-first
+;;         (cory/make-selection '(expand . block) m p)
+;;         (cory/select)))))
+
+;; (defun cory/to-block (arg)
+;;   "Expand to next block.
+
+;; Will create selection with type (expand . block)."
+;;   (interactive "P")
+;;   ;; We respect the direction of block selection.
+;;   (let ((back (or (and (region-active-p)
+;; 		    (> (mark) (point)))
+;; 		 (< (prefix-numeric-value arg) 0)))
+;;         (depth (car (syntax-ppss)))
+;;         (orig-pos (point))
+;;         p m)
+;;     (save-mark-and-excursion
+;;       (while (and (if back (re-search-backward "\\s(" nil t) (re-search-forward "\\s)" nil t))
+;;                 (or (save-mark-and-excursion
+;; 		     (nth 3 (syntax-ppss)))
+;;                    (> (car (syntax-ppss)) depth))))
+;;       (when (and (= (car (syntax-ppss)) depth)
+;;                (not (= (point) orig-pos)))
+;;         (setq p (point))
+;;         (when (ignore-errors (forward-list (if back 1 -1)))
+;;           (setq m (point)))))
+;;     (when (and p m)
+;;       (thread-first
+;;         (cory/make-selection '(expand . block) orig-pos p t)
+;;         (cory/select)))))
+
+;; (defun cory/quit-window-or-buffer ()
+;;   "Quit current window or buffer."
+;;   (interactive)
+;;   (if (> (seq-length (window-list (selected-frame))) 1)
+;;       (delete-window)
+;;     (previous-buffer)))
+
+;; (defun cory/replace-selection ()
+;;   "Replace current selection with yank.
+
+;; This command supports `meow-selection-command-fallback'."
+;;   (interactive)
+;;   (when (region-active-p)
+;;     (let ((select-enable-clipboard nil))
+;;       (when (not buffer-read-only)
+;; 	(when-let ((s (string-trim-right (current-kill 0 t) "\n")))
+;;           (delete-region (region-beginning) (region-end))
+;;           (insert s))))))
+
+;; (defvar cory/char-thing-table
+;;   '((?r . round)
+;;     (?s . square)
+;;     (?c . curly)
+;;     (?g . string)
+;;     (?e . symbol)
+;;     (?w . window)
+;;     (?b . buffer)
+;;     (?p . paragraph)
+;;     (?l . line)
+;;     (?d . defun)
+;;     (?. . sentence)))
+
+;; (defvar cory/selection-directions
+;;   '((inner . forward)
+;;     (bounds . backward)
+;;     (beginning . backward)
+;;     (end . forward)))
+
+;; (defun cory/thing-prompt (prompt-text)
+;;   (read-char prompt-text))
+
+;; (defun cory/thing-get-direction (cmd)
+;;   (or
+;;    (alist-get cmd cory/selection-directions)
+;;    'forward))
+
+;; (defun cory/bounds-of-symbol ()
+;;   (when-let (bounds (bounds-of-thing-at-point 'symbol))
+;;     (let ((beg (car bounds))
+;;           (end (cdr bounds)))
+;;       (save-mark-and-excursion
+;;         (goto-char end)
+;;         (if (not (looking-at-p "\\s)"))
+;;             (while (looking-at-p " \\|,")
+;;               (goto-char (cl-incf end)))
+;;           (goto-char beg)
+;;           (while (looking-back " \\|," 1)
+;;             (goto-char (cl-decf beg))))
+;;         (cons beg end)))))
+
+;; (defun cory/bounds-of-string-1 ()
+;;   "Return the bounds of the string under the cursor.
+
+;; The thing `string' is not available in Emacs 27.'"
+;;   (if (version< emacs-version "28")
+;;       (when (cory/in-string-p)
+;;         (let (beg end)
+;;           (save-mark-and-excursion
+;;             (while (cory/in-string-p)
+;;               (backward-char 1))
+;;             (setq beg (point)))
+;;           (save-mark-and-excursion
+;;             (while (cory/in-string-p)
+;;               (forward-char 1))
+;;             (setq end (point)))
+;;           (cons beg end)))
+;;     (bounds-of-thing-at-point 'string)))
+
+;; (defun cory/inner-of-symbol ()
+;;   (bounds-of-thing-at-point 'symbol))
+
+;; (defun cory/bounds-of-string (&optional inner)
+;;   (when-let (bounds (cory/bounds-of-string-1))
+;;     (let ((beg (car bounds))
+;;           (end (cdr bounds)))
+;;       (cons
+;;        (save-mark-and-excursion
+;;          (goto-char beg)
+;;          (funcall (if inner #'skip-syntax-forward #'skip-syntax-backward) "\"|")
+;;          (point))
+;;        (save-mark-and-excursion
+;;          (goto-char end)
+;;          (funcall (if inner #'skip-syntax-backward #'skip-syntax-forward) "\"|")
+;;          (point))))))
+
+;; (defun cory/inner-of-string ()
+;;   (cory/bounds-of-string t))
+
+;; (defun cory/inner-of-window ()
+;;   (cons (window-start) (window-end)))
+
+;; (defun cory/inner-of-line ()
+;;   (cons (save-mark-and-excursion (back-to-indentation) (point))
+;;         (line-end-position)))
+
+;; ;;; Registry
+
+;; (defvar cory/thing-registry nil
+;;   "Thing registry.
+
+;; This is a plist mapping from thing to (inner-fn . bounds-fn).
+;; Both inner-fn and bounds-fn returns a cons of (start . end) for that thing.")
+
+;; (defun cory/thing-register-helper (thing inner-fn bounds-fn)
+;;   "Register INNER-FN and BOUNDS-FN to a THING."
+;;   (setq cory/thing-registry
+;;         (plist-put cory/thing-registry
+;;                    thing
+;;                    (cons inner-fn bounds-fn))))
+
+;; (defun cory/thing-syntax-function (syntax)
+;;   (cons
+;;    (save-mark-and-excursion
+;;      (when (use-region-p)
+;;        (goto-char (region-beginning)))
+;;      (skip-syntax-backward (cdr syntax))
+;;      (point))
+;;    (save-mark-and-excursion
+;;      (when (use-region-p)
+;;        (goto-char (region-end)))
+;;      (skip-syntax-forward (cdr syntax))
+;;      (point))))
+
+;; (defun cory/thing-regexp-function (b-re f-re near)
+;;   (let ((beg (save-mark-and-excursion
+;;                (when (use-region-p)
+;;                  (goto-char (region-beginning)))
+;;                (when (re-search-backward b-re nil t)
+;;                  (if near (match-end 0) (point)))))
+;;         (end (save-mark-and-excursion
+;;                (when (use-region-p)
+;;                  (goto-char (region-end)))
+;;                (when (re-search-forward f-re nil t)
+;;                  (if near (match-beginning 0) (point))))))
+;;     (when (and beg end)
+;;       (cons beg end))))
+
+;; (defun cory/thing-parse-pair-search (push-token pop-token back near)
+;;   (let* ((search-fn (if back #'re-search-backward #'re-search-forward))
+;;          (match-fn (if back #'match-end #'match-beginning))
+;;          (cmp-fn (if back #'> #'<))
+;;          (push-next-pos nil)
+;;          (pop-next-pos nil)
+;;          (push-pos (save-mark-and-excursion
+;;                      (when (funcall search-fn push-token nil t)
+;;                        (setq push-next-pos (point))
+;;                        (if near (funcall match-fn 0) (point)))))
+;;          (pop-pos (save-mark-and-excursion
+;;                     (when (funcall search-fn pop-token nil t)
+;;                       (setq pop-next-pos (point))
+;;                       (if near (funcall match-fn 0) (point))))))
+;;     (cond
+;;      ((and (not pop-pos) (not push-pos))
+;;       nil)
+;;      ((not pop-pos)
+;;       (goto-char push-next-pos)
+;;       (cons 'push push-pos))
+;;      ((not push-pos)
+;;       (goto-char pop-next-pos)
+;;       (cons 'pop pop-pos))
+;;      ((funcall cmp-fn push-pos pop-pos)
+;;       (goto-char push-next-pos)
+;;       (cons 'push push-pos))
+;;      (t
+;;       (goto-char pop-next-pos)
+;;       (cons 'pop pop-pos)))))
+
+;; (defun cory/thing-pair-function (push-token pop-token near)
+;;   (let* ((found nil)
+;;          (depth  0)
+;;          (beg (save-mark-and-excursion
+;;                 (prog1
+;;                     (let ((case-fold-search nil))
+;;                       (while (and (<= depth 0)
+;;                                   (setq found (cory/thing-parse-pair-search push-token pop-token t near)))
+;;                         (let ((push-or-pop (car found)))
+;;                           (if (eq 'push push-or-pop)
+;;                               (cl-incf depth)
+;;                             (cl-decf depth))))
+;;                       (when (> depth 0) (cdr found)))
+;;                   (setq depth 0
+;;                         found nil))))
+;;          (end (save-mark-and-excursion
+;;                 (let ((case-fold-search nil))
+;;                   (while (and (>= depth 0)
+;;                               (setq found (cory/thing-parse-pair-search push-token pop-token nil near)))
+;;                     (let ((push-or-pop (car found)))
+;;                       (if (eq 'push push-or-pop)
+;;                           (cl-incf depth)
+;;                         (cl-decf depth))))
+;;                   (when (< depth 0) (cdr found))))))
+;;     (when (and beg end)
+;;       (cons beg end))))
+
+
+;; (defun cory/thing-make-syntax-function (x)
+;;   (lambda () (cory/thing-syntax-function x)))
+
+;; (defun cory/thing-make-regexp-function (x near)
+;;   (let* ((b-re (cadr x))
+;;          (f-re (caddr x)))
+;;     (lambda () (cory/thing-regexp-function b-re f-re near))))
+
+;; (defun cory/thing-make-pair-function (x near)
+;;   (let* ((push-token (let ((tokens (cadr x)))
+;;                        (string-join (mapcar #'regexp-quote tokens) "\\|")))
+;;          (pop-token (let ((tokens (caddr x)))
+;;                       (string-join (mapcar #'regexp-quote tokens) "\\|"))))
+;;     (lambda () (cory/thing-pair-function push-token pop-token near))))
+
+;; (defun cory/thing-parse-multi (xs near)
+;;   (let ((chained-fns (mapcar (lambda (x) (cory/thing-parse x near)) xs)))
+;;     (lambda ()
+;;       (let ((fns chained-fns)
+;;             ret)
+;;         (while (and fns (not ret))
+;;           (setq ret (funcall (car fns))
+;;                 fns (cdr fns)))
+;;         ret))))
+
+;; (defun cory/thing-parse (x near)
+;;   (cond
+;;    ((functionp x)
+;;     x)
+;;    ((symbolp x)
+;;     (lambda () (bounds-of-thing-at-point x)))
+;;    ((equal 'syntax (car x))
+;;     (cory/thing-make-syntax-function x))
+;;    ((equal 'regexp (car x))
+;;     (cory/thing-make-regexp-function x near))
+;;    ((equal 'pair (car x))
+;;     (cory/thing-make-pair-function x near))
+;;    ((listp x)
+;;     (cory/thing-parse-multi x near))
+;;    (t
+;;     (lambda ()
+;;       (message "THING definition broken")
+;;       (cons (point) (point))))))
+
+;; (defun cory/thing-register (thing inner bounds)
+;;   "Register a THING with INNER and BOUNDS.
+
+;; Argument THING should be symbol, which specified in `cory/char-thing-table'.
+;; Argument INNER and BOUNDS support following expressions:
+
+;;   EXPR ::= FUNCTION | SYMBOL | SYNTAX-EXPR | REGEXP-EXPR
+;;          | PAIRED-EXPR | MULTI-EXPR
+;;   SYNTAX-EXPR ::= (syntax . STRING)
+;;   REGEXP-EXPR ::= (regexp STRING STRING)
+;;   PAIRED-EXPR ::= (pair TOKENS TOKENS)
+;;   MULTI-EXPR ::= (EXPR ...)
+;;   TOKENS ::= (STRING ...)
+
+;; FUNCTION is a function receives no arguments, return a cons which
+;;   the car is the beginning of thing, and the cdr is the end of
+;;   thing.
+
+;; SYMBOL is a symbol represent a builtin thing.
+
+;;   Example: url
+
+;;     (cory/thing-register 'url 'url 'url)
+
+;; SYNTAX-EXPR contains a syntax description used by `skip-syntax-forward'
+
+;;   Example: non-whitespaces
+
+;;     (cory/thing-register 'non-whitespace
+;;                          '(syntax . \"^-\")
+;;                          '(syntax . \"^-\"))
+
+;;   You can find the description for syntax in current buffer with
+;;   \\[describe-syntax].
+
+;; REGEXP-EXPR contains two regexps, the first is used for
+;;   beginning, the second is used for end. For inner/beginning/end
+;;   function, the point of near end of match will be used.  For
+;;   bounds function, the point of far end of match will be used.
+
+;;   Example: quoted
+
+;;     (cory/thing-register 'quoted
+;;                          '(regexp \"`\" \"`\\\\|'\")
+;;                          '(regexp \"`\" \"`\\\\|'\"))
+
+;; PAIR-EXPR contains two string token lists. The tokens in first
+;;   list are used for finding beginning, the tokens in second list
+;;   are used for finding end.  A depth variable will be used while
+;;   searching, thus only matched pair will be found.
+
+;;   Example: do/end block
+
+;;     (cory/thing-register 'do/end
+;;                          '(pair (\"do\") (\"end\"))
+;;                          '(pair (\"do\") (\"end\")))"
+;;   (let ((inner-fn (cory/thing-parse inner t))
+;;         (bounds-fn (cory/thing-parse bounds nil)))
+;;     (cory/thing-register-helper thing inner-fn bounds-fn)))
+
+;; (cory/thing-register 'round
+;;                      '(pair ("(") (")"))
+;;                      '(pair ("(") (")")))
+
+;; (cory/thing-register 'square
+;;                      '(pair ("[") ("]"))
+;;                      '(pair ("[") ("]")))
+
+;; (cory/thing-register 'curly
+;;                      '(pair ("{") ("}"))
+;;                      '(pair ("{") ("}")))
+
+;; (cory/thing-register 'paragraph 'paragraph 'paragraph)
+
+;; (cory/thing-register 'sentence 'sentence 'sentence)
+
+;; (cory/thing-register 'buffer 'buffer 'buffer)
+
+;; (cory/thing-register 'defun 'defun 'defun)
+
+;; (cory/thing-register 'symbol #'cory/inner-of-symbol #'cory/bounds-of-symbol)
+
+;; (cory/thing-register 'string #'cory/inner-of-string #'cory/bounds-of-string)
+
+;; (cory/thing-register 'window #'cory/inner-of-window #'cory/inner-of-window)
+
+;; (cory/thing-register 'line #'cory/inner-of-line 'line)
+
+;; (defun cory/parse-inner-of-thing-char (ch)
+;;   (when-let ((ch-to-thing (assoc ch cory/char-thing-table)))
+;;     (cory/parse-range-of-thing (cdr ch-to-thing) t)))
+
+;; (defun cory/parse-bounds-of-thing-char (ch)
+;;   (when-let ((ch-to-thing (assoc ch cory/char-thing-table)))
+;;     (cory/parse-range-of-thing (cdr ch-to-thing) nil)))
+
+;; (defun cory/parse-range-of-thing (thing inner)
+;;   "Parse either inner or bounds of THING. If INNER is non-nil then parse inner."
+;;   (when-let (bounds-fn-pair (plist-get cory/thing-registry thing))
+;;     (if inner
+;;         (funcall (car bounds-fn-pair))
+;;       (funcall (cdr bounds-fn-pair)))))
+
+;; (defun cory/beginning-of-thing (thing)
+;;   "Select to the beginning of THING."
+;;   (interactive (list (cory/thing-prompt "Beginning of: ")))
+;;   (save-window-excursion
+;;     (let ((back (equal 'backward (cory/thing-get-direction 'beginning)))
+;;           (bounds (cory/parse-inner-of-thing-char thing)))
+;;       (when bounds
+;;         (thread-first
+;;           (cory/make-selection '(select . transient)
+;;                                (if back (point) (car bounds))
+;;                                (if back (car bounds) (point)))
+;;           (cory/select))))))
+
+;; (defun cory/end-of-thing (thing)
+;;   "Select to the end of THING."
+;;   (interactive (list (cory/thing-prompt "End of: ")))
+;;   (save-window-excursion
+;;     (let ((back (equal 'backward (cory/thing-get-direction 'end)))
+;;           (bounds (cory/parse-inner-of-thing-char thing)))
+;;       (when bounds
+;;         (thread-first
+;;           (cory/make-selection '(select . transient)
+;;                                (if back (cdr bounds) (point))
+;;                                (if back (point) (cdr bounds)))
+;;           (cory/select))))))
+
+;; (defun cory/select-range (back bounds)
+;;   (when bounds
+;;     (thread-first
+;;       (cory/make-selection '(select . transient)
+;; 			   (if back (cdr bounds) (car bounds))
+;; 			   (if back (car bounds) (cdr bounds)))
+;;       (cory/select))))
+
+;; (defun cory/inner-of-thing (thing)
+;;   "Select inner (excluding delimiters) of THING."
+;;   (interactive (list (cory/thing-prompt "Inner of: ")))
+;;   (save-window-excursion
+;;     (let ((back (equal 'backward (cory/thing-get-direction 'inner)))
+;;           (bounds (cory/parse-inner-of-thing-char thing)))
+;;       (cory/select-range back bounds))))
+
+;; (defun cory/bounds-of-thing (thing)
+;;   "Select bounds (including delimiters) of THING."
+;;   (interactive (list (cory/thing-prompt "Bounds of: ")))
+;;   (save-window-excursion
+;;     (let ((back (equal 'backward (cory/thing-get-direction 'bounds)))
+;;           (bounds (cory/parse-bounds-of-thing-char thing)))
+;;       (cory/select-range back bounds))))
+
+;; (defmacro defun-beginning-of (name char)
+;;   `(defun ,name ()
+;;      (interactive)
+;;      (cory/beginning-of-thing ,char)))
+
+;; (defmacro defun-end-of (name char)
+;;   `(defun ,name ()
+;;      (interactive)
+;;      (cory/end-of-thing ,char)))
+
+;; (defmacro defun-inner-of (name char)
+;;   `(defun ,name ()
+;;      (interactive)
+;;      (cory/inner-of-thing ,char)))
+
+;; (defmacro defun-bounds-of (name char)
+;;   `(defun ,name ()
+;;      (interactive)
+;;      (cory/bounds-of-thing ,char)))
+
+;; (defun-beginning-of cory/beginning-of-parens    ?r)
+;; (defun-beginning-of cory/beginning-of-brackets  ?s)
+;; (defun-beginning-of cory/beginning-of-braces    ?c)
+;; (defun-beginning-of cory/beginning-of-string    ?g)
+;; (defun-beginning-of cory/beginning-of-symbol    ?e)
+;; (defun-beginning-of cory/beginning-of-window    ?w)
+;; (defun-beginning-of cory/beginning-of-buffer    ?b)
+;; (defun-beginning-of cory/beginning-of-paragraph ?p)
+;; (defun-beginning-of cory/beginning-of-braces    ?l)
+;; (defun-beginning-of cory/beginning-of-defun     ?d)
+;; (defun-beginning-of cory/beginning-of-sentence  ?.)
+
+;; (defun-end-of cory/end-of-parens    ?r)
+;; (defun-end-of cory/end-of-brackets  ?s)
+;; (defun-end-of cory/end-of-braces    ?c)
+;; (defun-end-of cory/end-of-string    ?g)
+;; (defun-end-of cory/end-of-symbol    ?e)
+;; (defun-end-of cory/end-of-window    ?w)
+;; (defun-end-of cory/end-of-buffer    ?b)
+;; (defun-end-of cory/end-of-paragraph ?p)
+;; (defun-end-of cory/end-of-braces    ?l)
+;; (defun-end-of cory/end-of-defun     ?d)
+;; (defun-end-of cory/end-of-sentence  ?.)
+
+;; (defun-inner-of cory/inner-of-parens    ?r)
+;; (defun-inner-of cory/inner-of-brackets  ?s)
+;; (defun-inner-of cory/inner-of-braces    ?c)
+;; (defun-inner-of cory/inner-of-string    ?g)
+;; (defun-inner-of cory/inner-of-symbol    ?e)
+;; (defun-inner-of cory/inner-of-window    ?w)
+;; (defun-inner-of cory/inner-of-buffer    ?b)
+;; (defun-inner-of cory/inner-of-paragraph ?p)
+;; (defun-inner-of cory/inner-of-braces    ?l)
+;; (defun-inner-of cory/inner-of-defun     ?d)
+;; (defun-inner-of cory/inner-of-sentence  ?.)
+
+;; (defun-bounds-of cory/bounds-of-parens    ?r)
+;; (defun-bounds-of cory/bounds-of-brackets  ?s)
+;; (defun-bounds-of cory/bounds-of-braces    ?c)
+;; (defun-bounds-of cory/bounds-of-string    ?g)
+;; (defun-bounds-of cory/bounds-of-symbol    ?e)
+;; (defun-bounds-of cory/bounds-of-window    ?w)
+;; (defun-bounds-of cory/bounds-of-buffer    ?b)
+;; (defun-bounds-of cory/bounds-of-paragraph ?p)
+;; (defun-bounds-of cory/bounds-of-braces    ?l)
+;; (defun-bounds-of cory/bounds-of-defun     ?d)
+;; (defun-bounds-of cory/bounds-of-sentence  ?.)
 
 ;; (defun open-line-below ()
 ;;   (interactive)
@@ -3763,16 +5035,6 @@ PAIR-EXPR contains two string token lists. The tokens in first
 ;; (global-set-key (kbd "<C-m>") 'newline)
 ;; (define-key input-decode-map [?\C-i] [C-i])
 ;; (global-set-key (kbd "<C-i>") 'indent-region)
-(add-hook 'server-after-make-frame-hook
-	  (lambda ()
-	    (define-key input-decode-map [?\C-m] [C-m])
-	    (define-key input-decode-map [?\C-i] [C-i])))
-
-;; Now:
-;; (equal (kbd "TAB") (kbd "C-i"))   ; -> t
-;; (equal (kbd "TAB") (kbd "<C-i>")) ; -> nil
-;; (equal (kbd "RET") (kbd "C-m"))   ; -> t
-;; (equal (kbd "RET") (kbd "<C-m>")) ; -> nil
 
 ;; (dolist (pair '(("C-;"   exchange-point-and-mark)
 ;; 		("C-a"   crux-move-beginning-of-line)
@@ -3785,9 +5047,9 @@ PAIR-EXPR contains two string token lists. The tokens in first
 ;; 		("C-f"   forward-char)
 ;; 		("C-S-f" cory/forward-char-expand)
 ;; 		("C-g"   keyboard-quit)
-;; 		("C-S-g" cory/grab)
+;; 		("C-S-g" cory/grab) 👦
 ;; 		("<C-i>" kill-ring-save)
-;; 		("C-S-i" cory/sync-grab)
+;; 		("C-S-i" cory/sync-grab) 👦
 ;; 		("C-j"   cory/join)
 ;; 		("C-k"   cory/kill)
 ;; 		("C-l"   cory/line)
@@ -3803,11 +5065,11 @@ PAIR-EXPR contains two string token lists. The tokens in first
 ;; 		("C-q"   cory/quit-window-or-buffer)
 ;; 		("C-S-q" cory/goto-line)
 ;; 		("C-r"   cory/replace-selection)
-;; 		("C-S-r" cory/swap-grab)
+;; 		("C-S-r" cory/swap-grab) 👦
 ;; 		("C-s"   cory/search)
 ;; 		("C-S-s" cory/visit)
-;; 		("C-t"   avy-goto-char-timer)
-;; 		("C-S-t" avy-goto-word-1)
+;; 		("C-t"   avy-goto-char)
+;; 		("C-S-t" avy-goto-word-0)
 ;; 		("C-v"   forward-word)
 ;; 		("C-S-v" forward-symbol)
 ;; 		("C-w"   cory/mark-word)
@@ -3866,6 +5128,17 @@ PAIR-EXPR contains two string token lists. The tokens in first
 ;; 		("C-. d" cory/bounds-of-defun)
 ;; 		("C-. ." cory/bounds-of-sentence)))
 ;;   (global-set-key (kbd (car pair)) (cadr pair)))
+
+;; (add-hook 'ielm-mode-hook
+;; 	  (lambda ()
+;; 	    (define-key ielm-map (kbd "<return>") 'ielm-return)))
+
+;; (define-key minibuffer-local-map (kbd "<return>") 'exit-minibuffer)
+
+;; (eval-after-load 'help-mode
+;;   '(define-key help-mode-map (kbd "<return>") 'help-follow-symbol))
+
+;; (define-key button-map (kbd "<return>") 'push-button)
 
 ;;; Misc useful functions
 
@@ -4026,6 +5299,9 @@ PAIR-EXPR contains two string token lists. The tokens in first
      "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   (org-agenda-current-time-string "← now ----------")
   (org-agenda-timegrid-use-ampm 1) ;; 12-hour clock
+  (org-src-fontify-natively t)
+  (org-src-tab-acts-natively t)
+  (org-edit-src-content-indentation 0)
   (org-todo-keywords
    '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
      (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
@@ -4123,8 +5399,8 @@ PAIR-EXPR contains two string token lists. The tokens in first
   :config
   ;; Replace list hyphen with dot
   (font-lock-add-keywords 'org-mode
-                          '(("^ *\\([-]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+                           '(("^ *\\([-]\\) "
+                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
@@ -4137,9 +5413,7 @@ PAIR-EXPR contains two string token lists. The tokens in first
   (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 
   ;; Save Org buffers after refiling
-  (advice-add 'org-refile :after 'org-save-all-org-buffers)
-
-  )
+  (advice-add 'org-refile :after 'org-save-all-org-buffers))
 
 (use-package org-bullets
   :after org
@@ -4147,26 +5421,40 @@ PAIR-EXPR contains two string token lists. The tokens in first
   :custom
   (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
-(use-package visual-fill-column
-  ;; :hook
-  ;; (text-mode   . visual-fill-column-mode)
-  ;; (prog-mode   . visual-fill-column-mode)
-  ;; (conf-mode   . visual-fill-column-mode)
-  ;; (fundamental-mode . visual-fill-column-mode)
-  ;; (term-mode   . visual-fill-column-mode)
-  ;; (eshell-mode . visual-fill-column-mode)
+;; (use-package visual-fill-column
+;;   ;; :hook
+;;   ;; (text-mode   . visual-fill-column-mode)
+;;   ;; (prog-mode   . visual-fill-column-mode)
+;;   ;; (conf-mode   . visual-fill-column-mode)
+;;   ;; (fundamental-mode . visual-fill-column-mode)
+;;   ;; (term-mode   . visual-fill-column-mode)
+;;   ;; (eshell-mode . visual-fill-column-mode)
+;;   :custom
+;;   (global-visual-fill-column-mode t)
+;;   (visual-fill-column-width 100)
+;;   (visual-fill-column-center-text t)
+;;   :config
+;;   (add-hook 'pdf-view-mode-hook (lambda () (visual-fill-column-mode 0))))
+
+;; Center text in the frame
+(use-package olivetti
+  :hook ((text-mode         . olivetti-mode)
+         (prog-mode         . olivetti-mode)
+         (Info-mode         . olivetti-mode)
+	 (woman-mode        . olivetti-mode)
+         (org-mode          . olivetti-mode)
+         (mu4e-view-mode    . olivetti-mode)
+         (elfeed-show-mode  . olivetti-mode)
+         (mu4e-compose-mode . olivetti-mode))
   :custom
-  (global-visual-fill-column-mode t)
-  (visual-fill-column-width 100)
-  (visual-fill-column-center-text t)
-  (add-hook pdf-view-mode-hook (lambda () (flyspell-mode -1))))
+  (olivetti-body-width 100))
 
 ;; Drag and drop
 (use-package org-download
   :commands (org-mode org-download-clipboard)
   :custom
-  (org-download-screenshot-method "flameshot gui -s --raw > %s")
-  :bind ("<f8>" . org-download-screenshot))
+  (org-download-screenshot-method "sleep 1 && flameshot gui -s --raw > %s")
+  :bind ("C-c o s" . org-download-screenshot))
 
 ;; Org roam
 (use-package org-roam
@@ -4189,9 +5477,9 @@ PAIR-EXPR contains two string token lists. The tokens in first
 				 "#+date: %U")))
 		  (mapconcat 'identity options "\n")))
       :unnarrowed t)))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-	 ("C-c n f" . org-roam-node-find)
-	 ("C-c n i" . org-roam-node-insert)
+  :bind (("C-c o n l" . org-roam-buffer-toggle)
+	 ("C-c o n f" . org-roam-node-find)
+	 ("C-c o n i" . org-roam-node-insert)
 	 :map org-mode-map
 	 ("C-M-i" . completion-at-point))
   :config
@@ -4217,17 +5505,13 @@ PAIR-EXPR contains two string token lists. The tokens in first
   :init
   (add-to-list 'ispell-skip-region-alist '("+begin_src" . "+end_src"))
   (setq flyspell-use-meta-tab nil)
-  :bind (:map flyspell-mode-map ("C-;" . flyspell-correct-wrapper)))
+  :bind (:map flyspell-mode-map ("C-\"" . flyspell-correct-wrapper)))
 
 (use-package frog-menu
   :custom
   ;; Need to redefine keys to account for custom keyboard layout
-  (frog-menu-avy-keys (append (string-to-list "aoehsfnbit")
-			      (string-to-list "ulrpdyc")
-			      (string-to-list "qjkzvwmqxg")
-			      (string-to-list (upcase "aoehsfnbit"))
-			      (string-to-list (upcase "ulrpdyc"))
-			      (string-to-list (upcase "qjkzvwmqxg"))
+  (frog-menu-avy-keys (append (string-to-list "atenisubopyflmc")
+			      (string-to-list (upcase "atenisubopyflmc"))
 			      (number-sequence ?, ?@)))
   :config
   (defun frog-menu-flyspell-correct (candidates word)
@@ -4287,7 +5571,7 @@ of (command . word) to be used by `flyspell-do-correct'."
   (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
 
 ;; Use only one dired buffer at a time
-(use-package dired-single)
+;; (use-package dired-single)
 
 ;; Open certain file extensions in external programs
 (use-package dired-open
@@ -4308,9 +5592,46 @@ of (command . word) to be used by `flyspell-do-correct'."
 			   ("ppt" . "libreoffice")
 			   ("pptx" . "libreoffice"))))
 
-(use-package dirvish
+;; (use-package dirvish
+;;   :config
+;;   (dirvish-override-dired-mode))
+
+;; FIXME fix sunrise creating new buffers every time it is toggled
+(use-package sunrise
+  :custom
+  (sunrise-set-use-commander-keys nil)
+  :bind
+  ;; NOTE Sunrise uses "C-c s", "C-c t", "C-c r", "C-c v",
+  ;; "C-c p", and "C-c b", from the user's space
+  (("C-z" . sunrise)
+   :map sunrise-mode-map
+   ;; Remap traditional "commander keys" to non-function keys
+   ("C-c 2"     . sunrise-goto-dir)
+   ("C-c 3"     . sunrise-quick-view)
+   ("C-c 4"     . sunrise-advertised-find-file)
+   ("C-c 5"     . sunrise-do-copy)
+   ("C-c 6"     . sunrise-do-rename)
+   ("C-c 7"     . dired-create-directory)
+   ("C-c 8"     . sunrise-do-delete)
+   ("C-c 0"     . sunrise-quit)
+   ("C-c C-3"   . sunrise-sort-by-name)
+   ("C-c C-4"   . sunrise-sort-by-extension)
+   ("C-c C-5"   . sunrise-sort-by-time)
+   ("C-c C-6"   . sunrise-sort-by-size)
+   ("C-c C-7"   . sunrise-sort-by-number)
+   ("C-c &"     . sunrise-do-symlink)
+   ("<insert>"  . sunrise-mark-toggle)
+   ("C-<prior>" . sunrise-dired-prev-subdir)
+   ;; Remove binds to function keys
+   ("<f2>"  . other-window)
+   ("<f3>"  . kmacro-start-macro-or-insert-counter)
+   ("<f4>"  . kmacro-end-or-call-macro)
+   ("<f10>" . menu-bar-open))
+  :hook
+  (sunrise-mode . hl-line-mode)
+  (sunrise-mode . (lambda () (setq-local cursor-type nil)))
   :config
-  (dirvish-override-dired-mode))
+  (set-face-attribute 'hl-line nil :background nil :inherit 'highlight))
 
 ;;
 ;; --- MISC ---
@@ -4363,8 +5684,13 @@ of (command . word) to be used by `flyspell-do-correct'."
   ;; keyboard shortcuts
   (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
   (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
-  (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete)
-  )
+  (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))
+
+;; Eww
+
+;; (setq eww-search-prefix "https://searx.be/?preferences=eJxtV0uP4zYM_jX1xdhB2z0UPeRUoNcW2O3ZoCXG5lgSPXok8fz6Un7EcjyH9Y4-SuL7o6IgYseeMFw6dOjBVAZcl6DDC7pv__2oDCsweVFBiqzYjgYjXiqysqcZPT-my0-fsLIYe9aXf__58bMKcMWA4FV_-bWKPVq8cFDgK48hmRgado3DexOhvfwNJmClmRoRsrmhvzDI8o19V82nvoU4iQmGO1Ks8VYFylY0K0xdHyuFLqJvQFZW_lxvBX0Dp1A3qzEL-pHQTw25JlKUC2bryV3JUZRLlWdjNqsoQGvkPLqOnATpzw66pgmsCExtURP88vtfMA61Je_ZN82VDIYZEwtr-dYhssdCIHbQDWsKTbOGfEYjqaaZg5p3teS6Up7X9Y00shxb_p_R2CY1YJSTUdZKqW_xVmzgEZ0ENGBxtfgXgseruKEIJTqCTTiW2lTyhvAF8bJ3KjGN-Ckhb2wKpOb1jcBFcaXQpnVXa5xjS-wOPqPnO-mmYSkQL-s7DaQhwkGHuJf_dfw1Wi-KSoW77I6Qr941LEmxMMoB-WYbLL_TmPO474qS6eng_W-PQsFVe85mbwm9GlKDLzd4xDrwNd7BY63Jo5ISmNYcXT25gaBMdkedVBmEWOrspDah3RIrZd-i79Zlx9yJIyffV_xUJys-GphySYbd-FJi-UZ4ODay1mWGe2g95M9qB1nd7nEjB8Xhdwo978JBggSh0GxI7vJTnT0O9IWAr7Vi1wkplC4aaYTboUQMtyHimw-rUfBpJk8q7GYLM4Eawa0bHOLxBjfaTTQB7Jbk7vE4cmHcCOJGR2HruDG1b1L36-rjLvVf3jwD5zwt8ClNAUeChakOaAZyBdT58ywjsJBDtQEBrVxKqg6qZwO-bO-Qm3LMfF3YFnmYOLJkacih2TyMd4qZSV9JLrkgVRL6wo0Jej705cQpphYL45_IkySAzGQ5k0Gx7UYWuVjfqT1QjQUv_Cv-HvImc-kBTvsjmmmkZR7CKygDR7D8XYGPxBFfdwVOXp3QTKIUpxPM00tUNan4ye5IH9-___HYI6yTRrd3RsBPB_bgLb8jDocKhVtOyQ741E4d2q3mR0T_Evk5b6JikKa-37EtRD5ZGWpluPlBAzup5DpMjt1ksbDvfXwb7-7I01YI_TCfvFhYAqP0nNlq-Uv43Bal8JAsqfO9v5cE9WluwQrdcUDPh4Uk0qPOdm6c4B90KzuilbpRYMe9MPPudRC8jN2TnTN6MLCNmrquSDHLVPZ1nzYCxyhF78SuIrCihlJBU7KOuZ8Wiqe4n15Y-jAdFt4-GLFiX_R_v55fSNtJ3olTyTwF9iRNeijDSRcIyODCjfszOYLMtjyxA8qTrtC3yYQdZTjCOvmP8hBlTEaZwtsoHnWu333T2As7uaeUvDxVW5gKLk6tFPnhyDRSScXH-IitmuKJ2KSepBaOrgphqoGl566G71sNhSG1ycW01WEa0afwDIi8XUnLoJd3UiwmxkyS9Sv35JBAfhM8m4rNQuljXzxFrHSilbdDHT24YCQC5XuJvXY0FECM_o22Tt0fr6NJ0hzhklvr8bau3hia5dF99_LuXQfNLg5orvJGvvJJIj42qkc1nCRC441kbcApPBvza-X5t4SW3xEqrk_zZvvZcbq0z0NnWZxlHKKQJ4oXMpzUV17Ml0sdqeWXziT6jKg9e-Uh92wjT1-5zebkVzIipVAv_wP9Wvgr&q=")
+
+(setq eww-search-prefix "http://frogfind.com/?q=")
 
 ;; Emacs run launcher
 (defun emacs-run-launcher ()
@@ -4386,8 +5712,8 @@ of (command . word) to be used by `flyspell-do-correct'."
 ;; (setq x-select-enable-primary t)
 
 ;; Transparency
-(set-frame-parameter (selected-frame) 'alpha '(70 . 70))
-(add-to-list 'default-frame-alist '(alpha . (70 . 70)))
+;; (set-frame-parameter (selected-frame) 'alpha '(70 . 70))
+;; (add-to-list 'default-frame-alist '(alpha . (70 . 70)))
 
 (defun toggle-transparency ()
   "Toggles emacs transparency."
@@ -4396,10 +5722,10 @@ of (command . word) to be used by `flyspell-do-correct'."
     (set-frame-parameter
      nil 'alpha
      (if (eql (cond ((numberp alpha) alpha)
-                    ((numberp (cdr alpha)) (cdr alpha))
-                    ;; Also handle undocumented (<active> <inactive>) form.
-                    ((numberp (cadr alpha)) (cadr alpha)))
-              100)
+                   ((numberp (cdr alpha)) (cdr alpha))
+                   ;; Also handle undocumented (<active> <inactive>) form.
+                   ((numberp (cadr alpha)) (cadr alpha)))
+             100)
          '(70 . 70) '(100 . 100)))))
 
 ;; Set the fringe to an big enough width
