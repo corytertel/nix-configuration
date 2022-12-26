@@ -419,6 +419,13 @@
 
 ;; (pixel-scroll-precision-mode)
 
+;; (setq-local scroll-margin 1
+;; 	    scroll-conservatively 101
+;; 	    scroll-up-aggressively 0.01
+;; 	    scroll-down-aggressively 0.01
+;; 	    scroll-preserve-screen-position t
+;; 	    auto-window-vscroll nil)
+
 ;;
 ;; --- WINDOW MANAGEMENT
 ;;
