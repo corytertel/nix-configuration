@@ -1,5 +1,12 @@
 ;;; init.el --- init -*- lexical-binding: t; no-byte-compile: nil; -*-
 ;;; Commentary:
+
+;; Goals:
+;; 1. Frictionless
+;; 2. Robust
+;; 3. Fast
+;; 4. Flexible
+
 ;;; Code:
 
 ;;
@@ -261,7 +268,7 @@
                 'error
               'success)
       'help-echo M-files)
-     (propertize "|" 'face 'magit-dimmed)
+     " "
      (propertize
       (format "?:%d" U)
       'face (if (> U 0)
@@ -312,7 +319,8 @@
 (use-package moody
   :custom
   ;; (moody-mode-line-height (* (aref (font-info (face-font 'mode-line)) 2) 1.5))
-  (moody-mode-line-height 40)
+  ;; (moody-mode-line-height 40)
+  (moody-mode-line-height 30)
   :config
   (setq x-underline-at-descent-line t)
   (moody-replace-mode-line-buffer-identification)
@@ -376,19 +384,19 @@
 ;; (setq-default header-line-format nil)
 
 ;; Add padding to the sides
-(require 'frame)
-(setq-default default-frame-alist
-	      (append (list
-		       '(internal-border-width . 20)
-		       ;; '(left-fringe . 0)
-		       ;; '(right-fringe . 0)
-		       '(tool-bar-lines . 0)
-		       '(menu-bar-lines . 0)
-		       '(line-spacing . 0.075)
-		       '(vertical-scroll-bars . nil))))
-(setq-default window-resize-pixelwise t)
-(setq-default frame-resize-pixelwise t)
-(add-hook 'before-make-frame-hook 'window-divider-mode)
+;; (require 'frame)
+;; (setq-default default-frame-alist
+;; 	      (append (list
+;; 		       '(internal-border-width . 20)
+;; 		       ;; '(left-fringe . 0)
+;; 		       ;; '(right-fringe . 0)
+;; 		       '(tool-bar-lines . 0)
+;; 		       '(menu-bar-lines . 0)
+;; 		       '(line-spacing . 0.075)
+;; 		       '(vertical-scroll-bars . nil))))
+;; (setq-default window-resize-pixelwise t)
+;; (setq-default frame-resize-pixelwise t)
+;; (add-hook 'before-make-frame-hook 'window-divider-mode)
 
 ;; Make the cursor a bar
 ;; (setq-default cursor-type 'bar)
@@ -462,7 +470,8 @@
 (defun cory/last-real-buffer (buffers)
   (if buffers
       (let ((name (buffer-name (car buffers))))
-	(if (equal name (string-trim name "[ \*]+" "\*"))
+	(if (and (equal name (string-trim name "[ \*]+" "\*"))
+	      (not (equal "Sunrise" (string-trim name ".*(" ").*"))))
 	    (car buffers)
 	  (cory/last-real-buffer (cdr buffers))))
     nil))
@@ -628,40 +637,136 @@
           try-expand-line)))
 
 ;; Popups
-(use-package popper
-  :ensure t
-  :custom
-  (popper-reference-buffers
-   '("\\*Messages\\*"
-     "Output\\*$"
-     "\\*Async Shell Command\\*"
-     "\\*eldoc\\*"
-     "\\*Ibuffer\\*"
-     "\\*vc-git"
-     "\\*Help\\*"
-     "\\*Compile-Log\\*"
-     "\\*Warnings\\*"
-     "\\*Chicken Documentation\\*"
-     geiser-repl-mode
-     flymake-diagnostics-buffer-mode
-     calendar-mode
-     help-mode
-     compilation-mode
-     eshell-mode
-     vterm-mode))
-  ;; (popper-group-function #'popper-group-by-project) ; project.el projects
-  (popper-window-height (lambda (win)
-			  (fit-window-to-buffer
-			   win
-			   (frame-height)
-			   30)))
-  :config
-  (popper-mode)
-  ;; (popper-echo-mode)
-  :bind
-  (("C-`" . popper-toggle-latest)
-   ("C-~" . popper-toggle-type)
-   ("M-`" . popper-cycle)))
+;; (use-package popper
+;;   :ensure t
+;;   :custom
+;;   (popper-reference-buffers
+;;    '("\\*Messages\\*"
+;;      "Output\\*$"
+;;      "\\*Async Shell Command\\*"
+;;      "\\*eldoc\\*"
+;;      "\\*Ibuffer\\*"
+;;      "\\*vc-git"
+;;      "\\*Help\\*"
+;;      "\\*Compile-Log\\*"
+;;      "\\*Warnings\\*"
+;;      "\\*Chicken Documentation\\*"
+;;      geiser-repl-mode
+;;      flymake-diagnostics-buffer-mode
+;;      calendar-mode
+;;      help-mode
+;;      compilation-mode
+;;      eshell-mode
+;;      vterm-mode))
+;;   ;; (popper-group-function #'popper-group-by-project) ; project.el projects
+;;   (popper-window-height (lambda (win)
+;; 			  (fit-window-to-buffer
+;; 			   win
+;; 			   (frame-height)
+;; 			   30)))
+;;   :config
+;;   (popper-mode)
+;;   ;; (popper-echo-mode)
+
+;;   ;; (defvar popper-dedicated-term nil)
+
+;;   ;; (defun popper-open-dedicated-term ()
+;;   ;;   (unless popper-mode (user-error "Popper-mode not active!"))
+;;   ;;   (unless (and popper-dedicated-term (buffer-live-p popper-dedicated-term))
+;;   ;;     (let ((current (buffer-name (current-buffer))))
+;;   ;; 	(eshell t)
+;;   ;; 	(rename-buffer "*popper-dedicated-term*")
+;;   ;; 	(setq popper-dedicated-term (current-buffer))
+;;   ;; 	(switch-to-buffer current)))
+;;   ;;   (display-buffer "*popper-dedicated-term*")
+;;   ;;   (with-current-buffer "*popper-dedicated-term*"
+;;   ;;     (run-hooks 'popper-open-popup-hook)))
+
+;;   ;; (defun popper-toggle-dedicated-term ()
+;;   ;;   (interactive)
+;;   ;;   (if popper-open-popup-alist
+;;   ;; 	(popper-close-latest)
+;;   ;;     (popper-open-dedicated-term)))
+
+;;   ;; (defun cory/remove-buried-popup-buffer ()
+;;   ;;   ""
+;;   ;;   (dolist (p1 popper-buried-popup-alist)
+;;   ;;     (dolist (p2 (cdr p1))
+;;   ;; 	(when (string=
+;;   ;; 	       "*popper-dedicated-term*"
+;;   ;; 	       (buffer-name (cdr p2)))
+;;   ;; 	  (delete p2 (cdr p1))))))
+
+;;   ;; (defun cory/popper-display-in-posframe (buf _)
+;;   ;;   (when (posframe-workable-p)
+;;   ;;     (posframe-show buf
+;;   ;;                    :position t
+;;   ;;                    :poshandler #'posframe-poshandler-frame-center
+;;   ;;                    :width 150
+;;   ;;                    :height 40
+;;   ;;                    :border-width 1
+;;   ;;                    :border-color "#141404")))
+
+;;   ;; (setq popper-display-function #'cory/popper-display-in-posframe)
+
+;;   :bind
+;;   (("C-`" . popper-toggle-latest)
+;;    ("C-~" . popper-toggle-type)
+;;    ("M-`" . popper-cycle)))
+
+;; (use-package popper
+;;   :bind
+;;   (("C-`" . popper-toggle-latest)
+;;    ("C-~" . popper-toggle-type)
+;;    ("M-`" . popper-cycle))
+;;   :custom
+;;   (popper-reference-buffers '(eshell-mode))
+;;   (popper-window-height 40)
+;;   :config
+;;   ;; Override `popper-open-latest'
+;;   (defun popper-open-latest (&optional group)
+;;     "Open the last closed popup.
+
+;; Optional argument GROUP is called with no arguments to select
+;; a popup buffer to open."
+;;     (unless popper-mode (user-error "Popper-mode not active!"))
+;;     (let* ((identifier (when popper-group-function group))
+;;            (no-popup-msg (format "No buried popups for group %s"
+;;                                  (if (symbolp identifier)
+;;                                      (symbol-name identifier)
+;;                                    identifier))))
+;;       (if (null (alist-get identifier popper-buried-popup-alist
+;;                           nil 'remove 'equal))
+;;           (progn
+;; 	    (eshell)
+;; 	    (setq aweshell-dedicated-buffer (current-buffer))
+;; 	    (previous-buffer)
+;; 	    (display-buffer aweshell-dedicated-buffer)
+;; 	    (with-current-buffer aweshell-dedicated-buffer
+;; 	      (run-hooks 'popper-open-popup-hook))
+;; 	    (push (cons (selected-window) aweshell-dedicated-buffer) popper-open-popup-alist))
+;; 	(if-let* ((new-popup (pop (alist-get identifier popper-buried-popup-alist
+;;                                              nil 'remove 'equal)))
+;;                   (buf (cdr new-popup)))
+;;             (if (not (buffer-live-p buf))
+;; 		(popper-open-latest)
+;; 	      (display-buffer buf)
+;; 	      (with-current-buffer buf
+;; 		(run-hooks 'popper-open-popup-hook)))
+;;           (message no-popup-msg)))))
+
+;;   (defun cory/popper-display-in-posframe (buf _)
+;;     (when (posframe-workable-p)
+;;       (posframe-show buf
+;;                      :position t
+;;                      :poshandler #'posframe-poshandler-frame-center
+;;                      :width 150
+;;                      :height 40
+;;                      :border-width 1
+;;                      :border-color "#141404")))
+
+;;   (setq popper-display-function #'cory/popper-display-in-posframe)
+;;   (popper-mode))
 
 (use-package eldoc
   :ensure nil
@@ -700,7 +805,7 @@
   ;; (add-to-list 'eglot-server-programs
   ;;              `(scheme-mode . ("chicken-lsp-server")))
   (add-to-list 'eglot-server-programs
-		`(clojure-mode . ("clojure-lsp")))
+	       `(clojure-mode . ("clojure-lsp")))
   ;; (add-to-list 'eglot-server-programs
   ;;              `(nix-mode . ("nil")))
 
@@ -816,8 +921,9 @@
                               corfu-quit-no-match t
                               corfu-auto t
 			      completion-at-point-functions
-			      (cons #'cape-history
-				    completion-at-point-functions))
+			      (list (cape-super-capf
+				     #'cape-history
+				     #'pcomplete-completions-at-point)))
               (corfu-mode 1))))
 
 ;; Icons for corfu
@@ -2889,7 +2995,20 @@ With prefix argument, ask for the lookup symbol (with completion)."
 	   (completing-read "System name:" '("pc" "laptop"))
 	   " --use-remote-sudo")))
 
+(defun cory/nix-collect-garbage ()
+  "Collects the garbage made by the Nix package manager."
+  (interactive)
+  (async-shell-command
+   (concat "sudo nix-collect-garbage --delete-older-than "
+	   (let ((time (completing-read "Delete files older than:" '("7 days" "3 days" "1 day"))))
+	     (cond
+	      ((string= time "7 days") "7d")
+	      ((string= time "3 days") "3d")
+	      ((string= time "1 day") "1d")
+	      (t (error "Not a valid time")))))))
+
 (global-set-key (kbd "C-c n") #'cory/nixos-flake-rebuild)
+(global-set-key (kbd "C-c N") #'cory/nix-collect-garbage)
 
 ;; ;; This package adds a significant amount of time to emacs startup
 ;; (use-package nixos-options
@@ -2979,6 +3098,13 @@ With prefix argument, ask for the lookup symbol (with completion)."
 (setq eshell-review-quick-commands nil)
 (setq eshell-smart-space-goes-to-end t)
 
+(defun eshell-clear-buffer ()
+  "Clear terminal"
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
+
 (defun cory/configure-eshell ()
   "Eshell configuration that will run the first time eshell launches."
   ;; Save command history when commands are entered
@@ -2987,12 +3113,37 @@ With prefix argument, ask for the lookup symbol (with completion)."
   ;; Truncate buffer for performance
   (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
 
-  (setq eshell-history-size 10000
-	eshell-buffer-maximum-lines 10000
+  (setq eshell-history-size 100
+	eshell-buffer-maximum-lines 1000
 	eshell-hist-ignoredups t
 	eshell-scroll-to-bottom-on-input t)
 
-  (setq-local completion-in-region-function #'consult-completion-in-region))
+  ;; (setq-local completion-in-region-function #'consult-completion-in-region)
+
+  ;; Screen clearing
+  (local-set-key (kbd "C-l") 'eshell-clear-buffer)
+
+  ;; Alias setup
+  ;; (eshell/alias "nixos-update" "nix flake update")
+  ;; (eshell/alias "nixos-clean" "sudo nix-collect-garbage --delete-older-than $1")
+  ;; (eshell/alias "nixos-superclean" "sudo nix-collect-garbage --delete-old")
+  ;; (eshell/alias "n" "cd $HOME/.config/nix")
+  ;; (eshell/alias "nd" "nix develop $*")
+  ;; (eshell/alias "ls" "eshell/ls -A")
+  ;; (eshell/alias "l" "ls $*")
+  ;; (eshell/alias "ll" "ls -l -h $*")
+  ;; (eshell/alias "c" "clear-scrollback")
+  ;; (eshell/alias "clear" "clear-scrollback")
+  ;; (eshell/alias "grep" "grep -i --color=auto $*")
+  ;; (eshell/alias "rm" "eshell/rm --verbose $*")
+  ;; (eshell/alias "mv" "eshell/mv --interactive --verbose $1 $2")
+  ;; (eshell/alias "cp" "eshell/cp --interactive --verbose $1 $2 $3")
+  ;; (eshell/alias "nf" "neofetch $*")
+  ;; (eshell/alias "e" "find-file $1")
+  ;; (eshell/alias "eo" "find-file-other-window $1")
+  ;; (eshell/alias "edit" "find-file $1")
+  ;; (eshell/alias "edit-other" "find-file-other-window $1")
+  )
 
 (add-hook 'eshell-first-time-mode-hook 'cory/configure-eshell)
 
@@ -3107,13 +3258,53 @@ With prefix argument, ask for the lookup symbol (with completion)."
   "Delete files matching pattern \".*~\" and \"*~\"."
   (eshell/rm (directory-files "." nil "^\\.?.*~$" nil)))
 
+(defun eshell/extract (file &rest args)
+  "Unpack FILE with ARGS.
+Stolen from aweshell."
+  (let ((command (-some (lambda (x)
+                          (if (string-match-p (car x) file)
+                              (cadr x)))
+                        '((".*\.tar.bz2" "tar xjf")
+                          (".*\.tar.gz" "tar xzf")
+                          (".*\.bz2" "bunzip2")
+                          (".*\.rar" "unrar x")
+                          (".*\.gz" "gunzip")
+                          (".*\.tar" "tar xf")
+                          (".*\.tbz2" "tar xjf")
+                          (".*\.tgz" "tar xzf")
+                          (".*\.zip" "unzip")
+                          (".*\.Z" "uncompress")
+                          (".*" "echo 'Could not unpack the file:'")))))
+    (let ((unpack-command (concat command " " file " " (mapconcat 'identity args " "))))
+      (eshell/printnl "Unpack command: " unpack-command)
+      (eshell-command-result unpack-command))
+    ))
+
+(defun eshell/cat (filename)
+  "Like cat(1) but with syntax highlighting.
+Stole from aweshell. FILENAME is the file to display."
+  (let ((existing-buffer (get-file-buffer filename))
+        (buffer (find-file-noselect filename)))
+    (eshell-print
+     (with-current-buffer buffer
+       (if (fboundp 'font-lock-ensure)
+           (font-lock-ensure)
+         (with-no-warnings
+           (font-lock-fontify-buffer)))
+       (let ((contents (buffer-string)))
+         (remove-text-properties 0 (length contents) '(read-only nil) contents)
+         contents)))
+    (unless existing-buffer
+      (kill-buffer buffer))
+    nil))
+
 ;; Running programs in a term-mode buffer
 ;; (with-eval-after-load 'esh-opt
 ;;   (setq eshell-destroy-buffer-when-process-dies t)
 ;;   (setq eshell-visual-commands '("htop" "zsh" "vim")))
 
 ;;; Give eshell/ls icons
-(defun lem-eshell-prettify (file)
+(defun cory/eshell-prettify (file)
   "Add features to listings in `eshell/ls' output.
 The features are:
 1. Add decoration like 'ls -F':
@@ -3175,7 +3366,77 @@ This function is meant to be used as advice around
     map)
   "Keys in effect when point is over a file from `eshell/ls'.")
 
-(advice-add #'eshell-ls-annotate :filter-return #'lem-eshell-prettify)
+(advice-add #'eshell-ls-annotate :filter-return #'cory/eshell-prettify)
+
+;; Eshell prompt
+(use-package eshell-prompt-extras
+  :config
+  (defun epe-theme-cory ()
+    "Cory's prompt."
+    ;; If the prompt spans over multiple lines, the regexp should match
+    ;; last line only.
+    (setq eshell-prompt-regexp "^╰─λ ")
+    (let* ((icon (all-the-icons-icon-for-mode 'nix-mode))
+	   (nix (propertize
+		 icon
+		 'face
+		 (plist-put
+		  (get-text-property 0 'face icon)
+		  :height 1.0)
+		 'font-lock-face
+		 (plist-put
+		  (get-text-property 0 'font-lock-face icon)
+		  :height 1.0)
+		 'display
+		 '(raise 0))))
+      (concat
+       (epe-colorize-with-face (epe-status) 'epe-status-face)
+       (when (epe-remote-p)
+	 (epe-colorize-with-face
+	  (concat "(" (epe-remote-user) "@" (epe-remote-host) ")")
+	  'epe-remote-face))
+       (when (and epe-show-python-info (bound-and-true-p venv-current-name))
+	 (epe-colorize-with-face (concat "(" venv-current-name ") ") 'epe-venv-face))
+       (let ((f (cond ((eq epe-path-style 'fish) 'epe-fish-path)
+                      ((eq epe-path-style 'single) 'epe-abbrev-dir-name)
+                      ((eq epe-path-style 'full) 'abbreviate-file-name))))
+	 (pcase (epe-extract-git-component (funcall f (eshell/pwd)))
+	   (`(,prefix nil)
+            (format
+             (propertize "╭╴%s %s" 'face '(:weight regular))
+	     nix
+             (propertize prefix 'face '(:weight bold :foreground "#3647d9"))))
+	   (`(,prefix ,git-component)
+            (format
+             (epe-colorize-with-face "╭╴%s %s%s %s %s" '(:weight regular))
+	     nix
+             (epe-colorize-with-face prefix '(:weight bold :foreground "#3647d9"))
+             (if (string-empty-p git-component)
+		 ""
+               (concat "/"
+                       (epe-colorize-with-face git-component '(:weight bold :foreground "#2d9574"))))
+             (epe-colorize-with-face
+              (concat (or (epe-git-branch)
+			 (epe-git-tag))
+                      (epe-git-dirty)
+                      (epe-git-untracked))
+              '(:weight italic :foreground "#1f8c35"))
+	     (epe-colorize-with-face
+	      (let ((unpushed (epe-git-unpushed-number)))
+		(if (= unpushed 0) ""
+		  (concat "↑" (number-to-string unpushed))))
+	      '(:foreground "#e01bd0"))))))
+       (epe-colorize-with-face "\n╰─λ" '(:weight regular))
+       " ")))
+  (with-eval-after-load "esh-opt"
+    (setq eshell-highlight-prompt nil
+          eshell-prompt-function 'epe-theme-cory)))
+
+;; Eshell undistract me
+(setq eshell-undistract-me-play-sound t)
+(setq eshell-undistract-me-sound-path "/run/current-system/sw/share/sounds/freedesktop/stereo/complete.oga")
+(add-hook 'eshell-pre-command-hook #'eshell-undistract-me-pre-command)
+(add-hook 'eshell-before-prompt-hook #'eshell-undistract-me-before-prompt)
 
 ;; Vterm
 (use-package vterm
@@ -3503,7 +3764,7 @@ This function is meant to be used as advice around
 (define-key beginning-of-thing-map (kbd "m") #'cory/beginning-of-email)
 (define-key beginning-of-thing-map (kbd "r") #'beginning-of-line)
 (define-key beginning-of-thing-map (kbd "b") #'beginning-of-buffer)
-(define-key beginning-of-thing-map (kbd "p") #'cory/beginning-of-paragraph)
+(define-key beginning-of-thing-map (kbd "p") #'backward-paragraph)
 
 (define-prefix-command 'end-of-thing-map)
 (global-set-key (kbd "C->") 'end-of-thing-map)
@@ -3518,7 +3779,7 @@ This function is meant to be used as advice around
 (define-key end-of-thing-map (kbd "m") #'cory/end-of-email)
 (define-key end-of-thing-map (kbd "r") #'end-of-line)
 (define-key end-of-thing-map (kbd "b") #'end-of-buffer)
-(define-key end-of-thing-map (kbd "p") #'cory/end-of-paragraph)
+(define-key end-of-thing-map (kbd "p") #'forward-paragraph)
 
 ;;; Grab Keybinds
 
@@ -5494,7 +5755,10 @@ Else, redoes on the buffer."
          (org-mode          . olivetti-mode)
          (mu4e-view-mode    . olivetti-mode)
          (elfeed-show-mode  . olivetti-mode)
-         (mu4e-compose-mode . olivetti-mode))
+         (mu4e-compose-mode . olivetti-mode)
+	 (eshell-mode . (lambda ()
+			  (setq-local olivetti-body-width 150)
+			  (olivetti-mode))))
   :custom
   (olivetti-body-width 100))
 
@@ -5645,14 +5909,13 @@ of (command . word) to be used by `flyspell-do-correct'."
 ;;   :config
 ;;   (dirvish-override-dired-mode))
 
-;; FIXME fix sunrise creating new buffers every time it is toggled
 (use-package sunrise
   :custom
   (sunrise-set-use-commander-keys nil)
   :bind
   ;; NOTE Sunrise uses "C-c s", "C-c t", "C-c r", "C-c v",
   ;; "C-c p", and "C-c b", from the user's space
-  (("C-z" . sunrise)
+  (("C-z" . cory/sunrise-toggle)
    :map sunrise-mode-map
    ;; Remap traditional "commander keys" to non-function keys
    ("C-c 2"     . sunrise-goto-dir)
@@ -5677,10 +5940,100 @@ of (command . word) to be used by `flyspell-do-correct'."
    ("<f4>"  . kmacro-end-or-call-macro)
    ("<f10>" . menu-bar-open))
   :hook
-  (sunrise-mode . hl-line-mode)
+  ;; (sunrise-mode . hl-line-mode)
   (sunrise-mode . (lambda () (setq-local cursor-type nil)))
   :config
-  (set-face-attribute 'hl-line nil :background nil :inherit 'highlight))
+  (set-face-attribute 'hl-line nil :background nil :inherit 'highlight)
+
+  (defun cory/kill-all-sunrise-buffers ()
+    (interactive)
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+	(if (derived-mode-p 'sunrise-mode)
+	    (kill-buffer buf)))))
+
+  ;; TODO
+  ;; (defun cory/kill-all-duplicate-sunrise-buffers ()
+  ;;   (interactive))
+
+  (defun cory/sunrise-toggle ()
+    "Show or hide the Sunrise Commander."
+    (interactive)
+    (or (sunrise-quit)
+       (if (and ;; (boundp 'sunrise-left-buffer)
+	   ;; (boundp 'sunrise-right-buffer)
+	   (buffer-live-p sunrise-left-buffer)
+	   (buffer-live-p sunrise-right-buffer))
+	   (cory/sunrise-show)
+	 (sunrise-show))))
+
+  (defun cory/sunrise-show ()
+    "Ensure the Sunrise Commander is shown with the past two active buffers."
+    (interactive)
+    (message "Starting Sunrise Commander...")
+    (let ((msg nil))
+      (when (cory/sunrise-ensure-windows
+             (selected-frame)
+             sunrise-left-buffer
+             sunrise-right-buffer)
+	(setq msg sunrise-start-message))
+      (setq sunrise-this-directory default-directory)
+      (sunrise-highlight)  ; W32Emacs needs this.
+      (hl-line-mode 1)
+      (message "%s" msg)))
+
+  (defun cory/sunrise-ensure-windows (frame left-buffer right-buffer)
+    "Set up the Sunrise window configuration (two windows in `sunrise-mode').
+
+LEFT-DIRECTORY and RIGHT-DIRECTORY, if non-nil, are the directories to show."
+    (cl-destructuring-bind (a-window b-window view-window)
+	(sunrise--analyze-frame frame)
+      (let ((existing-layout-p (and a-window b-window view-window)))
+	(unless existing-layout-p
+          (sunrise-switch-to-nonpane-buffer)
+          (sunrise--set-frame-plist
+           frame
+           'restore-config (current-window-configuration)
+           'restore-buffer (current-buffer)
+           'current-frame  frame)
+          (run-hooks 'sunrise-init-hook)
+          (sunrise-select-viewer-window)
+          (delete-other-windows)
+          (unless (and sunrise-panes-height
+                     (< sunrise-panes-height (frame-height)))
+            (setq sunrise-panes-height (sunrise-get-panes-size)))
+          (when (and (<= sunrise-panes-height (* 2 window-min-height))
+                   (eq sunrise-window-split-style 'vertical))
+            (setq sunrise-panes-height (* 2 window-min-height)))
+          (let ((root (selected-window)))
+            (setq view-window (split-window root sunrise-panes-height))
+            (setq a-window (selected-window))
+            (cl-ecase sunrise-window-split-style
+              (horizontal
+               (setq b-window (split-window-horizontally)))
+              (vertical
+               (setq b-window (split-window-vertically)))
+              (top
+               (ignore))))
+
+          (set-window-buffer a-window left-buffer)
+          (set-window-buffer b-window right-buffer)
+
+          (if (buffer-live-p other-window-scroll-buffer)
+              (switch-to-buffer other-window-scroll-buffer)
+            (sunrise-switch-to-nonpane-buffer))))
+
+      ;; (sunrise--update-frame-plist
+      ;;  frame
+      ;;  'a-directory (lambda (old-directory) (or a-directory old-directory))
+      ;;  'b-directory (lambda (old-directory) (or b-directory old-directory)))
+
+      ;; (when a-window (sunrise--setup-directory-window a-directory a-window))
+      ;; (when b-window (sunrise--setup-directory-window b-directory b-window))
+      (sunrise-restore-panes-width)
+      (run-hooks 'sunrise-start-hook)))
+
+  )
 
 ;;
 ;; --- MISC ---

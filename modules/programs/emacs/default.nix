@@ -9,7 +9,10 @@ let
              # + (builtins.readFile ./aweshell.el)
              + (builtins.readFile ./eshell-undistract-me.el)
              + (builtins.readFile ./app-launcher.el)
-             + (import ./eshell-extras.nix { inherit config pkgs; })
+             + (builtins.readFile ./aside.el)
+             + (builtins.readFile ./aside-vterm.el)
+             + (builtins.readFile ./aside-eshell.el)
+             + (builtins.readFile ./aside-configurations.el)
              + (if cfg.exwm then builtins.readFile ./exwm.el else "");
 
   init = pkgs.runCommand "default.el" {} ''
@@ -44,82 +47,6 @@ let
     (pkgs.writeShellScriptBin "nixos-switch" ''
       nixos-rebuild switch --flake .#$1 --use-remote-sudo
     '')
-
-    # extract
-    (pkgs.writeShellScriptBin "extract" ''
-      if [ -f $1 ] ; then
-          case $1 in
-              *.tar.bz2) tar xjf $1 ;;
-              *.tar.gz) tar xzf $1 ;;
-              *.bz2) bunzip2 $1 ;;
-              *.rar) rar x $1 ;;
-              *.gz) gunzip $1 ;;
-              *.tar) tar xf $1 ;;
-              *.tbz2) tar xjf $1 ;;
-              *.tgz) tar xzf $1 ;;
-              *.zip) unzip $1 ;;
-              *.Z) uncompress $1 ;;
-              *) echo "'$1' cannot be extracted via extract()" ;;
-          esac
-      else
-          echo "'$1' is not a valid file"
-      fi
-    '')
-
-    # githelp
-    (pkgs.writeShellScriptBin "githelp" ''
-      echo "-------------------------------------------------------------------------------"
-      echo "git clone http://... [repo-name]"
-      echo "git init [repo-name]"
-      echo "-------------------------------------------------------------------------------"
-      echo "git add -A <==> git add . ; git add -u # Add to the staging area (index)"
-      echo "-------------------------------------------------------------------------------"
-      echo "git commit -m 'message' -a"
-      echo "git commit -m 'message' -a --amend"
-      echo "-------------------------------------------------------------------------------"
-      echo "git status"
-      echo "git log --stat # Last commits, --stat optional"
-      echo "git ls-files"
-      echo "git diff HEAD~1..HEAD"
-      echo "-------------------------------------------------------------------------------"
-      echo "git push origin master"
-      echo "git push origin master:master"
-      echo "-------------------------------------------------------------------------------"
-      echo "git remote add origin http://..."
-      echo "git remote set-url origin git://..."
-      echo "-------------------------------------------------------------------------------"
-      echo "git stash"
-      echo "git pull origin master"
-      echo "git stash list ; git stash pop"
-      echo "-------------------------------------------------------------------------------"
-      echo "git submodule add /absolute/path repo-name"
-      echo "git submodule add http://... repo-name"
-      echo "-------------------------------------------------------------------------------"
-      echo "git checkout -b new-branch <==> git branch new-branch ; git checkout new-branch"
-      echo "git merge old-branch"
-      echo "git branch local_name origin/remote_name # Associate branches"
-      echo "-------------------------------------------------------------------------------"
-      echo "git update-index --assume-unchanged <file> # Ignore changes"
-      echo "git rm --cached <file> # Untrack a file"
-      echo "-------------------------------------------------------------------------------"
-      echo "git reset --hard HEAD # Repair what has been done since last commit"
-      echo "git revert HEAD # Repair last commit"
-      echo "git checkout [file] # Reset a file to its previous state at last commit"
-      echo "-------------------------------------------------------------------------------"
-      echo "git tag # List"
-      echo "git tag v0.5 # Lightwieght tag"
-      echo "git tag -a v1.4 -m 'my version 1.4' # Annotated tag"
-      echo "git push origin v1.4 # Pushing"
-      echo "-------------------------------------------------------------------------------"
-      echo "HOW TO RENAME A BRANCH LOCALLY AND REMOTELY"
-      echo "git branch -m old_name new_name"
-      echo "git push origin new_name"
-      echo "git push origin :old_name"
-      echo "------"
-      echo "Each other client of the repository has to do:"
-      echo "git fetch origin ; git remote prune origin"
-      echo "-------------------------------------------------------------------------------"
-    '')
   ];
 
 in {
@@ -149,12 +76,11 @@ in {
 
     home-manager.users.cory.home.file = {
       ".emacs.d/themes/plain-light-theme.el".source = ./plain-light-theme.el;
-      ".emacs.d/themes/plain-grey-theme.el".source = ./plain-grey-theme.el;
-      ".emacs.d/themes/plain-dark-theme.el".source = ./plain-dark-theme.el;
-      ".emacs.d/themes/plain-summer-theme.el".source = ./plain-summer-theme.el;
-      ".emacs.d/themes/plain-ocean-theme.el".source = ./plain-ocean-theme.el;
-      ".emacs.d/themes/smart-mode-line-cory-theme.el".source = ./smart-mode-line-cory-theme.el;
-      ".emacs.d/logo.png".source = ./logo.png;
+      # ".emacs.d/themes/plain-grey-theme.el".source = ./plain-grey-theme.el;
+      # ".emacs.d/themes/plain-dark-theme.el".source = ./plain-dark-theme.el;
+      # ".emacs.d/themes/plain-summer-theme.el".source = ./plain-summer-theme.el;
+      # ".emacs.d/themes/plain-ocean-theme.el".source = ./plain-ocean-theme.el;
+      # ".emacs.d/themes/smart-mode-line-cory-theme.el".source = ./smart-mode-line-cory-theme.el;
       ".emacs.d/eshell/alias".text = import ./eshell-alias.nix { inherit config pkgs; };
       ".emacs.d/templates".source = ./templates;
       # ".emacs.d/snippets".source = ./snippets;
@@ -165,6 +91,8 @@ in {
       git
       ripgrep
       flameshot
+      # eshell-undistract-me
+      sound-theme-freedesktop
       # dired archive utilities
       avfs
       gnutar
