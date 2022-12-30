@@ -289,7 +289,7 @@ java-mode
 
 org-mode
 
-(title "#+title: " p n "#+author: Daniel Mendler" n "#+language: en" n n)
+(title "#+title: " p n "#+author: Cory Tertel" n "#+language: en" n n)
 (quote "#+begin_quote" n> r> n> "#+end_quote")
 (example "#+begin_example" n> r> n> "#+end_example")
 (center "#+begin_center" n> r> n> "#+end_center")

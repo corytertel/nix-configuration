@@ -6,13 +6,54 @@ let
   cfg = config.programs.cory.emacs;
 
   initFile = (builtins.readFile ./init.el)
-             # + (builtins.readFile ./aweshell.el)
-             + (builtins.readFile ./eshell-undistract-me.el)
-             + (builtins.readFile ./app-launcher.el)
-             + (builtins.readFile ./aside.el)
-             + (builtins.readFile ./aside-vterm.el)
-             + (builtins.readFile ./aside-eshell.el)
-             + (builtins.readFile ./aside-configurations.el)
+
+             + (builtins.readFile ./elisp/init-performance.el)
+             + (builtins.readFile ./elisp/init-visuals.el)
+
+             # Completion
+             + (builtins.readFile ./elisp/init-completion.el)
+             + (builtins.readFile ./elisp/init-minibuffer.el)
+
+             # IDE Stuff
+             + (builtins.readFile ./elisp/init-flymake.el)
+             + (builtins.readFile ./elisp/init-lsp.el)
+             + (builtins.readFile ./elisp/init-formatting.el)
+             + (builtins.readFile ./elisp/init-actions.el)
+             + (builtins.readFile ./elisp/init-search.el)
+             + (builtins.readFile ./elisp/init-templates.el)
+             + (builtins.readFile ./elisp/init-shell.el)
+             + (builtins.readFile ./elisp/init-projects.el)
+             + (builtins.readFile ./elisp/init-ssh.el)
+
+             # Langs
+             + (builtins.readFile ./elisp/init-clojure.el)
+             + (builtins.readFile ./elisp/init-common-lisp.el)
+             + (builtins.readFile ./elisp/init-cpp.el)
+             + (builtins.readFile ./elisp/init-elisp.el)
+             + (builtins.readFile ./elisp/init-java.el)
+             + (builtins.readFile ./elisp/init-other-langs.el)
+             + (builtins.readFile ./elisp/init-python.el)
+             + (builtins.readFile ./elisp/init-scheme.el)
+
+             # Other
+             + (builtins.readFile ./elisp/init-dired.el)
+             + (builtins.readFile ./elisp/init-nixos.el)
+             + (builtins.readFile ./elisp/init-org.el)
+             + (builtins.readFile ./elisp/init-pdf.el)
+             + (builtins.readFile ./elisp/init-keybinds.el)
+
+             # Window Management
+             + (builtins.readFile ./elisp/init-window-management.el)
+             + (builtins.readFile ./elisp/aside.el)
+             + (builtins.readFile ./elisp/aside-vterm.el)
+             + (builtins.readFile ./elisp/aside-eshell.el)
+             + (builtins.readFile ./elisp/aside-configurations.el)
+
+             # Informal Packages
+             # + (builtins.readFile ./elisp/aweshell.el)
+             + (builtins.readFile ./elisp/eshell-undistract-me.el)
+             + (builtins.readFile ./elisp/app-launcher.el)
+
              + (if cfg.exwm then builtins.readFile ./exwm.el else "");
 
   init = pkgs.runCommand "default.el" {} ''
@@ -81,7 +122,7 @@ in {
       # ".emacs.d/themes/plain-summer-theme.el".source = ./plain-summer-theme.el;
       # ".emacs.d/themes/plain-ocean-theme.el".source = ./plain-ocean-theme.el;
       # ".emacs.d/themes/smart-mode-line-cory-theme.el".source = ./smart-mode-line-cory-theme.el;
-      ".emacs.d/eshell/alias".text = import ./eshell-alias.nix { inherit config pkgs; };
+      ".emacs.d/eshell/alias".source = ./alias;
       ".emacs.d/templates".source = ./templates;
       # ".emacs.d/snippets".source = ./snippets;
       ".local/share/dict/words".source = "${pkgs.scowl}/share/dict/words.txt";
@@ -93,6 +134,8 @@ in {
       flameshot
       # eshell-undistract-me
       sound-theme-freedesktop
+      pulseaudio
+      libnotify
       # dired archive utilities
       avfs
       gnutar
@@ -117,11 +160,11 @@ in {
       scowl
       ispell
       # for emacs-everywhere
-      xclip
-      xdotool
-      xorg.xprop
-      xorg.xwininfo
-      fish
+      # xclip
+      # xdotool
+      # xorg.xprop
+      # xorg.xwininfo
+      # fish
     ] ++ shellScripts;
 
   };

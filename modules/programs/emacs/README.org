@@ -1,0 +1,5 @@
+#+title: Emacs Config
+#+author: Cory Tertel
+#+language: en
+
+* Reference Configs

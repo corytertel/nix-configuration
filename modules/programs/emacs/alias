@@ -1,12 +1,3 @@
-{ config, pkgs, ... }:
-
-# alias ls ${pkgs.exa}/bin/exa --icons --all --git --binary --group-directories-first $*
-# alias ls eshell/ls --all --group-directories-first
-# alias l ls --classify $*
-# alias ll ls -l -h $*
-# alias tree ${pkgs.exa}/bin/exa --icons --tree $*
-
-''
 alias nixos-update nix flake update
 alias nixos-clean sudo nix-collect-garbage --delete-older-than $1
 alias nixos-superclean sudo nix-collect-garbage --delete-old
@@ -26,6 +17,3 @@ alias e find-file $1
 alias eo find-file-other-window $1
 alias edit find-file $1
 alias edit-other find-file-other-window $1
-alias fm ${config.apps.fileManager.command} $*
-alias i ${config.apps.photoViewer.command} $*
-''
