@@ -40,6 +40,39 @@
   (let ((search-str (cory/isearch-string)))
     (isearch-resume search-str t nil nil search-str t)))
 
+(defun cory/consult-line-backward (&optional initial start)
+  "Search for a matching line, but backwards.
+
+Depending on the setting `consult-point-placement' the command jumps to the
+beginning or the end of the first match on the line or the line beginning. The
+default candidate is the non-empty line next to point. This command obeys
+narrowing. Optional INITIAL input can be provided. The search starting point is
+changed if the START prefix argument is set. The symbol at point and the last
+`isearch-string' is added to the future history."
+  (interactive (list nil (not (not current-prefix-arg))))
+  (let* ((curr-line (line-number-at-pos (point) consult-line-numbers-widen))
+         (top (not (eq start consult-line-start-from-top)))
+         (candidates (or (consult--with-increased-gc
+                         (reverse (consult--line-candidates top curr-line)))
+                        (user-error "No lines"))))
+    (consult--read
+     candidates
+     :prompt (if top "Go to line (backward) from top: " "Go to line (backward): ")
+     :annotate (consult--line-prefix curr-line)
+     :category 'consult-location
+     :sort nil
+     :require-match t
+     ;; Always add last isearch string to future history
+     :add-history (list (thing-at-point 'symbol) isearch-string)
+     :history '(:input consult--line-history)
+     :lookup #'consult--line-match
+     :default (car candidates)
+     ;; Add isearch-string as initial input if starting from isearch
+     :initial (or initial
+                 (and isearch-mode
+                    (prog1 isearch-string (isearch-done))))
+     :state (consult--location-state candidates))))
+
 (defun cory/visual-isearch-forward ()
   (interactive)
   (consult-line)
@@ -48,7 +81,7 @@
 
 (defun cory/visual-isearch-backward ()
   (interactive)
-  (consult-line)
+  (cory/consult-line-backward)
   (end-of-line)
   (cory/isearch-backward-resume))
 

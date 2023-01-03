@@ -10,20 +10,22 @@ let
              + (builtins.readFile ./elisp/init-performance.el)
              + (builtins.readFile ./elisp/init-visuals.el)
 
+             + (builtins.readFile ./elisp/init-functions.el)
+
              # Completion
              + (builtins.readFile ./elisp/init-completion.el)
-             + (builtins.readFile ./elisp/init-minibuffer.el)
 
              # IDE Stuff
-             + (builtins.readFile ./elisp/init-flymake.el)
              + (builtins.readFile ./elisp/init-lsp.el)
+             + (builtins.readFile ./elisp/init-checking.el)
              + (builtins.readFile ./elisp/init-formatting.el)
-             + (builtins.readFile ./elisp/init-actions.el)
+             + (builtins.readFile ./elisp/init-editing.el)
              + (builtins.readFile ./elisp/init-search.el)
              + (builtins.readFile ./elisp/init-templates.el)
              + (builtins.readFile ./elisp/init-shell.el)
              + (builtins.readFile ./elisp/init-projects.el)
              + (builtins.readFile ./elisp/init-ssh.el)
+             + (builtins.readFile ./elisp/init-movement.el)
 
              # Langs
              + (builtins.readFile ./elisp/init-clojure.el)
@@ -40,7 +42,6 @@ let
              + (builtins.readFile ./elisp/init-nixos.el)
              + (builtins.readFile ./elisp/init-org.el)
              + (builtins.readFile ./elisp/init-pdf.el)
-             + (builtins.readFile ./elisp/init-keybinds.el)
 
              # Window Management
              + (builtins.readFile ./elisp/init-window-management.el)
@@ -49,10 +50,14 @@ let
              + (builtins.readFile ./elisp/aside-eshell.el)
              + (builtins.readFile ./elisp/aside-configurations.el)
 
+             + (builtins.readFile ./elisp/init-keybinds.el)
+
              # Informal Packages
              # + (builtins.readFile ./elisp/aweshell.el)
              + (builtins.readFile ./elisp/eshell-undistract-me.el)
              + (builtins.readFile ./elisp/app-launcher.el)
+             + (builtins.readFile ./elisp/hexrgb.el)
+             + (builtins.readFile ./elisp/palette.el)
 
              + (if cfg.exwm then builtins.readFile ./exwm.el else "");
 

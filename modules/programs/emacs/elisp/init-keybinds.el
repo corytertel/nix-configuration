@@ -40,6 +40,11 @@
   ([remap describe-variable] . helpful-variable)
   ([remap describe-function] . helpful-callable))
 
+(use-package eldoc
+  :ensure nil
+  :config
+  (setq eldoc-echo-area-prefer-doc-buffer nil))
+
 ;; Hydras
 (use-package hydra)
 
@@ -258,76 +263,91 @@ Else, goto the end of the buffer."
 ;; (keyboard-translate (kbd "C-h") (kbd "C-x"))
 ;; (keyboard-translate (kbd "C-x") (kbd "C-h"))
 
-(dolist (pair '(("C-x k"   kill-this-buffer)
-		("C-x K"   kill-buffer)
-		("C-c w"   woman)
-		;; ("C-x u"   undo-only)
-		;; ("C-/"     undo-only)
-		;; ("C-x C-u" undo-redo)
-		;; ("C-?"     undo-redo)
-		("C-'"     repeat)
-		("C-s"     cory/search-forward-dwim)
-		("C-r"     cory/search-backward-dwim)
-		("C-M-s"   cory/isearch-forward-resume)
-		("C-M-r"   cory/isearch-backward-resume)
-		("C-v"     cory/scroll-down-half-page)
-		("M-v"     cory/scroll-up-half-page)
-		("C-c F"   cory/create-tmp-file)
-		("C-c e"   eww)
-		("S-SPC"   cory/insert-space)
-		("C-c q"   quit-window)
-		("C-j"     join-line)
-		("C-c x"   xref-find-references-and-replace)
-		("M-<"     cory/beginning-of-workspace)
-		("M->"     cory/end-of-workspace)))
-  (global-set-key (kbd (car pair)) (cadr pair)))
+(defmacro cory/define-keys (map &rest l)
+  ""
+  `(dolist (pair ',l)
+     (define-key ,map (kbd (car pair)) (cdr pair))))
+
+(cory/define-keys
+ global-map
+ ("C-x k" . kill-this-buffer)
+ ("C-x K" . kill-buffer)
+ ("C-c w" . woman)
+ ;; ("C-x u"   . undo-only)
+ ;; ("C-/"     . undo-only)
+ ;; ("C-x C-u" . undo-redo)
+ ;; ("C-?"     . undo-redo)
+ ("C-'"   . repeat)
+ ("C-s"   . cory/search-forward-dwim)
+ ("C-r"   . cory/search-backward-dwim)
+ ("C-M-s" . cory/isearch-forward-resume)
+ ("C-M-r" . cory/isearch-backward-resume)
+ ("C-v"   . cory/scroll-down-half-page)
+ ("M-v"   . cory/scroll-up-half-page)
+ ("C-c F" . cory/create-tmp-file)
+ ("C-c e" . eww)
+ ("S-SPC" . cory/insert-space)
+ ("C-c q" . quit-window)
+ ("C-j"   . join-line)
+ ("C-c x" . xref-find-references-and-replace)
+ ("M-<"   . cory/beginning-of-workspace)
+ ("M->"   . cory/end-of-workspace)
+ ("C-c s" . cory/connect-ssh)
+ ("C-c S" . cory/disconnect-ssh)
+ ("C-c p" . palette))
 
 ;;; Selection Keybinds
 
 (define-prefix-command 'bounds-of-thing-map)
 (global-set-key (kbd "C-.") 'bounds-of-thing-map)
-(define-key bounds-of-thing-map (kbd "w") #'cory/mark-word)
-(define-key bounds-of-thing-map (kbd "l") #'cory/mark-list)
-(define-key bounds-of-thing-map (kbd "s") #'cory/mark-symbol)
-(define-key bounds-of-thing-map (kbd "e") #'cory/mark-sexp)
-(define-key bounds-of-thing-map (kbd "f") #'mark-defun)
-(define-key bounds-of-thing-map (kbd "n") #'cory/mark-number)
-(define-key bounds-of-thing-map (kbd ".") #'cory/mark-sentence)
-(define-key bounds-of-thing-map (kbd "u") #'cory/mark-url)
-(define-key bounds-of-thing-map (kbd "m") #'cory/mark-email)
-(define-key bounds-of-thing-map (kbd "r") #'cory/mark-line)
-(define-key bounds-of-thing-map (kbd "b") #'mark-whole-buffer)
-(define-key bounds-of-thing-map (kbd "p") #'mark-paragraph)
+(cory/define-keys
+ bounds-of-thing-map
+ ("w" . cory/mark-word)
+ ("l" . cory/mark-list)
+ ("s" . cory/mark-symbol)
+ ("e" . cory/mark-sexp)
+ ("f" . mark-defun)
+ ("n" . cory/mark-number)
+ ("." . cory/mark-sentence)
+ ("u" . cory/mark-url)
+ ("m" . cory/mark-email)
+ ("r" . cory/mark-line)
+ ("b" . mark-whole-buffer)
+ ("p" . mark-paragraph))
 
 (define-prefix-command 'beginning-of-thing-map)
 (global-set-key (kbd "C-<") 'beginning-of-thing-map)
-(define-key beginning-of-thing-map (kbd "w") #'cory/beginning-of-word)
-(define-key beginning-of-thing-map (kbd "l") #'cory/beginning-of-list)
-(define-key beginning-of-thing-map (kbd "s") #'cory/beginning-of-symbol)
-(define-key beginning-of-thing-map (kbd "e") #'cory/beginning-of-sexp)
-(define-key beginning-of-thing-map (kbd "f") #'beginning-of-defun)
-(define-key beginning-of-thing-map (kbd "n") #'cory/beginning-of-number)
-(define-key beginning-of-thing-map (kbd ".") #'cory/beginning-of-sentence)
-(define-key beginning-of-thing-map (kbd "u") #'cory/beginning-of-url)
-(define-key beginning-of-thing-map (kbd "m") #'cory/beginning-of-email)
-(define-key beginning-of-thing-map (kbd "r") #'beginning-of-line)
-(define-key beginning-of-thing-map (kbd "b") #'beginning-of-buffer)
-(define-key beginning-of-thing-map (kbd "p") #'backward-paragraph)
+(cory/define-keys
+ beginning-of-thing-map
+ ("w" . cory/beginning-of-word)
+ ("l" . cory/beginning-of-list)
+ ("s" . cory/beginning-of-symbol)
+ ("e" . cory/beginning-of-sexp)
+ ("f" . beginning-of-defun)
+ ("n" . cory/beginning-of-number)
+ ("." . cory/beginning-of-sentence)
+ ("u" . cory/beginning-of-url)
+ ("m" . cory/beginning-of-email)
+ ("r" . beginning-of-line)
+ ("b" . beginning-of-buffer)
+ ("p" . backward-paragraph))
 
 (define-prefix-command 'end-of-thing-map)
 (global-set-key (kbd "C->") 'end-of-thing-map)
-(define-key end-of-thing-map (kbd "w") #'cory/end-of-word)
-(define-key end-of-thing-map (kbd "l") #'cory/end-of-list)
-(define-key end-of-thing-map (kbd "s") #'cory/end-of-symbol)
-(define-key end-of-thing-map (kbd "e") #'cory/end-of-sexp)
-(define-key end-of-thing-map (kbd "f") #'end-of-defun)
-(define-key end-of-thing-map (kbd "n") #'cory/end-of-number)
-(define-key end-of-thing-map (kbd ".") #'cory/end-of-sentence)
-(define-key end-of-thing-map (kbd "u") #'cory/end-of-url)
-(define-key end-of-thing-map (kbd "m") #'cory/end-of-email)
-(define-key end-of-thing-map (kbd "r") #'end-of-line)
-(define-key end-of-thing-map (kbd "b") #'end-of-buffer)
-(define-key end-of-thing-map (kbd "p") #'forward-paragraph)
+(cory/define-keys
+ end-of-thing-map
+ ("w" . cory/end-of-word)
+ ("l" . cory/end-of-list)
+ ("s" . cory/end-of-symbol)
+ ("e" . cory/end-of-sexp)
+ ("f" . end-of-defun)
+ ("n" . cory/end-of-number)
+ ("." . cory/end-of-sentence)
+ ("u" . cory/end-of-url)
+ ("m" . cory/end-of-email)
+ ("r" . end-of-line)
+ ("b" . end-of-buffer)
+ ("p" . forward-paragraph))
 
 ;;; Grab Keybinds
 
@@ -347,15 +367,6 @@ Else, goto the end of the buffer."
   (define-key map (kbd "M-a") 'backward-list)
   (define-key map (kbd "M-e") 'forward-list)
   (define-key map (kbd "M-h") 'cory/mark-list))
-
-;;; Easier macro handling
-;; (use-package kmacro-x
-;;   :ensure t
-;;   :init (kmacro-x-atomic-undo-mode 1)
-;;   :bind ("C-c k" . kmacro-x-mc-region))
-
-;;; Delete selection mode
-(delete-selection-mode 1)
 
 ;;; Repeat Maps
 

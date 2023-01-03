@@ -47,12 +47,30 @@
 (setq eshell-review-quick-commands nil)
 (setq eshell-smart-space-goes-to-end t)
 
-(defun eshell-clear-buffer ()
+(defun cory/eshell-clear-buffer ()
   "Clear terminal"
   (interactive)
   (let ((inhibit-read-only t))
     (erase-buffer)
     (eshell-send-input)))
+
+(defun cory/eshell-forward-char-or-complete-from-history (&optional arg)
+  "If at the end of the eshell buffer, complete from history.
+Else, go foward ARG characters."
+  (interactive)
+  (if (and (= (point) (point-max))
+	(not (= (save-excursion (eshell-bol) (point)) (point-max))))
+      (cape-history t)
+    (forward-char arg)))
+
+(defun cory/eshell-move-end-of-line-or-complete-from-history (&optional arg)
+  "If at the end of the eshell buffer, complete from history.
+Else, go to the end of line ARG number of times."
+  (interactive)
+  (if (and (= (point) (point-max))
+	(not (= (save-excursion (eshell-bol) (point)) (point-max))))
+      (cape-history t)
+    (move-end-of-line arg)))
 
 (defun cory/configure-eshell ()
   "Eshell configuration that will run the first time eshell launches."
@@ -62,15 +80,21 @@
   ;; Truncate buffer for performance
   (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
 
-  (setq eshell-history-size 100
+  (setq eshell-history-size 1000
 	eshell-buffer-maximum-lines 1000
 	eshell-hist-ignoredups t
 	eshell-scroll-to-bottom-on-input t)
 
   ;; (setq-local completion-in-region-function #'consult-completion-in-region)
 
-  ;; Screen clearing
-  (local-set-key (kbd "C-l") 'eshell-clear-buffer)
+  ;; Keybinds
+  (local-set-key (kbd "M-s") #'consult-history)
+  (local-set-key (kbd "M-r") #'consult-history)
+  (local-set-key (kbd "C-l") #'cory/eshell-clear-buffer)
+  (local-set-key (kbd "C-f") #'cory/eshell-forward-char-or-complete-from-history)
+  (local-set-key (kbd "<right>") #'cory/eshell-forward-char-or-complete-from-history)
+  (local-set-key (kbd "C-e") #'cory/eshell-move-end-of-line-or-complete-from-history)
+  (local-set-key (kbd "<end>") #'cory/eshell-move-end-of-line-or-complete-from-history)
 
   ;; Alias setup
   ;; (eshell/alias "nixos-update" "nix flake update")
@@ -112,8 +136,7 @@
           (lambda () (setq-local
 		 completion-cycle-threshold t
 		 completion-at-point-functions
-		 (list #'pcomplete-completions-at-point
-		       #'cape-history)
+		 (list #'pcomplete-completions-at-point)
 		 completion-styles '(basic partial-completion emacs22))
 	    (corfu-mode -1)))
 
@@ -140,6 +163,7 @@
 
 ;; One prompt at all times
 (use-package eshell-fixed-prompt
+  :disabled t
   :hook (eshell-mode . eshell-fixed-prompt-mode))
 
 ;; Syntax highlighting
