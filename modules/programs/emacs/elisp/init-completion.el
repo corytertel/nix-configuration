@@ -2,26 +2,63 @@
 ;; --- DEFAULT COMPLETION ---
 ;;
 
-(use-package vertico
-  :config
-  (recentf-mode t)
-  (vertico-mode t))
+;; (use-package vertico
+;;   :config
+;;   (recentf-mode t)
+;;   (vertico-mode t))
 
-(use-package vertico-posframe
-  :after vertico
-  :config (vertico-posframe-mode 1))
+;; (use-package vertico-posframe
+;;   :after vertico
+;;   :config (vertico-posframe-mode 1))
 
-;; Configure directory extension.
-(use-package vertico-directory
-  :after vertico
-  :ensure nil
-  ;; More convenient directory navigation commands
-  :bind (:map vertico-map
-         ("RET" . vertico-directory-enter)
-         ("DEL" . vertico-directory-delete-char)
-         ("M-DEL" . vertico-directory-delete-word))
-  ;; Tidy shadowed file names
-  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+;; ;; Configure directory extension.
+;; (use-package vertico-directory
+;;   :after vertico
+;;   :ensure nil
+;;   ;; More convenient directory navigation commands
+;;   :bind (:map vertico-map
+;;          ("RET" . vertico-directory-enter)
+;;          ("DEL" . vertico-directory-delete-char)
+;;          ("M-DEL" . vertico-directory-delete-word))
+;;   ;; Tidy shadowed file names
+;;   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+;; Recursive minibuffers
+(require 'mb-depth)
+(setq enable-recursive-minibuffers t)
+(minibuffer-depth-indicate-mode)
+
+;; Custom vertical completion
+(setq read-extended-command-predicate #'command-completion-default-include-p
+      completions-format 'one-column
+      completion-auto-select nil
+      completions-detailed nil
+      ;; completion-styles '(orderless partial-completion basic)
+      completion-show-help nil
+      completions-header-format (propertize "%s candidates:\n"
+                                            'face 'shadow)
+      completion-auto-help 'visual
+      completions-max-height 16
+      completion-auto-wrap t)
+
+(define-key minibuffer-local-completion-map
+  [remap previous-line]
+  #'minibuffer-previous-completion)
+
+(define-key minibuffer-local-completion-map
+  [remap next-line]
+  #'minibuffer-next-completion)
+
+;; (define-key minibuffer-local-completion-map
+;;   [backtab] #'minibuffer-previous-completion)
+
+;; (define-key minibuffer-local-completion-map
+;;   [tab] #'minibuffer-next-completion)
+
+(add-to-list 'display-buffer-alist
+             '("\\*Completions\\*"
+               (display-buffer-reuse-window display-buffer-at-bottom)
+               (window-parameters . ((mode-line-format . none)))))
 
 ;; Icons in minibuffer
 (use-package all-the-icons-completion
@@ -78,7 +115,13 @@
    :map minibuffer-local-map
    ("M-r" . consult-history))
   :custom
-  (completion-in-region-function #'consult-completion-in-region))
+  (completion-in-region-function #'consult-completion-in-region)
+  :config
+  ;; consult to show xref results
+  (with-eval-after-load 'xref
+    (setq xref-show-definitions-function #'consult-xref
+          xref-show-xrefs-function       #'consult-xref
+          xref-search-program             'ripgrep)))
 
 (use-package consult-eglot
   :after consult eglot
@@ -89,7 +132,7 @@
   (define-key eglot-mode-map [remap xref-find-apropos] 'consult-eglot-symbols))
 
 (use-package marginalia
-  :after vertico
+  ;; :after vertico
   :ensure t
   :config
   (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
@@ -99,23 +142,23 @@
 ;; --- EXPANSION ---
 ;;
 
-(use-package hippie-exp
-  :ensure nil
-  :bind
-  ([remap dabbrev-expand] . hippie-expand)
-  :commands (hippie-expand)
-  :config
-  (setq hippie-expand-try-functions-list
-        '(try-expand-dabbrev
-          try-expand-dabbrev-all-buffers
-          try-expand-dabbrev-from-kill
-          try-complete-lisp-symbol-partially
-          try-complete-lisp-symbol
-          try-complete-file-name-partially
-          try-complete-file-name
-          try-expand-all-abbrevs
-          try-expand-list
-          try-expand-line)))
+;; (use-package hippie-exp
+;;   :ensure nil
+;;   :bind
+;;   ([remap dabbrev-expand] . hippie-expand)
+;;   :commands (hippie-expand)
+;;   :config
+;;   (setq hippie-expand-try-functions-list
+;;         '(try-expand-dabbrev
+;;           try-expand-dabbrev-all-buffers
+;;           try-expand-dabbrev-from-kill
+;;           try-complete-lisp-symbol-partially
+;;           try-complete-lisp-symbol
+;;           try-complete-file-name-partially
+;;           try-complete-file-name
+;;           try-expand-all-abbrevs
+;;           try-expand-list
+;;           try-expand-line)))
 
 ;;
 ;; --- CODE COMPLETION ---

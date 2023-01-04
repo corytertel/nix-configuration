@@ -3,3 +3,5 @@
 #+language: en
 
 * Reference Configs
+https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org
+https://eshelyaron.com/esy.html

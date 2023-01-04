@@ -72,6 +72,15 @@ Else, go to the end of line ARG number of times."
       (cape-history t)
     (move-end-of-line arg)))
 
+;; Keybinds
+(define-key eshell-mode-map (kbd "M-s") #'consult-history)
+(define-key eshell-mode-map (kbd "M-r") #'consult-history)
+(define-key eshell-mode-map (kbd "C-l") #'cory/eshell-clear-buffer)
+(define-key eshell-mode-map (kbd "C-f") #'cory/eshell-forward-char-or-complete-from-history)
+(define-key eshell-mode-map (kbd "<right>") #'cory/eshell-forward-char-or-complete-from-history)
+(define-key eshell-mode-map (kbd "C-e") #'cory/eshell-move-end-of-line-or-complete-from-history)
+(define-key eshell-mode-map (kbd "<end>") #'cory/eshell-move-end-of-line-or-complete-from-history)
+
 (defun cory/configure-eshell ()
   "Eshell configuration that will run the first time eshell launches."
   ;; Save command history when commands are entered
@@ -86,15 +95,6 @@ Else, go to the end of line ARG number of times."
 	eshell-scroll-to-bottom-on-input t)
 
   ;; (setq-local completion-in-region-function #'consult-completion-in-region)
-
-  ;; Keybinds
-  (local-set-key (kbd "M-s") #'consult-history)
-  (local-set-key (kbd "M-r") #'consult-history)
-  (local-set-key (kbd "C-l") #'cory/eshell-clear-buffer)
-  (local-set-key (kbd "C-f") #'cory/eshell-forward-char-or-complete-from-history)
-  (local-set-key (kbd "<right>") #'cory/eshell-forward-char-or-complete-from-history)
-  (local-set-key (kbd "C-e") #'cory/eshell-move-end-of-line-or-complete-from-history)
-  (local-set-key (kbd "<end>") #'cory/eshell-move-end-of-line-or-complete-from-history)
 
   ;; Alias setup
   ;; (eshell/alias "nixos-update" "nix flake update")

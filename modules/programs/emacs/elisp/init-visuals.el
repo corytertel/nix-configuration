@@ -86,6 +86,7 @@
          (mu4e-view-mode    . olivetti-mode)
          (elfeed-show-mode  . olivetti-mode)
          (mu4e-compose-mode . olivetti-mode)
+	 (image-mode        . olivetti-mode)
 	 (eshell-mode . (lambda ()
 			  (setq-local olivetti-body-width 150)
 			  (olivetti-mode))))
@@ -127,9 +128,9 @@
 ;; Setting the font
 (set-face-attribute 'default nil :family "Victor Mono")
 ;; Set fixed pitch face
-(set-face-attribute 'fixed-pitch nil :font "Victor Mono")
+;; (set-face-attribute 'fixed-pitch nil :font "Victor Mono")
 ;; Set variable pitch face
-(set-face-attribute 'variable-pitch nil :font "Oxygen-Sans")
+;; (set-face-attribute 'variable-pitch nil :font "Oxygen-Sans")
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)

@@ -114,6 +114,21 @@
 ;; Eww
 (setq eww-search-prefix "http://frogfind.com/?q=")
 
+(with-eval-after-load 'eww
+  (setq eww-auto-rename-buffer 'title
+        browse-url-browser-function #'eww-browse-url))
+
+(defun cory/eww ()
+  "Prompt for a URL or keywords to search the web for."
+  (interactive)
+  (eww (mapconcat #'identity
+                  (completing-read-multiple "Browse or search: "
+                                            eww-prompt-history
+                                            nil nil nil
+                                            'eww-prompt-history
+                                            (car (eww-suggested-uris)))
+                  " ")))
+
 ;; Emacs run launcher
 (defun emacs-run-launcher ()
   "A frame to launch desktop applications."

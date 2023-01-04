@@ -285,7 +285,7 @@ Else, goto the end of the buffer."
  ("C-v"   . cory/scroll-down-half-page)
  ("M-v"   . cory/scroll-up-half-page)
  ("C-c F" . cory/create-tmp-file)
- ("C-c e" . eww)
+ ("C-c e" . cory/eww)
  ("S-SPC" . cory/insert-space)
  ("C-c q" . quit-window)
  ("C-j"   . join-line)

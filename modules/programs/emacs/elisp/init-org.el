@@ -7,8 +7,8 @@
   :hook
   (org-mode . (lambda ()
 		(org-indent-mode)
-		(variable-pitch-mode)
-		;; (auto-fill-mode)
+		;; (variable-pitch-mode) ; varible font
+		;; (auto-fill-mode) ; line breaks
 		(visual-line-mode)))
 
   (org-mode . (lambda () (interactive)
@@ -185,17 +185,26 @@
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-  ;; (set-face-attribute 'org-indent nil   :inherit '(org-hide fixed-pitch))
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+  ;; (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  ;; (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+  ;; (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+  ;; ;; (set-face-attribute 'org-indent nil   :inherit '(org-hide fixed-pitch))
+  ;; (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  ;; (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  ;; (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  ;; (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 
   ;; Save Org buffers after refiling
-  (advice-add 'org-refile :after 'org-save-all-org-buffers))
+  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+  ;; Display weekly agenda on startup
+  (defun cory/display-weekly-agenda ()
+    "Display the weekly agenda."
+    (org-agenda-list 1)
+    (delete-other-windows)
+    (toggle-frame-fullscreen))
+
+  (add-hook 'after-init-hook #'cory/display-weekly-agenda))
 
 (use-package org-bullets
   :after org

@@ -63,3 +63,7 @@
 ;; prevent the use of stale byte-code. Otherwise, it saves us a little IO time
 ;; to skip the mtime checks on every *.elc file.
 (setq load-prefer-newer noninteractive)
+
+;; Suppressing compilation warnings
+(setq native-comp-async-report-warnings-errors 'silent)
+(setq warning-minimum-level :error)

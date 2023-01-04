@@ -1,9 +1,7 @@
 ;;
 ;; --- DIRED ---
 ;;
-(custom-set-variables '(dired-listing-switches "-gho --group-directories-first"))
-(custom-set-variables '(dired-dwim-target t))
-(custom-set-variables '(delete-by-moving-to-trash t))
+
 ;; TODO set `dired-compress-file-alist' to include all archive types
 
 ;; Auto refresh buffers
@@ -13,52 +11,47 @@
 (setq global-auto-revert-non-file-buffers t)
 (setq auto-revert-verbose nil)
 
-;; Make M-> and M-< work in dired
-(defun dired-back-to-top ()
-  (interactive)
-  (beginning-of-buffer)
-  (dired-next-line 4))
-
-(define-key dired-mode-map
-  (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
-
-(defun dired-jump-to-bottom ()
-  (interactive)
-  (end-of-buffer)
-  (dired-next-line -1))
-
-(define-key dired-mode-map
-  (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
-
-;; Use only one dired buffer at a time
-;; (use-package dired-single)
-
-;; Open certain file extensions in external programs
-(use-package dired-open
-  :custom
-  (dired-open-extensions '(("mp4" . "mpc-qt")
-			   ("mpeg" . "mpc-qt")
-			   ("ogg" . "mpc-qt")
-			   ("mkv" . "mpc-qt")
-			   ("webm" . "mpc-qt")
-			   ("mp3" . "strawberry")
-			   ("opus" . "strawberry")
-			   ("wav" . "strawberry")
-			   ("weba" . "strawberry")
-			   ("aac" . "strawberry")
-			   ("doc" . "libreoffice")
-			   ("docx" . "libreoffice")
-			   ("odt" . "libreoffice")
-			   ("ppt" . "libreoffice")
-			   ("pptx" . "libreoffice"))))
-
-;; (use-package dirvish
-;;   :config
-;;   (dirvish-override-dired-mode))
-
 (use-package sunrise
+  :init
+  (defcustom cory/sunrise-open-extensions nil
+    "Alist of extensions mapping to a programs to run them in.
+The filename is appended after the program."
+    :type '(alist
+            :key-type (string :tag "Extension")
+            :value-type (string :tag "Program"))
+    :group 'sunrise)
+  (defcustom cory/sunrise-open-use-nohup t
+    "If non-nil, use nohup(1) to keep external processes opened
+even if emacs process is terminated.
+This only affects the built-in handlers."
+    :type 'boolean
+    :group 'sunrise)
+  (defcustom cory/sunrise-open-query-before-exit t
+    "If non-nil, ask the user if they want to kill any external
+processes started by `cory/sunrise-open-file' when they exit emacs.
+This only affects the built-in handlers."
+    :type 'boolean
+    :group 'sunrise)
   :custom
-  (sunrise-set-use-commander-keys nil)
+  (sunrise-use-commander-keys nil)
+  (sunrise-listing-switches "-ghoaF --group-directories-first")
+  (delete-by-moving-to-trash t)
+  (cory/sunrise-open-extensions '(("mp4" . "mpc-qt")
+				  ("mpeg" . "mpc-qt")
+				  ("ogg" . "mpc-qt")
+				  ("mkv" . "mpc-qt")
+				  ("webm" . "mpc-qt")
+				  ("mp3" . "strawberry")
+				  ("opus" . "strawberry")
+				  ("wav" . "strawberry")
+				  ("weba" . "strawberry")
+				  ("aac" . "strawberry")
+				  ("doc" . "libreoffice")
+				  ("docx" . "libreoffice")
+				  ("odt" . "libreoffice")
+				  ("ppt" . "libreoffice")
+				  ("pptx" . "libreoffice")
+				  ("xcf" . "gimp")))
   :bind
   ;; NOTE Sunrise uses "C-c s", "C-c t", "C-c r", "C-c v",
   ;; "C-c p", and "C-c b", from the user's space
@@ -85,12 +78,25 @@
    ("<f2>"  . other-window)
    ("<f3>"  . kmacro-start-macro-or-insert-counter)
    ("<f4>"  . kmacro-end-or-call-macro)
-   ("<f10>" . menu-bar-open))
+   ("<f10>" . menu-bar-open)
+   ;; Other binds
+   ("M-<" . cory/sunrise-back-to-top)
+   ("M->" . cory/sunrise-jump-to-bottom))
   :hook
   ;; (sunrise-mode . hl-line-mode)
   (sunrise-mode . (lambda () (setq-local cursor-type nil)))
   :config
   (set-face-attribute 'hl-line nil :background nil :inherit 'highlight)
+
+  (defun cory/sunrise-back-to-top ()
+    (interactive)
+    (beginning-of-buffer)
+    (dired-next-line 1))
+
+  (defun cory/sunrise-jump-to-bottom ()
+    (interactive)
+    (end-of-buffer)
+    (dired-next-line -1))
 
   (defun cory/kill-all-sunrise-buffers ()
     (interactive)
@@ -106,13 +112,14 @@
   (defun cory/sunrise-toggle ()
     "Show or hide the Sunrise Commander."
     (interactive)
-    (or (sunrise-quit)
-       (if (and ;; (boundp 'sunrise-left-buffer)
-	   ;; (boundp 'sunrise-right-buffer)
-	   (buffer-live-p sunrise-left-buffer)
-	   (buffer-live-p sunrise-right-buffer))
-	   (cory/sunrise-show)
-	 (sunrise-show))))
+    (if (sunrise-quit)
+	(hl-line-mode -1)
+      (if (and ;; (boundp 'sunrise-left-buffer)
+	  ;; (boundp 'sunrise-right-buffer)
+	  (buffer-live-p sunrise-left-buffer)
+	  (buffer-live-p sunrise-right-buffer))
+	  (cory/sunrise-show)
+	(sunrise-show))))
 
   (defun cory/sunrise-show ()
     "Ensure the Sunrise Commander is shown with the past two active buffers."
@@ -180,4 +187,60 @@ LEFT-DIRECTORY and RIGHT-DIRECTORY, if non-nil, are the directories to show."
       (sunrise-restore-panes-width)
       (run-hooks 'sunrise-start-hook)))
 
-  )
+  (defun cory/sunrise-open-start-process (file command)
+    "Open FILE with COMMAND.
+FILE is string, path to the file you want to open.  It is
+resolved with `file-truename'.
+Note that FILE should not be \"shell escaped\", that is handled
+by this function if the shell is invoked.
+COMMAND is a string representing the command to run.  If you want
+to call it with any switches, these should be included in this
+string as well."
+    (let ((process
+           (apply 'start-process "sunrise-open" nil
+                  (if cory/sunrise-open-use-nohup
+                      (list "sh" "-c"
+                            (concat
+                             "nohup "
+                             command
+                             " "
+                             (shell-quote-argument (file-truename file))
+                             " 2>&1 >/dev/null"))
+                    (append (split-string command " ")
+                            (list (file-truename file)))))))
+      (when (and process
+               (not cory/sunrise-open-query-before-exit))
+	(set-process-query-on-exit-flag process nil))
+      process))
+
+  (defun cory/sunrise-open-by-extension (filename)
+    "Open a file according to its extension.
+The mappings from extensions to applications is specified by
+`cory/sunrise-open-extensions'."
+    (interactive)
+    (let (process)
+      (when (and filename
+	       (not (file-directory-p filename)))
+	(--each-while cory/sunrise-open-extensions (not process)
+          (when (string-match-p (concat "\\." (regexp-quote (car it)) "\\'") filename)
+            (setq process (cory/sunrise-open-start-process filename (cdr it)))))
+	process)))
+
+  ;; Redefinition
+  (defun sunrise-find-file (filename &optional wildcards)
+    "Determine the proper way of handling an object in the file system.
+
+FILENAME can be either a regular file, a regular directory, a
+Sunrise VIRTUAL directory, or a virtual directory served by AVFS.
+WILDCARDS is passed to `sunrise-find-regular-file'."
+    (interactive (find-file-read-args "Find file or directory: " nil))
+    (cl-ecase (sunrise-classify-file filename)
+      (file
+       (or (cory/sunrise-open-by-extension filename)
+	  (sunrise-find-regular-file filename wildcards)))
+      (directory
+       (sunrise-find-regular-directory filename))
+      (virtual-directory
+       (sunrise-find-virtual-directory filename))
+      (avfs-directory
+       (sunrise-find-regular-directory (sunrise-avfs-dir filename))))))
