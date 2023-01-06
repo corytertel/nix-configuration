@@ -35,6 +35,8 @@ This only affects the built-in handlers."
   :custom
   (sunrise-use-commander-keys nil)
   (sunrise-listing-switches "-ghoaF --group-directories-first")
+  (sunrise-virtual-listing-switches "-ghoaFd --group-directories-first")
+  (sunrise-show-hidden-files t)
   (delete-by-moving-to-trash t)
   (cory/sunrise-open-extensions '(("mp4" . "mpc-qt")
 				  ("mpeg" . "mpc-qt")

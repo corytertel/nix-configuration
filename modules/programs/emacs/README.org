@@ -5,3 +5,15 @@
 * Reference Configs
 https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org
 https://eshelyaron.com/esy.html
+https://github.com/pimeys/nixos/blob/main/desktop/emacs/config.org
+https://github.com/DogLooksGood/dogEmacs (meow inspiration)
+https://github.com/erikbackman/nixos-config/blob/master/modules/programs/emacs/config/ebn-init.el
+https://github.com/gopar/.emacs.d
+https://codeberg.org/vifon/emacs-config
+https://github.com/Lambda-Emacs/lambda-emacs
+https://github.com/yilin-zhang/.emacs.d (kind-all-the-icons)
+https://github.com/rougier/elegant-emacs
+https://github.com/Likhon-baRoy/.emacs.d
+https://github.com/Likhon-baRoy/.emacs.d/blob/main/init.el
+https://github.com/magnars/.emacs.d
+https://github.com/toumorokoshi/yt.rc/tree/master/emacs

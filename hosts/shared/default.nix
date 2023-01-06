@@ -155,6 +155,7 @@
       CHICKEN_INCLUDE_PATH = "${chicken}/share";
     };
     systemPackages = with pkgs; [
+      mg
       wget
       curl
       git
@@ -294,6 +295,9 @@
             wrapfig amsmath ulem hyperref capt-of;
         });
       in with pkgs; [
+        # repeat of system basics
+        mg
+
         # linux basics
         killall
         btop
@@ -407,6 +411,9 @@
         # anki-bin
         peek
         sshfs
+        qmk
+        avrdude
+        avrdudess
 
         # games
         libsForQt5.kpat
@@ -425,8 +432,6 @@
         superTuxKart
         # srb2kart
         # crispyDoom
-
-        mesa-demos
 
         # wireshark
         # tcpdump

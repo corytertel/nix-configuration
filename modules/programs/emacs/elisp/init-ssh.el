@@ -62,7 +62,7 @@
 			       (concat mount-path "/home/" user "/")))))
 
 (defun cory/disconnect-ssh ()
-  "Manually disconnects the ssh connection to the server. Requires fusemount."
+  "Manually disconnects the ssh connection to the server. Requires fusermount."
   (interactive)
   (shell-command
    (concat "fusermount -u "

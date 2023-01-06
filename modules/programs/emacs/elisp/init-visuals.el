@@ -11,6 +11,18 @@
 ;; (setq-default cursor-type 'bar)
 (setq-default cursor-type 'hollow)
 
+(setq initial-scratch-message
+      (concat
+       ";; This buffer is for text that is not saved, and for Lisp evaluation.\n"
+       ";; To create a file, visit it with C-x C-f and enter text in its buffer.\n"
+       ";;\n"
+       ";; __          __  _                            \n"
+       ";; \\ \\        / / | |                           \n"
+       ";;  \\ \\  /\\  / /__| | ___ ___  _ __ ___   ___   \n"
+       ";;   \\ \\/  \\/ / _ \\ |/ __/ _ \\| '_ ` _ \\ / _ \\  \n"
+       ";;    \\  /\\  /  __/ | (_| (_) | | | | | |  __/_ \n"
+       ";;     \\/  \\/ \\___|_|\\___\\___/|_| |_| |_|\\___(_)\n"))
+
 ;; Beacon
 (use-package beacon
   :config

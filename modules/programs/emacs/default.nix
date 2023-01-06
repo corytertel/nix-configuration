@@ -161,6 +161,9 @@ in {
       poppler
       ffmpegthumbnailer
       mediainfo
+      # ssh
+      sshfs
+      fuse
       # dictionary
       scowl
       ispell

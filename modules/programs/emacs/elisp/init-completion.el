@@ -2,63 +2,83 @@
 ;; --- DEFAULT COMPLETION ---
 ;;
 
-;; (use-package vertico
-;;   :config
-;;   (recentf-mode t)
-;;   (vertico-mode t))
+(use-package vertico
+  :custom
+  (vertico-count 16)
+  (vertico-cycle t)
+  ;; :bind
+  ;; (:map vertico-map
+  ;;  ("TAB" . cory/vertico-insert-unless-tramp))
+  :init
+  (advice-add #'vertico--format-candidate :around
+              (lambda (orig cand prefix suffix index _start)
+		(setq cand (funcall orig cand prefix suffix index _start))
+		(concat
+		 (if (= vertico--index index)
+                     (propertize "» " 'face 'vertico-current)
+                   "  ")
+		 cand)))
+  :config
+  (recentf-mode t)
+  (savehist-mode t)
+  (vertico-mode t)
+  (vertico-reverse-mode t))
 
 ;; (use-package vertico-posframe
 ;;   :after vertico
 ;;   :config (vertico-posframe-mode 1))
 
-;; ;; Configure directory extension.
-;; (use-package vertico-directory
-;;   :after vertico
-;;   :ensure nil
-;;   ;; More convenient directory navigation commands
-;;   :bind (:map vertico-map
-;;          ("RET" . vertico-directory-enter)
-;;          ("DEL" . vertico-directory-delete-char)
-;;          ("M-DEL" . vertico-directory-delete-word))
-;;   ;; Tidy shadowed file names
-;;   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+;; Configure directory extension.
+(use-package vertico-directory
+  :after vertico
+  :ensure nil
+  ;; More convenient directory navigation commands
+  :bind (:map vertico-map
+         ("RET" . vertico-directory-enter)
+         ("DEL" . vertico-directory-delete-char)
+         ("M-DEL" . vertico-directory-delete-word))
+  ;; Tidy shadowed file names
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
-;; Recursive minibuffers
-(require 'mb-depth)
-(setq enable-recursive-minibuffers t)
-(minibuffer-depth-indicate-mode)
+;; ;; Keep track of recent files
+;; (recentf-mode t)
 
-;; Custom vertical completion
-(setq read-extended-command-predicate #'command-completion-default-include-p
-      completions-format 'one-column
-      completion-auto-select nil
-      completions-detailed nil
-      ;; completion-styles '(orderless partial-completion basic)
-      completion-show-help nil
-      completions-header-format (propertize "%s candidates:\n"
-                                            'face 'shadow)
-      completion-auto-help 'visual
-      completions-max-height 16
-      completion-auto-wrap t)
+;; ;; Recursive minibuffers
+;; (require 'mb-depth)
+;; (setq enable-recursive-minibuffers t)
+;; (minibuffer-depth-indicate-mode)
 
-(define-key minibuffer-local-completion-map
-  [remap previous-line]
-  #'minibuffer-previous-completion)
-
-(define-key minibuffer-local-completion-map
-  [remap next-line]
-  #'minibuffer-next-completion)
+;; ;; Custom vertical completion
+;; (setq read-extended-command-predicate #'command-completion-default-include-p
+;;       completions-format 'one-column
+;;       completion-auto-select nil
+;;       completions-detailed nil
+;;       ;; completion-styles '(orderless partial-completion basic)
+;;       completion-show-help nil
+;;       completions-header-format (propertize "%s candidates:\n"
+;;                                             'face 'shadow)
+;;       completion-auto-help 'visual
+;;       completions-max-height 16
+;;       completion-auto-wrap t)
 
 ;; (define-key minibuffer-local-completion-map
-;;   [backtab] #'minibuffer-previous-completion)
+;;   [remap previous-line]
+;;   #'minibuffer-previous-completion)
 
 ;; (define-key minibuffer-local-completion-map
-;;   [tab] #'minibuffer-next-completion)
+;;   [remap next-line]
+;;   #'minibuffer-next-completion)
 
-(add-to-list 'display-buffer-alist
-             '("\\*Completions\\*"
-               (display-buffer-reuse-window display-buffer-at-bottom)
-               (window-parameters . ((mode-line-format . none)))))
+;; ;; (define-key minibuffer-local-completion-map
+;; ;;   [backtab] #'minibuffer-previous-completion)
+
+;; ;; (define-key minibuffer-local-completion-map
+;; ;;   [tab] #'minibuffer-next-completion)
+
+;; (add-to-list 'display-buffer-alist
+;;              '("\\*Completions\\*"
+;;                (display-buffer-reuse-window display-buffer-at-bottom)
+;;                (window-parameters . ((mode-line-format . none)))))
 
 ;; Icons in minibuffer
 (use-package all-the-icons-completion

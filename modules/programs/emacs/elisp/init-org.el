@@ -263,6 +263,17 @@
 (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
   (add-hook hook (lambda () (flyspell-mode -1))))
 
+(setq flyspell-mode-map
+      (let ((map (make-sparse-keymap)))
+	(if flyspell-use-meta-tab
+	    (define-key map "\M-\t" 'flyspell-auto-correct-word))
+	;; (define-key map flyspell-auto-correct-binding 'flyspell-auto-correct-previous-word)
+	;; (define-key map [(control ?\,)] 'flyspell-goto-next-error)
+	;; (define-key map [(control ?\.)] 'flyspell-auto-correct-word)
+	(define-key map [?\C-c ?$] 'flyspell-correct-word-before-point)
+	map)
+      "Minor mode keymap for Flyspell mode--for the whole buffer.")
+
 (use-package flyspell-correct
   :after flyspell
   :init
