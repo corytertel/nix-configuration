@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: enum
-# key: e
-# --
-#[derive(Debug, PartialEq)]
-enum ${1:Enum} {
-    $0
-}

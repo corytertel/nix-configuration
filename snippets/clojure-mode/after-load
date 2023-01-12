@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: after-load
-# key: after-load
-# --
-(defn after-load [] (init))

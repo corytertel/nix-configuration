@@ -5,19 +5,17 @@
   ;; (tempel-trigger-prefix "")
 
   :hook
-  ((prog-mode text-mode) . tempel-setup-capf)
-  (emacs-lisp-mode . elisp-super-capf)
+  (prog-mode . cory/tempel-setup-capf)
+  (emacs-lisp-mode . cory/elisp-super-capf)
 
-  :bind (("M-+" . tempel-complete) ;; Alternative tempel-expand
-         ("M-*" . tempel-insert)
-	 :map tempel-map
+  :bind (:map tempel-map
 	 ("C-<tab>" . tempel-next)
 	 ("C-S-<tab>" . tempel-previous)
 	 ([remap keyboard-quit] . tempel-done))
 
   :init
   ;; Setup completion at point
-  (defun tempel-setup-capf ()
+  (defun cory/tempel-setup-capf ()
     ;; Add the Tempel Capf to `completion-at-point-functions'.
     ;; `tempel-expand' only triggers on exact matches. Alternatively use
     ;; `tempel-complete' if you want to see all matches, but then you
@@ -29,7 +27,7 @@
                 (cons #'tempel-complete
 		      completion-at-point-functions)))
 
-  (defun elisp-super-capf ()
+  (defun cory/elisp-super-capf ()
     (setq-local completion-at-point-functions
 		(list (cape-super-capf
 		       #'tempel-complete

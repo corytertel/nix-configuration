@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: jsw
-# key: jsw
-# --
-(.warn js/console $1)

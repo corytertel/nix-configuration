@@ -88,89 +88,113 @@
 
 ;; better comment-dwim
 (use-package comment-dwim-2
-  :bind ("M-;" . comment-dwim-2))
+  :bind ("M-;" . cory/comment-dwim)
+  :config
+  (defun cory/comment-dwim ()
+    (interactive)
+    (when (and transient-mark-mode mark-active (not (eq (mark) (point))))
+      (let ((region (buffer-substring-no-properties (mark) (point))))
+        (kill-ring-save nil nil region)))
+    (call-interactively #'comment-dwim-2)))
+
+;; Paredit
+(use-package paredit
+  :ensure t
+  :config
+  (defun cory/paredit-semicolon (f &rest args)
+    (if (region-active-p)
+	(comment-region (region-beginning) (region-end))
+      (apply f args)))
+  (advice-add 'paredit-semicolon :around #'cory/paredit-semicolon)
+  :hook ((emacs-lisp-mode
+	  lisp-mode lisp-data-mode
+	  clojure-mode cider-repl-mode
+	  racket-mode racket-repl-mode
+	  scheme-mode geiser-repl-mode
+	  json-mode)
+	 . enable-paredit-mode))
 
 ;; Smartparens
-(use-package smartparens
-  :defer 1
-  :hook ((
-          emacs-lisp-mode lisp-mode lisp-data-mode clojure-mode cider-repl-mode
-	  racket-mode racket-repl-mode scheme-mode geiser-repl-mode json-mode
-          ) . smartparens-strict-mode)
-  :bind (:map smartparens-mode-map
-         ;; This is the paredit mode map minus a few key bindings
-         ;; that I use in other modes (e.g. M-?)
-         ("C-M-f" . sp-forward-sexp) ;; navigation
-         ("C-M-b" . sp-backward-sexp)
-         ("C-M-u" . sp-backward-up-sexp)
-         ("C-M-d" . sp-down-sexp)
-         ("C-M-p" . sp-backward-down-sexp)
-         ("C-M-n" . sp-up-sexp)
-         ("M-S" . sp-splice-sexp) ;; depth-changing commands
-         ("M-R" . sp-splice-sexp-killing-around)
-         ("M-(" . sp-wrap-round)
-         ("C-)" . sp-forward-slurp-sexp) ;; barf/slurp
-         ("M-<right>" . sp-forward-slurp-sexp)
-         ("C-}" . sp-forward-barf-sexp)
-         ("M-<left>" . sp-forward-barf-sexp)
-         ("C-(" . sp-backward-slurp-sexp)
-         ("M-S-<left>" . sp-backward-slurp-sexp)
-         ("C-{" . sp-backward-barf-sexp)
-         ("M-S-<right>" . sp-backward-barf-sexp)
-         ("M-S" . sp-split-sexp) ;; misc
-         ("M-j" . sp-join-sexp)
-	 )
-  :config
-  (require 'smartparens-config)
-  (setq sp-base-key-bindings 'paredit)
-  (setq sp-autoskip-closing-pair 'always)
+;; (use-package smartparens
+;;   :defer 1
+;;   :hook ((
+;;           emacs-lisp-mode lisp-mode lisp-data-mode clojure-mode cider-repl-mode
+;; 	  racket-mode racket-repl-mode scheme-mode geiser-repl-mode json-mode
+;;           ) . smartparens-strict-mode)
+;;   :bind (:map smartparens-mode-map
+;;          ;; This is the paredit mode map minus a few key bindings
+;;          ;; that I use in other modes (e.g. M-?)
+;;          ("C-M-f" . sp-forward-sexp) ;; navigation
+;;          ("C-M-b" . sp-backward-sexp)
+;;          ("C-M-u" . sp-backward-up-sexp)
+;;          ("C-M-d" . sp-down-sexp)
+;;          ("C-M-p" . sp-backward-down-sexp)
+;;          ("C-M-n" . sp-up-sexp)
+;;          ("M-S" . sp-splice-sexp) ;; depth-changing commands
+;;          ("M-R" . sp-splice-sexp-killing-around)
+;;          ("M-(" . sp-wrap-round)
+;;          ("C-)" . sp-forward-slurp-sexp) ;; barf/slurp
+;;          ("M-<right>" . sp-forward-slurp-sexp)
+;;          ("C-}" . sp-forward-barf-sexp)
+;;          ("M-<left>" . sp-forward-barf-sexp)
+;;          ("C-(" . sp-backward-slurp-sexp)
+;;          ("M-S-<left>" . sp-backward-slurp-sexp)
+;;          ("C-{" . sp-backward-barf-sexp)
+;;          ("M-S-<right>" . sp-backward-barf-sexp)
+;;          ("M-S" . sp-split-sexp) ;; misc
+;;          ("M-j" . sp-join-sexp)
+;; 	 )
+;;   :config
+;;   (require 'smartparens-config)
+;;   (setq sp-base-key-bindings 'paredit)
+;;   (setq sp-autoskip-closing-pair 'always)
 
-  ;; Don't insert annoying colon after Python def
-  (setq sp-python-insert-colon-in-function-definitions nil)
+;;   ;; Don't insert annoying colon after Python def
+;;   (setq sp-python-insert-colon-in-function-definitions nil)
 
-  ;; Always highlight matching parens
-  (show-smartparens-global-mode +1)
+;;   ;; Always highlight matching parens
+;;   (show-smartparens-global-mode +1)
 
-  ;; Blink matching parens
-  (setq blink-matching-paren t)
+;;   ;; Blink matching parens
+;;   (setq blink-matching-paren t)
 
-  (defun whole-line-or-region-sp-kill-region (prefix)
-    "Call `sp-kill-region' on region or PREFIX whole lines."
-    (interactive "*p")
-    (whole-line-or-region-wrap-beg-end 'sp-kill-region prefix))
+;;   (defun whole-line-or-region-sp-kill-region (prefix)
+;;     "Call `sp-kill-region' on region or PREFIX whole lines."
+;;     (interactive "*p")
+;;     (whole-line-or-region-wrap-beg-end 'sp-kill-region prefix))
 
-  ;; Create keybindings to wrap symbol/region in pairs
-  (defun prelude-wrap-with (s)
-    "Create a wrapper function for smartparens using S."
-    `(lambda (&optional arg)
-       (interactive "P")
-       (sp-wrap-with-pair ,s)))
-  (define-key prog-mode-map (kbd "M-(") (prelude-wrap-with "("))
-  (define-key prog-mode-map (kbd "M-[") (prelude-wrap-with "["))
-  (define-key prog-mode-map (kbd "M-{") (prelude-wrap-with "{"))
-  (define-key prog-mode-map (kbd "M-\"") (prelude-wrap-with "\""))
-  (define-key prog-mode-map (kbd "M-'") (prelude-wrap-with "'"))
-  (define-key prog-mode-map (kbd "M-`") (prelude-wrap-with "`"))
+;;   ;; Create keybindings to wrap symbol/region in pairs
+;;   (defun prelude-wrap-with (s)
+;;     "Create a wrapper function for smartparens using S."
+;;     `(lambda (&optional arg)
+;;        (interactive "P")
+;;        (sp-wrap-with-pair ,s)))
+;;   (define-key prog-mode-map (kbd "M-(") (prelude-wrap-with "("))
+;;   (define-key prog-mode-map (kbd "M-[") (prelude-wrap-with "["))
+;;   (define-key prog-mode-map (kbd "M-{") (prelude-wrap-with "{"))
+;;   (define-key prog-mode-map (kbd "M-\"") (prelude-wrap-with "\""))
+;;   (define-key prog-mode-map (kbd "M-'") (prelude-wrap-with "'"))
+;;   (define-key prog-mode-map (kbd "M-`") (prelude-wrap-with "`"))
 
-  ;; smart curly braces
-  (sp-pair "{" nil :post-handlers
-           '(((lambda (&rest _ignored)
-                (crux-smart-open-line-above)) "RET")))
-  (sp-pair "[" nil :post-handlers
-           '(((lambda (&rest _ignored)
-                (crux-smart-open-line-above)) "RET")))
-  (sp-pair "(" nil :post-handlers
-           '(((lambda (&rest _ignored)
-                (crux-smart-open-line-above)) "RET")))
+;;   ;; smart curly braces
+;;   (sp-pair "{" nil :post-handlers
+;;            '(((lambda (&rest _ignored)
+;;                 (crux-smart-open-line-above)) "RET")))
+;;   (sp-pair "[" nil :post-handlers
+;;            '(((lambda (&rest _ignored)
+;;                 (crux-smart-open-line-above)) "RET")))
+;;   (sp-pair "(" nil :post-handlers
+;;            '(((lambda (&rest _ignored)
+;;                 (crux-smart-open-line-above)) "RET")))
 
-  ;; Don't include semicolon ; when slurping
-  (add-to-list 'sp-sexp-suffix '(java-mode regexp ""))
-  (add-to-list 'sp-sexp-suffix '(c-mode regexp ""))
-  (add-to-list 'sp-sexp-suffix '(c++-mode regexp ""))
-  (add-to-list 'sp-sexp-suffix '(nix-mode regexp ""))
+;;   ;; Don't include semicolon ; when slurping
+;;   (add-to-list 'sp-sexp-suffix '(java-mode regexp ""))
+;;   (add-to-list 'sp-sexp-suffix '(c-mode regexp ""))
+;;   (add-to-list 'sp-sexp-suffix '(c++-mode regexp ""))
+;;   (add-to-list 'sp-sexp-suffix '(nix-mode regexp ""))
 
-  ;; use smartparens-mode everywhere
-  (smartparens-global-mode))
+;;   ;; use smartparens-mode everywhere
+;;   (smartparens-global-mode))
 
 ;; Smart-region: Smart region selection
 ;; Smart region guesses what you want to select by one command:
@@ -360,10 +384,8 @@
 ;; Visual regex replacement
 (use-package visual-regexp
   :bind
-  (("C-c c" . cory/replace)
-   ("C-c C" . vr/query-replace)
-   ;; for multiple-cursors
-   ("C-c M" . vr/mc-mark))
+  (("M-%" . cory/replace)
+   ("C-M-%" . cory/replace))
   :config
   (defun cory/replace ()
     (interactive)

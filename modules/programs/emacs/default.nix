@@ -42,6 +42,7 @@ let
              + (builtins.readFile ./elisp/init-nixos.el)
              + (builtins.readFile ./elisp/init-org.el)
              + (builtins.readFile ./elisp/init-pdf.el)
+             + (builtins.readFile ./elisp/init-eww.el)
 
              # Window Management
              + (builtins.readFile ./elisp/init-window-management.el)
@@ -133,7 +134,14 @@ in {
       ".local/share/dict/words".source = "${pkgs.scowl}/share/dict/words.txt";
     };
 
-    environment.systemPackages = with pkgs; [
+    environment.systemPackages = let
+      tex = (pkgs.texlive.combine {
+        inherit (pkgs.texlive) scheme-basic
+          dvisvgm dvipng # for preview and export as html
+          wrapfig amsmath ulem hyperref capt-of;
+      });
+    in with pkgs; [
+      tex
       git
       ripgrep
       flameshot

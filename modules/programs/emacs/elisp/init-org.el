@@ -7,9 +7,12 @@
   :hook
   (org-mode . (lambda ()
 		(org-indent-mode)
-		;; (variable-pitch-mode) ; varible font
+		(variable-pitch-mode) ; varible font
 		;; (auto-fill-mode) ; line breaks
-		(visual-line-mode)))
+		(visual-line-mode)
+		(setq-local completion-styles '(basic flex))
+		(setq-local corfu-auto-prefix 2)
+		(org-cdlatex-mode)))
 
   (org-mode . (lambda () (interactive)
                 (setq prettify-symbols-alist '(("[#A]" . " ")
@@ -57,7 +60,12 @@
    ("C-c o A" . org-agenda)
    ("C-c o g" . consult-org-agenda)
    ("C-c o c" . org-capture)
-   ("C-c o r" . org-refile))
+   ("C-c o r" . org-refile)
+   :map org-mode-map
+   ("C-o" . org-meta-return)
+   ("C-c C-h" . consult-org-heading)
+   ("C-x r N" . cory/rectangle-number-lines)
+   ("C-S-RET" . cory/org-insert-heading-above-respect-content))
 
   :custom
   (org-ellipsis " ▼")
@@ -73,6 +81,13 @@
   (org-startup-with-inline-images t)
   (org-image-actual-width nil)
   (org-return-follows-link t)
+  (org-insert-heading-respect-content t)
+  (org-startup-with-latex-preview t)
+  (org-highlight-latex-and-related '(native))
+  ;; (org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
+  (org-latex-listings 'minted)
+  (org-latex-packages-alist '(("" "minted")))
+  (org-latex-tables-centered t)
   (org-latex-compiler "lualatex")
   (org-preview-latex-default-process 'dvisvgm)
   (org-latex-pdf-process
@@ -185,14 +200,14 @@
                              (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  ;; (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-  ;; (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-  ;; (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-  ;; ;; (set-face-attribute 'org-indent nil   :inherit '(org-hide fixed-pitch))
-  ;; (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-  ;; (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-  ;; (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  ;; (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+  ;; (set-face-attribute 'org-indent nil   :inherit '(org-hide fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 
   ;; Save Org buffers after refiling
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
@@ -204,7 +219,26 @@
     (delete-other-windows)
     (toggle-frame-fullscreen))
 
-  (add-hook 'after-init-hook #'cory/display-weekly-agenda))
+  (add-hook 'after-init-hook #'cory/display-weekly-agenda)
+
+  ;; Org-babel languages
+  (org-babel-do-load-languages 'org-babel-load-languages
+			       '((latex . t)
+				 (emacs-lisp . t)
+				 (scheme . t)
+				 (lisp . t)
+				 ;; (c++ . t)
+				 (java . t)))
+
+  (defun cory/rectangle-number-lines ()
+    (interactive)
+    (rectangle-number-lines (region-beginning) (region-end) 1 "%s. "))
+
+  (defun cory/org-insert-heading-above-respect-content (&optional invisible-ok)
+    "Insert heading with above current heading."
+    (interactive)
+    (beginning-of-line)
+    (org-insert-heading nil invisible-ok)))
 
 (use-package org-bullets
   :after org
@@ -265,14 +299,13 @@
 
 (setq flyspell-mode-map
       (let ((map (make-sparse-keymap)))
-	(if flyspell-use-meta-tab
-	    (define-key map "\M-\t" 'flyspell-auto-correct-word))
+	;; (if flyspell-use-meta-tab
+	;;     (define-key map "\M-\t" 'flyspell-auto-correct-word))
 	;; (define-key map flyspell-auto-correct-binding 'flyspell-auto-correct-previous-word)
 	;; (define-key map [(control ?\,)] 'flyspell-goto-next-error)
 	;; (define-key map [(control ?\.)] 'flyspell-auto-correct-word)
 	(define-key map [?\C-c ?$] 'flyspell-correct-word-before-point)
-	map)
-      "Minor mode keymap for Flyspell mode--for the whole buffer.")
+	map))
 
 (use-package flyspell-correct
   :after flyspell
@@ -311,3 +344,8 @@ of (command . word) to be used by `flyspell-do-correct'."
       res))
 
   (setq flyspell-correct-interface #'frog-menu-flyspell-correct))
+
+(use-package cdlatex
+  :commands 'turn-on-cdlatex)
+
+;; (use-package latex-preview-pane)

@@ -257,6 +257,19 @@ Else, goto the end of the buffer."
   (self-insert-command 1 ? )
   (backward-char))
 
+(defun cory/newline-dwim ()
+  (interactive)
+  (let ((break-open-pair (or (and (looking-back "{" 1) (looking-at "}"))
+                            (and (looking-back ">" 1) (looking-at "<"))
+                            (and (looking-back "(" 1) (looking-at ")"))
+                            (and (looking-back "\\[" 1) (looking-at "\\]")))))
+    (newline)
+    (when break-open-pair
+      (save-excursion
+        (newline)
+        (indent-for-tab-command)))
+    (indent-for-tab-command)))
+
 ;;; Basic Keybinds
 
 ;; Swap "C-h" and "C-x", so it's easier to type on Dvorak layout
@@ -270,6 +283,7 @@ Else, goto the end of the buffer."
 
 (cory/define-keys
  global-map
+ ("RET"   . cory/newline-dwim)
  ("C-x k" . kill-this-buffer)
  ("C-x K" . kill-buffer)
  ("C-c w" . woman)

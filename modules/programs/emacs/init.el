@@ -111,24 +111,6 @@
 ;; Add newlines when C-n at the end of file
 (setq next-line-add-newlines t)
 
-;; Eww
-(setq eww-search-prefix "http://frogfind.com/?q=")
-
-(with-eval-after-load 'eww
-  (setq eww-auto-rename-buffer 'title
-        browse-url-browser-function #'eww-browse-url))
-
-(defun cory/eww ()
-  "Prompt for a URL or keywords to search the web for."
-  (interactive)
-  (eww (mapconcat #'identity
-                  (completing-read-multiple "Browse or search: "
-                                            eww-prompt-history
-                                            nil nil nil
-                                            'eww-prompt-history
-                                            (car (eww-suggested-uris)))
-                  " ")))
-
 ;; Emacs run launcher
 (defun emacs-run-launcher ()
   "A frame to launch desktop applications."
@@ -161,5 +143,10 @@
 
 ;; Set the fringe to an big enough width
 (custom-set-variables '(fringe-mode 20))
+
+;; Show the time in Phoenix and Moscow in world-clock
+(with-eval-after-load 'time
+  (add-to-list 'zoneinfo-style-world-list '("America/Phoenix" "Phoenix"))
+  (add-to-list 'zoneinfo-style-world-list '("Europe/Moscow" "Moscow")))
 
 ;;; init.el ends here

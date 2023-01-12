@@ -42,6 +42,7 @@ This only affects the built-in handlers."
 				  ("mpeg" . "mpc-qt")
 				  ("ogg" . "mpc-qt")
 				  ("mkv" . "mpc-qt")
+				  ("mov" . "mpc-qt")
 				  ("webm" . "mpc-qt")
 				  ("mp3" . "strawberry")
 				  ("opus" . "strawberry")

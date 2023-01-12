@@ -16,7 +16,7 @@ prog-mode
 scheme-mode
 
 (lambda "lambda (" p ")" n> r>)
-(define "define " p "\n  \"" p "\"")
+(define "define " p "\n  " p)
 (let "let (" p ")" n> r> "")
 (cond "cond"n>
       "("(p "(predicate)")" "(p "return")")"n>

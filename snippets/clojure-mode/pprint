@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: cljs-pprint
-# key: pp
-# --
-(cljs.pprint/pprint $0)

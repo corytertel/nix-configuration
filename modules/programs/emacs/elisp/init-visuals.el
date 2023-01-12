@@ -141,8 +141,10 @@
 (set-face-attribute 'default nil :family "Victor Mono")
 ;; Set fixed pitch face
 ;; (set-face-attribute 'fixed-pitch nil :font "Victor Mono")
+(set-face-attribute 'fixed-pitch nil :family "Victor Mono")
 ;; Set variable pitch face
 ;; (set-face-attribute 'variable-pitch nil :font "Oxygen-Sans")
+(set-face-attribute 'variable-pitch nil :family "Oxygen-Sans")
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
@@ -212,7 +214,6 @@
 
 (setq custom-safe-themes t) ; Treat all themes as safe
 (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
-;; (add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-dark t)))
 (add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-light t)))
 
 ;;

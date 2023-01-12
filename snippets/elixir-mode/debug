@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: debug
-# key: debug
-# --
-Logger.debug("$1: #{inspect $1}")

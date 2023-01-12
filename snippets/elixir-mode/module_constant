@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: module_constant
-# key: mm
-# --
-__MODULE__

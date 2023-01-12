@@ -288,13 +288,7 @@
       homeDirectory = "/home/cory";
       stateVersion = "21.11";
 
-      packages = let
-        tex = (pkgs.texlive.combine {
-          inherit (pkgs.texlive) scheme-basic
-            dvisvgm dvipng # for preview and export as html
-            wrapfig amsmath ulem hyperref capt-of;
-        });
-      in with pkgs; [
+      packages = with pkgs; [
         # repeat of system basics
         mg
 
@@ -346,7 +340,6 @@
         # other programing languages
         nodejs
         yarn
-        tex
         # rnix-lsp
         # nil
         javaPackages.openjfx17

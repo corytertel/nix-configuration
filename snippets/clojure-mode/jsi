@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: jsi
-# key: jsi
-# --
-(.info js/console $1)
