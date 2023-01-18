@@ -49,15 +49,10 @@
 
 (use-package geiser
   :hook
-  (geiser-mode . (lambda () (geiser-capf-setup nil)))
+  (geiser-mode . (lambda ()
+		   (geiser-capf-setup nil)))
   (scheme-mode . scheme-super-capf)
   ;; (scheme-mode . cory/run-geiser-p)
-  ;; :bind
-  ;; (:map geiser-mode-map
-  ;;  ("C-c C-d d" . cory/chicken-doc-look-up-manual)
-  ;;  ("C-c C-d C-d" . cory/chicken-doc-look-up-manual)
-  ;;  ("C-c C-d i" . cory/chicken-doc-look-up-manual)
-  ;;  ("C-c C-d TAB" . cory/chicken-doc-look-up-manual))
   :custom
   (geiser-active-implementations '(chicken))
   :config
@@ -69,7 +64,11 @@
       (define-key
 	geiser-mode-map
 	(kbd bind)
-	#'cory/chicken-doc-look-up-manual)))
+	#'cory/chicken-doc-look-up-manual))
+
+    (define-key
+      geiser-mode-map
+      (kbd "C-.") nil))
 
   (defun scheme-super-capf ()
     (setq-local completion-at-point-functions

@@ -7,6 +7,16 @@
 ;; 3. Fast
 ;; 4. Flexible
 
+;; Config Rules:
+;; 1. All eligible variables will be set through customize.
+;; 2. Anything that is reliant or tied to a package must be put in the
+;;    `use-package' of the package. Binds related to the package must
+;;    be put in :bind, variables must be set in :custom, and functions
+;;    must be put in :config.
+;; 3. All functions that are not related to a package must be declared
+;;    in the functions file. All keybinds not related to a package must
+;;    be declared in the keybinds file.
+
 ;;; Code:
 
 ;;
@@ -110,6 +120,38 @@
 
 ;; Add newlines when C-n at the end of file
 (setq next-line-add-newlines t)
+
+;; Buffer management
+(use-package ibuffer-project
+  :hook (ibuffer-mode . cory/ibuffer-setup)
+  :custom
+  (ibuffer-truncate-lines nil)
+  (ibuffer-project-use-cache t)
+  (ibuffer-expert t) ; stop yes no prompt on delete
+  :config
+  (defun cory/ibuffer-setup ()
+    (setq ibuffer-filter-groups
+	  (append (cdr (ibuffer-project-generate-filter-groups))
+		  '(("Programming"
+		     (mode . prog-mode))
+		    ("Org"
+		     (mode . org-mode))
+		    ("Magit"
+		     (name . "^magit"))
+		    ("Planner"
+		     (or
+		      (name . "^\\*Calendar\\*$")
+		      (name . "^\\*Org Agenda\\*")))
+		    ("Sunrise"
+		     (mode . sunrise-mode))
+		    ("Emacs"
+		     (or
+		      (name . "^\\*scratch\\*$")
+		      (name . "^\\*Messages\\*$"))))))))
+
+(use-package all-the-icons-ibuffer
+  :ensure t
+  :hook (ibuffer-mode . all-the-icons-ibuffer-mode))
 
 ;; Emacs run launcher
 (defun emacs-run-launcher ()

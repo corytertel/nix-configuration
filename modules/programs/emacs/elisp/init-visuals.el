@@ -94,6 +94,7 @@
          (prog-mode         . olivetti-mode)
          (Info-mode         . olivetti-mode)
 	 (woman-mode        . olivetti-mode)
+	 (ibuffer-mode      . olivetti-mode)
          (org-mode          . olivetti-mode)
          (mu4e-view-mode    . olivetti-mode)
          (elfeed-show-mode  . olivetti-mode)

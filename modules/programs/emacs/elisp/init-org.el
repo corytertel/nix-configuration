@@ -10,7 +10,7 @@
 		(variable-pitch-mode) ; varible font
 		;; (auto-fill-mode) ; line breaks
 		(visual-line-mode)
-		(setq-local completion-styles '(basic flex))
+		(setq-local completion-styles '(emacs21 flex))
 		(setq-local corfu-auto-prefix 2)
 		(org-cdlatex-mode)))
 
@@ -65,7 +65,8 @@
    ("C-o" . org-meta-return)
    ("C-c C-h" . consult-org-heading)
    ("C-x r N" . cory/rectangle-number-lines)
-   ("C-S-RET" . cory/org-insert-heading-above-respect-content))
+   ("C-S-<return>" . cory/org-insert-heading-above-respect-content)
+   ("C-x C-e" . org-babel-execute-src-block))
 
   :custom
   (org-ellipsis " ▼")
@@ -238,7 +239,22 @@
     "Insert heading with above current heading."
     (interactive)
     (beginning-of-line)
-    (org-insert-heading nil invisible-ok)))
+    (org-insert-heading nil invisible-ok))
+
+
+
+  ;; Automatically tangle our Emacs.org config file when we save it
+  ;; (defun cory/org-babel-tangle-config ()
+  ;;   (when (string-equal (buffer-file-name)
+  ;; 			(expand-file-name
+  ;; 			 "~/.config/nix/modules/programs/emacs/config.org"))
+  ;;     ;; Dynamic scoping to the rescue
+  ;;     (let ((org-confirm-babel-evaluate nil))
+  ;; 	(org-babel-tangle))))
+
+  ;; (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook
+  ;; 					   #'cory/org-babel-tangle-config)))
+  )
 
 (use-package org-bullets
   :after org
@@ -250,8 +266,8 @@
 (use-package org-download
   :commands (org-mode org-download-clipboard)
   :custom
-  (org-download-screenshot-method "sleep 1 && flameshot gui -s --raw > %s")
-  :bind ("C-c o s" . org-download-screenshot))
+  (org-download-screenshot-method "sleep 2 && flameshot gui -s --raw > %s")
+  :bind ("C-c C-o s" . org-download-screenshot))
 
 ;; Org roam
 (use-package org-roam

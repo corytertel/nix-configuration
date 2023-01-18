@@ -87,6 +87,7 @@
          (string-match-p
           (rx (or "*Apropos*"
                  (seq "*cider-inspect" (one-or-more nonl))
+                 "*Chicken Documentation*"
                  "*Currency*"
                  (seq "*Dictionary" (one-or-more nonl))
                  (seq "*eldoc" (one-or-more nonl))
@@ -94,8 +95,8 @@
                  (seq "*Embark Collect" (one-or-more nonl))
                  (seq "*Embark Export" (one-or-more nonl))
                  "*Geiser documentation*"
-                 "*Chicken Documentation*"
                  (seq bol (seq "*Help" (one-or-more nonl)))
+		 "*info*"
                  "*lingva*"
                  "*Metahelp*"
                  (seq "*Shortdoc " (one-or-more nonl))
@@ -106,6 +107,7 @@
                  (seq "*sly-xref" (one-or-more nonl))
                  "*Synonyms List*"
                  "*wclock*"
+		 (seq "*WoMan" (one-or-more nonl))
                  "*WordNut*"
                  "*xref*"))
           (buffer-name buffer)))))

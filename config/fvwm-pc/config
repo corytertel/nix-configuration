@@ -244,10 +244,11 @@ AddToFunc   FocusWindow
 # Function: AutoRaise
 #
 # Focuses a window and adds it to the front of the window list.
+# FIXME FlipFocus might be buggy
 DestroyFunc AutoRaise
 AddToFunc   AutoRaise
 + I Iconify off
-+ I FlipFocus
+# + I FlipFocus
 + I Raise
 
 # Function: FullScreen

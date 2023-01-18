@@ -75,13 +75,15 @@ changed if the START prefix argument is set. The symbol at point and the last
 
 (defun cory/visual-isearch-forward ()
   (interactive)
-  (consult-line)
+  (let ((completions-format 'one-column))
+    (consult-line))
   (beginning-of-line)
   (cory/isearch-forward-resume))
 
 (defun cory/visual-isearch-backward ()
   (interactive)
-  (cory/consult-line-backward)
+  (let ((completions-format 'one-column))
+    (cory/consult-line-backward))
   (end-of-line)
   (cory/isearch-backward-resume))
 

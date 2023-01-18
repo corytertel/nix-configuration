@@ -286,6 +286,7 @@ Else, goto the end of the buffer."
  ("RET"   . cory/newline-dwim)
  ("C-x k" . kill-this-buffer)
  ("C-x K" . kill-buffer)
+ ("C-x C-b" . ibuffer)
  ("C-c w" . woman)
  ;; ("C-x u"   . undo-only)
  ;; ("C-/"     . undo-only)
@@ -301,14 +302,21 @@ Else, goto the end of the buffer."
  ("C-c F" . cory/create-tmp-file)
  ("C-c e" . cory/eww)
  ("S-SPC" . cory/insert-space)
+ ("M-@"   . cory/mark-word)
+ ("C-M-SPC" . cory/mark-sexp)
  ("C-c q" . quit-window)
- ("C-j"   . join-line)
+ ("M-j"   . join-line)
  ("C-c x" . xref-find-references-and-replace)
  ("M-<"   . cory/beginning-of-workspace)
  ("M->"   . cory/end-of-workspace)
  ("C-c s" . cory/connect-ssh)
  ("C-c S" . cory/disconnect-ssh)
- ("C-c p" . palette))
+ ("C-c p" . palette)
+ ("M-S-SPC" . cycle-spacing)
+ ;; Grab Keybinds
+ ("M-SPC"     . cory/grab)
+ ("C-c SPC"   . cory/swap-grab)
+ ("C-c S-SPC" . cory/sync-grab))
 
 ;;; Selection Keybinds
 
@@ -363,24 +371,13 @@ Else, goto the end of the buffer."
  ("b" . end-of-buffer)
  ("p" . forward-paragraph))
 
-;;; Grab Keybinds
-
-(global-set-key (kbd "C-c SPC") #'cory/grab)
-(global-set-key (kbd "C-c C-SPC") #'cory/swap-grab)
-(global-set-key (kbd "C-c M-SPC") #'cory/sync-grab)
-
-;;; Lisp Keybinds
-
-;; FIXME
-(dolist (map (list emacs-lisp-mode-map
-		   lisp-mode-map lisp-data-mode-map
-		   clojure-mode-map ;; cider-repl-mode-map
-		   ;; racket-mode-map racket-repl-mode-map
-		   ;; scheme-mode-map geiser-repl-mode-map
-		   ))
-  (define-key map (kbd "M-a") 'backward-list)
-  (define-key map (kbd "M-e") 'forward-list)
-  (define-key map (kbd "M-h") 'cory/mark-list))
+;;; General Programming Keybinds
+(cory/define-keys
+ prog-mode-map
+ ;; List binds
+ ("M-a" . cory/beginning-of-list)
+ ("M-e" . cory/end-of-list)
+ ("M-h" . cory/mark-list))
 
 ;;; Repeat Maps
 

@@ -14,8 +14,8 @@
 ;;   (read-extended-command-predicate
 ;;    #'command-completion-default-include-p)
 ;;   (enable-recursive-minibuffers t)
-;; ;; makes completion-in-region use consult
-;; ;; unnatural behavior when using default completion
+;;   ;; makes completion-in-region use consult
+;;   ;; unnatural behavior when using default completion
 ;;   (completion-in-region-function #'consult-completion-in-region)
 ;;   :init
 ;;   (advice-add #'vertico--format-candidate :around
@@ -30,17 +30,17 @@
 ;;   (recentf-mode t)
 ;;   (savehist-mode t)
 ;;   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-;;   (define-key vertico-map "?" #'minibuffer-completion-help)
-;;   (define-key vertico-map (kbd "M-RET") #'minibuffer-force-complete-and-exit)
-;;   (define-key vertico-map (kbd "M-TAB") #'minibuffer-complete)
-;;   (define-key vertico-map (kbd "TAB") #'vertico-next)
-;;   (define-key vertico-map (kbd "<backtab>") #'vertico-previous)
-;;   ;; (define-key vertico-map (kbd "RET") #'vertico-insert)
-;;   (vertico-mode t))
 
-;; (use-package vertico-posframe
-;;   :after vertico
-;;   :config (vertico-posframe-mode 1))
+;;   ;; Vertico keybinds
+;;   ;; (define-key vertico-map "?" #'minibuffer-completion-help)
+;;   ;; (define-key vertico-map (kbd "M-RET") #'minibuffer-force-complete-and-exit)
+;;   ;; (define-key vertico-map (kbd "M-TAB") #'minibuffer-complete)
+;;   ;; (define-key vertico-map (kbd "TAB") #'vertico-next)
+;;   ;; (define-key vertico-map (kbd "<backtab>") #'vertico-previous)
+;;   ;; ;; (define-key vertico-map (kbd "RET") #'vertico-insert)
+
+;;   (vertico-mode t)
+;;   (vertico-buffer-mode t))
 
 ;; ;; Configure directory extension.
 ;; (use-package vertico-directory
@@ -48,11 +48,15 @@
 ;;   :ensure nil
 ;;   ;; More convenient directory navigation commands
 ;;   :bind (:map vertico-map
-;;          ;; ("RET" . vertico-directory-enter)
+;;          ("RET" . vertico-directory-enter)
 ;;          ("DEL" . vertico-directory-delete-char)
 ;;          ("M-DEL" . vertico-directory-delete-word))
 ;;   ;; Tidy shadowed file names
 ;;   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+;; (use-package vertico-posframe
+;;   :after vertico
+;;   :config (vertico-posframe-mode 1))
 
 ;; Keep track of recent files
 (recentf-mode t)
@@ -67,9 +71,10 @@
 
 ;; Custom vertical completion
 (setq read-extended-command-predicate #'command-completion-default-include-p
-      completions-format 'one-column
-      ;; completion-auto-select nil
-      completion-auto-select t
+      ;; completions-format 'one-column
+      completion-auto-select nil
+      ;; completion-auto-select t
+      ;; completion-auto-select 'second-tab
       completions-detailed nil
       ;; completion-styles '(orderless partial-completion basic)
       completion-show-help nil
@@ -79,18 +84,41 @@
       completions-max-height 16
       completion-auto-wrap t)
 
-;; (define-key minibuffer-local-completion-map
-;;   [remap previous-line]
-;;   #'minibuffer-previous-completion)
-
-;; (define-key minibuffer-local-completion-map
-;;   [remap next-line]
-;;   #'minibuffer-next-completion)
-
+;; Position and format of completions window
 (add-to-list 'display-buffer-alist
              '("\\*Completions\\*"
                (display-buffer-reuse-window display-buffer-at-bottom)
                (window-parameters . ((mode-line-format . none)))))
+
+;; Automatic popup when minibuffer starts
+(add-hook 'minibuffer-setup-hook #'minibuffer-completion-help)
+
+(defun cory/kill-dir-or-char ()
+  "Kill backward by word for directories else by char"
+  (interactive)
+  (if (looking-back "/")
+      (backward-kill-sexp 1)
+    (backward-delete-char 1)))
+
+(defun cory/minibuffer-complete ()
+  (interactive)
+  (call-interactively #'minibuffer-complete)
+  (call-interactively #'minibuffer-completion-help))
+
+(define-key minibuffer-local-completion-map
+  (kbd "TAB") #'cory/minibuffer-complete)
+
+(define-key minibuffer-local-completion-map
+  [remap previous-line] #'minibuffer-previous-completion)
+
+(define-key minibuffer-local-completion-map
+  [remap next-line] #'minibuffer-next-completion)
+
+(define-key minibuffer-local-completion-map
+  (kbd "DEL") #'cory/kill-dir-or-char)
+
+(define-key completion-list-mode-map
+  (kbd "C-v") #'switch-to-minibuffer)
 
 ;; Icons in minibuffer
 (use-package all-the-icons-completion
@@ -107,6 +135,13 @@
   (completion-styles '(orderless flex))
   (completion-category-overrides '((file (styles basic partial-completion))))
   (orderless-component-separator "[ \\]"))
+
+;; (use-package marginalia
+;;   ;; :after vertico
+;;   :ensure t
+;;   :config
+;;   (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+;;   (marginalia-mode))
 
 ;; Minibuffer visual menu
 (use-package consult
@@ -157,13 +192,6 @@
   ;; FIXME bind isn't binding
   :config
   (define-key eglot-mode-map [remap xref-find-apropos] 'consult-eglot-symbols))
-
-(use-package marginalia
-  ;; :after vertico
-  :ensure t
-  :config
-  (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-  (marginalia-mode))
 
 ;;
 ;; --- EXPANSION ---
@@ -273,7 +301,10 @@
   ;; Add dictionary just to text modes
   (add-hook 'text-mode-hook (lambda ()
 			      (setq-local completion-at-point-functions
-					  (list #'cape-dict))))
+					  ;; (list #'cape-dict)
+					  (list (cape-super-capf
+						 #'pcomplete-completions-at-point
+						 #'cape-dict)))))
 
   ;; Silence then pcomplete capf, no errors or messages!
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)

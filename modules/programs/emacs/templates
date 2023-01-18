@@ -38,8 +38,8 @@ c-mode c++-mode
 
 c-mode c++-mode :when (re-search-backward "^\\S-*$" (line-beginning-position) 'noerror)
 
-(include "#include <" (p (concat (file-name-base (or (buffer-file-name) (buffer-name))) ".h")) ">")
-(include "#include \"" (p (concat (file-name-base (or (buffer-file-name) (buffer-name))) ".h")) "\"")
+(include "include <" (p (concat (file-name-base (or (buffer-file-name) (buffer-name))) ".h")) ">")
+(include "include \"" (p (concat (file-name-base (or (buffer-file-name) (buffer-name))) ".h")) "\"")
 
 c++-mode
 

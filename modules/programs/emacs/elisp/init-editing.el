@@ -22,10 +22,10 @@
 (use-package embark
   :ensure t
   :bind
-  (("<C-i>" . embark-act) ; pick some comfortable binding
-   ([remap describe-bindings] . embark-bindings)
+  (("<C-i>" . embark-act)
+   ([remap describe-bindings] . cory/embark-bindings)
    :map embark-file-map
-   ("C-d" . dragon-drop))
+   ("C-d" . cory/dragon-drop))
   :custom
   (embark-indicators
    '(embark-highlight-indicator
@@ -37,10 +37,14 @@
   (setq prefix-help-command #'embark-prefix-help-command)
   (setq embark-prompter 'embark-completing-read-prompter)
   :config
-  (defun search-in-source-graph (text))
-  (defun dragon-drop (file)
+  (defun cory/dragon-drop (file)
     (start-process-shell-command "dragon-drop" nil
-				 (concat "dragon-drag-and-drop " file))))
+				 (concat "dragon-drag-and-drop " file)))
+  (defun cory/embark-bindings (no-global)
+    "Wrapper for `embark-bindings' to take substring completion."
+    (interactive "P")
+    (let ((completion-styles '(substring)))
+      (embark-bindings no-global))))
 
 (use-package embark-consult
   :ensure t
@@ -100,19 +104,31 @@
 ;; Paredit
 (use-package paredit
   :ensure t
-  :config
-  (defun cory/paredit-semicolon (f &rest args)
-    (if (region-active-p)
-	(comment-region (region-beginning) (region-end))
-      (apply f args)))
-  (advice-add 'paredit-semicolon :around #'cory/paredit-semicolon)
   :hook ((emacs-lisp-mode
 	  lisp-mode lisp-data-mode
 	  clojure-mode cider-repl-mode
 	  racket-mode racket-repl-mode
 	  scheme-mode geiser-repl-mode
-	  json-mode)
-	 . enable-paredit-mode))
+	  json-mode nix-mode
+	  c-mode cpp-mode
+	  java-mode javascript-mode)
+	 . enable-paredit-mode)
+  :bind
+  (:map paredit-mode-map
+   ("{"   . paredit-open-curly)
+   ("}"   . paredit-close-curly)
+   ("M-{" . paredit-wrap-curly)
+   ("M-}" . paredit-close-curly-and-newline)
+   ("M-;" . cory/comment-dwim)
+   ("RET" . cory/newline-dwim))
+  :config
+  (defun cory/paredit-semicolon (f &rest args)
+    (if (region-active-p)
+	(comment-region (region-beginning) (region-end))
+      (apply f args)))
+  (advice-add 'paredit-semicolon :around #'cory/paredit-semicolon))
+
+;; (use-package cedit)
 
 ;; Smartparens
 ;; (use-package smartparens
