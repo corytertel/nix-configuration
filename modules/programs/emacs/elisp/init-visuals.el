@@ -11,17 +11,7 @@
 ;; (setq-default cursor-type 'bar)
 (setq-default cursor-type 'hollow)
 
-(setq initial-scratch-message
-      (concat
-       ";; This buffer is for text that is not saved, and for Lisp evaluation.\n"
-       ";; To create a file, visit it with C-x C-f and enter text in its buffer.\n"
-       ";;\n"
-       ";; __          __  _                            \n"
-       ";; \\ \\        / / | |                           \n"
-       ";;  \\ \\  /\\  / /__| | ___ ___  _ __ ___   ___   \n"
-       ";;   \\ \\/  \\/ / _ \\ |/ __/ _ \\| '_ ` _ \\ / _ \\  \n"
-       ";;    \\  /\\  /  __/ | (_| (_) | | | | | |  __/_ \n"
-       ";;     \\/  \\/ \\___|_|\\___\\___/|_| |_| |_|\\___(_)\n"))
+(setq initial-scratch-message nil)
 
 ;; Beacon
 (use-package beacon
@@ -150,6 +140,10 @@
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
 
+;; Italic comments
+(set-face-attribute 'font-lock-comment-face nil
+		    :slant 'italic)
+
 ;; Icons
 (use-package all-the-icons
   :custom
@@ -215,7 +209,23 @@
 
 (setq custom-safe-themes t) ; Treat all themes as safe
 (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
-(add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-light t)))
+;; (add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-light t)))
+
+(set-face-attribute 'mode-line nil
+		    :foreground "#141404"
+		    :background "#c0daff")
+(set-face-attribute 'mode-line-inactive nil
+		    :foreground "#141404"
+		    :background "#ffffff")
+(set-face-attribute 'fringe nil
+		    :background "#ffffff")
+;; (set-face-attribute 'whitespace-line nil
+;; 		    :background 'unspecified)
+
+(set-face-attribute 'show-paren-match nil
+		    :underline t)
+(set-face-attribute 'show-paren-mismatch nil
+		    :underline t)
 
 ;;
 ;; --- MODE-LINE ---

@@ -68,6 +68,8 @@
 	      bidi-paragraph-direction 'left-to-right
 	      bidi-inhibit-bpa t)
 
+(setq-default frame-resize-pixelwise t)
+
 ;; (global-so-long-mode 1)
 (save-place-mode 1)
 

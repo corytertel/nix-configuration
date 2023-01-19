@@ -81,7 +81,7 @@
       completions-header-format (propertize "%s candidates:\n"
 					    'face 'shadow)
       completion-auto-help 'visual
-      completions-max-height 16
+      ;; completions-max-height 16
       completion-auto-wrap t)
 
 ;; Position and format of completions window
@@ -108,11 +108,11 @@
 (define-key minibuffer-local-completion-map
   (kbd "TAB") #'cory/minibuffer-complete)
 
-(define-key minibuffer-local-completion-map
-  [remap previous-line] #'minibuffer-previous-completion)
+;; (define-key minibuffer-local-completion-map
+;;   [remap previous-line] #'minibuffer-previous-completion)
 
-(define-key minibuffer-local-completion-map
-  [remap next-line] #'minibuffer-next-completion)
+;; (define-key minibuffer-local-completion-map
+;;   [remap next-line] #'minibuffer-next-completion)
 
 (define-key minibuffer-local-completion-map
   (kbd "DEL") #'cory/kill-dir-or-char)

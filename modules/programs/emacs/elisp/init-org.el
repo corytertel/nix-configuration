@@ -238,7 +238,7 @@
   (defun cory/org-insert-heading-above-respect-content (&optional invisible-ok)
     "Insert heading with above current heading."
     (interactive)
-    (beginning-of-line)
+    (move-beginning-of-line nil)
     (org-insert-heading nil invisible-ok))
 
 

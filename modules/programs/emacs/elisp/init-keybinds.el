@@ -306,6 +306,9 @@ Else, goto the end of the buffer."
  ("C-M-SPC" . cory/mark-sexp)
  ("C-c q" . quit-window)
  ("M-j"   . join-line)
+ ("M-c"   . capitalize-dwim)
+ ("M-u"   . upcase-dwim)
+ ("M-l"   . downcase-dwim)
  ("C-c x" . xref-find-references-and-replace)
  ("M-<"   . cory/beginning-of-workspace)
  ("M->"   . cory/end-of-workspace)
@@ -316,7 +319,12 @@ Else, goto the end of the buffer."
  ;; Grab Keybinds
  ("M-SPC"     . cory/grab)
  ("C-c SPC"   . cory/swap-grab)
- ("C-c S-SPC" . cory/sync-grab))
+ ("C-c S-SPC" . cory/sync-grab)
+ ;; Scroll Keybinds
+ ("<mouse-4>" . previous-line)
+ ("<mouse-5>" . next-line)
+ ("<mouse-6>" . backward-char)
+ ("<mouse-7>" . forward-char))
 
 ;;; Selection Keybinds
 
