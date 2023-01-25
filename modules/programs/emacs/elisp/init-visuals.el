@@ -129,13 +129,14 @@
 ;;
 
 ;; Setting the font
-(set-face-attribute 'default nil :family "Victor Mono")
+;; (set-face-attribute 'default nil :family "Victor Mono")
+(set-face-attribute 'default nil :family "Roboto Mono")
 ;; Set fixed pitch face
-;; (set-face-attribute 'fixed-pitch nil :font "Victor Mono")
-(set-face-attribute 'fixed-pitch nil :family "Victor Mono")
+;; (set-face-attribute 'fixed-pitch nil :family "Victor Mono")
+(set-face-attribute 'fixed-pitch nil :family "Roboto Mono")
 ;; Set variable pitch face
-;; (set-face-attribute 'variable-pitch nil :font "Oxygen-Sans")
-(set-face-attribute 'variable-pitch nil :family "Oxygen-Sans")
+;; (set-face-attribute 'variable-pitch nil :family "Oxygen-Sans")
+(set-face-attribute 'variable-pitch nil :family "Roboto")
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
@@ -211,6 +212,7 @@
 (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
 ;; (add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-light t)))
 
+;; Basic theme settings
 (set-face-attribute 'mode-line nil
 		    :foreground "#141404"
 		    :background "#c0daff")
@@ -219,13 +221,16 @@
 		    :background "#ffffff")
 (set-face-attribute 'fringe nil
 		    :background "#ffffff")
+
+;; Whitespace settings
 ;; (set-face-attribute 'whitespace-line nil
 ;; 		    :background 'unspecified)
 
-(set-face-attribute 'show-paren-match nil
-		    :underline t)
-(set-face-attribute 'show-paren-mismatch nil
-		    :underline t)
+;; Matching parenthesis settings
+;; (set-face-attribute 'show-paren-match nil
+;; 		    :underline t)
+;; (set-face-attribute 'show-paren-mismatch nil
+;; 		    :underline t)
 
 ;;
 ;; --- MODE-LINE ---
@@ -357,16 +362,16 @@
    "  "
    (:eval (cory/mode-line-git-parse-status))))
 
-(use-package moody
-  :custom
-  ;; (moody-mode-line-height (* (aref (font-info (face-font 'mode-line)) 2) 1.5))
-  ;; (moody-mode-line-height 40)
-  (moody-mode-line-height 30)
-  :config
-  (setq x-underline-at-descent-line t)
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode)
-  (moody-replace-eldoc-minibuffer-message-function))
+;; (use-package moody
+;;   :custom
+;;   ;; (moody-mode-line-height (* (aref (font-info (face-font 'mode-line)) 2) 1.5))
+;;   ;; (moody-mode-line-height 40)
+;;   (moody-mode-line-height 30)
+;;   :config
+;;   (setq x-underline-at-descent-line t)
+;;   (moody-replace-mode-line-buffer-identification)
+;;   (moody-replace-vc-mode)
+;;   (moody-replace-eldoc-minibuffer-message-function))
 
 (use-package minions
   :config (minions-mode))

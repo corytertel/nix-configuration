@@ -26,7 +26,8 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; Show empty whitespace
-(setq whitespace-style '(face trailing tabs lines empty))
+;; (setq whitespace-style '(face trailing tabs lines empty))
+(setq whitespace-style '(trailing))
 (add-hook 'prog-mode-hook 'whitespace-mode)
 
 ;; Highlight and navigate TODO keywords

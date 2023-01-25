@@ -123,14 +123,9 @@ in {
 
     home-manager.users.cory.home.file = {
       ".emacs.d/themes/plain-light-theme.el".source = ./plain-light-theme.el;
-      # ".emacs.d/themes/plain-grey-theme.el".source = ./plain-grey-theme.el;
-      # ".emacs.d/themes/plain-dark-theme.el".source = ./plain-dark-theme.el;
-      # ".emacs.d/themes/plain-summer-theme.el".source = ./plain-summer-theme.el;
-      # ".emacs.d/themes/plain-ocean-theme.el".source = ./plain-ocean-theme.el;
       # ".emacs.d/themes/smart-mode-line-cory-theme.el".source = ./smart-mode-line-cory-theme.el;
       ".emacs.d/eshell/alias".source = ./alias;
       ".emacs.d/templates".source = ./templates;
-      # ".emacs.d/snippets".source = ./snippets;
       ".local/share/dict/words".source = "${pkgs.scowl}/share/dict/words.txt";
     };
 

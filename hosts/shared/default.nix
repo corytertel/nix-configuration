@@ -160,6 +160,9 @@
     config.theme.font.monospace.package
     corefonts
     vistafonts
+    roboto
+    roboto-mono
+    # iosevka-aile
   ];
 
   virtualisation = {

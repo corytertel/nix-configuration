@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: hiccup-prop-button
-# key: hb
-# --
-{:on-click on-${1:click}}$0

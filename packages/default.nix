@@ -8,6 +8,7 @@
   (import ./expose-glassy-right.nix)
   (import ./firefox-classic-theme.nix { inherit lib pkgs; })
   (import ./firefox-oxygen-theme.nix { inherit lib pkgs; })
+  (import ./iosevka.nix {inherit lib pkgs; })
   (import ./keyboard-layouts.nix { inherit pkgs; })
   (import ./layout-switch.nix {inherit pkgs; })
   (import ./newaita-reborn.nix { inherit lib pkgs; })

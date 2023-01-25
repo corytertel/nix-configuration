@@ -59,6 +59,7 @@
        "*Native-compile-Log*"
        "*sly-compilation*"
        "*sly-error"
+       "*Warning*"
        "*Warnings*"
        ;; Search results
        (seq "*Embark Export" (one-or-more nonl) "grep")

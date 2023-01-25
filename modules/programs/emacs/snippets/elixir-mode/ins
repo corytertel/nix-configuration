@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: ins
-# key: ins
-# --
-IO.puts("$1: #{IO.ANSI.format([:default_background, :yellow, inspect($1, pretty: true)])}")

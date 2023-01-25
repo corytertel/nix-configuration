@@ -93,6 +93,10 @@
 ;; Automatic popup when minibuffer starts
 (add-hook 'minibuffer-setup-hook #'minibuffer-completion-help)
 
+;; Disable newline with C-n in minibuffer
+(add-hook 'minibuffer-setup-hook
+	  (lambda () (setq-local next-line-add-newlines nil)))
+
 (defun cory/kill-dir-or-char ()
   "Kill backward by word for directories else by char"
   (interactive)
@@ -131,8 +135,8 @@
 (use-package orderless
   :ensure t
   :custom
-  ;; (completion-styles '(orderless basic))
-  (completion-styles '(orderless flex))
+  ;; (completion-styles '(orderless flex))
+  (completion-styles '(emacs21 orderless flex))
   (completion-category-overrides '((file (styles basic partial-completion))))
   (orderless-component-separator "[ \\]"))
 
@@ -291,7 +295,7 @@
   ;;  ("C-c p l" . cape-line))
   :init
   ;; Add `completion-at-point-functions', used by `completion-at-point'.
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  ;; (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file)
 
   :config
@@ -301,8 +305,8 @@
   ;; Add dictionary just to text modes
   (add-hook 'text-mode-hook (lambda ()
 			      (setq-local completion-at-point-functions
-					  ;; (list #'cape-dict)
 					  (list (cape-super-capf
+						 #'tempel-complete
 						 #'pcomplete-completions-at-point
 						 #'cape-dict)))))
 

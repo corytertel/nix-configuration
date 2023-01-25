@@ -68,31 +68,46 @@
 
 ;;; Scroll functions
 
-(defun cory/scroll-down-half-page ()
-  "Scroll down half a page while keeping the cursor centered."
-  (interactive)
-  (let ((ln (line-number-at-pos (point)))
-	(lmax (line-number-at-pos (point-max))))
-    (cond ((= ln 1) (move-to-window-line nil))
-	  ((= ln lmax) (recenter (window-end)))
-	  (t (progn
-               (move-to-window-line -1)
-               (recenter))))))
+;; (defun cory/scroll-down-half-page ()
+;;   "Scroll down half a page while keeping the cursor centered."
+;;   (interactive)
+;;   (let ((ln (line-number-at-pos (point)))
+;; 	(lmax (line-number-at-pos (point-max))))
+;;     (cond ((= ln 1) (move-to-window-line nil))
+;; 	  ((= ln lmax) (recenter (window-end)))
+;; 	  (t (progn
+;;                (move-to-window-line -1)
+;;                (recenter))))))
 
-(defun cory/scroll-up-half-page ()
-  "Scroll up half a page while keeping the cursor centered."
-  (interactive)
-  (previous-line)
-  (let ((ln (line-number-at-pos (point)))
-	(lmax (line-number-at-pos (point-max))))
-    (cond ((= ln 1) nil)
-	  ((= ln lmax) (move-to-window-line nil))
-	  (t (progn
-               (move-to-window-line 0)
-               (recenter))))))
+;; (defun cory/scroll-up-half-page ()
+;;   "Scroll up half a page while keeping the cursor centered."
+;;   (interactive)
+;;   (previous-line)
+;;   (let ((ln (line-number-at-pos (point)))
+;; 	(lmax (line-number-at-pos (point-max))))
+;;     (cond ((= ln 1) nil)
+;; 	  ((= ln lmax) (move-to-window-line nil))
+;; 	  (t (progn
+;;                (move-to-window-line 0)
+;;                (recenter))))))
 
-(put 'cory/scroll-down-half-page 'scroll-command t)
-(put 'cory/scroll-up-half-page 'scroll-command t)
+;; (put 'cory/scroll-down-half-page 'scroll-command t)
+;; (put 'cory/scroll-up-half-page 'scroll-command t)
+
+(defun cory/scroll-down (arg)
+  "Move cursor down half a screen ARG times."
+  (interactive "p")
+  (let ((dist (/ (window-height) 2)))
+    (next-line dist)))
+
+(defun cory/scroll-up (arg)
+  "Move cursor up half a screen ARG times."
+  (interactive "p")
+  (let ((dist (/ (window-height) 2)))
+    (previous-line dist)))
+
+(put 'cory/scroll-down 'scroll-command t)
+(put 'cory/scroll-up 'scroll-command t)
 
 ;;; Selection functions
 
@@ -245,6 +260,34 @@ Else, goto the end of the buffer."
       (setq mouse-secondary-start next-marker)
       (deactivate-mark t))))
 
+;;; Mouse functions
+
+(defun cory/mouse-goto-bol (click)
+  "Move to beginning of line for mouse-1 click in left fringe."
+  (interactive "e")
+  (cory/mouse-goto-line click 'left))
+
+(defun cory/mouse-goto-eol (click)
+  "Move to beginning of line for mouse-1 click in left fringe."
+  (interactive "e")
+  (mouse-goto-line click 'right))
+
+(defun cory/mouse-goto-line (click left/right)
+  "Helper for `mouse-goto-(bol|eol)'."
+  (let* ((posn      (event-start click))
+         (click-pt  (posn-point posn))
+         (window    (posn-window posn))
+         (buf       (window-buffer window))
+         (clicks    (if (eq mouse-selection-click-count-buffer buf)
+                        (event-click-count click)
+                      0)))
+    (when (= clicks 1)                  ; No-op if not single-click.
+      (with-current-buffer buf
+        (goto-char click-pt)
+        (if (eq 'left left/right)
+            (line-beginning-position)
+          (line-end-position))))))
+
 ;;; Misc functions
 
 (defun cory/create-tmp-file ()
@@ -292,13 +335,15 @@ Else, goto the end of the buffer."
  ;; ("C-/"     . undo-only)
  ;; ("C-x C-u" . undo-redo)
  ;; ("C-?"     . undo-redo)
- ("C-'"   . repeat)
- ("C-s"   . cory/search-forward-dwim)
- ("C-r"   . cory/search-backward-dwim)
- ("C-M-s" . cory/isearch-forward-resume)
- ("C-M-r" . cory/isearch-backward-resume)
- ("C-v"   . cory/scroll-down-half-page)
- ("M-v"   . cory/scroll-up-half-page)
+ ;; ("C-'"   . repeat)
+ ;; ("C-s"   . cory/search-forward-dwim)
+ ;; ("C-r"   . cory/search-backward-dwim)
+ ;; ("C-M-s" . cory/isearch-forward-resume)
+ ;; ("C-M-r" . cory/isearch-backward-resume)
+ ;; ("C-v"   . cory/scroll-down-half-page)
+ ;; ("M-v"   . cory/scroll-up-half-page)
+ ("C-v"   . cory/scroll-down)
+ ("M-v"   . cory/scroll-up)
  ("C-c F" . cory/create-tmp-file)
  ("C-c e" . cory/eww)
  ("S-SPC" . cory/insert-space)
@@ -325,6 +370,36 @@ Else, goto the end of the buffer."
  ("<mouse-5>" . next-line)
  ("<mouse-6>" . backward-char)
  ("<mouse-7>" . forward-char))
+
+(global-set-key [left-fringe mouse-4] #'previous-line)
+(global-set-key [left-fringe mouse-5] #'next-line)
+(global-set-key [left-fringe mouse-6] #'backward-char)
+(global-set-key [left-fringe mouse-7] #'forward-char)
+(global-set-key [left-margin mouse-4] #'previous-line)
+(global-set-key [left-margin mouse-5] #'next-line)
+(global-set-key [left-margin mouse-6] #'backward-char)
+(global-set-key [left-margin mouse-7] #'forward-char)
+(global-set-key [right-fringe mouse-4] #'previous-line)
+(global-set-key [right-fringe mouse-5] #'next-line)
+(global-set-key [right-fringe mouse-6] #'backward-char)
+(global-set-key [right-fringe mouse-7] #'forward-char)
+(global-set-key [right-margin mouse-4] #'previous-line)
+(global-set-key [right-margin mouse-5] #'next-line)
+(global-set-key [right-margin mouse-6] #'backward-char)
+(global-set-key [right-margin mouse-7] #'forward-char)
+
+(define-key olivetti-mode-map [right-margin mouse-4] #'previous-line)
+(define-key olivetti-mode-map [right-margin mouse-5] #'next-line)
+(define-key olivetti-mode-map [right-margin mouse-6] #'backward-char)
+(define-key olivetti-mode-map [right-margin mouse-7] #'forward-char)
+(define-key olivetti-mode-map [right-margin mouse-4] #'previous-line)
+(define-key olivetti-mode-map [right-margin mouse-5] #'next-line)
+(define-key olivetti-mode-map [right-margin mouse-6] #'backward-char)
+(define-key olivetti-mode-map [right-margin mouse-7] #'forward-char)
+
+(global-set-key [left-fringe mouse-1]  #'cory/mouse-goto-bol)
+(global-set-key [right-margin mouse-1] #'cory/mouse-goto-eol)
+;; (global-set-key [right-fringe mouse-1] #'cory/mouse-goto-eol) ; To use the right fringe.
 
 ;;; Selection Keybinds
 
@@ -386,6 +461,14 @@ Else, goto the end of the buffer."
  ("M-a" . cory/beginning-of-list)
  ("M-e" . cory/end-of-list)
  ("M-h" . cory/mark-list))
+
+;;; General Text Keybinds
+(cory/define-keys
+ text-mode-map
+ ;;; Prose binds
+ ("C-M-a" . backward-paragraph)
+ ("C-M-e" . forward-paragraph)
+ ("C-M-h" . mark-paragraph))
 
 ;;; Repeat Maps
 

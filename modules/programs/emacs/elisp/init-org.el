@@ -65,7 +65,9 @@
    ("C-o" . org-meta-return)
    ("C-c C-h" . consult-org-heading)
    ("C-x r N" . cory/rectangle-number-lines)
-   ("C-S-<return>" . cory/org-insert-heading-above-respect-content)
+   ([(control return)] . crux-smart-open-line)
+   ([(control shift return)] . crux-smart-open-line-above)
+   ([(meta return)] . org-insert-heading-respect-content)
    ("C-x C-e" . org-babel-execute-src-block))
 
   :custom
@@ -195,20 +197,29 @@
       "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
   :config
-  ;; Replace list hyphen with dot
-  (font-lock-add-keywords 'org-mode
-                          '(("^ *\\([-]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+  (dolist (face '((org-level-1 . 1.75)
+                  (org-level-2 . 1.5)
+                  (org-level-3 . 1.25)
+                  (org-level-4 . 1.1)
+                  (org-level-5 . 1.0)
+                  (org-level-6 . 1.0)
+                  (org-level-7 . 1.0)
+                  (org-level-8 . 1.0)))
+    (set-face-attribute (car face) nil :height (cdr face)))
+  (set-face-attribute 'org-document-title nil :height 2.0 :underline nil)
 
-  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
   (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-  ;; (set-face-attribute 'org-indent nil   :inherit '(org-hide fixed-pitch))
   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+  ;; Replace list hyphen with dot
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
   ;; Save Org buffers after refiling
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
@@ -240,8 +251,6 @@
     (interactive)
     (move-beginning-of-line nil)
     (org-insert-heading nil invisible-ok))
-
-
 
   ;; Automatically tangle our Emacs.org config file when we save it
   ;; (defun cory/org-babel-tangle-config ()

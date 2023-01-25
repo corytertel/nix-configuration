@@ -65,7 +65,7 @@
 	 ("C-c D" . crux-duplicate-and-comment-current-line-or-region)
 	 ;; ("C-c k" . crux-kill-other-buffers)
 	 ("C-^" . crux-top-join-line)
-	 ("C-k" . crux-kill-and-join-forward-2)
+	 ("C-k" . cory/kill-line)
 	 ([remap kill-whole-line]. crux-kill-whole-line)
          ("C-a"   . crux-move-beginning-of-line))
   :config
@@ -83,7 +83,7 @@
       (kill-line 0)
       (indent-according-to-mode)))
 
-  (defun crux-kill-and-join-forward-2 (&optional arg)
+  (defun cory/kill-line (&optional arg)
     "If ARG is given, kill backwards. Otherwise kill forwards."
     (interactive "P")
     (if (not arg)
@@ -120,8 +120,32 @@
    ("M-{" . paredit-wrap-curly)
    ("M-}" . paredit-close-curly-and-newline)
    ("M-;" . cory/comment-dwim)
-   ("RET" . cory/newline-dwim))
+   ("RET" . cory/newline-dwim)
+   ("C-k" . cory/paredit-kill))
   :config
+  ;; TODO fix prefix argument behavior
+  (defun cory/paredit-kill (&optional argument)
+    "Kill a line as if with `kill-line', but respecting delimiters.
+In a string, act exactly as `kill-line' but do not kill past the
+  closing string delimiter.
+On a line with no S-expressions on it starting after the point or
+  within a comment, act exactly as `kill-line'.
+Otherwise, kill all S-expressions that start after the point.
+Prefix arguments will enact the same behavior that `cory/kill-line'
+enacts."
+    (interactive "P")
+    (cond ((paredit-in-string-p)
+	   (paredit-kill-line-in-string))
+	  ((paredit-in-comment-p)
+	   (paredit-kill-line-in-comment))
+	  ((save-excursion (paredit-skip-whitespace t (point-at-eol))
+			   (or (eolp) (eq (char-after) ?\; )))
+					;** Be careful about trailing backslashes.
+	   (if (paredit-in-char-p)
+	       (backward-char))
+	   (cory/kill-line argument))
+	  (t (paredit-kill-sexps-on-line))))
+
   (defun cory/paredit-semicolon (f &rest args)
     (if (region-active-p)
 	(comment-region (region-beginning) (region-end))
@@ -244,9 +268,11 @@
      (beacon-mode 1)))
   :config
   (define-prefix-command 'macrursors-mark-map)
+  (global-set-key (kbd "C-'") #'macrursors-mark-next-instance-of)
+  (global-set-key (kbd "C-\"") #'macrursors-mark-previous-instance-of)
   (global-set-key (kbd "C-;") 'macrursors-mark-map)
-  (define-key macrursors-mark-map (kbd "C-;") #'macrursors-mark-all-instances-of)
-  (define-key macrursors-mark-map (kbd ";") #'macrursors-mark-all-instances-of)
+  (define-key macrursors-mark-map (kbd "C-;") #'macrursors-mark-all-lines-or-instances)
+  (define-key macrursors-mark-map (kbd ";") #'macrursors-mark-all-lines-or-instances)
   (define-key macrursors-mark-map (kbd "l") #'macrursors-mark-all-lists)
   (define-key macrursors-mark-map (kbd "s") #'macrursors-mark-all-symbols)
   (define-key macrursors-mark-map (kbd "e") #'macrursors-mark-all-sexps)

@@ -9,8 +9,8 @@ pkgs.emacsPackages.melpaBuild rec {
   src = pkgs.fetchFromGitHub {
     owner = "corytertel";
     repo = "macrursors";
-    rev = "5c0a5052118b8dd2c1787dba9b06cb0a1514c268";
-    sha256 = "GTi0iS3300yZm/uu4KkN9+c3Pv1aTk5OpcKYgurlAuE=";
+    rev = "bd7b9e61228d14b3d0335f061b522458dcd1769a";
+    sha256 = "UoPv+SnIoBzv5r/wlrnSwfJfR8Vlv/UiWXuMje1e5YU=";
   };
 
   buildInputs = with pkgs; [

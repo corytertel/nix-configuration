@@ -274,12 +274,11 @@ lisp-mode sly-mrepl-mode
 Description:
 
 "
- (p "description of function")
- )
+ (p "description of function"))
 
 java-mode
 
-(class "public class "
+(class "class "
        (p (file-name-base (or (buffer-file-name) (buffer-name))))
        " {" n> r> n "}")
 (print "System.out.println(" (r "What to print" print) ");")
@@ -301,6 +300,10 @@ org-mode
       :post (progn (unless sly-port
                      (sly))
                    (tempel-done) (org-edit-src-code)))
+(elisp "#+begin_src emacs-lisp" n> r> n
+       "#+end_src" :post (org-edit-src-code))
+(scheme "#+begin_src scheme" n> r> n
+	"#+end_src" :post (org-edit-src-code))
 
 (readmeorg
  "#+TITLE: " (p "Project title: ") n

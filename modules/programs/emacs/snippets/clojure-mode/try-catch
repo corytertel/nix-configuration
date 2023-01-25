@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: try-catch
-# key: try
-# --
-(try
-  `yas-selected-text`$0
-  (catch ${1:Exception} ex
-    ${2:(log/error ex)}))
