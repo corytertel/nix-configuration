@@ -3,7 +3,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./xps9300.nix
+    ./t14.nix
     ../shared
     ../../profiles/fvwm-laptop
   ];
@@ -15,26 +15,29 @@
     };
 
     initrd.luks.devices.root = {
-      device = "/dev/disk/by-uuid/15108fb0-8960-4581-8424-cefe6c550c90";
+      device = "/dev/disk/by-uuid/e4c8de9b-12b6-477c-bb3c-cb649ee5b010";
       preLVM = true;
     };
 
-    #kernelPackages = pkgs.linuxPackages_latest;
-    kernelPackages = pkgs.linuxPackages_5_15;
+    kernelPackages = pkgs.linuxPackages_6_0;
     kernelParams = [
       # ZFS required flags
       "nohibernate"
       "elevator=none"
     ];
+
+    plymouth.enable = true;
   };
 
   networking = {
-    hostId = "635976a6"; # for zfs
-    interfaces.wlp0s20f3.useDHCP = true;
+    hostId = "e5e55245"; # for zfs
+    interfaces.wlp2s0.useDHCP = true; # wifi
+    interfaces.enp1s0f0.useDHCP = true; # ethernet
   };
 
   # powerManagement = {
-  #   cpuFreqGovernor = "powersave";
+  #   # cpuFreqGovernor = "powersave";
+  #   cpuFreqGovernor = "ondemand";
   #   enable = true;
   #   powertop.enable = true;
   # };
@@ -44,7 +47,7 @@
     #   enable = true;
     #   package = pkgs.ananicy-cpp;
     # };
-    # tlp.enable = true;
+    tlp.enable = true;
     # thermald.enable = true;
     # gnome.gnome-keyring.enable = true;
     xserver = {
@@ -71,23 +74,24 @@
         sendEventsMode = "enabled";
         tapping = false;
         tappingDragLock = false;
-        # transformationMatrix = "2.5 0 0 0 2.5 0 0 0 1";
       };
     };
   };
+
+  system.stateVersion = "23.05";
 
   environment.systemPackages = with pkgs; [
 
   ];
 
-  home-manager.users.cory.services.xcape = {
-    enable = true;
-    mapExpression = {
-      # Shift_L = "Escape";
-      # Shift_R = "Escape";
-    };
-    timeout = 300;
-  };
+  # home-manager.users.cory.services.xcape = {
+  #   enable = true;
+  #   mapExpression = {
+  #     # Shift_L = "Escape";
+  #     # Shift_R = "Escape";
+  #   };
+  #   timeout = 300;
+  # };
 
   home-manager.users.cory = {
     # Xft.antialias: 1
@@ -97,11 +101,13 @@
     # Xft.rgba: rgb
     # Xft.lcdfilter: lcddefault
     xresources.extraConfig = ''
-      Xft.dpi: 225
+      Xft.dpi: 125
     '';
 
     home.packages = with pkgs; [
       zoom-us
     ];
+
+    home.stateVersion = "23.05";
   };
 }

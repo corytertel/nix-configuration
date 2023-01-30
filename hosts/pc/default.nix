@@ -52,6 +52,9 @@
     xboxdrv
   ];
 
+  system.stateVersion = "21.11";
+  home-manager.users.cory.home.stateVersion = "21.11";
+
   home-manager.users.cory = {
     # Xft.antialias: 1
     # Xft.hinting: 1

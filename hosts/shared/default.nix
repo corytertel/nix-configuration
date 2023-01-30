@@ -82,7 +82,7 @@
     # redshift = {
     #   enable = true;
     # };
-    postgresql.enable = true;
+    # postgresql.enable = true;
   };
 
   location = {
@@ -249,8 +249,6 @@
     };
   };
 
-  system.stateVersion = "21.11";
-
   home-manager.users.cory = {
     programs = {
       home-manager.enable = true;
@@ -275,7 +273,6 @@
     home = {
       username = "cory";
       homeDirectory = "/home/cory";
-      stateVersion = "21.11";
 
       packages = with pkgs; [
         # repeat of system basics
@@ -394,27 +391,25 @@
         # anki-bin
         peek
         sshfs
-        qmk
-        avrdude
-        avrdudess
+        # qmk
+        # avrdude
+        # avrdudess
+        drawio
 
         # games
-        libsForQt5.kpat
-        libsForQt5.kolf
-        libsForQt5.kmines
-        libsForQt5.kmahjongg
-        libsForQt5.kapman
-        libsForQt5.kspaceduel
-        libsForQt5.knights
-        libsForQt5.konquest
-        libsForQt5.knavalbattle
-        libsForQt5.ksudoku
-        libsForQt5.killbots
-        # ace-of-penguins
-        superTux
-        superTuxKart
-        # srb2kart
-        # crispyDoom
+        # libsForQt5.kpat
+        # libsForQt5.kolf
+        # libsForQt5.kmines
+        # libsForQt5.kmahjongg
+        # libsForQt5.kapman
+        # libsForQt5.kspaceduel
+        # libsForQt5.knights
+        # libsForQt5.konquest
+        # libsForQt5.knavalbattle
+        # libsForQt5.ksudoku
+        # libsForQt5.killbots
+        # superTux
+        # superTuxKart
 
         # wireshark
         # tcpdump

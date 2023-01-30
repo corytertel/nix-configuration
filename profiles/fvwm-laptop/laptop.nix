@@ -3,9 +3,9 @@
 {
   # Cursor
   theme.cursor = {
-    theme = "Oxygen_White";
-    size = 72;
-    package = pkgs.libsForQt5.oxygen;
+    theme = "Vanilla-DMZ";
+    size = 32;
+    package = pkgs.vanilla-dmz;
   };
 
   # File Manager
@@ -16,9 +16,4 @@
     enable = true;
     config = ../../config/touchegg/fvwm.conf;
   };
-
-  # Launcher
-  services.cory.rofi.config = let
-    offsetX = -240;
-  in "${import ../../config/rofi/launcher.nix { inherit config pkgs offsetX; }}";
 }

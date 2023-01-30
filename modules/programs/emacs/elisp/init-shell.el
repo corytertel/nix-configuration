@@ -427,10 +427,10 @@ This function is meant to be used as advice around
           eshell-prompt-function 'epe-theme-cory)))
 
 ;; Eshell undistract me
-(setq eshell-undistract-me-play-sound t)
-(setq eshell-undistract-me-sound-path "/run/current-system/sw/share/sounds/freedesktop/stereo/complete.oga")
-(add-hook 'eshell-pre-command-hook #'eshell-undistract-me-pre-command)
-(add-hook 'eshell-before-prompt-hook #'eshell-undistract-me-before-prompt)
+;; (setq eshell-undistract-me-play-sound t)
+;; (setq eshell-undistract-me-sound-path "/run/current-system/sw/share/sounds/freedesktop/stereo/complete.oga")
+;; (add-hook 'eshell-pre-command-hook #'eshell-undistract-me-pre-command)
+;; (add-hook 'eshell-before-prompt-hook #'eshell-undistract-me-before-prompt)
 
 ;; Vterm
 (use-package vterm

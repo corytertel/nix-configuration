@@ -480,6 +480,7 @@ AddToMenu   MenuSystem
 + "&Wallpapers%$[fvwm_icon]/actions/32x32/photo.png%" Popup BGMenu
 + "System Monitor%$[fvwm_icon]/apps/32x32/utilities-system-monitor.png%" Exec plasma-systemmonitor
 + "btop++" Exec exec $[fvwm_term] -e btop
++ "Wi-Fi Settings" Exec nm-connection-editor
 + "" Nop
 + "Re&fresh FVWM%$[fvwm_icon]/actions/32x32/view-refresh.png%" Refresh
 + "&Restart FVWM%$[fvwm_icon]/actions/32x32/system-reboot.png%" Restart

@@ -51,7 +51,7 @@ Read xdgmenu
 CursorStyle ROOT          left_ptr
 CursorStyle TITLE         left_ptr
 CursorStyle DEFAULT       left_ptr
-CursorStyle SYS           left_ptr
+pCursorStyle SYS           left_ptr
 CursorStyle MENU          left_ptr
 CursorStyle TOP           size_ver
 CursorStyle RIGHT         size_hor
@@ -306,7 +306,7 @@ Style * EdgeMoveDelay 350, EdgeMoveResistance 350
 # EwmhBaseStruts [left] [right] [top] [bottom]
 # Reserves space along the edge(s) of the Screen that will not
 # be covered when maximizing or placing windows.
-EwmhBaseStruts 0 240 0 0
+EwmhBaseStruts 0 140 0 0
 
 # This sets the ClickTime and MoveThreshold used to determine
 # Double Clicks, Hold and Move for the mouse.
@@ -343,7 +343,7 @@ Style * WindowShadeScrolls, WindowShadeSteps 10
 IgnoreModifiers L25
 
 # Decor Styles
-Style * BorderWidth 12, HandleWidth 12, MWMButtons, FvwmBorder, FirmBorder
+Style * BorderWidth 4, HandleWidth 4, MWMButtons, FvwmBorder, FirmBorder
 Style * Colorset 1, HilightColorset 2
 Style * BorderColorset 3, HilightBorderColorset 4
 
@@ -482,6 +482,7 @@ AddToMenu   MenuSystem
 + "&Wallpapers%$[fvwm_icon]/actions/32x32/photo.png%" Popup BGMenu
 + "System Monitor%$[fvwm_icon]/apps/32x32/utilities-system-monitor.png%" Exec plasma-systemmonitor
 + "btop++" Exec exec $[fvwm_term] -e btop
++ "Wi-Fi Settings" Exec nm-connection-editor
 + "" Nop
 + "Re&fresh FVWM%$[fvwm_icon]/actions/32x32/view-refresh.png%" Refresh
 + "&Restart FVWM%$[fvwm_icon]/actions/32x32/system-reboot.png%" Restart
@@ -497,6 +498,7 @@ AddToMenu   MenuSystem
 # Menu icons are located in ~/.fvwm/images/bgicons/
 DestroyMenu BGMenu
 AddToMenu   BGMenu
++ "Lenovo" SetBG fill lenovo.png
 + "Maui" SetBG fill maui.jpg
 
 # Window Operations Menus
@@ -769,7 +771,7 @@ Mouse 3 I    A Menu MenuIconOps
 # ButtonStyle 4 - MwmDecorMax
 # ButtonStyle 6 - MwmDecorMin
 
-TitleStyle Centered Height 60 -- Flat
+TitleStyle Centered Height 38 -- Flat
 ButtonStyle 1 \
       ActiveUp          (Pixmap $[fvwm_img]/button/stick-activeup.png -- Flat) \
       ActiveDown        (Pixmap $[fvwm_img]/button/stick-activedown.png -- Flat) \
@@ -820,7 +822,7 @@ DestroyModuleConfig FvwmScript:*
 #
 # Note - To use the system tray you must have "stalonetray" installed.
 DestroyModuleConfig RightPanel:*
-*RightPanel: Geometry 240x382-0+0
+*RightPanel: Geometry 140x222-0+0
 *RightPanel: Colorset 10
 *RightPanel: Rows 380
 *RightPanel: Columns 120
@@ -898,3 +900,9 @@ DestroyModuleConfig EventNewDesk:*
 # This sets the default colorsets.
 *FvwmFormDefault: Colorset 10
 *FvwmFormDefault: ItemColorset 13
+
+
+
+
+
+

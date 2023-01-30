@@ -62,7 +62,6 @@
    ("C-c o c" . org-capture)
    ("C-c o r" . org-refile)
    :map org-mode-map
-   ("C-o" . org-meta-return)
    ("C-c C-h" . consult-org-heading)
    ("C-x r N" . cory/rectangle-number-lines)
    ([(control return)] . crux-smart-open-line)
@@ -210,7 +209,7 @@
 
   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
   (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil :foreground "black" :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))

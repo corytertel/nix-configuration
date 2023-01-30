@@ -54,8 +54,7 @@ let
              + (builtins.readFile ./elisp/init-keybinds.el)
 
              # Informal Packages
-             # + (builtins.readFile ./elisp/aweshell.el)
-             + (builtins.readFile ./elisp/eshell-undistract-me.el)
+             # + (builtins.readFile ./elisp/eshell-undistract-me.el)
              + (builtins.readFile ./elisp/app-launcher.el)
              + (builtins.readFile ./elisp/hexrgb.el)
              + (builtins.readFile ./elisp/palette.el)

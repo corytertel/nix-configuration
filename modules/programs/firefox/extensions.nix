@@ -9,7 +9,7 @@ with pkgs.nur.repos.rycee.firefox-addons;
   decentraleyes
   duckduckgo-privacy-essentials
   facebook-container
-  https-everywhere
+  # https-everywhere
   pkgs.firefox-classic-theme
   # pkgs.new-tab-override
   privacy-badger
