@@ -104,9 +104,7 @@
       Xft.dpi: 125
     '';
 
-    home.packages = with pkgs; [
-      zoom-us
-    ];
+    home.packages = with pkgs; [];
 
     home.stateVersion = "23.05";
   };

@@ -268,8 +268,8 @@ enacts."
      (beacon-mode 1)))
   :config
   (define-prefix-command 'macrursors-mark-map)
-  (global-set-key (kbd "C-'") #'macrursors-mark-next-instance-of)
-  (global-set-key (kbd "C-\"") #'macrursors-mark-previous-instance-of)
+  (global-set-key (kbd "C->") #'macrursors-mark-next-instance-of)
+  (global-set-key (kbd "C-<") #'macrursors-mark-previous-instance-of)
   (global-set-key (kbd "C-;") 'macrursors-mark-map)
   (define-key macrursors-mark-map (kbd "C-;") #'macrursors-mark-all-lines-or-instances)
   (define-key macrursors-mark-map (kbd ";") #'macrursors-mark-all-lines-or-instances)

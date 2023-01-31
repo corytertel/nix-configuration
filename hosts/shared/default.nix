@@ -48,6 +48,11 @@
           languages = [ "eng" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_beakl_emacs";
         };
+        us_minimak = {
+          description = "US layout with numbers and characters flipped";
+          languages = [ "eng" ];
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_minimak";
+        };
         ru_phonetic_qwerty = {
           description = "Russian phonetic translation of the US dvorak emacs layout";
           languages = [ "rus" ];
@@ -395,6 +400,7 @@
         # avrdude
         # avrdudess
         drawio
+        zoom-us
 
         # games
         # libsForQt5.kpat

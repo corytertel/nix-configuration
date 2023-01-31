@@ -197,6 +197,18 @@
   :config
   (define-key eglot-mode-map [remap xref-find-apropos] 'consult-eglot-symbols))
 
+(use-package affe
+  :bind
+  (("C-x M-f" . (lambda () (affe-find "~/"))))
+  :config
+  ;; Manual preview key for `affe-grep'
+  (consult-customize affe-grep :preview-key (kbd "M-."))
+  ;; Orderless as regex transformer
+  (defun cory/affe-orderless-regexp-compiler (input _type _ignorecase)
+    (setq input (orderless-pattern-compiler input))
+    (cons input (lambda (str) (orderless--highlight input str))))
+  (setq affe-regexp-compiler #'cory/affe-orderless-regexp-compiler))
+
 ;;
 ;; --- EXPANSION ---
 ;;

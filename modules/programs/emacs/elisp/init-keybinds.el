@@ -21,16 +21,6 @@
 (define-key function-key-map
   [(meta control shift iso-lefttab)] [(meta control shift tab)])
 
-;; Visual Keybinding Info
-(use-package which-key
-  :disabled t
-  :init
-  (which-key-mode)
-  :diminish which-key-mode
-  :custom
-  ;; (which-key-idle-delay 0.00000001)
-  (which-key-idle-delay 1.0))
-
 ;; Better help information
 (use-package helpful
   :ensure
@@ -388,71 +378,62 @@ Else, goto the end of the buffer."
 (global-set-key [right-margin mouse-6] #'backward-char)
 (global-set-key [right-margin mouse-7] #'forward-char)
 
-(define-key olivetti-mode-map [right-margin mouse-4] #'previous-line)
-(define-key olivetti-mode-map [right-margin mouse-5] #'next-line)
-(define-key olivetti-mode-map [right-margin mouse-6] #'backward-char)
-(define-key olivetti-mode-map [right-margin mouse-7] #'forward-char)
-(define-key olivetti-mode-map [right-margin mouse-4] #'previous-line)
-(define-key olivetti-mode-map [right-margin mouse-5] #'next-line)
-(define-key olivetti-mode-map [right-margin mouse-6] #'backward-char)
-(define-key olivetti-mode-map [right-margin mouse-7] #'forward-char)
-
 (global-set-key [left-fringe mouse-1]  #'cory/mouse-goto-bol)
 (global-set-key [right-margin mouse-1] #'cory/mouse-goto-eol)
 ;; (global-set-key [right-fringe mouse-1] #'cory/mouse-goto-eol) ; To use the right fringe.
 
 ;;; Selection Keybinds
 
-(define-prefix-command 'bounds-of-thing-map)
-(global-set-key (kbd "C-.") 'bounds-of-thing-map)
-(cory/define-keys
- bounds-of-thing-map
- ("w" . cory/mark-word)
- ("l" . cory/mark-list)
- ("s" . cory/mark-symbol)
- ("e" . cory/mark-sexp)
- ("f" . mark-defun)
- ("n" . cory/mark-number)
- ("." . cory/mark-sentence)
- ("u" . cory/mark-url)
- ("m" . cory/mark-email)
- ("r" . cory/mark-line)
- ("b" . mark-whole-buffer)
- ("p" . mark-paragraph))
+;; (define-prefix-command 'bounds-of-thing-map)
+;; (global-set-key (kbd "C-.") 'bounds-of-thing-map)
+;; (cory/define-keys
+;;  bounds-of-thing-map
+;;  ("w" . cory/mark-word)
+;;  ("l" . cory/mark-list)
+;;  ("s" . cory/mark-symbol)
+;;  ("e" . cory/mark-sexp)
+;;  ("f" . mark-defun)
+;;  ("n" . cory/mark-number)
+;;  ("." . cory/mark-sentence)
+;;  ("u" . cory/mark-url)
+;;  ("m" . cory/mark-email)
+;;  ("r" . cory/mark-line)
+;;  ("b" . mark-whole-buffer)
+;;  ("p" . mark-paragraph))
 
-(define-prefix-command 'beginning-of-thing-map)
-(global-set-key (kbd "C-<") 'beginning-of-thing-map)
-(cory/define-keys
- beginning-of-thing-map
- ("w" . cory/beginning-of-word)
- ("l" . cory/beginning-of-list)
- ("s" . cory/beginning-of-symbol)
- ("e" . cory/beginning-of-sexp)
- ("f" . beginning-of-defun)
- ("n" . cory/beginning-of-number)
- ("." . cory/beginning-of-sentence)
- ("u" . cory/beginning-of-url)
- ("m" . cory/beginning-of-email)
- ("r" . beginning-of-line)
- ("b" . beginning-of-buffer)
- ("p" . backward-paragraph))
+;; (define-prefix-command 'beginning-of-thing-map)
+;; (global-set-key (kbd "C-<") 'beginning-of-thing-map)
+;; (cory/define-keys
+;;  beginning-of-thing-map
+;;  ("w" . cory/beginning-of-word)
+;;  ("l" . cory/beginning-of-list)
+;;  ("s" . cory/beginning-of-symbol)
+;;  ("e" . cory/beginning-of-sexp)
+;;  ("f" . beginning-of-defun)
+;;  ("n" . cory/beginning-of-number)
+;;  ("." . cory/beginning-of-sentence)
+;;  ("u" . cory/beginning-of-url)
+;;  ("m" . cory/beginning-of-email)
+;;  ("r" . beginning-of-line)
+;;  ("b" . beginning-of-buffer)
+;;  ("p" . backward-paragraph))
 
-(define-prefix-command 'end-of-thing-map)
-(global-set-key (kbd "C->") 'end-of-thing-map)
-(cory/define-keys
- end-of-thing-map
- ("w" . cory/end-of-word)
- ("l" . cory/end-of-list)
- ("s" . cory/end-of-symbol)
- ("e" . cory/end-of-sexp)
- ("f" . end-of-defun)
- ("n" . cory/end-of-number)
- ("." . cory/end-of-sentence)
- ("u" . cory/end-of-url)
- ("m" . cory/end-of-email)
- ("r" . end-of-line)
- ("b" . end-of-buffer)
- ("p" . forward-paragraph))
+;; (define-prefix-command 'end-of-thing-map)
+;; (global-set-key (kbd "C->") 'end-of-thing-map)
+;; (cory/define-keys
+;;  end-of-thing-map
+;;  ("w" . cory/end-of-word)
+;;  ("l" . cory/end-of-list)
+;;  ("s" . cory/end-of-symbol)
+;;  ("e" . cory/end-of-sexp)
+;;  ("f" . end-of-defun)
+;;  ("n" . cory/end-of-number)
+;;  ("." . cory/end-of-sentence)
+;;  ("u" . cory/end-of-url)
+;;  ("m" . cory/end-of-email)
+;;  ("r" . end-of-line)
+;;  ("b" . end-of-buffer)
+;;  ("p" . forward-paragraph))
 
 ;;; General Programming Keybinds
 (cory/define-keys

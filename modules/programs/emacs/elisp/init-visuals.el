@@ -94,7 +94,17 @@
 			  (setq-local olivetti-body-width 150)
 			  (olivetti-mode))))
   :custom
-  (olivetti-body-width 100))
+  (olivetti-body-width 100)
+  :bind
+  (:map olivetti-mode-map
+   ([right-margin mouse-4] . previous-line)
+   ([right-margin mouse-5] . next-line)
+   ([right-margin mouse-6] . backward-char)
+   ([right-margin mouse-7] . forward-char)
+   ([right-margin mouse-4] . previous-line)
+   ([right-margin mouse-5] . next-line)
+   ([right-margin mouse-6] . backward-char)
+   ([right-margin mouse-7] . forward-char)))
 
 ;; Super smooth scrolling
 ;; (setq scroll-step            1

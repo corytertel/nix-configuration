@@ -343,7 +343,7 @@ Style * WindowShadeScrolls, WindowShadeSteps 10
 IgnoreModifiers L25
 
 # Decor Styles
-Style * BorderWidth 4, HandleWidth 4, MWMButtons, FvwmBorder, FirmBorder
+Style * BorderWidth 3, HandleWidth 3, MWMButtons, FvwmBorder, FirmBorder
 Style * Colorset 1, HilightColorset 2
 Style * BorderColorset 3, HilightBorderColorset 4
 
@@ -412,8 +412,10 @@ BusyCursor 	DynamicMenu True, Read True, Wait True
 Colorset 0  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
 Colorset 1  fg #83aad8, bg #e0dfde, hi, sh, Plain, NoShape
 Colorset 2  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
-Colorset 3  fg #83aad8, bg #e0dfde, hi, sh, Plain, NoShape
-Colorset 4  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
+# Colorset 3  fg #83aad8, bg #e0dfde, hi, sh, Plain, NoShape
+# Colorset 4  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
+Colorset 3  fg #85aad0, bg #85aad0, hi, sh, Plain, NoShape
+Colorset 4  fg #85aad0, bg #85aad0, hi, sh, Plain, NoShape
 Colorset 5 RootTransparent, fg #e9eaea, bg #1a1a1a, hi, sh, Tint #1a1a1a 70, bgTint #1a1a1a 70
 Colorset 6  fg #141404, bg #c3dcf7, hi, sh, Plain, NoShape
 Colorset 7  fg grey30, bg #c3dcf7, hi, sh, Plain, NoShape
@@ -482,7 +484,7 @@ AddToMenu   MenuSystem
 + "&Wallpapers%$[fvwm_icon]/actions/32x32/photo.png%" Popup BGMenu
 + "System Monitor%$[fvwm_icon]/apps/32x32/utilities-system-monitor.png%" Exec plasma-systemmonitor
 + "btop++" Exec exec $[fvwm_term] -e btop
-+ "Wi-Fi Settings" Exec nm-connection-editor
++ "Wi-Fi Settings%$[fvwm_icon]/categories/32x32/applications-internet.png%" Exec nm-connection-editor
 + "" Nop
 + "Re&fresh FVWM%$[fvwm_icon]/actions/32x32/view-refresh.png%" Refresh
 + "&Restart FVWM%$[fvwm_icon]/actions/32x32/system-reboot.png%" Restart
@@ -632,6 +634,7 @@ DestroyMenu MenuKeyboard
 AddToMenu   MenuKeyboard
 + "US (BEAKL Emacs)" Exec setxkbmap "us_beakl_emacs"
 + "US (QWERTY)" Exec setxkbmap "us_qwerty"
++ "US (Minimak)" Exec setxkbmap "us_minimak"
 + "RU (Phonetic BEAKL Emacs)" Exec setxkbmap "ru_beakl_emacs"
 + "RU (Phonetic)" Exec setxkbmap "ru_phonetic_qwerty"
 
@@ -771,7 +774,7 @@ Mouse 3 I    A Menu MenuIconOps
 # ButtonStyle 4 - MwmDecorMax
 # ButtonStyle 6 - MwmDecorMin
 
-TitleStyle Centered Height 38 -- Flat
+TitleStyle Centered Height 40 -- Flat
 ButtonStyle 1 \
       ActiveUp          (Pixmap $[fvwm_img]/button/stick-activeup.png -- Flat) \
       ActiveDown        (Pixmap $[fvwm_img]/button/stick-activedown.png -- Flat) \

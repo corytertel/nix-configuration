@@ -17,6 +17,8 @@
 ;;    in the functions file. All keybinds not related to a package must
 ;;    be declared in the keybinds file.
 
+;; Small, big, bigger keybind philosophy.
+
 ;;; Code:
 
 ;;
