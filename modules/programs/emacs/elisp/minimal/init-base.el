@@ -25,10 +25,9 @@
 ;; -- PACKAGE SETUP ---
 ;;
 
-;; For Nix
 (require 'package)
 
-;; optional. makes impure packages archives unavailable
+;; makes impure packages archives unavailable
 (setq package-archives nil)
 
 (setq package-enable-at-startup nil)
@@ -36,22 +35,6 @@
 
 (require 'use-package)
 (setq use-package-always-ensure t)
-
-;; For non Nix Setups
-;; (require 'package)
-
-;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-;; 			    ("elpa" . "https://elpa.gnu.org/packages/")))
-
-;; (package-initialize)
-;; (unless package-archive-contents
-;;   (package-refresh-contents))
-
-;; (unless (package-installed-p 'use-package)
-;;   (package-install 'use-package))
-
-;; (require 'use-package)
-;; (setq use-package-always-ensure t)
 
 ;;
 ;; --- MISC ---
@@ -68,18 +51,10 @@
 	      auto-save-interval 60
 	      kill-do-not-save-duplicates t
 	      bidi-paragraph-direction 'left-to-right
-	      bidi-inhibit-bpa t)
+	      bidi-inhibit-bpa t
+	      frame-resize-pixelwise t)
 
-(setq-default frame-resize-pixelwise t)
-
-;; (global-so-long-mode 1)
 (save-place-mode 1)
-
-;; don't back up files
-;; (setq make-backup-files nil)
-
-;; Write backup files to tmp dir
-;; (setq backup-directory-alist `((".*" . ,temporary-file-directory)) )
 
 ;; Write backup files to backup directory instead of editing directory
 (setq backup-directory-alist
@@ -125,70 +100,8 @@
 ;; Add newlines when C-n at the end of file
 (setq next-line-add-newlines t)
 
-;; Buffer management
-(use-package ibuffer-project
-  :hook (ibuffer-mode . cory/ibuffer-setup)
-  :custom
-  (ibuffer-truncate-lines nil)
-  (ibuffer-project-use-cache t)
-  (ibuffer-expert t) ; stop yes no prompt on delete
-  :config
-  (defun cory/ibuffer-setup ()
-    (setq ibuffer-filter-groups
-	  (append (cdr (ibuffer-project-generate-filter-groups))
-		  '(("Programming"
-		     (mode . prog-mode))
-		    ("Org"
-		     (mode . org-mode))
-		    ("Magit"
-		     (name . "^magit"))
-		    ("Planner"
-		     (or
-		      (name . "^\\*Calendar\\*$")
-		      (name . "^\\*Org Agenda\\*")))
-		    ("Sunrise"
-		     (mode . sunrise-mode))
-		    ("Emacs"
-		     (or
-		      (name . "^\\*scratch\\*$")
-		      (name . "^\\*Messages\\*$"))))))))
-
-(use-package all-the-icons-ibuffer
-  :ensure t
-  :hook (ibuffer-mode . all-the-icons-ibuffer-mode))
-
-;; Emacs run launcher
-(defun emacs-run-launcher ()
-  "A frame to launch desktop applications."
-  (interactive)
-  (with-selected-frame
-      (make-frame '((name . "emacs-run-launcher")
-		    (minibuffer . only)
-		    (width . 100)
-		    (height . 11)))
-    (unwind-protect
-	(app-launcher-run-app)
-      (delete-frame))))
-
-;; Transparency
-;; (set-frame-parameter (selected-frame) 'alpha '(70 . 70))
-;; (add-to-list 'default-frame-alist '(alpha . (70 . 70)))
-
-(defun toggle-transparency ()
-  "Toggles emacs transparency."
-  (interactive)
-  (let ((alpha (frame-parameter nil 'alpha)))
-    (set-frame-parameter
-     nil 'alpha
-     (if (eql (cond ((numberp alpha) alpha)
-                   ((numberp (cdr alpha)) (cdr alpha))
-                   ;; Also handle undocumented (<active> <inactive>) form.
-                   ((numberp (cadr alpha)) (cadr alpha)))
-             100)
-         '(70 . 70) '(100 . 100)))))
-
 ;; Set the fringe to an big enough width
-(custom-set-variables '(fringe-mode 20))
+(setq-default fringe-mode 20)
 
 ;; Show the time in Phoenix and Moscow in world-clock
 (with-eval-after-load 'time

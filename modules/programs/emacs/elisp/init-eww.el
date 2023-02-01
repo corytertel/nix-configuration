@@ -35,7 +35,7 @@
 	(deactivate-mark)
 	(eww (concat "https://en.wiktionary.org/wiki/" region "#Russian")))
     (eww (concat "https://en.wiktionary.org/wiki/"
-		 (read-string "Word:")
+		 (read-string (concat "Word (default: " (word-at-point) "): ") nil nil (word-at-point))
 		 "#Russian"))))
 
 ;; (define-key org-mode-map (kbd "C-c C-h") 'eww-wiktionary-search)

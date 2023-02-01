@@ -5,12 +5,12 @@ let
 
   cfg = config.programs.cory.emacs;
 
-  initFile = (builtins.readFile ./init.el)
+  initFile = (builtins.readFile ./elisp/minimal/init-base.el)
+             + (builtins.readFile ./elisp/minimal/init-functions.el)
+             + (builtins.readFile ./elisp/minimal/init-keybinds.el)
 
              + (builtins.readFile ./elisp/init-performance.el)
              + (builtins.readFile ./elisp/init-visuals.el)
-
-             + (builtins.readFile ./elisp/init-functions.el)
 
              # Completion
              + (builtins.readFile ./elisp/init-completion.el)
@@ -26,6 +26,8 @@ let
              + (builtins.readFile ./elisp/init-projects.el)
              + (builtins.readFile ./elisp/init-ssh.el)
              + (builtins.readFile ./elisp/init-movement.el)
+             + (builtins.readFile ./elisp/init-buffer.el)
+             + (builtins.readFile ./elisp/init-help.el)
 
              # Langs
              + (builtins.readFile ./elisp/init-clojure.el)
@@ -51,13 +53,9 @@ let
              + (builtins.readFile ./elisp/aside-eshell.el)
              + (builtins.readFile ./elisp/aside-configurations.el)
 
-             + (builtins.readFile ./elisp/init-keybinds.el)
-
              # Informal Packages
              # + (builtins.readFile ./elisp/eshell-undistract-me.el)
              + (builtins.readFile ./elisp/app-launcher.el)
-             + (builtins.readFile ./elisp/hexrgb.el)
-             + (builtins.readFile ./elisp/palette.el)
 
              + (if cfg.exwm then builtins.readFile ./exwm.el else "");
 

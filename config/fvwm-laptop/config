@@ -666,8 +666,8 @@ AddToMenu   MenuKeyboard
 Silent Key F1 A M Menu MenuFvwmRoot
 Silent Key Menu A A Menu MenuFvwmRoot
 # Silent Key Tab A M WindowList Root c c NoDeskSort, SelectOnRelease Meta_L
-Silent Key Super_L A A Exec $[fvwm_launch]
-Silent Key Super_R A A Exec $[fvwm_launch]
+# Silent Key Super_L A A Exec $[fvwm_launch]
+# Silent Key Super_R A A Exec $[fvwm_launch]
 # Xah Keybinds
 # F1: reserved, commonly used key
 # F2: reserved, universal key (rename)

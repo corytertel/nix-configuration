@@ -629,6 +629,7 @@ DestroyMenu MenuKeyboard
 AddToMenu   MenuKeyboard
 + "US (QWERTY)" Exec setxkbmap "us_qwerty"
 + "US (BEAKL Emacs)" Exec setxkbmap "us_beakl_emacs"
++ "US (Minimak)" Exec setxkbmap "us_minimak"
 + "RU (Phonetic)" Exec setxkbmap "ru_phonetic_qwerty"
 + "RU (Phonetic BEAKL Emacs)" Exec setxkbmap "ru_beakl_emacs"
 
@@ -660,8 +661,8 @@ AddToMenu   MenuKeyboard
 Silent Key F1 A M Menu MenuFvwmRoot
 Silent Key Menu A A Menu MenuFvwmRoot
 # Silent Key Tab A M WindowList Root c c NoDeskSort, SelectOnRelease Meta_L
-Silent Key Super_L A A Exec $[fvwm_launch]
-Silent Key Super_R A A Exec $[fvwm_launch]
+# Silent Key Super_L A A Exec $[fvwm_launch]
+# Silent Key Super_R A A Exec $[fvwm_launch]
 # Xah Keybinds
 # F1: reserved, commonly used key
 # F2: reserved, universal key (rename)

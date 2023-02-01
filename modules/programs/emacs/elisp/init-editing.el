@@ -4,10 +4,12 @@
   :diminish undo-tree-mode
   :bind
   (:map undo-tree-map
-   ("C-x u"   . undo-tree-visualize)
-   ("C-/"     . undo-tree-undo)
-   ("C-x C-u" . undo-tree-visualize-redo)
-   ("C-?"     . undo-tree-redo))
+   ;; ("C-x u"   . undo-tree-visualize)
+   ;; ("C-/"     . undo-tree-undo)
+   ;; ("C-x C-u" . undo-tree-visualize-redo)
+   ;; ("C-?"     . undo-tree-redo)
+   ([remap undo-only] . undo-tree-undo)
+   ([remap undo-redo] . undo-tree-redo))
   :custom
   (undo-tree-visualizer-timestamps t)
   (undo-tree-visualizer-relative-timestamps t)

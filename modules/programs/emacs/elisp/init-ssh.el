@@ -38,9 +38,10 @@
 
 (defun cory/read-ssh-history ()
   "Return a list of ssh addresses previously connected to."
-  (with-temp-buffer
-    (insert-file-contents "~/.emacs.d/ssh_history")
-    (split-string (buffer-string) "\n" t)))
+  (when (file-exists-p "~/.emacs.d/ssh_history")
+    (with-temp-buffer
+      (insert-file-contents "~/.emacs.d/ssh_history")
+      (split-string (buffer-string) "\n" t))))
 
 (defun cory/clean-ssh-history ()
   (interactive)
