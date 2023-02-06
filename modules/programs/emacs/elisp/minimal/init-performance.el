@@ -33,6 +33,12 @@
   (makunbound 'hm/file-name-handler-alist))
 (add-hook 'emacs-startup-hook #'hm/restore-file-name-handler-alist)
 
+;; Garbage-collect on focus-out, Emacs should feel snappier overall.
+(add-function :after after-focus-change-function
+  (defun cory/garbage-collect-maybe ()
+    (unless (frame-focus-state)
+      (garbage-collect))))
+
 ;;
 ;; --- ASYNC ---
 ;;

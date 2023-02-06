@@ -5,17 +5,15 @@
   :ensure t
 
   :hook
-  ;; (nix-mode . eglot-ensure)
-  (c-mode . eglot-ensure)
-  (c++-mode . eglot-ensure)
-  (racket-mode . eglot-ensure)
-  (clojure-mode . eglot-ensure)
-  (clojurescript-mode . eglot-ensure)
-  (clojurec-mode . eglot-ensure)
-  ;; (scheme-mode . eglot-ensure)
-  (java-mode . eglot-ensure)
-  (python-mode . eglot-ensure)
-  (eglot-managed-mode . eglot-super-capf)
+  (c-mode . cory/eglot-ensure)
+  (c++-mode . cory/eglot-ensure)
+  (racket-mode . cory/eglot-ensure)
+  (clojure-mode . cory/eglot-ensure)
+  (clojurescript-mode . cory/eglot-ensure)
+  (clojurec-mode . cory/eglot-ensure)
+  ;; (java-mode . cory/eglot-ensure)
+  (python-mode . cory/eglot-ensure)
+  (eglot-managed-mode . cory/eglot-super-capf)
 
   :custom
   (eglot-autoshutdown t)
@@ -34,13 +32,18 @@
   ;; (add-to-list 'eglot-server-programs
   ;;              `(nix-mode . ("nil")))
 
-  (defun eglot-super-capf ()
+  (defun cory/eglot-super-capf ()
     (setq-local completion-at-point-functions
 		(list (cape-super-capf
 		       #'tempel-complete
 		       #'eglot-completion-at-point)
 		      #'cape-dabbrev
 		      #'cape-file)))
+
+  (defun cory/eglot-ensure ()
+    "Ensures that `eglot-ensure' is only run during local connections."
+    (unless (file-remote-p buffer-file-name)
+      (eglot-ensure)))
 
   :bind (:map eglot-mode-map
 	 ("C-c C-a" . eglot-code-actions)

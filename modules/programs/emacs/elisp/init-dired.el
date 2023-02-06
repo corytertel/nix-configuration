@@ -4,12 +4,13 @@
 
 ;; TODO set `dired-compress-file-alist' to include all archive types
 
+;; NOTE May slow down Emacs
 ;; Auto refresh buffers
-(global-auto-revert-mode 1)
+;; (global-auto-revert-mode 1)
 
 ;; Also auto refresh dired, but be quiet about it
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)
+;; (setq global-auto-revert-non-file-buffers t)
+;; (setq auto-revert-verbose nil)
 
 (use-package sunrise
   :init
@@ -118,9 +119,9 @@ This only affects the built-in handlers."
     (if (sunrise-quit)
 	(hl-line-mode -1)
       (if (and ;; (boundp 'sunrise-left-buffer)
-	  ;; (boundp 'sunrise-right-buffer)
-	  (buffer-live-p sunrise-left-buffer)
-	  (buffer-live-p sunrise-right-buffer))
+	   ;; (boundp 'sunrise-right-buffer)
+	   (buffer-live-p sunrise-left-buffer)
+	   (buffer-live-p sunrise-right-buffer))
 	  (cory/sunrise-show)
 	(sunrise-show))))
 
@@ -157,10 +158,10 @@ LEFT-DIRECTORY and RIGHT-DIRECTORY, if non-nil, are the directories to show."
           (sunrise-select-viewer-window)
           (delete-other-windows)
           (unless (and sunrise-panes-height
-                     (< sunrise-panes-height (frame-height)))
+                       (< sunrise-panes-height (frame-height)))
             (setq sunrise-panes-height (sunrise-get-panes-size)))
           (when (and (<= sunrise-panes-height (* 2 window-min-height))
-                   (eq sunrise-window-split-style 'vertical))
+                     (eq sunrise-window-split-style 'vertical))
             (setq sunrise-panes-height (* 2 window-min-height)))
           (let ((root (selected-window)))
             (setq view-window (split-window root sunrise-panes-height))
@@ -212,7 +213,7 @@ string as well."
                     (append (split-string command " ")
                             (list (file-truename file)))))))
       (when (and process
-               (not cory/sunrise-open-query-before-exit))
+		 (not cory/sunrise-open-query-before-exit))
 	(set-process-query-on-exit-flag process nil))
       process))
 
@@ -223,7 +224,7 @@ The mappings from extensions to applications is specified by
     (interactive)
     (let (process)
       (when (and filename
-	       (not (file-directory-p filename)))
+		 (not (file-directory-p filename)))
 	(--each-while cory/sunrise-open-extensions (not process)
           (when (string-match-p (concat "\\." (regexp-quote (car it)) "\\'") filename)
             (setq process (cory/sunrise-open-start-process filename (cdr it)))))
@@ -240,7 +241,7 @@ WILDCARDS is passed to `sunrise-find-regular-file'."
     (cl-ecase (sunrise-classify-file filename)
       (file
        (or (cory/sunrise-open-by-extension filename)
-	  (sunrise-find-regular-file filename wildcards)))
+	   (sunrise-find-regular-file filename wildcards)))
       (directory
        (sunrise-find-regular-directory filename))
       (virtual-directory

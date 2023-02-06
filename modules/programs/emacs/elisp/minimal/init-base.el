@@ -1,4 +1,3 @@
-;;; init.el --- init -*- lexical-binding: t; no-byte-compile: nil; -*-
 ;;; Commentary:
 
 ;; Goals:
@@ -6,6 +5,7 @@
 ;; 2. Robust
 ;; 3. Fast
 ;; 4. Flexible
+;; 5. Compatibility (Non-esotericness)
 
 ;; Config Rules:
 ;; 1. All eligible variables will be set through customize.
@@ -107,5 +107,17 @@
 (with-eval-after-load 'time
   (add-to-list 'zoneinfo-style-world-list '("America/Phoenix" "Phoenix"))
   (add-to-list 'zoneinfo-style-world-list '("Europe/Moscow" "Moscow")))
+
+;; Startup time
+(defun cory/display-startup-time ()
+  (message
+   "Emacs loaded in %s with %d garbage collections."
+   (format
+    "%.2f seconds"
+    (float-time
+     (time-subtract after-init-time before-init-time)))
+   gcs-done))
+
+(add-hook 'emacs-startup-hook #'cory/display-startup-time)
 
 ;;; init.el ends here

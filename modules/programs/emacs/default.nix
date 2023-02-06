@@ -5,59 +5,63 @@ let
 
   cfg = config.programs.cory.emacs;
 
-  initFile = (builtins.readFile ./elisp/minimal/init-base.el)
-             + (builtins.readFile ./elisp/minimal/init-functions.el)
-             + (builtins.readFile ./elisp/minimal/init-keybinds.el)
+  initFile = '';;; init.el --- init -*- lexical-binding: t; no-byte-compile: nil; -*-
+''
+  + (builtins.readFile ./elisp/minimal/init-performance.el)
+  + (builtins.readFile ./elisp/minimal/init-base.el)
+  + (builtins.readFile ./elisp/minimal/init-functions.el)
+  + (builtins.readFile ./elisp/minimal/init-keybinds.el)
+  + (builtins.readFile ./elisp/minimal/init-search.el)
+  + (builtins.readFile ./elisp/minimal/init-eww.el)
+  + (builtins.readFile ./elisp/minimal/init-completion.el)
 
-             + (builtins.readFile ./elisp/init-performance.el)
-             + (builtins.readFile ./elisp/init-visuals.el)
+  + (builtins.readFile ./elisp/init-visuals.el)
 
-             # Completion
-             + (builtins.readFile ./elisp/init-completion.el)
+  # Completion
+  + (builtins.readFile ./elisp/init-completion.el)
+  + (builtins.readFile ./elisp/init-lsp.el)
+  + (builtins.readFile ./elisp/init-templates.el)
 
-             # IDE Stuff
-             + (builtins.readFile ./elisp/init-lsp.el)
-             + (builtins.readFile ./elisp/init-checking.el)
-             + (builtins.readFile ./elisp/init-formatting.el)
-             + (builtins.readFile ./elisp/init-editing.el)
-             + (builtins.readFile ./elisp/init-search.el)
-             + (builtins.readFile ./elisp/init-templates.el)
-             + (builtins.readFile ./elisp/init-shell.el)
-             + (builtins.readFile ./elisp/init-projects.el)
-             + (builtins.readFile ./elisp/init-ssh.el)
-             + (builtins.readFile ./elisp/init-movement.el)
-             + (builtins.readFile ./elisp/init-buffer.el)
-             + (builtins.readFile ./elisp/init-help.el)
+  # IDE Stuff
+  + (builtins.readFile ./elisp/init-checking.el)
+  + (builtins.readFile ./elisp/init-formatting.el)
+  + (builtins.readFile ./elisp/init-editing.el)
+  + (builtins.readFile ./elisp/init-shell.el)
+  + (builtins.readFile ./elisp/init-projects.el)
+  + (builtins.readFile ./elisp/init-ssh.el)
+  + (builtins.readFile ./elisp/init-movement.el)
+  + (builtins.readFile ./elisp/init-buffer.el)
+  + (builtins.readFile ./elisp/init-help.el)
 
-             # Langs
-             + (builtins.readFile ./elisp/init-clojure.el)
-             + (builtins.readFile ./elisp/init-common-lisp.el)
-             + (builtins.readFile ./elisp/init-cpp.el)
-             + (builtins.readFile ./elisp/init-elisp.el)
-             + (builtins.readFile ./elisp/init-java.el)
-             + (builtins.readFile ./elisp/init-other-langs.el)
-             + (builtins.readFile ./elisp/init-python.el)
-             + (builtins.readFile ./elisp/init-scheme.el)
+  # Langs
+  # + (builtins.readFile ./elisp/init-clojure.el)
+  # + (builtins.readFile ./elisp/init-common-lisp.el)
+  + (builtins.readFile ./elisp/init-cpp.el)
+  + (builtins.readFile ./elisp/init-elisp.el)
+  + (builtins.readFile ./elisp/init-java.el)
+  # + (builtins.readFile ./elisp/init-other-langs.el)
+  # + (builtins.readFile ./elisp/init-python.el)
+  + (builtins.readFile ./elisp/init-scheme.el)
+  + (builtins.readFile ./elisp/init-web.el)
 
-             # Other
-             + (builtins.readFile ./elisp/init-dired.el)
-             + (builtins.readFile ./elisp/init-nixos.el)
-             + (builtins.readFile ./elisp/init-org.el)
-             + (builtins.readFile ./elisp/init-pdf.el)
-             + (builtins.readFile ./elisp/init-eww.el)
+  # Other
+  + (builtins.readFile ./elisp/init-dired.el)
+  + (builtins.readFile ./elisp/init-nixos.el)
+  + (builtins.readFile ./elisp/init-org.el)
+  + (builtins.readFile ./elisp/init-pdf.el)
 
-             # Window Management
-             + (builtins.readFile ./elisp/init-window-management.el)
-             + (builtins.readFile ./elisp/aside.el)
-             + (builtins.readFile ./elisp/aside-vterm.el)
-             + (builtins.readFile ./elisp/aside-eshell.el)
-             + (builtins.readFile ./elisp/aside-configurations.el)
+  # Window Management
+  + (builtins.readFile ./elisp/init-window-management.el)
+  + (builtins.readFile ./elisp/aside.el)
+  + (builtins.readFile ./elisp/aside-vterm.el)
+  + (builtins.readFile ./elisp/aside-eshell.el)
+  + (builtins.readFile ./elisp/aside-configurations.el)
 
-             # Informal Packages
-             # + (builtins.readFile ./elisp/eshell-undistract-me.el)
-             + (builtins.readFile ./elisp/app-launcher.el)
+  # Informal Packages
+  # + (builtins.readFile ./elisp/eshell-undistract-me.el)
+  + (builtins.readFile ./elisp/app-launcher.el)
 
-             + (if cfg.exwm then builtins.readFile ./exwm.el else "");
+  + (if cfg.exwm then builtins.readFile ./exwm.el else "");
 
   init = pkgs.runCommand "default.el" {} ''
     mkdir -p $out/share/emacs/site-lisp

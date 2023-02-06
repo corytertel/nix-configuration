@@ -8,36 +8,20 @@
 (tooltip-mode -1)    ; Disables tooltips
 
 ;; Make the cursor a bar
-;; (setq-default cursor-type 'bar)
 (setq-default cursor-type 'hollow)
 
 (setq initial-scratch-message nil)
 
 ;; Beacon
-(use-package beacon
-  :config
-  (beacon-mode 1))
+;; (use-package beacon
+;;   :config
+;;   (beacon-mode 1))
 
 ;; Visual feedback on yank/kill
-(use-package goggles
-  :hook ((prog-mode text-mode) . goggles-mode)
-  :config
-  (setq-default goggles-pulse nil))
-
-;; Display Line numbers
-;; (column-number-mode)
-;; (global-display-line-numbers-mode t)
-
-;; Disable line numbers for some modes
-;; (dolist (mode '(org-mode-hook
-;; 		term-mode-hook
-;; 		shell-mode-hook
-;; 		eshell-mode-hook
-;; 		vterm-mode-hook
-;; 		cider-repl-mode-hook
-;; 		racket-repl-mode-hook
-;; 		geiser-repl-mode-hook))
-;;   (add-hook mode (lambda () (display-line-numbers-mode 0))))
+;; (use-package goggles
+;;   :hook ((prog-mode text-mode) . goggles-mode)
+;;   :config
+;;   (setq-default goggles-pulse nil))
 
 ;; Window dividers
 (setq window-divider-default-right-width 3)
@@ -47,36 +31,6 @@
 		  window-divider))
     (set-face-foreground face color)))
 (window-divider-mode 1)
-
-;; Add padding to the sides
-;; (require 'frame)
-;; (setq-default default-frame-alist
-;; 	      (append (list
-;; 		       '(internal-border-width . 20)
-;; 		       ;; '(left-fringe . 0)
-;; 		       ;; '(right-fringe . 0)
-;; 		       '(tool-bar-lines . 0)
-;; 		       '(menu-bar-lines . 0)
-;; 		       '(line-spacing . 0.075)
-;; 		       '(vertical-scroll-bars . nil))))
-;; (setq-default window-resize-pixelwise t)
-;; (setq-default frame-resize-pixelwise t)
-;; (add-hook 'before-make-frame-hook 'window-divider-mode)
-
-;; (use-package visual-fill-column
-;;   ;; :hook
-;;   ;; (text-mode   . visual-fill-column-mode)
-;;   ;; (prog-mode   . visual-fill-column-mode)
-;;   ;; (conf-mode   . visual-fill-column-mode)
-;;   ;; (fundamental-mode . visual-fill-column-mode)
-;;   ;; (term-mode   . visual-fill-column-mode)
-;;   ;; (eshell-mode . visual-fill-column-mode)
-;;   :custom
-;;   (global-visual-fill-column-mode t)
-;;   (visual-fill-column-width 100)
-;;   (visual-fill-column-center-text t)
-;;   :config
-;;   (add-hook 'pdf-view-mode-hook (lambda () (visual-fill-column-mode 0))))
 
 ;; Center text in the frame
 (use-package olivetti
@@ -106,47 +60,19 @@
    ([right-margin mouse-6] . backward-char)
    ([right-margin mouse-7] . forward-char)))
 
-;; Super smooth scrolling
-;; (setq scroll-step            1
-;;       scroll-conservatively  10000)
-;; (setq next-screen-context-lines 5)
-
-;; Smooth scrolling
-;; (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
-;; (setq mouse-wheel-progressive-speed nil)
-
-;; Smooth pixel scrolling
-;; (pixel-scroll-mode 1)
-
-;; (pixel-scroll-precision-mode)
-
-;; (setq-local scroll-margin 1
-;; 	    scroll-conservatively 101
-;; 	    scroll-up-aggressively 0.01
-;; 	    scroll-down-aggressively 0.01
-;; 	    scroll-preserve-screen-position t
-;; 	    auto-window-vscroll nil)
-
-;; Minimap
-;; (use-package minimap
-;;   :custom
-;;   (minimap-window-location ')
-;;   :config
-;;   (minimap-mode))
-
 ;;
 ;; --- FONT ---
 ;;
 
 ;; Setting the font
-;; (set-face-attribute 'default nil :family "Victor Mono")
-(set-face-attribute 'default nil :family "Roboto Mono")
+(set-face-attribute 'default nil :family "Victor Mono" :height 100)
+;; (set-face-attribute 'default nil :family "Roboto Mono")
 ;; Set fixed pitch face
-;; (set-face-attribute 'fixed-pitch nil :family "Victor Mono")
-(set-face-attribute 'fixed-pitch nil :family "Roboto Mono")
+(set-face-attribute 'fixed-pitch nil :family "Victor Mono" :height 100)
+;; (set-face-attribute 'fixed-pitch nil :family "Roboto Mono")
 ;; Set variable pitch face
 ;; (set-face-attribute 'variable-pitch nil :family "Oxygen-Sans")
-(set-face-attribute 'variable-pitch nil :family "Roboto")
+(set-face-attribute 'variable-pitch nil :family "Roboto" :height 100)
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
@@ -166,9 +92,6 @@
     (all-the-icons-install-fonts t)))
 
 ;; Ligatures and Indicators
-;; (use-package pretty-mode
-;;   :config
-;;   (add-hook 'prog-mode-hook 'pretty-mode))
 (add-hook 'prog-mode-hook 'prettify-symbols-mode)
 
 ;; APL-like characters for scheme
@@ -229,32 +152,18 @@
 (set-face-attribute 'mode-line-inactive nil
 		    :foreground "#141404"
 		    :background "#ffffff")
+(set-face-attribute 'mode-line-buffer-id nil
+		    :inherit 'bold
+		    :foreground "#3647d9")
 (set-face-attribute 'fringe nil
 		    :background "#ffffff")
-
-;; Whitespace settings
-;; (set-face-attribute 'whitespace-line nil
-;; 		    :background 'unspecified)
-
-;; Matching parenthesis settings
-;; (set-face-attribute 'show-paren-match nil
-;; 		    :underline t)
-;; (set-face-attribute 'show-paren-mismatch nil
-;; 		    :underline t)
+(set-face-attribute 'secondary-selection nil
+		    :background "#fffccc")
 
 ;;
 ;; --- MODE-LINE ---
 ;;
 
-;; (use-package smart-mode-line
-;;   :config
-;;   (setq sml/theme 'cory)
-;;   (sml/setup))
-
-;; (use-package rich-minority
-;;   :config
-;;   (rich-minority-mode 1)
-;;   (setf rm-blacklist ""))
 
 ;; Buffer state in modeline
 (defface modeline-narrow-face
@@ -271,22 +180,6 @@
   '((t (:foreground "#d8d8d8" :background "#e60909")))
   "Modified buffer highlighting."
   :group 'faces)
-
-;; Git diff in modeline
-;; https://cocktailmake.github.io/posts/emacs-modeline-enhancement-for-git-diff/
-;; (defadvice vc-git-mode-line-string (after plus-minus (file) compile activate)
-;;   "Show the information of git diff in status-line"
-;;   (setq ad-return-value
-;;         (concat ad-return-value
-;;                 (let ((plus-minus (vc-git--run-command-string
-;;                                    file "diff" "--numstat" "--")))
-;;                   (if (and plus-minus
-;;                            (string-match "^\\([0-9]+\\)\t\\([0-9]+\\)\t" plus-minus))
-;;                       (concat
-;;                        " "
-;;                        (format "+%s" (match-string 1 plus-minus))
-;;                        (format "-%s" (match-string 2 plus-minus)))
-;;                     "")))))
 
 ;; Git Parse Repo Status
 ;; See https://kitchingroup.cheme.cmu.edu/blog/2014/09/19/A-git-status-Emacs-modeline/
@@ -333,6 +226,45 @@
       'help-echo U-files)
      "]")))
 
+;; (setq-default
+;;  mode-line-format
+;;  '("  "
+;;    (:eval (let ((icon (all-the-icons-icon-for-mode major-mode)))
+;; 	    (propertize
+;; 	     icon
+;; 	     'face
+;; 	     (plist-put
+;; 	      (get-text-property 0 'face icon)
+;; 	      :height 1.0)
+;; 	     'font-lock-face
+;; 	     (plist-put
+;; 	      (get-text-property 0 'font-lock-face icon)
+;; 	      :height 1.0)
+;; 	     'display
+;; 	     '(raise 0))))
+;;    "  "
+;;    (:eval (let ((str (if buffer-read-only
+;;                          (if (buffer-modified-p) "%%*" "%%%%")
+;;                        (if (buffer-modified-p) "**" "--"))))
+;;             (if buffer-read-only
+;;                 (propertize str 'face 'modeline-read-only-face)
+;;               (if (buffer-modified-p)
+;;                   (propertize str 'face 'modeline-modified-face)
+;;                 str))))
+;;    (list 'line-number-mode "  ")
+;;    (:eval (when line-number-mode
+;;             (let ((str "L%l"))
+;;               (if (/= (buffer-size) (- (point-max) (point-min)))
+;;                   (propertize str 'face 'modeline-narrow-face)
+;;                 str))))
+;;    "  %p"
+;;    (list 'column-number-mode "  C%c")
+;;    "  " mode-line-buffer-identification
+;;    "  " mode-line-modes
+;;    (:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format))
+;;    "  "
+;;    (:eval (cory/mode-line-git-parse-status))))
+
 (setq-default
  mode-line-format
  '("  "
@@ -367,10 +299,7 @@
    "  %p"
    (list 'column-number-mode "  C%c")
    "  " mode-line-buffer-identification
-   "  " mode-line-modes
-   (:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format))
-   "  "
-   (:eval (cory/mode-line-git-parse-status))))
+   "  " mode-line-modes))
 
 ;; (use-package moody
 ;;   :custom
@@ -385,56 +314,3 @@
 
 (use-package minions
   :config (minions-mode))
-
-;; (defvar +smart-file-name-cache nil)
-
-;; (defun +shorten-long-path (path)
-;;   (let ((paths (split-string path "/")))
-;;     (if (< (length paths) 3)
-;;         path
-;;       (string-join (reverse (let ((rpaths (reverse paths)))
-;;                               (-concat
-;;                                (-take 2 rpaths)
-;;                                (->> (-drop 2 rpaths)
-;;                                   (--map (if (> (length it) 1)
-;;                                              (substring it 0 1)
-;;                                            it))))))
-;;                    "/"))))
-
-;; (defun +smart-file-name ()
-;;   "Get current file name, if we are in project, the return relative path to the project root, otherwise return absolute file path.
-;; This function is slow, so we have to use cache."
-;;   (let ((vc-dir (vc-root-dir))
-;;         (bfn (buffer-file-name (current-buffer))))
-;;     (cond
-;;      ((and bfn vc-dir)
-;;       (+shorten-long-path (file-relative-name bfn vc-dir)))
-;;      (bfn bfn)
-;;      (t (buffer-name)))))
-
-;; (defun +smart-file-name-cached ()
-;;   (if (eq (buffer-name) (car +smart-file-name-cache))
-;;       (cdr +smart-file-name-cache)
-;;     (let ((file-name (+smart-file-name)))
-;;       (setq +smart-file-name-cache
-;;             (cons (buffer-name) file-name))
-;;       file-name)))
-
-;; (defun +format-mode-line ()
-;;   (let* ((lhs '((:eval (when (bound-and-true-p meow-mode) (meow-indicator)))
-;; 		(:eval " L%l C%C")
-;; 		(:eval (when (bound-and-true-p flymake-mode) flymake-mode-line-format))))
-;;          (rhs '((:eval (+smart-file-name-cached))
-;;                 " "
-;;                 (:eval mode-name)))
-;;          (ww (window-width))
-;;          (lhs-str (format-mode-line lhs))
-;;          (rhs-str (format-mode-line rhs))
-;;          (rhs-w (string-width rhs-str)))
-;;     (format "%s%s%s"
-;;             lhs-str
-;;             (propertize " " 'display `((space :align-to (- (+ right right-fringe right-margin) (+ 1 ,rhs-w)))))
-;;             rhs-str)))
-
-;; (setq-default mode-line-format '((:eval (+format-mode-line))))
-;; (setq-default header-line-format nil)

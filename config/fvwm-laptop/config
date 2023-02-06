@@ -271,6 +271,12 @@ DestroyFunc WindowScreenshot
 AddToFunc   WindowScreenshot
 +I Exec xwd -silent -id "$[w.id]" -out "$(date '+%Y-%m-%d_%H-%M')"
 
+# Function: MoveAndGotoPage
+DestroyFunc MoveAndGotoPage
+AddToFunc   MoveAndGotoPage
++ I MoveToPage wrapx wrapy $0 $1
++ I GotoPage wrapx wrapy $0 $1
+
 #############
 # 2: Styles #
 #############
@@ -343,7 +349,7 @@ Style * WindowShadeScrolls, WindowShadeSteps 10
 IgnoreModifiers L25
 
 # Decor Styles
-Style * BorderWidth 3, HandleWidth 3, MWMButtons, FvwmBorder, FirmBorder
+Style * BorderWidth 2, HandleWidth 2, MWMButtons, FvwmBorder, FirmBorder
 Style * Colorset 1, HilightColorset 2
 Style * BorderColorset 3, HilightBorderColorset 4
 
@@ -702,14 +708,21 @@ Silent Key Print A N Exec exec flameshot gui
 Silent Key Print A S Exec exec flameshot full -p ~/Pictures/Screenshots
 
 # Brightness Buttons
-Silent Key XF86MonBrightnessUp A A Exec exec xbrightness +5000
-Silent Key XF86MonBrightnessDown A A Exec exec xbrightness -5000
+Silent Key XF86MonBrightnessUp A A Exec exec xbrightness +2500
+Silent Key XF86MonBrightnessDown A A Exec exec xbrightness -2500
 
 # Workspaces
-Silent Key Up       A    M        GotoPage wrapx wrapy 0p -1p
-Silent Key Down     A    M        GotoPage wrapx wrapy 0p +1p
-Silent Key Left     A    M        GotoPage wrapx wrapy -1p 0p
-Silent Key Right    A    M        GotoPage wrapx wrapy +1p 0p
+Silent Key Up       A    4        GotoPage wrapx wrapy 0p -1p
+Silent Key Down     A    4        GotoPage wrapx wrapy 0p +1p
+Silent Key Left     A    4        GotoPage wrapx wrapy -1p 0p
+Silent Key Right    A    4        GotoPage wrapx wrapy +1p 0p
+       
+# Desktop Controls
+Silent Key Up       A    S4       MoveAndGotoPage 0p -1p
+Silent Key Down     A    S4       MoveAndGotoPage 0p +1p
+Silent Key Left     A    S4       MoveAndGotoPage -1p 0p
+Silent Key Right    A    S4       MoveAndGotoPage +1p 0p
+Silent Key Tab      A    4        GotoPage prev
 
 # Window Switching
 Silent Key Next  A M Next (AcceptsFocus, CurrentPage) FocusWindow

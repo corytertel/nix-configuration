@@ -19,7 +19,7 @@
       preLVM = true;
     };
 
-    kernelPackages = pkgs.linuxPackages_6_0;
+    kernelPackages = pkgs.linuxPackages_6_1;
     kernelParams = [
       # ZFS required flags
       "nohibernate"

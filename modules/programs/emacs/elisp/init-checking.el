@@ -5,14 +5,15 @@
   (prog-mode . flymake-mode)
   :bind
   (:map flymake-mode-map
-   ("M-n"     . flymake-goto-next-error)
-   ("M-p"     . flymake-goto-prev-error)
-   ("M-g n"   . flymake-goto-next-error)
-   ("M-g p"   . flymake-goto-prev-error)
-   ("M-g M-n" . flymake-goto-next-error)
-   ("M-g M-p" . flymake-goto-prev-error)
-   ("M-g d"   . flymake-show-buffer-diagnostics)
-   ("M-g M-d" . flymake-show-project-diagnostics))
+   ([remap forward-paragraph]  . flymake-goto-next-error)
+   ([remap backward-paragraph] . flymake-goto-prev-error)
+   :map goto-map
+   ("n"   . flymake-goto-next-error)
+   ("p"   . flymake-goto-prev-error)
+   ("M-n" . flymake-goto-next-error)
+   ("M-p" . flymake-goto-prev-error)
+   ("d"   . flymake-show-buffer-diagnostics)
+   ("M-d" . flymake-show-project-diagnostics))
 
   :init
   ;; Disable legacy diagnostic functions as some have bugs (mainly haskell)

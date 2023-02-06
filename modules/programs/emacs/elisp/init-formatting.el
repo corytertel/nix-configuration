@@ -8,7 +8,8 @@
   :config
   (electric-indent-mode 0)
   (global-aggressive-indent-mode 1)
-  (add-to-list 'aggressive-indent-excluded-modes 'html-mode))
+  ;; (add-to-list 'aggressive-indent-excluded-modes 'html-mode)
+  )
 
 ;; Word wrapping
 (global-visual-line-mode 1)

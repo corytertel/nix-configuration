@@ -1,37 +1,31 @@
 ;; Tramp
-;; (use-package tramp
-;;   :defer t
-;;   :config
-;;   (setq tramp-default-method "ssh")
 
-;;   ;; Only for debugging slow tramp connections
-;;   ;;(setq tramp-verbose 7)
+(setq tramp-default-method "ssh")
 
-;;   ;; Skip version control for tramp files
-;;   (setq vc-ignore-dir-regexp
-;;         (format "\\(%s\\)\\|\\(%s\\)"
-;;                 vc-ignore-dir-regexp
-;;                 tramp-file-name-regexp))
+;; Only for debugging slow tramp connections
+;;(setq tramp-verbose 7)
 
-;;   ;; Use ControlPath from .ssh/config
-;;   (setq tramp-ssh-controlmaster-options "")
+;; Skip version control for tramp files
+(setq vc-ignore-dir-regexp
+      (format "\\(%s\\)\\|\\(%s\\)"
+              vc-ignore-dir-regexp
+              tramp-file-name-regexp))
 
-;;   ;; Backup tramp files like local files and don't litter the remote
-;;   ;; file system with my emacs backup files
-;;   (setq tramp-backup-directory-alist backup-directory-alist)
+;; Use ControlPath from .ssh/config
+;; (setq tramp-ssh-controlmaster-options "")
 
-;;   ;; See https://www.gnu.org/software/tramp/#Ad_002dhoc-multi_002dhops
-;;   ;; For all hosts, except my local one, first connect via ssh, and then apply sudo -u root:
-;;   (dolist (tramp-proxies '((nil "\\`root\\'" "/ssh:%h:")
-;;                            ((regexp-quote (system-name)) nil nil)
-;;                            ("localhost" nil nil)
-;;                            ("blif\\.vpn" nil nil)
-;;                            ("skor-pi" nil nil)
-;;                            ;; Add tramp proxy for atomx user
-;;                            (nil "atomx" "/ssh:%h:")))
-;;     (add-to-list 'tramp-default-proxies-alist tramp-proxies)))
+;; Backup tramp files like local files and don't litter the remote
+;; file system with my emacs backup files
+(setq tramp-backup-directory-alist backup-directory-alist)
 
-;; SSH Functions
+;; See https://www.gnu.org/software/tramp/#Ad_002dhoc-multi_002dhops
+;; For all hosts, except my local one, first connect via ssh, and then apply sudo -u root:
+(dolist (tramp-proxies '((nil "\\`root\\'" "/ssh:%h:")
+                         ((regexp-quote (system-name)) nil nil)
+                         ("localhost" nil nil)))
+  (add-to-list 'tramp-default-proxies-alist tramp-proxies))
+
+;; SSHFS Functions
 (defun cory/write-ssh-address-to-history (address)
   (write-region (concat address "
 ") nil "~/.emacs.d/ssh_history" t))
@@ -71,3 +65,6 @@
 		   ".emacs-sshfs-mount-"
 		   (completing-read "user@server.address:"
 				    (cory/read-ssh-history))))))
+
+(global-set-key (kbd "C-c s") #'cory/connect-ssh)
+(global-set-key (kbd "C-c S") #'cory/disconnect-ssh)

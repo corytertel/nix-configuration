@@ -71,7 +71,7 @@
 
 ;;; Code:
 
-(require 'dash)
+(use-package dash)
 
 ;; Symbol builders
 

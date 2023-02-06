@@ -32,7 +32,7 @@ c-mode c++-mode
      (s var) "++" "){"
      n> (p "/* your code here*/")
      n "}")
-(main "int main(int argc, char* argv[])"n"{" n> (r "/*Your Code Here*/") n"}")
+(main "int main(int argc, char* argv[]) {" n> (r "/*Your Code Here*/") n"}")
 
 (struct "struct "(p "Name")" {" n> (p "/* fields */") n "};")
 

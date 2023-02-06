@@ -26,4 +26,4 @@
     (setq magit-diff-options (remove "-w" magit-diff-options))
     (magit-refresh)))
 
-(use-package forge)
+;; (use-package forge)

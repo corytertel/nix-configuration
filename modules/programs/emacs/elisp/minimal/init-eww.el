@@ -21,7 +21,7 @@
   "QUERY wikipedia"
   (interactive "sQuery: ")
   (eww (concat "https://en.wikipedia.org/wiki/"
-               (replace-in-string query " " "_"))))
+               (replace-regexp-in-string " " "_" query))))
 
 (defun cory/eww-wikipedia-at-point ()
   "Query wikipedia for thing at point."
@@ -39,3 +39,5 @@
 		 "#Russian"))))
 
 ;; (define-key org-mode-map (kbd "C-c C-h") 'eww-wiktionary-search)
+
+(global-set-key (kbd "C-c e") #'cory/eww)

@@ -22,91 +22,31 @@
   [(meta control shift iso-lefttab)] [(meta control shift tab)])
 
 ;;
-;; --- CUA Keybinds ---
+;; --- GENERAL KEYBINDS ---
 ;;
-
-;; List of things to rebind to make Emacs have CUA:
-;; - global binds
-;; - minibuffer binds
-;; - dired binds
-;; - eww binds?
-;; - sgml binds
-;; - paredit binds
 
 (defmacro cory/define-keys (map &rest l)
   ""
   `(dolist (pair ',l)
      (define-key ,map (kbd (car pair)) (cdr pair))))
 
-;; Swap "C-w" and "C-x"
-(keyboard-translate ?\C-w ?\C-x)
-(keyboard-translate ?\C-x ?\C-w)
-(keyboard-translate ?\C-r ?\C-c)
-(keyboard-translate ?\C-c ?\C-r)
-;; (global-set-key "\C-w" ctl-x-map)
-;; (global-set-key "\C-x" 'kill-region)
-
-(cory/define-keys
- global-map
- ("C-y" . move-end-of-line)
- ("<C-i>" . previous-line)
- ("C-o" . find-file)
- ("C-p" . recenter-top-bottom)
- ("C-a" . mark-whole-buffer)
- ("C-s" . save-buffer)
- ("C-S" . write-file)
- ("C-f" . isearch-forward)
- ("C-j" . backward-char)
- ("C-e" . next-line)
- ("C-l" . forward-char)
- ("C-z" . undo-only)
- ("C-Z" . undo-redo)
- ("C-w" . kill-region)
- ("C-r" . kill-ring-save)
- ("C-v" . yank)
- ("C-b" . beginning-of-line)
- ("C-n" . scroll-up-command)
- ("C-/" . open-line)
- ("M-w" . nil)
- ("M-y" . forward-sentence)
- ("M-i" . backward-paragraph)
- ("M-p" . downcase-word)
- ("M-a" . default-indent-new-line)
- ("M-s" . tab-to-tab-stop)
- ;; ("M-f" . search-map)
- ("M-j" . backward-word)
- ("M-e" . forward-paragraph)
- ("M-l" . forward-word)
- ("M-v" . yank-pop)
- ("M-b" . backward-sentence)
- ("M-n" . scroll-down-command))
-
-;;
-;; --- GENERAL KEYBINDS ---
-;;
-
 ;;; Basic Keybinds
 
-(global-set-key [remap default-indent-new-line] #'join-line)
-(global-set-key [remap capitalize-word] #'capitalize-dwim)
-(global-set-key [remap downcase-word] #'downcase-dwim)
-(global-set-key [remap upcase-word] #'upcase-dwim)
-(global-set-key [remap list-buffers] #'ibuffer)
-(global-set-key [remap mark-word] #'cory/mark-word)
-(global-set-key [remap mark-sexp] #'cory/mark-sexp)
-(global-set-key [remap scroll-up-command] #'cory/scroll-down)
-(global-set-key [remap scroll-down-command] #'cory/scroll-up)
-(global-set-key [remap beginning-of-buffer] #'cory/beginning-of-workspace)
-(global-set-key [remap end-of-buffer] #'cory/end-of-workspace)
-(global-set-key [remap kill-buffer] #'kill-this-buffer)
+;; Swap "C-h" and "C-x", so it's easier to type on Dvorak layout
+;; (keyboard-translate (kbd "C-h") (kbd "C-x"))
+;; (keyboard-translate (kbd "C-x") (kbd "C-h"))
 
 (cory/define-keys
  global-map
  ("RET"   . cory/newline-dwim)
- ;; ("C-x k" . kill-this-buffer)
+ ("C-x k" . kill-this-buffer)
  ("C-x K" . kill-buffer)
- ;; ("C-x C-b" . ibuffer)
+ ("C-x C-b" . ibuffer)
  ("C-c w" . woman)
+ ("C-x u"   . undo-only)
+ ("C-/"     . undo-only)
+ ("C-x C-u" . undo-redo)
+ ("C-?"     . undo-redo)
  ("C-'"   . repeat)
  ;; ("C-s"   . cory/search-forward-dwim)
  ;; ("C-r"   . cory/search-backward-dwim)
@@ -114,20 +54,20 @@
  ;; ("C-M-r" . cory/isearch-backward-resume)
  ;; ("C-v"   . cory/scroll-down-half-page)
  ;; ("M-v"   . cory/scroll-up-half-page)
- ;; ("C-v"   . cory/scroll-down)
- ;; ("M-v"   . cory/scroll-up)
+ ("C-v"   . cory/scroll-down)
+ ("M-v"   . cory/scroll-up)
  ("C-c F" . cory/create-tmp-file)
  ("S-SPC" . cory/insert-space)
- ;; ("M-@"   . cory/mark-word)
- ;; ("C-M-SPC" . cory/mark-sexp)
+ ("M-@"   . cory/mark-word)
+ ("C-M-SPC" . cory/mark-sexp)
  ("C-c q" . quit-window)
- ;; ("M-j"   . join-line)
- ;; ("M-c"   . capitalize-dwim)
- ;; ("M-u"   . upcase-dwim)
- ;; ("M-l"   . downcase-dwim)
+ ("M-j"   . join-line)
+ ("M-c"   . capitalize-dwim)
+ ("M-u"   . upcase-dwim)
+ ("M-l"   . downcase-dwim)
  ("C-c x" . xref-find-references-and-replace)
- ;; ("M-<"   . cory/beginning-of-workspace)
- ;; ("M->"   . cory/end-of-workspace)
+ ("M-<"   . cory/beginning-of-workspace)
+ ("M->"   . cory/end-of-workspace)
  ("M-S-SPC" . cycle-spacing)
  ;; Grab Keybinds
  ("M-SPC"     . cory/grab)
