@@ -56,4 +56,4 @@
   (kbd "DEL") #'cory/kill-dir-or-char)
 
 (define-key completion-list-mode-map
-  (kbd "C-v") #'switch-to-minibuffer)
+  [remap scroll-up-command] #'switch-to-minibuffer)

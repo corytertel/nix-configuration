@@ -1,16 +1,20 @@
 {
-  "settingsVersion": "1.67.4",
+  "settingsVersion": "1.67.6",
   "exclusionRules": [
     {
       "pattern": "https?://mail.google.com/*",
+      "passKeys": ""
+    },
+    {
+      "pattern": "https?://docs.google.com/*",
       "passKeys": ""
     }
   ],
   "filterLinkHints": false,
   "waitForEnterForFilteredHints": true,
   "hideHud": false,
-  "keyMappings": "# Emacs keybindings for firefox\n# Inspired by Chromemacs\n\nunmapAll\n\n# Navigating the current page\nmap <c-h> showHelp\nmap h showHelp\nmap ? showHelp\nmap <c-n> scrollDown\nmap <c-p> scrollUp\nmap <c-a-f> scrollRight\nmap <c-a-b> scrollLeft\nmap <a-<> scrollToTop\nmap <a->> scrollToBottom\nmap < scrollToTop\nmap > scrollToBottom\nmap <c-v> scrollPageDown\nmap <a-v> scrollPageUp\nmap o LinkHints.activateMode\nmap <a-o> LinkHints.activateModeWithQueue\nmap g reload\nmap v toggleViewSource\nmap w copyCurrentUrl\nmap <c-c><c-l> LinkHints.activateModeToCopyLinkUrl\nmap <c-x>o nextFrame\n\n# Navigating to new pages\nmap <a-g> Vomnibar.activate\nmap G Vomnibar.activateInNewTab\nmap <a-b> Vomnibar.activateBookmarks\nmap B Vomnibar.activateBookmarksInNewTab\n\n# Using find\nmap <c-s> enterFindMode\nmap <down> performFind\nmap <up> performBackwardsFind\n\n# Navigating history\nmap l goBack\nmap r goForward\n\n# Manipulating tabs\nmap <c-b> previousTab\nmap <c-f> nextTab\nmap <c-x><up> firstTab\nmap <c-x><down> lastTab\nmap <c-c><c-t> createTab\nmap <c-x>4 duplicateTab\nmap <c-x>0 removeTab\nmap <c-c><c-r> restoreTab\nmap s Vomnibar.activateTabSelection\nmap <c-x>5 moveTabToNewWindow\nmap <a-p> togglePinTab\n\n# Using marks\n#map m Marks.activateCreateMode\n#map ` Marks.activateGotoMode\n\n# Additional browsing commands\nmap n goNext\nmap p goPrevious\nmap <c-c>f focusInput\nmap u goUp\nmap / goToRoot\nmap <c-x>< scrollToLeft\nmap <c-x>> scrollToRight\nmap d LinkHints.activateModeToDownloadLink\nmap e Vomnibar.activateEditUrl",
-  "linkHintCharacters": "enhbofasputrl",
+  "keyMappings": "# Emacs keybindings for firefox\n# Inspired by Chromemacs\n\nunmapAll\n\n# Navigating the current page\nmap <c-h> showHelp\nmap h showHelp\nmap ? showHelp\nmap <c-e> scrollDown\nmap <c-i> scrollUp\nmap <c-a-l> scrollRight\nmap <c-a-j> scrollLeft\nmap <a-<> scrollToTop\nmap <a->> scrollToBottom\nmap < scrollToTop\nmap > scrollToBottom\n# map <c-v> scrollPageDown\n# map <a-v> scrollPageUp\nmap o LinkHints.activateMode\nmap <a-o> LinkHints.activateModeWithQueue\nmap g reload\nmap v toggleViewSource\nmap w copyCurrentUrl\nmap <c-c><c-l> LinkHints.activateModeToCopyLinkUrl\nmap <c-x>o nextFrame\n\n# Navigating to new pages\nmap <a-g> Vomnibar.activate\nmap G Vomnibar.activateInNewTab\nmap <a-b> Vomnibar.activateBookmarks\nmap B Vomnibar.activateBookmarksInNewTab\n\n# Using find\n# map <c-s> enterFindMode\n# map <down> performFind\n# map <up> performBackwardsFind\n\n# Navigating history\nmap l goBack\nmap r goForward\n\n# Manipulating tabs\nmap <c-j> previousTab\nmap <c-l> nextTab\nmap <c-x><up> firstTab\nmap <c-x><down> lastTab\nmap <c-c><c-t> createTab\nmap <c-x>4 duplicateTab\nmap <c-x>0 removeTab\nmap <c-c><c-r> restoreTab\nmap s Vomnibar.activateTabSelection\nmap <c-x>5 moveTabToNewWindow\nmap <a-p> togglePinTab\n\n# Using marks\n#map m Marks.activateCreateMode\n#map ` Marks.activateGotoMode\n\n# Additional browsing commands\nmap n goNext\nmap p goPrevious\nmap <c-c><c-f> focusInput\nmap u goUp\nmap / goToRoot\nmap <c-x>< scrollToLeft\nmap <c-x>> scrollToRight\nmap d LinkHints.activateModeToDownloadLink\nmap e Vomnibar.activateEditUrl",
+  "linkHintCharacters": "tefjslwudiroa",
   "linkHintNumbers": "0123456789",
   "newTabUrl": "pages/blank.html",
   "nextPatterns": "next,more,newer,>,›,→,»,≫,>>",

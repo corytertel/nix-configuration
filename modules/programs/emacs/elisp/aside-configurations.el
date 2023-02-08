@@ -139,7 +139,7 @@
 (aside-enable-configuration 'messages)
 (define-key global-map (kbd "C-S-x") 'aside-messages-dwim)
 (aside-enable-configuration 'context)
-(define-key global-map (kbd "C-S-z") 'aside-context-dwim)
+(define-key global-map (kbd "C-S-p") 'aside-context-dwim)
 
 ;; (provide 'aside-configurations)
 

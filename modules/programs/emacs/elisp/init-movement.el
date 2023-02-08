@@ -9,8 +9,8 @@
    ("C-S-m" . avy-pop-mark)
    ;; ("C-j" . avy-goto-end-of-line-num)
    ;; ("C-S-j" . avy-goto-line-num)
-   ("C-M-s" . isearch-forward-other-window)
-   ("C-M-r" . isearch-backward-other-window)
+   ([remap isearch-forward-regexp] . isearch-forward-other-window)
+   ([remap isearch-backward-regexp] . isearch-backward-other-window)
    :map isearch-mode-map
    ("<C-m>" . avy-isearch))
 

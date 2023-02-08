@@ -725,8 +725,8 @@ Silent Key Right    A    S4       MoveAndGotoPage +1p 0p
 Silent Key Tab      A    4        GotoPage prev
 
 # Window Switching
-Silent Key Next  A M Next (AcceptsFocus, CurrentPage) FocusWindow
-Silent Key Prior A M Prev (AcceptsFocus, CurrentPage) FocusWindow
+Silent Key Next  A 4 Next (AcceptsFocus, CurrentPage) FocusWindow
+Silent Key Prior A 4 Prev (AcceptsFocus, CurrentPage) FocusWindow
 
 # Window Buttons: [1 3 5 7 9  TTTTT  0 8 6 4 2]
 #   1 - Stick (pin)

@@ -116,9 +116,9 @@ in {
   # Keybindings
   # https://searchcode.com/codesearch/view/26755902/
   # default is 17, 17 is ctrl
-  "ui.key.accelKey" = 224;
+  "ui.key.accelKey" = 17;
   # default is 18, 18 is alt
-  "ui.key.menuAccessKey" = 0;
+  "ui.key.menuAccessKey" = 18;
   "ui.key.menuAccessKeyFocuses" = true;
   "ui.key.textcontrol.prefer_native_key_bindings_over_builtin_shortcut_key_definitions" = true;
   # Prevent sites from taking over copy/paste

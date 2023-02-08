@@ -59,7 +59,7 @@ This only affects the built-in handlers."
   :bind
   ;; NOTE Sunrise uses "C-c s", "C-c t", "C-c r", "C-c v",
   ;; "C-c p", and "C-c b", from the user's space
-  (("C-z" . cory/sunrise-toggle)
+  (("C-/" . cory/sunrise-toggle)
    :map sunrise-mode-map
    ;; Remap traditional "commander keys" to non-function keys
    ("C-c 2"     . sunrise-goto-dir)

@@ -4,12 +4,12 @@
   :diminish undo-tree-mode
   :bind
   (:map undo-tree-map
-   ;; ("C-x u"   . undo-tree-visualize)
-   ;; ("C-/"     . undo-tree-undo)
-   ;; ("C-x C-u" . undo-tree-visualize-redo)
-   ;; ("C-?"     . undo-tree-redo)
-   ([remap undo-only] . undo-tree-undo)
-   ([remap undo-redo] . undo-tree-redo))
+   ("C-x u"   . undo-tree-visualize)
+   ("C-z"     . undo-tree-undo)
+   ("C-_"     . undo-tree-undo)
+   ("C-x C-u" . undo-tree-visualize-redo)
+   ("C-S-z"     . undo-tree-redo)
+   ("M-_"     . undo-tree-redo))
   :custom
   (undo-tree-visualizer-timestamps t)
   (undo-tree-visualizer-relative-timestamps t)
@@ -24,7 +24,7 @@
 (use-package embark
   :ensure t
   :bind
-  (;; ("M-w" . embark-act)
+  (("M-w" . embark-act)
    ([remap describe-bindings] . cory/embark-bindings))
   :custom
   (embark-indicators
@@ -64,8 +64,7 @@
 	 ("C-^" . crux-top-join-line)
 	 ([remap kill-line] . cory/kill-line)
 	 ([remap kill-whole-line] . crux-kill-whole-line)
-         ([remap move-beginning-of-line] . crux-move-beginning-of-line)
-         ([remap beginning-of-visual-line] . crux-move-beginning-of-line)
+         ("C-b" . crux-move-beginning-of-line)
 	 :map ctl-x-4-map
 	 ("t" . crux-transpose-windows))
   :config
@@ -121,7 +120,19 @@
    ("M-}" . paredit-close-curly-and-newline)
    ("M-;" . cory/comment-dwim)
    ("RET" . cory/newline-dwim)
-   ("C-k" . cory/paredit-kill))
+   ("C-k" . cory/paredit-kill)
+   ;; Minimak
+   ("C-j" . nil)
+   ("C-M-b" . nil)
+   ("C-M-f" . nil)
+   ("C-M-n" . nil)
+   ("C-M-p" . nil)
+   ("C-M-j" . paredit-backward)
+   ("C-M-l" . paredit-forward)
+   ("C-M-i" . paredit-backward-down)
+   ("C-M-e" . paredit-forward-up)
+   ("C-c C-M-l" . nil)
+   ("C-c C-M-p" . paredit-recenter-on-sexp))
   :config
   ;; TODO fix prefix argument behavior
   (defun cory/paredit-kill (&optional argument)
@@ -174,18 +185,15 @@ enacts."
   :custom
   (macrursors-preapply-command
    (lambda ()
-     (corfu-mode -1)
-     ;; (goggles-mode -1)
-     ;; (beacon-mode -1)
-     ))
+     (corfu-mode -1)))
   (macrursors-postapply-command
    (lambda ()
-     (corfu-mode 1)
-     ;; (goggles-mode 1)
-     ;; (beacon-mode 1)
-     ))
+     (corfu-mode 1)))
   :config
   (define-prefix-command 'macrursors-mark-map)
+  (global-set-key (kbd "M-SPC") #'macrursors-grab)
+  (global-set-key (kbd "C-c SPC") #'macrursors-swap-grab)
+  (global-set-key (kbd "C-c S-SPC") #'macrursors-sync-grab)
   (global-set-key (kbd "C->") #'macrursors-mark-next-instance-of)
   (global-set-key (kbd "C-<") #'macrursors-mark-previous-instance-of)
   (global-set-key (kbd "C-;") 'macrursors-mark-map)

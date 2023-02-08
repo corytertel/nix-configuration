@@ -67,7 +67,8 @@
    ([(control return)] . crux-smart-open-line)
    ([(control shift return)] . crux-smart-open-line-above)
    ([(meta return)] . org-insert-heading-respect-content)
-   ("C-x C-e" . org-babel-execute-src-block))
+   ("C-x C-e" . org-babel-execute-src-block)
+   ("C-j" . nil))
 
   :custom
   (org-ellipsis " ▼")
@@ -331,6 +332,7 @@
 	(define-key map [?\C-c ?$] 'flyspell-correct-word-before-point)
 	map))
 
+;; FIXME
 (use-package flyspell-correct
   :after flyspell
   :init

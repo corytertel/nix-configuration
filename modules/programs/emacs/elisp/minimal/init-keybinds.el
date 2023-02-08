@@ -28,24 +28,36 @@
 ;; List of things to rebind to make Emacs have CUA:
 ;; - global binds
 ;; - minibuffer binds
+;; - search-map binds
+;; - goto-map binds
+;; - isearch binds
+;; - kmacro-binds
 ;; - dired binds
 ;; - eww binds?
 ;; - sgml binds
 ;; - paredit binds
+;; - org-mode binds
+;; - ibuffer binds
+;; - eshell binds
+;; - repeat maps
 
 (defmacro cory/define-keys (map &rest l)
   ""
   `(dolist (pair ',l)
      (define-key ,map (kbd (car pair)) (cdr pair))))
 
-;; Swap "C-w" and "C-x"
-(keyboard-translate ?\C-w ?\C-x)
-(keyboard-translate ?\C-x ?\C-w)
-(keyboard-translate ?\C-r ?\C-c)
-(keyboard-translate ?\C-c ?\C-r)
-;; (global-set-key "\C-w" ctl-x-map)
+;; Swap "C-q" and "C-x"
+;; Swap "C-w" and "C-c"
+(keyboard-translate ?\C-q ?\C-x)
+(keyboard-translate ?\C-x ?\C-q)
+(keyboard-translate ?\C-w ?\C-c)
+(keyboard-translate ?\C-c ?\C-w)
+;; (global-set-key "\C-q" ctl-x-map)
 ;; (global-set-key "\C-x" 'kill-region)
 
+(global-set-key (kbd "M-f") search-map)
+
+;; global binds
 (cory/define-keys
  global-map
  ("C-y" . move-end-of-line)
@@ -54,32 +66,125 @@
  ("C-p" . recenter-top-bottom)
  ("C-a" . mark-whole-buffer)
  ("C-s" . save-buffer)
- ("C-S" . write-file)
+ ("C-S-s" . write-file)
  ("C-f" . isearch-forward)
  ("C-j" . backward-char)
  ("C-e" . next-line)
  ("C-l" . forward-char)
  ("C-z" . undo-only)
- ("C-Z" . undo-redo)
- ("C-w" . kill-region)
- ("C-r" . kill-ring-save)
+ ("C-S-z" . undo-redo)
+ ("C-q" . kill-region)
+ ("C-w" . kill-ring-save)
  ("C-v" . yank)
- ("C-b" . beginning-of-line)
+ ("C-b" . move-beginning-of-line)
  ("C-n" . scroll-up-command)
- ("C-/" . open-line)
+ ("C-/" . nil)
+ ("C-\\" . quoted-insert)
  ("M-w" . nil)
  ("M-y" . forward-sentence)
  ("M-i" . backward-paragraph)
  ("M-p" . downcase-word)
  ("M-a" . default-indent-new-line)
  ("M-s" . tab-to-tab-stop)
- ;; ("M-f" . search-map)
  ("M-j" . backward-word)
  ("M-e" . forward-paragraph)
  ("M-l" . forward-word)
  ("M-v" . yank-pop)
  ("M-b" . backward-sentence)
- ("M-n" . scroll-down-command))
+ ("M-n" . scroll-down-command)
+ ("C-M-i" . backward-list)
+ ("C-M-a" . default-indent-new-line)
+ ("C-M-b" . beginning-of-defun)
+ ("C-M-e" . forward-list)
+ ("C-M-f" . isearch-forward-regexp)
+ ("C-M-j" . backward-sexp)
+ ("C-M-l" . forward-sexp)
+ ("C-M-n" . scroll-other-window)
+ ("C-M-S-n" . scroll-other-window-down)
+ ("C-M-p" . reposition-window)
+ ("C-M-s" . completion-at-point)
+ ("C-M-v" . nil)
+ ("C-M-S-v" . nil)
+ ("C-M-w" . nil)
+ ("C-M-y" . end-of-defun)
+ ("C-M-x" . append-next-kill))
+
+;; minibuffer binds
+(cory/define-keys
+ minibuffer-local-completion-map
+ ("C-j" . nil)
+ ("M-n" . switch-to-completions)
+ ("M-p" . nil)
+ ("M-v" . nil)
+ ("M-i" . previous-history-element)
+ ("M-e" . next-history-element)
+ ("M-s" . nil)
+ ("M-f" . next-matching-history-element))
+
+(cory/define-keys
+ completion-list-mode-map
+ ("n" . nil)
+ ("p" . nil)
+ ("e" . next-completion)
+ ("i" . previous-completion))
+
+;; isearch binds
+(cory/define-keys
+ isearch-mode-map
+ ("TAB" . isearch-complete)
+ ("C-M-i" . nil)
+ ("C-M-w" . nil)
+ ("C-M-y" . nil)
+ ("C-M-x" . isearch-yank-symbol-or-char)
+ ("C-M-v" . isearch-yank-char)
+ ("C-s" . nil)
+ ("C-f" . isearch-repeat-forward)
+ ("C-w" . nil)
+ ("C-x" . isearch-yank-word-or-char)
+ ("C-y" . nil)
+ ("C-v" . isearch-yank-kill)
+ ("M-y" . isearch-edit-string)
+ ("M-p" . nil)
+ ("M-n" . nil)
+ ("M-i" . isearch-ring-retreat)
+ ("M-e" . isearch-ring-advance)
+ ("M-v" . isearch-yank-pop-only)
+ ("M-s '" . nil)
+ ("M-s C-e" . nil)
+ ("M-s M-<" . nil)
+ ("M-s M->" . nil)
+ ("M-s SPC" . nil)
+ ("M-s _" . nil)
+ ("M-s c" . nil)
+ ("M-s e" . nil)
+ ("M-s h l" . nil)
+ ("M-s h r" . nil)
+ ("M-s i" . nil)
+ ("M-s o" . nil)
+ ("M-s r" . nil)
+ ("M-s w" . nil)
+ ("M-f '" . isearch-toggle-char-fold)
+ ("M-f C-y" . isearch-yank-line)
+ ("M-f M-<" . isearch-beginning-of-buffer)
+ ("M-f M->" . isearch-end-of-buffer)
+ ("M-f SPC" . isearch-toggle-lax-whitespace)
+ ("M-f _" . isearch-toggle-symbol)
+ ("M-f c" . isearch-toggle-case-fold)
+ ("M-f e" . isearch-edit-string)
+ ("M-f h l" . isearch-highlight-lines-matching-regexp)
+ ("M-f h r" . isearch-highlight-regexp)
+ ("M-f i" . isearch-toggle-invisible)
+ ("M-f o" . isearch-occur)
+ ("M-f r" . isearch-toggle-regexp)
+ ("M-f w" . isearch-toggle-word))
+
+;; kmacro binds
+(with-eval-after-load 'kmacro
+  (define-key kmacro-keymap (kbd "C-n") nil)
+  (define-key kmacro-keymap (kbd "C-p") nil)
+  (define-key kmacro-keymap (kbd "C-i") #'kmacro-cycle-ring-previous)
+  (define-key kmacro-keymap (kbd "C-e") #'kmacro-cycle-ring-next)
+  (define-key kmacro-keymap (kbd "C-y") #'kmacro-edit-macro-repeat))
 
 ;;
 ;; --- GENERAL KEYBINDS ---
@@ -103,36 +208,14 @@
 (cory/define-keys
  global-map
  ("RET"   . cory/newline-dwim)
- ;; ("C-x k" . kill-this-buffer)
  ("C-x K" . kill-buffer)
- ;; ("C-x C-b" . ibuffer)
  ("C-c w" . woman)
  ("C-'"   . repeat)
- ;; ("C-s"   . cory/search-forward-dwim)
- ;; ("C-r"   . cory/search-backward-dwim)
- ;; ("C-M-s" . cory/isearch-forward-resume)
- ;; ("C-M-r" . cory/isearch-backward-resume)
- ;; ("C-v"   . cory/scroll-down-half-page)
- ;; ("M-v"   . cory/scroll-up-half-page)
- ;; ("C-v"   . cory/scroll-down)
- ;; ("M-v"   . cory/scroll-up)
  ("C-c F" . cory/create-tmp-file)
  ("S-SPC" . cory/insert-space)
- ;; ("M-@"   . cory/mark-word)
- ;; ("C-M-SPC" . cory/mark-sexp)
  ("C-c q" . quit-window)
- ;; ("M-j"   . join-line)
- ;; ("M-c"   . capitalize-dwim)
- ;; ("M-u"   . upcase-dwim)
- ;; ("M-l"   . downcase-dwim)
  ("C-c x" . xref-find-references-and-replace)
- ;; ("M-<"   . cory/beginning-of-workspace)
- ;; ("M->"   . cory/end-of-workspace)
  ("M-S-SPC" . cycle-spacing)
- ;; Grab Keybinds
- ("M-SPC"     . cory/grab)
- ("C-c SPC"   . cory/swap-grab)
- ("C-c S-SPC" . cory/sync-grab)
  ;; Scroll Keybinds
  ("<mouse-4>" . previous-line)
  ("<mouse-5>" . next-line)
@@ -222,65 +305,65 @@ together in sequence."
 
 (defvar repeaters-maps
   '(("buffer-switch"
-     previous-buffer                   "C-x C-<left>" "C-x <left>" "C-<left>" "<left>" "p"
-     next-buffer                       "C-x C-<right>" "C-x <right>" "C-<right>" "<right>" "n")
+     previous-buffer                   "C-x C-<left>" "C-x <left>" "C-<left>" "<left>" "i"
+     next-buffer                       "C-x C-<right>" "C-x <right>" "C-<right>" "<right>" "e")
 
     ("calendar-nav"
-     calendar-forward-day              "C-f" "f"
-     calendar-backward-day             "C-b" "b"
-     calendar-forward-week             "C-n" "n"
-     calendar-backward-week            "C-p" "p"
+     calendar-forward-day              "C-l" "l"
+     calendar-backward-day             "C-j" "j"
+     calendar-forward-week             "C-e" "e"
+     calendar-backward-week            "C-i" "i"
      calendar-forward-month            "M-}" "}" "]"
      calendar-backward-month           "M-{" "{" "["
      calendar-forward-year             "C-x ]"
      calendar-backward-year            "C-x [")
 
     ("char-line-nav"
-     backward-char                     "C-b" "b"
-     forward-char                      "C-f" "f"
-     next-line                         "C-n" "n"
-     previous-line                     "C-p" "p")
+     backward-char                     "C-j" "j"
+     forward-char                      "C-l" "l"
+     next-line                         "C-e" "e"
+     previous-line                     "C-i" "i")
 
     ("defun-nav"
-     beginning-of-defun                "C-M-a" "M-a" "a" "ESC M-a"
-     end-of-defun                      "C-M-e" "M-e" "e" "ESC M-e")
+     beginning-of-defun                "C-M-b" "M-b" "b" "ESC M-b"
+     end-of-defun                      "C-M-y" "M-y" "y" "ESC M-y")
 
     ("del-char"
      delete-char                       "C-d" "d")
 
     ("sexp-nav"
-     backward-sexp                     "C-M-b" "b" "ESC M-b"
-     forward-sexp                      "C-M-f" "f" "ESC M-f")
+     backward-sexp                     "C-M-j" "j" "ESC M-j"
+     forward-sexp                      "C-M-l" "l" "ESC M-l")
 
     ("paragraph-nav"
      backward-paragraph                "C-<up>" "<up>" "M-{" "M-[" "{" "["
      forward-paragraph                 "C-<down>" "<down>" "M-}" "M-]" "}" "]")
 
     ("sentence-nav"
-     backward-sentence                 "M-a" "a"
-     forward-sentence                  "M-e" "e"
+     backward-sentence                 "M-b" "b"
+     forward-sentence                  "M-y" "y"
      back-to-indentation               "M-m" "m"                     :exitonly)
 
     ("in-line-nav"
-     move-end-of-line                  "C-a" "a"
-     move-end-of-line                  "C-e" "e")
+     move-end-of-line                  "C-b" "b"
+     move-end-of-line                  "C-y" "y")
 
     ("page-nav"
      backward-page                     "C-x [" "["
      forward-page                      "C-x ]" "]")
 
     ("list-nav"
-     backward-list                     "C-M-p" "p" "ESC M-p"
-     forward-list                      "C-M-n" "n" "ESC M-n"
+     backward-list                     "C-M-i" "i" "ESC M-i"
+     forward-list                      "C-M-e" "e" "ESC M-e"
      backward-up-list                  "C-M-<up>" "C-M-u" "<up>" "u" "ESC M-u"
      down-list                         "C-M-<down>" "C-M-d" "<down>" "d" "ESC M-d")
 
     ("error-nav"
-     next-error                        "C-x `" "`" "M-g M-n" "M-g n" "n"
-     previous-error                    "M-g M-p" "M-p" "p")
+     next-error                        "C-x `" "`" "M-g M-e" "M-g e" "e"
+     previous-error                    "M-g M-i" "M-i" "i")
 
     ("mid-top-bottom-move"
-     recenter-top-bottom               "C-l" "l"
+     recenter-top-bottom               "C-p" "p"
      move-to-window-line-top-bottom    "M-r" "r"
      back-to-indentation               "M-m" "m"                     :exitonly)
 
@@ -288,7 +371,7 @@ together in sequence."
      upcase-word                       "M-u" "u"
 
      ;; Easy way to manually set title case
-     downcase-word                     "M-l" "l" "d"
+     downcase-word                     "M-p" "p" "d"
      capitalize-word                   "M-c" "c")
 
     ("kill-word"
@@ -306,21 +389,21 @@ together in sequence."
 
     ;; Yank same text repeatedly with “C-y y y y”...
     ("yank-only"
-     yank                              "C-y" "y"
-     yank-pop                          "M-y" "n"                     :exitonly)
+     yank                              "C-v" "v"
+     yank-pop                          "M-v" "e"                     :exitonly)
 
     ;; Cycle through the kill-ring with “C-y n n n”...
     ;; You can reverse direction too “C-y n n C-- n n”
     ("yank-popping"
-     yank-pop                          "M-y" "y" "n")
+     yank-pop                          "M-v" "v" "e")
 
     ("kmacro-cycle"
-     kmacro-cycle-ring-next            "C-x C-k C-n" "C-n" "n"
-     kmacro-cycle-ring-previous        "C-x C-k C-p" "C-p" "p")
+     kmacro-cycle-ring-next            "C-x C-k C-e" "C-e" "e"
+     kmacro-cycle-ring-previous        "C-x C-k C-i" "C-i" "i")
 
     ("tab-bar-nav"
-     tab-next                          "C-x t o" "o" "n"
-     tab-previous                      "C-x t O" "O" "p")
+     tab-next                          "C-x t o" "o" "e"
+     tab-previous                      "C-x t O" "O" "i")
 
     ("transpose-chars"
      transpose-chars                    "C-t" "t")
@@ -337,30 +420,30 @@ together in sequence."
     ;; M-< for beginning-of-buffer brings up this map, since you can
     ;; only scroll a buffer up when at its beginning.
     ("scroll-up"
-     scroll-up-command                 "C-v" "v"
+     scroll-up-command                 "C-n" "n"
      beginning-of-buffer               "M-<" "<"
      end-of-buffer                     "M->" ">"                     :exitonly
-     scroll-down-command               "M-v"                         :exitonly)
+     scroll-down-command               "M-n"                         :exitonly)
 
     ;; M-> for end-of buffer brings up this map, since you can only
     ;; scroll a buffer down when at its end.
     ("scroll-down"
-     scroll-down-command               "M-v" "v"
+     scroll-down-command               "M-n" "n"
      end-of-buffer                     "M->" ">"
      beginning-of-buffer               "M-<" "<"                     :exitonly
-     scroll-up-command                 "C-v"                         :exitonly)
+     scroll-up-command                 "C-n"                         :exitonly)
 
     ("scroll-otherwin"
-     scroll-other-window               "C-M-v" "v" "ESC M-v"
+     scroll-other-window               "C-M-n" "n" "ESC M-n"
      beginning-of-buffer-other-window  "M-<home>" "<"
      end-of-buffer-other-window        "M-<end>" ">"                 :exitonly
-     scroll-other-window-down          "C-M-S-v" "M-v" "ESC M-V" "V" :exitonly)
+     scroll-other-window-down          "C-M-S-n" "M-n" "ESC M-N" "N" :exitonly)
 
     ("scroll-otherwin-down"
-     scroll-other-window-down          "C-M-S-v" "M-v" "v" "ESC M-V" "V"
+     scroll-other-window-down          "C-M-S-n" "M-n" "n" "ESC M-N" "N"
      end-of-buffer-other-window        "M-<end>" ">"
      beginning-of-buffer-other-window  "M-<home>" "<"                :exitonly
-     scroll-other-window               "C-M-v" "C-v" "ESC M-v"       :exitonly)
+     scroll-other-window               "C-M-n" "C-n" "ESC M-n"       :exitonly)
 
     ("scroll-sideways"
      scroll-left                       "C-x <" "<"
@@ -373,20 +456,20 @@ together in sequence."
      hippie-expand                     "M-/" "/")
 
     ("search-nav"
-     isearch-repeat-forward            "C-s" "s" "C-M-s" "ESC M-s"
+     isearch-repeat-forward            "C-f" "f" "C-M-f" "ESC M-f"
      isearch-repeat-backward           "C-r" "r" "C-M-r" "ESC M-r"
      isearch-exit                      "<enter>" "<return>" "RET"    :exitonly)
 
     ("undo-only-redo"
-     undo-only                         "C-x u" "C-_" "_" "C-/" "/"
-     undo-redo                         "C-?" "?" "r")
+     undo-only                         "C-x u" "C-_" "_" "C-z" "z"
+     undo-redo                         "C-S-z" "Z" "r")
 
     ;; Repeat Maps for Org-Mode
     ("org-nav"
-     org-backward-heading-same-level   "C-c C-b" "C-b" "b"
-     org-forward-heading-same-level    "C-c C-f" "C-f" "f"
-     org-previous-visible-heading      "C-c C-p" "C-p" "p"
-     org-next-visible-heading          "C-c C-n" "C-n" "n"
+     org-backward-heading-same-level   "C-c C-j" "C-j" "j"
+     org-forward-heading-same-level    "C-c C-l" "C-l" "l"
+     org-previous-visible-heading      "C-c C-i" "C-i" "i"
+     org-next-visible-heading          "C-c C-e" "C-e" "e"
      outline-up-heading                "C-c C-u" "C-u" "u")
 
     ("org-editing"
@@ -403,8 +486,8 @@ together in sequence."
      org-deadline                      "C-c C-d" "C-d" "d")
 
     ("word-nav"
-     backward-word                     "M-b" "b"
-     forward-word                      "M-f" "f")
+     backward-word                     "M-j" "j"
+     forward-word                      "M-l" "l")
 
     ("set-mark"
      smart-region                      "C-SPC" "SPC"))

@@ -55,7 +55,7 @@
         enable = true;
         user = "cory";
       };
-      layout = "us_beakl_emacs";
+      layout = "us_minimak";
       libinput.touchpad = {
         accelProfile = "adaptive";
         accelSpeed = "0.5";

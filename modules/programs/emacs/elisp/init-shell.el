@@ -75,10 +75,11 @@ Else, go to the end of line ARG number of times."
 ;; Keybinds
 (define-key eshell-mode-map (kbd "M-s") #'consult-history)
 (define-key eshell-mode-map (kbd "M-r") #'consult-history)
-(define-key eshell-mode-map (kbd "C-l") #'cory/eshell-clear-buffer)
-(define-key eshell-mode-map (kbd "C-f") #'cory/eshell-forward-char-or-complete-from-history)
+(define-key eshell-mode-map [remap recenter-top-bottom] #'cory/eshell-clear-buffer)
+(define-key eshell-mode-map [remap forward-char] #'cory/eshell-forward-char-or-complete-from-history)
 (define-key eshell-mode-map (kbd "<right>") #'cory/eshell-forward-char-or-complete-from-history)
-(define-key eshell-mode-map (kbd "C-e") #'cory/eshell-move-end-of-line-or-complete-from-history)
+(define-key eshell-mode-map [remap move-end-of-line] #'cory/eshell-move-end-of-line-or-complete-from-history)
+(define-key eshell-mode-map [remap end-of-visual-line] #'cory/eshell-move-end-of-line-or-complete-from-history)
 (define-key eshell-mode-map (kbd "<end>") #'cory/eshell-move-end-of-line-or-complete-from-history)
 
 (defun cory/configure-eshell ()
