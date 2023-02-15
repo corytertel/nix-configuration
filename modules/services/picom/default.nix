@@ -34,8 +34,8 @@ in {
 
       opacityRules = [
         # "93:class_g = 'Emacs' && !_NET_WM_STATE@:32a" "0:_NET_WM_STATE@:32a *= '_NET_WM_STATE_HIDDEN'"
-        "70:class_g *?= 'FvwmButtons'"
-        "70:class_g *?= 'Conky'"
+        # "70:class_g *?= 'FvwmButtons'"
+        # "70:class_g *?= 'Conky'"
       ];
 
       settings = {
@@ -63,6 +63,9 @@ in {
           "class_g *?= 'FvwmButtons'"
           "class_g *?= 'Conky'"
         ];
+        shadow-red = 0.0;
+        shadow-green = 0.0;
+        shadow-blue = 0.2;
 
         # blur = {
         #   method = "kernel";

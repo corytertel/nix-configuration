@@ -37,9 +37,12 @@
 ;; - sgml binds
 ;; - paredit binds
 ;; - org-mode binds
+;; - org agenda binds
 ;; - ibuffer binds
 ;; - eshell binds
 ;; - repeat maps
+;; - helpful binds
+;; - geiser binds
 
 (defmacro cory/define-keys (map &rest l)
   ""
@@ -243,20 +246,14 @@
 (global-set-key [right-margin mouse-1] #'cory/mouse-goto-eol)
 
 ;;; General Programming Keybinds
-(cory/define-keys
- prog-mode-map
- ;; List binds
- ("M-a" . cory/beginning-of-list)
- ("M-e" . cory/end-of-list)
- ("M-h" . cory/mark-list))
+(define-key prog-mode-map [remap backward-sentence] #'cory/beginning-of-list)
+(define-key prog-mode-map [remap forward-sentence] #'cory/end-of-list)
+(define-key prog-mode-map [remap mark-paragraph] #'cory/mark-list)
 
 ;;; General Text Keybinds
-(cory/define-keys
- text-mode-map
- ;;; Prose binds
- ("C-M-a" . backward-paragraph)
- ("C-M-e" . forward-paragraph)
- ("C-M-h" . mark-paragraph))
+(define-key text-mode-map [remap beginning-of-defun] #'backward-paragraph)
+(define-key text-mode-map [remap end-of-defun] #'forward-paragraph)
+(define-key text-mode-map [remap mark-d] #'mark-paragraph)
 
 ;;; Repeat Maps
 
@@ -312,7 +309,7 @@ together in sequence."
      calendar-forward-day              "C-l" "l"
      calendar-backward-day             "C-j" "j"
      calendar-forward-week             "C-e" "e"
-     calendar-backward-week            "C-i" "i"
+     calendar-backward-week            "<C-i>" "i"
      calendar-forward-month            "M-}" "}" "]"
      calendar-backward-month           "M-{" "{" "["
      calendar-forward-year             "C-x ]"
@@ -322,7 +319,7 @@ together in sequence."
      backward-char                     "C-j" "j"
      forward-char                      "C-l" "l"
      next-line                         "C-e" "e"
-     previous-line                     "C-i" "i")
+     previous-line                     "<C-i>" "i")
 
     ("defun-nav"
      beginning-of-defun                "C-M-b" "M-b" "b" "ESC M-b"
@@ -399,7 +396,7 @@ together in sequence."
 
     ("kmacro-cycle"
      kmacro-cycle-ring-next            "C-x C-k C-e" "C-e" "e"
-     kmacro-cycle-ring-previous        "C-x C-k C-i" "C-i" "i")
+     kmacro-cycle-ring-previous        "C-x C-k C-i" "<C-i>" "i")
 
     ("tab-bar-nav"
      tab-next                          "C-x t o" "o" "e"
@@ -468,7 +465,7 @@ together in sequence."
     ("org-nav"
      org-backward-heading-same-level   "C-c C-j" "C-j" "j"
      org-forward-heading-same-level    "C-c C-l" "C-l" "l"
-     org-previous-visible-heading      "C-c C-i" "C-i" "i"
+     org-previous-visible-heading      "C-c C-i" "<C-i>" "i"
      org-next-visible-heading          "C-c C-e" "C-e" "e"
      outline-up-heading                "C-c C-u" "C-u" "u")
 

@@ -68,6 +68,7 @@
    ([(control shift return)] . crux-smart-open-line-above)
    ([(meta return)] . org-insert-heading-respect-content)
    ("C-x C-e" . org-babel-execute-src-block)
+   ;; Minimak binds
    ("C-j" . nil))
 
   :custom
@@ -263,7 +264,47 @@
 
   ;; (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook
   ;; 					   #'cory/org-babel-tangle-config)))
-  )
+
+  ;; Minimak binds
+  (with-eval-after-load 'org-agenda
+    (define-key org-agenda-keymap (kbd "C-z") #'org-agenda-undo)
+    (define-key org-agenda-keymap (kbd "C-c C-n") nil)
+    (define-key org-agenda-keymap (kbd "C-c C-p") nil)
+    (define-key org-agenda-keymap (kbd "C-c C-e") #'org-agenda-next-date-line)
+    (define-key org-agenda-keymap (kbd "C-c <C-i>") #'org-agenda-previous-date-line)
+    (define-key org-agenda-keymap (kbd "C-s") #'org-save-all-org-buffers)
+    (define-key org-agenda-keymap (kbd "L") #'org-agenda-clock-in)
+    (define-key org-agenda-keymap (kbd "P") #'org-agenda-recenter)
+    (define-key org-agenda-keymap (kbd "I") #'org-agenda-previous-item)
+    (define-key org-agenda-keymap (kbd "N") #'org-agenda-entry-text-mode)
+    (define-key org-agenda-keymap (kbd "E") #'org-agenda-next-item)
+    (define-key org-agenda-keymap (kbd "n") #'org-agenda-set-effort)
+    (define-key org-agenda-keymap (kbd "e") #'org-agenda-next-line)
+    (define-key org-agenda-keymap (kbd "p") #'org-agenda-diary-entry)
+    (define-key org-agenda-keymap (kbd "i") #'org-agenda-previous-line)
+    (define-key org-agenda-keymap (kbd "b") #'org-agenda-goto-date)
+    (define-key org-agenda-keymap (kbd "j") #'org-agenda-earlier)
+    (define-key org-agenda-keymap (kbd "f") #'org-agenda-log-mode)
+    (define-key org-agenda-keymap (kbd "l") #'org-agenda-later)
+    (define-key org-agenda-mode-map (kbd "C-z") #'org-agenda-undo)
+    (define-key org-agenda-mode-map (kbd "C-c C-n") nil)
+    (define-key org-agenda-mode-map (kbd "C-c C-p") nil)
+    (define-key org-agenda-mode-map (kbd "C-c C-e") #'org-agenda-next-date-line)
+    (define-key org-agenda-mode-map (kbd "C-c <C-i>") #'org-agenda-previous-date-line)
+    (define-key org-agenda-mode-map (kbd "C-s") #'org-save-all-org-buffers)
+    (define-key org-agenda-mode-map (kbd "L") #'org-agenda-clock-in)
+    (define-key org-agenda-mode-map (kbd "P") #'org-agenda-recenter)
+    (define-key org-agenda-mode-map (kbd "I") #'org-agenda-previous-item)
+    (define-key org-agenda-mode-map (kbd "N") #'org-agenda-entry-text-mode)
+    (define-key org-agenda-mode-map (kbd "E") #'org-agenda-next-item)
+    (define-key org-agenda-mode-map (kbd "n") #'org-agenda-set-effort)
+    (define-key org-agenda-mode-map (kbd "e") #'org-agenda-next-line)
+    (define-key org-agenda-mode-map (kbd "p") #'org-agenda-diary-entry)
+    (define-key org-agenda-mode-map (kbd "i") #'org-agenda-previous-line)
+    (define-key org-agenda-mode-map (kbd "b") #'org-agenda-goto-date)
+    (define-key org-agenda-mode-map (kbd "j") #'org-agenda-earlier)
+    (define-key org-agenda-mode-map (kbd "f") #'org-agenda-log-mode)
+    (define-key org-agenda-mode-map (kbd "l") #'org-agenda-later)))
 
 (use-package org-bullets
   :after org

@@ -5,7 +5,7 @@ let
 
   cfg = config.programs.cory.emacs;
 
-  initFile = '';;; init.el --- init -*- lexical-binding: t; no-byte-compile: nil; -*-
+  initFile = '';;; default.el --- init -*- lexical-binding: t; no-byte-compile: nil; -*-
 ''
   + (builtins.readFile ./elisp/minimal/init-performance.el)
   + (builtins.readFile ./elisp/minimal/init-base.el)

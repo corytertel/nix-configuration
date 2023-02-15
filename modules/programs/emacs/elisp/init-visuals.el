@@ -51,10 +51,10 @@
   (olivetti-body-width 100)
   :bind
   (:map olivetti-mode-map
-   ([right-margin mouse-4] . previous-line)
-   ([right-margin mouse-5] . next-line)
-   ([right-margin mouse-6] . backward-char)
-   ([right-margin mouse-7] . forward-char)
+   ([left-margin mouse-4] . previous-line)
+   ([left-margin mouse-5] . next-line)
+   ([left-margin mouse-6] . backward-char)
+   ([left-margin mouse-7] . forward-char)
    ([right-margin mouse-4] . previous-line)
    ([right-margin mouse-5] . next-line)
    ([right-margin mouse-6] . backward-char)
@@ -66,13 +66,10 @@
 
 ;; Setting the font
 (set-face-attribute 'default nil :family "Victor Mono" :height 100)
-;; (set-face-attribute 'default nil :family "Roboto Mono")
 ;; Set fixed pitch face
 (set-face-attribute 'fixed-pitch nil :family "Victor Mono" :height 100)
-;; (set-face-attribute 'fixed-pitch nil :family "Roboto Mono")
 ;; Set variable pitch face
-;; (set-face-attribute 'variable-pitch nil :family "Oxygen-Sans")
-(set-face-attribute 'variable-pitch nil :family "Roboto" :height 100)
+(set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 110)
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
@@ -148,10 +145,16 @@
 ;; Basic theme settings
 (set-face-attribute 'mode-line nil
 		    :foreground "#141404"
-		    :background "#c0daff")
+		    :background "#c0daff"
+		    :box nil
+		    :underline "#3647d9"
+		    :overline "#3647d9")
 (set-face-attribute 'mode-line-inactive nil
 		    :foreground "#141404"
-		    :background "#ffffff")
+		    :background "#ffffff"
+		    :box nil
+		    :underline "#3647d9"
+		    :overline "#3647d9")
 (set-face-attribute 'mode-line-buffer-id nil
 		    :inherit 'bold
 		    :foreground "#3647d9")
@@ -301,16 +304,18 @@
    "  " mode-line-buffer-identification
    "  " mode-line-modes))
 
-;; (use-package moody
-;;   :custom
-;;   ;; (moody-mode-line-height (* (aref (font-info (face-font 'mode-line)) 2) 1.5))
-;;   ;; (moody-mode-line-height 40)
-;;   (moody-mode-line-height 30)
-;;   :config
-;;   (setq x-underline-at-descent-line t)
-;;   (moody-replace-mode-line-buffer-identification)
-;;   (moody-replace-vc-mode)
-;;   (moody-replace-eldoc-minibuffer-message-function))
+(use-package moody
+  :custom
+  ;; (moody-mode-line-height (* (aref (font-info (face-font 'mode-line)) 2) 1.5))
+  ;; (moody-mode-line-height 40
+  (moody-mode-line-height 25)
+  :config
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode)
+  (moody-replace-eldoc-minibuffer-message-function))
 
 (use-package minions
-  :config (minions-mode))
+  :config
+  (minions-mode)
+  (push '(macrursors-mode) minions-available-modes))

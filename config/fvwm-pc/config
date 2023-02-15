@@ -713,7 +713,7 @@ Mouse 1 2 A Close
 #                Right Click - WindowOps Menu
 #                Middle Click - Window List Menu
 #   Right click TitleBar/Borders for WindowOps Menu
-Mouse 1	T    A RaiseMoveX Move Maximize
+Mouse 1	T    A RaiseMoveX Move FullScreen
 Mouse 1	FS   A RaiseMove Resize
 Mouse 4	T    A WindowShade True
 Mouse 5	T    A WindowShade False
@@ -723,6 +723,7 @@ Mouse 3	R    A Menu MenuWindowOpsLong
 Mouse 1	I    A RaiseMoveX Move "Iconify off"
 Mouse 3	T    A Menu MenuWindowOps
 Mouse 3 I    A Menu MenuIconOps
+Mouse 2 T    A AnimatedMove 50-50w 50-50w
 Mouse 9 A A Next (AcceptsFocus, CurrentPage) FocusWindow
 Mouse 8 A A Prev (AcceptsFocus, CurrentPage) FocusWindow
 

@@ -165,9 +165,7 @@
     config.theme.font.monospace.package
     corefonts
     vistafonts
-    roboto
-    roboto-mono
-    # iosevka-aile
+    liberation_ttf
   ];
 
   virtualisation = {
@@ -327,6 +325,10 @@
         racket
         # for lsp run:
         # raco pkg install racket-langserver
+
+        # F#
+        fsharp
+        dotnet-sdk
 
         # other programing languages
         nodejs

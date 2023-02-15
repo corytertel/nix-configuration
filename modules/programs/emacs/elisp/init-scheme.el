@@ -66,9 +66,22 @@
 	(kbd bind)
 	#'cory/chicken-doc-look-up-manual))
 
-    (define-key
-      geiser-mode-map
-      (kbd "C-.") nil))
+    (define-key geiser-mode-map (kbd "C-.") nil)
+    (define-key geiser-mode-map (kbd "C-M-i") nil))
+
+  (with-eval-after-load 'geiser-doc
+    (define-key geiser-doc-mode-map (kbd "N") nil)
+    (define-key geiser-doc-mode-map (kbd "P") nil)
+    (define-key geiser-doc-mode-map (kbd "E") #'geiser-doc-next-section)
+    (define-key geiser-doc-mode-map (kbd "I") #'geiser-doc-previous-section)
+    (define-key geiser-doc-mode-map (kbd "n") nil)
+    (define-key geiser-doc-mode-map (kbd "p") nil)
+    (define-key geiser-doc-mode-map (kbd "e") #'forward-button)
+    (define-key geiser-doc-mode-map (kbd "i") #'backward-button)
+    (define-key geiser-doc-mode-map (kbd "b") nil)
+    (define-key geiser-doc-mode-map (kbd "j") #'geiser-doc-previous)
+    (define-key geiser-doc-mode-map (kbd "f") nil)
+    (define-key geiser-doc-mode-map (kbd "l") #'geiser-doc-next))
 
   (defun scheme-super-capf ()
     (setq-local completion-at-point-functions

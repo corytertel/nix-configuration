@@ -1,7 +1,7 @@
 ;; Buffer management
 ;; FIXME
 (with-eval-after-load 'ibuf-ext
-  ;; ibuffer binds
+  ;; Minimak binds
   (define-key ibuffer-mode-map (kbd "M-n") nil)
   (define-key ibuffer-mode-map (kbd "M-p") nil)
   (define-key ibuffer-mode-map (kbd "M-i") #'ibuffer-backward-filter-group)

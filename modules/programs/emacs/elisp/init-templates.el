@@ -42,3 +42,47 @@
   ;; (add-hook 'prog-mode-hook #'tempel-abbrev-mode)
   ;; (global-tempel-abbrev-mode)
   )
+
+;; Snippets
+;; (use-package yasnippet
+;;   :config
+;;   ;; Don't touch TAB!!!
+
+;;   ;; The active keymap while a snippet expansion is in progress.
+;;   (setq yas-keymap
+;; 	(let ((map (make-sparse-keymap)))
+;; 	  (define-key map (kbd "C-<tab>")   (yas-filtered-definition 'yas-next-field-or-maybe-expand))
+;; 	  (define-key map (kbd "C-M-<tab>") (yas-filtered-definition 'yas-prev-field))
+;; 	  (define-key map (kbd "C-g")   (yas-filtered-definition 'yas-abort-snippet))
+;; 	  (define-key map (kbd "C-d")   (yas-filtered-definition yas-maybe-skip-and-clear-field))
+;; 	  (define-key map (kbd "DEL")   (yas-filtered-definition yas-maybe-clear-field))
+;; 	  map))
+
+;;   ;; The keymap used when `yas-minor-mode' is active.
+;;   (setq yas-minor-mode-map
+;; 	(let ((map (make-sparse-keymap)))
+;; 	  (define-key map (kbd "C-<tab>") yas-maybe-expand)
+;; 	  (define-key map "\C-c&\C-s" 'yas-insert-snippet)
+;; 	  (define-key map "\C-c&\C-n" 'yas-new-snippet)
+;; 	  (define-key map "\C-c&\C-v" 'yas-visit-snippet-file)
+;; 	  map))
+
+;;   (yas-global-mode 1))
+
+;; (use-package common-lisp-snippets)
+
+;; (use-package clojure-snippets)
+
+;; (use-package java-snippets)
+
+;; (use-package gitignore-snippets
+;;   :config (gitignore-snippets-init))
+
+;; (require 'company-yasnippet)
+;; (defun my/eglot-cap-config ()
+;;   (setq-local completion-at-point-functions
+;;               (list (cape-super-capf
+;;                      #'eglot-completion-at-point
+;;                      #'cape-dabbrev
+;;                      (cape-company-to-capf #'company-yasnippet)))))
+;; (add-hook 'eglot-managed-mode-hook #'my/eglot-cap-config)

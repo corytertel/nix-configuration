@@ -426,7 +426,7 @@ Colorset 5 RootTransparent, fg #e9eaea, bg #1a1a1a, hi, sh, Tint #1a1a1a 70, bgT
 Colorset 6  fg #141404, bg #c3dcf7, hi, sh, Plain, NoShape
 Colorset 7  fg grey30, bg #c3dcf7, hi, sh, Plain, NoShape
 Colorset 8  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
-Colorset 10 fg #ffffff, bg #1a1a1a, hi #aaaaaa, sh #999999, Plain, NoShape
+Colorset 10 fg #141404, bg #ffffff, hi, sh, Plain, NoShape
 Colorset 11 fg #141404, bg #c0daff, hi #ffffff, sh #ffffff, Plain, NoShape
 Colorset 12 fg #2d2d2d, bg #ffffff, hi, sh, Plain, NoShape
 Colorset 13 fg #141404, bg #c0daff, hi, sh, Plain, NoShape
@@ -741,7 +741,7 @@ Mouse 1 2 A Close
 #                Right Click - WindowOps Menu
 #                Middle Click - Window List Menu
 #   Right click TitleBar/Borders for WindowOps Menu
-Mouse 1	T    A RaiseMoveX Move Maximize
+Mouse 1	T    A RaiseMoveX Move FullScreen
 Mouse 1	FS   A RaiseMove Resize
 Mouse 4	T    A WindowShade True
 Mouse 5	T    A WindowShade False
@@ -751,6 +751,7 @@ Mouse 3	R    A Menu MenuWindowOpsLong
 Mouse 1	I    A RaiseMoveX Move "Iconify off"
 Mouse 3	T    A Menu MenuWindowOps
 Mouse 3 I    A Menu MenuIconOps
+Mouse 2 T    A AnimatedMove 50-50w 50-50w
 
 #######
 # 6: Window Decor
