@@ -41,7 +41,13 @@
   ;;   (interactive)
   ;;   (sly-eval-async '(ql:quickload :lisp-critic))
   ;;   (sly-eval-async `(lisp-critic:critique ,(buffer-file-name))))
-  )
+
+  (add-hook 'sly-mode-hook (lambda ()
+			     (setq-local completion-at-point-functions
+					 (list (cape-super-capf
+						#'tempel-complete
+						#'sly-complete-filename-maybe
+						#'sly-complete-symbol))))))
 
 (use-package sly-asdf
   :config
@@ -50,7 +56,5 @@
 (use-package sly-repl-ansi-color
   :config
   (push 'sly-repl-ansi-color sly-contribs))
-
-;; (use-package common-lisp-snippets)
 
 (use-package lisp-extra-font-lock)

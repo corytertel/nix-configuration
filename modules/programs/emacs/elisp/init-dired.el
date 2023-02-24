@@ -2,6 +2,52 @@
 ;; --- DIRED ---
 ;;
 
+(setq dired-listing-switches "-ghoaF --group-directories-first"
+      dired-dwim-target t
+      delete-by-moving-to-trash t)
+
+;; Make M-> and M-< work in dired
+(defun dired-back-to-top ()
+  (interactive)
+  (beginning-of-buffer)
+  (dired-next-line 4))
+
+(define-key dired-mode-map
+  (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
+
+(defun dired-jump-to-bottom ()
+  (interactive)
+  (end-of-buffer)
+  (dired-next-line -1))
+
+(define-key dired-mode-map
+  (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
+
+;; Open certain file extensions in external programs
+(use-package dired-open
+  :custom
+  (dired-open-extensions '(("mp4" . "mpc-qt")
+			   ("mpeg" . "mpc-qt")
+			   ("ogg" . "mpc-qt")
+			   ("mkv" . "mpc-qt")
+			   ("mov" . "mpc-qt")
+			   ("webm" . "mpc-qt")
+			   ("mp3" . "strawberry")
+			   ("opus" . "strawberry")
+			   ("wav" . "strawberry")
+			   ("weba" . "strawberry")
+			   ("aac" . "strawberry")
+			   ("doc" . "libreoffice")
+			   ("docx" . "libreoffice")
+			   ("odt" . "libreoffice")
+			   ("ppt" . "libreoffice")
+			   ("pptx" . "libreoffice")
+			   ("xcf" . "gimp"))))
+
+;; Minimak binds
+
+;;; Sunrise
+
 ;; TODO set `dired-compress-file-alist' to include all archive types
 
 ;; NOTE May slow down Emacs
@@ -13,6 +59,7 @@
 ;; (setq auto-revert-verbose nil)
 
 (use-package sunrise
+  :disabled t
   :init
   (defcustom cory/sunrise-open-extensions nil
     "Alist of extensions mapping to a programs to run them in.
@@ -119,9 +166,9 @@ This only affects the built-in handlers."
     (if (sunrise-quit)
 	(hl-line-mode -1)
       (if (and ;; (boundp 'sunrise-left-buffer)
-	   ;; (boundp 'sunrise-right-buffer)
-	   (buffer-live-p sunrise-left-buffer)
-	   (buffer-live-p sunrise-right-buffer))
+	  ;; (boundp 'sunrise-right-buffer)
+	  (buffer-live-p sunrise-left-buffer)
+	  (buffer-live-p sunrise-right-buffer))
 	  (cory/sunrise-show)
 	(sunrise-show))))
 
@@ -224,7 +271,7 @@ The mappings from extensions to applications is specified by
     (interactive)
     (let (process)
       (when (and filename
-		 (not (file-directory-p filename)))
+	       (not (file-directory-p filename)))
 	(--each-while cory/sunrise-open-extensions (not process)
           (when (string-match-p (concat "\\." (regexp-quote (car it)) "\\'") filename)
             (setq process (cory/sunrise-open-start-process filename (cdr it)))))
@@ -241,7 +288,7 @@ WILDCARDS is passed to `sunrise-find-regular-file'."
     (cl-ecase (sunrise-classify-file filename)
       (file
        (or (cory/sunrise-open-by-extension filename)
-	   (sunrise-find-regular-file filename wildcards)))
+	  (sunrise-find-regular-file filename wildcards)))
       (directory
        (sunrise-find-regular-directory filename))
       (virtual-directory

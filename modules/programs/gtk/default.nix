@@ -106,7 +106,7 @@ in {
   config = mkIf cfg.enable {
     programs.dconf.enable = true;
 
-    qt5 = {
+    qt = {
       enable = true;
       # platformTheme = "gtk2";
       # style = "gtk2";
@@ -125,8 +125,8 @@ in {
           name = "${theme.font.system.name} ${toString (theme.font.system.size)}";
         };
 
+        # gtk-key-theme-name = "Emacs"
         gtk2.extraConfig = ''
-          gtk-key-theme-name = "Emacs"
           gtk-enable-animations=1
           gtk-primary-button-warps-slider=1
           gtk-toolbar-style=3
@@ -134,8 +134,8 @@ in {
           gtk-button-images=1
       '';
 
+        # gtk-key-theme-name = "Emacs";
         gtk3.extraConfig = {
-          gtk-key-theme-name = "Emacs";
           gtk-button-images = true;
           gtk-decoration-layout = "icon:minimize,maximize,close";
           gtk-enable-animations = true;
@@ -149,8 +149,8 @@ in {
           gtk-application-prefer-dark-theme = if theme.darkTheme then true else false;
         };
 
+        # gtk-key-theme-name = "Emacs";
         gtk4.extraConfig = {
-          gtk-key-theme-name = "Emacs";
           gtk-decoration-layout = "icon:minimize,maximize,close";
           gtk-enable-animations = true;
           gtk-primary-button-warps-slider = true;

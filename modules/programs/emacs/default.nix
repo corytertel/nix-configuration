@@ -34,12 +34,12 @@ let
   + (builtins.readFile ./elisp/init-help.el)
 
   # Langs
-  # + (builtins.readFile ./elisp/init-clojure.el)
-  # + (builtins.readFile ./elisp/init-common-lisp.el)
+  + (builtins.readFile ./elisp/init-clojure.el)
+  + (builtins.readFile ./elisp/init-common-lisp.el)
   + (builtins.readFile ./elisp/init-cpp.el)
   + (builtins.readFile ./elisp/init-elisp.el)
   + (builtins.readFile ./elisp/init-java.el)
-  # + (builtins.readFile ./elisp/init-other-langs.el)
+  + (builtins.readFile ./elisp/init-other-langs.el)
   # + (builtins.readFile ./elisp/init-python.el)
   + (builtins.readFile ./elisp/init-scheme.el)
   + (builtins.readFile ./elisp/init-web.el)
@@ -77,11 +77,14 @@ let
   emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
     config = initFile;
     alwaysEnsure = true;
-    package = pkgs.emacsGit;
+    package = pkgs.emacsGit.override {
+      withGTK3 = true;
+    };
     extraEmacsPackages = emacsPackages;
     override = epkgs: epkgs // {
       sunrise = pkgs.callPackage ./sunrise-commander.nix {};
       macrursors = pkgs.callPackage ./macrursors.nix {};
+      # org-cv = pkgs.callPackage ./org-cv.nix {};
     };
   };
 

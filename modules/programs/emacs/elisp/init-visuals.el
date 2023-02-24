@@ -50,15 +50,16 @@
   :custom
   (olivetti-body-width 100)
   :bind
-  (:map olivetti-mode-map
-   ([left-margin mouse-4] . previous-line)
-   ([left-margin mouse-5] . next-line)
-   ([left-margin mouse-6] . backward-char)
-   ([left-margin mouse-7] . forward-char)
-   ([right-margin mouse-4] . previous-line)
-   ([right-margin mouse-5] . next-line)
-   ([right-margin mouse-6] . backward-char)
-   ([right-margin mouse-7] . forward-char)))
+  ;; (:map olivetti-mode-map
+  ;;  ([left-margin mouse-4] . previous-line)
+  ;;  ([left-margin mouse-5] . next-line)
+  ;;  ([left-margin mouse-6] . backward-char)
+  ;;  ([left-margin mouse-7] . forward-char)
+  ;;  ([right-margin mouse-4] . previous-line)
+  ;;  ([right-margin mouse-5] . next-line)
+  ;;  ([right-margin mouse-6] . backward-char)
+  ;;  ([right-margin mouse-7] . forward-char))
+  )
 
 ;;
 ;; --- FONT ---
@@ -66,10 +67,12 @@
 
 ;; Setting the font
 (set-face-attribute 'default nil :family "Victor Mono" :height 100)
+;; (set-face-attribute 'default nil :family "DejaVu Sans Mono" :height 100)
 ;; Set fixed pitch face
 (set-face-attribute 'fixed-pitch nil :family "Victor Mono" :height 100)
+;; (set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono" :height 100)
 ;; Set variable pitch face
-(set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 110)
+(set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 115)
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
@@ -308,7 +311,7 @@
   :custom
   ;; (moody-mode-line-height (* (aref (font-info (face-font 'mode-line)) 2) 1.5))
   ;; (moody-mode-line-height 40
-  (moody-mode-line-height 25)
+  (moody-mode-line-height 23)
   :config
   (setq x-underline-at-descent-line t)
   (moody-replace-mode-line-buffer-identification)

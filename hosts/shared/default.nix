@@ -53,10 +53,20 @@
           languages = [ "eng" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_minimak";
         };
+        us_carplax = {
+          description = "US layout with numbers and characters flipped";
+          languages = [ "eng" ];
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_minimak";
+        };
         ru_phonetic_qwerty = {
-          description = "Russian phonetic translation of the US dvorak emacs layout";
+          description = "Russian phonetic translation of the US qwerty layout";
           languages = [ "rus" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_phonetic_qwerty";
+        };
+        ru_phonetic_minimak = {
+          description = "Russian phonetic translation of the US minimak layout";
+          languages = [ "rus" ];
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_phonetic_minimak";
         };
         ru_beakl_emacs = {
           description = "Russian phonetic translation of the US beakl emacs layout";
@@ -145,6 +155,9 @@
       CHICKEN_REPOSITORY_PATH = "${chicken-lsp-server}/lib/chicken/${toString chicken.binaryVersion}";
       CHICKEN_INCLUDE_PATH = "${chicken}/share";
     };
+    sessionVariables = with pkgs; {
+      DOTNET_ROOT = "${dotnet-sdk_7}";
+    };
     systemPackages = with pkgs; [
       mg
       wget
@@ -166,6 +179,7 @@
     corefonts
     vistafonts
     liberation_ttf
+    dejavu_fonts
   ];
 
   virtualisation = {
@@ -328,7 +342,13 @@
 
         # F#
         fsharp
-        dotnet-sdk
+        dotnet-sdk_7
+        libgccjit
+        # dotnet-runtime
+        # dotnet-aspnetcore
+        # (with dotnetCorePackages; combinePackages [
+        #   sdk_7_0
+        # ])
 
         # other programing languages
         nodejs
@@ -403,6 +423,15 @@
         # avrdudess
         drawio
         zoom-us
+
+        # all configured in dconf
+        mate.eom
+        mate.caja
+        mate.atril
+        mate.mate-terminal
+        mate.mate-system-monitor
+        mate.mate-power-manager
+        mate.mate-media
 
         # games
         # libsForQt5.kpat

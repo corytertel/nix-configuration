@@ -137,7 +137,7 @@
   (display-line-numbers-mode -1))
 
 (aside-enable-configuration 'messages)
-(define-key global-map (kbd "C-S-x") 'aside-messages-dwim)
+(define-key global-map (kbd "C-S-m") 'aside-messages-dwim)
 (aside-enable-configuration 'context)
 (define-key global-map (kbd "C-S-p") 'aside-context-dwim)
 

@@ -280,7 +280,7 @@ java-mode
 
 (class "class "
        (p (file-name-base (or (buffer-file-name) (buffer-name))))
-       " {" n> r> n "}")
+       n "{" n> r> n "}")
 (print "System.out.println(" (r "What to print" print) ");")
 (debug "System.out.println(""\"The value of "
        (p "var") " is \" + "

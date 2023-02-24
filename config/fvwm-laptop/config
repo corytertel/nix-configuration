@@ -728,6 +728,12 @@ Silent Key Tab      A    4        GotoPage prev
 Silent Key Next  A 4 Next (AcceptsFocus, CurrentPage) FocusWindow
 Silent Key Prior A 4 Prev (AcceptsFocus, CurrentPage) FocusWindow
 
+# Arrow keys
+# Silent Key i A C Exec xdotool key --clearmodifiers Up
+# Silent Key e A C Exec xdotool key --clearmodifiers Down
+# Silent Key j A C Exec xdotool key --clearmodifiers Left
+# Silent Key l A C Exec xdotool key --clearmodifiers Right
+
 # Window Buttons: [1 3 5 7 9  TTTTT  0 8 6 4 2]
 #   1 - Stick (pin)
 #   2 - Close on single click, Destory on double click.

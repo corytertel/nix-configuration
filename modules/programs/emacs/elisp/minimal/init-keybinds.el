@@ -43,6 +43,7 @@
 ;; - repeat maps
 ;; - helpful binds
 ;; - geiser binds
+;; - info binds
 
 (defmacro cory/define-keys (map &rest l)
   ""
@@ -76,6 +77,8 @@
  ("C-l" . forward-char)
  ("C-z" . undo-only)
  ("C-S-z" . undo-redo)
+ ("<undo>" . undo-only)
+ ("<redo>" . undo-redo)
  ("C-q" . kill-region)
  ("C-w" . kill-ring-save)
  ("C-v" . yank)
@@ -114,6 +117,16 @@
 
 ;; minibuffer binds
 (cory/define-keys
+ minibuffer-mode-map
+ ("C-j" . nil)
+ ("M-n" . nil)
+ ("M-p" . nil)
+ ("M-e" . next-history-element)
+ ("M-i" . previous-history-element)
+ ("M-s" . nil)
+ ("M-f" . next-matching-history-element))
+
+(cory/define-keys
  minibuffer-local-completion-map
  ("C-j" . nil)
  ("M-n" . switch-to-completions)
@@ -123,6 +136,14 @@
  ("M-e" . next-history-element)
  ("M-s" . nil)
  ("M-f" . next-matching-history-element))
+
+(cory/define-keys
+ minibuffer-local-must-match-map
+ ("C-j" . nil))
+
+(cory/define-keys
+ read--expression-map
+ ("C-j" . nil))
 
 (cory/define-keys
  completion-list-mode-map
@@ -189,6 +210,19 @@
   (define-key kmacro-keymap (kbd "C-e") #'kmacro-cycle-ring-next)
   (define-key kmacro-keymap (kbd "C-y") #'kmacro-edit-macro-repeat))
 
+;; info binds
+(with-eval-after-load 'info
+  (define-key Info-mode-map (kbd "C-M-e") #'Info-next-reference)
+  (define-key Info-mode-map (kbd "S") nil)
+  (define-key Info-mode-map (kbd "F") #'Info-search-case-sensitively)
+  (define-key Info-mode-map (kbd "n") nil)
+  (define-key Info-mode-map (kbd "y") #'end-of-buffer)
+  (define-key Info-mode-map (kbd "e") #'Info-next)
+  (define-key Info-mode-map (kbd "p") #'Info-index)
+  (define-key Info-mode-map (kbd "i") #'Info-prev)
+  (define-key Info-mode-map (kbd "s") #'Info-follow-reference)
+  (define-key Info-mode-map (kbd "f") #'Info-search))
+
 ;;
 ;; --- GENERAL KEYBINDS ---
 ;;
@@ -218,32 +252,31 @@
  ("S-SPC" . cory/insert-space)
  ("C-c q" . quit-window)
  ("C-c x" . xref-find-references-and-replace)
- ("M-S-SPC" . cycle-spacing)
- ;; Scroll Keybinds
- ("<mouse-4>" . previous-line)
- ("<mouse-5>" . next-line)
- ("<mouse-6>" . backward-char)
- ("<mouse-7>" . forward-char))
+ ("M-S-SPC" . cycle-spacing))
 
-(global-set-key [left-fringe mouse-4] #'previous-line)
-(global-set-key [left-fringe mouse-5] #'next-line)
-(global-set-key [left-fringe mouse-6] #'backward-char)
-(global-set-key [left-fringe mouse-7] #'forward-char)
-(global-set-key [left-margin mouse-4] #'previous-line)
-(global-set-key [left-margin mouse-5] #'next-line)
-(global-set-key [left-margin mouse-6] #'backward-char)
-(global-set-key [left-margin mouse-7] #'forward-char)
-(global-set-key [right-fringe mouse-4] #'previous-line)
-(global-set-key [right-fringe mouse-5] #'next-line)
-(global-set-key [right-fringe mouse-6] #'backward-char)
-(global-set-key [right-fringe mouse-7] #'forward-char)
-(global-set-key [right-margin mouse-4] #'previous-line)
-(global-set-key [right-margin mouse-5] #'next-line)
-(global-set-key [right-margin mouse-6] #'backward-char)
-(global-set-key [right-margin mouse-7] #'forward-char)
-
-(global-set-key [left-fringe mouse-1]  #'cory/mouse-goto-bol)
-(global-set-key [right-margin mouse-1] #'cory/mouse-goto-eol)
+;; Scroll Keybinds
+;; (global-set-key (kbd "<mouse-4>") #'previous-line)
+;; (global-set-key (kbd "<mouse-5>") #'next-line)
+;; (global-set-key (kbd "<mouse-6>") #'backward-char)
+;; (global-set-key (kbd "<mouse-7>") #'forward-char)
+;; (global-set-key [left-fringe mouse-4] #'previous-line)
+;; (global-set-key [left-fringe mouse-5] #'next-line)
+;; (global-set-key [left-fringe mouse-6] #'backward-char)
+;; (global-set-key [left-fringe mouse-7] #'forward-char)
+;; (global-set-key [left-margin mouse-4] #'previous-line)
+;; (global-set-key [left-margin mouse-5] #'next-line)
+;; (global-set-key [left-margin mouse-6] #'backward-char)
+;; (global-set-key [left-margin mouse-7] #'forward-char)
+;; (global-set-key [right-fringe mouse-4] #'previous-line)
+;; (global-set-key [right-fringe mouse-5] #'next-line)
+;; (global-set-key [right-fringe mouse-6] #'backward-char)
+;; (global-set-key [right-fringe mouse-7] #'forward-char)
+;; (global-set-key [right-margin mouse-4] #'previous-line)
+;; (global-set-key [right-margin mouse-5] #'next-line)
+;; (global-set-key [right-margin mouse-6] #'backward-char)
+;; (global-set-key [right-margin mouse-7] #'forward-char)
+;; (global-set-key [left-fringe mouse-1]  #'cory/mouse-goto-bol)
+;; (global-set-key [right-margin mouse-1] #'cory/mouse-goto-eol)
 
 ;;; General Programming Keybinds
 (define-key prog-mode-map [remap backward-sentence] #'cory/beginning-of-list)
@@ -251,9 +284,18 @@
 (define-key prog-mode-map [remap mark-paragraph] #'cory/mark-list)
 
 ;;; General Text Keybinds
+(define-key text-mode-map [remap mark-paragraph] #'cory/mark-sentence)
 (define-key text-mode-map [remap beginning-of-defun] #'backward-paragraph)
 (define-key text-mode-map [remap end-of-defun] #'forward-paragraph)
-(define-key text-mode-map [remap mark-d] #'mark-paragraph)
+(define-key text-mode-map [remap mark-defun] #'mark-paragraph)
+
+;;; Escape as keyboard-quit
+(define-key global-map [escape] #'keyboard-quit)
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
 ;;; Repeat Maps
 
@@ -316,10 +358,10 @@ together in sequence."
      calendar-backward-year            "C-x [")
 
     ("char-line-nav"
-     backward-char                     "C-j" "j"
-     forward-char                      "C-l" "l"
-     next-line                         "C-e" "e"
-     previous-line                     "<C-i>" "i")
+     backward-char                     "C-j" "j" "<left>"
+     forward-char                      "C-l" "l" "<right>"
+     next-line                         "C-e" "e" "<down>"
+     previous-line                     "<C-i>" "i" "<up>")
 
     ("defun-nav"
      beginning-of-defun                "C-M-b" "M-b" "b" "ESC M-b"
@@ -487,7 +529,11 @@ together in sequence."
      forward-word                      "M-l" "l")
 
     ("set-mark"
-     smart-region                      "C-SPC" "SPC"))
+     smart-region                      "C-SPC" "SPC")
+
+    ("macrursors"
+     macrursors-mark-next-instance-of "C->" ">" "e"
+     macrursors-mark-next-instance-of "C-<" "<" "i"))
 
   "List of lists containing repeater-map definitions.
 This must be in the form required by the

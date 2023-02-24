@@ -5,11 +5,21 @@
 
 ;; Indenting
 (use-package aggressive-indent
+  :custom
+  (aggressive-indent-excluded-modes
+   '(elm-mode
+     haskell-mode
+     inf-ruby-mode
+     makefile-mode
+     makefile-gmake-mode
+     python-mode
+     sql-interactive-mode))
+  :hook
+  (prog-mode . aggressive-indent-mode)
+  (html-mode . aggressive-indent-mode)
+  (css-mode  . aggressive-indent-mode)
   :config
-  (electric-indent-mode 0)
-  (global-aggressive-indent-mode 1)
-  ;; (add-to-list 'aggressive-indent-excluded-modes 'html-mode)
-  )
+  (electric-indent-mode 0))
 
 ;; Word wrapping
 (global-visual-line-mode 1)

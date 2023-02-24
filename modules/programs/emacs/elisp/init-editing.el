@@ -9,7 +9,11 @@
    ("C-_"     . undo-tree-undo)
    ("C-x C-u" . undo-tree-visualize-redo)
    ("C-S-z"     . undo-tree-redo)
-   ("M-_"     . undo-tree-redo))
+   ("M-_"     . undo-tree-redo)
+   ("<undo>" . undo-tree-undo)
+   ("<redo>" . undo-tree-redo)
+   ("C-/" . nil)
+   ("C-?" . nil))
   :custom
   (undo-tree-visualizer-timestamps t)
   (undo-tree-visualizer-relative-timestamps t)
@@ -22,6 +26,7 @@
   (global-undo-tree-mode))
 
 (use-package embark
+  :disabled t
   :ensure t
   :bind
   (("M-w" . embark-act)
@@ -65,6 +70,7 @@
 	 ([remap kill-line] . cory/kill-line)
 	 ([remap kill-whole-line] . crux-kill-whole-line)
          ("C-b" . crux-move-beginning-of-line)
+         ("<home>" . crux-move-beginning-of-line)
 	 :map ctl-x-4-map
 	 ("t" . crux-transpose-windows))
   :config
@@ -107,10 +113,7 @@
 	  lisp-mode lisp-data-mode
 	  clojure-mode cider-repl-mode
 	  racket-mode racket-repl-mode
-	  scheme-mode geiser-repl-mode
-	  json-mode nix-mode
-	  c-mode cpp-mode
-	  java-mode javascript-mode)
+	  scheme-mode geiser-repl-mode)
 	 . enable-paredit-mode)
   :bind
   (:map paredit-mode-map

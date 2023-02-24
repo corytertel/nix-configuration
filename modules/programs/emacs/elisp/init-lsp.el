@@ -65,3 +65,65 @@
 ;;     (tree-sitter-hl-mode)))
 
 ;; (use-package tree-sitter-langs)
+
+;; (use-package lsp-mode
+;;   :after corfu flymake
+;;   :commands (lsp lsp-deferred)
+;;   :hook (prog-mode . lsp)
+;;   :init
+;;   (setq lsp-keymap-prefix "C-c C-a")
+;;   :bind (:map lsp-mode-map
+;;          ("C-c C-l" . lsp-execute-code-action)
+;;          ("M-." . lsp-find-definition)
+;;          ("M-," . lsp-find-references)
+;; 	 ("C-c C-a r" . lsp-rename)
+;;          ("C-c C-a f" . lsp-format-buffer)
+;;          ("C-c C-a g" . lsp-format-region)
+;;          ("C-c C-a a" . lsp-execute-code-action)
+;;          ("C-c C-a r" . lsp-find-references))
+;;   :config
+;;   ;; Performance
+;;   (setq read-process-output-max (* 1024 1024)) ;; 1mb
+;;   (setq lsp-prefer-capf t)
+;;   ;; Don't watch `build' and `.gradle' directories for file changes
+;;   (add-to-list 'lsp-file-watch-ignored "[/\\\\]build$")
+;;   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\.gradle$")
+;;   ;; Turn off breadcrumb trail
+;;   (setq lsp-headerline-breadcrumb-enable nil)
+;;   ;; Turn off warnings
+;;   (setq lsp-warn-no-matched-clients nil))
+
+;; (use-package lsp-ui
+;;   :commands (lsp-ui-mode)
+;;   :hook (lsp-mode . lsp-ui-mode)
+;;   :bind (:map lsp-mode-map
+;;          ("M-?" . lsp-ui-doc-toggle)
+;;          ("C-c C-a d" . lsp-ui-doc-show)
+;;          ("C-c C-a s" . lsp-ui-find-workspace-symbol))
+;;   :config
+;;   (defun lsp-ui-doc-toggle ()
+;;     "Shows or hides lsp-ui-doc popup."
+;;     (interactive)
+;;     (if lsp-ui-doc--bounds
+;;         (lsp-ui-doc-hide)
+;;       (lsp-ui-doc-show)))
+
+;;   ;; Deactivate most of the annoying "fancy features"
+;;   ;; (setq lsp-ui-doc-enable nil)
+;;   ;; (setq lsp-ui-doc-use-childframe t)
+;;   ;; (setq lsp-ui-doc-include-signature t)
+;;   ;; (setq lsp-ui-doc-position 'at-point)
+;;   ;; (setq lsp-ui-sideline-enable nil)
+;;   ;; (setq lsp-ui-sideline-show-hover nil)
+;;   ;; (setq lsp-ui-sideline-show-symbol nil)
+
+;;   (setq lsp-ui-doc-position 'right)
+
+;;   ;; Enable features
+;;   (setq lsp-ui-doc-enable t)
+;;   (setq lsp-ui-doc-use-childframe t)
+;;   (setq lsp-ui-doc-include-signature t)
+;;   (setq lsp-ui-doc-position 'at-point)
+;;   (setq lsp-ui-sideline-enable t)
+;;   (setq lsp-ui-sideline-show-hover t)
+;;   (setq lsp-ui-sideline-show-symbol t))

@@ -43,3 +43,6 @@
    ((javap-handler-real op args))))
 
 (add-to-list 'file-name-handler-alist '("\\.class$" . javap-handler))
+
+;; Java style
+(add-hook 'java-mode-hook (lambda () (c-set-style "csharp")))

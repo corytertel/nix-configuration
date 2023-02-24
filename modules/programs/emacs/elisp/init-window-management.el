@@ -5,6 +5,8 @@
 (setq focus-follows-mouse t
       mouse-autoselect-window t)
 
+(pixel-scroll-precision-mode t)
+
 (defun split-and-follow-below ()
   "Open a new window vertically."
   (interactive)
