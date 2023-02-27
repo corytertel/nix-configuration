@@ -121,8 +121,8 @@
    ("}"   . paredit-close-curly)
    ("M-{" . paredit-wrap-curly)
    ("M-}" . paredit-close-curly-and-newline)
-   ("M-;" . cory/comment-dwim)
-   ("RET" . cory/newline-dwim)
+   ("M-;" . nil)
+   ("RET" . nil)
    ("C-k" . cory/paredit-kill)
    ;; Minimak
    ("C-j" . nil)

@@ -88,12 +88,15 @@ in {
         lm_sensors
         lsb-release
 
-        libsForQt5.kwallet
-        libsForQt5.kwallet-pam
-        libsForQt5.kwalletmanager
-        libsForQt5.plasma-systemmonitor
-        libsForQt5.kirigami2
-        libsForQt5.kirigami-addons
+        # all configured in dconf
+        mate.eom
+        mate.caja
+        mate.atril
+        mate.mate-terminal
+        mate.mate-system-monitor
+        mate.mate-power-manager
+        upower
+        mate.mate-media
       ];
     };
 

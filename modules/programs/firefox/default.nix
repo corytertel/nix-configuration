@@ -59,10 +59,10 @@ in {
   config = mkIf cfg.enable {
     home-manager.users.cory.programs.firefox = {
       enable = true;
-      extensions = import ./extensions.nix { inherit pkgs; };
       profiles."cory" = {
         bookmarks = import ./bookmarks.nix;
         settings = import ./settings.nix { inherit config lib; };
+        extensions = import ./extensions.nix { inherit pkgs; };
 
         userContent = ''
         @-moz-document url-prefix(about:blank) {

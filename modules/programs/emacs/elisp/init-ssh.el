@@ -1,6 +1,7 @@
 ;; Tramp
 
 (setq tramp-default-method "ssh")
+(tramp-change-syntax 'simplified)
 
 ;; Only for debugging slow tramp connections
 ;;(setq tramp-verbose 7)
@@ -10,6 +11,9 @@
       (format "\\(%s\\)\\|\\(%s\\)"
               vc-ignore-dir-regexp
               tramp-file-name-regexp))
+
+(setq remote-file-name-inhibit-cache nil)
+(setq tramp-verbose 1)
 
 ;; Use ControlPath from .ssh/config
 ;; (setq tramp-ssh-controlmaster-options "")

@@ -2,15 +2,13 @@
 (use-package avy
   :ensure t
   :bind
-  (;; ("M-g g" . avy-goto-line)
-   ;; ("M-g c" . avy-goto-char-in-line)
-   ;; ("M-g m" . avy-move-line)
+  (("M-g g" . avy-goto-line)
+   ("M-g c" . avy-goto-char-in-line)
+   ("M-g m" . avy-move-line)
    ("<C-m>" . avy-goto-char-timer)
    ("C-S-m" . avy-pop-mark)
-   ;; ("C-j" . avy-goto-end-of-line-num)
-   ;; ("C-S-j" . avy-goto-line-num)
-   ([remap isearch-forward-regexp] . isearch-forward-other-window)
-   ([remap isearch-backward-regexp] . isearch-backward-other-window)
+   ;; ([remap isearch-forward-regexp] . isearch-forward-other-window)
+   ;; ([remap isearch-backward-regexp] . isearch-backward-other-window)
    :map isearch-mode-map
    ("<C-m>" . avy-isearch))
 

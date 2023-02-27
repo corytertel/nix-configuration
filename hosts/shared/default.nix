@@ -56,7 +56,12 @@
         us_carplax = {
           description = "US layout with numbers and characters flipped";
           languages = [ "eng" ];
-          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_minimak";
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_carplax";
+        };
+        us_qgmlfj = {
+          description = "US layout with numbers and characters flipped";
+          languages = [ "eng" ];
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_qgmlfj";
         };
         ru_phonetic_qwerty = {
           description = "Russian phonetic translation of the US qwerty layout";
@@ -423,15 +428,6 @@
         # avrdudess
         drawio
         zoom-us
-
-        # all configured in dconf
-        mate.eom
-        mate.caja
-        mate.atril
-        mate.mate-terminal
-        mate.mate-system-monitor
-        mate.mate-power-manager
-        mate.mate-media
 
         # games
         # libsForQt5.kpat

@@ -44,7 +44,60 @@
 			   ("pptx" . "libreoffice")
 			   ("xcf" . "gimp"))))
 
+(defun cory/dired ()
+  (interactive)
+  (dired default-directory))
+
+(defun cory/last-buffer-not-dired (buffers)
+  (if buffers
+      (let ((name (buffer-name (car buffers))))
+	(if (and (equal name (string-trim name "[ \*]+" "\*"))
+	      (not (equal 'dired-mode (with-current-buffer (car buffers)
+				      major-mode))))
+	    (car buffers)
+	  (cory/last-real-buffer (cdr buffers))))
+    nil))
+
+(defun cory/goto-last-buffer-not-dired ()
+  (interactive)
+  (switch-to-buffer (cory/last-buffer-not-dired (cdr (buffer-list)))))
+
+(add-hook 'dired-mode-hook (lambda ()
+			     (hl-line-mode 1)
+			     (setq-local cursor-type nil)))
+
+;; Binds
+(global-set-key (kbd "C-/") #'cory/dired)
+(define-key dired-mode-map (kbd "C-/") #'cory/goto-last-buffer-not-dired)
+
 ;; Minimak binds
+(define-key dired-mode-map (kbd "C-M-n") nil)
+(define-key dired-mode-map (kbd "C-M-e") #'dired-next-subdir)
+(define-key dired-mode-map (kbd "C-M-p") nil)
+(define-key dired-mode-map (kbd "C-M-i") #'dired-prev-subdir)
+(define-key dired-mode-map (kbd "C-o") nil)
+(define-key dired-mode-map (kbd "C-d") #'dired-display-file)
+(define-key dired-mode-map (kbd "* C-n") nil)
+(define-key dired-mode-map (kbd "* C-e") #'dired-next-marked-file)
+(define-key dired-mode-map (kbd "* C-p") nil)
+(define-key dired-mode-map (kbd "* C-i") #'dired-prev-marked-file)
+(define-key dired-mode-map (kbd "M-s a C-M-s") nil)
+(define-key dired-mode-map (kbd "M-f a C-M-f") #'dired-do-isearch-regexp)
+(define-key dired-mode-map (kbd "M-s a C-s") nil)
+(define-key dired-mode-map (kbd "M-f a C-f") #'dired-do-isearch)
+(define-key dired-mode-map (kbd "M-s f C-M-s") nil)
+(define-key dired-mode-map (kbd "M-f f C-M-f") #'dired-isearch-filenames-regexp)
+(define-key dired-mode-map (kbd "M-s f C-s") nil)
+(define-key dired-mode-map (kbd "M-f f C-f") #'dired-isearch-filenames)
+(define-key dired-mode-map (kbd "n") nil)
+(define-key dired-mode-map (kbd "e") #'dired-next-line)
+(define-key dired-mode-map (kbd "p") #'dired-do-redisplay)
+(define-key dired-mode-map (kbd "i") #'dired-previous-line)
+(define-key dired-mode-map (kbd "l") #'dired-maybe-insert-subdir)
+(define-key dired-mode-map (kbd "C-f") #'dired-isearch-filenames)
+(define-key dired-mode-map (kbd "C-M-f") #'dired-isearch-filenames-regexp)
+(define-key dired-mode-map (kbd "<find>") #'dired-isearch-filenames)
+(define-key dired-mode-map (kbd "M-<find>") #'dired-isearch-filenames-regexp)
 
 ;;; Sunrise
 
@@ -166,9 +219,9 @@ This only affects the built-in handlers."
     (if (sunrise-quit)
 	(hl-line-mode -1)
       (if (and ;; (boundp 'sunrise-left-buffer)
-	  ;; (boundp 'sunrise-right-buffer)
-	  (buffer-live-p sunrise-left-buffer)
-	  (buffer-live-p sunrise-right-buffer))
+	   ;; (boundp 'sunrise-right-buffer)
+	   (buffer-live-p sunrise-left-buffer)
+	   (buffer-live-p sunrise-right-buffer))
 	  (cory/sunrise-show)
 	(sunrise-show))))
 
@@ -271,7 +324,7 @@ The mappings from extensions to applications is specified by
     (interactive)
     (let (process)
       (when (and filename
-	       (not (file-directory-p filename)))
+		 (not (file-directory-p filename)))
 	(--each-while cory/sunrise-open-extensions (not process)
           (when (string-match-p (concat "\\." (regexp-quote (car it)) "\\'") filename)
             (setq process (cory/sunrise-open-start-process filename (cdr it)))))
@@ -288,7 +341,7 @@ WILDCARDS is passed to `sunrise-find-regular-file'."
     (cl-ecase (sunrise-classify-file filename)
       (file
        (or (cory/sunrise-open-by-extension filename)
-	  (sunrise-find-regular-file filename wildcards)))
+	   (sunrise-find-regular-file filename wildcards)))
       (directory
        (sunrise-find-regular-directory filename))
       (virtual-directory

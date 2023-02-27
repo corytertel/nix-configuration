@@ -104,13 +104,13 @@ AddToFunc InitFunction
 + I Exec exec dolphin --daemon
 + I Exec exec touchegg --client
 + I Exec exec conky
-+ I Exec exec kwalletd5
 + I Exec exec nm-applet
-+ I Exec exec pasystray
+# + I Exec exec pasystray
++ I Exec exec mate-volume-control-status-icon
 + I Exec exec cbatticon
-+ I Exec exec flameshot
+# + I Exec exec flameshot
 + I Exec exec xscreensaver --no-splash
-+ I SetVolume 28
++ I SetVolume 0
 
 # Mouse Bindings Functions
 DestroyFunc RaiseMoveX
@@ -322,7 +322,7 @@ MoveThreshold 3
 # Sets the focus style to SloppyFocus and a mouse click
 # in a window will Raise it.
 Style * SloppyFocus, MouseFocusClickRaises
-Module FvwmAuto 500 "Silent AutoRaise"
+Module FvwmAuto 1000 "Silent AutoRaise"
 
 # Default Font
 DefaultFont "xft:Oxygen-Sans:size=11:antialias=True"
@@ -349,7 +349,7 @@ Style * WindowShadeScrolls, WindowShadeSteps 10
 IgnoreModifiers L25
 
 # Decor Styles
-Style * BorderWidth 2, HandleWidth 2, MWMButtons, FvwmBorder, FirmBorder
+Style * BorderWidth 3, HandleWidth 3, MWMButtons, FvwmBorder, FirmBorder
 Style * Colorset 1, HilightColorset 2
 Style * BorderColorset 3, HilightBorderColorset 4
 
@@ -488,8 +488,8 @@ DestroyMenu MenuSystem
 AddToMenu   MenuSystem
 + "Keyboard%$[fvwm_icon]/devices/32x32/input-keyboard.png%" Popup MenuKeyboard
 + "&Wallpapers%$[fvwm_icon]/actions/32x32/photo.png%" Popup BGMenu
-+ "System Monitor%$[fvwm_icon]/apps/32x32/utilities-system-monitor.png%" Exec plasma-systemmonitor
-+ "btop++" Exec exec $[fvwm_term] -e btop
++ "System Monitor%$[fvwm_icon]/apps/32x32/utilities-system-monitor.png%" Exec mate-system-monitor
++ "Volume Control%$[fvwm_icon]/preferences/32x32/preferences-desktop-sound.png%" Exec mate-volume-control
 + "Wi-Fi Settings%$[fvwm_icon]/categories/32x32/applications-internet.png%" Exec nm-connection-editor
 + "" Nop
 + "Re&fresh FVWM%$[fvwm_icon]/actions/32x32/view-refresh.png%" Refresh
@@ -641,8 +641,11 @@ AddToMenu   MenuKeyboard
 + "US (BEAKL Emacs)" Exec setxkbmap "us_beakl_emacs"
 + "US (QWERTY)" Exec setxkbmap "us_qwerty"
 + "US (Minimak)" Exec setxkbmap "us_minimak"
++ "US (QGMLWY)" Exec setxkbmap "us_carplax"
++ "US (QGMLFJ)" Exec setxkbmap "us_qgmlfj"
 + "RU (Phonetic BEAKL Emacs)" Exec setxkbmap "ru_beakl_emacs"
 + "RU (Phonetic)" Exec setxkbmap "ru_phonetic_qwerty"
++ "RU (Phonetic)" Exec setxkbmap "ru_phonetic_minimak"
 
 #######
 # 5: Mouse and Key bindings

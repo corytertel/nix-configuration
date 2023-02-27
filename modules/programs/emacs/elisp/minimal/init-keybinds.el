@@ -64,6 +64,8 @@
 ;; global binds
 (cory/define-keys
  global-map
+ ("<left>" . backward-char)
+ ("<right>" . forward-char)
  ("C-y" . move-end-of-line)
  ("<C-i>" . previous-line)
  ("C-o" . find-file)
@@ -72,6 +74,7 @@
  ("C-s" . save-buffer)
  ("C-S-s" . write-file)
  ("C-f" . isearch-forward)
+ ("<find>" . isearch-forward)
  ("C-j" . backward-char)
  ("C-e" . next-line)
  ("C-l" . forward-char)
@@ -103,6 +106,7 @@
  ("C-M-b" . beginning-of-defun)
  ("C-M-e" . forward-list)
  ("C-M-f" . isearch-forward-regexp)
+ ("M-<find>" . isearch-forward-regexp)
  ("C-M-j" . backward-sexp)
  ("C-M-l" . forward-sexp)
  ("C-M-n" . scroll-other-window)
@@ -244,7 +248,6 @@
 
 (cory/define-keys
  global-map
- ("RET"   . cory/newline-dwim)
  ("C-x K" . kill-buffer)
  ("C-c w" . woman)
  ("C-'"   . repeat)
@@ -279,6 +282,7 @@
 ;; (global-set-key [right-margin mouse-1] #'cory/mouse-goto-eol)
 
 ;;; General Programming Keybinds
+(define-key prog-mode-map [remap newline] #'cory/newline-dwim)
 (define-key prog-mode-map [remap backward-sentence] #'cory/beginning-of-list)
 (define-key prog-mode-map [remap forward-sentence] #'cory/end-of-list)
 (define-key prog-mode-map [remap mark-paragraph] #'cory/mark-list)
@@ -288,6 +292,8 @@
 (define-key text-mode-map [remap beginning-of-defun] #'backward-paragraph)
 (define-key text-mode-map [remap end-of-defun] #'forward-paragraph)
 (define-key text-mode-map [remap mark-defun] #'mark-paragraph)
+(define-key text-mode-map (kbd "C-M-i") nil)
+(define-key text-mode-map (kbd "C-M-s") #'ispell-complete-word)
 
 ;;; Escape as keyboard-quit
 (define-key global-map [escape] #'keyboard-quit)
