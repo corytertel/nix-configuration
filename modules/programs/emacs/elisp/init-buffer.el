@@ -45,3 +45,7 @@
 (use-package all-the-icons-ibuffer
   :ensure t
   :hook (ibuffer-mode . all-the-icons-ibuffer-mode))
+
+(add-hook 'ibuffer-mode-hook (lambda ()
+			       (hl-line-mode 1)
+			       (setq-local cursor-type nil)))

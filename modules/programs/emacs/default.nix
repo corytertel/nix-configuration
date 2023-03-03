@@ -129,7 +129,10 @@ in {
       ".emacs.d/themes/plain-light-theme.el".source = ./plain-light-theme.el;
       # ".emacs.d/themes/smart-mode-line-cory-theme.el".source = ./smart-mode-line-cory-theme.el;
       ".emacs.d/eshell/alias".source = ./alias;
-      ".emacs.d/templates".source = ./templates;
+      ".emacs.d/snippets" = {
+        source = ./snippets;
+        recursive = true;
+      };
       ".local/share/dict/words".source = "${pkgs.scowl}/share/dict/words.txt";
     };
 

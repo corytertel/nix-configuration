@@ -5,8 +5,8 @@
 ;; F#
 (use-package fsharp-mode)
 
-(use-package eglot-fsharp
-  :hook (fsharp-mode . cory/eglot-ensure))
+;; (use-package eglot-fsharp
+;;   :hook (fsharp-mode . cory/eglot-ensure))
 
 ;; prettify symbols
 (defun fsharp-enable-prettify-symbols ()
@@ -19,3 +19,6 @@
 (add-hook 'fsharp-mode-hook
           (lambda ()
             (fsharp-enable-prettify-symbols)))
+
+;; Fvwm
+(use-package fvwm-mode)

@@ -72,7 +72,7 @@
 (set-face-attribute 'fixed-pitch nil :family "Victor Mono" :height 100)
 ;; (set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono" :height 100)
 ;; Set variable pitch face
-(set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 115)
+(set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 110)
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
@@ -151,16 +151,28 @@
 		    :background "#c0daff"
 		    :box nil
 		    :underline "#3647d9"
-		    :overline "#3647d9")
+		    :overline "#3647d9"
+		    :family "Liberation Serif"
+		    :height 110)
 (set-face-attribute 'mode-line-inactive nil
 		    :foreground "#141404"
 		    :background "#ffffff"
 		    :box nil
 		    :underline "#3647d9"
-		    :overline "#3647d9")
+		    :overline "#3647d9"
+		    :family "Liberation Serif"
+		    :height 110)
 (set-face-attribute 'mode-line-buffer-id nil
 		    :inherit 'bold
-		    :foreground "#3647d9")
+		    :foreground "#3647d9"
+		    :family "Liberation Serif"
+		    :height 110)
+(set-face-attribute 'header-line nil
+		    :background "#ffffff"
+		    :family "Liberation Serif"
+		    :underline nil
+		    :overline nil
+		    :height 110)
 (set-face-attribute 'fringe nil
 		    :background "#ffffff")
 (set-face-attribute 'secondary-selection nil
@@ -173,17 +185,17 @@
 
 ;; Buffer state in modeline
 (defface modeline-narrow-face
-  '((t (:foreground "#141404" :background "#ed8f23")))
+  '((t (:foreground "#141404" :background "#ed8f23" :family "Liberation Serif" :height 110)))
   "Todo/fixme highlighting."
   :group 'faces)
 
 (defface modeline-read-only-face
-  '((t (:foreground "#141404" :background "#9feaae")))
+  '((t (:foreground "#141404" :background "#9feaae" :family "Liberation Serif" :height 110)))
   "Read-only buffer highlighting."
   :group 'faces)
 
 (defface modeline-modified-face
-  '((t (:foreground "#d8d8d8" :background "#e60909")))
+  '((t (:foreground "#d8d8d8" :background "#e60909" :family "Liberation Serif" :height 110)))
   "Modified buffer highlighting."
   :group 'faces)
 

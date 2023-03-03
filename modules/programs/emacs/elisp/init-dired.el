@@ -66,6 +66,16 @@
 			     (hl-line-mode 1)
 			     (setq-local cursor-type nil)))
 
+(defun cory/dired-make-directory ()
+  (interactive)
+  (call-interactively #'make-directory)
+  (call-interactively #'revert-buffer))
+
+(defun cory/dired-make-file ()
+  (interactive)
+  (call-interactively #'make-empty-file)
+  (call-interactively #'revert-buffer))
+
 ;; Binds
 (global-set-key (kbd "C-/") #'cory/dired)
 (define-key dired-mode-map (kbd "C-/") #'cory/goto-last-buffer-not-dired)
@@ -98,6 +108,8 @@
 (define-key dired-mode-map (kbd "C-M-f") #'dired-isearch-filenames-regexp)
 (define-key dired-mode-map (kbd "<find>") #'dired-isearch-filenames)
 (define-key dired-mode-map (kbd "M-<find>") #'dired-isearch-filenames-regexp)
+(define-key dired-mode-map (kbd "C-c C-n") #'cory/dired-make-directory)
+(define-key dired-mode-map (kbd "C-c C-f") #'cory/dired-make-file)
 
 ;;; Sunrise
 

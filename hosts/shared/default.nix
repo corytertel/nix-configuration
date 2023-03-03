@@ -103,6 +103,11 @@
     #   enable = true;
     # };
     # postgresql.enable = true;
+    # pgadmin =  {
+    #   enable = true;
+    #   initialEmail = "pgadmin4@pgadmin.org";
+    #   initialPasswordFile = "/persist/secrets/pgadmin4";
+    # };
   };
 
   location = {
@@ -346,18 +351,21 @@
         # raco pkg install racket-langserver
 
         # F#
-        fsharp
-        dotnet-sdk_7
-        libgccjit
+        # fsharp
+        # dotnet-sdk_7
+        # libgccjit
         # dotnet-runtime
         # dotnet-aspnetcore
         # (with dotnetCorePackages; combinePackages [
         #   sdk_7_0
         # ])
 
-        # other programing languages
+        # web
         nodejs
-        yarn
+        # yarn
+        # yarn2nix
+
+        # other programing
         # rnix-lsp
         # nil
         javaPackages.openjfx17
@@ -369,7 +377,12 @@
         # python39Full
         # python39Packages.pip
         # python39Packages.python-lsp-server
+
+        # postgres
         postgresql
+        postman # Not FOSS, remove when done
+        # pgadmin4
+        dbeaver
 
         # essential user apps
         tdesktop
@@ -396,7 +409,7 @@
         winetricks
         grapejuice
         pciutils
-        # peek # simple animated gif screen recorder
+        peek # simple animated gif screen recorder
         # leafpad
         # onlyoffice-bin
         ledger-live-desktop
@@ -418,10 +431,10 @@
         thunderbird
         # mullvad-vpn
         # lazpaint
-        libsForQt5.kcalc
+        # libsForQt5.kcalc
+        qalculate-gtk
         anki
         # anki-bin
-        peek
         sshfs
         # qmk
         # avrdude

@@ -127,7 +127,7 @@
   (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.[sx]?html?\\(\\.[a-zA-Z_]+\\)?\\'" . web-mode))
 
   ;; (setq web-mode-engines-alist
   ;; 	'(("php"    . "\\.phtml\\'")))
@@ -206,3 +206,6 @@
 	      (when (and buffer-file-name
 		       (string-match ".*\.html" buffer-file-name))
 		(setq-local completion-at-point-functions '(cory/web-mode-html-capf t))))))
+
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))

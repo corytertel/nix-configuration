@@ -12,7 +12,59 @@
   programs.cory.emacs.enable = true;
 
   # Terminal
-  programs.cory.konsole.enable = true;
+  # programs.cory.konsole.enable = true;
+  home-manager.users.cory.programs.kitty = {
+    enable = true;
+    font = {
+      name = "Victor Mono";
+      size = 10;
+    };
+    settings = with config.theme.color; {
+      disable_ligatures = "cursor";
+      cursor_blink_interval = 0.5;
+      cursor_stop_blinking_after = 0;
+      cursor_shape = "block";
+      scrollback_lines = 5000;
+      enable_audio_bell = "yes";
+      update_check_interval = 0;
+      repaint_delay = 10;
+      input_delay = 3;
+      sync_to_monitor = "yes";
+      remember_window_size = "no";
+      window_padding_width = 10.0;
+
+      cursor = foreground;
+      cursor_text_color = background;
+      url_color = color4;
+      url_style = "single";
+      foreground = foreground;
+      background = background;
+      selection_foreground = background;
+      selection_background = foreground;
+      color1 = color1;
+      color2 = color2;
+      color3 = color3;
+      color4 = color4;
+      color5 = color5;
+      color6 = color6;
+      color7 = color7;
+      color8 = color8;
+      color9 = color9;
+      color10 = color10;
+      color11 = color11;
+      color12 = color12;
+      color13 = color13;
+      color14 = color14;
+      color15 = color15;
+    };
+  };
+
+  apps.terminal = {
+    name = "kitty";
+    command = "kitty";
+    desktopFile = "kitty.desktop";
+    package = pkgs.kitty;
+  };
 
   # Browser
   programs.cory.firefox = {

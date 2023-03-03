@@ -367,7 +367,9 @@ together in sequence."
      backward-char                     "C-j" "j" "<left>"
      forward-char                      "C-l" "l" "<right>"
      next-line                         "C-e" "e" "<down>"
-     previous-line                     "<C-i>" "i" "<up>")
+     previous-line                     "<C-i>" "i" "<up>"
+     move-end-of-line                  "C-b" "b" "<home>"
+     move-end-of-line                  "C-y" "y" "<end>")
 
     ("defun-nav"
      beginning-of-defun                "C-M-b" "M-b" "b" "ESC M-b"
@@ -388,10 +390,6 @@ together in sequence."
      backward-sentence                 "M-b" "b"
      forward-sentence                  "M-y" "y"
      back-to-indentation               "M-m" "m"                     :exitonly)
-
-    ("in-line-nav"
-     move-end-of-line                  "C-b" "b"
-     move-end-of-line                  "C-y" "y")
 
     ("page-nav"
      backward-page                     "C-x [" "["
@@ -432,13 +430,13 @@ together in sequence."
     ("kill-sexp"
      kill-sexp                         "C-M-k" "k" "ESC M-k")
 
-    ;; Yank same text repeatedly with “C-y y y y”...
+    ;; Yank same text repeatedly with “C-v v v v”...
     ("yank-only"
      yank                              "C-v" "v"
      yank-pop                          "M-v" "e"                     :exitonly)
 
-    ;; Cycle through the kill-ring with “C-y n n n”...
-    ;; You can reverse direction too “C-y n n C-- n n”
+    ;; Cycle through the kill-ring with “C-v e e e”...
+    ;; You can reverse direction too “C-v e e C-- e e”
     ("yank-popping"
      yank-pop                          "M-v" "v" "e")
 

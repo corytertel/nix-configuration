@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Object
+# key: Object
+# --
+Object $0

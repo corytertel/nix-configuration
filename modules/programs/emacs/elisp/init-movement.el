@@ -257,7 +257,8 @@
 
   (defun avy-action-lsp-rename (pt)
     (avy-generic-command-action
-     (lambda () (call-interactively 'eglot-rename))))
+     ;; (lambda () (call-interactively 'eglot-rename))))
+     (lambda () (call-interactively 'lsp-rename))))
   (setf (alist-get 16777330 avy-dispatch-alist) 'avy-action-lsp-rename) ; C-r
 
   ;;; Functions

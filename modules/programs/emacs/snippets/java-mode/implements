@@ -1,0 +1,6 @@
+
+# -*- mode: snippet -*-
+# name: implements
+# key: implements
+# --
+implements $0

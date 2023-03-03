@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: boolean
+# key: boolean
+# --
+boolean $0

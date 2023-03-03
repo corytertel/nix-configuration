@@ -40,7 +40,7 @@
 ;; --- MISC ---
 ;;
 
-(setq visible-bell nil
+(setq ;; visible-bell nil
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
 (setq-default left-margin-width 1

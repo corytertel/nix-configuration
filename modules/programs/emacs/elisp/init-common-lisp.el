@@ -45,7 +45,8 @@
   (add-hook 'sly-mode-hook (lambda ()
 			     (setq-local completion-at-point-functions
 					 (list (cape-super-capf
-						#'tempel-complete
+						;; #'tempel-complete
+						(cape-company-to-capf #'company-yasnippet)
 						#'sly-complete-filename-maybe
 						#'sly-complete-symbol))))))
 

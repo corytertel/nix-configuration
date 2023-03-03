@@ -51,13 +51,13 @@
           xref-show-xrefs-function       #'consult-xref
           xref-search-program             'ripgrep)))
 
-(use-package consult-eglot
-  :after consult eglot
-  ;; :bind (:map eglot-mode-map
-  ;; 	 ("C-M-." . consult-eglot-symbols))
-  ;; FIXME bind isn't binding
-  :config
-  (define-key eglot-mode-map [remap xref-find-apropos] 'consult-eglot-symbols))
+;; (use-package consult-eglot
+;;   :after consult eglot
+;;   ;; :bind (:map eglot-mode-map
+;;   ;; 	 ("C-M-." . consult-eglot-symbols))
+;;   ;; FIXME bind isn't binding
+;;   :config
+;;   (define-key eglot-mode-map [remap xref-find-apropos] 'consult-eglot-symbols))
 
 (use-package affe
   :disabled t ; package is currently broken
@@ -163,14 +163,6 @@
   ;; (setq-local completion-at-point-functions
   ;;             (list (cape-super-capf #'cape-dabbrev #'cape-dict #'cape-keyword #'cape-symbol)))
 
-  ;; Org mode completions
-  (add-hook 'org-mode-hook (lambda ()
-			     (setq-local completion-at-point-functions
-					 (list (cape-super-capf
-						#'tempel-complete
-						#'pcomplete-completions-at-point
-						#'cape-dict)))))
-
   ;; Silence then pcomplete capf, no errors or messages!
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
 
@@ -247,15 +239,15 @@ An alist.")
 (defun kind-all-the-icons-formatted (kind)
   "Format icon kind with all-the-icons"
   (or (alist-get kind kind-all-the-icons--cache)
-     (let ((map (assq kind kind-all-the-icons--icons)))
-       (let*  ((icon (if map
-                         (cdr map)
-                       (cdr (assq t kind-all-the-icons--icons))))
-               (half (/ (default-font-width) 2))
-               (pad (propertize " " 'display `(space :width (,half))))
-               (disp (concat pad icon pad)))
-         (setf (alist-get kind kind-all-the-icons--cache) disp)
-         disp))))
+      (let ((map (assq kind kind-all-the-icons--icons)))
+	(let*  ((icon (if map
+                          (cdr map)
+			(cdr (assq t kind-all-the-icons--icons))))
+		(half (/ (default-font-width) 2))
+		(pad (propertize " " 'display `(space :width (,half))))
+		(disp (concat pad icon pad)))
+          (setf (alist-get kind kind-all-the-icons--cache) disp)
+          disp))))
 
 (defun kind-all-the-icons-margin-formatter (metadata)
   "Return a margin-formatter function which produces kind icons.
@@ -270,3 +262,71 @@ function to the relevant margin-formatters list."
 
 (add-to-list 'corfu-margin-formatters
 	     #'kind-all-the-icons-margin-formatter)
+
+;; (use-package company
+;;   :hook (prog-mode . company-mode)
+;;   :config
+;;   (setq company-idle-delay 0.0)
+;;   (setq company-tooltip-minimum-width 60)
+;;   (setq company-tooltip-maximum-width 60)
+;;   (setq company-tooltip-limit 7)
+;;   (setq company-minimum-prefix-length 1)
+;;   (setq company-tooltip-align-annotations t)
+;;   (setq company-frontends '(company-pseudo-tooltip-frontend ; show tooltip even for single candidate
+;;                             company-echo-metadata-frontend))
+;;   (unless (display-graphic-p)
+;;     (define-key company-active-map (kbd "C-h") #'backward-kill-word)
+;;     (define-key company-active-map (kbd "C-w") #'backward-kill-word))
+;;   (define-key company-active-map (kbd "C-j") nil) ; avoid conflict with emmet-mode
+;;   (define-key company-active-map (kbd "C-n") #'company-select-next)
+;;   (define-key company-active-map (kbd "C-p") #'company-select-previous)
+;;   (if (display-graphic-p)
+;;       (define-key company-active-map (kbd "<tab>") 'company-select-next)
+;;     (define-key company-active-map (kbd "TAB") 'company-select-next))
+;;   (define-key company-active-map (kbd "<backtab>") 'company-select-previous))
+
+;; (use-package company-box
+;;   :if (display-graphic-p)
+;;   :hook (company-mode . company-box-mode)
+;;   :config
+;;   (setq company-box-doc-enable nil)
+;;   (setq company-box-scrollbar nil)
+;;   (setq company-box-frame-behavior 'default))
+
+;; ;; Autocompletion
+;; (use-package company
+;;   :diminish company-mode
+;;   :bind
+;;   (:map company-active-map
+;;    ([return] . nil)
+;;    ("RET" . nil)
+;;    ("TAB" . company-complete-selection)
+;;    ([tab] . company-complete-selection)
+;;    ("C-f" . company-complete-selection)
+;;    ("S-TAB" . company-select-previous)
+;;    ([backtab] . company-select-previous)
+;;    ("C-n" . company-select-next)
+;;    ("C-p" . company-select-previous))
+;;   ;; (:map lsp-mode-map
+;;   ;;  ("<tab>" . company-indent-or-complete-common))
+;;   :config
+;;   (setq company-idle-delay 0.0
+;;         company-minimum-prefix-length 1
+;;         company-show-numbers t
+;;         company-tooltip-maximum-width 100
+;;         company-tooltip-minimum-width 20
+;; 	;; Allow me to keep typing even if company disapproves.
+;;         company-require-match nil)
+;;   (global-company-mode))
+
+;; TODO figure out import order
+;; (use-package company-emoji
+;;   :config (add-to-list 'company-backends 'company-emoji))
+
+;; (use-package company-quickhelp
+;;   :config (company-quickhelp-mode))
+
+;; (use-package company-box
+;;   :hook (company-mode . company-box-mode)
+;;   :config
+;;   (setq company-box-icons-alist 'company-box-icons-all-the-icons))

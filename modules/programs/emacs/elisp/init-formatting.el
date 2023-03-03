@@ -18,6 +18,7 @@
   (prog-mode . aggressive-indent-mode)
   (html-mode . aggressive-indent-mode)
   (css-mode  . aggressive-indent-mode)
+  (java-mode . (lambda () (aggressive-indent-mode -1)))
   :config
   (electric-indent-mode 0))
 

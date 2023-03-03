@@ -10,7 +10,11 @@
 		(variable-pitch-mode) ; varible font
 		;; (auto-fill-mode) ; line breaks
 		(visual-line-mode)
-		(setq-local completion-styles '(emacs21 flex))
+		(setq-local completion-at-point-functions
+			    (list (cape-super-capf
+				   #'pcomplete-completions-at-point
+				   #'cape-dict)))
+		(setq-local completion-styles '(emacs21))
 		(setq-local corfu-auto-prefix 2)
 		(org-cdlatex-mode)))
 
@@ -305,6 +309,10 @@
     (define-key org-agenda-mode-map (kbd "j") #'org-agenda-earlier)
     (define-key org-agenda-mode-map (kbd "f") #'org-agenda-log-mode)
     (define-key org-agenda-mode-map (kbd "l") #'org-agenda-later))
+
+  ;; Org Src
+  (with-eval-after-load 'org-src
+    (define-key org-src-mode-map (kbd "C-s") #'org-edit-src-save))
 
   ;; Org Speed
   (defun cory/org-jump-to-heading-beginning ()

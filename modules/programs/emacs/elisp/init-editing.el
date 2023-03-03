@@ -1,3 +1,11 @@
+(setq c-default-style '((java-mode . "java")
+                        (awk-mode  . "awk")
+                        (c++-mode  . "bsd")
+                        (c-mode    . "bsd")
+                        (other     . "k&r")))
+
+(electric-pair-mode 1)
+
 ;; Undo
 (use-package undo-tree
   :defer 1

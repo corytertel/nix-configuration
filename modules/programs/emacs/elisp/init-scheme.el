@@ -86,7 +86,8 @@
   (defun scheme-super-capf ()
     (setq-local completion-at-point-functions
 		(list (cape-super-capf
-		       #'tempel-complete
+		       ;; #'tempel-complete
+		       (cape-company-to-capf #'company-yasnippet)
 		       #'geiser-capf--for-filename
 		       #'geiser-capf--for-module
 		       #'geiser-capf--for-symbol)

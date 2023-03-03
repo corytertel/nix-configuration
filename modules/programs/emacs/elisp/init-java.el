@@ -1,16 +1,19 @@
 ;;; Java
 
-(use-package eglot-java
-  :hook
-  (java-mode . eglot-java-mode)
-  :bind
-  (:map eglot-java-mode-map
-   ("C-c C-l n" . eglot-java-file-new)
-   ("C-c C-l x" . eglot-java-run-main)
-   ("C-c C-l t" . eglot-java-run-test)
-   ("C-c C-l N" . eglot-java-project-new)
-   ("C-c C-l T" . eglot-java-project-build-task)
-   ("C-c C-l R" . eglot-java-project-build-refresh)))
+;; (use-package eglot-java
+;;   :hook
+;;   (java-mode . eglot-java-mode)
+;;   :bind
+;;   (:map eglot-java-mode-map
+;;    ("C-c C-l n" . eglot-java-file-new)
+;;    ("C-c C-l x" . eglot-java-run-main)
+;;    ("C-c C-l t" . eglot-java-run-test)
+;;    ("C-c C-l N" . eglot-java-project-new)
+;;    ("C-c C-l T" . eglot-java-project-build-task)
+;;    ("C-c C-l R" . eglot-java-project-build-refresh)))
+
+(use-package lsp-java
+  :after lsp)
 
 ;; For groovy and gradle support
 (use-package groovy-mode :defer t)
@@ -44,5 +47,22 @@
 
 (add-to-list 'file-name-handler-alist '("\\.class$" . javap-handler))
 
-;; Java style
-(add-hook 'java-mode-hook (lambda () (c-set-style "csharp")))
+;;; Snippets
+
+(defun cory/java-snippet-constructor-assignments (arg-string)
+  (let ((indentation (make-string (save-excursion
+				    (goto-char start-point)
+				    (current-indentation))
+				  ?\s)))
+    (string-trim (mapconcat (lambda (arg)
+			      (if (string-match "^\\*" arg)
+				  ""
+				(format "this.%s = %s;\n%s"
+					arg arg indentation)))
+			    (cory/java-snippet-split-args arg-string)
+			    ""))))
+
+(defun cory/java-snippet-split-args (arg-string)
+  (mapcar (lambda (x)
+	    (string-trim x ".* "))
+          (split-string arg-string "[[:blank:]]*,[[:blank:]]*" t)))

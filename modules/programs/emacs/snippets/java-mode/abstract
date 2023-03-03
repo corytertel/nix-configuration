@@ -1,0 +1,6 @@
+
+# -*- mode: snippet -*-
+# name: abstract
+# key: abstract
+# --
+abstract $0

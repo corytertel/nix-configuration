@@ -1,3 +1,4 @@
+# -*- mode: fvwm -*-
 ##################################
 #  ____________________________
 # (   _________________________)
@@ -29,7 +30,7 @@
 #
 # The following is used in various menus and also sets the terminal
 # that FvwmConsole uses. Change this to your terminal of choice
-# InfoStoreAdd terminal konsole
+# InfoStoreAdd terminal kitty
 
 # Sets the default path to look for images in.
 # ImagePath $[fvwm_icon]:$[fvwm_icon];.png:$[fvwm_wallpaper]:+
@@ -688,7 +689,7 @@ Silent Key F7 A N FullScreen
 Silent Key F8 A N Close
 Silent Key F9 A N Next ("emacs") FocusWindow
 Silent Key F10 A N Next ("firefox|chromium-browser") FocusWindow
-Silent Key F11 A N Next ("konsole") FocusWindow
+Silent Key F11 A N Next ("kitty") FocusWindow
 # Silent Key F11 A N Exec emacsclient -n -e '(yequake-toggle "eshell")'
 Silent Key F12 A N Exec exec "$[fvwm_scripts]/layout-switch"
 Silent Key Scroll_Lock A N Next ("discord|telegram-desktop") FocusWindow

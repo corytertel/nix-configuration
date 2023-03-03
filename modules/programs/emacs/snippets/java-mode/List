@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: List
+# key: List
+# --
+List<${1:Object}> ${2:list} = new ${3:List}<>();$0
