@@ -13,7 +13,9 @@
 ;;    ("C-c C-l R" . eglot-java-project-build-refresh)))
 
 (use-package lsp-java
-  :after lsp)
+  :after lsp
+  :config
+  (require 'dap-java))
 
 ;; For groovy and gradle support
 (use-package groovy-mode :defer t)

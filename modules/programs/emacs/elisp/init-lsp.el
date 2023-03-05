@@ -119,6 +119,7 @@
 
   (defun cory/lsp ()
     "Ensures that `lsp' is only run during local connections."
+    (interactive)
     (unless (file-remote-p buffer-file-name)
       (lsp-deferred)
       (company-mode -1))))
@@ -160,3 +161,9 @@
   (setq lsp-ui-sideline-enable t)
   (setq lsp-ui-sideline-show-hover t)
   (setq lsp-ui-sideline-show-symbol t))
+
+;;; Debugging
+
+(use-package dap-mode
+  :after lsp-mode
+  :config (dap-auto-configure-mode))

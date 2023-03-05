@@ -35,12 +35,12 @@
     interfaces.enp1s0f0.useDHCP = true; # ethernet
   };
 
-  # powerManagement = {
-  #   # cpuFreqGovernor = "powersave";
-  #   cpuFreqGovernor = "ondemand";
-  #   enable = true;
-  #   powertop.enable = true;
-  # };
+  powerManagement = {
+    # cpuFreqGovernor = "powersave";
+    cpuFreqGovernor = "ondemand";
+    enable = true;
+    # powertop.enable = true;
+  };
 
   services = {
     # ananicy = {

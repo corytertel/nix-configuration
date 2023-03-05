@@ -388,11 +388,8 @@
         tdesktop
         blender
 
-        # modern unix
         fd
         ripgrep
-        fzf
-        jq
 
         nix-prefetch-github
         git-crypt
@@ -441,6 +438,8 @@
         # avrdudess
         drawio
         zoom-us
+        firefox
+        chromium
 
         # games
         # libsForQt5.kpat

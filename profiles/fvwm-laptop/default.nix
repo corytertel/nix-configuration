@@ -1,10 +1,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [
-    ./laptop.nix
-  ];
-
   # Window Manager
   windowManagers.cory.fvwm.laptop.enable = true;
 
@@ -21,7 +17,7 @@
     };
     settings = with config.theme.color; {
       disable_ligatures = "cursor";
-      cursor_blink_interval = 0.5;
+      cursor_blink_interval = "0.5";
       cursor_stop_blinking_after = 0;
       cursor_shape = "block";
       scrollback_lines = 5000;
@@ -31,7 +27,9 @@
       input_delay = 3;
       sync_to_monitor = "yes";
       remember_window_size = "no";
-      window_padding_width = 10.0;
+      initial_window_width = 1280;
+      initial_window_height = 800;
+      window_padding_width = 10;
 
       cursor = foreground;
       cursor_text_color = background;
@@ -39,8 +37,8 @@
       url_style = "single";
       foreground = foreground;
       background = background;
-      selection_foreground = background;
-      selection_background = foreground;
+      selection_foreground = foreground;
+      selection_background = "#eedc82";
       color1 = color1;
       color2 = color2;
       color3 = color3;
@@ -73,7 +71,51 @@
   };
 
   # File Manager
-  programs.cory.dolphin.enable = true;
+  # programs.cory.dolphin.enable = true;
+  # programs.cory.dolphin.config = import ../../config/dolphin/laptop.nix;
+  environment.variables = {
+    GTK_USE_PORTAL = "1";
+    XDG_DESKTOP_PORTAL = "1";
+  };
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.libsForQt5.xdg-desktop-portal-kde ];
+  };
+
+  home-manager.users.cory.dconf = {
+    enable = true;
+    settings = {
+      "org/mate/caja/icon-view" = {
+        default-use-tighter-layout = true;
+        default-zoom-level = "larger";
+        labels-beside-icons = false;
+      };
+      "org/mate/caja/list-view" = {
+        default-column-order = ["name" "size" "type" "date_modified" "date_accessed" "date_created" "extension" "group" "where" "mime_type" "octal_permissions" "owner" "permissions" "size_on_disk"];
+        default-visible-columns = ["name" "size" "type" "date_modified"];
+        default-zoom-level = "smaller";
+      };
+      "org/mate/caja/preferences" = {
+        always-use-location-entry = false;
+        click-policy = "single";
+      };
+      "org/mate/caja/geometry" = {
+        side-pane-view = "tree";
+        start-with-location-bar = true;
+        start-with-sidebar = true;
+        start-with-status-bar = true;
+        start-with-toolbar = true;
+      };
+    };
+  };
+
+  apps.fileManager = {
+    name = "caja";
+    command = "caja";
+    desktopFile = "caja.desktop";
+    package = pkgs.mate.caja;
+  };
 
   # Photo Viewer
   programs.cory.gwenview = {
@@ -136,6 +178,12 @@
   programs.cory.neofetch.enable = true;
   programs.cory.zsh.enable = true;
 
+  # Gestures
+  services.cory.touchegg = {
+    enable = true;
+    config = ../../config/touchegg/fvwm.conf;
+  };
+
   # Aesthetics
   theme = with pkgs; {
     name = "PlainLight";
@@ -184,6 +232,11 @@
       color14         = "#2d9574";
       color7          = "#ffffff";
       color15         = "#ffffff";
+    };
+    cursor = {
+      theme = "Vanilla-DMZ";
+      size = 32;
+      package = pkgs.vanilla-dmz;
     };
   };
 

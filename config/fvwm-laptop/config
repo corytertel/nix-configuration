@@ -52,7 +52,7 @@ Read xdgmenu
 CursorStyle ROOT          left_ptr
 CursorStyle TITLE         left_ptr
 CursorStyle DEFAULT       left_ptr
-pCursorStyle SYS           left_ptr
+CursorStyle SYS           left_ptr
 CursorStyle MENU          left_ptr
 CursorStyle TOP           size_ver
 CursorStyle RIGHT         size_hor
@@ -102,7 +102,7 @@ DestroyFunc InitFunction
 AddToFunc InitFunction
 + I Exec exec mkdir -p /tmp/fvwm-cache
 + I Exec exec emacs --daemon
-+ I Exec exec dolphin --daemon
+# + I Exec exec dolphin --daemon
 + I Exec exec touchegg --client
 + I Exec exec conky
 + I Exec exec nm-applet
@@ -472,15 +472,15 @@ AddToMenu   MenuFvwmRoot
 # This menu shows folders in the home directory if the exist.
 DestroyMenu MenuHome
 AddToMenu   MenuHome
-Test (f /home/cory/Classes) + "Classes%$[fvwm_icon]/places/32x32/folder-text.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Classes
-Test (f /home/cory/Code) + "Code%$[fvwm_icon]/places/32x32/folder-development.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Code
-Test (f /home/cory/Desktop) + "Desktop%$[fvwm_icon]/places/32x32/desktop.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Desktop
-Test (f /home/cory/Documents) + "Documents%$[fvwm_icon]/places/32x32/folder-documents.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Documents
-Test (f /home/cory/Downloads) + "Downloads%$[fvwm_icon]/places/32x32/folder-downloads.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Downloads
-Test (f /home/cory/Music) + "Music%$[fvwm_icon]/places/32x32/folder-sound.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Music
-Test (f /home/cory/Pictures) + "Pictures%$[fvwm_icon]/places/32x32/folder-pictures.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Pictures
-Test (f /home/cory/Videos) + "Videos%$[fvwm_icon]/places/32x32/folder-videos.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/Videos
-Test (f /home/cory/.local/share/Trash/files) + "Trash%$[fvwm_icon]/places/32x32/user-trash.png%" Exec exec $[fvwm_file_manager] --new-window /home/cory/.local/share/Trash/files
+Test (f /home/cory/Classes) + "Classes%$[fvwm_icon]/places/32x32/folder-text.png%" Exec exec $[fvwm_file_manager] --browser /home/cory/Classes
+Test (f /home/cory/Code) + "Code%$[fvwm_icon]/places/32x32/folder-development.png%" Exec exec $[fvwm_file_manager] --browser /home/cory/Code
+Test (f /home/cory/Desktop) + "Desktop%$[fvwm_icon]/places/32x32/desktop.png%" Exec exec $[fvwm_file_manager] --browser /home/cory/Desktop
+Test (f /home/cory/Documents) + "Documents%$[fvwm_icon]/places/32x32/folder-documents.png%" Exec exec $[fvwm_file_manager] --browser /home/cory/Documents
+Test (f /home/cory/Downloads) + "Downloads%$[fvwm_icon]/places/32x32/folder-downloads.png%" Exec exec $[fvwm_file_manager] --browser /home/cory/Downloads
+Test (f /home/cory/Music) + "Music%$[fvwm_icon]/places/32x32/folder-sound.png%" Exec exec $[fvwm_file_manager] --browser /home/cory/Music
+Test (f /home/cory/Pictures) + "Pictures%$[fvwm_icon]/places/32x32/folder-pictures.png%" Exec exec $[fvwm_file_manager] --browser /home/cory/Pictures
+Test (f /home/cory/Videos) + "Videos%$[fvwm_icon]/places/32x32/folder-videos.png%" Exec exec $[fvwm_file_manager] --browser /home/cory/Videos
+Test (f /home/cory/.local/share/Trash/files) + "Trash%$[fvwm_icon]/places/32x32/user-trash.png%" Exec exec $[fvwm_file_manager] --browser /home/cory/.local/share/Trash/files
 
 # System Menu
 #

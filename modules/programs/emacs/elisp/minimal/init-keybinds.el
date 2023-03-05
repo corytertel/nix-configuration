@@ -368,7 +368,7 @@ together in sequence."
      forward-char                      "C-l" "l" "<right>"
      next-line                         "C-e" "e" "<down>"
      previous-line                     "<C-i>" "i" "<up>"
-     move-end-of-line                  "C-b" "b" "<home>"
+     move-beginning-of-line            "C-b" "b" "<home>"
      move-end-of-line                  "C-y" "y" "<end>")
 
     ("defun-nav"

@@ -2,6 +2,8 @@
 ;; --- DEFAULT COMPLETION ---
 ;;
 
+(setq completion-ignore-case t)
+
 ;; Icons in minibuffer
 (use-package all-the-icons-completion
   :disabled t
