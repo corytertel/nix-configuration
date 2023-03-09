@@ -83,12 +83,12 @@
     typescript-ts-mode)
    . cory/lsp)
   (lsp-mode . (lambda ()
-		(company-mode -1)
 		(setq-local completion-at-point-functions
 			    (list (cape-super-capf
 				   (cape-company-to-capf #'company-yasnippet)
 				   #'lsp-completion-at-point)
-				  #'cape-file))))
+				  #'cape-file))
+		(company-mode -1)))
   :init
   (setq lsp-keymap-prefix "C-c C-a")
   :bind (:map lsp-mode-map

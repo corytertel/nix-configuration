@@ -93,6 +93,9 @@
   #   timeout = 300;
   # };
 
+  # Bluetooth
+  services.blueman.enable = true;
+
   home-manager.users.cory = {
     # Xft.antialias: 1
     # Xft.hinting: 1

@@ -21,7 +21,8 @@
             (fsharp-enable-prettify-symbols)))
 
 ;;; Fvwm
-(use-package fvwm-mode)
+(use-package fvwm-mode
+  :hook (fvwm-mode . (lambda () (setq-local completion-at-point-functions '(cape-dabbrev)))))
 
 ;;; SQL
 

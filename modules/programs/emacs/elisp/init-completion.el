@@ -15,10 +15,37 @@
 (use-package orderless
   :ensure t
   :custom
+  (orderless-component-separator "[ \\]")
   ;; (completion-styles '(orderless flex))
-  (completion-styles '(emacs21 orderless flex))
-  (completion-category-overrides '((file (styles basic partial-completion))))
-  (orderless-component-separator "[ \\]"))
+  ;; (completion-styles '(emacs21 orderless flex))
+  (completion-styles '(emacs21))
+  (completion-category-overrides
+   '((bookmark             (styles orderless))
+     (buffer               (styles orderless))
+     (charset              (styles orderless))
+     (coding-system        (styles orderless))
+     (color                (styles orderless))
+     (command              (styles orderless)) ; (e.g. `M-x')
+     (customize-group      (styles orderless))
+     (environment-variable (styles orderless))
+     (expression           (styles orderless))
+     (face                 (styles orderless))
+     (file                 (styles orderless partial-completion))
+     (function             (styles orderless)) ; (the `describe-function' command bound to `C-h f')
+     (info-menu            (styles orderless))
+     (imenu                (styles orderless))
+     (input-method         (styles orderless))
+     (kill-ring            (styles orderless))
+     (library              (styles orderless))
+     (minor-mode           (styles orderless))
+     (multi-category       (styles orderless))
+     (package              (styles orderless))
+     (project-file         (styles orderless))
+     (symbol               (styles orderless)) ; (the `describe-symbol' command bound to `C-h o')
+     (theme                (styles orderless))
+     (unicode-name         (styles orderless)) ; (the `insert-char' command bound to `C-x 8 RET')
+     (variable             (styles orderless)) ; (the `describe-variable' command bound to `C-h v')
+     )))
 
 ;; Minibuffer visual menu
 (use-package consult

@@ -293,48 +293,27 @@ Stole from aweshell. FILENAME is the file to display."
       (kill-buffer buffer))
     nil))
 
+(defun eshell/info (subject)
+  "Read the Info manual on SUBJECT."
+  (let ((buf (current-buffer)))
+    (Info-directory)
+    (let ((node-exists (ignore-errors (Info-menu subject))))
+      (if node-exists
+	  0
+	;; We want to switch back to *eshell* if the requested
+	;; Info manual doesn't exist.
+	(switch-to-buffer buf)
+	(eshell-print (format "There is no Info manual on %s.\n"
+			      subject))
+	1))))
+
 ;; Running programs in a term-mode buffer
 ;; (with-eval-after-load 'esh-opt
 ;;   (setq eshell-destroy-buffer-when-process-dies t)
 ;;   (setq eshell-visual-commands '("htop" "zsh" "vim")))
 
 ;;; Give eshell/ls icons
-(defun cory/eshell-prettify (file)
-  "Add features to listings in `eshell/ls' output.
-The features are:
-1. Add decoration like 'ls -F':
- * Mark directories with a `/'
- * Mark executables with a `*'
-2. Make each listing into a clickable link to open the
-corresponding file or directory.
-3. Add icons (requires `all-the-icons`)
-This function is meant to be used as advice around
-`eshell-ls-annotate', where FILE is the cons describing the file."
-  (let* ((name (car file))
-         (icon (if (eq (cadr file) t)
-                   (all-the-icons-icon-for-dir name)
-                 (all-the-icons-icon-for-file name)))
-         (suffix
-          (cond
-           ;; Directory
-           ((eq (cadr file) t)
-            "/")
-           ;; Executable
-           ((and (/= (user-uid) 0) ; root can execute anything
-	       (eshell-ls-applicable (cdr file) 3 #'file-executable-p (car file)))
-            "*"))))
-    (cons
-     (concat " "
-             icon
-             " "
-             (propertize name
-                         'keymap eshell-ls-file-keymap
-                         'mouse-face 'highlight
-                         'file-name (expand-file-name (substring-no-properties (car file)) default-directory))
-             (when (and suffix (not (string-suffix-p suffix name)))
-               (propertize suffix 'face 'shadow)))
-     (cdr file)
-     )))
+;; Make files and dirs clickable as well as prettyfied w/icons and suffixes
 
 (defun eshell-ls-file-at-point ()
   "Get the full path of the Eshell listing at point."
@@ -361,7 +340,59 @@ This function is meant to be used as advice around
     map)
   "Keys in effect when point is over a file from `eshell/ls'.")
 
-(advice-add #'eshell-ls-annotate :filter-return #'cory/eshell-prettify)
+(defface all-the-icons-eshell-dir-face
+  '((((background dark)) :foreground "white")
+    (((background light)) :foreground "black"))
+  "Face for the directory icon"
+  :group 'all-the-icons-faces)
+
+(defcustom all-the-icons-eshell-v-adjust 0.01
+  "The default vertical adjustment of the icon in the eshell buffer."
+  :group 'all-the-icons
+  :type 'number)
+
+(defcustom all-the-icons-eshell-monochrome t
+  "Whether to show the icons as the same color as the text on the same line."
+  :group 'all-the-icons
+  :type 'boolean)
+
+(defun cory/eshell-better-ls (file)
+  "Add features to listings in `eshell/ls' output.
+The features are:
+1. Add decoration like 'ls -F':
+ * Mark directories with a `/'
+ * Mark executables with a `*'
+2. Make each listing into a clickable link to open the
+corresponding file or directory.
+3. Add icons (requires `all-the-icons`)
+This function is meant to be used as advice around
+`eshell-ls-annotate', where FILE is the cons describing the file."
+  (let* ((name (car file))
+         (icon (if (eq (cadr file) t)
+                   (all-the-icons-icon-for-dir name)
+                 (all-the-icons-icon-for-file name)))
+         (suffix
+          (cond
+           ;; Directory
+           ((eq (cadr file) t)
+            "/")
+           ;; Executable
+           ((and (/= (user-uid) 0) ; root can execute anything
+               (eshell-ls-applicable (cdr file) 3 #'file-executable-p (car file)))
+            "*"))))
+    (cons
+     (concat " "
+             icon
+             " "
+             (propertize name
+                         'keymap eshell-ls-file-keymap
+                         'mouse-face 'highlight
+                         'file-name (expand-file-name (substring-no-properties (car file)) default-directory))
+             (when (and suffix (not (string-suffix-p suffix name)))
+               (propertize suffix 'face 'shadow)))
+     (cdr file))))
+
+(advice-add #'eshell-ls-annotate :filter-return #'cory/eshell-better-ls)
 
 ;; Eshell prompt
 (use-package eshell-prompt-extras

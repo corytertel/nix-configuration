@@ -1,8 +1,8 @@
 (setq c-default-style '((java-mode . "java")
                         (awk-mode  . "awk")
-                        (c++-mode  . "bsd")
-                        (c-mode    . "bsd")
-                        (other     . "k&r")))
+                        (c++-mode  . "stroustrup")
+                        (c-mode    . "stroustrup")
+                        (other     . "gnu")))
 
 (electric-pair-mode 1)
 

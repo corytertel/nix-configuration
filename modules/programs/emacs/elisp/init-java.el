@@ -68,3 +68,14 @@
   (mapcar (lambda (x)
 	    (string-trim x ".* "))
           (split-string arg-string "[[:blank:]]*,[[:blank:]]*" t)))
+
+;;; Minimak binds
+(with-eval-after-load 'cc-mode
+  (define-key java-mode-map (kbd "C-M-a") nil)
+  (define-key java-mode-map (kbd "C-M-b") #'c-beginning-of-defun)
+  (define-key java-mode-map (kbd "C-M-e") nil)
+  (define-key java-mode-map (kbd "C-M-y") #'c-end-of-defun)
+  (define-key java-mode-map (kbd "C-c C-n") nil)
+  (define-key java-mode-map (kbd "C-c C-e") #'c-forward-conditional)
+  (define-key java-mode-map (kbd "C-c C-p") nil)
+  (define-key java-mode-map (kbd "C-c C-i") #'c-backward-conditional))

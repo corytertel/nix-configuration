@@ -280,6 +280,10 @@
 ;; (global-set-key [right-margin mouse-7] #'forward-char)
 ;; (global-set-key [left-fringe mouse-1]  #'cory/mouse-goto-bol)
 ;; (global-set-key [right-margin mouse-1] #'cory/mouse-goto-eol)
+(global-set-key (kbd "C-<mouse-4>") #'ignore)
+(global-set-key (kbd "C-<mouse-5>") #'ignore)
+(global-set-key (kbd "C-<wheel-down>") #'ignore)
+(global-set-key (kbd "C-<wheel-up>") #'ignore)
 
 ;;; General Programming Keybinds
 (define-key prog-mode-map [remap newline] #'cory/newline-dwim)

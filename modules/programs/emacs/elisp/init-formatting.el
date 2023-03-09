@@ -35,7 +35,19 @@
 
 ;; Rainbow delimiters
 (use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-delimiters-mode)
+  :custom-face
+  (rainbow-delimiters-depth-1-face ((t (:foreground "#6597ef"))))
+  (rainbow-delimiters-depth-2-face ((t (:foreground "#ffa805"))))
+  (rainbow-delimiters-depth-3-face ((t (:foreground "#0b8007"))))
+  (rainbow-delimiters-depth-4-face ((t (:foreground "#de7397"))))
+  (rainbow-delimiters-depth-5-face ((t (:foreground "#6597ef"))))
+  (rainbow-delimiters-depth-6-face ((t (:foreground "#ffa805"))))
+  (rainbow-delimiters-depth-7-face ((t (:foreground "#0b8007"))))
+  (rainbow-delimiters-depth-8-face ((t (:foreground "#de7397"))))
+  (rainbow-delimiters-base-error-face ((t (:foreground "#de7397"))))
+  (rainbow-delimiters-mismatched-face ((t (:foreground "#de7397"))))
+  (rainbow-delimiters-unmatched-face ((t (:foreground "#de7397")))))
 
 ;; Show empty whitespace
 ;; (setq whitespace-style '(face trailing tabs lines empty))

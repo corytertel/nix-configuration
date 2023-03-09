@@ -88,5 +88,6 @@
   :config (gitignore-snippets-init))
 
 (use-package company
+  ;; :hook (company-mode . (lambda () (company-mode -1)))
   :config
   (require 'company-yasnippet))
