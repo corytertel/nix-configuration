@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: propTypes
+# key: rpt
+# --
+${1:$TM_FILENAME_BASE}.propTypes = {
+    $2
+};

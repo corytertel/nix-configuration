@@ -33,15 +33,15 @@ $DISK-part4 as the swap partition
 
 ** Create the pool. If you want to tweak this a bit and you're feeling adventurous, you might try adding one or more of the following additional options:
 *** To disable writing access times:
-  -O atime=off
+  ~-O atime=off~
 *** To enable filesystem compression:
-  -O compression=lz4
+  ~-O compression=lz4~
 *** To improve performance of certain extended attributes:
-  -O xattr=sa
+  ~-O xattr=sa~
 *** For systemd-journald posixacls are required
-  -O  acltype=posixacl 
+  ~-O  acltype=posixacl ~
 *** To specify that your drive uses 4K sectors instead of relying on the size reported by the hardware (note small 'o'):
-  -o ashift=12
+  ~-o ashift=12~
 
 ** The 'mountpoint=none' option disables ZFS's automount machinery; we'll use the normal fstab-based mounting machinery in Linux.
 ** '-R /mnt' is not a persistent property of the FS, it'll just be used while we're installing.
@@ -187,6 +187,11 @@ environment.etc."NetworkManager/system-connections".source = "/persist/etc/Netwo
 #+begin_src nix
 environment.etc."nixos".source = "/persist/etc/nixos/";
 #+end_src
+
+** To fix postgres deletion problems:
+~# mkdir /persist/postgresql~
+~# chown postgres /persist/postgresql~
+Then make the postgres ~dataDir~ to ~/persist/postgresql/data~
 
 * Finish the Installation
 ** Tip to make sure that your network interfaces are the correct ones.

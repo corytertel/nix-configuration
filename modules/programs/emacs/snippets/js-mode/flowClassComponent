@@ -1,0 +1,21 @@
+# -*- mode: snippet -*-
+# name: flowClassComponent
+# key: fcc
+# --
+// @flow
+import * as React from 'react';
+type Props = {
+  $0
+};
+type State = {
+  $1
+};
+export class ${2:`(file-name-sans-extension (buffer-name))`} extends React.Component<Props, State>{
+  render() {
+    return (
+      <div>
+
+      </div>
+    );
+  };
+};

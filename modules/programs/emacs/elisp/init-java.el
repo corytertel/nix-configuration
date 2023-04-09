@@ -1,5 +1,7 @@
 ;;; Java
 
+(add-hook 'java-mode-hook #'subword-mode)
+
 ;; (use-package eglot-java
 ;;   :hook
 ;;   (java-mode . eglot-java-mode)
@@ -17,8 +19,46 @@
   :config
   (require 'dap-java))
 
+(with-eval-after-load 'lsp-java
+  ;; TODO make the version of jdtls match automatically with the version nix uses
+  ;; TODO make lsp-java use the jdtls that nix installs, don't install it's own
+  (let ((version "1.19.0")
+	(timestamp "202301171536"))
+    (setq lsp-java-jdt-download-url
+	  (concat "https://download.eclipse.org/jdtls/milestones/" version
+		  "/jdt-language-server-" version "-" timestamp ".tar.gz"))))
+
+;; jdtls has a problem with auto save
+(add-hook 'java-mode-hook
+	  (lambda () (auto-save-mode -1)))
+(setq lsp-enable-indentation nil
+      lsp-enable-relative-indentation nil
+      lsp-enable-on-type-formatting nil
+      lsp-completion-enable-additional-text-edit nil)
+
 ;; For groovy and gradle support
 (use-package groovy-mode :defer t)
+
+;; Gradle support
+(use-package gradle-mode
+  :config
+  ;; Java project creation
+  (defun cory/gradle-create-new-java-app ()
+    (interactive)
+    (let ((project-name (read-string "Project Name: ")))
+      (shell-command
+       (concat
+	"gradle init --type java-application --dsl groovy --test-framework junit --project-name "
+	project-name " --package " (downcase project-name) " --console plain"))))
+  ;; Run project
+  (defun cory/gradle-run ()
+    "Execute gradle run command."
+    (interactive)
+    (gradle-run "run")))
+
+;; TODO Gradle project run
+
+;; TODO Gradle project create new class/interface/enum
 
 ;; Viewing Java Class files
 (defun javap-handler-real (operation args)
@@ -68,14 +108,3 @@
   (mapcar (lambda (x)
 	    (string-trim x ".* "))
           (split-string arg-string "[[:blank:]]*,[[:blank:]]*" t)))
-
-;;; Minimak binds
-(with-eval-after-load 'cc-mode
-  (define-key java-mode-map (kbd "C-M-a") nil)
-  (define-key java-mode-map (kbd "C-M-b") #'c-beginning-of-defun)
-  (define-key java-mode-map (kbd "C-M-e") nil)
-  (define-key java-mode-map (kbd "C-M-y") #'c-end-of-defun)
-  (define-key java-mode-map (kbd "C-c C-n") nil)
-  (define-key java-mode-map (kbd "C-c C-e") #'c-forward-conditional)
-  (define-key java-mode-map (kbd "C-c C-p") nil)
-  (define-key java-mode-map (kbd "C-c C-i") #'c-backward-conditional))

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: componentWillUpdate
+# key: cwup
+# --
+componentWillUpdate(nextProps, nextState) {
+    $0
+}

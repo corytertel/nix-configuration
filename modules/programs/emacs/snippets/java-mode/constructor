@@ -3,6 +3,6 @@
 # key: constructor
 # --
 ${2:`(file-name-sans-extension (buffer-name))`}(${1:, args}) {
-${1:$(cory/java-snippet-constructor-assignments yas-text)}
+  ${1:$(cory/java-snippet-constructor-assignments yas-text)}
+  $0
 }
-$0

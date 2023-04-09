@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: getDerivedStateFromProps
+# key: gdsfp
+# --
+static getDerivedStateFromProps(nextProps, prevState) {
+    $0
+}

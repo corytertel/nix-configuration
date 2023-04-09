@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: useEffect
+# key: usf
+# --
+useEffect(() => {
+$0
+})

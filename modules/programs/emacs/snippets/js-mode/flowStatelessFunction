@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: flowStatelessFunction
+# key: fsf
+# --
+// @flow
+import * as React from 'react';
+type Props = {
+  $0
+};
+export function ${1:`(file-name-sans-extension (buffer-name))`}(props: Props) {
+  return (
+    <div>
+
+    </div>
+  );
+};

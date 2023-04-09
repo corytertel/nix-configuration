@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: propTypeInstanceOfRequired
+# key: ptir
+# --
+PropTypes.instanceOf($0).isRequired,

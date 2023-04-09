@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: reactJustClassComponent
+# key: rcjc
+# --
+class ${1:`(file-name-sans-extension (buffer-name))`} extends Component {
+    render() {
+        return (
+            <div>
+                $0
+            </div>
+        );
+    }
+}

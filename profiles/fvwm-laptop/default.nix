@@ -12,7 +12,7 @@
   home-manager.users.cory.programs.kitty = {
     enable = true;
     font = {
-      name = "Victor Mono";
+      name = "JuliaMono";
       size = 10;
     };
     settings = with config.theme.color; {
@@ -30,6 +30,7 @@
       initial_window_width = 1280;
       initial_window_height = 800;
       window_padding_width = 10;
+      confirm_os_window_close = 0;
 
       cursor = foreground;
       cursor_text_color = background;

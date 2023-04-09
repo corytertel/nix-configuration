@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: classConstructorContext
+# key: conc
+# --
+constructor(props, context) {
+    super(props, context);
+    $0
+}

@@ -1,7 +1,5 @@
 # -*- mode: snippet -*-
 # name: use-package
-# key: up
+# key: use-package
 # --
-(use-package ${1:package}
-  :init
-  $2)
+use-package ${1:package}$0

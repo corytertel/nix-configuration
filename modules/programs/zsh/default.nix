@@ -27,6 +27,17 @@ in {
         };
         defaultKeymap = "emacs";
         initExtra = ''
+          export WORDCHARS='*?_-.[]~=/%;!#$%^(){}<>:."'"'"
+
+          autoload -U select-word-style
+          select-word-style bash
+
+          umask 027
+
+          bindkey "^[[3~" delete-char
+          bindkey \^U backward-kill-line
+          bindkey "^[[1;5C" forward-word
+          bindkey "^[[1;5D" backward-word
           bindkey -M emacs '^P' history-substring-search-up
           bindkey -M emacs '^N' history-substring-search-down
 
@@ -146,9 +157,12 @@ in {
           nixos-superclean = "sudo nix-collect-garbage --delete-old";
           cd = "z";
           cdi = "zi";
-          ls = "${pkgs.exa}/bin/exa --icons --all --git --binary --group-directories-first";
-          l = "ls --classify";
-          ll = "ls -l -h";
+          # ls = "${pkgs.exa}/bin/exa --icons --all --git --binary --group-directories-first";
+          # l = "ls --classify";
+          # ll = "ls -l -h";
+          ls = "${pkgs.exa}/bin/exa --icons --all --group-directories-first --sort extension --classify";
+          l = "ls";
+          ll = "ls -l -a -h --git --binary";
           tree = "${pkgs.exa}/bin/exa --icons --tree";
           c = "clear";
           grep = "grep -i --color=auto";
@@ -162,6 +176,7 @@ in {
           i = config.apps.photoViewer.command;
           nd = "nix develop";
           info = "info -v link-style=blue,underline -v active-link-style=blue,bold -v match-style=black,bgyellow";
+          javac = "javac -Xdiags:verbose";
           # _directory = "if [ \"$PWD\" = \"$HOME\" ]; then echo \'~'; else; basename \"$PWD\"; fi";
         };
         sessionVariables = {

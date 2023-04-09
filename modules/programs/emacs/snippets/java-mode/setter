@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: setter
+# key: setter
+# --
+public void set${1:$(upcase-initials yas-text)}(${2:Object} $1) {
+  this.$1 = $1;
+}$0

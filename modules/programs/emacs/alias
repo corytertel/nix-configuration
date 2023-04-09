@@ -19,3 +19,4 @@ alias eo find-file-other-window $1
 alias edit find-file $1
 alias edit-other find-file-other-window $1
 alias rg rg --color=always $*
+alias javac javac -Xdiags:verbose $*

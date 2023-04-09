@@ -1,7 +1,11 @@
 ;; Automatically remove trailing whitespace if user put it there
 (use-package ws-butler
-  :hook ((text-mode prog-mode) . ws-butler-mode)
-  :config (setq ws-butler-keep-whitespace-before-point nil))
+  :hook
+  ((text-mode prog-mode) . ws-butler-mode)
+  ;; (java-mode . (lambda () (ws-butler-mode -1)))
+  ;; :custom
+  ;; (ws-butler-keep-whitespace-before-point nil)
+  )
 
 ;; Indenting
 (use-package aggressive-indent
@@ -13,12 +17,13 @@
      makefile-mode
      makefile-gmake-mode
      python-mode
-     sql-interactive-mode))
+     sql-interactive-mode
+     java-mode
+     snippet-mode))
   :hook
   (prog-mode . aggressive-indent-mode)
   (html-mode . aggressive-indent-mode)
   (css-mode  . aggressive-indent-mode)
-  (java-mode . (lambda () (aggressive-indent-mode -1)))
   :config
   (electric-indent-mode 0))
 
@@ -51,10 +56,36 @@
 
 ;; Show empty whitespace
 ;; (setq whitespace-style '(face trailing tabs lines empty))
-(setq whitespace-style '(trailing))
-(add-hook 'prog-mode-hook 'whitespace-mode)
+(require 'whitespace)
+(with-eval-after-load 'whitespace
+  (setq whitespace-style '(face trailing lines)
+	whitespace-line-column 100)
+  (add-hook 'prog-mode-hook 'whitespace-mode)
+  (set-face-attribute 'whitespace-line nil
+		      :background 'unspecified))
 
 ;; Highlight and navigate TODO keywords
 (use-package hl-todo
+  :custom
+  (hl-todo-keyword-faces
+   '(("HOLD" . "#d0bf8f")
+     ("TODO" . "#cc9393")
+     ("NEXT" . "#dca3a3")
+     ("THEM" . "#dc8cc3")
+     ("PROG" . "#7cb8bb")
+     ("OKAY" . "#7cb8bb")
+     ("DONT" . "#5f7f5f")
+     ("FAIL" . "#8c5353")
+     ("DONE" . "#afd8af")
+     ("NOTE" . "#d0bf8f")
+     ("KLUDGE" . "#d0bf8f")
+     ("HACK" . "#d0bf8f")
+     ("TEMP" . "#d0bf8f")
+     ("FIXME" . "#cc9393")
+     ("XXXX*" . "#cc9393")
+     ("DOING" . "#cc9393")
+     ("WAITING" . "#d0bf8f")
+     ("MAYBE" . "#dca3a3")
+     ("SOMEDAY" . "#d0bf8f")
+     ("CANCELLED" . "#8c5353")))
   :config (global-hl-todo-mode))
-

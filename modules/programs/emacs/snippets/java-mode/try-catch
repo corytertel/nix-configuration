@@ -1,9 +1,9 @@
-
 # -*- mode: snippet -*-
 # name: try, catch
 # key: tryc
 # --
 try {
-    $0
-} catch (${1:Exception} ${2:ex}) {
+  $0
+} catch (${1:Exception} ${2:e}) {
+
 }

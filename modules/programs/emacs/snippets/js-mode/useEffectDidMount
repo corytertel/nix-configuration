@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: useEffectDidMount
+# key: usfd
+# --
+useEffect(() => {
+$0
+},[])

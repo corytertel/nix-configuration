@@ -102,7 +102,17 @@
     # redshift = {
     #   enable = true;
     # };
-    # postgresql.enable = true;
+    postgresql = {
+      enable = true;
+      package = pkgs.postgresql;
+      dataDir = "/persist/postgresql/data";
+      authentication = lib.mkForce ''
+        # Generated file; do not edit!
+        local all all              trust
+        host  all all 127.0.0.1/32 md5
+        host  all all ::1/128      md5
+      '';
+    };
     # pgadmin =  {
     #   enable = true;
     #   initialEmail = "pgadmin4@pgadmin.org";
@@ -162,8 +172,11 @@
   environment = {
     variables = with pkgs; {
       BROWSER = config.apps.browser.command;
-      CHICKEN_REPOSITORY_PATH = "${chicken-lsp-server}/lib/chicken/${toString chicken.binaryVersion}";
+      # CLASSPATH = "${postgresql_jdbc}/share/java/postgresql-jdbc.jar";
+      CHICKEN_REPOSITORY_PATH =
+        "${chicken-lsp-server}/lib/chicken/${toString chicken.binaryVersion}";
       CHICKEN_INCLUDE_PATH = "${chicken}/share";
+      _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd";
     };
     sessionVariables = with pkgs; {
       DOTNET_ROOT = "${dotnet-sdk_7}";
@@ -190,6 +203,7 @@
     vistafonts
     liberation_ttf
     dejavu_fonts
+    julia-mono
   ];
 
   virtualisation = {
@@ -364,15 +378,21 @@
         nodejs
         # yarn
         # yarn2nix
+        nodePackages_latest.typescript-language-server
+
+        # java
+        javaPackages.openjfx17
+        jdt-language-server
+        maven
+        gradle
 
         # other programing
         # rnix-lsp
         # nil
-        javaPackages.openjfx17
-        maven
-        gradle
-        # dotnet-sdk
-        # python39
+        gnuapl
+        dyalog
+        # ride
+        python39
         # (python39.withPackages (ps: [ ps.epc ps.python-lsp-server ]))
         # python39Full
         # python39Packages.pip
@@ -383,6 +403,7 @@
         postman # Not FOSS, remove when done
         # pgadmin4
         dbeaver
+        postgresql_jdbc # for java
 
         # essential user apps
         tdesktop

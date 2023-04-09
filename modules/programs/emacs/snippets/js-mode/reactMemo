@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: reactMemo
+# key: rscm
+# --
+import React, { memo } from 'react';
+
+const ${1:`(file-name-sans-extension (buffer-name))`} = memo(() => {
+    return (
+        <div>
+            $0
+        </div>
+    );
+});
+
+export default ${1:`(file-name-sans-extension (buffer-name))`};

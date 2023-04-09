@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: getSnapshotBeforeUpdate
+# key: gsbu
+# --
+getSnapshotBeforeUpdate(prevProps, prevState) {
+    $0
+}

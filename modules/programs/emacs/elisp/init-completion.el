@@ -1,6 +1,79 @@
 ;;
-;; --- DEFAULT COMPLETION ---
+;; --- COMPLETION ---
 ;;
+
+(use-package vertico
+  :custom
+  (vertico-count 10)
+  (vertico-cycle t)
+  (vertico-preselect 'prompt)
+  (vertico-grid-separator "       ")
+  (minibuffer-prompt-properties
+   '(read-only t cursor-intangible t face minibuffer-prompt))
+  (read-extended-command-predicate
+   #'command-completion-default-include-p)
+  (enable-recursive-minibuffers t)
+  ;; makes completion-in-region use consult
+  ;; unnatural behavior when using default completion
+  (completion-in-region-function #'consult-completion-in-region)
+  ;; :init
+  ;; (advice-add #'vertico--format-candidate :around
+  ;;             (lambda (orig cand prefix suffix index _start)
+  ;; 		(setq cand (funcall orig cand prefix suffix index _start))
+  ;; 		(concat
+  ;; 		 (if (= vertico--index index)
+  ;;                    (propertize "» " 'face 'vertico-current)
+  ;;                  "  ")
+  ;; 		 cand)))
+  :config
+  (recentf-mode t)
+  (savehist-mode t)
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+  ;; Vertico keybinds
+  ;; (define-key vertico-map "?" #'minibuffer-completion-help)
+  ;; (define-key vertico-map (kbd "M-RET") #'minibuffer-force-complete-and-exit)
+  ;; (define-key vertico-map (kbd "M-TAB") #'minibuffer-complete)
+  ;; (define-key vertico-map (kbd "RET") #'vertico-insert)
+
+  (defun cory/vertico-slash ()
+    (interactive)
+    (vertico-insert)
+    ;; (insert ?/)
+    )
+
+  (with-eval-after-load 'vertico-reverse
+    ;; TODO work on tab behavior
+    (define-key vertico-map (kbd "TAB") #'vertico-next)
+    (define-key vertico-map (kbd "<backtab>") #'vertico-previous)
+    (define-key vertico-map (kbd "/") #'cory/vertico-slash)
+    ;; (define-key vertico-map (kbd "TAB") #'minibuffer-complete)
+    (define-key vertico-reverse-map (kbd "M-n") #'vertico-grid-scroll-up)
+    (define-key vertico-reverse-map (kbd "<prior>") #'vertico-grid-scroll-up)
+    (define-key vertico-reverse-map (kbd "C-n") #'vertico-grid-scroll-down)
+    (define-key vertico-reverse-map (kbd "<next>") #'vertico-grid-scroll-down))
+
+  ;; (with-eval-after-load 'vertico-buffer
+  ;;   (setq vertico-buffer-display-action '(display-buffer-reuse-window display-buffer-at-bottom))
+  ;;   (add-hook 'vertico-buffer-mode-hook (lambda () (setq-local mode-line-format nil))))
+
+  (vertico-mode t)
+  (vertico-grid-mode t)
+  (vertico-reverse-mode t)
+  ;; (vertico-buffer-mode t)
+  )
+
+;; Configure directory extension.
+(use-package vertico-directory
+  :after vertico
+  :ensure nil
+  ;; More convenient directory navigation commands
+  :bind (:map vertico-map
+         ("RET" . vertico-directory-enter)
+         ("DEL" . vertico-directory-delete-char)
+         ("M-DEL" . vertico-directory-delete-word))
+  ;; Tidy shadowed file names
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
 (setq completion-ignore-case t)
 
@@ -9,7 +82,14 @@
   :disabled t
   :config
   (all-the-icons-completion-mode)
-  (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
+  ;; (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
+  )
+
+;; Fuzzy matching
+(use-package hotfuzz
+  :disabled t
+  :custom
+  (completion-styles '(hotfuzz emacs21)))
 
 ;; Completion matching
 (use-package orderless
@@ -18,7 +98,8 @@
   (orderless-component-separator "[ \\]")
   ;; (completion-styles '(orderless flex))
   ;; (completion-styles '(emacs21 orderless flex))
-  (completion-styles '(emacs21))
+  ;; (completion-styles '(emacs21))
+  (completion-styles '(flex emacs21))
   (completion-category-overrides
    '((bookmark             (styles orderless))
      (buffer               (styles orderless))
@@ -132,7 +213,7 @@
   :custom
   (corfu-cycle t)                  ; Allows cycling through candidates
   (corfu-auto t)                   ; Enable auto completion
-  (corfu-auto-prefix 1)            ; Enable auto completion
+  (corfu-auto-prefix 2)            ; Enable auto completion
   (corfu-auto-delay 0.0)           ; Enable auto completion
   (corfu-quit-at-boundary t)
   (corfu-echo-documentation t)     ; Enable auto documentation in the minibuffer
@@ -144,6 +225,9 @@
   (corfu-popupinfo-max-height 30)
   (corfu-popupinfo-delay nil)
 
+  ;; :custom-face
+  ;; (corfu-popupinfo ((t (:height 'unspecified))))
+
   :init
   ;; Need to recreate the map in order to preserve movement keys
   ;; Don't touch my movement keys!!
@@ -152,9 +236,9 @@
 	(let ((map (make-sparse-keymap)))
 	  (define-key map [remap completion-at-point] #'corfu-complete)
 	  (define-key map [remap keyboard-escape-quit] #'corfu-quit)
-	  (define-key map (kbd "C-g") #'corfu-quit)
-	  (define-key map [down] #'corfu-next)
-	  (define-key map [up] #'corfu-previous)
+	  (define-key map [remap keyboard-quit] #'corfu-quit)
+	  ;; (define-key map [down] #'corfu-next)
+	  ;; (define-key map [up] #'corfu-previous)
 	  (define-key map [tab] #'corfu-next)
 	  (define-key map [backtab] #'corfu-previous)
 	  (define-key map (kbd "TAB") #'corfu-next)
@@ -163,15 +247,25 @@
 	  ;; (define-key map (kbd "S-<return>") #'corfu-insert)
 	  (define-key map [return] #'corfu-insert)
 	  (define-key map (kbd "<return>") #'corfu-insert)
-	  (define-key map (kbd "M-l") #'corfu-info-location)
+	  (define-key map (kbd "M-.") #'corfu-info-location)
 	  (define-key map (kbd "M-SPC") #'corfu-insert-separator)
-	  ;; (define-key map [space] #'cory/corfu-insert-with-space)
-	  ;; (define-key map (kbd "SPC") #'cory/corfu-insert-with-space)
 	  map))
 
   (global-corfu-mode)
   (corfu-history-mode)
-  (corfu-popupinfo-mode))
+  (corfu-popupinfo-mode)
+
+  :config
+  ;; Fix corfu popup height
+  (set-face-attribute 'corfu-popupinfo nil :height 'unspecified)
+  ;; Enable Corfu completion for commands like M-: (eval-expression) or M-!
+  ;; (shell-command)
+  (defun corfu-enable-in-minibuffer ()
+    "Enable Corfu in the minibuffer if `completion-at-point' is bound."
+    (when (where-is-internal #'completion-at-point (list (current-local-map)))
+      ;; (setq-local corfu-auto nil) Enable/disable auto completion
+      (corfu-mode 1)))
+  (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer))
 
 ;; Completion at point extensions
 (use-package cape

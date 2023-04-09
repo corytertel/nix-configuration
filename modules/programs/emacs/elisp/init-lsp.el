@@ -99,7 +99,12 @@
          ("C-c C-a f" . lsp-format-buffer)
          ("C-c C-a g" . lsp-format-region)
          ("C-c C-a a" . lsp-execute-code-action)
-         ("C-c C-a r" . lsp-find-references))
+         ("C-c C-a r" . lsp-find-references)
+	 :map global-map
+	 ("C-h ." . cory/display-local-help)
+	 ("<help> ." . cory/display-local-help)
+	 :map help-map
+	 ("." . cory/display-local-help))
   :custom-face
   (lsp-headerline-breadcrumb-symbols-face                ((t (:inherit variable-pitch))))
   (lsp-headerline-breadcrumb-path-face                   ((t (:inherit variable-pitch))))
@@ -122,13 +127,21 @@
     (interactive)
     (unless (file-remote-p buffer-file-name)
       (lsp-deferred)
-      (company-mode -1))))
+      (company-mode -1)))
+
+  (defun cory/display-local-help ()
+    (interactive)
+    (if (lsp-mode)
+	(call-interactively #'lsp-describe-thing-at-point)
+      (call-interactively #'display-local-help))))
 
 (use-package lsp-ui
+  :after lsp-mode
   :commands (lsp-ui-mode)
   :custom-face
   (lsp-ui-sideline-global ((t (:italic t))))
   (lsp-ui-peek-highlight  ((t (:foreground unspecified :background unspecified :inherit isearch))))
+  (lsp-ui-doc-background  ((t (:background "#f0f0f0"))))
   :hook (lsp-mode . lsp-ui-mode)
   :bind (:map lsp-mode-map
          ("M-?" . lsp-ui-doc-toggle)

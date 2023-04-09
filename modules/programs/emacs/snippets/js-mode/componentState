@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: componentState
+# key: state
+# --
+this.state.$0

@@ -2,4 +2,4 @@
 # name: List
 # key: List
 # --
-List<${1:Object}> ${2:list} = new ${3:List}<>();$0
+List<${1:Object}>$0

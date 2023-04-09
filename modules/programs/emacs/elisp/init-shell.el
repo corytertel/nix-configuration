@@ -72,6 +72,10 @@ Else, go to the end of line ARG number of times."
       (cape-history t)
     (move-end-of-line arg)))
 
+(defun cory/eshell-insert-file-name ()
+  (interactive)
+  (insert (read-file-name "Dir: ")))
+
 ;; Keybinds
 (define-key eshell-mode-map (kbd "M-s") #'consult-history)
 (define-key eshell-mode-map (kbd "M-r") #'consult-history)
@@ -81,6 +85,7 @@ Else, go to the end of line ARG number of times."
 (define-key eshell-mode-map [remap move-end-of-line] #'cory/eshell-move-end-of-line-or-complete-from-history)
 (define-key eshell-mode-map [remap end-of-visual-line] #'cory/eshell-move-end-of-line-or-complete-from-history)
 (define-key eshell-mode-map (kbd "<end>") #'cory/eshell-move-end-of-line-or-complete-from-history)
+(define-key eshell-mode-map [remap find-file] #'cory/eshell-insert-file-name)
 
 (defun cory/configure-eshell ()
   "Eshell configuration that will run the first time eshell launches."

@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: reactStatelessFunction
+# key: rsf
+# --
+import React from 'react';
+
+function ${1:`(file-name-sans-extension (buffer-name))`}(props) {
+    return (
+        <div>
+
+        </div>
+    );
+}
+
+export default ${1:`(file-name-sans-extension (buffer-name))`};

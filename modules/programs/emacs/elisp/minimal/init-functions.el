@@ -176,3 +176,9 @@ Else, goto the end of the buffer."
         (newline)
         (indent-for-tab-command)))
     (indent-for-tab-command)))
+
+(defun cory/kill-from-start-of-line ()
+  (interactive)
+  (move-beginning-of-line nil)
+  (kill-line)
+  (indent-for-tab-command))

@@ -1,0 +1,20 @@
+# -*- mode: snippet -*-
+# name: reactMemoProps
+# key: rscpm
+# --
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
+
+const ${1:`(file-name-sans-extension (buffer-name))`} = memo((props) => {
+    return (
+        <div>
+
+        </div>
+    );
+});
+
+${1:`(file-name-sans-extension (buffer-name))`}.propTypes = {
+    $0
+};
+
+export default ${1:`(file-name-sans-extension (buffer-name))`};

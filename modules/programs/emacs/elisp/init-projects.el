@@ -1,5 +1,29 @@
 ;; Project Management
-(use-package project)
+(use-package project
+  :custom
+  (project-vc-extra-root-markers
+   '(".project" "Cargo.toml" "compile_commands.json" "compile_flags.txt"
+     "project.clj" ".git" "gradlew" "pom.xml"))
+  :config
+  (defcustom cory/project-root-markers
+    '("Cargo.toml" "compile_commands.json" "compile_flags.txt"
+      "project.clj" ".git" "gradlew" "pom.xml")
+    "Files or directories that indicate the root of a project."
+    :type '(repeat string)
+    :group 'project)
+
+  (defun cory/project-root-p (path)
+    "Check if the current PATH has any of the project root markers."
+    (catch 'found
+      (dolist (marker cory/project-root-markers)
+	(when (file-exists-p (concat path marker))
+          (throw 'found marker)))))
+
+  (defun cory/project-find-root (path)
+    "Search up the PATH for `cory/project-root-markers'."
+    (when-let ((root (locate-dominating-file path #'cory/project-root-p)))
+      (cons 'transient (expand-file-name root))))
+  (add-to-list 'project-find-functions #'cory/project-find-root))
 
 ;; Git Management
 (use-package magit

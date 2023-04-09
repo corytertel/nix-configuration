@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: componentDidCatch
+# key: cdc
+# --
+componentDidCatch(error, info) {
+    $0
+}

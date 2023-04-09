@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: propTypeOneOfTypeRequired
+# key: ptetr
+# --
+PropTypes.oneOfType([
+    $0
+]).isRequired,

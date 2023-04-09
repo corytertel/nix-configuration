@@ -3,5 +3,5 @@
 # key: foreach
 # --
 for (${1:String} ${2:name} : ${4:iterable}) {
-$0
+  $0
 }

@@ -3,7 +3,9 @@
 # key: trycf
 # --
 try {
-    $0
-} catch (${1:Exception} ${2:ex}) {
+  $0
+} catch (${1:Exception} ${2:e}) {
+
 } finally {
+
 }

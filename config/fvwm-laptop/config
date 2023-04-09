@@ -67,6 +67,8 @@ CursorStyle RIGHT_EDGE    left_ptr
 CursorStyle BOTTOM_EDGE   left_ptr
 CursorStyle LEFT_EDGE     left_ptr
 
+SetEnv DIR Next
+
 ###########
 # 1: Functions
 #
@@ -106,6 +108,7 @@ AddToFunc InitFunction
 + I Exec exec touchegg --client
 + I Exec exec conky
 + I Exec exec nm-applet
++ I Exec exec blueman-applet
 # + I Exec exec pasystray
 + I Exec exec mate-volume-control-status-icon
 + I Exec exec cbatticon
@@ -194,21 +197,24 @@ AddToFunc SetVolume
 # This function increases the volume.
 DestroyFunc IncVolume
 AddToFunc IncVolume
-+ I Exec exec amixer -q set Master unmute 2%+
+# + I Exec exec amixer -q set Master unmute 2%+
++ I Exec $[fvwm_scripts]/vol up
 
 # Function: DecVolume
 #
 # This function decreases the volume.
 DestroyFunc DecVolume
 AddToFunc DecVolume
-+ I Exec exec amixer -q set Master unmute 2%-
+# + I Exec exec amixer -q set Master unmute 2%-
++ I Exec $[fvwm_scripts]/vol down
 
 # Function: ToggleMute
 #
 # This function toggles volume mute.
 DestroyFunc ToggleMute
 AddToFunc ToggleMute
-+ I Exec exec amixer -q set Master toggle
+# + I Exec exec amixer -q set Master toggle
++ I Exec $[fvwm_scripts]/vol mute
 
 # Function: Tile $0 $1 $2 $3
 #
@@ -216,7 +222,9 @@ AddToFunc ToggleMute
 DestroyFunc Tile
 AddToFunc Tile
 + I ThisWindow (Maximized) Maximize toggle
++ I TestRc (Match) WindowStyle Borders, Colorset 1, HilightColorset 2, UseDecor WindowDecor
 + I TestRc (Match) Break
++ I TestRc (!Match) WindowStyle !Borders, Colorset 15, HilightColorset 15, UseDecor FullScreenDecor
 + I Maximize Forget
 + I Raise
 + I Maximize $0 $1
@@ -225,7 +233,7 @@ AddToFunc Tile
 
 # Function: WindowListFunc
 #
-# Redefinition of WindowListFunc. 
+# Redefinition of WindowListFunc.
 # Puts cursor in bottom right of newly focused window.
 DestroyFunc WindowListFunc
 AddToFunc   WindowListFunc
@@ -259,8 +267,10 @@ AddToFunc   AutoRaise
 # Fullscreens the focused app.
 DestroyFunc FullScreen
 AddToFunc   FullScreen
-+ I ThisWindow (Maximized) WindowStyle Title, Borders
-+ I TestRc (!Match) WindowStyle !Title, !Borders
+# + I ThisWindow (Maximized) WindowStyle Title, Borders
++ I ThisWindow (Maximized) WindowStyle Borders, Colorset 1, HilightColorset 2, UseDecor WindowDecor
+# + I TestRc (!Match) WindowStyle !Title, !Borders
++ I TestRc (!Match) WindowStyle !Borders, Colorset 15, HilightColorset 15, UseDecor FullScreenDecor
 + I TestRc (!Match) Raise
 + I TestRc (!Match) UpdateStyles
 + I Maximize 100 100
@@ -273,10 +283,35 @@ AddToFunc   WindowScreenshot
 +I Exec xwd -silent -id "$[w.id]" -out "$(date '+%Y-%m-%d_%H-%M')"
 
 # Function: MoveAndGotoPage
+#
+# Sends the current window to the selected page follows it there.
 DestroyFunc MoveAndGotoPage
 AddToFunc   MoveAndGotoPage
 + I MoveToPage wrapx wrapy $0 $1
 + I GotoPage wrapx wrapy $0 $1
+
+# Function: ToggleStaysOnTop
+#
+#
+DestroyFunc ToggleStaysOnTop
+AddToFunc   ToggleStaysOnTop
++ I ThisWindow (Layer 6) Pick (CirculateHit) Layer 0 4
++ I TestRc (!Match) Pick (CirculateHit) Layer 0 6
+
+DestroyFunc FocusRaiseAndStuff
+AddToFunc   FocusRaiseAndStuff
++ I Iconify off
++ I Focus
++ I Raise
+
+DestroyFunc SwitchWindow
+AddToFunc   SwitchWindow
++ I $[DIR] (CurrentDesk, !Iconic, !Sticky) FocusRaiseAndStuff
++ I Deschedule 134000
++ I PipeRead `[ "$[DIR]" == "Prev" ] && \
+echo 'SetEnv NDIR Next' || \
+echo 'SetEnv NDIR Prev'`
++ I Schedule 1 134000 SetEnv DIR $[NDIR]
 
 #############
 # 2: Styles #
@@ -285,7 +320,7 @@ AddToFunc   MoveAndGotoPage
 # Desktops and Pages
 #
 # Fvwm has both Virtual Desktops and Pages. Each Desktop is built from
-# a grid of Pages. The following divides each Desktop into a 3x3 grid 
+# a grid of Pages. The following divides each Desktop into a 3x3 grid
 # of Pages that are positioned as
 #
 #   +---+---+---+
@@ -306,7 +341,7 @@ DesktopSize 3x3
 #
 # Set EdgeScroll 0 0 and/or EdgeResistance -1 to disable.
 EdgeScroll 100 100 wrap
-EdgeResistance 150
+EdgeResistance 350
 EdgeThickness 1
 Style * EdgeMoveDelay 350, EdgeMoveResistance 350
 
@@ -326,7 +361,7 @@ Style * SloppyFocus, MouseFocusClickRaises
 Module FvwmAuto 1000 "Silent AutoRaise"
 
 # Default Font
-DefaultFont "xft:Oxygen-Sans:size=11:antialias=True"
+DefaultFont "xft:JuliaMono:size=11:antialias=True"
 
 # Window Placement
 # Style * MinOverlapPlacement, GrabFocusOff, !UsePPosition
@@ -350,6 +385,7 @@ Style * WindowShadeScrolls, WindowShadeSteps 10
 IgnoreModifiers L25
 
 # Decor Styles
+Style * UseDecor WindowDecor
 Style * BorderWidth 3, HandleWidth 3, MWMButtons, FvwmBorder, FirmBorder
 Style * Colorset 1, HilightColorset 2
 Style * BorderColorset 3, HilightBorderColorset 4
@@ -376,9 +412,11 @@ Style RightPanel !Title, !Borders, !Handles, Sticky, \
                  WindowListSkip, NeverFocus
 Style ConfirmQuit !Title, PositionPlacement Center, WindowListSkip, Layer 6
 Style FvwmIdent WindowListSkip
-Style DesktopEditors NoTitle, !Borders, !Handles,
+Style DesktopEditors NoTitle, !Borders, !Handles
 Style Steam NoTitle, !Borders, !Handles
-Style emacs-run-launcher NoTitle, !Borders, !Handles,
+# Style firefox NoTitle, !Borders, !Handles
+# Style emacs NoTitle, !Borders, !Handles
+Style emacs-run-launcher NoTitle, !Borders, !Handles
 Style Conky NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
 
@@ -409,12 +447,13 @@ BusyCursor 	DynamicMenu True, Read True, Wait True
 #   7 - Menu - Grayed Item
 #   8 - Menu - Title
 #   9 - Reserved
-#  10+ Modules
+#  10-14 - Modules
 #      10 - Module Default
 #      11 - Module Hilight
 #      12 - Module ActiveButton (Mouse Hover)
 #      13 - FvwmPager Active Page
 #      14 - FvwmIconMan Iconified Button
+#  15 - Fullscreen Window
 ###########
 Colorset 0  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
 Colorset 1  fg #83aad8, bg #e0dfde, hi, sh, Plain, NoShape
@@ -432,6 +471,7 @@ Colorset 11 fg #141404, bg #c0daff, hi #ffffff, sh #ffffff, Plain, NoShape
 Colorset 12 fg #2d2d2d, bg #ffffff, hi, sh, Plain, NoShape
 Colorset 13 fg #141404, bg #c0daff, hi, sh, Plain, NoShape
 Colorset 14 fg #999999, bg #2a2a2a, hi #aaaaaa, sh #999999, Plain, NoShape
+Colorset 15 fg #141404, bg #ffffff, hi, sh, Plain, NoShape
 
 #######
 # 4: Menus
@@ -440,7 +480,7 @@ MenuStyle * MenuColorset 5, ActiveColorset 6, GreyedColorset 7, TitleColorset 8
 MenuStyle * Hilight3DOff, HilightBack, HilightTitleBack, SeparatorsLong
 MenuStyle * TrianglesSolid, TrianglesUseFore
 MenuStyle * ItemFormat "%|%8.0i%24.24l%10.4>%|"
-MenuStyle * Font "xft:Oxygen-Sans:size=11:antialias=True"
+MenuStyle * Font "xft:JuliaMono:size=11:antialias=True"
 
 MenuStyle * PopupDelayed, PopupDelay 300, PopdownImmediately
 MenuStyle * PopupOffset -5 100, TitleWarpOff
@@ -487,11 +527,12 @@ Test (f /home/cory/.local/share/Trash/files) + "Trash%$[fvwm_icon]/places/32x32/
 # This menu controls system functions.
 DestroyMenu MenuSystem
 AddToMenu   MenuSystem
-+ "Keyboard%$[fvwm_icon]/devices/32x32/input-keyboard.png%" Popup MenuKeyboard
++ "Keyboard Layout%$[fvwm_icon]/preferences/32x32/preferences-desktop-keyboard.png%" Popup MenuKeyboard
 + "&Wallpapers%$[fvwm_icon]/actions/32x32/photo.png%" Popup BGMenu
 + "System Monitor%$[fvwm_icon]/apps/32x32/utilities-system-monitor.png%" Exec mate-system-monitor
 + "Volume Control%$[fvwm_icon]/preferences/32x32/preferences-desktop-sound.png%" Exec mate-volume-control
-+ "Wi-Fi Settings%$[fvwm_icon]/categories/32x32/applications-internet.png%" Exec nm-connection-editor
++ "Wi-Fi Settings%$[fvwm_icon]/preferences/32x32/preferences-system-network.png%" Exec nm-connection-editor
++ "Bluetooth Settings%$[fvwm_icon]/preferences/32x32/preferences-system-bluetooth.png%" Exec blueman-manager
 + "" Nop
 + "Re&fresh FVWM%$[fvwm_icon]/actions/32x32/view-refresh.png%" Refresh
 + "&Restart FVWM%$[fvwm_icon]/actions/32x32/system-reboot.png%" Restart
@@ -515,39 +556,39 @@ DestroyMenu MenuWindowOps
 AddToMenu   MenuWindowOps
 + "Send To"                                                  Popup MenuSendToPage
 + "Center%$[fvwm_icon]/actions/32x32/window.png%"            AnimatedMove 50-50w 50-50w
-+ "Maximize%$[fvwm_icon]/actions/32x32/window-maximize.png%" Maximize
++ "Maximize%$[fvwm_icon]/actions/32x32/window-maximize.png%" FullScreen
 + "Tile%$[fvwm_icon]/actions/32x32/window.png%"              Popup MenuTile
-+ "Always On Top%$[fvwm_icon]/actions/32x32/window.png%"     Pick (CirculateHit) Layer 0 6
++ "Pin%$[fvwm_icon]/actions/32x32/window.png%"               Stick
 + "Take Screenshot%$[fvwm_icon]/actions/32x32/window.png%"   WindowScreenshot
 + "More Actions"                                             Popup MenuWindowOpsLong
 + "Close%$[fvwm_icon]/actions/32x32/window-close.png%"       Close
 
 DestroyMenu MenuWindowOpsLong
 AddToMenu   MenuWindowOpsLong
-+ "Move%$[fvwm_icon]/actions/32x32/transform-move.png%"                Move
-+ "Resize%$[fvwm_icon]/actions/32x32/transform-scale.png%"              Resize
++ "Move%$[fvwm_icon]/actions/32x32/transform-move.png%"      Move
++ "Resize%$[fvwm_icon]/actions/32x32/transform-scale.png%"   Resize
 + "" Nop
-+ "Shade%$[fvwm_icon]/actions/32x32/window.png%"               WindowShade
-+ "Stick%$[fvwm_icon]/actions/32x32/window.png%"	        Stick
-+ "Toggle Titlebar%$[fvwm_icon]/actions/32x32/window.png%"      Pick (CirculateHit) ToggleTitle
++ "Shade%$[fvwm_icon]/actions/32x32/window.png%"             WindowShade
++ "Pin%$[fvwm_icon]/actions/32x32/window.png%"	             Stick
++ "Toggle Titlebar%$[fvwm_icon]/actions/32x32/window.png%"   Pick (CirculateHit) ToggleTitle
 + "" Nop
-+ "Close%$[fvwm_icon]/actions/32x32/window-close.png%"               Close
-+ "Destroy%$[fvwm_icon]/actions/32x32/window-close.png%"             Destroy
++ "Close%$[fvwm_icon]/actions/32x32/window-close.png%"       Close
++ "Destroy%$[fvwm_icon]/actions/32x32/window-close.png%"     Destroy
 + "" Nop
-+ "Raise%$[fvwm_icon]/actions/32x32/window.png%"		Raise
-+ "Lower%$[fvwm_icon]/actions/32x32/window.png%"		Lower
++ "Raise%$[fvwm_icon]/actions/32x32/window.png%"             Raise
++ "Lower%$[fvwm_icon]/actions/32x32/window.png%"             Lower
 + "" Nop
-+ "StaysOnTop%$[fvwm_icon]/actions/32x32/window.png%"          Pick (CirculateHit) Layer 0 6
-+ "StaysPut%$[fvwm_icon]/actions/32x32/window.png%"            Pick (CirculateHit) Layer 0 4
-+ "StaysOnBottom%$[fvwm_icon]/actions/32x32/window.png%"       Pick (CirculateHit) Layer 0 2
++ "StaysOnTop%$[fvwm_icon]/actions/32x32/window.png%"        ToggleStaysOnTop
++ "StaysPut%$[fvwm_icon]/actions/32x32/window.png%"          Pick (CirculateHit) Layer 0 4
++ "StaysOnBottom%$[fvwm_icon]/actions/32x32/window.png%"     Pick (CirculateHit) Layer 0 2
 + "" Nop
-+ "Identify%$[fvwm_icon]/actions/32x32/help-whatsthis.png%"            Module FvwmIdent
++ "Identify%$[fvwm_icon]/actions/32x32/help-whatsthis.png%"  Module FvwmIdent
 
 DestroyMenu MenuIconOps
 AddToMenu   MenuIconOps
-+ "(Un)Maximize"        Maximize
++ "(Un)Maximize"        FullScreen
 + "(Un)Shade"           WindowShade
-+ "(Un)Sticky"		Stick
++ "(Un)Pin"		Stick
 + "(No)TitleBar"	Pick (CirculateHit) ToggleTitle
 + "Send To"             Popup MenuSendToPage
 + "" Nop
@@ -557,7 +598,7 @@ AddToMenu   MenuIconOps
 + "Raise"		Raise
 + "Lower"		Lower
 + "" Nop
-+ "StaysOnTop"          Pick (CirculateHit) Layer 0 6
++ "StaysOnTop"          ToggleStaysOnTop
 + "StaysPut"            Pick (CirculateHit) Layer 0 4
 + "StaysOnBottom"       Pick (CirculateHit) Layer 0 2
 + "" Nop
@@ -676,27 +717,41 @@ AddToMenu   MenuKeyboard
 Silent Key F1 A M Menu MenuFvwmRoot
 Silent Key Menu A A Menu MenuFvwmRoot
 # Silent Key Tab A M WindowList Root c c NoDeskSort, SelectOnRelease Meta_L
+# Silent Key Tab A M WindowList CurrentAtEnd
+Silent Key Tab A M WindowList Root c c NoDeskSort CurrentAtEnd, SelectOnRelease Meta_L
+# Silent Key Tab A M SwitchWindow
 # Silent Key Super_L A A Exec $[fvwm_launch]
 # Silent Key Super_R A A Exec $[fvwm_launch]
+
 # Xah Keybinds
 # F1: reserved, commonly used key
 # F2: reserved, universal key (rename)
 # F3: reserved, commonly used key
 # F4: reserved, commonly used key
 Silent Key F5 A N Next ($[w.class]) FocusWindow
-Silent Key F6 A N Prev (AcceptsFocus) FocusWindow
+# Silent Key F6 A N Prev (AcceptsFocus) FocusWindow
+Silent Key F6 A N WindowList Root c c NoDeskSort CurrentAtEnd, SelectOnRelease F6
+# Silent Key F6 A N SwitchWindow
 Silent Key F7 A N FullScreen
 Silent Key F8 A N Close
 Silent Key F9 A N Next ("emacs") FocusWindow
 Silent Key F10 A N Next ("firefox|chromium-browser") FocusWindow
 Silent Key F11 A N Next ("kitty") FocusWindow
-# Silent Key F11 A N Exec emacsclient -n -e '(yequake-toggle "eshell")'
 Silent Key F12 A N Exec exec "$[fvwm_scripts]/layout-switch"
 Silent Key Scroll_Lock A N Next ("discord|telegram-desktop") FocusWindow
 # Pause: bound through discord to toggle mic mute
 
-# Emacs Everywhere
-Silent Key Insert A N Exec exec emacsclient --eval "(emacs-everywhere)"
+# Silent Key 1 A 4 Next ("emacs") FocusWindow
+# Silent Key 2 A 4 Next ("firefox|chromium-browser") FocusWindow
+# Silent Key 3 A 4 Next ("kitty") FocusWindow
+# Silent Key 4 A 4 Next ("discord|telegram-desktop") FocusWindow
+# Silent Key 5 A 4 Next ($[w.class]) FocusWindow
+# Silent Key 6 A 4 SwitchWindow
+# Silent Key 7 A 4 FullScreen
+# Silent Key 8 A 4 Close
+# Silent Key space A 4 Exec exec "$[fvwm_scripts]/layout-switch"
+
+# Pause: bound through discord to toggle mic mute
 
 # Audio Controls
 Silent Key XF86AudioLowerVolume A A DecVolume
@@ -708,29 +763,54 @@ Silent Key XF86AudioPlay A A Exec exec $[fvwm_music_player] --play-pause
 Silent Key XF86AudioStop A A Exec exec $[fvwm_music_player] --stop
 
 # Screenshot
-Silent Key Print A N Exec exec flameshot gui
 Silent Key Print A S Exec exec flameshot full -p ~/Pictures/Screenshots
+Silent Key Print A 4 Exec exec flameshot gui
+Silent Key Print A N Exec exec flameshot launcher
 
 # Brightness Buttons
 Silent Key XF86MonBrightnessUp A A Exec exec xbrightness +2500
 Silent Key XF86MonBrightnessDown A A Exec exec xbrightness -2500
 
-# Workspaces
-Silent Key Up       A    4        GotoPage wrapx wrapy 0p -1p
-Silent Key Down     A    4        GotoPage wrapx wrapy 0p +1p
-Silent Key Left     A    4        GotoPage wrapx wrapy -1p 0p
-Silent Key Right    A    4        GotoPage wrapx wrapy +1p 0p
-       
 # Desktop Controls
-Silent Key Up       A    S4       MoveAndGotoPage 0p -1p
-Silent Key Down     A    S4       MoveAndGotoPage 0p +1p
-Silent Key Left     A    S4       MoveAndGotoPage -1p 0p
-Silent Key Right    A    S4       MoveAndGotoPage +1p 0p
+Silent Key Up       A    4C       GotoPage wrapx wrapy 0p -1p
+Silent Key Down     A    4C       GotoPage wrapx wrapy 0p +1p
+Silent Key Left     A    4C       GotoPage wrapx wrapy -1p 0p
+Silent Key Right    A    4C       GotoPage wrapx wrapy +1p 0p
+Silent Key Up       A    4M       MoveAndGotoPage 0p -1p
+Silent Key Down     A    4M       MoveAndGotoPage 0p +1p
+Silent Key Left     A    4M       MoveAndGotoPage -1p 0p
+Silent Key Right    A    4M       MoveAndGotoPage +1p 0p
 Silent Key Tab      A    4        GotoPage prev
+# Silent Key F1       A    4        GotoPage 0 0
+# Silent Key F2       A    4        GotoPage 1 0
+# Silent Key F3       A    4        GotoPage 2 0
+# Silent Key F4       A    4        GotoPage 0 1
+# Silent Key F5       A    4        GotoPage 1 1
+# Silent Key F6       A    4        GotoPage 2 1
+# Silent Key F7       A    4        GotoPage 0 2
+# Silent Key F8       A    4        GotoPage 1 2
+# Silent Key F9       A    4        GotoPage 2 2
 
 # Window Switching
-Silent Key Next  A 4 Next (AcceptsFocus, CurrentPage) FocusWindow
-Silent Key Prior A 4 Prev (AcceptsFocus, CurrentPage) FocusWindow
+# TODO alt-tab behavior
+# Silent Key Next     A    4        Next (AcceptsFocus, CurrentPage) FocusWindow
+# Silent Key Prior    A    4        Prev (AcceptsFocus, CurrentPage) FocusWindow
+Silent Key Next     A    4        FullScreen
+Silent Key Prior    A    4        Next (AcceptsFocus, CurrentPage) FocusWindow
+
+# Tiling
+Silent Key Up       A    4        Tile 100 50 +0 +0
+Silent Key Down     A    4        Tile 100 50 +0 -0
+Silent Key Left     A    4        Tile 50 100 +0 +0
+Silent Key Right    A    4        Tile 50 100 -0 +0
+
+# Open File Manager
+Silent Key e        A    4        Exec exec $[fvwm_file_manager] --browser "/home/cory"
+# Show System Activity
+Silent Key Escape   A    4        Exec exec mate-system-monitor --show-processes-tab
+# Switch to Next Keyboard Layout
+Silent Key k        A    4M       Exec exec "$[fvwm_scripts]/layout-switch"
+# Sw
 
 # Arrow keys
 # Silent Key i A C Exec xdotool key --clearmodifiers Up
@@ -739,9 +819,9 @@ Silent Key Prior A 4 Prev (AcceptsFocus, CurrentPage) FocusWindow
 # Silent Key l A C Exec xdotool key --clearmodifiers Right
 
 # Window Buttons: [1 3 5 7 9  TTTTT  0 8 6 4 2]
-#   1 - Stick (pin)
-#   2 - Close on single click, Destory on double click.
-Mouse 1 1 A Stick
+#   1 - Always On Top (pin)
+#   2 - Close on single click, Destroy on double click.
+Mouse 1 1 A ToggleStaysOnTop
 Mouse 1 2 A Close
 
 #   TitleBar: Click to Raise, Move, Double Click to Maximize
@@ -798,23 +878,45 @@ Mouse 2 T    A AnimatedMove 50-50w 50-50w
 # ButtonStyle 4 - MwmDecorMax
 # ButtonStyle 6 - MwmDecorMin
 
-TitleStyle Centered Height 40 -- Flat
-ButtonStyle 1 \
-      ActiveUp          (Pixmap $[fvwm_img]/button/stick-activeup.png -- Flat) \
-      ActiveDown        (Pixmap $[fvwm_img]/button/stick-activedown.png -- Flat) \
-      Inactive          (Pixmap $[fvwm_img]/button/stick-inactive.png -- Flat) \
-      ToggledActiveUp   (Pixmap $[fvwm_img]/button/stick-activedown.png -- Flat) \
-      ToggledActiveDown (Pixmap $[fvwm_img]/button/stick-activeup.png -- Flat) \
-      ToggledInactive   (Pixmap $[fvwm_img]/button/stick-inactivedown.png -- Flat)
-ButtonStyle 2 \
-      ActiveUp          (Pixmap $[fvwm_img]/button/close-activeup.png -- Flat) \
-      ActiveDown        (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat) \
-      Inactive          (Pixmap $[fvwm_img]/button/close-inactive.png -- Flat)
-ButtonStyle All - Clear
-ButtonStyle 1 - MwmDecorStick
-TitleStyle -- Flat
-BorderStyle Simple -- HiddenHandles NoInset Flat
-ButtonStyle All -- UseTitleStyle
+DestroyDecor WindowDecor
+AddToDecor   WindowDecor
++ TitleStyle Centered Height 40 -- Flat
++ ButtonStyle 1 \
+        ActiveUp          (Pixmap $[fvwm_img]/button/stick-activeup.png -- Flat) \
+        ActiveDown        (Pixmap $[fvwm_img]/button/stick-activedown.png -- Flat) \
+        Inactive          (Pixmap $[fvwm_img]/button/stick-inactive.png -- Flat) \
+        ToggledActiveUp   (Pixmap $[fvwm_img]/button/stick-activedown.png -- Flat) \
+        ToggledActiveDown (Pixmap $[fvwm_img]/button/stick-activeup.png -- Flat) \
+        ToggledInactive   (Pixmap $[fvwm_img]/button/stick-inactivedown.png -- Flat)
++ ButtonStyle 2 \
+        ActiveUp          (Pixmap $[fvwm_img]/button/close-activeup.png -- Flat) \
+        ActiveDown        (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat) \
+        Inactive          (Pixmap $[fvwm_img]/button/close-inactive.png -- Flat)
++ ButtonStyle All - Clear
++ ButtonStyle 1 - MwmDecorStick
++ TitleStyle -- Flat
++ BorderStyle Simple -- HiddenHandles NoInset Flat
++ ButtonStyle All -- UseTitleStyle
+
+DestroyDecor FullScreenDecor
+AddToDecor   FullScreenDecor
++ TitleStyle Centered Height 40 -- Flat
++ ButtonStyle 1 \
+        ActiveUp          (Pixmap $[fvwm_img]/button/stick-fullscreenup.png -- Flat) \
+        ActiveDown        (Pixmap $[fvwm_img]/button/stick-fullscreendown.png -- Flat) \
+        Inactive          (Pixmap $[fvwm_img]/button/stick-fullscreenup.png -- Flat) \
+        ToggledActiveUp   (Pixmap $[fvwm_img]/button/stick-fullscreendown.png -- Flat) \
+        ToggledActiveDown (Pixmap $[fvwm_img]/button/stick-fullscreenup.png -- Flat) \
+        ToggledInactive   (Pixmap $[fvwm_img]/button/stick-fullscreendown.png -- Flat)
++ ButtonStyle 2 \
+        ActiveUp          (Pixmap $[fvwm_img]/button/close-fullscreenup.png -- Flat) \
+        ActiveDown        (Pixmap $[fvwm_img]/button/close-fullscreendown.png -- Flat) \
+        Inactive          (Pixmap $[fvwm_img]/button/close-fullscreenup.png -- Flat)
++ ButtonStyle All - Clear
++ ButtonStyle 1 - MwmDecorStick
++ TitleStyle -- Flat
++ BorderStyle Simple -- HiddenHandles NoInset Flat
++ ButtonStyle All -- UseTitleStyle
 
 ############
 # 7: Modules
@@ -826,7 +928,7 @@ ButtonStyle All -- UseTitleStyle
 # a window. One use is getting the class/resource/name of a window.
 DestroyModuleConfig FvwmIdent:*
 *FvwmIdent: Colorset 10
-*FvwmIdent: Font "xft:Oxygen-Sans:size=13:antialias=True"
+*FvwmIdent: Font "xft:JuliaMono:size=13:antialias=True"
 
 # FvwmScript
 #
@@ -838,7 +940,7 @@ DestroyModuleConfig FvwmIdent:*
 #     quitting fvwm.
 DestroyModuleConfig FvwmScript:*
 *FvwmScript: DefaultColorset 10
-*FvwmScript: Font "xft:Oxygen-Sans:size=13"
+*FvwmScript: Font "xft:JuliaMono:size=13"
 
 # FvwmButtons - RightPanel
 #
@@ -854,7 +956,7 @@ DestroyModuleConfig RightPanel:*
 *RightPanel: Rows 380
 *RightPanel: Columns 120
 *RightPanel: Frame 0
-*RightPanel: Font "xft:Oxygen-Sans:size=13:antialias=True"
+*RightPanel: Font "xft:JuliaMono:size=13:antialias=True"
 *RightPanel: (120x200, Icon "$[fvwm_img]/nixos-logo.png", Frame 0)
 *RightPanel: (120x5, Frame 0)
 *RightPanel: (5x120, Frame 0)
@@ -878,7 +980,7 @@ DestroyModuleConfig FvwmPager:*
 *FvwmPager: WindowColorsets 10 11
 *FvwmPager: Font None
 *FvwmPager: Balloons All
-*FvwmPager: BalloonFont "xft:Oxygen-Sans:size=11:antialias=True"
+*FvwmPager: BalloonFont "xft:JuliaMono:size=11:antialias=True"
 *FvwmPager: BallonYOffset +2
 # *FvwmPager: Window3dBorders
 *FvwmPager: MiniIcons
@@ -903,7 +1005,7 @@ DestroyModuleConfig FvwmIconMan:*
 *FvwmIconMan: DrawIcons always
 *FvwmIconMan: ReliefThickness 0
 *FvwmIconMan: Format "%t"
-*FvwmIconMan: Font "xft:Oxygen-Sans:size=11:antialias=True"
+*FvwmIconMan: Font "xft:JuliaMono:size=11:antialias=True"
 *FvwmIconMan: Action Mouse 0 A ret
 *FvwmIconMan: Action Mouse 1 A sendcommand IconManClick
 *FvwmIconMan: Action Mouse 3 A sendcommand "Menu MenuIconOps"
@@ -927,9 +1029,3 @@ DestroyModuleConfig EventNewDesk:*
 # This sets the default colorsets.
 *FvwmFormDefault: Colorset 10
 *FvwmFormDefault: ItemColorset 13
-
-
-
-
-
-

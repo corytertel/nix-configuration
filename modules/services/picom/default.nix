@@ -55,10 +55,10 @@ in {
         shadow-opacity = 0.80;
         shadow-offset-x = -20;
         shadow-offset-y = -10;
-        shadow-exclude = [
-          "class_g *?= 'FvwmButtons'"
-          "class_g *?= 'Conky'"
-        ];
+        # shadow-exclude = [
+        #   "class_g *?= 'FvwmButtons'"
+        #   "class_g *?= 'Conky'"
+        # ];
         clip-shadow-above  = [
           "class_g *?= 'FvwmButtons'"
           "class_g *?= 'Conky'"

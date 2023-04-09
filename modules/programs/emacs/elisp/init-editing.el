@@ -1,10 +1,65 @@
-(setq c-default-style '((java-mode . "java")
+;; Indentation
+(require 'cc-engine)
+(defun cory/c-lineup-methods (langelem)
+  (save-excursion
+    (back-to-indentation)
+    (when (eq ?. (char-after))
+      (let ((limit (c-langelem-pos langelem)) (depth 1))
+        (catch 'done
+          (while (and (c-syntactic-skip-backward "^?." limit t)
+		    (not (bobp)))
+            (backward-char)
+            (cond ((eq (char-after) ?.)
+                   ;; If we've found a second period, decrease depth.  If we've
+                   ;; reached zero, we've found the one we were looking for.
+                   (when (zerop (setq depth (1- depth)))
+                     (throw 'done (vector (current-column)))))
+                  ((or (eq ?: (char-before)) (eq ?? (char-before)))
+                   ;; Step over `..' operator.  We don't have to
+                   ;; handle `..' here but doing so saves an iteration.
+                   (if (eq (point) limit)
+		       (throw 'done nil)
+                     (goto-char (1- (point)))))
+                  ((setq depth (1+ depth))))))))))
+
+(c-add-style "cory/java"
+	     '("java"
+	       (c-basic-offset . 2)
+	       (c-offsets-alist
+		(arglist-intro . +)
+		(arglist-close . 0)
+		(case-label . +)
+		(statement-cont . (first cory/c-lineup-methods c-lineup-ternary-bodies ++)))))
+
+(setq c-default-style '((java-mode . "cory/java")
                         (awk-mode  . "awk")
                         (c++-mode  . "stroustrup")
                         (c-mode    . "stroustrup")
                         (other     . "gnu")))
 
-(electric-pair-mode 1)
+;; (electric-pair-mode 1)
+
+;;; C Mode Minimak binds
+(with-eval-after-load 'cc-mode
+  ;; (define-key c-mode-base-map (kbd "#") nil)
+  ;; (define-key c-mode-base-map (kbd "(") nil)
+  ;; (define-key c-mode-base-map (kbd ")") nil)
+  ;; (define-key c-mode-base-map (kbd "*") nil)
+  ;; (define-key c-mode-base-map (kbd ",") nil)
+  ;; (define-key c-mode-base-map (kbd "/") nil)
+  ;; (define-key c-mode-base-map (kbd ":") nil)
+  ;; (define-key c-mode-base-map (kbd ";") nil)
+  ;; (define-key c-mode-base-map (kbd "DEL") nil)
+  ;; (define-key c-mode-base-map (kbd "{") nil)
+  ;; (define-key c-mode-base-map (kbd "}") nil)
+  (define-key c-mode-base-map (kbd "C-M-a") nil)
+  (define-key c-mode-base-map (kbd "C-M-b") #'c-beginning-of-defun)
+  (define-key c-mode-base-map (kbd "C-M-e") nil)
+  (define-key c-mode-base-map (kbd "C-M-y") #'c-end-of-defun)
+  (define-key c-mode-base-map (kbd "C-c C-n") nil)
+  (define-key c-mode-base-map (kbd "C-c C-e") #'c-forward-conditional)
+  (define-key c-mode-base-map (kbd "C-c C-p") nil)
+  (define-key c-mode-base-map (kbd "C-c C-i") #'c-backward-conditional))
 
 ;; Undo
 (use-package undo-tree
@@ -68,7 +123,7 @@
 
 (use-package crux
   :bind (([(control return)] . crux-smart-open-line)
-         ([(control shift return)] . crux-smart-open-line-above)
+         ([(meta return)] . crux-smart-open-line-above)
 	 ("C-c u" . crux-view-url)
 	 ;; ("C-c e" . crux-eval-and-replace)
 	 ("C-c d" . crux-duplicate-current-line-or-region)
@@ -86,12 +141,12 @@
   (defun crux-kill-and-join-backward ()
     (interactive)
     (if (and (save-mark-and-excursion
-	    (let ((orig-point (point)))
-	      (move-beginning-of-line 1)
-	      (while (looking-at "[[:space:]\t]")
-		(forward-char 1))
-	      (= orig-point (point))))
-	  (not (eolp)))
+	     (let ((orig-point (point)))
+	       (move-beginning-of-line 1)
+	       (while (looking-at "[[:space:]\t]")
+		 (forward-char 1))
+	       (= orig-point (point))))
+	   (not (eolp)))
 	(delete-indentation)
       (kill-line 0)
       (indent-according-to-mode)))
@@ -105,17 +160,11 @@
 
 ;; better comment-dwim
 (use-package comment-dwim-2
-  :bind ([remap comment-dwim] . cory/comment-dwim)
-  :config
-  (defun cory/comment-dwim ()
-    (interactive)
-    (when (and transient-mark-mode mark-active (not (eq (mark) (point))))
-      (let ((region (buffer-substring-no-properties (mark) (point))))
-        (kill-ring-save nil nil region)))
-    (call-interactively #'comment-dwim-2)))
+  :bind ([remap comment-dwim] . comment-dwim-2))
 
 ;; Paredit
 (use-package paredit
+  :disabled t
   :ensure t
   :hook ((emacs-lisp-mode
 	  lisp-mode lisp-data-mode
@@ -174,6 +223,86 @@ enacts."
       (apply f args)))
   (advice-add 'paredit-semicolon :around #'cory/paredit-semicolon))
 
+(use-package smartparens
+  :after clojure-mode
+  :hook
+  ((prog-mode web-mode sgml-mode) . smartparens-mode)
+  ((emacs-lisp-mode lisp-mode scheme-mode clojure-mode) . smartparens-strict-mode)
+  :custom
+  (sp-navigate-consider-stringlike-sexp t)
+  (sp-autoskip-closing-pair 'always)
+  ;; Don't insert annoying colon after Python def
+  (sp-python-insert-colon-in-function-definitions nil)
+  :bind
+  (:map smartparens-mode-map
+   ("C-(" . sp-backward-slurp-sexp)
+   ("C-)" . sp-forward-slurp-sexp)
+   ("C-{" . sp-backward-barf-sexp)
+   ("C-}" . sp-forward-barf-sexp)
+   ("C-M-<left>" . sp-backward-slurp-sexp)
+   ("C-M-<right>" . sp-backward-barf-sexp)
+   ("C-<left>" . sp-forward-barf-sexp)
+   ("C-<right>" . sp-forward-slurp-sexp)
+   ("M-<down>" . sp-splice-sexp-killing-forward)
+   ("M-<up>" . sp-splice-sexp-killing-backward)
+   ("C-M-d" . sp-down-sexp)
+   ("C-M-e" . sp-up-sexp)
+   ("C-M-i" . sp-backward-down-sexp)
+   ("C-M-j" . sp-backward-sexp)
+   ("C-M-l" . sp-forward-sexp)
+   ("C-M-u" . sp-backward-up-sexp)
+   ("M-J" . sp-join-sexp)
+   ("M-S" . sp-split-sexp)
+   ("M-d" . sp-kill-word)
+   ("M-q" . sp-indent-defun)
+   ("M-r" . sp-raise-sexp)
+   ("M-s" . sp-splice-sexp)
+   :map emacs-lisp-mode-map
+   (";" . sp-comment)
+   :map scheme-mode-map
+   (";" . sp-comment)
+   :map lisp-mode-map
+   (";" . sp-comment)
+   :map clojure-mode-map
+   (";" . sp-comment))
+  :init
+  (require 'scheme)
+  (require 'smartparens-config)
+  :config
+  ;; Create keybindings to wrap symbol/region in pairs
+  (defun prelude-wrap-with (s)
+    "Create a wrapper function for smartparens using S."
+    `(lambda (&optional arg)
+       (interactive "P")
+       (sp-wrap-with-pair ,s)))
+  (define-key prog-mode-map (kbd "M-(") (prelude-wrap-with "("))
+  (define-key prog-mode-map (kbd "M-[") (prelude-wrap-with "["))
+  (define-key prog-mode-map (kbd "M-{") (prelude-wrap-with "{"))
+  (define-key prog-mode-map (kbd "M-\"") (prelude-wrap-with "\""))
+  (define-key prog-mode-map (kbd "M-'") (prelude-wrap-with "'"))
+  (define-key prog-mode-map (kbd "M-`") (prelude-wrap-with "`"))
+
+  ;; smart curly braces
+  (sp-pair "{" nil :post-handlers
+           '(((lambda (&rest _ignored)
+                (crux-smart-open-line-above)) "RET")))
+  (sp-pair "[" nil :post-handlers
+           '(((lambda (&rest _ignored)
+                (crux-smart-open-line-above)) "RET")))
+  (sp-pair "(" nil :post-handlers
+           '(((lambda (&rest _ignored)
+                (crux-smart-open-line-above)) "RET")))
+
+  ;; Don't include semicolon ; when slurping
+  (add-to-list 'sp-sexp-suffix '(java-mode regexp ""))
+  (add-to-list 'sp-sexp-suffix '(c-mode regexp ""))
+  (add-to-list 'sp-sexp-suffix '(c++-mode regexp ""))
+  (add-to-list 'sp-sexp-suffix '(nix-mode regexp ""))
+
+  ;; Rid of annoying highlight
+  (set-face-attribute 'sp-pair-overlay-face nil
+		      :inherit 'unspecified))
+
 ;; Smart-region: Smart region selection
 ;; Smart region guesses what you want to select by one command:
 ;; - If you call this command multiple times at the same position,
@@ -190,21 +319,18 @@ enacts."
   ;; C-SPC is smart-region
   :bind (([remap set-mark-command] . smart-region)))
 
-;; Personal custom multi-edit package
+;; Personal multi-edit package
 ;; Very similar to meow's beacon-mode
 (use-package macrursors
-  :custom
-  (macrursors-preapply-command
-   (lambda ()
-     (corfu-mode -1)))
-  (macrursors-postapply-command
-   (lambda ()
-     (corfu-mode 1)))
   :config
+  (add-hook 'macrursors-pre-finish-hook
+	    (lambda ()
+	      (corfu-mode -1)))
+  (add-hook 'macrursors-post-finish-hook
+	    (lambda ()
+	      (corfu-mode 1)))
   (define-prefix-command 'macrursors-mark-map)
-  (global-set-key (kbd "M-SPC") #'macrursors-grab)
-  (global-set-key (kbd "C-c SPC") #'macrursors-swap-grab)
-  (global-set-key (kbd "C-c S-SPC") #'macrursors-sync-grab)
+  (global-set-key (kbd "C-c SPC") #'macrursors-select)
   (global-set-key (kbd "C->") #'macrursors-mark-next-instance-of)
   (global-set-key (kbd "C-<") #'macrursors-mark-previous-instance-of)
   (global-set-key (kbd "C-;") 'macrursors-mark-map)
@@ -216,7 +342,10 @@ enacts."
   (define-key macrursors-mark-map (kbd "f") #'macrursors-mark-all-defuns)
   (define-key macrursors-mark-map (kbd "n") #'macrursors-mark-all-numbers)
   (define-key macrursors-mark-map (kbd ".") #'macrursors-mark-all-sentences)
-  (define-key macrursors-mark-map (kbd "r") #'macrursors-mark-all-lines))
+  (define-key macrursors-mark-map (kbd "r") #'macrursors-mark-all-lines)
+  (define-key isearch-mode-map (kbd "C-;") #'macrursors-mark-from-isearch)
+  (define-key isearch-mode-map (kbd "C->") #'macrursors-mark-next-from-isearch)
+  (define-key isearch-mode-map (kbd "C-<") #'macrursors-mark-previous-from-isearch))
 
 ;; Visual regex replacement
 (use-package visual-regexp

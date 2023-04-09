@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: useEffectUnMount
+# key: usfu
+# --
+useEffect(() => {
+$0 return () => {
+$0
+    }
+})

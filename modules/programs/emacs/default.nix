@@ -15,6 +15,7 @@ let
   + (builtins.readFile ./elisp/minimal/init-eww.el)
   + (builtins.readFile ./elisp/minimal/init-completion.el)
 
+  + (builtins.readFile ./elisp/init-help.el)
   + (builtins.readFile ./elisp/init-visuals.el)
 
   # Completion
@@ -31,7 +32,6 @@ let
   + (builtins.readFile ./elisp/init-ssh.el)
   + (builtins.readFile ./elisp/init-movement.el)
   + (builtins.readFile ./elisp/init-buffer.el)
-  + (builtins.readFile ./elisp/init-help.el)
 
   # Langs
   + (builtins.readFile ./elisp/init-clojure.el)
@@ -61,6 +61,9 @@ let
   # + (builtins.readFile ./elisp/eshell-undistract-me.el)
   + (builtins.readFile ./elisp/app-launcher.el)
 
+  # Repeat Maps (last)
+  + (builtins.readFile ./elisp/init-repeat-maps.el)
+
   + (if cfg.exwm then builtins.readFile ./exwm.el else "");
 
   init = pkgs.runCommand "default.el" {} ''
@@ -72,6 +75,7 @@ let
     init
     use-package
     vterm
+    hotfuzz
   ] ++ (if cfg.exwm then [ epkgs.exwm ] else []);
 
   emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
@@ -127,6 +131,8 @@ in {
 
     home-manager.users.cory.home.file = {
       ".emacs.d/themes/plain-light-theme.el".source = ./plain-light-theme.el;
+      ".emacs.d/tabs/tab-new.xpm".source = ./tab-new.xpm;
+      ".emacs.d/tabs/tab-close.xpm".source = ./tab-close.xpm;
       # ".emacs.d/themes/smart-mode-line-cory-theme.el".source = ./smart-mode-line-cory-theme.el;
       ".emacs.d/eshell/alias".source = ./alias;
       ".emacs.d/snippets" = {

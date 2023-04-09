@@ -60,7 +60,8 @@
     (dolist (bind '("C-c C-d d"
 		    "C-c C-d C-d"
 		    "C-c C-d i"
-		    "C-c C-d TAB"))
+		    "C-c C-d TAB"
+		    "C-h ."))
       (define-key
 	geiser-mode-map
 	(kbd bind)

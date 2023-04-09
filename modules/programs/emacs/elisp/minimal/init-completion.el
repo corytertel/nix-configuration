@@ -21,7 +21,7 @@
       completions-header-format (propertize "%s candidates:\n"
 					    'face 'shadow)
       completion-auto-help 'visual
-      ;; completions-max-height 16
+      completions-max-height 10
       completion-auto-wrap t)
 
 ;; Position and format of completions window
@@ -30,8 +30,9 @@
                (display-buffer-reuse-window display-buffer-at-bottom)
                (window-parameters . ((mode-line-format . none)))))
 
+;; Disabled for Vertico
 ;; Automatic popup when minibuffer starts
-(add-hook 'minibuffer-setup-hook #'minibuffer-completion-help)
+;; (add-hook 'minibuffer-setup-hook #'minibuffer-completion-help)
 
 ;; Disable newline with C-n in minibuffer
 (add-hook 'minibuffer-setup-hook
@@ -49,11 +50,35 @@
   (call-interactively #'minibuffer-complete)
   (call-interactively #'minibuffer-completion-help))
 
-(define-key minibuffer-local-completion-map
-  (kbd "TAB") #'cory/minibuffer-complete)
+(defun cory/switch-to-completions-beginning ()
+  (interactive)
+  (switch-to-completions))
+
+(defun cory/switch-to-completions-end ()
+  (interactive)
+  (switch-to-completions)
+  (previous-completion 1))
+
+;; TODO make minibuffer completion more intuitive
+
+;; Disabled for Vertico
+;; (define-key minibuffer-local-completion-map
+;;   (kbd "TAB") #'cory/minibuffer-complete)
 
 (define-key minibuffer-local-completion-map
   (kbd "DEL") #'cory/kill-dir-or-char)
+
+;; (define-key minibuffer-local-completion-map
+;;   (kbd "C-e") #'cory/switch-to-completions-beginning)
+
+;; (define-key minibuffer-local-completion-map
+;;   (kbd "<C-i>") #'cory/switch-to-completions-end)
+
+;; (define-key minibuffer-local-completion-map
+;;   (kbd "<down>") #'cory/switch-to-completions-beginning)
+
+;; (define-key minibuffer-local-completion-map
+;;   (kbd "<up>") #'cory/switch-to-completions-end)
 
 (define-key completion-list-mode-map
   [remap scroll-up-command] #'switch-to-minibuffer)

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: propTypeSymbol
+# key: ptsm
+# --
+PropTypes.symbol,

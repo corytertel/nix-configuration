@@ -50,9 +50,11 @@
 (aside-define-configuration messages
   (rx (or
        ;; Messages
+       "*Agenda Commands*"
        "*Async-native-compile-log*"
        "*Async Shell Command*"
        "*Backtrace*"
+       "*compilation*"
        "*Compile-Log*"
        "*Geiser Debug*"
        "*Messages*"
@@ -99,6 +101,7 @@
                  (seq bol (seq "*Help" (one-or-more nonl)))
 		 "*info*"
                  "*lingva*"
+		 "*lsp-help*"
                  "*Metahelp*"
                  (seq "*Shortdoc " (one-or-more nonl))
                  (seq "*sly-apropos" (one-or-more nonl))
@@ -137,7 +140,7 @@
   (display-line-numbers-mode -1))
 
 (aside-enable-configuration 'messages)
-(define-key global-map (kbd "C-S-m") 'aside-messages-dwim)
+(define-key global-map (kbd "M-m") 'aside-messages-dwim)
 (aside-enable-configuration 'context)
 (define-key global-map (kbd "C-S-p") 'aside-context-dwim)
 

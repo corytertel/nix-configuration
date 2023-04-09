@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: case ...: return ...;
+# key: case-return
+# --
+case $1:
+  return $0;

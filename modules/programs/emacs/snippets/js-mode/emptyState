@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: emptyState
+# key: est
+# --
+this.state = {
+    $1
+};

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: getter
+# key: getter
+# --
+public ${1:Object} get${2:$(upcase-initials yas-text)}() {
+  return $2;
+}$0

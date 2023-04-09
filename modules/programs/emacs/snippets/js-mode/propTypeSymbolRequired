@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: propTypeSymbolRequired
+# key: ptsmr
+# --
+PropTypes.symbol.isRequired,

@@ -66,22 +66,49 @@
 ;;
 
 ;; Setting the font
-(set-face-attribute 'default nil :family "Victor Mono" :height 100)
+(set-face-attribute 'default nil :family "JuliaMono" :height 100)
 ;; (set-face-attribute 'default nil :family "DejaVu Sans Mono" :height 100)
 ;; Set fixed pitch face
-(set-face-attribute 'fixed-pitch nil :family "Victor Mono" :height 100)
+(set-face-attribute 'fixed-pitch nil :family "JuliaMono" :height 100)
 ;; (set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono" :height 100)
 ;; Set variable pitch face
-(set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 110)
+(set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 120)
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
 
 ;; Italic comments
+;; (set-face-attribute 'font-lock-comment-face nil
+;; 		    :slant 'italic)
 (set-face-attribute 'font-lock-comment-face nil
-		    :slant 'italic)
+		    :foreground "dark red"
+		    :family "Liberation Serif"
+		    :height 110)
 
 ;; Icons
+(require 'icon)
+(declare-function icon-string "icons" (name))
+(declare-function iconp "icons" (object))
+(declare-function icons--register "icons")
+(unless (iconp 'cory/tab-bar-new)
+  (define-icon cory/tab-bar-new nil
+    `((image "/home/cory/.emacs.d/tabs/tab-new.xpm"
+             :margin ,tab-bar-button-margin
+             :ascent center)
+      (text " + "))
+    "Icon for creating a new tab."
+    :version "29.1"
+    :help-echo "New tab"))
+(unless (iconp 'cory/tab-bar-close)
+  (define-icon cory/tab-bar-close nil
+    `((image "/home/cory/.emacs.d/tabs/tab-close.xpm"
+             :margin ,tab-bar-button-margin
+             :ascent center)
+      (text " x"))
+    "Icon for closing the clicked tab."
+    :version "29.1"
+    :help-echo "Click to close tab"))
+
 (use-package all-the-icons
   :custom
   (all-the-icons-scale-factor 1.0)
@@ -104,15 +131,15 @@
 				  ("==>"   . #x21D2)
 				  ("<="       . "≤")
 				  (">="       . "≥")
-				  ("define"   . "≝")
-				  ("set!"     . "≐")
-				  ("set-car!" . "≔")
-				  ("set-cdr!" . "≕")
+				  ;; ("define"   . "≝")
+				  ;; ("set!"     . "≐")
+				  ;; ("set-car!" . "≔")
+				  ;; ("set-cdr!" . "≕")
 				  ("#t"       . "✓")
 				  ("#f"       . "✗")
 				  ("'()"      . "∅")
 				  ("null"     . "∅")
-				  ("if"       . "⁇")
+				  ;; ("if"       . "⁇")
 				  ("or"       . "∨")
 				  ("and"      . "∧")
 				  ("not"      . "¬")))
@@ -131,7 +158,7 @@
 				  ("t"        . "✓")
 				  ("'()"      . "∅")
 				  ("nil"      . "∅")
-				  ("if"       . "⁇")
+				  ;; ("if"       . "⁇")
 				  ("or"       . "∨")
 				  ("and"      . "∧")
 				  ("not"      . "¬")))
@@ -147,17 +174,17 @@
 
 ;; Basic theme settings
 (set-face-attribute 'mode-line nil
-		    :foreground "#141404"
+    		    :foreground "#141404"
 		    :background "#c0daff"
-		    :box nil
+		    ;; :box '(:line-width 4 :color "#c0daff" :style nil)
 		    :underline "#3647d9"
 		    :overline "#3647d9"
 		    :family "Liberation Serif"
 		    :height 110)
 (set-face-attribute 'mode-line-inactive nil
-		    :foreground "#141404"
+    		    :foreground "#141404"
 		    :background "#ffffff"
-		    :box nil
+		    ;; :box '(:line-width 4 :color "#ffffff" :style nil)
 		    :underline "#3647d9"
 		    :overline "#3647d9"
 		    :family "Liberation Serif"
@@ -167,6 +194,11 @@
 		    :foreground "#3647d9"
 		    :family "Liberation Serif"
 		    :height 110)
+;; (set-face-attribute 'mode-line-emphasis
+;; 		      :weight 'bold)
+(set-face-attribute 'mode-line-highlight nil
+		    :background "darkseagreen2"
+		    :box '(:line-width 1 :color "grey40" :style flat-button))
 (set-face-attribute 'header-line nil
 		    :background "#ffffff"
 		    :family "Liberation Serif"
@@ -322,8 +354,8 @@
 (use-package moody
   :custom
   ;; (moody-mode-line-height (* (aref (font-info (face-font 'mode-line)) 2) 1.5))
-  ;; (moody-mode-line-height 40
-  (moody-mode-line-height 23)
+  ;; (moody-mode-line-height 23)
+  (moody-mode-line-height 30)
   :config
   (setq x-underline-at-descent-line t)
   (moody-replace-mode-line-buffer-identification)
@@ -334,3 +366,50 @@
   :config
   (minions-mode)
   (push '(macrursors-mode) minions-available-modes))
+
+;;
+;; --- Fringes ---
+;;
+
+;; Truncation indicators
+;; (define-fringe-bitmap 'left-curly-arrow
+;;   (vector #b0000001111111111
+;; 	  #b0000111111111111
+;; 	  #b0001111000000000
+;; 	  #b0001110000000000
+;; 	  #b0011100000000000
+;; 	  #b0001110000000000
+;; 	  #b0000111000000001
+;; 	  #b0000011100000011
+;; 	  #b0000001110000111
+;; 	  #b0000000111001111
+;; 	  #b0000000011111111
+;; 	  #b0000000001111111
+;; 	  #b0000000001111111
+;; 	  #b0000000011111111
+;; 	  #b0000000111111111
+;; 	  #b0000001111111111)
+;;   16
+;;   16
+;;   'center)
+
+;; (define-fringe-bitmap 'right-curly-arrow
+;;   (vector #b1111111111000000
+;; 	  #b1111111111110000
+;; 	  #b0000000001111000
+;; 	  #b0000000000111000
+;; 	  #b0000000000011100
+;; 	  #b0000000000111000
+;; 	  #b1000000001110000
+;; 	  #b1100000011100000
+;; 	  #b1110000111000000
+;; 	  #b1111001110000000
+;; 	  #b1111111100000000
+;; 	  #b1111111000000000
+;; 	  #b1111111000000000
+;; 	  #b1111111100000000
+;; 	  #b1111111110000000
+;; 	  #b1111111111000000)
+;;   16
+;;   16
+;;   'center)

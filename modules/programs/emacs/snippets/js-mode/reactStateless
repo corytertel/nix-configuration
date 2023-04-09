@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: reactStateless
+# key: rsc
+# --
+import React from 'react';
+
+const ${1:`(file-name-sans-extension (buffer-name))`} = () => {
+    return (
+        <div>
+            $0
+        </div>
+    );
+};
+
+export default ${1:`(file-name-sans-extension (buffer-name))`};

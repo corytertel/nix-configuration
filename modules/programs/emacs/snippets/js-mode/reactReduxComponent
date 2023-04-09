@@ -1,0 +1,26 @@
+# -*- mode: snippet -*-
+# name: reactReduxComponent
+# key: rrc
+# --
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+function mapStateToProps(state) {
+    return {
+
+    };
+}
+
+class ${1:`(file-name-sans-extension (buffer-name))`} extends Component {
+    render() {
+        return (
+            <div>
+                $0
+            </div>
+        );
+    }
+}
+
+export default connect(
+    mapStateToProps,
+)(${1:`(file-name-sans-extension (buffer-name))`});

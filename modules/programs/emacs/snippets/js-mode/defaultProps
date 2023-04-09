@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: defaultProps
+# key: rdp
+# --
+${1:$TM_FILENAME_BASE}.defaultProps = {
+    $2
+};

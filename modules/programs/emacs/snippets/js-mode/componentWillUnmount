@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: componentWillUnmount
+# key: cwun
+# --
+componentWillUnmount() {
+    $0
+}
