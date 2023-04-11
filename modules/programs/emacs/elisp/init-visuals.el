@@ -83,7 +83,7 @@
 (set-face-attribute 'font-lock-comment-face nil
 		    :foreground "dark red"
 		    :family "Liberation Serif"
-		    :height 110)
+		    :height 115)
 
 ;; Icons
 (require 'icon)
@@ -180,7 +180,7 @@
 		    :underline "#3647d9"
 		    :overline "#3647d9"
 		    :family "Liberation Serif"
-		    :height 110)
+		    :height 115)
 (set-face-attribute 'mode-line-inactive nil
     		    :foreground "#141404"
 		    :background "#ffffff"
@@ -188,12 +188,12 @@
 		    :underline "#3647d9"
 		    :overline "#3647d9"
 		    :family "Liberation Serif"
-		    :height 110)
+		    :height 115)
 (set-face-attribute 'mode-line-buffer-id nil
 		    :inherit 'bold
 		    :foreground "#3647d9"
 		    :family "Liberation Serif"
-		    :height 110)
+		    :height 115)
 ;; (set-face-attribute 'mode-line-emphasis
 ;; 		      :weight 'bold)
 (set-face-attribute 'mode-line-highlight nil
@@ -204,7 +204,7 @@
 		    :family "Liberation Serif"
 		    :underline nil
 		    :overline nil
-		    :height 110)
+		    :height 115)
 (set-face-attribute 'fringe nil
 		    :background "#ffffff")
 (set-face-attribute 'secondary-selection nil
@@ -217,17 +217,17 @@
 
 ;; Buffer state in modeline
 (defface modeline-narrow-face
-  '((t (:foreground "#141404" :background "#ed8f23" :family "Liberation Serif" :height 110)))
+  '((t (:foreground "#141404" :background "#ed8f23" :family "Liberation Serif" :height 115)))
   "Todo/fixme highlighting."
   :group 'faces)
 
 (defface modeline-read-only-face
-  '((t (:foreground "#141404" :background "#9feaae" :family "Liberation Serif" :height 110)))
+  '((t (:foreground "#141404" :background "#9feaae" :family "Liberation Serif" :height 115)))
   "Read-only buffer highlighting."
   :group 'faces)
 
 (defface modeline-modified-face
-  '((t (:foreground "#d8d8d8" :background "#e60909" :family "Liberation Serif" :height 110)))
+  '((t (:foreground "#d8d8d8" :background "#e60909" :family "Liberation Serif" :height 115)))
   "Modified buffer highlighting."
   :group 'faces)
 

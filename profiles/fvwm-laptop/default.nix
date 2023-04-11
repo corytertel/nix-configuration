@@ -56,6 +56,15 @@
       color14 = color14;
       color15 = color15;
     };
+
+    # extraConfig = ''
+    #   map ctrl+f launch --type=overlay --stdin-source=@screen_scrollback ${pkgs.fzf}/bin/fzf --no-sort --no-mouse --exact -i
+    # '';
+    extraConfig = ''
+      map ctrl+f combine : show_scrollback : send_text normal,application /
+      map ctrl+c copy_and_clear_or_interrupt
+      map ctrl+v paste_from_clipboard
+    '';
   };
 
   apps.terminal = {

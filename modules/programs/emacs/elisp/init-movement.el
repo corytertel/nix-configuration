@@ -2,10 +2,10 @@
 (use-package avy
   :ensure t
   :bind
-  (("M-g g" . avy-goto-line)
+  (([remap goto-line] . avy-goto-line)
    ("M-g c" . avy-goto-char-in-line)
    ("M-g m" . avy-move-line)
-   ("<C-m>" . avy-goto-char-timer)
+   ("<C-m>" . cory/avy)
    ("C-S-m" . avy-pop-mark)
    ;; ([remap isearch-forward-regexp] . isearch-forward-other-window)
    ;; ([remap isearch-backward-regexp] . isearch-backward-other-window)
@@ -13,24 +13,15 @@
    ("<C-m>" . avy-isearch))
 
   :custom
-  ;; (setq avy-keys '(?q ?e ?r ?y ?u ?o ?p
-  ;;                     ?a ?s ?d ?f ?g ?h ?j
-  ;;                     ?k ?l ?' ?x ?c ?v ?b
-  ;;                     ?n ?, ?/))
-  ;; (avy-keys (append (string-to-list "aoehsfb")
-  ;; 		    (string-to-list "ulrpdc")
-  ;; 		    (string-to-list "qjvg")
-  ;; 		    (string-to-list (upcase "aoehsfb"))
-  ;; 		    (string-to-list (upcase "ulrpdc"))
-  ;; 		    (string-to-list (upcase "qjvg"))
-  ;; 		    (number-sequence ?, ?')))
-  ;; (avy-keys (nconc (number-sequence ?a ?z)
-  ;; 		   (number-sequence ?A ?Z)))
-  (avy-keys (append (string-to-list "atenisubopyflmc")
-		    (string-to-list (upcase "atenisubopyflmc"))))
+  (avy-keys (append (string-to-list "atenisubopyflmc")))
   (avy-timeout-seconds 0.25)
 
   :config
+  (defun cory/avy (arg)
+    (interactive "P")
+    (if arg
+	(call-interactively #'avy-goto-char-timer)
+      (call-interactively #'avy-goto-word-1)))
 
   ;; Most of the below was copied from and/or inspired by
   ;; https://github.com/xl666/avy-conf/blob/main/avy.org

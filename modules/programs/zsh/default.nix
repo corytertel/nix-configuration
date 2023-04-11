@@ -35,11 +35,21 @@ in {
           umask 027
 
           bindkey "^[[3~" delete-char
-          bindkey \^U backward-kill-line
-          bindkey "^[[1;5C" forward-word
-          bindkey "^[[1;5D" backward-word
-          bindkey -M emacs '^P' history-substring-search-up
-          bindkey -M emacs '^N' history-substring-search-down
+          bindkey "^H" backward-kill-word
+          bindkey "^U" backward-kill-line
+          bindkey "^J" backward-char
+          bindkey "^L" forward-char
+          bindkey "^[l" emacs-forward-word
+          bindkey "^[j" emacs-backward-word
+          bindkey "^[[1;5C" emacs-forward-word
+          bindkey "^[[1;5D" emacs-backward-word
+          bindkey "^[i" history-substring-search-up
+          bindkey "^[e" history-substring-search-down
+          bindkey "^[[H" beginning-of-line
+          bindkey "^[[F" end-of-line
+          bindkey "^B" beginning-of-line
+          bindkey "^Y" end-of-line
+          bindkey "^\\" quoted-insert
 
           # setopt promptsubst
           # PROMPT="╭╴%F{cyan}  %f%F{blue}%B\$(_directory)%b%f %F{green}%U\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)%u%f

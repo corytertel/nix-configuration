@@ -137,9 +137,8 @@
    ([remap switch-to-buffer] . consult-buffer)
    ([remap kmacro-end-or-call-macro-repeat] . consult-kmacro)
    ([remap yank-pop] . consult-yank-pop)
-   ([remap goto-line] . consult-goto-line)
    ([remap occur] . consult-focus-lines)
-   ([remap pop-global-mark] . consult-global-mark)
+   ("C-c SPC" . consult-global-mark)
    ([remap imenu] . consult-imenu)
    ([remap repeat-complex-command] . consult-complex-command)
    :map goto-map
@@ -258,6 +257,8 @@
   :config
   ;; Fix corfu popup height
   (set-face-attribute 'corfu-popupinfo nil :height 'unspecified)
+  ;; Deprecated face
+  (set-face-attribute 'corfu-deprecated nil :foreground "magenta" :inherit nil)
   ;; Enable Corfu completion for commands like M-: (eval-expression) or M-!
   ;; (shell-command)
   (defun corfu-enable-in-minibuffer ()

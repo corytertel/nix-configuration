@@ -69,6 +69,16 @@ together in sequence."
      cory/mark-line                    "C-M-SPC"
      exchange-point-and-mark           "C-x C-x" "q")
 
+    ("rectangle-nav"
+     rectangle-mark-mode               "C-x SPC"
+     rectangle-previous-line           "<C-i>" "i" "<up>"
+     rectangle-next-line               "C-e" "e" "<down>"
+     rectangle-backward-char           "C-j" "j" "<left>"
+     rectangle-forward-char            "C-l" "l" "<right>"
+     open-rectangle                    "C-o" "o"
+     string-rectangle                  "C-t" "t"
+     rectangle-exchange-point-and-mark "C-x C-x" "q")
+
     ("defun-nav"
      beginning-of-defun                "C-M-b" "M-b" "b" "ESC M-b"
      end-of-defun                      "C-M-y" "M-y" "y" "ESC M-y")

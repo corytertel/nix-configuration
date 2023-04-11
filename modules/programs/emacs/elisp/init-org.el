@@ -59,7 +59,9 @@
                                                ("SCHEDULED:" . " ")
                                                ("DEADLINE:" . " ")
                                                ("#+begin_defn" . " ")
-                                               ("#+end_defn" . "―")))
+                                               ("#+end_defn" . "―")
+					       ;; ("|" . "│")
+					       ))
                 (prettify-symbols-mode)))
 
   :bind
@@ -358,13 +360,13 @@
   ;; (set-face-attribute 'org-document-title nil :height 2.0 :underline nil)
   (set-face-attribute 'org-document-title nil :height 1.5 :underline t)
   (set-face-attribute 'org-level-1 nil :height 1.2 :underline nil :weight 'bold :foreground "blue4")
-  (set-face-attribute 'org-level-2 nil :height 1.0 :weight 'bold :foreground "sienna4")
-  (set-face-attribute 'org-level-3 nil :height 1.0 :foreground "purple4")
-  (set-face-attribute 'org-level-4 nil :height 1.0 :foreground "red4")
-  (set-face-attribute 'org-level-5 nil :height 1.0 :foreground "dark green")
-  (set-face-attribute 'org-level-6 nil :height 1.0 :foreground "DeepSkyBlue4")
-  (set-face-attribute 'org-level-7 nil :height 1.0)
-  (set-face-attribute 'org-level-8 nil :height 1.0)
+  (set-face-attribute 'org-level-2 nil :height 1.0 :weight 'bold :foreground "sienna4" :inherit nil)
+  (set-face-attribute 'org-level-3 nil :height 1.0 :foreground "purple4" :inherit nil)
+  (set-face-attribute 'org-level-4 nil :height 1.0 :foreground "red4" :inherit nil)
+  (set-face-attribute 'org-level-5 nil :height 1.0 :foreground "dark green" :inherit nil)
+  (set-face-attribute 'org-level-6 nil :height 1.0 :foreground "DeepSkyBlue4" :inherit nil)
+  (set-face-attribute 'org-level-7 nil :height 1.0 :inherit nil)
+  (set-face-attribute 'org-level-8 nil :height 1.0 :inherit nil)
 
   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
   (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
@@ -652,7 +654,8 @@ _vr_ reset      ^^                       ^^                 ^^
   :after org
   :hook (org-mode . org-bullets-mode)
   :custom
-  (org-bullets-bullet-list '("\u200b")))
+  (org-bullets-bullet-list '("
+\u200b" "\u200b" "•" "-" "•" "–" "•" "–")))
 
 ;; show markup at point -- this should be part of org!
 (use-package org-appear
