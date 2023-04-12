@@ -15,23 +15,23 @@ let
   + (builtins.readFile ./elisp/minimal/init-eww.el)
   + (builtins.readFile ./elisp/minimal/init-completion.el)
 
-  # + (builtins.readFile ./elisp/init-help.el)
-  # + (builtins.readFile ./elisp/init-visuals.el)
+  + (builtins.readFile ./elisp/init-help.el)
+  + (builtins.readFile ./elisp/init-visuals.el)
 
-  # # Completion
-  # + (builtins.readFile ./elisp/init-completion.el)
-  # + (builtins.readFile ./elisp/init-lsp.el)
-  # + (builtins.readFile ./elisp/init-templates.el)
+  # Completion
+  + (builtins.readFile ./elisp/init-completion.el)
+  + (builtins.readFile ./elisp/init-lsp.el)
+  + (builtins.readFile ./elisp/init-templates.el)
 
   # IDE Stuff
   + (builtins.readFile ./elisp/init-checking.el)
   + (builtins.readFile ./elisp/init-formatting.el)
   + (builtins.readFile ./elisp/init-editing.el)
-  # + (builtins.readFile ./elisp/init-shell.el)
-  # + (builtins.readFile ./elisp/init-projects.el)
-  # + (builtins.readFile ./elisp/init-ssh.el)
+  + (builtins.readFile ./elisp/init-shell.el)
+  + (builtins.readFile ./elisp/init-projects.el)
+  + (builtins.readFile ./elisp/init-ssh.el)
   + (builtins.readFile ./elisp/init-movement.el)
-  # + (builtins.readFile ./elisp/init-buffer.el)
+  + (builtins.readFile ./elisp/init-buffer.el)
 
   # Langs
   + (builtins.readFile ./elisp/init-clojure.el)

@@ -105,6 +105,15 @@
 	 ("<help> ." . cory/display-local-help)
 	 :map help-map
 	 ("." . cory/display-local-help))
+  :custom
+  (lsp-log-io nil)
+  (lsp-enable-folding nil)
+  (lsp-diagnostic-package :flymake)
+  (lsp-enable-snippet nil)
+  (lsp-enable-completion-at-point nil)
+  (lsp-enable-symbol-highlighting nil)
+  (lsp-enable-links nil)
+  (lsp-restart 'auto-restart)
   :custom-face
   (lsp-headerline-breadcrumb-symbols-face                ((t (:inherit variable-pitch))))
   (lsp-headerline-breadcrumb-path-face                   ((t (:inherit variable-pitch))))
@@ -133,7 +142,16 @@
     (interactive)
     (if (lsp-mode)
 	(call-interactively #'lsp-describe-thing-at-point)
-      (call-interactively #'display-local-help))))
+      (call-interactively #'display-local-help)))
+
+  ;; don't ping LSP lanaguage server too frequently
+  (defvar lsp-on-touch-time 0)
+  (defadvice lsp-on-change (around lsp-on-change-hack activate)
+    ;; don't run `lsp-on-change' too frequently
+    (when (> (- (float-time (current-time))
+                lsp-on-touch-time) 30) ;; 30 seconds
+      (setq lsp-on-touch-time (float-time (current-time)))
+      ad-do-it)))
 
 (use-package lsp-ui
   :after lsp-mode
