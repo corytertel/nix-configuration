@@ -4,75 +4,11 @@
   # Window Manager
   windowManagers.cory.fvwm.laptop.enable = true;
 
-  # Editor
+  # # Editor
   programs.cory.emacs.enable = true;
 
   # Terminal
-  # programs.cory.konsole.enable = true;
-  home-manager.users.cory.programs.kitty = {
-    enable = true;
-    font = {
-      name = "JuliaMono";
-      size = 10;
-    };
-    settings = with config.theme.color; {
-      disable_ligatures = "cursor";
-      cursor_blink_interval = "0.5";
-      cursor_stop_blinking_after = 0;
-      cursor_shape = "beam";
-      scrollback_lines = 5000;
-      enable_audio_bell = "yes";
-      update_check_interval = 0;
-      repaint_delay = 10;
-      input_delay = 3;
-      sync_to_monitor = "yes";
-      remember_window_size = "no";
-      initial_window_width = 1280;
-      initial_window_height = 800;
-      window_padding_width = 10;
-      confirm_os_window_close = 0;
-
-      cursor = foreground;
-      cursor_text_color = background;
-      url_color = color4;
-      url_style = "single";
-      foreground = foreground;
-      background = background;
-      selection_foreground = foreground;
-      selection_background = "#eedc82";
-      color1 = color1;
-      color2 = color2;
-      color3 = color3;
-      color4 = color4;
-      color5 = color5;
-      color6 = color6;
-      color7 = color7;
-      color8 = color8;
-      color9 = color9;
-      color10 = color10;
-      color11 = color11;
-      color12 = color12;
-      color13 = color13;
-      color14 = color14;
-      color15 = color15;
-    };
-
-    # extraConfig = ''
-    #   map ctrl+f launch --type=overlay --stdin-source=@screen_scrollback ${pkgs.fzf}/bin/fzf --no-sort --no-mouse --exact -i
-    # '';
-    extraConfig = ''
-      map ctrl+f combine : show_scrollback : send_text normal,application /
-      map ctrl+c copy_and_clear_or_interrupt
-      map ctrl+v paste_from_clipboard
-    '';
-  };
-
-  apps.terminal = {
-    name = "kitty";
-    command = "kitty";
-    desktopFile = "kitty.desktop";
-    package = pkgs.kitty;
-  };
+  programs.cory.kitty.enable = true;
 
   # Browser
   programs.cory.firefox = {
@@ -81,51 +17,7 @@
   };
 
   # File Manager
-  # programs.cory.dolphin.enable = true;
-  # programs.cory.dolphin.config = import ../../config/dolphin/laptop.nix;
-  environment.variables = {
-    GTK_USE_PORTAL = "1";
-    XDG_DESKTOP_PORTAL = "1";
-  };
-
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.libsForQt5.xdg-desktop-portal-kde ];
-  };
-
-  home-manager.users.cory.dconf = {
-    enable = true;
-    settings = {
-      "org/mate/caja/icon-view" = {
-        default-use-tighter-layout = true;
-        default-zoom-level = "larger";
-        labels-beside-icons = false;
-      };
-      "org/mate/caja/list-view" = {
-        default-column-order = ["name" "size" "type" "date_modified" "date_accessed" "date_created" "extension" "group" "where" "mime_type" "octal_permissions" "owner" "permissions" "size_on_disk"];
-        default-visible-columns = ["name" "size" "type" "date_modified"];
-        default-zoom-level = "smaller";
-      };
-      "org/mate/caja/preferences" = {
-        always-use-location-entry = false;
-        click-policy = "single";
-      };
-      "org/mate/caja/geometry" = {
-        side-pane-view = "tree";
-        start-with-location-bar = true;
-        start-with-sidebar = true;
-        start-with-status-bar = true;
-        start-with-toolbar = true;
-      };
-    };
-  };
-
-  apps.fileManager = {
-    name = "caja";
-    command = "caja";
-    desktopFile = "caja.desktop";
-    package = pkgs.mate.caja;
-  };
+  programs.cory.caja.enable = true;
 
   # Photo Viewer
   programs.cory.gwenview = {
@@ -214,8 +106,8 @@
         size = 11;
       };
       monospace = {
-        package = victor-mono;
-        name = "Victor Mono";
+        package = julia-mono;
+        name = "JuliaMono";
         size = 10;
       };
     };

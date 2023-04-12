@@ -2,20 +2,10 @@
 with lib;
 
 let
-  cfg = config.windowManagers.cory.fvwm.laptop;
-
-  fvwm-config = pkgs.stdenv.mkDerivation {
-    name = "fvwm-config";
-    dontBuild = true;
-    installPhase = ''
-      cp -aR $src $out
-    '';
-    src = ../../../config/fvwm-laptop;
-  };
-
+  cfg = config.windowManagers.cory.xmonad;
 in {
-  options.windowManagers.cory.fvwm.laptop = {
-    enable = mkEnableOption "Enable fvwm";
+  options.windowManagers.cory.xmonad = {
+    enable = mkEnableOption "Enable xmonad";
   };
 
   config = mkIf cfg.enable {
@@ -44,6 +34,7 @@ in {
 
     environment = {
       systemPackages = with pkgs; [
+        xmobar
         feh
         xorg.xwd
         xlockmore
@@ -59,6 +50,7 @@ in {
         kde-gtk-config
         trash-cli
         xdotool
+        xscreensaver
 
         conky
         lua

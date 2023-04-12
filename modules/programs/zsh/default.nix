@@ -50,6 +50,7 @@ in {
           bindkey "^B" beginning-of-line
           bindkey "^Y" end-of-line
           bindkey "^\\" quoted-insert
+          bindkey "^P" clear-screen
 
           # setopt promptsubst
           # PROMPT="╭╴%F{cyan}  %f%F{blue}%B\$(_directory)%b%f %F{green}%U\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)%u%f

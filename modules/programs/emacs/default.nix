@@ -6,7 +6,7 @@ let
   cfg = config.programs.cory.emacs;
 
   initFile = '';;; default.el --- init -*- lexical-binding: t; no-byte-compile: nil; -*-
-''
+  ''
   + (builtins.readFile ./elisp/minimal/init-performance.el)
   + (builtins.readFile ./elisp/minimal/init-base.el)
   + (builtins.readFile ./elisp/minimal/init-functions.el)
@@ -15,23 +15,23 @@ let
   + (builtins.readFile ./elisp/minimal/init-eww.el)
   + (builtins.readFile ./elisp/minimal/init-completion.el)
 
-  + (builtins.readFile ./elisp/init-help.el)
-  + (builtins.readFile ./elisp/init-visuals.el)
+  # + (builtins.readFile ./elisp/init-help.el)
+  # + (builtins.readFile ./elisp/init-visuals.el)
 
-  # Completion
-  + (builtins.readFile ./elisp/init-completion.el)
-  + (builtins.readFile ./elisp/init-lsp.el)
-  + (builtins.readFile ./elisp/init-templates.el)
+  # # Completion
+  # + (builtins.readFile ./elisp/init-completion.el)
+  # + (builtins.readFile ./elisp/init-lsp.el)
+  # + (builtins.readFile ./elisp/init-templates.el)
 
   # IDE Stuff
   + (builtins.readFile ./elisp/init-checking.el)
   + (builtins.readFile ./elisp/init-formatting.el)
   + (builtins.readFile ./elisp/init-editing.el)
-  + (builtins.readFile ./elisp/init-shell.el)
-  + (builtins.readFile ./elisp/init-projects.el)
-  + (builtins.readFile ./elisp/init-ssh.el)
+  # + (builtins.readFile ./elisp/init-shell.el)
+  # + (builtins.readFile ./elisp/init-projects.el)
+  # + (builtins.readFile ./elisp/init-ssh.el)
   + (builtins.readFile ./elisp/init-movement.el)
-  + (builtins.readFile ./elisp/init-buffer.el)
+  # + (builtins.readFile ./elisp/init-buffer.el)
 
   # Langs
   + (builtins.readFile ./elisp/init-clojure.el)
@@ -88,7 +88,6 @@ let
     override = epkgs: epkgs // {
       sunrise = pkgs.callPackage ./sunrise-commander.nix {};
       macrursors = pkgs.callPackage ./macrursors.nix {};
-      # org-cv = pkgs.callPackage ./org-cv.nix {};
     };
   };
 

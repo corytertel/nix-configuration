@@ -4,12 +4,14 @@
   imports = [
     ./programs/bash
     ./programs/bat
+    ./programs/caja
     ./programs/discord
     ./programs/dolphin
     ./programs/emacs
     ./programs/firefox
     ./programs/gtk
     ./programs/gwenview
+    ./programs/kitty
     ./programs/konsole
     ./programs/krusader
     ./programs/lximage-qt
@@ -41,5 +43,6 @@
     ./windowManagers/kde
     # ./windowManagers/xmonad-laptop
     # ./windowManagers/xmonad-pc
+    # ./windowManagers/xmonad
   ];
 }
