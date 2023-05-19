@@ -52,10 +52,10 @@ let
 
   # Window Management
   + (builtins.readFile ./elisp/init-window-management.el)
-  + (builtins.readFile ./elisp/aside.el)
-  + (builtins.readFile ./elisp/aside-vterm.el)
-  + (builtins.readFile ./elisp/aside-eshell.el)
-  + (builtins.readFile ./elisp/aside-configurations.el)
+  # + (builtins.readFile ./elisp/aside.el)
+  # + (builtins.readFile ./elisp/aside-vterm.el)
+  # + (builtins.readFile ./elisp/aside-eshell.el)
+  # + (builtins.readFile ./elisp/aside-configurations.el)
 
   # Informal Packages
   # + (builtins.readFile ./elisp/eshell-undistract-me.el)

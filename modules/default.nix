@@ -43,6 +43,6 @@
     ./windowManagers/kde
     # ./windowManagers/xmonad-laptop
     # ./windowManagers/xmonad-pc
-    # ./windowManagers/xmonad
+    ./windowManagers/xmonad
   ];
 }

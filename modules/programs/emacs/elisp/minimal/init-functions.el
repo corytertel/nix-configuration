@@ -182,3 +182,37 @@ Else, goto the end of the buffer."
   (move-beginning-of-line nil)
   (kill-line)
   (indent-for-tab-command))
+
+(defun cory/find-file ()
+  (interactive)
+  (let* ((file (car (find-file-read-args
+		     "Find file: "
+		     (confirm-nonexistent-file-or-buffer))))
+	 (run (lambda (command)
+		(async-shell-command
+		 (concat command " " (shell-quote-argument (expand-file-name file))))))
+	 (async-shell-command-buffer 'new-buffer))
+    (cond
+     ((string-match-p ".*\.mp4$" file) (funcall run "mpc-qt"))
+     ((string-match-p ".*\.mpeg$" file) (funcall run "mpc-qt"))
+     ((string-match-p ".*\.ogg$" file) (funcall run "mpc-qt"))
+     ((string-match-p ".*\.mkv$" file) (funcall run "mpc-qt"))
+     ((string-match-p ".*\.mov$" file) (funcall run "mpc-qt"))
+     ((string-match-p ".*\.webm$" file) (funcall run "mpc-qt"))
+     ((string-match-p ".*\.mp3$" file) (funcall run "strawberry"))
+     ((string-match-p ".*\.opus$" file) (funcall run "strawberry"))
+     ((string-match-p ".*\.wav$" file) (funcall run "strawberry"))
+     ((string-match-p ".*\.weba$" file) (funcall run "strawberry"))
+     ((string-match-p ".*\.aac$" file) (funcall run "strawberry"))
+     ((string-match-p ".*\.doc$" file) (funcall run "libreoffice"))
+     ((string-match-p ".*\.docx$" file) (funcall run "libreoffice"))
+     ((string-match-p ".*\.odt$" file) (funcall run "libreoffice"))
+     ((string-match-p ".*\.ppt$" file) (funcall run "libreoffice"))
+     ((string-match-p ".*\.pptx$" file) (funcall run "libreoffice"))
+     ((string-match-p ".*\.xcf$" file) (funcall run "gimp"))
+     ((string-match-p ".*\.pdf$" file) (funcall run "qpdfview"))
+     (t (find-file file)))))
+
+(defun cory/join-next-line ()
+  (interactive)
+  (join-line 4))

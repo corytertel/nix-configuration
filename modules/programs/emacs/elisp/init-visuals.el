@@ -24,13 +24,13 @@
 ;;   (setq-default goggles-pulse nil))
 
 ;; Window dividers
-(setq window-divider-default-right-width 3)
-(let ((color (face-background 'mode-line)))
-  (dolist (face '(window-divider-first-pixel
-		  window-divider-last-pixel
-		  window-divider))
-    (set-face-foreground face color)))
-(window-divider-mode 1)
+;; (setq window-divider-default-right-width 3)
+;; (let ((color (face-background 'mode-line)))
+;;   (dolist (face '(window-divider-first-pixel
+;; 		  window-divider-last-pixel
+;; 		  window-divider))
+;;     (set-face-foreground face color)))
+;; (window-divider-mode 1)
 
 ;; Center text in the frame
 (use-package olivetti
@@ -44,9 +44,10 @@
          (elfeed-show-mode  . olivetti-mode)
          (mu4e-compose-mode . olivetti-mode)
 	 (image-mode        . olivetti-mode)
-	 (eshell-mode . (lambda ()
-			  (setq-local olivetti-body-width 150)
-			  (olivetti-mode))))
+	 ;; (eshell-mode . (lambda ()
+	 ;; 		  (setq-local olivetti-body-width 150)
+	 ;; 		  (olivetti-mode)))
+	 )
   :custom
   (olivetti-body-width 100)
   :bind
@@ -60,6 +61,23 @@
   ;;  ([right-margin mouse-6] . backward-char)
   ;;  ([right-margin mouse-7] . forward-char))
   )
+
+(use-package visual-fill-column
+  :disabled t
+  :hook
+  ((text-mode         . visual-fill-column-mode)
+   (prog-mode         . visual-fill-column-mode)
+   (Info-mode         . visual-fill-column-mode)
+   (woman-mode        . visual-fill-column-mode)
+   (ibuffer-mode      . visual-fill-column-mode)
+   (org-mode          . visual-fill-column-mode)
+   (mu4e-view-mode    . visual-fill-column-mode)
+   (elfeed-show-mode  . visual-fill-column-mode)
+   (mu4e-compose-mode . visual-fill-column-mode)
+   (image-mode        . visual-fill-column-mode))
+  :custom
+  (visual-fill-column-width 100)
+  (visual-fill-column-center-text t))
 
 ;;
 ;; --- FONT ---
@@ -366,6 +384,10 @@
   :config
   (minions-mode)
   (push '(macrursors-mode) minions-available-modes))
+
+;;; Line Numbers
+(setq display-line-numbers-type 'relative)
+;; (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
 ;;
 ;; --- Fringes ---

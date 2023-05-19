@@ -1,5 +1,5 @@
-(setq search-whitespace-regexp ".*"
-      isearch-lax-whitespace t)
+;; (setq search-whitespace-regexp ".*"
+;;       isearch-lax-whitespace t)
 
 (defun cory/isearch-forward-dwim ()
   (interactive)
@@ -38,9 +38,9 @@
 	(t
 	 ;; If region is active, prepopulate the isearch term.
 	 (if (and transient-mark-mode mark-active (not (eq (mark) (point))))
-	     (let ((region (buffer-substring-no-properties (mark) (point))))
+	     (let ((region (regexp-quote (buffer-substring-no-properties (mark) (point)))))
                (deactivate-mark)
-               (isearch-resume region nil nil t region nil))
+               (isearch-resume region t nil t region nil))
 	   (call-interactively #'isearch-forward-regexp)))))
 
 (defun cory/isearch-backward-regex-dwim ()
@@ -52,10 +52,15 @@
 	(t
 	 ;; If region is active, prepopulate the isearch term.
 	 (if (and transient-mark-mode mark-active (not (eq (mark) (point))))
-	     (let ((region (buffer-substring-no-properties (mark) (point))))
+	     (let ((region (regexp-quote (buffer-substring-no-properties (mark) (point)))))
 	       (deactivate-mark)
-	       (isearch-resume region nil nil nil region nil))
+	       (isearch-resume region t nil nil region nil))
 	   (call-interactively #'isearch-backward-regexp)))))
+
+(defun cory/isearch-start-macro-at-point ()
+  (interactive)
+  (isearch-exit)
+  (call-interactively #'kmacro-start-macro-or-insert-counter))
 
 (defun cory/isearch-call-macro-at-point ()
   (interactive)
@@ -71,8 +76,12 @@
       (call-interactively #'kmacro-call-macro)
       (isearch-resume string regexp word forward message case-fold))))
 
-(global-set-key [remap isearch-forward] #'cory/isearch-forward-dwim)
-(global-set-key [remap isearch-backward] #'cory/isearch-backward-dwim)
-(global-set-key [remap isearch-forward-regexp] #'cory/isearch-forward-regex-dwim)
-(global-set-key [remap isearch-backward-regexp] #'cory/isearch-backward-regex-dwim)
+(global-set-key [remap isearch-forward] #'cory/isearch-forward-regex-dwim)
+(global-set-key [remap isearch-backward] #'cory/isearch-backward-regex-dwim)
+(global-set-key [remap isearch-forward-regexp] #'cory/isearch-forward-dwim)
+(global-set-key [remap isearch-backward-regexp] #'cory/isearch-backward-dwim)
+(define-key isearch-mode-map [remap kmacro-start-macro-or-insert-counter]
+  #'cory/isearch-start-macro-at-point)
 (define-key isearch-mode-map [remap kmacro-end-or-call-macro] #'cory/isearch-call-macro-at-point)
+(define-key isearch-mode-map (kbd "SPC")
+  (lambda () (interactive) (isearch-printing-char ?. 1) (isearch-printing-char ?* 1)))

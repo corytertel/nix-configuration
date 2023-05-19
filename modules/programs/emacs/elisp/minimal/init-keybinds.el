@@ -243,6 +243,13 @@
   (define-key Info-mode-map (kbd "s") #'Info-follow-reference)
   (define-key Info-mode-map (kbd "f") #'Info-search))
 
+;; tetris binds
+(with-eval-after-load 'tetris
+  (define-key tetris-mode-map (kbd "e") #'tetris-move-down)
+  (define-key tetris-mode-map (kbd "i") #'tetris-rotate-prev)
+  (define-key tetris-mode-map (kbd "l") #'tetris-move-right)
+  (define-key tetris-mode-map (kbd "j") #'tetris-move-left))
+
 ;;
 ;; --- GENERAL KEYBINDS ---
 ;;
@@ -261,6 +268,7 @@
 (global-set-key [remap beginning-of-buffer] #'cory/beginning-of-workspace)
 (global-set-key [remap end-of-buffer] #'cory/end-of-workspace)
 (global-set-key [remap kill-buffer] #'kill-this-buffer)
+(global-set-key [remap find-file] #'cory/find-file)
 
 ;; TODO `k' and `SPC' key variation in text and prog modes
 ;; `M-b' and `M-y' binds in prog modes
@@ -268,6 +276,7 @@
 
 (cory/define-keys
  global-map
+ ("C-M-a" . cory/join-next-line)
  ("C-x K" . kill-buffer)
  ("C-c w" . woman)
  ("C-'"   . repeat)
@@ -280,13 +289,19 @@
  ("C-M-k" . kill-whole-line)
  ("M-SPC" . cory/mark-sexp)
  ("C-M-SPC" . cory/mark-line)
- ("C-M-<return>" . open-line))
+ ("C-M-<return>" . open-line)
+ ("C-<f4>" . kill-this-buffer)
+ ("<deletechar>" . delete-char))
 
 ;; Scroll Keybinds
 (global-set-key (kbd "C-<mouse-4>") #'ignore)
 (global-set-key (kbd "C-<mouse-5>") #'ignore)
 (global-set-key (kbd "C-<wheel-down>") #'ignore)
 (global-set-key (kbd "C-<wheel-up>") #'ignore)
+(global-set-key (kbd "C-M-<mouse-4>") #'ignore)
+(global-set-key (kbd "C-M-<mouse-5>") #'ignore)
+(global-set-key (kbd "C-M-<wheel-down>") #'ignore)
+(global-set-key (kbd "C-M-<wheel-up>") #'ignore)
 
 ;;; General Programming Keybinds
 ;; (define-key prog-mode-map [remap newline] #'cory/newline-dwim)

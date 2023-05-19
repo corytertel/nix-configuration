@@ -9,6 +9,15 @@
 ;; Suggest commands used before in the minibuffer first (history)
 (savehist-mode t)
 
+;; Fuzzy matching
+;; (setq completion-styles '(emacs21 flex))
+
+;; Case insensitve completion
+(setq completion-ignore-case t
+      read-file-name-completion-ignore-case t
+      read-buffer-completion-ignore-case t
+      bookmark-completion-ignore-case t)
+
 ;; Custom vertical completion
 (setq read-extended-command-predicate #'command-completion-default-include-p
       ;; completions-format 'one-column

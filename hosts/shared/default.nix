@@ -358,6 +358,7 @@
         chicken
         chicken-lsp-server
         egg2nix
+        # chickenPackages_5.chickenEggs.srfi-197
 
         # racket
         racket
@@ -400,8 +401,6 @@
 
         # postgres
         postgresql
-        postman # Not FOSS, remove when done
-        # pgadmin4
         dbeaver
         postgresql_jdbc # for java
 
@@ -416,56 +415,37 @@
         git-crypt
         bb
         qbittorrent
-        # brave
         tree
         imagemagick
         yt-dlp
         ffmpeg
-        # qemu
-        # qutebrowser
         wine64
         winetricks
         grapejuice
         pciutils
         peek # simple animated gif screen recorder
-        # leafpad
-        # onlyoffice-bin
         ledger-live-desktop
         #ledger-udev-rules
         acpi
         gparted
         libnotify
         dos2unix
-        # galculator
         unzip
         klavaro
         obs-studio
-        # okular
         libreoffice
         fd
-        # citra-canary
-        # protonvpn-gui
         inkscape
         thunderbird
-        # mullvad-vpn
-        # lazpaint
-        # libsForQt5.kcalc
         qalculate-gtk
         anki
-        # anki-bin
         sshfs
-        # qmk
-        # avrdude
-        # avrdudess
         drawio
         zoom-us
         firefox
         chromium
         zeal # offline documentation
-
-        # wireshark
-        # tcpdump
-        # nmap
+        android-studio
       ];
     };
   };

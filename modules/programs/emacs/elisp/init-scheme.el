@@ -55,6 +55,7 @@
   ;; (scheme-mode . cory/run-geiser-p)
   :custom
   (geiser-active-implementations '(chicken))
+  (geiser-debug-show-debug nil)
   :config
   (with-eval-after-load 'geiser-mode
     (dolist (bind '("C-c C-d d"
@@ -84,15 +85,17 @@
     (define-key geiser-doc-mode-map (kbd "f") nil)
     (define-key geiser-doc-mode-map (kbd "l") #'geiser-doc-next))
 
+  ;; Suppress async-shell-command popup
+  (add-to-list 'display-buffer-alist
+	       '("\\*Geiser Debug\\*" display-buffer-no-window))
+
   (defun scheme-super-capf ()
     (setq-local completion-at-point-functions
 		(list (cape-super-capf
-		       ;; #'tempel-complete
 		       (cape-company-to-capf #'company-yasnippet)
 		       #'geiser-capf--for-filename
 		       #'geiser-capf--for-module
 		       #'geiser-capf--for-symbol)
-		      #'cape-dabbrev
 		      #'cape-file)))
 
   (defun cory/run-geiser-p ()
@@ -122,3 +125,10 @@ With prefix argument, ask for the lookup symbol (with completion)."
 
 (use-package geiser-chicken
   :after geiser)
+
+;; (push ov macrursors--overlays)
+;; (setq scheme-overlays nil)
+
+;; (overlay-put (make-overlay (point-at-bol) (point-at-eol)) 'display "...")
+
+;; (remove-overlays (point-min) (point-max) 'display "...")

@@ -2,10 +2,11 @@
 (use-package avy
   :ensure t
   :bind
-  (([remap goto-line] . avy-goto-line)
+  (;; ([remap goto-line] . avy-goto-line)
    ("M-g c" . avy-goto-char-in-line)
    ("M-g m" . avy-move-line)
    ("<C-m>" . cory/avy)
+   ("M-m" . avy-goto-char-in-line)
    ("C-S-m" . avy-pop-mark)
    ;; ([remap isearch-forward-regexp] . isearch-forward-other-window)
    ;; ([remap isearch-backward-regexp] . isearch-backward-other-window)

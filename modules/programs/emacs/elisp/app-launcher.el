@@ -189,5 +189,18 @@ When ARG is non-nil, ignore NoDisplay property in *.desktop files."
 		  t nil 'app-launcher nil nil)))
     (funcall app-launcher--action-function result)))
 
+;;;###autoload
+(defun emacs-run-launcher ()
+  "A frame to launch desktop applications."
+  (interactive)
+  (with-selected-frame
+      (make-frame '((name . "emacs-run-launcher")
+	  	    (minibuffer . only)
+		    (width . 100)
+		    (height . 11)))
+    (unwind-protect
+	(app-launcher-run-app)
+      (delete-frame))))
+
 ;; Provide the app-launcher feature
 (provide 'app-launcher)

@@ -213,9 +213,9 @@
   (org-odt-preferred-output-format "docx")
 
   ;; Agenda
-  (org-agenda-files '("~/Code/Org/Tasks.org"
-		      "~/Code/Org/School.org"
-		      "~/Code/Org/Homework.org"))
+  (org-agenda-files '("~/Org/Tasks.org"
+		      "~/Org/School.org"
+		      "~/Org/Homework.org"))
   ;; (org-agenda-start-on-weekday nil) ;; Start on current day
   (org-agenda-start-on-weekday 0) ;; Start on Sunday
   (org-agenda-timegrid-use-ampm 1) ;; 12-hour clock
@@ -323,28 +323,28 @@
   ;; Capture
   (org-capture-templates
    `(("t" "Tasks / Projects")
-     ("tt" "Task" entry (file+olp "~/Code/Org/Tasks.org" "Inbox")
+     ("tt" "Task" entry (file+olp "~/Org/Tasks.org" "Inbox")
       "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
 
      ("j" "Journal Entries")
      ("jj" "Journal" entry
-      (file+olp+datetree "~/Code/Org/Journal.org")
+      (file+olp+datetree "~/Org/Journal.org")
       "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
       ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
       :clock-in :clock-resume
       :empty-lines 1)
      ("jm" "Meeting" entry
-      (file+olp+datetree "~/Code/Org/Journal.org")
+      (file+olp+datetree "~/Org/Journal.org")
       "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
       :clock-in :clock-resume
       :empty-lines 1)
 
      ("w" "Workflows")
-     ("we" "Checking Email" entry (file+olp+datetree "~/Code/Org/Journal.org")
+     ("we" "Checking Email" entry (file+olp+datetree "~/Org/Journal.org")
       "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
 
      ("m" "Metrics Capture")
-     ("mw" "Weight" table-line (file+headline "~/Code/Org/Metrics.org" "Weight")
+     ("mw" "Weight" table-line (file+headline "~/Org/Metrics.org" "Weight")
       "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
   :config
@@ -702,7 +702,7 @@ _vr_ reset      ^^                       ^^                 ^^
   :init
   (setq org-roam-v2-ack t)
   :custom
-  (org-roam-directory "~/Code/Org/Roam")
+  (org-roam-directory "~/Org/Roam")
   (org-roam-complete-everywhere t)
   (org-roam-capture-templates
    `(("d" "default" plain "%?"

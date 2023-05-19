@@ -21,9 +21,19 @@
      java-mode
      snippet-mode))
   :hook
-  (prog-mode . aggressive-indent-mode)
-  (html-mode . aggressive-indent-mode)
-  (css-mode  . aggressive-indent-mode)
+  (prog-mode            . aggressive-indent-mode)
+  (html-mode            . aggressive-indent-mode)
+  (css-mode             . aggressive-indent-mode)
+  (web-mode             . aggressive-indent-mode)
+  (elm-mode             . (lambda () (aggressive-indent-mode -1)))
+  (haskell-mode         . (lambda () (aggressive-indent-mode -1)))
+  (inf-ruby-mode        . (lambda () (aggressive-indent-mode -1)))
+  (makefile-mode        . (lambda () (aggressive-indent-mode -1)))
+  (makefile-gmake-mode  . (lambda () (aggressive-indent-mode -1)))
+  (python-mode          . (lambda () (aggressive-indent-mode -1)))
+  (sql-interactive-mode . (lambda () (aggressive-indent-mode -1)))
+  (java-mode            . (lambda () (aggressive-indent-mode -1)))
+  (snippet-mode         . (lambda () (aggressive-indent-mode -1)))
   :config
   (electric-indent-mode 0))
 
@@ -53,6 +63,27 @@
   (rainbow-delimiters-base-error-face ((t (:foreground "#de7397"))))
   (rainbow-delimiters-mismatched-face ((t (:foreground "#de7397"))))
   (rainbow-delimiters-unmatched-face ((t (:foreground "#de7397")))))
+
+;; ;; Rainbow blocks
+;; (use-package rainbow-blocks
+;;   :hook ((emacs-lisp-mode scheme-mode clojure-mode lisp-mode) .
+;; 	 (lambda () (rainbow-blocks-mode 1) (rainbow-delimiters-mode -1)))
+;;   :custom-face
+;;   (rainbow-blocks-depth-1-face ((t (:foreground nil :background "#ffd5cf"))))
+;;   (rainbow-blocks-depth-2-face ((t (:foreground nil :background "#cef7cf"))))
+;;   (rainbow-blocks-depth-3-face ((t (:foreground nil :background "#d2d5ff"))))
+;;   (rainbow-blocks-depth-4-face ((t (:foreground nil :background "#cdfbff"))))
+;;   (rainbow-blocks-depth-5-face ((t (:foreground nil :background "#ffd7ff"))))
+;;   (rainbow-blocks-depth-6-face ((t (:foreground nil :background "#ffd5cf"))))
+;;   (rainbow-blocks-depth-7-face ((t (:foreground nil :background "#cef7cf"))))
+;;   (rainbow-blocks-depth-8-face ((t (:foreground nil :background "#d2d5ff"))))
+;;   (rainbow-blocks-depth-9-face ((t (:foreground nil :background "#cdfbff"))))
+;;   (rainbow-blocks-unmatched-face ((t (:foreground "#ffffff" :background "#de7397")))))
+
+;; Rainbow blocks
+(use-package prism
+  :hook ((emacs-lisp-mode scheme-mode clojure-mode lisp-mode) .
+	 (lambda () (prism-mode 1) (rainbow-delimiters-mode -1))))
 
 ;; Show empty whitespace
 ;; (setq whitespace-style '(face trailing tabs lines empty))

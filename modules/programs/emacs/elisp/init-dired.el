@@ -10,7 +10,7 @@
 (defun dired-back-to-top ()
   (interactive)
   (beginning-of-buffer)
-  (dired-next-line 4))
+  (dired-next-line 3))
 
 (define-key dired-mode-map
   (vector 'remap 'beginning-of-buffer) 'dired-back-to-top)
@@ -42,7 +42,8 @@
 			   ("odt" . "libreoffice")
 			   ("ppt" . "libreoffice")
 			   ("pptx" . "libreoffice")
-			   ("xcf" . "gimp"))))
+			   ("xcf" . "gimp")
+			   ("pdf" . "qpdfview"))))
 
 (defun cory/dired ()
   (interactive)

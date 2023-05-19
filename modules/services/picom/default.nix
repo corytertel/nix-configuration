@@ -50,7 +50,7 @@ in {
           "class_g *?= 'Conky'"
         ];
 
-        shadow = true;
+        shadow = false;
         shadow-radius = 20;
         shadow-opacity = 0.80;
         shadow-offset-x = -20;
@@ -75,10 +75,10 @@ in {
         #   "class_g *?= 'peek'"
         # ];
 
-        wintypes = {
-          dock = { shadow = true; };
-          dnd = { shadow = true; };
-        };
+        # wintypes = {
+        #   dock = { shadow = true; };
+        #   dnd = { shadow = true; };
+        # };
 
         mark-wmwin-focused = true;
         mark-ovredir-focused = true;

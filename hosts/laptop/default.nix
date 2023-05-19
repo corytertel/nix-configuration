@@ -5,7 +5,7 @@
     ./hardware-configuration.nix
     ./t14.nix
     ../shared
-    ../../profiles/fvwm-laptop
+    ../../profiles/xmonad
   ];
 
   boot = {

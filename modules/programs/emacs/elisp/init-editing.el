@@ -325,9 +325,11 @@ enacts."
   :config
   (add-hook 'macrursors-pre-finish-hook
 	    (lambda ()
+	      (aggressive-indent-mode -1)
 	      (corfu-mode -1)))
   (add-hook 'macrursors-post-finish-hook
 	    (lambda ()
+	      (aggressive-indent-mode 1)
 	      (corfu-mode 1)))
   (define-prefix-command 'macrursors-mark-map)
   (global-set-key (kbd "C->") #'macrursors-mark-next-instance-of)
@@ -342,6 +344,7 @@ enacts."
   (define-key macrursors-mark-map (kbd "n") #'macrursors-mark-all-numbers)
   (define-key macrursors-mark-map (kbd ".") #'macrursors-mark-all-sentences)
   (define-key macrursors-mark-map (kbd "r") #'macrursors-mark-all-lines)
+  (define-key macrursors-mark-map (kbd "C-SPC") #'macrursors-select)
   (define-key macrursors-mark-map (kbd "SPC") #'macrursors-select)
   (define-key isearch-mode-map (kbd "C-;") #'macrursors-mark-from-isearch)
   (define-key isearch-mode-map (kbd "C->") #'macrursors-mark-next-from-isearch)

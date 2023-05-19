@@ -65,7 +65,7 @@ together in sequence."
      previous-line                     "<C-i>" "i" "<up>"
      crux-move-beginning-of-line       "C-b" "b" "<home>"
      end-of-visual-line                "C-y" "y" "<end>"
-     smart-region                      "C-SPC" "SPC"
+     smart-region                      "C-SPC"
      cory/mark-line                    "C-M-SPC"
      exchange-point-and-mark           "C-x C-x" "q")
 
@@ -84,7 +84,7 @@ together in sequence."
      end-of-defun                      "C-M-y" "M-y" "y" "ESC M-y")
 
     ("del-char"
-     delete-char                       "C-d" "d")
+     delete-char                       "C-d" "d" "<deletechar>")
 
     ("sexp-nav"
      backward-sexp                     "C-M-j" "j" "ESC M-j"
@@ -283,7 +283,14 @@ together in sequence."
      sp-backward-up-sexp               "C-M-u" "u")
 
     ("smartparens-del-char"
-     sp-delete-char                    "C-d" "d" "<deletechar>"))
+     sp-delete-char                    "C-d" "d" "<deletechar>")
+
+    ("smartparens-kill-word"
+     sp-kill-word                      "M-d" "d" "C-<delete>")
+
+    ("corfu"
+     corfu-next                        "TAB" "<tab>" "e"
+     corfu-previous                    "S-TAB" "<backtab>" "i"))
 
   "List of lists containing repeater-map definitions.
 This must be in the form required by the
