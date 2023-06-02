@@ -7,21 +7,23 @@ let
 
   initFile = '';;; default.el --- init -*- lexical-binding: t; no-byte-compile: nil; -*-
   ''
-  + (builtins.readFile ./elisp/minimal/init-performance.el)
-  + (builtins.readFile ./elisp/minimal/init-base.el)
-  + (builtins.readFile ./elisp/minimal/init-functions.el)
-  + (builtins.readFile ./elisp/minimal/init-keybinds.el)
-  + (builtins.readFile ./elisp/minimal/init-search.el)
-  + (builtins.readFile ./elisp/minimal/init-eww.el)
-  + (builtins.readFile ./elisp/minimal/init-completion.el)
+  + (builtins.readFile ./elisp/init-performance.el)
+  + (builtins.readFile ./elisp/init-base.el)
+  + (builtins.readFile ./elisp/init-functions.el)
+  + (builtins.readFile ./elisp/init-keybinds.el)
+  + (builtins.readFile ./elisp/init-search.el)
+  + (builtins.readFile ./elisp/init-eww.el)
 
   + (builtins.readFile ./elisp/init-help.el)
   + (builtins.readFile ./elisp/init-visuals.el)
 
   # Completion
+  + ''(add-to-list 'load-path "${(pkgs.callPackage ./hotfuzz-module.nix
+    { inherit pkgs; emacs = emacsBasePackage; })}")''
   + (builtins.readFile ./elisp/init-completion.el)
   + (builtins.readFile ./elisp/init-lsp.el)
-  + (builtins.readFile ./elisp/init-templates.el)
+  + (builtins.readFile ./elisp/init-snippets.el)
+  # + (builtins.readFile ./elisp/company-yasnippet.el)
 
   # IDE Stuff
   + (builtins.readFile ./elisp/init-checking.el)
@@ -40,7 +42,7 @@ let
   + (builtins.readFile ./elisp/init-elisp.el)
   + (builtins.readFile ./elisp/init-java.el)
   + (builtins.readFile ./elisp/init-other-langs.el)
-  # + (builtins.readFile ./elisp/init-python.el)
+  + (builtins.readFile ./elisp/init-python.el)
   + (builtins.readFile ./elisp/init-scheme.el)
   + (builtins.readFile ./elisp/init-web.el)
 
@@ -62,32 +64,31 @@ let
   + (builtins.readFile ./elisp/app-launcher.el)
 
   # Repeat Maps (last)
-  + (builtins.readFile ./elisp/init-repeat-maps.el)
-
-  + (if cfg.exwm then builtins.readFile ./exwm.el else "");
+  + (builtins.readFile ./elisp/init-repeat-maps.el);
 
   init = pkgs.runCommand "default.el" {} ''
     mkdir -p $out/share/emacs/site-lisp
     cp ${pkgs.writeText "default.el" initFile} $out/share/emacs/site-lisp/default.el
   '';
 
+  emacsBasePackage = pkgs.emacsGit.override {
+    withGTK3 = true;
+  };
+
   emacsPackages = epkgs: with epkgs; [
     init
     use-package
     vterm
-    hotfuzz
-  ] ++ (if cfg.exwm then [ epkgs.exwm ] else []);
+  ];
 
   emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
     config = initFile;
     alwaysEnsure = true;
-    package = pkgs.emacsGit.override {
-      withGTK3 = true;
-    };
+    package = emacsBasePackage;
     extraEmacsPackages = emacsPackages;
     override = epkgs: epkgs // {
-      sunrise = pkgs.callPackage ./sunrise-commander.nix {};
       macrursors = pkgs.callPackage ./macrursors.nix {};
+      cape-yasnippet = pkgs.callPackage ./cape-yasnippet.nix {};
     };
   };
 
@@ -129,10 +130,6 @@ in {
     };
 
     home-manager.users.cory.home.file = {
-      ".emacs.d/themes/plain-light-theme.el".source = ./plain-light-theme.el;
-      ".emacs.d/tabs/tab-new.xpm".source = ./tab-new.xpm;
-      ".emacs.d/tabs/tab-close.xpm".source = ./tab-close.xpm;
-      # ".emacs.d/themes/smart-mode-line-cory-theme.el".source = ./smart-mode-line-cory-theme.el;
       ".emacs.d/eshell/alias".source = ./alias;
       ".emacs.d/snippets" = {
         source = ./snippets;
@@ -170,12 +167,6 @@ in {
       arj
       lha
       p7zip
-      # dirvish utilities
-      fd
-      imagemagick
-      poppler
-      ffmpegthumbnailer
-      mediainfo
       # ssh
       sshfs
       fuse
@@ -183,10 +174,10 @@ in {
       scowl
       ispell
       # for emacs-everywhere
-      # xclip
-      # xdotool
-      # xorg.xprop
-      # xorg.xwininfo
+      xclip
+      xdotool
+      xorg.xprop
+      xorg.xwininfo
       # fish
     ] ++ shellScripts;
 

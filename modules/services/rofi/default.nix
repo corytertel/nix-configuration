@@ -17,11 +17,5 @@ in {
       terminal = "${config.apps.terminal.package}/bin/${config.apps.terminal.command}";
       theme = cfg.config;
     };
-    apps.launcher = {
-      name = "rofi";
-      command = "rofi -show drun -modi drun,run -show -scroll-method 0 -sort -hover-select -me-select-entry '' -me-accept-entry MousePrimary";
-      desktopFile = "rofi.desktop";
-      package = pkgs.rofi;
-    };
   };
 }

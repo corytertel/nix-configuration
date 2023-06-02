@@ -95,16 +95,5 @@ in {
         mate.mate-media
       ];
     };
-
-    home-manager.users.cory.home.pointerCursor = with config.theme; {
-      name = cursor.theme;
-      size = cursor.size;
-      gtk.enable = true;
-      package = cursor.package;
-      x11 = {
-        enable = true;
-        defaultCursor = "left_ptr";
-      };
-    };
   };
 }

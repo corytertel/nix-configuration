@@ -11,6 +11,8 @@ in {
   config = mkIf cfg.enable {
     users.users.cory.shell = pkgs.zsh;
 
+    programs.zsh.enable = true;
+
     home-manager.users.cory.programs = {
       zsh = {
         enable = true;
@@ -75,7 +77,7 @@ in {
               else
                   echo "'$1' is not a valid file"
               fi
-          }
+                    }
 
           # Open a file with the appropriate application
           function open {
@@ -160,7 +162,7 @@ in {
               else
                   printf "\e]%s\e\\" "$1"
               fi
-          }
+                    }
         '';
         shellAliases = {
           nixos-update = "nix flake update";
@@ -189,6 +191,7 @@ in {
           info = "info -v link-style=blue,underline -v active-link-style=blue,bold -v match-style=black,bgyellow";
           javac = "javac -Xdiags:verbose";
           # _directory = "if [ \"$PWD\" = \"$HOME\" ]; then echo \'~'; else; basename \"$PWD\"; fi";
+          audio-dl = "yt-dlp -x -f bestaudio --audio-quality 0 --add-metadata --embed-thumbnail -o \"%(artist)s - %(title)s.%(ext)s\"";
         };
         sessionVariables = {
           CALIBRE_USE_SYSTEM_THEME = "1";

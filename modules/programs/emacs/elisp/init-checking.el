@@ -5,8 +5,8 @@
   (prog-mode . flymake-mode)
   :bind
   (:map flymake-mode-map
-   ([remap forward-paragraph]  . flymake-goto-next-error)
-   ([remap backward-paragraph] . flymake-goto-prev-error)
+   ;; ([remap forward-paragraph]  . flymake-goto-next-error)
+   ;; ([remap backward-paragraph] . flymake-goto-prev-error)
    ([remap next-error] . flymake-goto-next-error)
    ([remap prev-error] . flymake-goto-prev-error)
    :map goto-map
@@ -26,25 +26,18 @@
 	    #b0011000000001100
 	    #b0110000000000110
 	    #b0110000000000110
-	    #b1100000000000011
-	    #b1100000000000011
-	    #b1100000000000011
-	    #b1100000000000011
 	    #b0110000000000110
 	    #b0110000000000110
 	    #b0011000000001100
 	    #b0001100000011000
 	    #b0000110000110000
 	    #b0000110000110000
-	    #b0000111111110000
 	    #b0000011111100000
 	    #b0000000000000000
-	    #b0000000000000000
-	    #b0000011111100000
 	    #b0000011111100000
 	    #b0000001111000000
 	    #b0000001111000000)
-    23
+    16
     16
     'center)
 

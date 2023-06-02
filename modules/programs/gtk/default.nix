@@ -108,8 +108,6 @@ in {
 
     qt = {
       enable = true;
-      # platformTheme = "gtk2";
-      # style = "gtk2";
       platformTheme = "qt5ct";
       style = "Oxygen";
     };
@@ -125,16 +123,20 @@ in {
           name = "${theme.font.system.name} ${toString (theme.font.system.size)}";
         };
 
-        # gtk-key-theme-name = "Emacs"
+        cursorTheme = {
+          name = theme.cursor.theme;
+          package = theme.cursor.package;
+          size = theme.cursor.size;
+        };
+
         gtk2.extraConfig = ''
           gtk-enable-animations=1
           gtk-primary-button-warps-slider=1
           gtk-toolbar-style=3
           gtk-menu-images=1
           gtk-button-images=1
-      '';
+        '';
 
-        # gtk-key-theme-name = "Emacs";
         gtk3.extraConfig = {
           gtk-button-images = true;
           gtk-decoration-layout = "icon:minimize,maximize,close";
@@ -149,7 +151,6 @@ in {
           gtk-application-prefer-dark-theme = if theme.darkTheme then true else false;
         };
 
-        # gtk-key-theme-name = "Emacs";
         gtk4.extraConfig = {
           gtk-decoration-layout = "icon:minimize,maximize,close";
           gtk-enable-animations = true;
@@ -173,8 +174,6 @@ in {
 
       qt = {
         enable = true;
-        # platformTheme = "gtk";
-        # style.name = "gtk2";
         style.name = "Oxygen";
         style.package = pkgs.libsForQt5.oxygen;
       };
@@ -186,6 +185,23 @@ in {
         libsForQt5.qt5ct
         libsForQt5.breeze-qt5
       ];
+
+      home.pointerCursor = {
+        package = theme.cursor.package;
+        gtk.enable = true;
+        name = theme.cursor.theme;
+        size = theme.cursor.size;
+        x11.enable = true;
+      };
+
+      home.file.".icons/default/index.theme" = {
+        text = ''
+          [Icon Theme]
+          Name=Default
+          Comment=Default Cursor Theme
+          Inherits=${theme.cursor.theme}
+        '';
+      };
     };
   };
 }

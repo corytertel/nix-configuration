@@ -368,8 +368,8 @@
   (set-face-attribute 'org-level-7 nil :height 1.0 :inherit nil)
   (set-face-attribute 'org-level-8 nil :height 1.0 :inherit nil)
 
-  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-block nil :background "grey93" :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil :background "grey93" :inherit '(fixed-pitch))
   (set-face-attribute 'org-table nil :foreground "black" :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))

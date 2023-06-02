@@ -88,10 +88,10 @@
   (lsp-mode . (lambda ()
 		(setq-local completion-at-point-functions
 			    (list (cape-super-capf
-				   (cape-company-to-capf #'company-yasnippet)
+				   ;; (cape-company-to-capf #'company-yasnippet)
+				   #'cape-yasnippet
 				   #'lsp-completion-at-point)
-				  #'cape-file))
-		(company-mode -1)))
+				  #'cape-file))))
   :init
   (setq lsp-keymap-prefix "C-c C-a")
   :bind (:map lsp-mode-map
@@ -139,8 +139,7 @@
     "Ensures that `lsp' is only run during local connections."
     (interactive)
     (unless (file-remote-p buffer-file-name)
-      (lsp-deferred)
-      (company-mode -1)))
+      (lsp-deferred)))
 
   (defun cory/display-local-help ()
     (interactive)

@@ -47,6 +47,38 @@
 
 (add-hook 'scheme-mode-hook 'scheme-indent-hook)
 
+;; Faces
+(defface scheme-comment-5
+  '((t (:underline t
+	:foreground "midnight blue"
+	:family "Liberation Serif"
+	:height 1.5)))
+  "Face for scheme comments with 5 semicolons."
+  :group 'faces)
+
+(defface scheme-comment-4
+  '((t (:foreground "blue4"
+	:family "Liberation Serif"
+	:height 1.2)))
+  "Face for scheme comments with 4 semicolons."
+  :group 'faces)
+
+(defface scheme-comment-3
+  '((t (:underline t
+	:foreground "sienna4"
+	:family "Liberation Serif"
+	:height 1.0)))
+  "Face for scheme comments with 3 semicolons."
+  :group 'faces)
+
+;; (add-hook
+;;  'scheme-mode-hook
+;;  (lambda ()
+;;    (interactive)
+;;    (font-lock-add-keywords nil `((,(rx bol ";;;;;" (one-or-more nonl) eol) . scheme-comment-5)))
+;;    (font-lock-add-keywords nil `((,(rx bol ";;;;" (one-or-more nonl) eol) . scheme-comment-4)))
+;;    (font-lock-add-keywords nil `((,(rx bol ";;;" (one-or-more nonl) eol) . scheme-comment-3)))))
+
 (use-package geiser
   :hook
   (geiser-mode . (lambda ()

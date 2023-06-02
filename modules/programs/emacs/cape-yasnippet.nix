@@ -1,32 +1,34 @@
 { config, lib, pkgs }:
 
 pkgs.emacsPackages.melpaBuild rec {
-  pname = "sunrise";
+  pname = "cape-yasnippet";
   version = "1.0.0";
 
-  commit = "4b31af22d834e9dbd4ebb743312130fa5855a3d2";
+  commit = "ad8c27c2f748b410e7dd568927e99081f87b98b9";
 
   src = pkgs.fetchFromGitHub {
-    owner = "corytertel";
-    repo = "sunrise-commander";
-    rev = "4b31af22d834e9dbd4ebb743312130fa5855a3d2";
-    sha256 = "jIFHejXGyBH4xZeTsMts89I7XVKCPyeRo3P368iJIv8=";
+    owner = "elken";
+    repo = "cape-yasnippet";
+    rev = "ad8c27c2f748b410e7dd568927e99081f87b98b9";
+    sha256 = "JmJljrvo9AcEVALv5GHa/XdpVLAUaww3wGmlXSAoITs=";
   };
 
   buildInputs = with pkgs; [
     emacs
-    emacsPackages.advice
+    emacsPackages.cape
+    emacsPackages.yasnippet
     emacsPackages.cl-lib
   ];
 
   packageRequires = with pkgs; [
-    emacsPackages.advice
+    emacsPackages.cape
+    emacsPackages.yasnippet
     emacsPackages.cl-lib
   ];
 
   recipe = pkgs.writeText "recipe" ''
-    (sunrise
-    :repo "corytertel/sunrise-commander"
+    (cape-yasnippet
+    :repo "elken/cape-yasnippet"
     :fetcher github
     :files ("*.el"))
   '';

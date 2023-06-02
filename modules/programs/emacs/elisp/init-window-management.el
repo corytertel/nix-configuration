@@ -132,6 +132,12 @@
 (add-to-list 'display-buffer-alist
 	     '("\\*Async Shell Command\\*.*" display-buffer-no-window))
 
+;; Emacs Everywhere
+(use-package emacs-everywhere
+  :bind
+  (:map emacs-everywhere-mode-map
+   ("C-c q" . emacs-everywhere-finish)))
+
 ;; ;;; Tab Bar
 ;; ;; Use tab-bar for window grouping and configuration within a project
 ;; (with-eval-after-load 'tab-bar

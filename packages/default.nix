@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 [
-  (import ./chicken-lsp-server { inherit pkgs; })
+  (import ./chicken-pkgs.nix { inherit pkgs; })
   (import ./crystal-nova.nix { inherit lib pkgs; })
   (import ./crystal-remix.nix { inherit lib pkgs; })
   (import ./dyalog.nix { inherit lib pkgs; })

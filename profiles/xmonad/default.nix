@@ -11,10 +11,7 @@
   programs.cory.kitty.enable = true;
 
   # Browser
-  programs.cory.firefox = {
-    enable = true;
-    changeColor = false;
-  };
+  programs.cory.firefox.enable = true;
 
   # File Manager
   programs.cory.caja.enable = true;
@@ -33,29 +30,11 @@
 
   # Set other apps
   apps = {
-    photoEditor = {
-      name = "photogimp";
-      command = "gimp";
-      desktopFile = "gimp.desktop";
-      package = pkgs.photogimp;
-    };
     musicPlayer = {
       name = "strawberry";
       command = "strawberry";
       desktopFile = "org.strawberrymusicplayer.strawberry.desktop";
       package = pkgs.strawberry;
-    };
-    archiver = {
-      name = "ark";
-      command = "ark";
-      desktopFile = "org.kde.ark.desktop";
-      package = pkgs.libsForQt5.ark;
-    };
-    launcher = {
-      name = "emacs-run-launcher";
-      command = "xdotool mousemove 1800 1200; emacsclient -e '(emacs-run-launcher)'";
-      desktopFile = "emacsclient.desktop";
-      package = pkgs.emacsGit;
     };
   };
 

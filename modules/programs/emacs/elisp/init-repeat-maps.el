@@ -58,7 +58,7 @@ together in sequence."
      calendar-forward-year             "C-x ]"
      calendar-backward-year            "C-x [")
 
-    ("char-line-nav"
+    ("navigation"
      backward-char                     "C-j" "j" "<left>"
      forward-char                      "C-l" "l" "<right>"
      next-line                         "C-e" "e" "<down>"
@@ -67,7 +67,11 @@ together in sequence."
      end-of-visual-line                "C-y" "y" "<end>"
      smart-region                      "C-SPC"
      cory/mark-line                    "C-M-SPC"
-     exchange-point-and-mark           "C-x C-x" "q")
+     exchange-point-and-mark           "C-x C-x" "q"
+     cory/scroll-down                  "C-n" "n"                     :exitonly
+     cory/beginning-of-workspace       "M-<" "<"                     :exitonly
+     cory/end-of-workspace             "M->" ">"                     :exitonly
+     cory/scroll-up                    "M-n"                         :exitonly)
 
     ("rectangle-nav"
      rectangle-mark-mode               "C-x SPC"
@@ -168,31 +172,37 @@ together in sequence."
     ("transpose-lines"
      transpose-lines                   "C-x C-t" "t")
 
-    ;; M-< for beginning-of-buffer brings up this map, since you can
-    ;; only scroll a buffer up when at its beginning.
-    ;; ("scroll-up"
-    ;;  scroll-up-command                 "C-n" "n"
-    ;;  beginning-of-buffer               "M-<" "<"
-    ;;  end-of-buffer                     "M->" ">"                     :exitonly
-    ;;  scroll-down-command               "M-n"                         :exitonly)
     ("scroll-down"
      cory/scroll-down                  "C-n" "n"
      cory/beginning-of-workspace       "M-<" "<"
      cory/end-of-workspace             "M->" ">"                     :exitonly
-     cory/scroll-up                    "M-n"                         :exitonly)
+     cory/scroll-up                    "M-n"                         :exitonly
+     ;; same as navigation
+     backward-char                     "C-j" "j" "<left>"            :exitonly
+     forward-char                      "C-l" "l" "<right>"           :exitonly
+     next-line                         "C-e" "e" "<down>"            :exitonly
+     previous-line                     "<C-i>" "i" "<up>"            :exitonly
+     crux-move-beginning-of-line       "C-b" "b" "<home>"            :exitonly
+     end-of-visual-line                "C-y" "y" "<end>"             :exitonly
+     smart-region                      "C-SPC"                       :exitonly
+     cory/mark-line                    "C-M-SPC"                     :exitonly
+     exchange-point-and-mark           "C-x C-x" "q"                 :exitonly)
 
-    ;; M-> for end-of buffer brings up this map, since you can only
-    ;; scroll a buffer down when at its end.
-    ;; ("scroll-down"
-    ;;  scroll-down-command               "M-n" "n"
-    ;;  end-of-buffer                     "M->" ">"
-    ;;  beginning-of-buffer               "M-<" "<"                     :exitonly
-    ;;  scroll-up-command                 "C-n"                         :exitonly)
     ("scroll-up"
      cory/scroll-up                    "M-n" "n"
      cory/end-of-workspace             "M->" ">"
      cory/beginning-of-workspace       "M-<" "<"                     :exitonly
-     cory/scroll-down                  "C-n"                         :exitonly)
+     cory/scroll-down                  "C-n"                         :exitonly
+     ;; same as navigation
+     backward-char                     "C-j" "j" "<left>"            :exitonly
+     forward-char                      "C-l" "l" "<right>"           :exitonly
+     next-line                         "C-e" "e" "<down>"            :exitonly
+     previous-line                     "<C-i>" "i" "<up>"            :exitonly
+     crux-move-beginning-of-line       "C-b" "b" "<home>"            :exitonly
+     end-of-visual-line                "C-y" "y" "<end>"             :exitonly
+     smart-region                      "C-SPC"                       :exitonly
+     cory/mark-line                    "C-M-SPC"                     :exitonly
+     exchange-point-and-mark           "C-x C-x" "q"                 :exitonly)
 
     ("scroll-otherwin"
      scroll-other-window               "C-M-n" "n" "ESC M-n"
@@ -262,8 +272,8 @@ together in sequence."
      repeat                            "C-'" "'")
 
     ("macrursors"
-     macrursors-mark-next-instance-of     "C->" ">" "e"
-     macrursors-mark-previous-instance-of "C-<" "<" "i")
+     macrursors-mark-next-instance-of     "C->" ">" "."
+     macrursors-mark-previous-instance-of "C-<" "<" ",")
 
     ("macrursors-select"
      macrursors-select                 "C-; SPC" "C-c SPC" "SPC")
@@ -300,7 +310,7 @@ This must be in the form required by the
 (setq repeat-exit-key "g"
       repeat-exit-timeout 30
       repeat-echo-function (lambda (keymap)
-			     (repeat-echo-message keymap)
+			     ;; (repeat-echo-message keymap)
 			     (cond
 			      (keymap
 			       (set-face-attribute 'mode-line nil

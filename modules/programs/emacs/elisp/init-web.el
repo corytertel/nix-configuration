@@ -217,16 +217,41 @@
   ;; 		       (string-match ".*\.html" buffer-file-name))
   ;; 		(setq-local completion-at-point-functions '(html-mode--complete-at-point t)))))
 
-  (require 'css-mode)
+  (defun cory/forward-indent ()
+    (interactive)
+    (save-excursion
+      (beginning-of-line)
+      (insert "  ")))
+
+  (defun cory/backward-indent ()
+    (interactive)
+    (save-excursion
+      (beginning-of-line)
+      (when (looking-at " ")
+	(delete-char 1))
+      (when (looking-at " ")
+	(delete-char 1))))
+
+  (defun cory/web-mode-html-hook ()
+    (setq-local completion-at-point-functions '(cory/web-mode-html-capf t))
+    (local-set-key (kbd "TAB") #'cory/forward-indent)
+    (local-set-key (kbd "<backtab>") #'cory/backward-indent)
+    (local-set-key (kbd "C-<tab>") #'indent-for-tab-command))
+
+  (defun cory/web-mode-css-hook ()
+    (require 'css-mode)
+    (setq-local completion-at-point-functions '(css-completion-at-point t))
+    (aggressive-indent-mode 1))
+
   (add-hook 'web-mode-hook
 	    (lambda ()
 	      (cond
 	       ((and buffer-file-name
 		   (string-match ".*\.html" buffer-file-name))
-		(setq-local completion-at-point-functions '(cory/web-mode-html-capf t)))
+		(cory/web-mode-html-hook))
 	       ((and buffer-file-name
 		   (string-match ".*\.css" buffer-file-name))
-		(setq-local completion-at-point-functions '(css-completion-at-point t)))
+		(cory/web-mode-css-hook))
 	       (t nil)))))
 
 ;; Typescript

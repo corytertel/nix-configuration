@@ -319,10 +319,10 @@ enacts."
   ;; C-SPC is smart-region
   :bind (([remap set-mark-command] . smart-region)))
 
-;; Personal multi-edit package
-;; Very similar to meow's beacon-mode
+;; Multi-edit package
 (use-package macrursors
   :config
+  (require 'macrursors-select)
   (add-hook 'macrursors-pre-finish-hook
 	    (lambda ()
 	      (aggressive-indent-mode -1)

@@ -7,7 +7,7 @@
   ];
 
   boot = {
-    cleanTmpDir = true;
+    tmp.cleanOnBoot = true;
     loader = {
       efi.canTouchEfiVariables = true;
       grub = {
@@ -174,8 +174,8 @@
       BROWSER = config.apps.browser.command;
       # CLASSPATH = "${postgresql_jdbc}/share/java/postgresql-jdbc.jar";
       CHICKEN_REPOSITORY_PATH =
-        "${chicken-lsp-server}/lib/chicken/${toString chicken.binaryVersion}";
-      CHICKEN_INCLUDE_PATH = "${chicken}/share";
+        "${chicken-pkgs}/lib/chicken/${toString chicken.binaryVersion}";
+      # CHICKEN_INCLUDE_PATH = "${chicken}/share";
       _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd";
     };
     sessionVariables = with pkgs; {
@@ -210,7 +210,7 @@
     virtualbox.host.enable = true; # Virtual Box
     libvirtd.enable = true; # virt-manager
     # anbox.enable = true;
-    waydroid.enable = true;
+    # waydroid.enable = true;
   };
 
   programs = {
@@ -232,6 +232,7 @@
       document = "writer.desktop";
       presentation = "impress.desktop";
       telegram = "telegramdesktop.desktop";
+      archiver = "xarchiver.desktop";
     in with config.apps; {
       "application/pdf" = pdfViewer.desktopFile;
       "x-scheme-handler/tg" = telegram;
@@ -239,10 +240,10 @@
       "text/plain" = editor.desktopFile;
       "inode/directory" = fileManager.desktopFile;
 
-      "application/zip" = archiver.desktopFile;
-      "application/x-7z-compressed" = archiver.desktopFile;
-      "application/vnd.rar" = archiver.desktopFile;
-      "application/gzip" = archiver.desktopFile;
+      "application/zip" = archiver;
+      "application/x-7z-compressed" = archiver;
+      "application/vnd.rar" = archiver;
+      "application/gzip" = archiver;
 
       "application/msword" = document;
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = document;
@@ -356,9 +357,7 @@
         # scheme
         chez
         chicken
-        chicken-lsp-server
-        egg2nix
-        # chickenPackages_5.chickenEggs.srfi-197
+        chicken-pkgs
 
         # racket
         racket
@@ -404,9 +403,15 @@
         dbeaver
         postgresql_jdbc # for java
 
-        # essential user apps
+        # desktop apps
         tdesktop
+        photogimp
         blender
+        kolourpaint
+        inkscape
+
+        # utilities
+        xarchiver
 
         fd
         ripgrep
@@ -435,7 +440,6 @@
         obs-studio
         libreoffice
         fd
-        inkscape
         thunderbird
         qalculate-gtk
         anki

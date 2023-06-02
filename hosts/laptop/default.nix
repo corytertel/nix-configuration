@@ -10,7 +10,6 @@
 
   boot = {
     loader.grub = {
-      version = 2;
       enableCryptodisk = true;
     };
 

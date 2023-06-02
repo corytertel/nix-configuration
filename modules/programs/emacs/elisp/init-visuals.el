@@ -32,52 +32,110 @@
 ;;     (set-face-foreground face color)))
 ;; (window-divider-mode 1)
 
-;; Center text in the frame
-(use-package olivetti
-  :hook ((text-mode         . olivetti-mode)
-         (prog-mode         . olivetti-mode)
-         (Info-mode         . olivetti-mode)
-	 (woman-mode        . olivetti-mode)
-	 (ibuffer-mode      . olivetti-mode)
-         (org-mode          . olivetti-mode)
-         (mu4e-view-mode    . olivetti-mode)
-         (elfeed-show-mode  . olivetti-mode)
-         (mu4e-compose-mode . olivetti-mode)
-	 (image-mode        . olivetti-mode)
-	 ;; (eshell-mode . (lambda ()
-	 ;; 		  (setq-local olivetti-body-width 150)
-	 ;; 		  (olivetti-mode)))
-	 )
-  :custom
-  (olivetti-body-width 100)
-  :bind
-  ;; (:map olivetti-mode-map
-  ;;  ([left-margin mouse-4] . previous-line)
-  ;;  ([left-margin mouse-5] . next-line)
-  ;;  ([left-margin mouse-6] . backward-char)
-  ;;  ([left-margin mouse-7] . forward-char)
-  ;;  ([right-margin mouse-4] . previous-line)
-  ;;  ([right-margin mouse-5] . next-line)
-  ;;  ([right-margin mouse-6] . backward-char)
-  ;;  ([right-margin mouse-7] . forward-char))
-  )
+;; ;; Center text in the frame
+;; (use-package olivetti
+;;   :hook ((text-mode         . olivetti-mode)
+;;          (prog-mode         . olivetti-mode)
+;;          (Info-mode         . olivetti-mode)
+;; 	 (woman-mode        . olivetti-mode)
+;; 	 (ibuffer-mode      . olivetti-mode)
+;;          (org-mode          . olivetti-mode)
+;;          (mu4e-view-mode    . olivetti-mode)
+;;          (elfeed-show-mode  . olivetti-mode)
+;;          (mu4e-compose-mode . olivetti-mode)
+;; 	 (image-mode        . olivetti-mode))
+;;   :custom
+;;   (olivetti-body-width 100)
+;;   ;; :config
+;;   ;;   (defgroup auto-olivetti nil
+;;   ;;     "Automatically enable `olivetti-mode' in wide windows."
+;;   ;;     :link '(url-link :tag "Homepage" "https://sr.ht/~ashton314/auto-olivetti")
+;;   ;;     :group 'text
+;;   ;;     :prefix "auto-olivetti-")
 
-(use-package visual-fill-column
-  :disabled t
-  :hook
-  ((text-mode         . visual-fill-column-mode)
-   (prog-mode         . visual-fill-column-mode)
-   (Info-mode         . visual-fill-column-mode)
-   (woman-mode        . visual-fill-column-mode)
-   (ibuffer-mode      . visual-fill-column-mode)
-   (org-mode          . visual-fill-column-mode)
-   (mu4e-view-mode    . visual-fill-column-mode)
-   (elfeed-show-mode  . visual-fill-column-mode)
-   (mu4e-compose-mode . visual-fill-column-mode)
-   (image-mode        . visual-fill-column-mode))
+;;   ;;   (defcustom auto-olivetti-enabled-modes '(fundamental-mode)
+;;   ;;     "Modes for which `olivetti-mode' should automatically be enabled for."
+;;   ;;     :type '(repeat symbol))
+
+;;   ;;   (defcustom auto-olivetti-threshold-fraction 1.3
+;;   ;;     "Fraction of `olivetti-body-width' at which to enable `olivetti-mode'."
+;;   ;;     :type 'float)
+
+;;   ;;   (defcustom auto-olivetti-threshold-absolute 100
+;;   ;;     "Number of columns at which to enable `olivetti-mode'."
+;;   ;;     :type 'natnum)
+
+;;   ;;   (defcustom auto-olivetti-threshold-method 'absolute
+;;   ;;     "How to determine if the activation threshold has been met.
+;;   ;; - fraction: use `auto-olivetti-threshold-fraction' * `olivetti-body-width'
+;;   ;; - absolute: use `auto-olivetti-threshold-absolute'"
+;;   ;;     :type '(choice (const fraction) (const absolute)))
+
+;;   ;;   (defvar-local auto-olivetti--vlm-active nil
+;;   ;;     "Old value of `visual-line-mode' in current buffer.")
+
+;;   ;;   (defun auto-olivetti--do-change ()
+;;   ;;     "Turn on or off `olivetti-mode' depending on the current window configuration."
+;;   ;;     (setq-local auto-olivetti--vlm-active (or olivetti--visual-line-mode
+;;   ;;                                              (and (not olivetti-mode) visual-line-mode)))
+;;   ;;     (if (and (bound-and-true-p auto-olivetti-mode)                  ; mode enabled?
+;;   ;;            (apply #'derived-mode-p auto-olivetti-enabled-modes)   ; in correct major-mode
+;;   ;;            (> (window-total-width)                                ; window big enough?
+;;   ;;               (if (eq auto-olivetti-threshold-method 'fraction)
+;;   ;;                   (* (or olivetti-body-width 80) auto-olivetti-threshold-fraction)
+;;   ;;                 auto-olivetti-threshold-absolute)))
+;;   ;; 	(olivetti-mode +1)
+;;   ;;       (when olivetti-mode
+;;   ;; 	(olivetti-mode -1)
+;;   ;; 	(when (bound-and-true-p auto-olivetti--vlm-active)
+;;   ;;           (visual-line-mode)))))
+
+;;   ;;   (define-minor-mode auto-olivetti-mode
+;;   ;;     "Automatically enable `olivetti-mode' in wide windows."
+;;   ;;     :global t :group 'auto-olivetti
+;;   ;;     (if auto-olivetti-mode
+;;   ;; 	(add-hook 'window-configuration-change-hook 'auto-olivetti--do-change)
+;;   ;;       (prog2
+;;   ;;           (remove-hook 'window-configuration-change-hook 'auto-olivetti--do-change)
+;;   ;;           (olivetti-mode -1)
+;;   ;; 	(when (bound-and-true-p auto-olivetti--vlm-active)
+;;   ;;           (visual-line-mode)))))
+
+;;   ;;   (auto-olivetti-mode 1)
+;;   )
+
+(use-package perfect-margin
   :custom
-  (visual-fill-column-width 100)
-  (visual-fill-column-center-text t))
+  (perfect-margin-visible-width 100)
+  :config
+  ;; enable perfect-mode
+  (perfect-margin-mode t)
+  ;; auto-center minibuffer windows
+  ;; (setq perfect-margin-ignore-filters nil)
+  ;; auto-center special windows
+  ;; (setq perfect-margin-ignore-regexps nil)
+  ;; add additinal bding on margin area
+  (dolist (margin '("<left-margin> " "<right-margin> "))
+    (global-set-key (kbd (concat margin "<mouse-1>")) 'ignore)
+    (global-set-key (kbd (concat margin "<mouse-3>")) 'ignore)
+    (global-set-key (kbd (concat margin "<wheel-up>")) 'mwheel-scroll)
+    (global-set-key (kbd (concat margin "<wheel-down>")) 'mwheel-scroll)))
+
+;; (use-package visual-fill-column
+;;   :hook
+;;   ((text-mode         . visual-fill-column-mode)
+;;    (prog-mode         . visual-fill-column-mode)
+;;    (Info-mode         . visual-fill-column-mode)
+;;    (woman-mode        . visual-fill-column-mode)
+;;    (ibuffer-mode      . visual-fill-column-mode)
+;;    (org-mode          . visual-fill-column-mode)
+;;    (mu4e-view-mode    . visual-fill-column-mode)
+;;    (elfeed-show-mode  . visual-fill-column-mode)
+;;    (mu4e-compose-mode . visual-fill-column-mode)
+;;    (image-mode        . visual-fill-column-mode))
+;;   :custom
+;;   (visual-fill-column-width 100)
+;;   (visual-fill-column-center-text t))
 
 ;;
 ;; --- FONT ---
@@ -104,29 +162,6 @@
 		    :height 115)
 
 ;; Icons
-(require 'icon)
-(declare-function icon-string "icons" (name))
-(declare-function iconp "icons" (object))
-(declare-function icons--register "icons")
-(unless (iconp 'cory/tab-bar-new)
-  (define-icon cory/tab-bar-new nil
-    `((image "/home/cory/.emacs.d/tabs/tab-new.xpm"
-             :margin ,tab-bar-button-margin
-             :ascent center)
-      (text " + "))
-    "Icon for creating a new tab."
-    :version "29.1"
-    :help-echo "New tab"))
-(unless (iconp 'cory/tab-bar-close)
-  (define-icon cory/tab-bar-close nil
-    `((image "/home/cory/.emacs.d/tabs/tab-close.xpm"
-             :margin ,tab-bar-button-margin
-             :ascent center)
-      (text " x"))
-    "Icon for closing the clicked tab."
-    :version "29.1"
-    :help-echo "Click to close tab"))
-
 (use-package all-the-icons
   :custom
   (all-the-icons-scale-factor 1.0)
@@ -160,7 +195,11 @@
 				  ;; ("if"       . "⁇")
 				  ("or"       . "∨")
 				  ("and"      . "∧")
-				  ("not"      . "¬")))
+				  ("not"      . "¬")
+				  ("chain"        . (?~ (Br . Bl) ?>))
+				  ("chain-and"    . (#x2227 (Br . Bl) ?~ (Br . Bl) ?>))
+				  ("chain-when"   . (#x2047 (Br . Bl) ?~ (Br . Bl) ?>))
+				  ("chain-lambda" . (#x3bb  (Br . Bl) ?~ (Br . Bl) ?>))))
    (prettify-symbols-mode 1)))
 
 ;; APL-like characters for elisp
@@ -194,22 +233,23 @@
 (set-face-attribute 'mode-line nil
     		    :foreground "#141404"
 		    :background "#c0daff"
-		    ;; :box '(:line-width 4 :color "#c0daff" :style nil)
-		    :underline "#3647d9"
-		    :overline "#3647d9"
+		    :box '(:line-width 1 :color "#3647d9" :style nil)
+		    :underline nil
+		    :overline nil
 		    :family "Liberation Serif"
 		    :height 115)
 (set-face-attribute 'mode-line-inactive nil
     		    :foreground "#141404"
 		    :background "#ffffff"
-		    ;; :box '(:line-width 4 :color "#ffffff" :style nil)
-		    :underline "#3647d9"
-		    :overline "#3647d9"
+		    :box '(:line-width 1 :color "#3647d9" :style nil)
+		    :underline nil
+		    :overline nil
 		    :family "Liberation Serif"
 		    :height 115)
 (set-face-attribute 'mode-line-buffer-id nil
 		    :inherit 'bold
 		    :foreground "#3647d9"
+		    :background nil
 		    :family "Liberation Serif"
 		    :height 115)
 ;; (set-face-attribute 'mode-line-emphasis
@@ -369,21 +409,22 @@
    "  " mode-line-buffer-identification
    "  " mode-line-modes))
 
-(use-package moody
-  :custom
-  ;; (moody-mode-line-height (* (aref (font-info (face-font 'mode-line)) 2) 1.5))
-  ;; (moody-mode-line-height 23)
-  (moody-mode-line-height 30)
-  :config
-  (setq x-underline-at-descent-line t)
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode)
-  (moody-replace-eldoc-minibuffer-message-function))
+;; (use-package moody
+;;   :custom
+;;   ;; (moody-mode-line-height (* (aref (font-info (face-font 'mode-line)) 2) 1.5))
+;;   ;; (moody-mode-line-height 23)
+;;   (moody-mode-line-height 30)
+;;   :config
+;;   (setq x-underline-at-descent-line t)
+;;   (moody-replace-mode-line-buffer-identification)
+;;   (moody-replace-vc-mode)
+;;   (moody-replace-eldoc-minibuffer-message-function))
 
 (use-package minions
   :config
   (minions-mode)
-  (push '(macrursors-mode) minions-available-modes))
+  ;; (push '(macrursors-mode) minions-available-modes)
+  )
 
 ;;; Line Numbers
 (setq display-line-numbers-type 'relative)

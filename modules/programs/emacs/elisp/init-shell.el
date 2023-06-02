@@ -478,3 +478,11 @@ This function is meant to be used as advice around
 ;;   :ensure t
 ;;   :bind
 ;;   ("C-c C-t" . multi-vterm-dedicated-toggle))
+
+;; Desktop launching
+(defun emacs-shell ()
+  (interactive)
+  (with-selected-frame
+      (make-frame '((name . "emacs-shell")))
+    (unwind-protect
+	(eshell))))

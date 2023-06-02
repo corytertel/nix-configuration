@@ -190,8 +190,7 @@ Else, goto the end of the buffer."
 		     (confirm-nonexistent-file-or-buffer))))
 	 (run (lambda (command)
 		(async-shell-command
-		 (concat command " " (shell-quote-argument (expand-file-name file))))))
-	 (async-shell-command-buffer 'new-buffer))
+		 (concat command " " (shell-quote-argument (expand-file-name file)))))))
     (cond
      ((string-match-p ".*\.mp4$" file) (funcall run "mpc-qt"))
      ((string-match-p ".*\.mpeg$" file) (funcall run "mpc-qt"))
@@ -211,6 +210,13 @@ Else, goto the end of the buffer."
      ((string-match-p ".*\.pptx$" file) (funcall run "libreoffice"))
      ((string-match-p ".*\.xcf$" file) (funcall run "gimp"))
      ((string-match-p ".*\.pdf$" file) (funcall run "qpdfview"))
+     ((string-match-p ".*\.jpg$" file) (funcall run "sxiv"))
+     ((string-match-p ".*\.jpeg$" file) (funcall run "sxiv"))
+     ((string-match-p ".*\.png$" file) (funcall run "sxiv"))
+     ((string-match-p ".*\.xpm$" file) (funcall run "sxiv"))
+     ((string-match-p ".*\.xbm$" file) (funcall run "sxiv"))
+     ((string-match-p ".*\.svg$" file) (funcall run "sxiv"))
+     ((string-match-p ".*\.webp$" file) (funcall run "sxiv"))
      (t (find-file file)))))
 
 (defun cory/join-next-line ()

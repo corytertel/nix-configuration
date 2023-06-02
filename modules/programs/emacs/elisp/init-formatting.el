@@ -22,9 +22,6 @@
      snippet-mode))
   :hook
   (prog-mode            . aggressive-indent-mode)
-  (html-mode            . aggressive-indent-mode)
-  (css-mode             . aggressive-indent-mode)
-  (web-mode             . aggressive-indent-mode)
   (elm-mode             . (lambda () (aggressive-indent-mode -1)))
   (haskell-mode         . (lambda () (aggressive-indent-mode -1)))
   (inf-ruby-mode        . (lambda () (aggressive-indent-mode -1)))
@@ -82,8 +79,15 @@
 
 ;; Rainbow blocks
 (use-package prism
-  :hook ((emacs-lisp-mode scheme-mode clojure-mode lisp-mode) .
-	 (lambda () (prism-mode 1) (rainbow-delimiters-mode -1))))
+  ;; :init
+  ;; (add-hook 'emacs-lisp-mode-hook (lambda () (rainbow-delimiters-mode -1) (prism-mode 1)))
+  ;; (add-hook 'scheme-mode-hook (lambda () (rainbow-delimiters-mode -1) (prism-mode 1)))
+  ;; (add-hook 'clojure-mode-hook (lambda () (rainbow-delimiters-mode -1) (prism-mode 1)))
+  ;; (add-hook 'lisp-mode-hook (lambda () (rainbow-delimiters-mode -1) (prism-mode 1)))
+  :hook
+  (scheme-mode . prism-mode)
+  ;; (emacs-lisp-mode . prism-mode)
+  )
 
 ;; Show empty whitespace
 ;; (setq whitespace-style '(face trailing tabs lines empty))

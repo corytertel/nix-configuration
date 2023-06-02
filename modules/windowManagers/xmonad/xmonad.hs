@@ -40,6 +40,7 @@ import XMonad.Hooks.SetWMName (setWMName)
 import XMonad.Hooks.DynamicLog hiding (statusBar)
 import XMonad.Hooks.StatusBar hiding (withEasySB)
 import XMonad.Hooks.ManageHelpers (doCenterFloat)
+import XMonad.Hooks.RefocusLast
 
 import XMonad.Actions.GroupNavigation
 import XMonad.Actions.Plane
@@ -73,7 +74,7 @@ myFocusedBorderColor = "#3647d9"
 
 barWidth = 110
 
-cornerWidth = 150
+cornerWidth = 50
 
 myModMask = mod4Mask
 
@@ -87,11 +88,12 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
     -- Xmonad prompt
-    [ ("M-<Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run -icon-theme \"crystal-nova\" -show-icons -terminal kitty")
+    [ ("M-<Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run -show -scroll-method 0 -sort -hover-select -me-select-entry '' -me-accept-entry MousePrimary -icon-theme \"crystal-nova\" -show-icons -terminal kitty")
     -- [ ("M-<Space>", spawn "dmenu_run -nb #ffffff -nf #000000 -sb #3647d9 -sf #ffffff -fn \"Liberation Serif\" -b")
     , ("M-<Escape>", spawn "mate-system-monitor --show-processes-tab")
-    , ("M-e", spawn "caja --browser \"/home/cory\"")
-    , ("M-w", spawn "emacs")
+    , ("M-f", spawn "caja --browser \"/home/cory\"")
+    , ("M-e", spawn "emacsclient -c")
+    , ("S-M-e", spawn "emacsclient -e '(emacs-everywhere)'")
     , ("M-t", spawn myTerminal)
     , ("M-l", spawn "xscreensaver-command -lock")
     ----------------------------------------------------------------------
@@ -128,17 +130,22 @@ myAdditionalKeys =
     , ("M-<Prior>", windows W.focusDown)
     , ("<F2>", windows W.focusDown)
     , ("<F5>", nextMatchWithThis Forward className)
-    , ("<F6>", nextMatch History (return True))
-    -- , ("<F7>", sendMessage $ JumpToLayout "normal")
+    , ("<F6>", nextMatch History (resource =!? "scratchpad"))
     -- , ("<F7>", sendMessage NextLayout)
     , ("<F7>", sendMessage Mag.Toggle)
     , ("<F8>", kill)
     , ("<F9>" , nextMatchOrDo Forward (className =? "Emacs") (spawn "emacsclient -c"))
     , ("<F10>", nextMatchOrDo Forward (className =? "firefox" <||> className =? "chromium-browser") (spawn "firefox"))
     , ("<F11>", nextMatchOrDo Forward (className =? "kitty") (spawn "kitty"))
-    , ("<F12>", spawn "layout-switch")
+    -- , ("<F12>", spawn "layout-switch")
+    , ("<F12>", runSelectedAction def
+                { gs_navigate = myGsnavigation }
+                [ ("US Minimak", spawn "setxkbmap us_minimak")
+                , ("RU Minimak", spawn "setxkbmap ru_phonetic_minimak")
+                , ("US Qwerty",  spawn "setxkbmap us")
+                ])
     , ("<Scroll_Lock>", nextMatchOrDo Forward (className =? "discord" <||> className =? "telegram-desktop") (spawn "discord"))
-    -- , ("M1-m", sendMessage $ JumpToLayout "messages")
+      -- , ("M1-m", sendMessage $ JumpToLayout "messages")
     -- , ("C-S-p", sendMessage $ JumpToLayout "context")
     , ("C-M-<Up>", planeMove (Lines 3) Circular ToUp)
     , ("C-M-<Down>", planeMove (Lines 3) Circular ToDown)
@@ -221,184 +228,6 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
 
 ------------------------------------------------------------------------
 
-data SwapWindow =  SwapWindow        -- ^ Swap window between panes
-                 | SwapWindowN Int   -- ^ Swap window between panes in the N-th nested ComboP. @SwapWindowN 0@ equals to SwapWindow
-                 deriving (Read, Show)
-instance Message SwapWindow
-
-data PartitionWins = PartitionWins  -- ^ Reset the layout and
-                                    -- partition all windows into the
-                                    -- correct sub-layout.  Useful for
-                                    -- when window properties have
-                                    -- changed and you want ComboP to
-                                    -- update which layout a window
-                                    -- belongs to.
-                   deriving (Read, Show)
-instance Message PartitionWins
-
-data CombineTwoP l l1 l2 a = C2P [a] [a] [a] l (l1 a) (l2 a) PropertyRE
-                                deriving (Read, Show)
-
-combineTwoP :: (LayoutClass super(), LayoutClass l1 Window, LayoutClass l2 Window) =>
-                super () -> l1 Window -> l2 Window -> PropertyRE -> CombineTwoP (super ()) l1 l2 Window
-combineTwoP = C2P [] [] []
-
-instance (LayoutClass l (), LayoutClass l1 Window, LayoutClass l2 Window) =>
-    LayoutClass (CombineTwoP (l ()) l1 l2) Window where
-    doLayout (C2P f w1 w2 super l1 l2 prop) rinput s =
-        let origws = W.integrate s           -- passed in windows
-            w1c = origws `P.intersect` w1      -- current windows in the first pane
-            w2c = origws `P.intersect` w2      -- current windows in the second pane
-            new = origws P.\\ (w1c ++ w2c)     -- new windows
-            superstack = Just Stack { focus=(), up=[], down=[()] }
-            f' = focus s:P.delete (focus s) f  -- list of focused windows, contains 2 elements at most
-        in do
-            matching <- hasPropertyRE prop `filterM` new  -- new windows matching predecate
-            let w1' = w1c ++ matching                     -- updated first pane windows
-                w2' = w2c ++ (new P.\\ matching)            -- updated second pane windows
-                s1 = differentiate f' w1'                 -- first pane stack
-                s2 = differentiate f' w2'                 -- second pane stack
-            ([((),r1),((),r2)], msuper') <- runLayout (Workspace "" super superstack) rinput
-            (wrs1, ml1') <- runLayout (Workspace "" l1 s1) r1
-            (wrs2, ml2') <- runLayout (Workspace "" l2 s2) r2
-            return  (wrs1++wrs2, Just $ C2P f' w1' w2' (P.fromMaybe super msuper')
-                (P.fromMaybe l1 ml1') (P.fromMaybe l2 ml2') prop)
-
-    handleMessage us@(C2P f ws1 ws2 super l1 l2 prop) m
-        | Just PartitionWins   <- fromMessage m = return . Just $ C2P [] [] [] super l1 l2 prop
-        | Just SwapWindow      <- fromMessage m = swap us
-        | Just (SwapWindowN 0) <- fromMessage m = swap us
-        | Just (SwapWindowN n) <- fromMessage m = forwardToFocused us $ SomeMessage $ SwapWindowN $ n-1
-
-        | Just (WN.MoveWindowToWindow w1 w2) <- fromMessage m,
-          w1 `elem` ws1,
-          w2 `elem` ws2 = return $ Just $ C2P f (P.delete w1 ws1) (w1:ws2) super l1 l2 prop
-
-        | Just (WN.MoveWindowToWindow w1 w2) <- fromMessage m,
-          w1 `elem` ws2,
-          w2 `elem` ws1 = return $ Just $ C2P f (w1:ws1) (P.delete w1 ws2) super l1 l2 prop
-
-        | otherwise = do ml1' <- handleMessage l1 m
-                         ml2' <- handleMessage l2 m
-                         msuper' <- handleMessage super m
-                         if isJust msuper' || isJust ml1' || isJust ml2'
-                            then return $ Just $ C2P f ws1 ws2
-                                                 (P.fromMaybe super msuper')
-                                                 (P.fromMaybe l1 ml1')
-                                                 (P.fromMaybe l2 ml2') prop
-                            else return Nothing
-
-    description (C2P _ _ _ super l1 l2 prop) = "combining " ++ description l1 ++ " and "++
-                                description l2 ++ " with " ++ description super ++ " using "++ show prop
-
--- send focused window to the other pane. Does nothing if we don't
--- own the focused window
-swap :: (LayoutClass s a, LayoutClass l1 Window, LayoutClass l2 Window) =>
-        CombineTwoP (s a) l1 l2 Window -> X (Maybe (CombineTwoP (s a) l1 l2 Window))
-swap (C2P f ws1 ws2 super l1 l2 prop) = do
-    mst <- gets (W.stack . W.workspace . W.current . windowset)
-    let (ws1', ws2') = case mst of
-            Nothing -> (ws1, ws2)
-            Just st -> if foc `elem` ws1
-                           then (foc `P.delete` ws1, foc:ws2)
-                           else if foc `elem` ws2
-                               then (foc:ws1, foc `P.delete` ws2)
-                               else (ws1, ws2)
-                       where foc = W.focus st
-    if (ws1,ws2) == (ws1',ws2')
-        then return Nothing
-        else return $ Just $ C2P f ws1' ws2' super l1 l2 prop
-
-
--- forwards the message to the sublayout which contains the focused window
-forwardToFocused :: (LayoutClass l1 Window, LayoutClass l2 Window, LayoutClass s a) =>
-                    CombineTwoP (s a) l1 l2 Window -> SomeMessage -> X (Maybe (CombineTwoP (s a) l1 l2 Window))
-forwardToFocused (C2P f ws1 ws2 super l1 l2 prop) m = do
-    ml1 <- forwardIfFocused l1 ws1 m
-    ml2 <- forwardIfFocused l2 ws2 m
-    ms <- if isJust ml1 || isJust ml2
-            then return Nothing
-            else handleMessage super m
-    if isJust ml1 || isJust ml2 || isJust ms
-        then return $ Just $ C2P f ws1 ws2 (P.fromMaybe super ms) (P.fromMaybe l1 ml1) (P.fromMaybe l2 ml2) prop
-        else return Nothing
-
--- forwards message m to layout l if focused window is among w
-forwardIfFocused :: (LayoutClass l Window) => l Window -> [Window] -> SomeMessage -> X (Maybe (l Window))
-forwardIfFocused l w m = do
-    mst <- gets (W.stack . W.workspace . W.current . windowset)
-    maybe (return Nothing) send mst where
-    send st = if W.focus st `elem` w
-                then handleMessage l m
-                else return Nothing
-
--- code from CombineTwo
--- given two sets of zs and xs takes the first z from zs that also belongs to xs
--- and turns xs into a stack with z being current element. Acts as
--- StackSet.differentiate if zs and xs don't intersect
-differentiate :: Eq q => [q] -> [q] -> Maybe (Stack q)
-differentiate (z:zs) xs | z `elem` xs = Just $ Stack { focus=z
-                                                     , up = reverse $ takeWhile (/=z) xs
-                                                     , down = tail $ dropWhile (/=z) xs }
-                        | otherwise = differentiate zs xs
-differentiate [] xs = W.differentiate xs
-
-------------------------------------------------------------------------
-
--- for the future: want to spawn window within currently selected group,
--- and then if you want it to be separate unmerge it from the group.
--- the new window will already be selected so it will be easy to umerge it
-
-contextProperties =
-  (RE
-    (Not (Or (Title "\\*Apropos\\*")
-           (Or (Title "\\*cider-inspect.*")
-             (Or (Title "\\*Chicken Documentation\\*")
-               (Or (Title "\\*Currency\\*")
-                 (Or (Title "\\*Dictionary.*")
-                   (Or (Title "\\*eldoc.*")
-                     (Or (Title "\\*Embark Actions\\*")
-                       (Or (Title "\\*Embark Collect.*")
-                         (Or (Title "\\*Embark Export.*")
-                           (Or (Title "\\*Geiser documentation\\*")
-                             (Or (Title "\\*Help.*")
-                              (Or (Title "\\*helpful.*")
-                                (Or (Title "\\*info\\*")
-                                  (Or (Title "\\*lingva\\*")
-                                    (Or (Title "\\*lsp-help\\*")
-                                      (Or (Title "\\*Metahelp\\*")
-                                        (Or (Title "\\*Shortdoc .*")
-                                          (Or (Title "\\*sly-apropos.*")
-                                            (Or (Title "\\*sly-db")
-                                              (Or (Title "\\*sly-description\\*")
-                                                (Or (Title "\\*sly-inspector.*")
-                                                  (Or (Title "\\*sly-xref.*")
-                                                    (Or (Title "\\*Synonyms List\\*")
-                                                      (Or (Title "\\*wclock\\*")
-                                                        (Or (Title "\\*WoMan.*")
-                                                          (Or (Title "\\*WorkNut\\*") (Title "\\*xref\\*")))))))))))))))))))))))))))))
-
-messageProperties =
-  (RE
-   (Not (Or (Title "\\*Agenda Commands\\*")
-         (Or (Title "\\*Async-native-compile-log\\*")
-          (Or (Title "\\*Async Shell Command\\*")
-           (Or (Title "\\*Backtrace\\*")
-            (Or (Title "\\*compilation\\*")
-             (Or (Title "\\*Compile-Log\\*")
-              (Or (Title "\\*Geiser Debug\\*")
-               (Or (Title "\\*Messages\\*")
-                (Or (Title "\\*Native-compile-Log\\*")
-                 (Or (Title "\\*sly-compilation\\*")
-                  (Or (Title "\\*sly-error")
-                   (Or (Title "\\*Warning\\*")
-                    (Or (Title "\\*Warnings\\*")
-                     (Or (Title "\\*Embark Export.*")
-                      (Or (Title "\\*Occur.*")
-                       (Or (Title "\\*grep\\*")
-                        (Or (Title "\\*PDF-Occur\\*")
-                         (Or (Title "\\*rg.*") (Title "\\*trace-output\\*")))))))))))))))))))))
-
 -- Spacing
 -- top, bottom, right, left
 gaps = spacingRaw False (Border 0 0 140 0)
@@ -406,41 +235,6 @@ gaps = spacingRaw False (Border 0 0 140 0)
 
 bsp =
   renamed [Replace "bsp"] $ emptyBSP
-
-normal =
-  renamed [Replace "normal"] $
-  combineTwoP
-  Simplest
-  emptyBSP
-  Simplest
-  (RE (Not (Title "\\*Async Shell Command\\*")))
-
-context =
-  renamed [Replace "context"] $
-  combineTwoP
-  (TwoPane 0.03 0.67)
-  emptyBSP
-  Simplest
-  contextProperties
-
-messages =
-  renamed [Replace "messages"] $
-  combineTwoP
-  (Mirror (TwoPane 0.03 0.8))
-  emptyBSP
-  Simplest
-  messageProperties
-
-contextAndMessages =
-  renamed [Replace "contextAndMessages"] $
-  combineTwoP
-  (Mirror (TwoPane 0.03 0.8))
-  context
-  Simplest
-  messageProperties
-
-focused =
-  renamed [Replace "focused"] $ Simplest
 
 -- mySDConfig = def { activeColor         = "#c0daff"
 --                  , inactiveColor       = "#ffffff"
@@ -464,8 +258,8 @@ focused =
 myLayout = screenCornerLayoutHook
   . gaps
   . smartBorders
+  . refocusLastLayoutHook
   $ Mag.magnifiercz 1.618 (bsp)
-  -- $ monocle ||| bsp
 
 ------------------------------------------------------------------------
 
@@ -480,39 +274,6 @@ p -!> f = p >>= \b -> if b then return mempty else f
 -- | @q =? x@. if the result of @q@ equals @x@, return 'False'.
 (=!?) :: Eq a => C.Query a -> a -> C.Query Bool
 q =!? x = fmap (/= x) q
-
--- myManageHook = composeAll
---     -- [ className =? "Orage"                                --> doCenterFloat
---     [ className =? "Firefox" <&&> resource =? "Toolkit"   --> myRectFloat
---     , stringProperty "WM_WINDOW_ROLE"
---       =? "GtkFileChooserDialog"                           --> myRectFloat
---     , stringProperty "WM_WINDOW_ROLE" =? "pop-up"         --> myRectFloat
---     -- , isDialog                                            --> myRectFloat
---     -- , isInProperty "_NET_WM_WINDOW_TYPE"
---     --   "_NET_WM_WINDOW_TYPE_SPLASH"                        --> myRectFloat
---     , title     =? "Save Image"                           --> myRectFloat
---     , title     =? "Save File"                            --> myRectFloat
---     , title     =? "Open"                                 --> myRectFloat
---     , title     =? "Open Files"                           --> myRectFloat
---     , resource  =? "desktop_window"                       --> doIgnore
---     , resource  =? "kdesktop"                             --> doIgnore
---     , isFullscreen --> doFullFloat
---     , fmap not willFloat --> insertPosition Below Newer
---     , fmap not willFloat -!> insertPosition Master Newer
---     ]
---   where
---     -- xpos, ypos, width, height
---     myRectFloat = doRectFloat (W.RationalRect (1 % 3) (3 % 10) (1 % 3) (2 % 5))
---     helpFloat = doRectFloat (W.RationalRect (7 % 8) (0 % 1) (1 % 8) (1 % 2))
-
--- myManageHook = composeAll
---                [ isFullscreen --> doFullFloat
---                --, fmap not willFloat -!> unfloat
---                , isFullscreen -!> unfloat
---                , insertPosition Below Newer
---                ]
---                where
---                  unfloat = ask >>= doF . W.sink
 
 willFloat :: C.Query Bool
 willFloat =
@@ -538,20 +299,6 @@ myManageHook = composeAll
   , fmap not Main.willFloat --> insertPosition Below Newer
   , fmap not Main.willFloat -!> insertPosition Master Newer
   ]  <+> namedScratchpadManageHook myScratchpads
-
-------------------------------------------------------------------------
-
--- myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
---               , NS "emacs-scratch" spawnEmacsScratch findEmacsScratch manageEmacsScratch
---                 ]
---     where
---     role = stringProperty "WM_WINDOW_ROLE"
---     spawnTerm = myTerminal ++  " -name scratchpad"
---     findTerm = resource =? "scratchpad"
---     manageTerm = nonFloating
---     findEmacsScratch = title =? "emacs-scratch"
---     spawnEmacsScratch = "emacsclient -a='' -nc --frame-parameters='(quote (name . \"emacs-scratch\"))'"
---     manageEmacsScratch = nonFloating
 
 ------------------------------------------------------------------------
 
@@ -704,6 +451,7 @@ screenCornerLayoutHook = ModifiedLayout ScreenCornerLayout
 
 myEventHook e = do
     screenCornerEventHook e
+    refocusLastWhen (return True) e
 
 ------------------------------------------------------------------------
 
@@ -722,21 +470,20 @@ myStartupHook = do
   spawnOnce "cbatticon"
   spawnOnce "xscreensaver --no-splash"
   spawnOnce "feh --bg-fill /etc/wallpaper.jpg"
-  -- spawnOnce "trayer --width 140 --widthtype pixel --edge top --align right --transparent true --alpha 0 --tint 0xffffff --distance 190 --height 32"
   spawnOnce "sleep 10 && trayer --widthtype pixel --edge right --transparent true --alpha 0 --tint 0xffffff --width 330 --height 50 --distancefrom left --distance 45 --align right --expand false --padding 30 --iconspacing 5"
   setWMName "LG3D"
   addScreenCorners [ (SCRight, rightWS >> spawn "xdotool mousemove_relative -- -2238 0")
                    , (SCLeft,  leftWS >> spawn "xdotool mousemove_relative 2238 0")
                    , (SCTop, upWS >> spawn "xdotool mousemove_relative 0 1398")
                    , (SCBottom, downWS >> spawn "xdotool mousemove_relative -- 0 -1398")
-                   , (SCUpperLeftH, leftWS >> upWS >> spawn "xdotool mousemove 2238 1398")
-                   , (SCUpperLeftV, leftWS >> upWS >> spawn "xdotool mousemove 2238 1398")
-                   , (SCUpperRightH, rightWS >> upWS >> spawn "xdotool mousemove 2 1398")
-                   , (SCUpperRightV, rightWS >> upWS >> spawn "xdotool mousemove 2 1398")
-                   , (SCLowerLeftH, leftWS >> downWS >> spawn "xdotool mousemove 2238 2")
-                   , (SCLowerLeftV, leftWS >> downWS >> spawn "xdotool mousemove 2238 2")
-                   , (SCLowerRightH, rightWS >> downWS >> spawn "xdotool mousemove 2 2")
-                   , (SCLowerRightV, rightWS >> downWS >> spawn "xdotool mousemove 2 2")
+                   , (SCUpperLeftH, leftWS >> upWS >> spawn "xdotool mousemove 2190 1350")
+                   , (SCUpperLeftV, leftWS >> upWS >> spawn "xdotool mousemove 2190 1350")
+                   , (SCUpperRightH, rightWS >> upWS >> spawn "xdotool mousemove 50 1350")
+                   , (SCUpperRightV, rightWS >> upWS >> spawn "xdotool mousemove 50 1350")
+                   , (SCLowerLeftH, leftWS >> downWS >> spawn "xdotool mousemove 2190 50")
+                   , (SCLowerLeftV, leftWS >> downWS >> spawn "xdotool mousemove 2190 50")
+                   , (SCLowerRightH, rightWS >> downWS >> spawn "xdotool mousemove 50 50")
+                   , (SCLowerRightV, rightWS >> downWS >> spawn "xdotool mousemove 50 50")
                    ]
   setDefaultCursor xC_left_ptr
 
@@ -759,11 +506,11 @@ withEasySB sb k conf = docks . withSB sb $ conf
     keys' = (`M.singleton` sendMessage ToggleStruts) . k'
 
 statusBar :: LayoutClass l Window
-          => String
-          -> PP
-          -> (XConfig Layout -> (KeyMask, KeySym))
-          -> XConfig l
-          -> IO (XConfig l)
+    => String
+    -> PP
+    -> (XConfig Layout -> (KeyMask, KeySym))
+    -> XConfig l
+    -> IO (XConfig l)
 statusBar cmd pp k conf= do
   sb <- statusBarPipe cmd (pure pp)
   return $ withEasySB sb k conf
