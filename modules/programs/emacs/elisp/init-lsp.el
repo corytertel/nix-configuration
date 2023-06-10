@@ -78,7 +78,7 @@
     c++-mode
     python-mode
     clojure-mode
-    clojurescipe-mode
+    clojurescript-mode
     javascript-mode
     js-mode
     js-jsx-mode
@@ -88,8 +88,8 @@
   (lsp-mode . (lambda ()
 		(setq-local completion-at-point-functions
 			    (list (cape-super-capf
-				   ;; (cape-company-to-capf #'company-yasnippet)
-				   #'cape-yasnippet
+				   (cape-company-to-capf #'company-yasnippet)
+				   ;; #'cape-yasnippet
 				   #'lsp-completion-at-point)
 				  #'cape-file))))
   :init

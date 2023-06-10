@@ -168,7 +168,6 @@ in {
           nixos-update = "nix flake update";
           nixos-clean = "sudo nix-collect-garbage --delete-older-than";
           nixos-superclean = "sudo nix-collect-garbage --delete-old";
-          cd = "z";
           cdi = "zi";
           # ls = "${pkgs.exa}/bin/exa --icons --all --git --binary --group-directories-first";
           # l = "ls --classify";
@@ -205,8 +204,8 @@ in {
             src = pkgs.fetchFromGitHub {
               owner = "chisui";
               repo = "zsh-nix-shell";
-              rev = "v0.4.0";
-              sha256 = "037wz9fqmx0ngcwl9az55fgkipb745rymznxnssr3rx9irb6apzg";
+              rev = "227d284ab2dc2f5153826974e0094a1990b1b5b9";
+              sha256 = "SrGvHsAJCxzi69CKNKKvItYUaAP7CKwRntsprVHBs4Y=";
             };
           }
           {
@@ -214,8 +213,8 @@ in {
             src = pkgs.fetchFromGitHub {
               owner = "spwhitt";
               repo = "nix-zsh-completions";
-              rev = "468d8cf752a62b877eba1a196fbbebb4ce4ebb6f";
-              sha256 = "TWgo56l+FBXssOYWlAfJ5j4pOHNmontOEolcGdihIJs=";
+              rev ="6a1bfc024481bdba568f2ced65e02f3a359a7692";
+              sha256 = "aXetjkl5nPuYHHyuX59ywXF+4Xg+PUCV6Y2u+g18gEk=";
             };
           }
           {
@@ -223,8 +222,8 @@ in {
             src = pkgs.fetchFromGitHub {
               owner = "zsh-users";
               repo = "zsh-history-substring-search";
-              rev = "4abed97b6e67eb5590b39bcd59080aa23192f25d";
-              sha256 = "8kiPBtgsjRDqLWt0xGJ6vBBLqCWEIyFpYfd+s1prHWk=";
+              rev = "400e58a87f72ecec14f783fbd29bc6be4ff1641c";
+              sha256 = "GSEvgvgWi1rrsgikTzDXokHTROoyPRlU0FVpAoEmXG4=";
             };
           }
           {

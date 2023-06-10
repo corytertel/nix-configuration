@@ -137,7 +137,7 @@
       cory = {
         isNormalUser = true;
         uid = 1000;
-        extraGroups = [ "wheel" "network" "audio" "libvirtd" ];
+        extraGroups = [ "wheel" "network" "audio" "video" "libvirtd" ];
         home = "/home/cory";
       };
     };
@@ -280,6 +280,7 @@
       "image/svg+xml" = photoViewer.desktopFile;
       "image/svg-xml" = photoViewer.desktopFile;
       "image/webp" = photoViewer.desktopFile;
+      "image/xpm" = photoViewer.desktopFile;
 
       "video/mp4" = videoPlayer.desktopFile;
       "video/mpeg" = videoPlayer.desktopFile;
@@ -317,14 +318,7 @@
       homeDirectory = "/home/cory";
 
       packages = with pkgs; [
-        # repeat of system basics
-        mg
-
-        # linux basics
-        killall
-        btop
-
-        # c++
+        # c/c++
         ccls
         clang_12
         #llvmPackages_12.clang-unwrapped # clangd
@@ -335,7 +329,6 @@
         #libcxx
         #clang-analyzer
         cppcheck
-        ncurses
         global
         gdb
         # irony-server
@@ -347,7 +340,7 @@
         leiningen
         # joker
         clj-kondo
-        # babashka
+        babashka
 
         # common lisp
         clisp
@@ -355,29 +348,14 @@
         asdf
 
         # scheme
-        chez
         chicken
         chicken-pkgs
 
         # racket
         racket
-        # for lsp run:
-        # raco pkg install racket-langserver
-
-        # F#
-        # fsharp
-        # dotnet-sdk_7
-        # libgccjit
-        # dotnet-runtime
-        # dotnet-aspnetcore
-        # (with dotnetCorePackages; combinePackages [
-        #   sdk_7_0
-        # ])
 
         # web
         nodejs
-        # yarn
-        # yarn2nix
         nodePackages_latest.typescript-language-server
 
         # java
@@ -386,12 +364,16 @@
         maven
         gradle
 
-        # other programing
+        # nix
         # rnix-lsp
         # nil
+
+        # apl
         gnuapl
         dyalog
         # ride
+
+        # python
         python39
         # (python39.withPackages (ps: [ ps.epc ps.python-lsp-server ]))
         # python39Full
@@ -403,53 +385,58 @@
         dbeaver
         postgresql_jdbc # for java
 
+        # smalltalk
+        pharo
+
         # desktop apps
         tdesktop
         photogimp
         blender
         kolourpaint
         inkscape
-
-        # utilities
+        libreoffice
+        qalculate-gtk
+        thunderbird
+        obs-studio
+        peek
+        drawio
+        zoom-us
+        qbittorrent
         xarchiver
 
+        # command line utils
+        mg
         fd
         ripgrep
-
-        nix-prefetch-github
-        git-crypt
-        bb
-        qbittorrent
-        tree
-        imagemagick
         yt-dlp
+        unzip
+        nix-prefetch-github
+        imagemagick
+        pciutils
+        killall
+
+        # libs
         ffmpeg
+        libnotify
+
+        # misc
+        ledger-live-desktop
+        #ledger-udev-rules
         wine64
         winetricks
         grapejuice
-        pciutils
-        peek # simple animated gif screen recorder
-        ledger-live-desktop
-        #ledger-udev-rules
+
         acpi
-        gparted
-        libnotify
-        dos2unix
-        unzip
         klavaro
-        obs-studio
-        libreoffice
-        fd
-        thunderbird
-        qalculate-gtk
         anki
         sshfs
-        drawio
-        zoom-us
         firefox
         chromium
         zeal # offline documentation
-        android-studio
+
+        # iphone utils
+        ifuse
+        libimobiledevice
       ];
     };
   };

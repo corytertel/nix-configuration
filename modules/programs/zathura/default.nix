@@ -42,8 +42,8 @@ in {
           highlight-active-color = color.color5;
           default-bg = color.background;
           default-fg = color.foreground;
-          recolor = true;
-          recolor-keephue = true;
+          recolor = false;
+          recolor-keephue = false;
           recolor-lightcolor = color.background;
           recolor-darkcolor = color.foreground;
           render-loading = true;
@@ -60,10 +60,10 @@ in {
           zoom-step = 3;
         };
         extraConfig = ''
-          map [normal] <C-b> scroll left
-          map [normal] <C-n> scroll down
-          map [normal] <C-p> scroll up
-          map [normal] <C-f> scroll right
+          map [normal] <C-j> scroll left
+          map [normal] <C-e> scroll down
+          map [normal] <C-i> scroll up
+          map [normal] <C-l> scroll right
           map [normal] <C-g> abort
           map [insert] <C-g> abort
           map [normal] <C-[> abort
@@ -82,7 +82,7 @@ in {
           map [normal] <A-Left> navigate previous
           map [normal] <PageDown> scroll full-down
           map [normal] <PageUp> scroll full-up
-          map [normal] <C-P> print
+          map [normal] <C-p> print
           map [normal] c recolor
           map [normal] R reload
           map [normal] v rotate rotate_cw
@@ -91,15 +91,17 @@ in {
           map [normal] <Up> scroll up
           map [normal] <Down> scroll down
           map [normal] <Right> scroll right
-          map [normal] <A-a> scroll half-left
-          map [normal] <C-V> scroll half-down
-          map [normal] <A-V> scroll half-up
-          map [normal] <A-e> scroll half-right
-          map [normal] <C-a> scroll full-left
-          map [normal] <C-v> scroll full-down
+          map [normal] <A-b> scroll half-left
+          map [normal] <C-N> scroll half-down
+          map [normal] <A-N> scroll half-up
+          map [normal] <A-y> scroll half-right
+          map [normal] <C-b> scroll full-left
+          map [normal] <C-n> scroll full-down
+          map [normal] e scroll full-down
           map [normal] <Return> scroll full-down
-          map [normal] <A-v> scroll full-up
-          map [normal] <C-e> scroll full-right
+          map [normal] <A-n> scroll full-up
+          map [normal] i scroll full-up
+          map [normal] <C-y> scroll full-right
           map [normal] <Space> scroll full-down
           map [normal] <C-h> scroll full-up
           map [normal] <BackSpace> scroll full-up
@@ -109,11 +111,11 @@ in {
           map [normal] <A-r> bisect forward
           map [normal] <A-l> bisect backward
           # still need to use '/' to trigger search
-          map [normal] <C-s> search forward
+          map [normal] <C-f> search forward
           map [normal] <C-r> search backward
           map [normal] p snap_to_page
-          map [normal] <C-i> toggle_index
-          map [normal] i toggle_index
+          map [normal] <C-t> toggle_index
+          map [normal] t toggle_index
           map [normal] <Tab> toggle_index
           map [normal] <A-s> toggle_statusbar
           map [normal] <A-i> focus_inputbar
@@ -124,13 +126,13 @@ in {
           map [normal] = zoom in
           map [normal] <A-P> toggle_presentation
           map [normal] <A-F> toggle_fullscreen
-          map [normal] j toggle_fullscreen
-          map [fullscreen] j toggle_fullscreen
+          map [normal] f toggle_fullscreen
+          map [fullscreen] f toggle_fullscreen
           map [fullscreen] q toggle_fullscreen
-          map [fullscreen] <C-b> scroll left
-          map [fullscreen] <C-n> scroll down
-          map [fullscreen] <C-p> scroll up
-          map [fullscreen] <C-f> scroll right
+          map [fullscreen] <C-j> scroll left
+          map [fullscreen] <C-e> scroll down
+          map [fullscreen] <C-i> scroll up
+          map [fullscreen] <C-l> scroll right
           map [fullscreen] <C-g> abort
           map [fullscreen] <C-[> abort
           map [fullscreen] <A-\<> goto top
@@ -148,7 +150,7 @@ in {
           map [fullscreen] <A-Left> navigate previous
           map [fullscreen] <PageDown> scroll full-down
           map [fullscreen] <PageUp> scroll full-up
-          map [fullscreen] <C-P> print
+          map [fullscreen] <C-p> print
           map [fullscreen] c recolor
           map [fullscreen] R reload
           map [fullscreen] v rotate rotate_cw
@@ -157,15 +159,17 @@ in {
           map [fullscreen] <Up> scroll up
           map [fullscreen] <Down> scroll down
           map [fullscreen] <Right> scroll right
-          map [fullscreen] <A-a> scroll half-left
-          map [fullscreen] <C-V> scroll half-down
-          map [fullscreen] <A-V> scroll half-up
-          map [fullscreen] <A-e> scroll half-right
-          map [fullscreen] <C-a> scroll full-left
-          map [fullscreen] <C-v> scroll full-down
+          map [fullscreen] <A-b> scroll half-left
+          map [fullscreen] <C-N> scroll half-down
+          map [fullscreen] <A-N> scroll half-up
+          map [fullscreen] <A-y> scroll half-right
+          map [fullscreen] <C-b> scroll full-left
+          map [fullscreen] <C-n> scroll full-down
+          map [fullscreen] e scroll full-down
           map [fullscreen] <Return> scroll full-down
-          map [fullscreen] <A-v> scroll full-up
-          map [fullscreen] <C-e> scroll full-right
+          map [fullscreen] <A-n> scroll full-up
+          map [fullscreen] i scroll full-up
+          map [fullscreen] <C-y> scroll full-right
           map [fullscreen] <Space> scroll full-down
           map [fullscreen] <C-h> scroll full-up
           map [fullscreen] <BackSpace> scroll full-up
@@ -174,36 +178,37 @@ in {
           map [fullscreen] r jumplist forward
           map [fullscreen] <A-r> bisect forward
           map [fullscreen] <A-l> bisect backward
-          map [fullscreen] <C-s> search forward
+          map [fullscreen] <C-f> search forward
           map [fullscreen] <C-r> search backward
           map [fullscreen] p snap_to_page
-          map [fullscreen] i toggle_index
-          map [fullscreen] <C-i> toggle_index
+          map [fullscreen] <C-t> toggle_index
+          map [fullscreen] t toggle_index
           map [fullscreen] <Tab> toggle_index
           map [fullscreen] <A-s> toggle_statusbar
           map [fullscreen] <A-i> focus_inputbar
           map [fullscreen] d toggle_page_mode
+          map [fullscreen] q quit
           map [fullscreen] + zoom in
           map [fullscreen] - zoom out
           map [fullscreen] = zoom in
           # status bar will obscure last item in index mode
           map [index] <A-s> toggle_statusbar
           map [index] q toggle_index
-          map [index] i toggle_index
-          map [index] <C-p> navigate_index up
+          map [index] t toggle_index
+          map [index] <C-i> navigate_index up
           map [index] <C-h> navigate_index up
           map [index] <BackSpace> navigate_index up
+          map [index] <C-e> navigate_index down
+          map [index] <A-n> navigate_index up
           map [index] <C-n> navigate_index down
-          map [index] <A-v> navigate_index up
-          map [index] <C-v> navigate_index down
           map [index] \< navigate_index top
           map [index] \> navigate_index bottom
           map [index] <A-\<> navigate_index top
           map [index] <A-\>> navigate_index bottom
-          map [index] <C-b> navigate_index collapse
-          map [index] <C-f> navigate_index expand
-          map [index] <C-i> navigate_index expand-all
-          map [index] <A-i> navigate_index collapse-all
+          map [index] <C-j> navigate_index collapse
+          map [index] <C-l> navigate_index expand
+          map [index] <C-a> navigate_index expand-all
+          map [index] <A-a> navigate_index collapse-all
           map [index] <Up> navigate_index up
           map [index] <Down> navigate_index down
           map [index] <Left> navigate_index collapse
@@ -211,18 +216,18 @@ in {
           map [index] <C-m> navigate_index select
           map [index] <Space> navigate_index select
           map [index] <Return> navigate_index select
-          map [index] <C-j> navigate_index select
+          map [index] <C-s> navigate_index select
           map [index] <Esc> toggle_index
           map [index] <C-[> toggle_index
           map [index] <C-g> toggle_index
           map [index] <C-c> toggle_index
-          map [presentation] i toggle_index
-          map [presentation] r navigate next
+          map [presentation] t toggle_index
+          map [presentation] l navigate next
           map [presentation] <Down> navigate next
           map [presentation] <Right> navigate next
           map [presentation] <PageDown> navigate next
           map [presentation] <Space> navigate next
-          map [presentation] l navigate previous
+          map [presentation] j navigate previous
           map [presentation] <Left> navigate previous
           map [presentation] <Up> navigate previous
           map [presentation] <PageUp> navigate previous
@@ -231,8 +236,8 @@ in {
           map [presentation] <F5> toggle_presentation
           map [presentation] q toggle_presentation
           map [presentation] <C-h> navigate previous
-          map [presentation] <M-v> navigate previous
-          map [presentation] <C-v> navigate next
+          map [presentation] <M-n> navigate previous
+          map [presentation] <C-n> navigate next
           map [presentation] <A-\<> goto top
           map [presentation] <A-\>> goto bottom
         '';

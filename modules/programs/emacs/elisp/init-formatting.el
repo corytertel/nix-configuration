@@ -18,19 +18,24 @@
      makefile-gmake-mode
      python-mode
      sql-interactive-mode
-     java-mode
      snippet-mode))
   :hook
-  (prog-mode            . aggressive-indent-mode)
-  (elm-mode             . (lambda () (aggressive-indent-mode -1)))
-  (haskell-mode         . (lambda () (aggressive-indent-mode -1)))
-  (inf-ruby-mode        . (lambda () (aggressive-indent-mode -1)))
-  (makefile-mode        . (lambda () (aggressive-indent-mode -1)))
-  (makefile-gmake-mode  . (lambda () (aggressive-indent-mode -1)))
-  (python-mode          . (lambda () (aggressive-indent-mode -1)))
-  (sql-interactive-mode . (lambda () (aggressive-indent-mode -1)))
-  (java-mode            . (lambda () (aggressive-indent-mode -1)))
-  (snippet-mode         . (lambda () (aggressive-indent-mode -1)))
+  ((java-mode
+    c-mode
+    c++-mode
+    scheme-mode
+    emacs-lisp-mode
+    lisp-mode
+    clojure-mode
+    clojurescript-mode
+    javascript-mode
+    js-mode
+    js-jsx-mode
+    js-ts-mode
+    typescript-ts-mode
+    sql-mode
+    nix-mode)
+   . aggressive-indent-mode)
   :config
   (electric-indent-mode 0))
 

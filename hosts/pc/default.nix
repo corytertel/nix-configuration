@@ -52,6 +52,10 @@
     xboxdrv
   ];
 
+  environment.variables = {
+    GDK_SCALE = 2;
+  };
+
   system.stateVersion = "21.11";
   home-manager.users.cory.home.stateVersion = "21.11";
 

@@ -269,4 +269,5 @@ in {
   # "webgl.disabled" = true;
   # "webgl.renderer-string-override" = " ";
   # "webgl.vendor-string-override" = " ";
+  "plugin.scan.plid.all" = false;
 }

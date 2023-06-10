@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: define lambda
+# key: defl
+# --
+define $0
+  (lambda ($1) $0)

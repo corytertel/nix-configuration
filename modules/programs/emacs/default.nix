@@ -23,7 +23,7 @@ let
   + (builtins.readFile ./elisp/init-completion.el)
   + (builtins.readFile ./elisp/init-lsp.el)
   + (builtins.readFile ./elisp/init-snippets.el)
-  # + (builtins.readFile ./elisp/company-yasnippet.el)
+  + (builtins.readFile ./elisp/company-yasnippet.el)
 
   # IDE Stuff
   + (builtins.readFile ./elisp/init-checking.el)
@@ -50,7 +50,7 @@ let
   + (builtins.readFile ./elisp/init-dired.el)
   + (builtins.readFile ./elisp/init-nixos.el)
   + (builtins.readFile ./elisp/init-org.el)
-  + (builtins.readFile ./elisp/init-pdf.el)
+  # + (builtins.readFile ./elisp/init-pdf.el)
 
   # Window Management
   + (builtins.readFile ./elisp/init-window-management.el)
@@ -108,10 +108,6 @@ in {
 
   options.programs.cory.emacs = {
     enable = mkEnableOption "Enables emacs";
-    exwm = mkOption {
-      type = types.bool;
-      default = false;
-    };
   };
 
   config = mkIf cfg.enable {

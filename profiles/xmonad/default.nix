@@ -17,25 +17,25 @@
   programs.cory.caja.enable = true;
 
   # Photo Viewer
-  programs.cory.gwenview = {
-    enable = true;
-    config = import ../../config/gwenview/config.nix;
-  };
+  programs.cory.sxiv.enable = true;
 
   # Video Player
-  programs.cory.mpc-qt.enable = true;
+  apps.videoPlayer = {
+    name = "vlc";
+    command = "vlc";
+    desktopFile = "vlc.desktop";
+    package = pkgs.vlc;
+  };
 
   # PDF Viewer
-  programs.cory.qpdfview.enable = true;
+  programs.cory.zathura.enable = true;
 
-  # Set other apps
-  apps = {
-    musicPlayer = {
-      name = "strawberry";
-      command = "strawberry";
-      desktopFile = "org.strawberrymusicplayer.strawberry.desktop";
-      package = pkgs.strawberry;
-    };
+  # Music Player
+  apps.musicPlayer = {
+    name = "strawberry";
+    command = "strawberry";
+    desktopFile = "org.strawberrymusicplayer.strawberry.desktop";
+    package = pkgs.strawberry;
   };
 
   # Notifications

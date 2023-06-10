@@ -47,4 +47,8 @@
     url = "https://nyaa.si/";
     keyword = "nyaa";
   };
+  "codeforces" = {
+    url = "https://codeforces.com/problemset";
+    keyword = "codeforces";
+  };
 }

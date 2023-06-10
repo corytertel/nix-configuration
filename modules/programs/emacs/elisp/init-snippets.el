@@ -2,6 +2,8 @@
 (use-package yasnippet
   :hook
   (emacs-lisp-mode . cory/elisp-super-capf)
+  :custom-face
+  (yas-field-highlight-face ((t (:inherit nil :background "light goldenrod yellow"))))
   :config
   ;; Don't touch TAB!!!
   ;; The active keymap while a snippet expansion is in progress.
@@ -34,9 +36,12 @@
 		(list (cape-super-capf
 		       ;; #'tempel-complete
 		       (cape-company-to-capf #'company-yasnippet)
+		       ;; #'cape-yasnippet
 		       #'elisp-completion-at-point)
 		      #'cape-dabbrev
 		      #'cape-file))))
+
+(use-package yasnippet-snippets)
 
 (use-package common-lisp-snippets)
 

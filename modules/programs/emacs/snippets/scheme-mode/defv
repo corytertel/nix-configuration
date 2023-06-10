@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: defv
+# key: defv
+# --
+define $0

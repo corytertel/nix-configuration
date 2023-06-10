@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../../profiles/exwm
+    # ../../profiles/xmonad
     /etc/nixos/hardware-configuration.nix
   ];
 

@@ -125,6 +125,7 @@
     (setq-local completion-at-point-functions
 		(list (cape-super-capf
 		       (cape-company-to-capf #'company-yasnippet)
+		       ;; #'cape-yasnippet
 		       #'geiser-capf--for-filename
 		       #'geiser-capf--for-module
 		       #'geiser-capf--for-symbol)

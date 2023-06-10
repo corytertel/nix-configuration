@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: if (null? ...) ... ...
+# key: ifn
+# --
+if (null? $1)
+   $2
+   $0

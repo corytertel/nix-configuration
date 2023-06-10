@@ -27,6 +27,8 @@ in {
       };
     };
 
+    programs.light.enable = true;
+
     environment.variables = {
       QT_AUTO_SCREEN_SCALE_FACTOR = "0";
       PLASMA_USE_QT_SCALING = "1";
@@ -67,7 +69,6 @@ in {
         networkmanagerapplet
         cbatticon
         xdgmenumaker
-        xbrightness
         imagemagick
         kde-gtk-config
         trash-cli

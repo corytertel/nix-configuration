@@ -36,13 +36,8 @@
     ./apps
     ./theme
 
-    ./windowManagers/exwm
-    ./windowManagers/fluxbox
     ./windowManagers/fvwm-laptop
     ./windowManagers/fvwm-pc
-    ./windowManagers/kde
-    # ./windowManagers/xmonad-laptop
-    # ./windowManagers/xmonad-pc
     ./windowManagers/xmonad
   ];
 }

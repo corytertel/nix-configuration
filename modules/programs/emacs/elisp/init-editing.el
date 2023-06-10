@@ -322,7 +322,6 @@ enacts."
 ;; Multi-edit package
 (use-package macrursors
   :config
-  (require 'macrursors-select)
   (add-hook 'macrursors-pre-finish-hook
 	    (lambda ()
 	      (aggressive-indent-mode -1)
@@ -348,7 +347,8 @@ enacts."
   (define-key macrursors-mark-map (kbd "SPC") #'macrursors-select)
   (define-key isearch-mode-map (kbd "C-;") #'macrursors-mark-from-isearch)
   (define-key isearch-mode-map (kbd "C->") #'macrursors-mark-next-from-isearch)
-  (define-key isearch-mode-map (kbd "C-<") #'macrursors-mark-previous-from-isearch))
+  (define-key isearch-mode-map (kbd "C-<") #'macrursors-mark-previous-from-isearch)
+  (require 'macrursors-select))
 
 ;; Visual regex replacement
 (use-package visual-regexp
@@ -367,12 +367,8 @@ enacts."
 
 ;; Move text
 (use-package move-text
-  :bind (([(control shift up)]   . move-text-up)
-         ([(control shift down)] . move-text-down)
-         ([(meta shift up)]      . move-text-up)
-         ([(meta shift down)]    . move-text-down)
-	 ("C-S-n" . move-text-down)
-	 ("C-S-p" . move-text-up)))
+  :bind (("M-e" . move-text-down)
+	 ("M-i" . move-text-up)))
 
 ;; Code folding
 ;; (dolist (mode '(c-mode-common-hook

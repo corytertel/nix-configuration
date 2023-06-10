@@ -68,13 +68,12 @@ myClickJustFocuses = False
 
 myBorderWidth = 2
 
--- myNormalBorderColor  = "#aaaaaa"
 myNormalBorderColor  = "#ffffff"
 myFocusedBorderColor = "#3647d9"
 
 barWidth = 110
 
-cornerWidth = 50
+cornerWidth = 400
 
 myModMask = mod4Mask
 
@@ -87,20 +86,20 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
-    -- Xmonad prompt
     [ ("M-<Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run -show -scroll-method 0 -sort -hover-select -me-select-entry '' -me-accept-entry MousePrimary -icon-theme \"crystal-nova\" -show-icons -terminal kitty")
-    -- [ ("M-<Space>", spawn "dmenu_run -nb #ffffff -nf #000000 -sb #3647d9 -sf #ffffff -fn \"Liberation Serif\" -b")
     , ("M-<Escape>", spawn "mate-system-monitor --show-processes-tab")
     , ("M-f", spawn "caja --browser \"/home/cory\"")
     , ("M-e", spawn "emacsclient -c")
     , ("S-M-e", spawn "emacsclient -e '(emacs-everywhere)'")
     , ("M-t", spawn myTerminal)
     , ("M-l", spawn "xscreensaver-command -lock")
+    , ("M-s",   sendMessage $ Swap)
+    , ("M-r",   sendMessage $ Rotate)
     ----------------------------------------------------------------------
     --                          Brightness                              --
     ----------------------------------------------------------------------
-    , ("<XF86MonBrightnessUp>", spawn "xbrightness +2500")
-    , ("<XF86MonBrightnessDown>", spawn "xbrightness -2500")
+    , ("<XF86MonBrightnessUp>", spawn "light -A 5")
+    , ("<XF86MonBrightnessDown>", spawn "light -U 5")
 
     ----------------------------------------------------------------------
     --                            Audio                                 --
@@ -123,30 +122,26 @@ myAdditionalKeys =
     ----------------------------------------------------------------------
     --                     Basic Window Management                      --
     ----------------------------------------------------------------------
-    -- , ("M1-<Tab>", nextMatch History (return True))
     -- , ("M1-<Tab>", goToSelected $ myGsconfig myGscolorizer)
     , ("M1-<Tab>", goToSelected def { gs_navigate = myGsnavigation })
-    , ("M-<Next>", windows W.focusDown)
-    , ("M-<Prior>", windows W.focusDown)
+    , ("M-<Page_Up>", windows W.focusDown)
+    , ("M-<Page_Down>", windows W.focusDown)
     , ("<F2>", windows W.focusDown)
     , ("<F5>", nextMatchWithThis Forward className)
     , ("<F6>", nextMatch History (resource =!? "scratchpad"))
-    -- , ("<F7>", sendMessage NextLayout)
     , ("<F7>", sendMessage Mag.Toggle)
     , ("<F8>", kill)
     , ("<F9>" , nextMatchOrDo Forward (className =? "Emacs") (spawn "emacsclient -c"))
-    , ("<F10>", nextMatchOrDo Forward (className =? "firefox" <||> className =? "chromium-browser") (spawn "firefox"))
+    , ("<F10>", nextMatchOrDo Forward (className =? "firefox" <||> className =? "Chromium-browser") (spawn "firefox"))
     , ("<F11>", nextMatchOrDo Forward (className =? "kitty") (spawn "kitty"))
-    -- , ("<F12>", spawn "layout-switch")
-    , ("<F12>", runSelectedAction def
+    , ("<F12>", spawn "layout-switch")
+    , ("M-<F12>", runSelectedAction def
                 { gs_navigate = myGsnavigation }
                 [ ("US Minimak", spawn "setxkbmap us_minimak")
                 , ("RU Minimak", spawn "setxkbmap ru_phonetic_minimak")
                 , ("US Qwerty",  spawn "setxkbmap us")
                 ])
     , ("<Scroll_Lock>", nextMatchOrDo Forward (className =? "discord" <||> className =? "telegram-desktop") (spawn "discord"))
-      -- , ("M1-m", sendMessage $ JumpToLayout "messages")
-    -- , ("C-S-p", sendMessage $ JumpToLayout "context")
     , ("C-M-<Up>", planeMove (Lines 3) Circular ToUp)
     , ("C-M-<Down>", planeMove (Lines 3) Circular ToDown)
     , ("C-M-<Left>", planeMove (Lines 3) Circular ToLeft)
@@ -210,10 +205,6 @@ rightShiftWS = planeShift (Lines 3) Circular ToRight
 
 ------------------------------------------------------------------------
 
--- myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $ []
-
-------------------------------------------------------------------------
-
 myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
                 ]
     where
@@ -235,25 +226,6 @@ gaps = spacingRaw False (Border 0 0 140 0)
 
 bsp =
   renamed [Replace "bsp"] $ emptyBSP
-
--- mySDConfig = def { activeColor         = "#c0daff"
---                  , inactiveColor       = "#ffffff"
---                  , urgentColor         = "#ff00ff"
---                  , activeBorderColor   = "#3647d9"
---                  , inactiveBorderColor = "#3647d9"
---                  , urgentBorderColor   = "#3647d9"
---                  , activeBorderWidth   = 1
---                  , inactiveBorderWidth = 1
---                  , urgentBorderWidth   = 1
---                  , activeTextColor     = "#000000"
---                  , inactiveTextColor   = "#000000"
---                  , urgentTextColor     = "#000000"
---                  , fontName            = "xft:Liberation Serif"
---                  , decoWidth           = 2240
---                  , decoHeight          = 30
---                  , windowTitleAddons   = []
---                  , windowTitleIcons    = []
---                  }
 
 myLayout = screenCornerLayoutHook
   . gaps
@@ -292,6 +264,7 @@ myManageHook = composeAll
   , title     =? "Open"                                       --> doCenterFloat
   , title     =? "Open Files"                                 --> doCenterFloat
   , title     =? "emacs-run-launcher"                         --> doCenterFloat
+  , resource  =? "nm-applet"                                  --> doCenterFloat
   , resource  =? "stalonetray"                                --> doIgnore
   , resource  =? "desktop_window"                             --> doIgnore
   , resource  =? "kdesktop"                                   --> doIgnore
@@ -302,14 +275,10 @@ myManageHook = composeAll
 
 ------------------------------------------------------------------------
 
-data ScreenCorner = SCUpperLeftH
-                  | SCUpperLeftV
-                  | SCUpperRightH
-                  | SCUpperRightV
-                  | SCLowerLeftH
-                  | SCLowerLeftV
-                  | SCLowerRightH
-                  | SCLowerRightV
+data ScreenCorner = SCUpperLeft
+                  | SCUpperRight
+                  | SCLowerLeft
+                  | SCLowerRight
                   | SCLeft
                   | SCRight
                   | SCTop
@@ -340,37 +309,20 @@ addScreenCorners = mapM_ (uncurry addScreenCorner)
 -- "Translate" a ScreenCorner to real (x,y) Positions
 createWindowAt :: ScreenCorner -> X Window
 
-createWindowAt SCUpperLeftH =
-  createEdgeAt 0 0 cornerWidth 1
+createWindowAt SCUpperLeft = createEdgeAt 0 0 1 1
 
-createWindowAt SCUpperLeftV =
-  createEdgeAt 0 0 1 cornerWidth
+createWindowAt SCUpperRight = withDisplay $ \dpy ->
+  let w = displayWidth  dpy (defaultScreen dpy) - 1
+  in createEdgeAt (P.fi w) 0 1 1
 
-createWindowAt SCUpperRightH = withDisplay $ \dpy ->
-    let w = displayWidth  dpy (defaultScreen dpy)
-    in createEdgeAt ((P.fi w) - (P.fi cornerWidth)) 0 cornerWidth 1
+createWindowAt SCLowerLeft = withDisplay $ \dpy ->
+  let h = displayHeight dpy (defaultScreen dpy) - 1
+  in createEdgeAt 0 (P.fi h) 1 1
 
-createWindowAt SCUpperRightV = withDisplay $ \dpy ->
-    let w = displayWidth  dpy (defaultScreen dpy)
-    in createEdgeAt (P.fi (w - 1)) 0 1 cornerWidth
-
-createWindowAt SCLowerLeftH = withDisplay $ \dpy ->
-    let h = displayHeight dpy (defaultScreen dpy)
-    in createEdgeAt 0 (P.fi (h - 1)) cornerWidth 1
-
-createWindowAt SCLowerLeftV = withDisplay $ \dpy ->
-    let h = displayHeight dpy (defaultScreen dpy)
-    in createEdgeAt 0 ((P.fi h) - (P.fi cornerWidth)) 1 cornerWidth
-
-createWindowAt SCLowerRightH = withDisplay $ \dpy ->
-    let w = displayWidth  dpy (defaultScreen dpy)
-        h = displayHeight dpy (defaultScreen dpy)
-    in createEdgeAt ((P.fi w) - (P.fi cornerWidth)) (P.fi (h - 1)) cornerWidth 1
-
-createWindowAt SCLowerRightV = withDisplay $ \dpy ->
-    let w = displayWidth  dpy (defaultScreen dpy)
-        h = displayHeight dpy (defaultScreen dpy)
-    in createEdgeAt (P.fi (w - 1)) ((P.fi h) - (P.fi cornerWidth)) 1 cornerWidth
+createWindowAt SCLowerRight = withDisplay $ \dpy ->
+    let w = displayWidth  dpy (defaultScreen dpy) - 1
+        h = displayHeight dpy (defaultScreen dpy) - 1
+    in createEdgeAt (P.fi w) (P.fi h) 1 1
 
 createWindowAt SCLeft = withDisplay $ \dpy ->
     let h = displayHeight dpy (defaultScreen dpy)
@@ -476,14 +428,10 @@ myStartupHook = do
                    , (SCLeft,  leftWS >> spawn "xdotool mousemove_relative 2238 0")
                    , (SCTop, upWS >> spawn "xdotool mousemove_relative 0 1398")
                    , (SCBottom, downWS >> spawn "xdotool mousemove_relative -- 0 -1398")
-                   , (SCUpperLeftH, leftWS >> upWS >> spawn "xdotool mousemove 2190 1350")
-                   , (SCUpperLeftV, leftWS >> upWS >> spawn "xdotool mousemove 2190 1350")
-                   , (SCUpperRightH, rightWS >> upWS >> spawn "xdotool mousemove 50 1350")
-                   , (SCUpperRightV, rightWS >> upWS >> spawn "xdotool mousemove 50 1350")
-                   , (SCLowerLeftH, leftWS >> downWS >> spawn "xdotool mousemove 2190 50")
-                   , (SCLowerLeftV, leftWS >> downWS >> spawn "xdotool mousemove 2190 50")
-                   , (SCLowerRightH, rightWS >> downWS >> spawn "xdotool mousemove 50 50")
-                   , (SCLowerRightV, rightWS >> downWS >> spawn "xdotool mousemove 50 50")
+                   , (SCUpperLeft, leftWS >> upWS >> spawn "xdotool mousemove 2238 1398")
+                   , (SCUpperRight, rightWS >> upWS >> spawn "xdotool mousemove 2 1398")
+                   , (SCLowerLeft, leftWS >> downWS >> spawn "xdotool mousemove 2238 2")
+                   , (SCLowerRight, rightWS >> downWS >> spawn "xdotool mousemove 2 2")
                    ]
   setDefaultCursor xC_left_ptr
 
@@ -536,36 +484,26 @@ main = xmonad
   . ewmhFullscreen
   . ewmh
   . docks
-  -- . sideBorder mySideBorderConfig
   =<< statusBar bar ppWorkspaces toggleStrutsKey defaults
 
--- mySideBorderConfig :: SideBorderConfig
--- mySideBorderConfig = def
---   { sbSide          = D
---   , sbActiveColor   = "#c0daff"
---   , sbInactiveColor = "#ffffff"
---   , sbSize          = 30
---   }
-
 defaults = def {
-      -- simple stuff
-        terminal           = myTerminal,
-        focusFollowsMouse  = myFocusFollowsMouse,
-        clickJustFocuses   = myClickJustFocuses,
-        borderWidth        = myBorderWidth,
-        modMask            = myModMask,
-        workspaces         = myWorkspaces,
-        normalBorderColor  = myNormalBorderColor,
-        focusedBorderColor = myFocusedBorderColor,
+  -- simple stuff
+  terminal           = myTerminal,
+  focusFollowsMouse  = myFocusFollowsMouse,
+  clickJustFocuses   = myClickJustFocuses,
+  borderWidth        = myBorderWidth,
+  modMask            = myModMask,
+  workspaces         = myWorkspaces,
+  normalBorderColor  = myNormalBorderColor,
+  focusedBorderColor = myFocusedBorderColor,
 
-      -- key bindings
-        keys               = myKeys,
-        -- mouseBindings      = myMouseBindings,
+  -- key bindings
+  keys               = myKeys,
 
-      -- hooks, layouts
-        layoutHook         = myLayout,
-        manageHook         = myManageHook,
-        handleEventHook    = myEventHook,
-        logHook            = myLogHook,
-        startupHook        = myStartupHook
-    } `additionalKeysP` myAdditionalKeys
+  -- hooks, layouts
+  layoutHook         = myLayout,
+  manageHook         = myManageHook,
+  handleEventHook    = myEventHook,
+  logHook            = myLogHook,
+  startupHook        = myStartupHook
+  } `additionalKeysP` myAdditionalKeys
