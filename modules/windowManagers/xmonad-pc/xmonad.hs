@@ -66,12 +66,12 @@ myFocusFollowsMouse = True
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
 
-myBorderWidth = 8
+myBorderWidth = 2
 
 myNormalBorderColor  = "#ffffff"
 myFocusedBorderColor = "#3647d9"
 
-cornerWidth = 800
+cornerWidth = 300
 
 myModMask = mod4Mask
 
@@ -412,23 +412,21 @@ myLogHook = historyHook
 
 myStartupHook = do
   spawnOnce "emacs --daemon"
-  spawnOnce "touchegg --client"
   spawnOnce "conky"
   spawnOnce "nm-applet"
   spawnOnce "blueman-applet"
   spawnOnce "mate-volume-control-status-icon"
-  spawnOnce "cbatticon"
   spawnOnce "xscreensaver --no-splash"
   spawnOnce "feh --bg-fill /etc/wallpaper.jpg"
-  spawnOnce "sleep 10 && trayer --widthtype pixel --edge right --transparent true --alpha 0 --tint 0xffffff --width 330 --height 50 --distancefrom left --distance 45 --align right --expand false --padding 30 --iconspacing 5"
+  spawnOnce "sleep 10 && trayer --widthtype pixel --edge right --transparent true --alpha 0 --tint 0xffffff --width 330 --height 150 --distancefrom left --distance 45 --align right --expand false --padding 30 --iconspacing 5"
   setWMName "LG3D"
-  addScreenCorners [ (SCRight, rightWS >> spawn "xdotool mousemove_relative -- -2238 0")
-                   , (SCLeft,  leftWS >> spawn "xdotool mousemove_relative 2238 0")
-                   , (SCTop, upWS >> spawn "xdotool mousemove_relative 0 1398")
-                   , (SCBottom, downWS >> spawn "xdotool mousemove_relative -- 0 -1398")
-                   , (SCUpperLeft, leftWS >> upWS >> spawn "xdotool mousemove 2238 1398")
-                   , (SCUpperRight, rightWS >> upWS >> spawn "xdotool mousemove 2 1398")
-                   , (SCLowerLeft, leftWS >> downWS >> spawn "xdotool mousemove 2238 2")
+  addScreenCorners [ (SCRight, rightWS >> spawn "xdotool mousemove_relative -- -3838 0")
+                   , (SCLeft,  leftWS >> spawn "xdotool mousemove_relative 3838 0")
+                   , (SCTop, upWS >> spawn "xdotool mousemove_relative 0 2158")
+                   , (SCBottom, downWS >> spawn "xdotool mousemove_relative -- 0 -2158")
+                   , (SCUpperLeft, leftWS >> upWS >> spawn "xdotool mousemove 3838 2158")
+                   , (SCUpperRight, rightWS >> upWS >> spawn "xdotool mousemove 2 2158")
+                   , (SCLowerLeft, leftWS >> downWS >> spawn "xdotool mousemove 3838 2")
                    , (SCLowerRight, rightWS >> downWS >> spawn "xdotool mousemove 2 2")
                    ]
   setDefaultCursor xC_left_ptr

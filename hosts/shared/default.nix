@@ -99,24 +99,16 @@
         };
       };
     };
-    # redshift = {
+    # postgresql = {
     #   enable = true;
-    # };
-    postgresql = {
-      enable = true;
-      package = pkgs.postgresql;
-      dataDir = "/persist/postgresql/data";
-      authentication = lib.mkForce ''
-        # Generated file; do not edit!
-        local all all              trust
-        host  all all 127.0.0.1/32 md5
-        host  all all ::1/128      md5
-      '';
-    };
-    # pgadmin =  {
-    #   enable = true;
-    #   initialEmail = "pgadmin4@pgadmin.org";
-    #   initialPasswordFile = "/persist/secrets/pgadmin4";
+    #   package = pkgs.postgresql;
+    #   dataDir = "/persist/postgresql/data";
+    #   authentication = lib.mkForce ''
+    #     # Generated file; do not edit!
+    #     local all all              trust
+    #     host  all all 127.0.0.1/32 md5
+    #     host  all all ::1/128      md5
+    #   '';
     # };
   };
 

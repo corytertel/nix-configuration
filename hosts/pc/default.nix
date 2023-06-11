@@ -10,7 +10,7 @@
   nix.settings.cores = 4;
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_xanmod_latest;
+    kernelPackages = pkgs.linuxPackages_6_1;
     kernelParams = [
       "pcie_aspm.policy=performance"
       "intel_iommu=on"
@@ -50,14 +50,14 @@
     xboxdrv
   ];
 
-  environment.variables = {
-    GDK_SCALE = 2;
-  };
+  # environment.variables = {
+  #   GDK_SCALE = "2";
+  # };
 
   system.stateVersion = "21.11";
-  home-manager.users.cory.home.stateVersion = "21.11";
 
   home-manager.users.cory = {
+    home.stateVersion = "21.11";
     # Xft.antialias: 1
     # Xft.hinting: 1
     # Xft.autohint: 0
@@ -65,7 +65,7 @@
     # Xft.rgba: rgb
     # Xft.lcdfilter: lcddefault
     xresources.extraConfig = ''
-      Xft.dpi: 150
+      Xft.dpi: 125
     '';
 
     home.packages = with pkgs; [

@@ -65,7 +65,6 @@ in {
         pavucontrol
         pasystray
         networkmanagerapplet
-        cbatticon
         xdgmenumaker
         imagemagick
         kde-gtk-config
