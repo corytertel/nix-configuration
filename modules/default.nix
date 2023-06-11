@@ -38,6 +38,7 @@
 
     ./windowManagers/fvwm-laptop
     ./windowManagers/fvwm-pc
-    ./windowManagers/xmonad
+    ./windowManagers/xmonad-laptop
+    ./windowManagers/xmonad-pc
   ];
 }

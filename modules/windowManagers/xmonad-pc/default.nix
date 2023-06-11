@@ -2,9 +2,9 @@
 with lib;
 
 let
-  cfg = config.windowManagers.cory.xmonad;
+  cfg = config.windowManagers.cory.xmonad-pc;
 in {
-  options.windowManagers.cory.xmonad = {
+  options.windowManagers.cory.xmonad-pc = {
     enable = mkEnableOption "Enable xmonad";
   };
 
@@ -27,8 +27,6 @@ in {
       };
     };
 
-    programs.light.enable = true;
-
     environment.variables = {
       QT_AUTO_SCREEN_SCALE_FACTOR = "0";
       PLASMA_USE_QT_SCALING = "1";
@@ -38,7 +36,7 @@ in {
 
     environment = {
       etc = {
-        "wallpaper.jpg".source = ./images/maui.jpg;
+        "wallpaper.jpg".source = ./images/honolulu.jpg;
         "xmobar/xmobarrc".source = ./xmobarrc;
         "xmobar/1.xpm".source = ./images/1.xpm;
         "xmobar/2.xpm".source = ./images/2.xpm;
@@ -75,25 +73,18 @@ in {
         xdotool
         xscreensaver
         rofi
-        # dmenu
         gtk3
         glib
         gsettings-desktop-schemas
+        mate.mate-system-monitor
+        mate.mate-power-manager
+        upower
+        mate.mate-media
 
         conky
         lua
         lm_sensors
         lsb-release
-
-        # all configured in dconf
-        mate.eom
-        mate.caja
-        mate.atril
-        mate.mate-terminal
-        mate.mate-system-monitor
-        mate.mate-power-manager
-        upower
-        mate.mate-media
       ];
     };
   };

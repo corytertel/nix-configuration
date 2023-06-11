@@ -23,6 +23,7 @@ super: self: {
         trie
         utf8
         vector-lib
+        imlib2
 
         srfi-1
         srfi-13

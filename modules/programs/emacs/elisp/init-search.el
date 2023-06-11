@@ -85,3 +85,8 @@
 (define-key isearch-mode-map [remap kmacro-end-or-call-macro] #'cory/isearch-call-macro-at-point)
 (define-key isearch-mode-map (kbd "SPC")
   (lambda () (interactive) (isearch-printing-char ?. 1) (isearch-printing-char ?* 1)))
+
+(use-package symbol-overlay
+  :bind
+  ("M-i" . symbol-overlay-jump-prev)
+  ("M-e" . symbol-overlay-jump-next))

@@ -4,14 +4,12 @@
   imports = [
     ./hardware-configuration.nix
     ../shared
-    ../../profiles/fvwm-pc
+    ../../profiles/xmonad-pc
   ];
 
   nix.settings.cores = 4;
 
   boot = {
-    # kernelPackages = pkgs.linuxPackages_5_15;
-    # kernelPackages = pkgs.linuxPackages_xanmod;
     kernelPackages = pkgs.linuxPackages_xanmod_latest;
     kernelParams = [
       "pcie_aspm.policy=performance"

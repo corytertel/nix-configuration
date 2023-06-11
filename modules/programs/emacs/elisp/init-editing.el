@@ -366,9 +366,9 @@ enacts."
 	(call-interactively 'vr/replace)))))
 
 ;; Move text
-(use-package move-text
-  :bind (("M-e" . move-text-down)
-	 ("M-i" . move-text-up)))
+;; (use-package move-text
+;;   :bind (("M-e" . move-text-down)
+;; 	 ("M-i" . move-text-up)))
 
 ;; Code folding
 ;; (dolist (mode '(c-mode-common-hook

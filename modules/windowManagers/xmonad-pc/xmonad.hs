@@ -66,14 +66,12 @@ myFocusFollowsMouse = True
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
 
-myBorderWidth = 2
+myBorderWidth = 8
 
 myNormalBorderColor  = "#ffffff"
 myFocusedBorderColor = "#3647d9"
 
-barWidth = 110
-
-cornerWidth = 400
+cornerWidth = 800
 
 myModMask = mod4Mask
 
@@ -221,7 +219,7 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
 
 -- Spacing
 -- top, bottom, right, left
-gaps = spacingRaw False (Border 0 0 140 0)
+gaps = spacingRaw False (Border 0 0 240 0)
   True (Border 0 0 0 0) True
 
 bsp =

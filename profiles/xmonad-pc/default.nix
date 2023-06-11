@@ -2,7 +2,7 @@
 
 {
   # Window Manager
-  windowManagers.cory.xmonad.enable = true;
+  windowManagers.cory.xmonad-pc.enable = true;
 
   # # Editor
   programs.cory.emacs.enable = true;
@@ -51,7 +51,8 @@
   # Discord
   programs.cory.discord = {
     enable = true;
-    css = builtins.readFile ../../config/discocss/skeuocord.theme.css;
+    # css = builtins.readFile ../../config/discocss/skeuocord.theme.css;
+    css = "";
   };
 
   # Shell
@@ -132,7 +133,7 @@
   };
 
   home-manager.users.cory.home.file.".config/conky" = {
-    source = ../../config/conky/laptop;
+    source = ../../config/conky/pc;
     recursive = true;
   };
 

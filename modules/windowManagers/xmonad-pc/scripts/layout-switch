@@ -1,0 +1,3 @@
+#!/bin/sh
+
+if [[ "$(setxkbmap -query | grep layout | awk 'END{print $2}')" == "us_minimak" ]]; then setxkbmap "ru_phonetic_minimak"; else setxkbmap "us_minimak"; fi

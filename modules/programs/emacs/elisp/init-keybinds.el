@@ -1,18 +1,11 @@
-;;
-;; --- KEYBINDING FIX ---
-;;
+;;; Keybinding Fix
 
-(define-key input-decode-map [?\C-m] [C-m])
+;; (define-key input-decode-map [?\C-m] [C-m])
 (define-key input-decode-map [?\C-i] [C-i])
-;; (define-key input-decode-map [?\C-?\S-m] [C-S-m])
-;; (define-key input-decode-map [?\C-?\S-i] [C-S-i])
 (add-hook 'server-after-make-frame-hook
 	  (lambda ()
-	    (define-key input-decode-map [?\C-m] [C-m])
-	    (define-key input-decode-map [?\C-i] [C-i])
-	    ;; (define-key input-decode-map [?\C-?\S-m] [C-S-m])
-	    ;; (define-key input-decode-map [?\C-?\S-i] [C-S-i])
-	    ))
+	    ;; (define-key input-decode-map [?\C-m] [C-m])
+	    (define-key input-decode-map [?\C-i] [C-i])))
 
 ;; Now:
 ;; (equal (kbd "TAB") (kbd "C-i"))   ; -> t
