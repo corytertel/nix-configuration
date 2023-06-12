@@ -1,0 +1,83 @@
+// 4 Key Minimak
+
+default partial alphanumeric_keys modifier_keys
+xkb_symbols "basic" {
+
+    name[Group1]= "English";
+
+    key <TLDE> { [       dollar, asciitilde            ] };
+
+    key <AE01> { [    ampersand, 1                     ] };
+    key <AE02> { [  bracketleft, 2                     ] };
+    key <AE03> { [    braceleft, 3                     ] };
+    key <AE04> { [   braceright, 4                     ] };
+    key <AE05> { [    parenleft, 5                     ] };
+    key <AE06> { [        equal, 6                     ] };
+    key <AE07> { [     asterisk, 7                     ] };
+    key <AE08> { [   parenright, 8                     ] };
+    key <AE09> { [         plus, 9                     ] };
+    key <AE10> { [ bracketright, 0                     ] };
+    key <AE11> { [       exclam, percent               ] };
+    key <AE12> { [   numbersign, grave                 ] };
+
+    key <AD01> { [            q, Q                     ] };
+    key <AD02> { [            w, W                     ] };
+    key <AD03> { [            d, D, Delete, Delete     ] };
+    key <AD04> { [            r, R                     ] };
+    key <AD05> { [            k, K                     ] };
+    key <AD06> { [            y, Y, End, End           ] };
+    key <AD07> { [            u, U                     ] };
+    key <AD08> { [            i, I, Up, Up             ] };
+    key <AD09> { [            o, O                     ] };
+    key <AD10> { [            p, P                     ] };
+    key <AD11> { [        minus, underscore            ] };
+    key <AD12> { [        slash, question              ] };
+
+    key <AC01> { [            a, A                     ] };
+    key <AC02> { [            s, S                     ] };
+    key <AC03> { [            t, T                     ] };
+    key <AC04> { [            f, F, Find, Find         ] };
+    key <AC05> { [            g, G, Escape, Escape     ] };
+    key <AC06> { [            h, H, Help, Help         ] };
+    key <AC07> { [            j, J, Left, Left         ] };
+    key <AC08> { [            e, E, Down, Down         ] };
+    key <AC09> { [            l, L, Right, Right       ] };
+    key <AC10> { [    semicolon, colon                 ] };
+    key <AC11> { [   apostrophe, quotedbl              ] };
+
+    key <AB01> { [            z, Z, Undo, Redo         ] };
+    key <AB02> { [            x, X, Cut, Cut           ] };
+    key <AB03> { [            c, C, Copy, Copy         ] };
+    key <AB04> { [            v, V, Paste, Paste       ] };
+    key <AB05> { [            b, B, Home, Home         ] };
+    key <AB06> { [            n, N, Page_Down, Page_Up ] };
+    key <AB07> { [            m, M                     ] };
+    key <AB08> { [        comma, less                  ] };
+    key <AB09> { [       period, greater               ] };
+    
+    // Trigger shift lock when both shifts are pressed
+    key <LFSH> {
+      type[Group1]="TWO_LEVEL",
+      symbols[Group1] = [ Shift_L, Shift_Lock ]
+    };
+    key <RTSH> {
+      type[Group1]="TWO_LEVEL",
+      symbols[Group1] = [ Shift_R, Shift_Lock ]
+    };
+    
+    // Eliminate CapsLock, making it another Ctrl.
+    replace key <CAPS> { [ Control_L, Control_L ] };
+    modifier_map  Control { <CAPS>, <LCTL> };
+
+    // Make slash into AltGr
+    key <AB10> {
+      type= "ONE_LEVEL",
+      symbols[Group1]= [ ISO_Level3_Shift ]
+    };
+        
+    // Make Control_R into at
+    key <RCTL> {
+      type= "TWO_LEVEL",
+      symbols[Group1]= [ at, asciicircum ]
+    };
+};

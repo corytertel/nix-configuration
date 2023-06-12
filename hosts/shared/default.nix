@@ -43,25 +43,10 @@
           languages = [ "eng" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_qwerty";
         };
-        us_beakl_emacs = {
-          description = "US layout with numbers and characters flipped";
-          languages = [ "eng" ];
-          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_beakl_emacs";
-        };
         us_minimak = {
           description = "US layout with numbers and characters flipped";
           languages = [ "eng" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_minimak";
-        };
-        us_carplax = {
-          description = "US layout with numbers and characters flipped";
-          languages = [ "eng" ];
-          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_carplax";
-        };
-        us_qgmlfj = {
-          description = "US layout with numbers and characters flipped";
-          languages = [ "eng" ];
-          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_qgmlfj";
         };
         ru_phonetic_qwerty = {
           description = "Russian phonetic translation of the US qwerty layout";
@@ -72,11 +57,6 @@
           description = "Russian phonetic translation of the US minimak layout";
           languages = [ "rus" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_phonetic_minimak";
-        };
-        ru_beakl_emacs = {
-          description = "Russian phonetic translation of the US beakl emacs layout";
-          languages = [ "rus" ];
-          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_beakl_emacs";
         };
       };
       libinput = {

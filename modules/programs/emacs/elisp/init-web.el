@@ -48,10 +48,10 @@
 (use-package web-mode
   :bind
   (:map web-mode-map
-   ("M-i" . cory/mark-sentence)
-   ("C-M-i" . mark-paragraph)
-   ("C-M-a" . backward-paragraph)
-   ("C-M-e" . forward-paragraph)
+   ("M-h" . cory/mark-sentence)
+   ("C-M-b" . backward-paragraph)
+   ("C-M-h" . mark-paragraph)
+   ("C-M-y" . forward-paragraph)
    ("<" . cory/insert-angled-pair)
    (">" . cory/close-angled-pair)
    ;; Minimak binds

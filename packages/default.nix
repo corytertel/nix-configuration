@@ -11,7 +11,7 @@
   (import ./firefox-oxygen-theme.nix { inherit lib pkgs; })
   (import ./iosevka.nix {inherit lib pkgs; })
   (import ./jdtls.nix { inherit pkgs; })
-  (import ./keyboard-layouts.nix { inherit pkgs; })
+  (import ./keyboard-layouts { inherit pkgs; })
   (import ./layout-switch.nix {inherit pkgs; })
   (import ./newaita-reborn.nix { inherit lib pkgs; })
   (import ./new-tab-override.nix { inherit lib pkgs; })

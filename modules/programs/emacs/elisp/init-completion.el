@@ -143,6 +143,7 @@
     (define-key vertico-map (kbd "<backtab>") #'vertico-previous)
     (define-key vertico-map (kbd "/") #'cory/vertico-slash)
     (define-key vertico-map (kbd "M-m") #'vertico-quick-jump)
+    (define-key vertico-map (kbd "RET") #'vertico-exit)
     (define-key vertico-reverse-map (kbd "M-n") #'vertico-grid-scroll-up)
     (define-key vertico-reverse-map (kbd "<prior>") #'vertico-grid-scroll-up)
     (define-key vertico-reverse-map (kbd "C-n") #'vertico-grid-scroll-down)
@@ -164,13 +165,14 @@
   :ensure nil
   ;; More convenient directory navigation commands
   :bind (:map vertico-map
-         ("RET" . vertico-directory-enter)
+         ;; ("RET" . vertico-directory-enter)
          ("DEL" . vertico-directory-delete-char)
          ("M-DEL" . vertico-directory-delete-word))
   ;; Tidy shadowed file names
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
 (use-package marginalia
+  :disabled t
   :after vertico
   :ensure t
   :config

@@ -66,7 +66,7 @@ myFocusFollowsMouse = True
 myClickJustFocuses :: Bool
 myClickJustFocuses = False
 
-myBorderWidth = 3
+myBorderWidth = 2
 
 myNormalBorderColor  = "#ffffff"
 myFocusedBorderColor = "#3647d9"
@@ -148,7 +148,7 @@ myAdditionalKeys =
     , ("M1-M-<Down>", planeShift (Lines 3) Circular ToDown)
     , ("M1-M-<Left>", planeShift (Lines 3) Circular ToLeft)
     , ("M1-M-<Right>", planeShift (Lines 3) Circular ToRight)
-    , ("C-`", namedScratchpadAction myScratchpads "terminal")
+    , ("C-$", namedScratchpadAction myScratchpads "terminal")
     ]
 
 ------------------------------------------------------------------------

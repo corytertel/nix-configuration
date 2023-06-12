@@ -94,7 +94,7 @@
 		    "C-c C-d C-d"
 		    "C-c C-d i"
 		    "C-c C-d TAB"
-		    "<C-i> ."))
+		    "C-h ."))
       (define-key
 	geiser-mode-map
 	(kbd bind)
@@ -106,14 +106,14 @@
   (with-eval-after-load 'geiser-doc
     (define-key geiser-doc-mode-map (kbd "N") nil)
     (define-key geiser-doc-mode-map (kbd "P") nil)
-    (define-key geiser-doc-mode-map (kbd "J") #'geiser-doc-next-section)
-    (define-key geiser-doc-mode-map (kbd "K") #'geiser-doc-previous-section)
+    (define-key geiser-doc-mode-map (kbd "E") #'geiser-doc-next-section)
+    (define-key geiser-doc-mode-map (kbd "I") #'geiser-doc-previous-section)
     (define-key geiser-doc-mode-map (kbd "n") nil)
     (define-key geiser-doc-mode-map (kbd "p") nil)
-    (define-key geiser-doc-mode-map (kbd "j") #'forward-button)
-    (define-key geiser-doc-mode-map (kbd "k") #'backward-button)
+    (define-key geiser-doc-mode-map (kbd "e") #'forward-button)
+    (define-key geiser-doc-mode-map (kbd "i") #'backward-button)
     (define-key geiser-doc-mode-map (kbd "b") nil)
-    (define-key geiser-doc-mode-map (kbd "h") #'geiser-doc-previous)
+    (define-key geiser-doc-mode-map (kbd "j") #'geiser-doc-previous)
     (define-key geiser-doc-mode-map (kbd "f") nil)
     (define-key geiser-doc-mode-map (kbd "l") #'geiser-doc-next))
 

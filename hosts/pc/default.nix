@@ -58,14 +58,14 @@
 
   home-manager.users.cory = {
     home.stateVersion = "21.11";
-    # Xft.antialias: 1
-    # Xft.hinting: 1
-    # Xft.autohint: 0
-    # Xft.hintstyle: hintslight
-    # Xft.rgba: rgb
-    # Xft.lcdfilter: lcddefault
     xresources.extraConfig = ''
-      Xft.dpi: 125
+      Xft.dpi: 128
+      Xft.autohint: 0
+      Xft.lcdfilter: lcddefault
+      Xft.hintstyle: hintfull
+      Xft.hinting: 1
+      Xft.antialias: 1
+      Xft.rgba: rgb
     '';
 
     home.packages = with pkgs; [

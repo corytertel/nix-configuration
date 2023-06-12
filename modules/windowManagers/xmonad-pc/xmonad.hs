@@ -139,7 +139,7 @@ myAdditionalKeys =
                 , ("RU Minimak", spawn "setxkbmap ru_phonetic_minimak")
                 , ("US Qwerty",  spawn "setxkbmap us")
                 ])
-    , ("<Scroll_Lock>", nextMatchOrDo Forward (className =? "discord" <||> className =? "telegram-desktop") (spawn "discord"))
+    -- , ("<Scroll_Lock>", nextMatchOrDo Forward (className =? "discord" <||> className =? "telegram-desktop") (spawn "discord"))
     , ("C-M-<Up>", planeMove (Lines 3) Circular ToUp)
     , ("C-M-<Down>", planeMove (Lines 3) Circular ToDown)
     , ("C-M-<Left>", planeMove (Lines 3) Circular ToLeft)
@@ -148,7 +148,7 @@ myAdditionalKeys =
     , ("M1-M-<Down>", planeShift (Lines 3) Circular ToDown)
     , ("M1-M-<Left>", planeShift (Lines 3) Circular ToLeft)
     , ("M1-M-<Right>", planeShift (Lines 3) Circular ToRight)
-    , ("C-`", namedScratchpadAction myScratchpads "terminal")
+    , ("C-$", namedScratchpadAction myScratchpads "terminal")
     ]
 
 ------------------------------------------------------------------------
