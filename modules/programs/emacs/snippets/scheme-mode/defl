@@ -2,5 +2,5 @@
 # name: define lambda
 # key: defl
 # --
-define $0
-  (lambda ($1) $0)
+define $1
+  (lambda ($2) $0)

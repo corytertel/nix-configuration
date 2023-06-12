@@ -71,7 +71,7 @@ let
     cp ${pkgs.writeText "default.el" initFile} $out/share/emacs/site-lisp/default.el
   '';
 
-  emacsBasePackage = pkgs.emacsGit.override {
+  emacsBasePackage = pkgs.emacs-git.override {
     withGTK3 = true;
   };
 

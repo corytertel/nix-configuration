@@ -222,3 +222,50 @@ Else, goto the end of the buffer."
 (defun cory/join-next-line ()
   (interactive)
   (join-line 4))
+
+(defun cory/describe-all-keymaps ()
+  "Describe all keymaps in currently-defined variables."
+  (interactive)
+  (with-output-to-temp-buffer "*keymaps*"
+    (let (symbs seen)
+      (mapatoms (lambda (s)
+                  (when (and (boundp s) (keymapp (symbol-value s)))
+                    (push (indirect-variable s) symbs))))
+      (dolist (keymap symbs)
+        (unless (memq keymap seen)
+          (princ (format "* %s\n\n" keymap))
+          (princ (substitute-command-keys (format "\\{%s}" keymap)))
+          (princ (format "\f\n%s\n\n" (make-string (min 80 (window-width)) ?-)))
+          (push keymap seen))))
+    (with-current-buffer standard-output ;; temp buffer
+      (setq help-xref-stack-item (list #'describe-all-keymaps)))))
+
+(defun cory/delete-current-buffer-file ()
+  "Removes file connected to current buffer and kills buffer."
+  (interactive)
+  (let ((filename (buffer-file-name))
+        (buffer (current-buffer))
+        (name (buffer-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (ido-kill-buffer)
+      (when (yes-or-no-p "Are you sure you want to remove this file? ")
+        (delete-file filename)
+        (kill-buffer buffer)
+        (message "File '%s' successfully removed" filename)))))
+
+(defun cory/rename-current-buffer-file ()
+  "Renames current buffer and file it is visiting."
+  (interactive)
+  (let ((name (buffer-name))
+        (filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (error "Buffer '%s' is not visiting a file!" name)
+      (let ((new-name (read-file-name "New name: " filename)))
+        (if (get-buffer new-name)
+            (error "A buffer named '%s' already exists!" new-name)
+          (rename-file filename new-name 1)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil)
+          (message "File '%s' successfully renamed to '%s'"
+                   name (file-name-nondirectory new-name)))))))

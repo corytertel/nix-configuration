@@ -149,14 +149,4 @@
 (add-to-list 'auto-mode-alist '("\\.cljs.*$" . clojure-mode))
 (add-to-list 'auto-mode-alist '("lein-env" . enh-ruby-mode))
 
-;; Define keybindings just for clojure-mode
-;; (define-key clojure-mode-map (kbd "SPC l c") 'cider-jack-in)
-
-;; Clojure-mode specific keybindings
-(add-hook 'clojure-mode-hook
-	  '(cory/leader-keys
-	    ","  '(:ignore t :which-key "clojure")
-	    ",c" '(cider-jack-in-clj :which-key "cider jack in")
-	    ",k" '(cider-load-buffer :which-key "load buffer")))
-
 (setq read-process-output-max (* 1024 1024))

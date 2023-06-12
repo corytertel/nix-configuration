@@ -55,7 +55,7 @@
       name = "emacs-run-launcher";
       command = "xdotool mousemove 1800 1200; emacsclient -e '(emacs-run-launcher)'";
       desktopFile = "emacsclient.desktop";
-      package = pkgs.emacsGit;
+      package = pkgs.emacs-git;
     };
   };
 

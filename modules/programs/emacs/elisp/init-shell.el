@@ -77,7 +77,7 @@ Else, go to the end of line ARG number of times."
   (insert (read-file-name "Dir: ")))
 
 ;; Keybinds
-(define-key eshell-mode-map (kbd "M-s") #'consult-history)
+(define-key eshell-mode-map (kbd "M-f") #'consult-history)
 (define-key eshell-mode-map (kbd "M-r") #'consult-history)
 (define-key eshell-mode-map [remap recenter-top-bottom] #'cory/eshell-clear-buffer)
 (define-key eshell-mode-map [remap forward-char] #'cory/eshell-forward-char-or-complete-from-history)
