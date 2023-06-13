@@ -9,9 +9,9 @@ xkb_symbols "basic" {
 
     key <AE01> { [    ampersand, 1                     ] };
     key <AE02> { [  bracketleft, 2                     ] };
-    key <AE03> { [    braceleft, 3                     ] };
-    key <AE04> { [   braceright, 4                     ] };
-    key <AE05> { [    parenleft, 5                     ] };
+    key <AE03> { [    parenleft, 3                     ] };
+    key <AE04> { [    braceleft, 4                     ] };
+    key <AE05> { [   braceright, 5                     ] };
     key <AE06> { [        equal, 6                     ] };
     key <AE07> { [     asterisk, 7                     ] };
     key <AE08> { [   parenright, 8                     ] };

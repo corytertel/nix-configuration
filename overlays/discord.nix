@@ -1,18 +1,21 @@
 { pkgs, ... }:
 
 final: prev: let
-  # source = prev.discord.overrideAttrs (_: {
-  #   src = builtins.fetchTarball {
-  #     url = "https://discord.com/api/download?platform=linux&format=tar.gz";
-  #     sha256 = "1kwqn1xr96kvrlbjd14m304g2finc5f5ljvnklg6fs5k4avrvmn4";
-  #   };
-  # });
   source = (prev.discord.override {
     nss = prev.nss_latest;
   }).overrideAttrs (_: {
     src = builtins.fetchTarball {
       url = "https://discord.com/api/download?platform=linux&format=tar.gz";
       sha256 = "0mr1az32rcfdnqh61jq7jil6ki1dpg7bdld88y2jjfl2bk14vq4s";
+    };
+  });
+
+  source-pc = (prev.discord.override {
+    nss = prev.nss_latest;
+  }).overrideAttrs (_: {
+    src = builtins.fetchTarball {
+      url = "https://discord.com/api/download?platform=linux&format=tar.gz";
+      sha256 = "0qaczvp79b4gzzafgc5ynp6h4nd2ppvndmj6pcs1zys3c0hrabpv";
     };
   });
 
@@ -127,11 +130,11 @@ in {
 
   discord-gpu = let
     wrapped = pkgs.writeShellScriptBin "discord" (css-injector + ''
-      exec ${source}/bin/discord ${gpuCommandLineArgs}
+      exec ${source-pc}/bin/discord ${gpuCommandLineArgs}
     '');
 
     wrapped' = pkgs.writeShellScriptBin "Discord" (css-injector + ''
-      exec ${source}/bin/Discord ${gpuCommandLineArgs}
+      exec ${source-pc}/bin/Discord ${gpuCommandLineArgs}
     '');
   in
     pkgs.symlinkJoin {
@@ -139,7 +142,7 @@ in {
       paths = [
         wrapped
         wrapped'
-        source
+        source-pc
       ];
     };
 }

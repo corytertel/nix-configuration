@@ -53,6 +53,7 @@
     enable = true;
     # css = builtins.readFile ../../config/discocss/skeuocord.theme.css;
     css = "";
+    package = pkgs.discord-gpu;
   };
 
   # Shell
