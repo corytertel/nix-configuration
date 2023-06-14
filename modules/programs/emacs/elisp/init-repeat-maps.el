@@ -69,8 +69,6 @@ together in sequence."
      cory/mark-line                    "C-M-SPC"
      exchange-point-and-mark           "C-x C-x" "q"
      cory/scroll-down                  "C-n" "n"                     :exitonly
-     cory/beginning-of-workspace       "M-<" "<"                     :exitonly
-     cory/end-of-workspace             "M->" ">"                     :exitonly
      cory/scroll-up                    "M-n"                         :exitonly)
 
     ("rectangle-nav"

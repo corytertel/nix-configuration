@@ -1,0 +1,83 @@
+// Dvorak
+
+default partial alphanumeric_keys modifier_keys
+xkb_symbols "basic" {
+
+    name[Group1]= "English";
+
+    key <TLDE> { [       grave,	asciitilde, dead_grave, dead_tilde	] };
+
+    key <AE01> { [	    1,	exclam	    	]	};
+    key <AE02> { [	    2,	at		]	};
+    key <AE03> { [	    3,	numbersign	]	};
+    key <AE04> { [	    4,	dollar		]	};
+    key <AE05> { [	    5,	percent		]	};
+    key <AE06> { [	    6,	asciicircum, dead_circumflex, dead_circumflex ]	};
+    key <AE07> { [	    7,	ampersand	]	};
+    key <AE08> { [	    8,	asterisk	]	};
+    key <AE09> { [	    9,	bracketleft,  dead_grave]	};
+    key <AE10> { [	    0,	bracketright	]	};
+    key <AE11> { [  parenleft,	braceleft	]	};
+    key <AE12> { [ parenright,  braceright,  dead_tilde] };
+
+    key <AD01> { [  apostrophe,	quotedbl, dead_acute, dead_diaeresis	] };
+    key <AD02> { [	comma,	less,   dead_cedilla, dead_caron	] };
+    key <AD03> { [      period,	greater, dead_abovedot, periodcentered	] };
+    key <AD04> { [	    p,	P, Page_Down, Page_Up	]	};
+    key <AD05> { [	    y,	Y, Delete, Delete ]	};
+    key <AD06> { [	    f,	F, Find, Find	]	};
+    key <AD07> { [	    g,	G, Escape, Escape ]	};
+    key <AD08> { [	    c,	C, Copy, Copy	]	};
+    key <AD09> { [	    r,	R		]	};
+    key <AD10> { [	    l,	L       	]	};
+    key <AD11> { [      slash,  question 	]	};
+    key <AD12> { [	equal,	plus		]	};
+
+    key <AC01> { [	    a,	A, Home, Home 	]	};
+    key <AC02> { [	    o,	O     		]	};
+    key <AC03> { [	    e,	E, End, End	]	};
+    key <AC04> { [	    u,	U		]	};
+    key <AC05> { [	    i,	I, Help, Help	]	};
+    key <AC06> { [	    d,	D, Left, Left   ]	};
+    key <AC07> { [	    h,	H, Down, Down   ]	};
+    key <AC08> { [	    t,	T, Up, Up	]	};
+    key <AC09> { [	    n,	N, Right, Right ]	};
+    key <AC10> { [	    s,	S		]	};
+    key <AC11> { [	minus,	underscore	]	};
+
+    key <AB01> { [   semicolon,	colon, dead_ogonek, dead_doubleacute ] };
+    key <AB02> { [	    q,	Q		]	};
+    key <AB03> { [	    j,	J       	]	};
+    key <AB04> { [	    k,	K		]	};
+    key <AB05> { [	    x,	X, Cut, Cut	]	};
+    key <AB06> { [	    b,	B       	]	};
+    key <AB07> { [	    m,	M		]	};
+    key <AB08> { [	    w,	W		]	};
+    key <AB09> { [	    v,	V, Paste, Paste	]	};
+
+    // Trigger caps lock when both shifts are pressed
+    key <LFSH> {
+      type[Group1]="TWO_LEVEL",
+      symbols[Group1] = [ Shift_L, Caps_Lock ]
+    };
+    key <RTSH> {
+      type[Group1]="TWO_LEVEL",
+      symbols[Group1] = [ Shift_R, Caps_Lock ]
+    };
+    
+    // Eliminate CapsLock, making it another Ctrl.
+    replace key <CAPS> { [ Control_L, Control_L ] };
+    modifier_map  Control { <CAPS>, <LCTL> };
+
+    // Make Z into AltGr
+    key <AB10> {
+      type= "ONE_LEVEL",
+      symbols[Group1]= [ ISO_Level3_Shift ]
+    };
+	
+    // Make Control_R into Z
+    key <RCTL> {
+      type= "FOUR_LEVEL",
+      symbols[Group1]= [ z, Z, Undo, Redo ]
+    };
+};

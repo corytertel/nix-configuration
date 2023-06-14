@@ -162,67 +162,7 @@
 (use-package comment-dwim-2
   :bind ([remap comment-dwim] . comment-dwim-2))
 
-;; Paredit
-(use-package paredit
-  :disabled t
-  :ensure t
-  :hook ((emacs-lisp-mode
-	  lisp-mode lisp-data-mode
-	  clojure-mode cider-repl-mode
-	  racket-mode racket-repl-mode
-	  scheme-mode geiser-repl-mode)
-	 . enable-paredit-mode)
-  :bind
-  (:map paredit-mode-map
-   ("{"   . paredit-open-curly)
-   ("}"   . paredit-close-curly)
-   ("M-{" . paredit-wrap-curly)
-   ("M-}" . paredit-close-curly-and-newline)
-   ("M-;" . nil)
-   ("RET" . nil)
-   ("C-k" . cory/paredit-kill)
-   ;; Minimak
-   ("C-j" . nil)
-   ("C-M-b" . nil)
-   ("C-M-f" . nil)
-   ("C-M-n" . nil)
-   ("C-M-p" . nil)
-   ("C-M-j" . paredit-backward)
-   ("C-M-l" . paredit-forward)
-   ("C-M-i" . paredit-backward-down)
-   ("C-M-e" . paredit-forward-up)
-   ("C-c C-M-l" . nil)
-   ("C-c C-M-p" . paredit-recenter-on-sexp))
-  :config
-  ;; TODO fix prefix argument behavior
-  (defun cory/paredit-kill (&optional argument)
-    "Kill a line as if with `kill-line', but respecting delimiters.
-In a string, act exactly as `kill-line' but do not kill past the
-  closing string delimiter.
-On a line with no S-expressions on it starting after the point or
-  within a comment, act exactly as `kill-line'.
-Otherwise, kill all S-expressions that start after the point.
-Prefix arguments will enact the same behavior that `cory/kill-line'
-enacts."
-    (interactive "P")
-    (cond ((paredit-in-string-p)
-	   (paredit-kill-line-in-string))
-	  ((paredit-in-comment-p)
-	   (paredit-kill-line-in-comment))
-	  ((save-excursion (paredit-skip-whitespace t (point-at-eol))
-			   (or (eolp) (eq (char-after) ?\; )))
-					;** Be careful about trailing backslashes.
-	   (if (paredit-in-char-p)
-	       (backward-char))
-	   (cory/kill-line argument))
-	  (t (paredit-kill-sexps-on-line))))
-
-  (defun cory/paredit-semicolon (f &rest args)
-    (if (region-active-p)
-	(comment-region (region-beginning) (region-end))
-      (apply f args)))
-  (advice-add 'paredit-semicolon :around #'cory/paredit-semicolon))
-
+;; Structural editing
 (use-package smartparens
   :after clojure-mode
   :hook
@@ -301,7 +241,14 @@ enacts."
 
   ;; Rid of annoying highlight
   (set-face-attribute 'sp-pair-overlay-face nil
-		      :inherit 'unspecified))
+		      :inherit 'unspecified)
+
+  ;; Web mode
+  (sp-local-tag '(web-mode) "<" "<_>" "</_>"
+		:transform 'sp-match-sgml-tags
+		:post-handlers
+		'(((lambda (&rest _ignored)
+                     (crux-smart-open-line-above)) "RET"))))
 
 ;; Smart-region: Smart region selection
 ;; Smart region guesses what you want to select by one command:

@@ -97,6 +97,6 @@ in {
         # jonaburg
         # transition-length = 150;
       };
-  };
+    };
   };
 }

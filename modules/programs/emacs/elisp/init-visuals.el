@@ -9,6 +9,8 @@
 
 ;; Make the cursor a bar
 (setq-default cursor-type 'hollow)
+;; (setq-default cursor-type 'box)
+;; (set-cursor-color "darkseagreen2")
 
 (setq initial-scratch-message nil)
 

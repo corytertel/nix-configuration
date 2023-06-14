@@ -51,3 +51,50 @@
   :config (gitignore-snippets-init))
 
 (use-package cape-yasnippet)
+
+;; Boilerplate code files
+(auto-insert-mode t)
+
+(define-auto-insert "\\.org\\'"
+  (lambda ()
+    (let ((title (read-string "Enter title: ")))
+      (insert "#+title: " title "\n"
+              "#+OPTIONS: \\n:t\n"
+              "#+STARTUP: showall\n"
+              "#+DATE: Created on " (format-time-string "%-d %B %Y @%H:%M") "\n\n")
+      (newline)
+      (goto-char (point-max)))))
+
+(define-auto-insert "\\.sh\\'"
+  (lambda ()
+    (insert "#!/bin/sh\n\n"
+            "# Description: \n"
+            "# Author: \n"
+            "# Date: " (format-time-string "%Y-%m-%d") "\n\n"
+            "# Add your script code here\n")
+    (search-forward "Description: ")
+    (forward-word)
+    (forward-char)))
+
+(define-auto-insert "\\.html\\'"
+  (lambda ()
+    (insert "<!DOCTYPE html>\n"
+	    "<html>\n"
+	    "  <head>\n"
+	    "    <meta charset='UTF-8'>\n"
+	    "    <title></title>\n"
+	    "  </head>\n"
+	    "  <body>\n"
+	    "  </body>\n"
+	    "</html>\n")
+    (goto-char (point-min))
+    (search-forward "<body>")
+    (newline)))
+
+(define-auto-insert "\\.java\\'"
+  (lambda ()
+    (insert "public class " (file-name-sans-extension (buffer-name)) " {\n"
+	    "  "
+	    "}")
+    (previous-line)
+    (move-end-of-line nil)))

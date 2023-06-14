@@ -48,6 +48,11 @@
           languages = [ "eng" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_minimak";
         };
+        us_dvorak = {
+          description = "US layout with numbers and characters flipped";
+          languages = [ "eng" ];
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_dvorak";
+        };
         ru_phonetic_qwerty = {
           description = "Russian phonetic translation of the US qwerty layout";
           languages = [ "rus" ];

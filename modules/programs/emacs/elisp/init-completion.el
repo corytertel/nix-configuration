@@ -111,25 +111,10 @@
   ;; makes completion-in-region use consult
   ;; unnatural behavior when using default completion
   (completion-in-region-function #'consult-completion-in-region)
-  ;; :init
-  ;; (advice-add #'vertico--format-candidate :around
-  ;;             (lambda (orig cand prefix suffix index _start)
-  ;; 		(setq cand (funcall orig cand prefix suffix index _start))
-  ;; 		(concat
-  ;; 		 (if (= vertico--index index)
-  ;;                    (propertize "» " 'face 'vertico-current)
-  ;;                  "  ")
-  ;; 		 cand)))
   :config
   (recentf-mode t)
   (savehist-mode t)
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
-  ;; Vertico keybinds
-  ;; (define-key vertico-map "?" #'minibuffer-completion-help)
-  ;; (define-key vertico-map (kbd "M-RET") #'minibuffer-force-complete-and-exit)
-  ;; (define-key vertico-map (kbd "M-TAB") #'minibuffer-complete)
-  ;; (define-key vertico-map (kbd "RET") #'vertico-insert)
 
   (defun cory/vertico-slash ()
     (interactive)
@@ -149,15 +134,9 @@
     (define-key vertico-reverse-map (kbd "C-n") #'vertico-grid-scroll-down)
     (define-key vertico-reverse-map (kbd "<next>") #'vertico-grid-scroll-down))
 
-  ;; (with-eval-after-load 'vertico-buffer
-  ;;   (setq vertico-buffer-display-action '(display-buffer-reuse-window display-buffer-at-bottom))
-  ;;   (add-hook 'vertico-buffer-mode-hook (lambda () (setq-local mode-line-format nil))))
-
   (vertico-mode t)
   (vertico-grid-mode t)
-  (vertico-reverse-mode t)
-  ;; (vertico-buffer-mode t)
-  )
+  (vertico-reverse-mode t))
 
 ;; Configure directory extension.
 (use-package vertico-directory
@@ -165,7 +144,6 @@
   :ensure nil
   ;; More convenient directory navigation commands
   :bind (:map vertico-map
-         ;; ("RET" . vertico-directory-enter)
          ("DEL" . vertico-directory-delete-char)
          ("M-DEL" . vertico-directory-delete-word))
   ;; Tidy shadowed file names
