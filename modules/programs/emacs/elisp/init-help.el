@@ -7,6 +7,7 @@
    ([remap describe-variable] . helpful-variable)
    ([remap describe-function] . helpful-callable)
    ("C-h V" . describe-face)
+   ("C-h <down>" . view-external-packages)
    ;; Minimak binds
    :map helpful-mode-map
    ("n" . nil)

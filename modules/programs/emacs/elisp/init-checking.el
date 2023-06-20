@@ -5,10 +5,8 @@
   (prog-mode . flymake-mode)
   :bind
   (:map flymake-mode-map
-   ;; ([remap forward-paragraph]  . flymake-goto-next-error)
-   ;; ([remap backward-paragraph] . flymake-goto-prev-error)
    ([remap next-error] . flymake-goto-next-error)
-   ([remap prev-error] . flymake-goto-prev-error)
+   ([remap previous-error] . flymake-goto-prev-error)
    :map goto-map
    ("d"   . flymake-show-buffer-diagnostics)
    ("M-d" . flymake-show-project-diagnostics))

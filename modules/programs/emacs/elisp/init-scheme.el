@@ -89,11 +89,41 @@
   (geiser-active-implementations '(chicken))
   (geiser-debug-show-debug nil)
   :config
+  ;; Eval result
+  (defface geiser-result-overlay-face
+    '((t (:inherit eval-result-overlay-face)))
+    "Face used to display evaluation results at the end of line."
+    :group 'geiser-faces)
+
+  (defvar geiser--last-post-command-position 0
+    "Holds the cursor position from the last run of post-command-hooks.")
+
+  (make-variable-buffer-local 'geiser--last-post-command-position)
+
+  (defun geiser--remove-overlay ()
+    (unless (equal (point) geiser--last-post-command-position)
+      (remove-overlays (point-min) (point-max) 'category 'geiser-result))
+    (setq geiser--last-post-command-position (point)))
+
+  (defun cory/geiser-eval-last-sexp (print-to-buffer-p)
+    (interactive "P")
+    (let ((res (geiser-eval-last-sexp print-to-buffer-p)))
+      (unless (string-match-p "ERROR: .*" res)
+	(let* ((pt (save-excursion (move-end-of-line nil) (point)))
+	       (ov (make-overlay pt pt)))
+	  (overlay-put ov 'after-string
+		       (concat " " (propertize res 'face 'geiser-result-overlay-face)))
+	  (overlay-put ov 'category 'geiser-result)))))
+
   (with-eval-after-load 'geiser-mode
     (dolist (bind '("C-c C-d d"
 		    "C-c C-d C-d"
 		    "C-c C-d i"
 		    "C-c C-d TAB"
+		    "C-c <deletechar> d"
+		    "C-c <deletechar> <deletechar>"
+		    "C-c <deletechar> i"
+		    "C-c <deletechar> TAB"
 		    "C-h ."))
       (define-key
 	geiser-mode-map
@@ -101,7 +131,12 @@
 	#'cory/chicken-doc-look-up-manual))
 
     (define-key geiser-mode-map (kbd "C-.") nil)
-    (define-key geiser-mode-map (kbd "C-M-i") nil))
+    (define-key geiser-mode-map (kbd "C-M-i") nil)
+    (define-key geiser-mode-map (kbd "C-x C-e") #'cory/geiser-eval-last-sexp)
+    (define-key geiser-mode-map (kbd "C-x <down>") #'cory/geiser-eval-last-sexp)
+
+    (add-hook 'geiser-mode-hook
+	      (lambda () (add-to-list 'post-command-hook #'geiser--remove-overlay))))
 
   (with-eval-after-load 'geiser-doc
     (define-key geiser-doc-mode-map (kbd "N") nil)

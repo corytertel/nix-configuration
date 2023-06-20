@@ -92,6 +92,7 @@
  ("C-v" . yank)
  ("C-b" . move-beginning-of-line)
  ("C-n" . scroll-up-command)
+ ("<next>" . scroll-up-command)
  ("C-/" . nil)
  ("C-\\" . quoted-insert)
  ("M-w" . nil)
@@ -104,6 +105,7 @@
  ("M-v" . yank-pop)
  ("M-b" . backward-sentence)
  ("M-n" . scroll-down-command)
+ ("<prior>" . scroll-down-command)
  ("C-M-i" . backward-list)
  ("C-M-a" . default-indent-new-line)
  ("C-M-b" . beginning-of-defun)
@@ -121,7 +123,9 @@
  ("C-M-w" . nil)
  ("C-M-y" . end-of-defun)
  ("C-M-x" . append-next-kill)
- ("C-M-\\" . toggle-input-method))
+ ("C-M-\\" . toggle-input-method)
+ ("C-x <down>" . eval-last-sexp)
+ ("C-x <home>" . list-buffers))
 
 ;; minibuffer binds
 (cory/define-keys
@@ -217,9 +221,11 @@
 (with-eval-after-load 'kmacro
   (define-key kmacro-keymap (kbd "C-n") nil)
   (define-key kmacro-keymap (kbd "C-p") nil)
-  (define-key kmacro-keymap (kbd "C-i") #'kmacro-cycle-ring-previous)
+  (define-key kmacro-keymap (kbd "<C-i>") #'kmacro-cycle-ring-previous)
   (define-key kmacro-keymap (kbd "C-e") #'kmacro-cycle-ring-next)
-  (define-key kmacro-keymap (kbd "C-y") #'kmacro-edit-macro-repeat))
+  (define-key kmacro-keymap (kbd "C-y") #'kmacro-edit-macro-repeat)
+  (define-key kmacro-keymap (kbd "<up>") #'kmacro-cycle-ring-previous)
+  (define-key kmacro-keymap (kbd "<down>") #'kmacro-cycle-ring-next))
 
 ;; info binds
 (with-eval-after-load 'info
@@ -240,6 +246,18 @@
   (define-key tetris-mode-map (kbd "i") #'tetris-rotate-prev)
   (define-key tetris-mode-map (kbd "l") #'tetris-move-right)
   (define-key tetris-mode-map (kbd "j") #'tetris-move-left))
+
+;; goto binds
+(cory/define-keys
+ goto-map
+ ("M-n" . nil)
+ ("M-p" . nil)
+ ("n" . nil)
+ ("p" . nil)
+ ("M-e" . next-error)
+ ("M-i" . previous-error)
+ ("e" . next-error)
+ ("i" . previous-error))
 
 ;;
 ;; --- GENERAL KEYBINDS ---

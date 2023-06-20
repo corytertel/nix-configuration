@@ -721,77 +721,94 @@ _vr_ reset      ^^                       ^^                 ^^
 	 ("C-c o n f" . org-roam-node-find)
 	 ("C-c o n i" . org-roam-node-insert)
 	 :map org-mode-map
-	 ("C-M-i" . completion-at-point))
+	 ("C-M-s" . completion-at-point))
   :config
   (org-roam-setup))
 
 ;; Writing
 (use-package writegood-mode
-  :hook (flyspell-mode . writegood-mode)
-  :bind (:map flyspell-mode-map
-	 ("C-c C-g g" . writegood-grade-level)
-	 ("C-c C-g e" . writegood-reading-ease)))
+  :hook (org-mode . writegood-mode)
+  ;; :bind (:map org-mode-map
+  ;; 	 ("C-c C-g g" . writegood-grade-level)
+  ;; 	 ("C-c C-g e" . writegood-reading-ease))
+  )
 
 (use-package dictionary)
 
 ;; Spelling
-(dolist (hook '(text-mode-hook))
-  (add-hook hook (lambda () (flyspell-mode 1))))
-(dolist (hook '(change-log-mode-hook log-edit-mode-hook sgml-mode-hook org-mode-hook))
-  (add-hook hook (lambda () (flyspell-mode -1))))
-
-(with-eval-after-load 'flyspell
-  (setq flyspell-mode-map
-	(let ((map (make-sparse-keymap)))
-	  ;; (if flyspell-use-meta-tab
-	  ;;     (define-key map "\M-\t" 'flyspell-auto-correct-word))
-	  ;; (define-key map flyspell-auto-correct-binding 'flyspell-auto-correct-previous-word)
-	  ;; (define-key map [(control ?\,)] 'flyspell-goto-next-error)
-	  ;; (define-key map [(control ?\.)] 'flyspell-auto-correct-word)
-	  (define-key map [?\C-c ?$] 'flyspell-correct-word-before-point)
-	  map))
-
-  (define-key flyspell-mouse-map (kbd "<mouse-2>") nil)
-  (define-key flyspell-mouse-map (kbd "<mouse-3>") #'flyspell-correct-word))
-
-;; FIXME
-(use-package flyspell-correct
-  :after flyspell
+(use-package jinx
+  :bind
+  (:map text-mode-map
+   ("M-$" . jinx-correct)
+   ("C-M-$" . jinx-languages)
+   ([remap next-error] . jinx-next)
+   ([remap previous-error] . jinx-previous))
   :init
-  (add-to-list 'ispell-skip-region-alist '("+begin_src" . "+end_src"))
-  (setq flyspell-use-meta-tab nil)
-  :bind (:map flyspell-mode-map ("C-\"" . flyspell-correct-wrapper)))
-
-(use-package frog-menu
-  :custom
-  ;; Need to redefine keys to account for custom keyboard layout
-  (frog-menu-avy-keys (append (string-to-list "atenisubopyflmc")
-			      (string-to-list (upcase "atenisubopyflmc"))
-			      (number-sequence ?, ?@)))
+  (dolist (hook '(text-mode-hook))
+    (add-hook hook #'jinx-mode))
+  (dolist (hook '(change-log-mode-hook log-edit-mode-hook sgml-mode-hook))
+    (add-hook hook (lambda () (jinx-mode -1))))
   :config
-  (defun frog-menu-flyspell-correct (candidates word)
-    "Run `frog-menu-read' for the given CANDIDATES.
+  (set-face-attribute 'jinx-misspelled nil
+		      :underline '(:style wave :color "red")))
 
-List of CANDIDATES is given by flyspell for the WORD.
+;; (dolist (hook '(text-mode-hook))
+;;   (add-hook hook (lambda () (flyspell-mode 1))))
+;; (dolist (hook '(change-log-mode-hook log-edit-mode-hook sgml-mode-hook org-mode-hook))
+;;   (add-hook hook (lambda () (flyspell-mode -1))))
 
-Return selected word to use as a replacement or a tuple
-of (command . word) to be used by `flyspell-do-correct'."
-    (let* ((corrects (if flyspell-sort-corrections
-			 (sort candidates 'string<)
-                       candidates))
-           (actions `(("C-s" "Save word"         (save    . ,word))
-                      ("C-a" "Accept (session)"  (session . ,word))
-                      ("C-b" "Accept (buffer)"   (buffer  . ,word))
-                      ("C-c" "Skip"              (skip    . ,word))))
-           (prompt   (format "Dictionary: [%s]"  (or ispell-local-dictionary
-                                                     ispell-dictionary
-                                                     "default")))
-           (res      (frog-menu-read prompt corrects actions)))
-      (unless res
-	(error "Quit"))
-      res))
+;; (with-eval-after-load 'flyspell
+;;   (setq flyspell-mode-map
+;; 	(let ((map (make-sparse-keymap)))
+;; 	  ;; (if flyspell-use-meta-tab
+;; 	  ;;     (define-key map "\M-\t" 'flyspell-auto-correct-word))
+;; 	  ;; (define-key map flyspell-auto-correct-binding 'flyspell-auto-correct-previous-word)
+;; 	  ;; (define-key map [(control ?\,)] 'flyspell-goto-next-error)
+;; 	  ;; (define-key map [(control ?\.)] 'flyspell-auto-correct-word)
+;; 	  (define-key map [?\C-c ?$] 'flyspell-correct-word-before-point)
+;; 	  map))
 
-  (setq flyspell-correct-interface #'frog-menu-flyspell-correct))
+;;   (define-key flyspell-mouse-map (kbd "<mouse-2>") nil)
+;;   (define-key flyspell-mouse-map (kbd "<mouse-3>") #'flyspell-correct-word))
+
+;; ;; FIXME
+;; (use-package flyspell-correct
+;;   :after flyspell
+;;   :init
+;;   (add-to-list 'ispell-skip-region-alist '("+begin_src" . "+end_src"))
+;;   (setq flyspell-use-meta-tab nil)
+;;   :bind (:map flyspell-mode-map ("C-\"" . flyspell-correct-wrapper)))
+
+;; (use-package frog-menu
+;;   :custom
+;;   ;; Need to redefine keys to account for custom keyboard layout
+;;   (frog-menu-avy-keys (append (string-to-list "atenisubopyflmc")
+;; 			      (string-to-list (upcase "atenisubopyflmc"))
+;; 			      (number-sequence ?, ?@)))
+;;   :config
+;;   (defun frog-menu-flyspell-correct (candidates word)
+;;     "Run `frog-menu-read' for the given CANDIDATES.
+
+;; List of CANDIDATES is given by flyspell for the WORD.
+
+;; Return selected word to use as a replacement or a tuple
+;; of (command . word) to be used by `flyspell-do-correct'."
+;;     (let* ((corrects (if flyspell-sort-corrections
+;; 			 (sort candidates 'string<)
+;;                        candidates))
+;;            (actions `(("C-s" "Save word"         (save    . ,word))
+;;                       ("C-a" "Accept (session)"  (session . ,word))
+;;                       ("C-b" "Accept (buffer)"   (buffer  . ,word))
+;;                       ("C-c" "Skip"              (skip    . ,word))))
+;;            (prompt   (format "Dictionary: [%s]"  (or ispell-local-dictionary
+;;                                                      ispell-dictionary
+;;                                                      "default")))
+;;            (res      (frog-menu-read prompt corrects actions)))
+;;       (unless res
+;; 	(error "Quit"))
+;;       res))
+
+;;   (setq flyspell-correct-interface #'frog-menu-flyspell-correct))
 
 (use-package cdlatex
   :commands 'turn-on-cdlatex)

@@ -45,8 +45,8 @@ together in sequence."
 
 (defvar repeaters-maps
   '(("buffer-switch"
-     previous-buffer                   "C-x C-<left>" "C-x <left>" "C-<left>" "<left>" "i"
-     next-buffer                       "C-x C-<right>" "C-x <right>" "C-<right>" "<right>" "e")
+     previous-buffer                   "C-x C-<left>" "C-x <left>" "C-<left>" "<left>" "j"
+     next-buffer                       "C-x C-<right>" "C-x <right>" "C-<right>" "<right>" "l")
 
     ("calendar-nav"
      calendar-forward-day              "C-l" "l"
@@ -111,10 +111,6 @@ together in sequence."
      backward-up-list                  "C-M-<up>" "C-M-u" "<up>" "u" "ESC M-u"
      down-list                         "C-M-<down>" "C-M-d" "<down>" "d" "ESC M-d")
 
-    ("error-nav"
-     next-error                        "C-x `" "`" "M-g M-e" "M-g e" "e"
-     previous-error                    "M-g M-i" "M-i" "i")
-
     ("mid-top-bottom-move"
      recenter-top-bottom               "C-p" "p"
      move-to-window-line-top-bottom    "M-r" "r"
@@ -171,10 +167,10 @@ together in sequence."
      transpose-lines                   "C-x C-t" "t")
 
     ("scroll-down"
-     cory/scroll-down                  "C-n" "n"
+     cory/scroll-down                  "C-n" "n" "<next>"
      cory/beginning-of-workspace       "M-<" "<"
      cory/end-of-workspace             "M->" ">"                     :exitonly
-     cory/scroll-up                    "M-n"                         :exitonly
+     cory/scroll-up                    "M-n" "<prior>"               :exitonly
      ;; same as navigation
      backward-char                     "C-j" "j" "<left>"            :exitonly
      forward-char                      "C-l" "l" "<right>"           :exitonly
@@ -187,10 +183,10 @@ together in sequence."
      exchange-point-and-mark           "C-x C-x" "q"                 :exitonly)
 
     ("scroll-up"
-     cory/scroll-up                    "M-n" "n"
+     cory/scroll-up                    "M-n" "n" "<prior>"
      cory/end-of-workspace             "M->" ">"
      cory/beginning-of-workspace       "M-<" "<"                     :exitonly
-     cory/scroll-down                  "C-n"                         :exitonly
+     cory/scroll-down                  "C-n" "<next>"                :exitonly
      ;; same as navigation
      backward-char                     "C-j" "j" "<left>"            :exitonly
      forward-char                      "C-l" "l" "<right>"           :exitonly
@@ -298,7 +294,19 @@ together in sequence."
 
     ("corfu"
      corfu-next                        "TAB" "<tab>" "e"
-     corfu-previous                    "S-TAB" "<backtab>" "i"))
+     corfu-previous                    "S-TAB" "<backtab>" "i")
+
+    ("error-nav"
+     next-error                        "M-g M-e" "M-g e" "M-e" "e" "C-x `" "`"
+     previous-error                    "M-g M-i" "M-g i" "M-i" "i")
+
+    ("jinx"
+     jinx-next                         "M-g M-e" "M-g e" "M-e" "e" "C-x `" "`"
+     jinx-previous                     "M-g M-i" "M-g i" "M-i" "i")
+
+    ("flymake-error-nav"
+     flymake-goto-next-error           "M-g M-e" "M-g e" "M-e" "e" "C-x `" "`"
+     flymake-goto-prev-error           "M-g M-i" "M-g i" "M-i" "i"))
 
   "List of lists containing repeater-map definitions.
 This must be in the form required by the

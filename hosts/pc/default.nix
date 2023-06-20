@@ -59,7 +59,7 @@
   home-manager.users.cory = {
     home.stateVersion = "21.11";
     xresources.extraConfig = ''
-      Xft.dpi: 128
+      Xft.dpi: 144
       Xft.autohint: 0
       Xft.lcdfilter: lcddefault
       Xft.hintstyle: hintfull

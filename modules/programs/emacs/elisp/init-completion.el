@@ -10,8 +10,9 @@
 (setq enable-recursive-minibuffers t)
 (minibuffer-depth-indicate-mode)
 
+;; Disabled for hotfuzz
 ;; Suggest commands used before in the minibuffer first (history)
-(savehist-mode t)
+;; (savehist-mode t)
 
 ;; Fuzzy matching
 ;; (setq completion-styles '(emacs21 flex))
@@ -37,11 +38,12 @@
       completions-max-height 10
       completion-auto-wrap t)
 
+;; Disabled for window management
 ;; Position and format of completions window
-(add-to-list 'display-buffer-alist
-             '("\\*Completions\\*"
-               (display-buffer-reuse-window display-buffer-at-bottom)
-               (window-parameters . ((mode-line-format . none)))))
+;; (add-to-list 'display-buffer-alist
+;;              '("\\*Completions\\*"
+;;                (display-buffer-reuse-window display-buffer-at-bottom)
+;;                (window-parameters . ((mode-line-format . none)))))
 
 ;; Disabled for Vertico
 ;; Automatic popup when minibuffer starts
@@ -101,8 +103,9 @@
   (vertico-count 10)
   (vertico-cycle t)
   ;; (vertico-preselect 'prompt)
-  (vertico-grid-separator "       ")
+  (vertico-grid-separator "   ")
   (vertico-grid-min-columns 3)
+  (vertico-grid-annotate 20)
   (minibuffer-prompt-properties
    '(read-only t cursor-intangible t face minibuffer-prompt))
   (read-extended-command-predicate
@@ -113,7 +116,7 @@
   (completion-in-region-function #'consult-completion-in-region)
   :config
   (recentf-mode t)
-  (savehist-mode t)
+  ;; (savehist-mode t)
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
   (defun cory/vertico-slash ()

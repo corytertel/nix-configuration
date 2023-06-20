@@ -78,13 +78,21 @@ myModMask = mod4Mask
 myWorkspaces = [ "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
+  -- mod-[1..9], Switch to workspace N
+  -- mod-control-[1..9], Move client to workspace N
   [((m .|. modm, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
         , (f, m) <- [(W.greedyView, 0), (W.shift, controlMask)]]
+  ++
+  -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
+  -- mod-control-{w,e,r}, Move client to screen 1, 2, or 3
+  [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
+        | (key, sc) <- zip [xK_F1, xK_F2, xK_F3] [0..]
+        , (f, m) <- [(W.view, 0), (W.shift, controlMask)]]
 
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
-    [ ("M-<Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run -show -scroll-method 0 -sort -hover-select -me-select-entry '' -me-accept-entry MousePrimary -icon-theme \"crystal-nova\" -show-icons -terminal kitty")
+    [ ("M-x", spawn "rofi -matching fuzzy -show drun -modi drun,run -show -scroll-method 0 -sort -hover-select -me-select-entry '' -me-accept-entry MousePrimary -icon-theme \"crystal-nova\" -show-icons -terminal kitty")
     , ("M-<Escape>", spawn "mate-system-monitor --show-processes-tab")
     , ("M-f", spawn "caja --browser \"/home/cory\"")
     , ("M-e", spawn "emacsclient -c")
@@ -150,6 +158,13 @@ myAdditionalKeys =
     , ("M1-M-<Right>", planeShift (Lines 3) Circular ToRight)
     , ("C-`", namedScratchpadAction myScratchpads "terminal")
     ]
+
+myMouseBindings :: [((ButtonMask, Button), Window -> X ())]
+myMouseBindings =
+  [ ((mod4Mask, button2), (\_ -> withFocused $ windows . W.sink))
+  , ((0, 8), (\_ -> windows W.focusUp))
+  , ((0, 9), (\_ -> windows W.focusDown))
+  ]
 
 ------------------------------------------------------------------------
 
@@ -414,11 +429,11 @@ myStartupHook = do
   spawnOnce "emacs --daemon"
   spawnOnce "conky"
   spawnOnce "nm-applet"
-  spawnOnce "blueman-applet"
   spawnOnce "mate-volume-control-status-icon"
   spawnOnce "xscreensaver --no-splash"
   spawnOnce "feh --bg-fill /etc/wallpaper.jpg"
   spawnOnce "sleep 10 && trayer --widthtype pixel --edge right --transparent true --alpha 0 --tint 0xffffff --width 330 --height 150 --distancefrom left --distance 45 --align right --expand false --padding 30 --iconspacing 5"
+  spawnOnce "strawberry"
   setWMName "LG3D"
   addScreenCorners [ (SCRight, rightWS >> spawn "xdotool mousemove_relative -- -3838 0")
                    , (SCLeft,  leftWS >> spawn "xdotool mousemove_relative 3838 0")
@@ -502,4 +517,4 @@ defaults = def {
   handleEventHook    = myEventHook,
   logHook            = myLogHook,
   startupHook        = myStartupHook
-  } `additionalKeysP` myAdditionalKeys
+  } `additionalKeysP` myAdditionalKeys `additionalMouseBindings` myMouseBindings

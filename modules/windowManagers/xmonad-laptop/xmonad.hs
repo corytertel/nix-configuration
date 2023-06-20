@@ -84,7 +84,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
-    [ ("M-<Space>", spawn "rofi -matching fuzzy -show drun -modi drun,run -show -scroll-method 0 -sort -hover-select -me-select-entry '' -me-accept-entry MousePrimary -icon-theme \"crystal-nova\" -show-icons -terminal kitty")
+    [ ("M-x", spawn "rofi -matching fuzzy -show drun -modi drun,run -show -scroll-method 0 -sort -hover-select -me-select-entry '' -me-accept-entry MousePrimary -icon-theme \"crystal-nova\" -show-icons -terminal kitty")
     , ("M-<Escape>", spawn "mate-system-monitor --show-processes-tab")
     , ("M-f", spawn "caja --browser \"/home/cory\"")
     , ("M-e", spawn "emacsclient -c")
@@ -150,6 +150,13 @@ myAdditionalKeys =
     , ("M1-M-<Right>", planeShift (Lines 3) Circular ToRight)
     , ("C-`", namedScratchpadAction myScratchpads "terminal")
     ]
+
+myMouseBindings :: [((ButtonMask, Button), Window -> X ())]
+myMouseBindings =
+  [ ((mod4Mask, button2), (\_ -> withFocused $ windows . W.sink))
+  , ((0, 8), (\_ -> windows W.focusUp))
+  , ((0, 9), (\_ -> windows W.focusDown))
+  ]
 
 ------------------------------------------------------------------------
 
@@ -421,6 +428,7 @@ myStartupHook = do
   spawnOnce "xscreensaver --no-splash"
   spawnOnce "feh --bg-fill /etc/wallpaper.jpg"
   spawnOnce "sleep 10 && trayer --widthtype pixel --edge right --transparent true --alpha 0 --tint 0xffffff --width 330 --height 50 --distancefrom left --distance 45 --align right --expand false --padding 30 --iconspacing 5"
+  spawnOnce "strawberry"
   setWMName "LG3D"
   addScreenCorners [ (SCRight, rightWS >> spawn "xdotool mousemove_relative -- -2238 0")
                    , (SCLeft,  leftWS >> spawn "xdotool mousemove_relative 2238 0")
@@ -504,4 +512,4 @@ defaults = def {
   handleEventHook    = myEventHook,
   logHook            = myLogHook,
   startupHook        = myStartupHook
-  } `additionalKeysP` myAdditionalKeys
+  } `additionalKeysP` myAdditionalKeys `additionalMouseBindings` myMouseBindings

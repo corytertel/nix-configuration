@@ -50,14 +50,9 @@ let
   + (builtins.readFile ./elisp/init-dired.el)
   + (builtins.readFile ./elisp/init-nixos.el)
   + (builtins.readFile ./elisp/init-org.el)
-  # + (builtins.readFile ./elisp/init-pdf.el)
 
   # Window Management
   + (builtins.readFile ./elisp/init-window-management.el)
-  # + (builtins.readFile ./elisp/aside.el)
-  # + (builtins.readFile ./elisp/aside-vterm.el)
-  # + (builtins.readFile ./elisp/aside-eshell.el)
-  # + (builtins.readFile ./elisp/aside-configurations.el)
 
   # Informal Packages
   # + (builtins.readFile ./elisp/eshell-undistract-me.el)
@@ -175,6 +170,9 @@ in {
       xorg.xprop
       xorg.xwininfo
       # fish
+      # spelling
+      enchant
+      pkgconf
     ] ++ shellScripts;
 
   };

@@ -14,11 +14,17 @@
 (use-package cider
   :bind (:map cider-mode-map
          ("M-?" . cider-maybe-clojuredocs)
+	 ("C-x <down>" . cider-eval-last-sexp)
          :map cider-repl-mode-map
          ("M-?" . cider-doc))
   :hook ( ;; ((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
          (cider-mode . eldoc-mode))
   :config
+  (set-face-attribute 'cider-result-overlay-face nil
+		      :background 'unspecified
+		      :box 'unspecified
+		      :inherit eval-result-overlay-face)
+
   (defun cider-maybe-clojuredocs (&optional arg)
     "Like `cider-doc' but call `cider-clojuredocs' when invoked with prefix arg in `clojure-mode'."
     (interactive "P")

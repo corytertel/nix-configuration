@@ -127,3 +127,36 @@ Lisp function does not specify a special indentation."
 ;; 	'elisp-font-lock-comment-face)
 ;;    (set (make-local-variable 'font-lock-comment-delimiter-face)
 ;; 	'elisp-font-lock-comment-delimiter-face)))
+
+;;; Eval result overlay
+
+(defface eval-result-overlay-face
+  '((t (:background "grey90" :box (:line-width -1 :color "yellow"))))
+  "Face used to display evaluation results at the end of line."
+  :group 'faces)
+
+(defvar elisp--last-post-command-position 0
+  "Holds the cursor position from the last run of post-command-hooks.")
+
+(make-variable-buffer-local 'elisp--last-post-command-position)
+
+(defun cory/elisp--remove-overlay ()
+  (unless (equal (point) elisp--last-post-command-position)
+    (remove-overlays (point-min) (point-max) 'category 'eval-result))
+  (setq elisp--last-post-command-position (point)))
+
+(defun cory/eval-last-sexp (eval-last-sexp-arg-internal)
+  (interactive "P")
+  (let* ((res (prin1-to-string (eval-last-sexp eval-last-sexp-arg-internal)))
+	 (pt (save-excursion (move-end-of-line nil) (point)))
+	 (ov (make-overlay pt pt)))
+    (overlay-put ov 'category 'eval-result)
+    (overlay-put ov 'after-string
+		 (concat " " (propertize (concat "=> " (if (string= "nil" res) "∅" res))
+					 'face
+					 'eval-result-overlay-face)))))
+
+(global-set-key [remap eval-last-sexp] #'cory/eval-last-sexp)
+
+(add-hook 'emacs-lisp-mode-hook
+	  (lambda () (add-to-list 'post-command-hook #'cory/elisp--remove-overlay)))

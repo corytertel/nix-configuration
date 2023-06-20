@@ -363,7 +363,8 @@
         postgresql_jdbc # for java
 
         # smalltalk
-        pharo
+        # pharo
+        squeak
 
         # desktop apps
         tdesktop

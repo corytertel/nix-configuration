@@ -60,7 +60,11 @@
     (let ((title (read-string "Enter title: ")))
       (insert "#+title: " title "\n"
               "#+OPTIONS: \\n:t\n"
-              "#+STARTUP: showall\n"
+	      "#+OPTIONS: _:{}\n"
+	      "#+OPTIONS: ^:{}\n"
+	      "#+STARTUP: latexpreview\n"
+	      "#+STARTUP: entitiespretty\n"
+	      "#+STARTUP: inlineimages\n"
               "#+DATE: Created on " (format-time-string "%-d %B %Y @%H:%M") "\n\n")
       (newline)
       (goto-char (point-max)))))
