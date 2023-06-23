@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   imports = [
@@ -41,6 +41,8 @@
 
   hardware.opengl = {
     enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
     extraPackages = with pkgs; [
       vaapiVdpau
     ];
@@ -48,6 +50,7 @@
 
   environment.systemPackages = with pkgs; [
     xboxdrv
+    vulkan-loader
   ];
 
   # environment.variables = {

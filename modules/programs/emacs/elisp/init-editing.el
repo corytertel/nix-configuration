@@ -269,14 +269,19 @@
 ;; Multi-edit package
 (use-package macrursors
   :config
+  (defvar cory/macrursors-stored-modes '())
   (add-hook 'macrursors-pre-finish-hook
 	    (lambda ()
-	      (aggressive-indent-mode -1)
-	      (corfu-mode -1)))
+	      (dolist (mode '(aggressive-indent-mode
+			      corfu-mode))
+		(when (eval mode)
+		  (add-to-list 'cory/macrursors-stored-modes mode)
+		  (funcall mode -1)))))
   (add-hook 'macrursors-post-finish-hook
 	    (lambda ()
-	      (aggressive-indent-mode 1)
-	      (corfu-mode 1)))
+	      (dolist (mode cory/macrursors-stored-modes)
+		(funcall mode 1))
+	      (setq cory/macrursors-stored-modes '())))
   (define-prefix-command 'macrursors-mark-map)
   (global-set-key (kbd "C->") #'macrursors-mark-next-instance-of)
   (global-set-key (kbd "C-<") #'macrursors-mark-previous-instance-of)

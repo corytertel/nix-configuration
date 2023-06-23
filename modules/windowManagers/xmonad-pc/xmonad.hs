@@ -143,9 +143,10 @@ myAdditionalKeys =
     , ("<F12>", spawn "layout-switch")
     , ("M-<F12>", runSelectedAction def
                 { gs_navigate = myGsnavigation }
-                [ ("US Minimak", spawn "setxkbmap us_minimak")
+                [ ("US Qwerty",  spawn "setxkbmap us_qwerty")
+                , ("RU Qwerty",  spawn "setxkbmap ru_phonetic_qwerty")
+                , ("US Minimak", spawn "setxkbmap us_minimak")
                 , ("RU Minimak", spawn "setxkbmap ru_phonetic_minimak")
-                , ("US Qwerty",  spawn "setxkbmap us")
                 ])
     -- , ("<Scroll_Lock>", nextMatchOrDo Forward (className =? "discord" <||> className =? "telegram-desktop") (spawn "discord"))
     , ("C-M-<Up>", planeMove (Lines 3) Circular ToUp)

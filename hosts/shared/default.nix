@@ -39,19 +39,14 @@
       enable = true;
       extraLayouts = {
         us_qwerty = {
-          description = "US layout with numbers and characters flipped";
+          description = "US standard layout";
           languages = [ "eng" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_qwerty";
         };
         us_minimak = {
-          description = "US layout with numbers and characters flipped";
+          description = "US layout with d, t, k, and e switched";
           languages = [ "eng" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_minimak";
-        };
-        us_dvorak = {
-          description = "US layout with numbers and characters flipped";
-          languages = [ "eng" ];
-          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_dvorak";
         };
         ru_phonetic_qwerty = {
           description = "Russian phonetic translation of the US qwerty layout";
