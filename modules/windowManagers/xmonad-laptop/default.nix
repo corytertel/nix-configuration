@@ -49,6 +49,7 @@ in {
         "xmobar/7.xpm".source = ./images/7.xpm;
         "xmobar/8.xpm".source = ./images/8.xpm;
         "xmobar/9.xpm".source = ./images/9.xpm;
+        "xdg/jgmenu/jgmenurc".source = ./jgmenurc;
       };
       systemPackages = let
         vol =
@@ -74,7 +75,6 @@ in {
         trash-cli
         xdotool
         xscreensaver
-        rofi
         gtk3
         glib
         gsettings-desktop-schemas
@@ -87,6 +87,8 @@ in {
         lua
         lm_sensors
         lsb-release
+
+        jgmenu
       ];
     };
   };

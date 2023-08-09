@@ -37,6 +37,12 @@
   services = {
     xserver.videoDrivers = [ "nvidia" ];
     xserver.layout = "us_qwerty";
+    libinput.mouse = {
+      # Mouse
+      accelProfile = "flat";
+      accelSpeed = null;
+      disableWhileTyping = true;
+    };
   };
 
   hardware.opengl = {

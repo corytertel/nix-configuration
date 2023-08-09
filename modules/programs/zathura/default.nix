@@ -17,7 +17,7 @@ in {
           window-title-home-tilde = true;
           statusbar-home-tilde = true;
           adjust-open = "best-fit";
-          font = "${font.system.name} ${toString (font.system.size + 1)}";
+          font = "${font.serif.name} ${toString (font.serif.size + 1)}";
           notification-error-bg = color.color1;
           notification-error-fg = color.background;
           notification-warning-bg = color.color3;

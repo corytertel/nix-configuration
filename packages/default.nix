@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
 
 [
+  (import ./chicken-docs.nix { inherit pkgs; })
   (import ./chicken-pkgs.nix { inherit pkgs; })
   (import ./crystal-nova.nix { inherit lib pkgs; })
   (import ./crystal-remix.nix { inherit lib pkgs; })
@@ -9,7 +10,9 @@
   (import ./expose-glassy-right.nix)
   (import ./firefox-classic-theme.nix { inherit lib pkgs; })
   (import ./firefox-oxygen-theme.nix { inherit lib pkgs; })
-  (import ./iosevka.nix {inherit lib pkgs; })
+  (import ./iosevka-aile.nix {inherit pkgs; })
+  (import ./iosevka-etoile.nix {inherit pkgs; })
+  (import ./iosevka-slab.nix {inherit pkgs; })
   (import ./jdtls.nix { inherit pkgs; })
   (import ./keyboard-layouts { inherit pkgs; })
   (import ./layout-switch.nix {inherit pkgs; })

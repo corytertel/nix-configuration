@@ -105,6 +105,7 @@
   ;; (vertico-preselect 'prompt)
   (vertico-grid-separator "   ")
   (vertico-grid-min-columns 3)
+  (setq vertico-grid-max-columns 20)
   (vertico-grid-annotate 20)
   (minibuffer-prompt-properties
    '(read-only t cursor-intangible t face minibuffer-prompt))
@@ -173,7 +174,11 @@
   :custom
   (completion-styles '(hotfuzz))
   :config
-  (require 'hotfuzz-module))
+  (require 'hotfuzz-module)
+  ;; Don't use hotfuzz with some completion functions.
+  ;; For some reason, hotfuzz will be slower than flex and will crash emacs.
+  :hook
+  (emacs-lisp-mode . (lambda () (setq-local completion-styles '(flex)))))
 
 ;; Minibuffer visual menu
 (use-package consult
@@ -274,6 +279,9 @@
   (corfu-popupinfo-mode)
 
   :config
+  ;; Background
+  (set-face-attribute 'corfu-default nil :background "white")
+  (set-face-attribute 'corfu-border nil :background "grey70")
   ;; Fix corfu popup height
   (set-face-attribute 'corfu-popupinfo nil :height 'unspecified)
   ;; Deprecated face

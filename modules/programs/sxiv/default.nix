@@ -13,7 +13,7 @@ in {
       xresources.extraConfig = ''
         Sxiv.background: ${config.theme.color.background}
         Sxiv.foreground: ${config.theme.color.foreground}
-        Sxiv.font: ${config.theme.font.system.name}:size=${toString config.theme.font.system.size}
+        Sxiv.font: ${config.theme.font.serif.name}:size=${toString config.theme.font.serif.size}
       '';
     };
     apps.photoViewer = {

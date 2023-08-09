@@ -181,8 +181,8 @@
    ("C-}" . sp-forward-barf-sexp)
    ("C-M-<left>" . sp-backward-slurp-sexp)
    ("C-M-<right>" . sp-backward-barf-sexp)
-   ("C-<left>" . sp-forward-barf-sexp)
-   ("C-<right>" . sp-forward-slurp-sexp)
+   ;; ("C-<left>" . sp-forward-barf-sexp)
+   ;; ("C-<right>" . sp-forward-slurp-sexp)
    ("M-<down>" . sp-splice-sexp-killing-forward)
    ("M-<up>" . sp-splice-sexp-killing-backward)
    ("C-M-d" . sp-down-sexp)
@@ -348,3 +348,39 @@
 
 ;;; Delete selection mode
 (delete-selection-mode 1)
+
+;; Devil mode
+(use-package devil
+  :config
+  (global-devil-mode 1)
+  (add-hook 'server-after-make-frame-hook
+	    (lambda ()
+	      (global-devil-mode 1)))
+  :custom
+  ;; (devil-repeatable-keys
+  ;;  (list "%k i"
+  ;;        "%k e"
+  ;;        "%k l"
+  ;;        "%k j"
+  ;;        "%k d"
+  ;;        "%k k"
+  ;;        "%k f"
+  ;;        "%k z"
+  ;;        "%k m l"
+  ;;        "%k m j"
+  ;;        "%k m v"
+  ;;        "%k m ^"
+  ;;        "%k x o"))
+  (devil-repeatable-keys nil)
+  (devil-translations
+   (list (cons "%k m m" "C-M-")
+         (cons "%k m %k" "M-,")
+         (cons "%k m /" "M-")
+         (cons "%k m" "M-")
+         (cons "%k %k" "%k")
+         (cons "%k /" "C-")
+	 (cons "%k x" "C-q")
+	 (cons "%k q" "C-x")
+	 (cons "%k c" "C-w")
+	 (cons "%k w" "C-c")
+         (cons "%k"  "C-"))))

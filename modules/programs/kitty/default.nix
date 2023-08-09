@@ -12,8 +12,8 @@ in {
     home-manager.users.cory.programs.kitty = {
       enable = true;
       font = {
-        name = "JuliaMono";
-        size = 10;
+        name = config.theme.font.monospace.name;
+        size = config.theme.font.monospace.size;
       };
       settings = with config.theme.color; {
         disable_ligatures = "cursor";

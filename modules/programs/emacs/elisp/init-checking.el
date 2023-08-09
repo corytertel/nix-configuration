@@ -84,20 +84,40 @@
   (setq ;; flymake-fringe-indicator-position 'right-fringe
    flymake-note-bitmap '(cory-info-mark compilation-info)
    flymake-warning-bitmap '(cory-warning-mark compilation-warning)
-   flymake-error-bitmap '(cory-error-mark compilation-error)))
+   flymake-error-bitmap '(cory-error-mark compilation-error))
+
+  (set-face-attribute 'flymake-warning nil
+		      :underline '(:style wave :color "DarkOrange"))
+
+  ;; Show diagnostics
+  ;; (setq flymake-show-diagnostics-at-end-of-line t)
+  )
 
 (use-package flymake-diagnostic-at-point
   :ensure t
   :after flymake
+  :custom
+  (flymake-diagnostic-at-point-error-prefix nil)
+  (flymake-diagnostic-at-point-timer-delay 0.1)
   :config
-  (setq flymake-diagnostic-at-point-error-prefix nil)
-  (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode))
+  (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode)
+  ;; Redefinition
+  ;; (defun flymake-diagnostic-at-point-maybe-display ()
+  ;;     "Display the flymake diagnostic text for the thing at point.
 
-(use-package flymake-racket
-  :ensure t
-  :commands (flymake-racket-add-hook)
-  :init
-  (add-hook 'racket-mode-hook #'flymake-racket-add-hook))
+  ;; The diagnostic text will be rendered using the function defined
+  ;; in `flymake-diagnostic-at-point-display-diagnostic-function.'"
+  ;;     (when-let* ((m flymake-mode)
+  ;; 		(prop (get-char-property (point) 'flymake-diagnostic))
+  ;; 		(text (flymake--diag-text prop))
+  ;; 		(type (flymake--diag-type prop)))
+  ;;       (save-excursion
+  ;; 	(move-beginning-of-line nil)
+  ;; 	(funcall flymake-diagnostic-at-point-display-diagnostic-function
+  ;; 		 (cond ((eq type ':warning) (propertize text 'face 'warning))
+  ;; 		       ((eq type ':error)   (propertize text 'face 'error))
+  ;; 		       (t text))))))
+  )
 
 (use-package flymake-kondor
   :ensure t

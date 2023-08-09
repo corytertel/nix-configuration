@@ -81,9 +81,14 @@
       package = crystal-nova-icon-theme;
     };
     font = {
-      system = {
-        package = oxygenfonts;
-        name = "Oxygen-Sans";
+      serif = {
+        package = liberation_ttf;
+        name = "Liberation Serif";
+        size = 11;
+      };
+      sansSerif = {
+        package = liberation_ttf;
+        name = "Liberation Sans";
         size = 11;
       };
       monospace = {

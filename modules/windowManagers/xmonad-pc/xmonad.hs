@@ -15,7 +15,6 @@ import XMonad.Util.Types
 import XMonad.Util.WorkspaceCompare
 import XMonad.Util.NamedScratchpad
   (customFloating, namedScratchpadAction, namedScratchpadManageHook, NamedScratchpad(..))
-import XMonad.Util.Cursor
 
 import XMonad.Layout.Spacing
 import XMonad.Layout.NoBorders
@@ -434,7 +433,6 @@ myStartupHook = do
   spawnOnce "xscreensaver --no-splash"
   spawnOnce "feh --bg-fill /etc/wallpaper.jpg"
   spawnOnce "sleep 10 && trayer --widthtype pixel --edge right --transparent true --alpha 0 --tint 0xffffff --width 330 --height 150 --distancefrom left --distance 45 --align right --expand false --padding 30 --iconspacing 5"
-  spawnOnce "strawberry"
   setWMName "LG3D"
   addScreenCorners [ (SCRight, rightWS >> spawn "xdotool mousemove_relative -- -3838 0")
                    , (SCLeft,  leftWS >> spawn "xdotool mousemove_relative 3838 0")
@@ -445,7 +443,7 @@ myStartupHook = do
                    , (SCLowerLeft, leftWS >> downWS >> spawn "xdotool mousemove 3838 2")
                    , (SCLowerRight, rightWS >> downWS >> spawn "xdotool mousemove 2 2")
                    ]
-  setDefaultCursor xC_left_ptr
+  spawnOnce "xsetroot -cursor_name left_ptr &"
 
 ------------------------------------------------------------------------
 

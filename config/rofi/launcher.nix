@@ -8,7 +8,7 @@ pkgs.writeText "config.rasi" ''
  */
 
 configuration {
-    font:                           "${font.system.name} Bold ${toString (font.system.size + 10)}";
+    font:                           "${font.serif.name} Bold ${toString (font.serif.size + 10)}";
     show-icons:                     true;
     icon-theme:                     "${icons.name}";
     display-drun:                   "";

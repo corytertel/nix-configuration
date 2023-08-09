@@ -15,7 +15,6 @@ import XMonad.Util.Types
 import XMonad.Util.WorkspaceCompare
 import XMonad.Util.NamedScratchpad
   (customFloating, namedScratchpadAction, namedScratchpadManageHook, NamedScratchpad(..))
-import XMonad.Util.Cursor
 
 import XMonad.Layout.Spacing
 import XMonad.Layout.NoBorders
@@ -31,6 +30,7 @@ import XMonad.Layout.LayoutCombinators (JumpToLayout)
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.SideBorderDecoration
 import XMonad.Layout.NoBorders
+import XMonad.Layout.MultiColumns
 
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
@@ -84,7 +84,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
-    [ ("M-x", spawn "rofi -matching fuzzy -show drun -modi drun,run -show -scroll-method 0 -sort -hover-select -me-select-entry '' -me-accept-entry MousePrimary -icon-theme \"crystal-nova\" -show-icons -terminal kitty")
+    [ ("M-<f1>", spawn "jgmenu_run")
     , ("M-<Escape>", spawn "mate-system-monitor --show-processes-tab")
     , ("M-f", spawn "caja --browser \"/home/cory\"")
     , ("M-e", spawn "emacsclient -c")
@@ -155,8 +155,10 @@ myAdditionalKeys =
 myMouseBindings :: [((ButtonMask, Button), Window -> X ())]
 myMouseBindings =
   [ ((mod4Mask, button2), (\_ -> withFocused $ windows . W.sink))
-  , ((0, 8), (\_ -> windows W.focusUp))
-  , ((0, 9), (\_ -> windows W.focusDown))
+  -- , ((0, 8), (\_ -> windows W.focusUp))
+  -- , ((0, 9), (\_ -> windows W.focusDown))
+  , ((0, 8), (\_ -> spawn "jgmenu_run"))
+  , ((0, 9), (\_ -> windows W.focusUp))
   ]
 
 ------------------------------------------------------------------------
@@ -233,11 +235,18 @@ gaps = spacingRaw False (Border 0 0 140 0)
 bsp =
   renamed [Replace "bsp"] $ emptyBSP
 
+cols =
+  multiCol [1] 1 0.01 (-0.5)
+
+rows =
+  Mirror (multiCol [2] 2 0.01 (-0.5))
+
 myLayout = screenCornerLayoutHook
   . gaps
   . smartBorders
   . refocusLastLayoutHook
   $ Mag.magnifiercz 1.618 (bsp)
+  -- $ Mag.magnifiercz 1.618 (rows)
 
 ------------------------------------------------------------------------
 
@@ -428,8 +437,7 @@ myStartupHook = do
   spawnOnce "cbatticon"
   spawnOnce "xscreensaver --no-splash"
   spawnOnce "feh --bg-fill /etc/wallpaper.jpg"
-  spawnOnce "sleep 10 && trayer --widthtype pixel --edge right --transparent true --alpha 0 --tint 0xffffff --width 330 --height 50 --distancefrom left --distance 45 --align right --expand false --padding 30 --iconspacing 5"
-  spawnOnce "strawberry"
+  spawnOnce "sleep 10 && trayer --widthtype pixel --edge right --transparent true --alpha 0 --tint 0xffffff --width 310 --height 50 --distancefrom left --distance 45 --align right --expand false --padding 30 --iconspacing 5"
   setWMName "LG3D"
   addScreenCorners [ (SCRight, rightWS >> spawn "xdotool mousemove_relative -- -2238 0")
                    , (SCLeft,  leftWS >> spawn "xdotool mousemove_relative 2238 0")
@@ -440,7 +448,7 @@ myStartupHook = do
                    , (SCLowerLeft, leftWS >> downWS >> spawn "xdotool mousemove 2238 2")
                    , (SCLowerRight, rightWS >> downWS >> spawn "xdotool mousemove 2 2")
                    ]
-  setDefaultCursor xC_left_ptr
+  spawnOnce "xsetroot -cursor_name left_ptr &"
 
 ------------------------------------------------------------------------
 

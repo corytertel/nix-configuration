@@ -64,7 +64,7 @@ in {
           # --- Text --- #
 
           # Set the font
-          font = "${font.system.name} ${toString font.system.size}";
+          font = "${font.serif.name} ${toString font.serif.size}";
 
           # Set line height to font height
           line_height = 0;

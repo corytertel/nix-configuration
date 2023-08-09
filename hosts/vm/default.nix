@@ -129,7 +129,8 @@
   };
 
   fonts.fonts = with pkgs; [
-    config.theme.font.system.package
+    config.theme.font.serif.package
+    config.theme.font.sansSerif.package
     config.theme.font.monospace.package
   ];
 

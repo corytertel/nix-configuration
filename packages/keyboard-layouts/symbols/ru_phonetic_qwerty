@@ -57,9 +57,12 @@ xkb_symbols "basic" {
     key <AB08> { [             comma,     guillemotleft  ] };
     key <AB09> { [            period,    guillemotright  ] };
     key <AB10> { [        dead_acute,          question  ] };
+    
+    key <BKSL> {
+      type= "TWO_LEVEL",
+      symbols[Group1]= [ Cyrillic_e, Cyrillic_E ]
+    };
 
     key.type[Group1]="KEYPAD" ;
     key <KPDL> { [ KP_Delete, KP_Separator ] }; // <delete> <separator>
-
-    key <BKSL> { [        Cyrillic_e,        Cyrillic_E  ] };
 };

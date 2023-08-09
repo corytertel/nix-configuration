@@ -48,15 +48,31 @@ in {
     };
 
     font = {
-      system = {
+      serif = {
         package = mkOption {
-          type = types.nullOr types.package;
-          default = null;
-          description = "The system-wide font. Will be used everywhere except where a monospace font is forced.";
+          type = types.package;
+          default = pkgs.dejavu_fonts;
+          description = "The system serif font.";
         };
         name = mkOption {
           type = types.str;
-          default = "";
+          default = "DejaVu Serif";
+        };
+        size = mkOption {
+          type = types.int;
+          default = 10;
+        };
+       };
+
+      sansSerif = {
+        package = mkOption {
+          type = types.package;
+          default = pkgs.dejavu_fonts;
+          description = "The system sans serif font.";
+        };
+        name = mkOption {
+          type = types.str;
+          default = "DejaVu Sans";
         };
         size = mkOption {
           type = types.int;
@@ -66,13 +82,13 @@ in {
 
       monospace = {
         package = mkOption {
-          type = types.nullOr types.package;
-          default = null;
-          description = "The font used when a monospace font is forced.";
+          type = types.package;
+          default = pkgs.dejavu_fonts;
+          description = "The system monospace font.";
         };
         name = mkOption {
           type = types.str;
-          default = "";
+          default = "DejaVu Sans Mono";
         };
         size = mkOption {
           type = types.int;

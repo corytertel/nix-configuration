@@ -35,7 +35,6 @@
 ;;   (defun cory/eglot-super-capf ()
 ;;     (setq-local completion-at-point-functions
 ;; 		(list (cape-super-capf
-;; 		       ;; #'tempel-complete
 ;; 		       (cape-company-to-capf #'company-yasnippet)
 ;; 		       #'eglot-completion-at-point)
 ;; 		      #'cape-dabbrev

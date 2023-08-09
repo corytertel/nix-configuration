@@ -93,13 +93,16 @@ together in sequence."
      forward-sexp                      "C-M-l" "l" "ESC M-l")
 
     ("paragraph-nav"
-     backward-paragraph                "C-<up>" "<up>" "M-{" "M-[" "{" "["
-     forward-paragraph                 "C-<down>" "<down>" "M-}" "M-]" "}" "]")
+     backward-paragraph                "M-i" "i" "C-M-b" "b" "C-<up>" "<up>" "M-{" "M-[" "{" "["
+     forward-paragraph                 "M-e" "e" "C-M-y" "y" "C-<down>" "<down>" "M-}" "M-]" "}" "]")
 
     ("sentence-nav"
      backward-sentence                 "M-b" "b"
-     forward-sentence                  "M-y" "y"
-     back-to-indentation               "M-m" "m"                     :exitonly)
+     forward-sentence                  "M-y" "y")
+
+    ("org-sentence-nav"
+     org-backward-sentence             "M-b" "b"
+     org-forward-sentence              "M-y" "y")
 
     ("page-nav"
      backward-page                     "C-x [" "["
@@ -124,7 +127,7 @@ together in sequence."
      capitalize-word                   "M-c" "c")
 
     ("kill-word"
-     kill-word                         "M-d" "M-<delete>" "d")
+     kill-word                         "M-d" "C-<delete>" "d")
 
     ("kill-line"
      kill-line                         "C-k" "k")
@@ -253,8 +256,8 @@ together in sequence."
      org-deadline                      "C-c C-d" "C-d" "d")
 
     ("word-nav"
-     backward-word                     "M-j" "j"
-     forward-word                      "M-l" "l")
+     backward-word                     "M-j" "j" "C-<left>"
+     forward-word                      "M-l" "l" "C-<right>")
 
     ;; ("set-mark"
     ;;  smart-region                      "C-SPC" "SPC")
@@ -289,6 +292,9 @@ together in sequence."
     ("smartparens-del-char"
      sp-delete-char                    "C-d" "d" "<deletechar>")
 
+    ("org-del-char"
+     org-delete-char                   "C-d" "d" "<deletechar>")
+
     ("smartparens-kill-word"
      sp-kill-word                      "M-d" "d" "C-<delete>")
 
@@ -297,16 +303,18 @@ together in sequence."
      corfu-previous                    "S-TAB" "<backtab>" "i")
 
     ("error-nav"
-     next-error                        "M-g M-e" "M-g e" "M-e" "e" "C-x `" "`"
-     previous-error                    "M-g M-i" "M-g i" "M-i" "i")
+     next-error                        "M-g M-e" "M-e" "M-g C-<down>" "C-<down>" "e" "C-x `" "`"
+     previous-error                    "M-g M-i" "M-i" "M-g C-<up>" "C-<up>" "i")
 
-    ("jinx"
-     jinx-next                         "M-g M-e" "M-g e" "M-e" "e" "C-x `" "`"
-     jinx-previous                     "M-g M-i" "M-g i" "M-i" "i")
+    ;; ("jinx"
+    ;;  jinx-next                         "M-g M-e" "M-e" "e" "C-x `" "`"
+    ;;  jinx-previous                     "M-g M-i" "M-i" "i"
+    ;;  jinx-correct                      "M-$" "$" :exitonly)
 
     ("flymake-error-nav"
-     flymake-goto-next-error           "M-g M-e" "M-g e" "M-e" "e" "C-x `" "`"
-     flymake-goto-prev-error           "M-g M-i" "M-g i" "M-i" "i"))
+     flymake-goto-next-error           "M-g M-e" "M-e" "M-g C-<down>" "C-<down>" "e" "C-x `" "`"
+     flymake-goto-prev-error           "M-g M-i" "M-i" "M-g C-<up>" "C-<up>" "i"
+     flymake-show-buffer-diagnostics   "M-g d" "d" :exitonly))
 
   "List of lists containing repeater-map definitions.
 This must be in the form required by the

@@ -145,23 +145,60 @@
 
 ;; Setting the font
 (set-face-attribute 'default nil :family "JuliaMono" :height 100)
-;; (set-face-attribute 'default nil :family "DejaVu Sans Mono" :height 100)
 ;; Set fixed pitch face
 (set-face-attribute 'fixed-pitch nil :family "JuliaMono" :height 100)
-;; (set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono" :height 100)
 ;; Set variable pitch face
-(set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 120)
+(set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 115)
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
 
-;; Italic comments
-;; (set-face-attribute 'font-lock-comment-face nil
-;; 		    :slant 'italic)
+;; Font locks
 (set-face-attribute 'font-lock-comment-face nil
 		    :foreground "dark red"
 		    :family "Liberation Serif"
 		    :height 115)
+(set-face-attribute 'font-lock-comment-delimiter-face nil
+		    :foreground "dark red"
+		    :inherit nil)
+(set-face-attribute 'font-lock-builtin-face nil
+		    :inherit 'bold)
+(set-face-attribute 'font-lock-keyword-face nil
+		    :inherit 'bold)
+(set-face-attribute 'font-lock-negation-char-face nil
+		    :inherit 'error)
+(set-face-attribute 'font-lock-string-face nil
+		    :slant 'italic)
+(set-face-attribute 'font-lock-type-face nil
+		    :inherit 'bold)
+(set-face-attribute 'font-lock-warning-face nil
+		    :inherit 'warning)
+(set-face-attribute 'font-lock-punctuation-face nil
+		    :slant 'italic)
+
+;; Popup
+(with-eval-after-load 'popup
+  (set-face-attribute 'popup-tip-face nil
+		      ;; :background "white"
+		      :slant 'italic
+		      ;; :box '(:line-width 1 :color "dark red" :style nil)
+		      :background "#c0daff"))
+
+;; Emojis
+(add-hook 'server-after-make-frame-hook
+	  (lambda ()
+	    (progn
+	      (set-fontset-font
+	       t
+	       (if (version< emacs-version "28.1")
+		   '(#x1f300 . #x1fad0)
+		 'emoji)
+	       (cond
+		((member "Apple Color Emoji" (font-family-list)) "Apple Color Emoji")
+		((member "Noto Color Emoji" (font-family-list)) "Noto Color Emoji")
+		((member "Noto Emoji" (font-family-list)) "Noto Emoji")
+		((member "Segoe UI Emoji" (font-family-list)) "Segoe UI Emoji")
+		((member "Symbola" (font-family-list)) "Symbola"))))))
 
 ;; Icons
 (use-package all-the-icons
@@ -201,7 +238,8 @@
 				  ("chain"        . (?~ (Br . Bl) ?>))
 				  ("chain-and"    . (#x2227 (Br . Bl) ?~ (Br . Bl) ?>))
 				  ("chain-when"   . (#x2047 (Br . Bl) ?~ (Br . Bl) ?>))
-				  ("chain-lambda" . (#x3bb  (Br . Bl) ?~ (Br . Bl) ?>))))
+				  ("chain-lambda" . (#x3bb  (Br . Bl) ?~ (Br . Bl) ?>))
+				  ("case-lambda" . (?c (Br . Bl) ?a (Br . Bl) ?s (Br . Bl) ?e (Br . Bl) ?- (Br . Bl) #x3bb))))
    (prettify-symbols-mode 1)))
 
 ;; APL-like characters for elisp

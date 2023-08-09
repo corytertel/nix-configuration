@@ -71,6 +71,8 @@
  global-map
  ("<left>" . backward-char)
  ("<right>" . forward-char)
+ ("C-<left>" . backward-word)
+ ("C-<right>" . forward-word)
  ("C-y" . move-end-of-line)
  ("<C-i>" . previous-line)
  ("C-o" . find-file)
@@ -135,6 +137,8 @@
  ("M-p" . nil)
  ("M-e" . next-history-element)
  ("M-i" . previous-history-element)
+ ("C-<up>" . previous-history-element)
+ ("C-<down>" . next-history-element)
  ("M-s" . nil)
  ("M-f" . next-matching-history-element))
 
@@ -145,7 +149,9 @@
  ("M-p" . nil)
  ("M-v" . nil)
  ("M-i" . previous-history-element)
+ ("C-<up>" . previous-history-element)
  ("M-e" . next-history-element)
+ ("C-<down>" . next-history-element)
  ("M-s" . nil)
  ("M-f" . next-matching-history-element))
 
@@ -186,7 +192,9 @@
  ("M-p" . nil)
  ("M-n" . nil)
  ("M-i" . isearch-ring-retreat)
+ ("C-<up>" . isearch-ring-retreat)
  ("M-e" . isearch-ring-advance)
+ ("C-<down>" . isearch-ring-advance)
  ("M-v" . isearch-yank-pop-only)
  ("M-s '" . nil)
  ("M-s C-e" . nil)
@@ -255,9 +263,9 @@
  ("n" . nil)
  ("p" . nil)
  ("M-e" . next-error)
+ ("C-<down>" . next-error)
  ("M-i" . previous-error)
- ("e" . next-error)
- ("i" . previous-error))
+ ("C-<up>" . previous-error))
 
 ;;
 ;; --- GENERAL KEYBINDS ---

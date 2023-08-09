@@ -1,0 +1,96 @@
+<?xml version="1.0"?><!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+
+  <alias>
+    <family>serif</family>
+    <prefer><family>Liberation Serif</family></prefer>
+  </alias>
+  <alias>
+    <family>sans-serif</family>
+    <prefer><family>Liberation Sans</family></prefer>
+  </alias>
+  <alias>
+    <family>sans</family>
+    <prefer><family>Liberation Sans</family></prefer>
+  </alias>
+  <alias>
+    <family>monospace</family>
+    <prefer><family>JuliaMono</family></prefer>
+  </alias>
+
+  <!-- This adds Apple Color Emoji to the font families sans, serif, sans-serif and monospace -->
+  <match target="pattern">
+    <test name="family"><string>monospace</string></test>
+    <edit name="family" mode="append"><string>Apple Color Emoji</string></edit>
+  </match>
+  <match target="pattern">
+    <test name="family"><string>sans</string></test>
+    <edit name="family" mode="append"><string>Apple Color Emoji</string></edit>
+  </match>
+
+  <match target="pattern">
+    <test name="family"><string>serif</string></test>
+    <edit name="family" mode="append"><string>Apple Color Emoji</string></edit>
+  </match>
+  <!-- Discord loads the system's sans-serif font family, add Apple Color Emoji to it -->
+  <match target="pattern">
+    <test name="family"><string>sans-serif</string></test>
+    <edit name="family" mode="append"><string>Apple Color Emoji</string></edit>
+  </match>
+
+  <!-- Add emoji generic family -->
+  <alias binding="strong">
+    <family>emoji</family>
+    <default><family>Apple Color Emoji</family></default>
+  </alias>
+
+  <!-- Alias requests for the other emoji fonts -->
+  <alias binding="strong">
+    <family>Noto Color Emoji</family>
+    <prefer><family>Apple Color Emoji</family></prefer>
+    <default><family>emoji</family></default>
+  </alias>
+  <alias binding="strong">
+    <family>Segoe UI Emoji</family>
+    <prefer><family>Apple Color Emoji</family></prefer>
+    <default><family>emoji</family></default>
+  </alias>
+  <alias binding="strong">
+    <family>EmojiOne Mozilla</family>
+    <prefer><family>Apple Color Emoji</family></prefer>
+    <default><family>emoji</family></default>
+  </alias>
+  <alias binding="strong">
+    <family>Emoji One</family>
+    <prefer><family>Apple Color Emoji</family></prefer>
+    <default><family>emoji</family></default>
+  </alias>
+  <alias binding="strong">
+    <family>Emoji Two</family>
+    <prefer><family>Apple Color Emoji</family></prefer>
+    <default><family>emoji</family></default>
+  </alias>
+  <alias binding="strong">
+    <family>Twemoji Mozilla</family>
+    <prefer><family>Apple Color Emoji</family></prefer>
+    <default><family>emoji</family></default>
+  </alias>
+  <alias binding="strong">
+    <family>Twitter Color Emoji</family>
+    <prefer><family>Apple Color Emoji</family></prefer>
+    <default><family>emoji</family></default>
+  </alias>
+  <alias binding="strong">
+    <family>Noto Emoji</family>
+    <prefer><family>Apple Color Emoji</family></prefer>
+    <default><family>emoji</family></default>
+  </alias>
+  <alias binding="strong">
+    <family>Android Emoji</family>
+    <prefer><family>Apple Color Emoji</family></prefer>
+    <default><family>emoji</family></default>
+  </alias>
+
+  <!-- Run "fc-cache -fv" after saving the file and kill and restart whichever app (like discord) and enjoy emoji -->
+
+</fontconfig>

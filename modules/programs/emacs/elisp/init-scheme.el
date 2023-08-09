@@ -79,6 +79,9 @@
 ;;    (font-lock-add-keywords nil `((,(rx bol ";;;;" (one-or-more nonl) eol) . scheme-comment-4)))
 ;;    (font-lock-add-keywords nil `((,(rx bol ";;;" (one-or-more nonl) eol) . scheme-comment-3)))))
 
+(let ((str (make-string 200 ?a)))
+  (substring str 0 (min 50 (length str))))
+
 (use-package geiser
   :hook
   (geiser-mode . (lambda ()
@@ -100,6 +103,8 @@
 
   (make-variable-buffer-local 'geiser--last-post-command-position)
 
+  (defvar geiser--eval-overlay-max-length 50)
+
   (defun geiser--remove-overlay ()
     (unless (equal (point) geiser--last-post-command-position)
       (remove-overlays (point-min) (point-max) 'category 'geiser-result))
@@ -107,12 +112,13 @@
 
   (defun cory/geiser-eval-last-sexp (print-to-buffer-p)
     (interactive "P")
-    (let ((res (geiser-eval-last-sexp print-to-buffer-p)))
-      (unless (string-match-p "ERROR: .*" res)
+    (let* ((res (geiser-eval-last-sexp print-to-buffer-p))
+	   (str (substring res 0 (min geiser--eval-overlay-max-length (length res)))))
+      (unless (string-match-p "ERROR: .*" str)
 	(let* ((pt (save-excursion (move-end-of-line nil) (point)))
 	       (ov (make-overlay pt pt)))
 	  (overlay-put ov 'after-string
-		       (concat " " (propertize res 'face 'geiser-result-overlay-face)))
+		       (concat " " (propertize str 'face 'geiser-result-overlay-face)))
 	  (overlay-put ov 'category 'geiser-result)))))
 
   (with-eval-after-load 'geiser-mode
@@ -189,7 +195,18 @@ With prefix argument, ask for the lookup symbol (with completion)."
       (rename-buffer "*Chicken Documentation*")
       (switch-to-buffer current)
       ;; (display-buffer "*Chicken Documentation*")
-      (switch-to-buffer-other-window "*Chicken Documentation*"))))
+      (switch-to-buffer-other-window "*Chicken Documentation*")))
+
+  (require 'cmuscheme)
+  (defun cory/chicken-doc (&optional obtain-function)
+    (interactive)
+    (let ((func (funcall (or obtain-function 'current-word))))
+      (when func
+	(process-send-string (scheme-proc)
+                             (format "(require-library chicken-doc) ,doc %S\n" func))
+	(save-selected-window
+          (select-window (display-buffer (get-buffer scheme-buffer) t))
+          (goto-char (point-max)))))))
 
 (use-package geiser-chicken
   :after geiser)

@@ -13,7 +13,6 @@ super: self: {
         fmt
         iset
         lazy-seq
-        matchable
         miscmacros
         r7rs
         regex
@@ -24,6 +23,10 @@ super: self: {
         utf8
         vector-lib
         imlib2
+
+        coops
+        matchable
+        record-variants
 
         srfi-1
         srfi-13

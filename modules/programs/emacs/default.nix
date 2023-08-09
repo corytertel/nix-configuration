@@ -173,6 +173,10 @@ in {
       # spelling
       enchant
       pkgconf
+      aspell
+      aspellDicts.en
+      hunspell
+      hunspellDicts.ru_RU
     ] ++ shellScripts;
 
   };

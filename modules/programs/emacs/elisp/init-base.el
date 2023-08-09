@@ -124,5 +124,3 @@
 
 ;; Make all async-shell-command's have their own buffer
 (setq async-shell-command-buffer 'new-buffer)
-
-;;; init.el ends here

@@ -18,7 +18,7 @@
 			    (list (cape-super-capf
 				   #'pcomplete-completions-at-point
 				   #'cape-dict)))
-		(org-cdlatex-mode)
+		;; (org-cdlatex-mode)
 		(corfu-mode -1)))
 
   (org-mode . (lambda () (interactive)
@@ -86,6 +86,7 @@
    ("C-c M-f" . nil)
    ("C-c M-l" . org-next-block)
    ("C-c M-i" . org-insert-last-stored-link)
+   ("C-c C-<up>" . org-insert-last-stored-link)
    ("C-c C-b" . cory/org-insert-image)
    ("C-c C-j" . org-backward-heading-same-level)
    ("C-c C-f" . org-insert-link)
@@ -208,7 +209,8 @@
   (org-export-async-debug t)
   (org-html-postamble nil) ;; dont export postamble
   (org-export-async-init-file nil)
-  (org-export-backends '(ascii beamer html icalendar latex odt pandoc hugo md))
+  ;; (org-export-backends '(ascii beamer html icalendar latex odt pandoc hugo md))
+  (org-export-backends '(ascii html latex odt md))
   ;; org v8 bundled with Emacs 24.4
   (org-odt-preferred-output-format "docx")
 
@@ -368,14 +370,18 @@
   (set-face-attribute 'org-level-7 nil :height 1.0 :inherit nil)
   (set-face-attribute 'org-level-8 nil :height 1.0 :inherit nil)
 
-  (set-face-attribute 'org-block nil :background "grey93" :foreground nil :inherit 'fixed-pitch)
-  (set-face-attribute 'org-code nil :background "grey93" :inherit '(fixed-pitch))
+  (set-face-attribute 'org-block nil :background 'unspecified :foreground 'unspecified :inherit 'fixed-pitch)
+  (set-face-attribute 'org-block-begin-line nil :underline '(:line-width (1 . 1) :color "black") :extend t :weight 'demi-bold :height 0.9 :foreground "gray7" :inherit nil)
+  (set-face-attribute 'org-block-end-line nil :inherit 'org-block-begin-line)
+  (set-face-attribute 'org-code nil :background "grey95" :inherit '(fixed-pitch))
   (set-face-attribute 'org-table nil :foreground "black" :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
   (set-face-attribute 'org-todo nil :weight 'unspecified)
+
+  (set-face-attribute 'org-tag nil :width 'condensed :height 0.9 :weight 'regular :underline nil :box '(:color "black" :line-width (1 . -3)) :background "grey90" :foreground "grey10")
 
   (set-face-attribute 'org-scheduled nil :foreground "black")
   (set-face-attribute 'org-scheduled-today nil :foreground "Blue1")
@@ -679,9 +685,45 @@ _vr_ reset      ^^                       ^^                 ^^
   (org-modern-label-border .25)
   ;; Note that these stars allow differentiation of levels
   ;; "①" "②" "③" "④" "⑤" "⑥" "⑦"
-  ;; (org-modern-star ["\u200b"])
   (org-modern-star ["
-\u200b" "\u200b" "•" "-" "•" "–" "•" "–"]))
+\u200b" "\u200b" "•" "-" "•" "–" "•" "–"])
+  :config
+  (set-face-attribute 'org-modern-tag nil
+		      :inherit '(org-modern-label))
+  (set-face-attribute 'org-modern-done nil
+		      :inherit '(org-done org-modern-label))
+  (set-face-attribute 'org-modern-todo nil
+		      :weight 'semibold
+		      :inverse-video t
+		      :inherit '(org-todo org-modern-label))
+  (set-face-attribute 'org-modern-label nil
+		      :width 'condensed
+		      :height 0.9
+		      :weight 'regular
+		      :underline nil
+		      :box '(:color "black"
+			     :line-width (1 . -3))
+		      :background "grey90"
+		      :foreground "grey10")
+  (set-face-attribute 'org-modern-symbol nil
+		      :inherit 'bold)
+  (set-face-attribute 'org-modern-priority nil
+		      :weight 'semibold
+		      :inverse-video t
+		      :inherit   '(org-priority org-modern-label))
+  (set-face-attribute 'org-modern-block-name nil
+		      :inherit '(org-block-begin-line))
+  (set-face-attribute 'org-modern-statistics nil
+		      :inherit 'org-modern-done)
+  (set-face-attribute 'org-modern-horizontal-rule nil
+		      :strike-through "grey10"
+		      :inherit 'org-hide)
+  (set-face-attribute 'org-modern-date-active nil
+		      :inherit 'org-modern-done)
+  (set-face-attribute 'org-modern-date-inactive nil
+		      :foreground "grey90"
+		      :background "dark red"
+		      :inherit 'org-modern-label))
 
 ;; Make org-modern work better with org-indent
 ;; (use-package org-modern-indent
@@ -731,9 +773,19 @@ _vr_ reset      ^^                       ^^                 ^^
   ;; :bind (:map org-mode-map
   ;; 	 ("C-c C-g g" . writegood-grade-level)
   ;; 	 ("C-c C-g e" . writegood-reading-ease))
-  )
-
-(use-package dictionary)
+  :config
+  (set-face-attribute 'writegood-weasels-face nil
+		      :foreground "DarkOrange"
+		      :strike-through t
+		      :underline 'unspecified)
+  (set-face-attribute 'writegood-duplicates-face nil
+		      :foreground "DeepPink"
+		      :underline 'unspecified)
+  (set-face-attribute 'writegood-passive-voice-face nil
+		      :underline '(:style wave :color "deep sky blue"))
+  (add-to-list 'writegood-weasel-words "essentially")
+  (add-to-list 'writegood-weasel-words "just")
+  (add-to-list 'writegood-weasel-words "so"))
 
 ;; Spelling
 (use-package jinx
@@ -742,11 +794,40 @@ _vr_ reset      ^^                       ^^                 ^^
    ("M-$" . jinx-correct)
    ("C-M-$" . jinx-languages)
    ([remap next-error] . jinx-next)
-   ([remap previous-error] . jinx-previous))
+   ([remap previous-error] . jinx-previous)
+   :map jinx-overlay-map
+   ("M-n" . nil)
+   ("M-p" . nil)
+   ("M-e" . jinx-next)
+   ("C-<down>" . jinx-next)
+   ("M-i" . jinx-previous)
+   ("C-<up>" . jinx-previous)
+   :map jinx-correct-map
+   ("M-n" . nil)
+   ("M-p" . nil)
+   ("M-e" . jinx-next)
+   ("C-<down>" . jinx-next)
+   ("M-i" . jinx-previous)
+   ("C-<up>" . jinx-previous)
+   :map jinx-repeat-map
+   ("M-n"        . nil)
+   ("M-p"        . nil)
+   ("M-g M-e"    . jinx-next)
+   ("M-g C-<down>" . jinx-next)
+   ("M-e"        . jinx-next)
+   ("C-<down>"   . jinx-next)
+   ("e"          . jinx-next)
+   ("C-x `"      . jinx-next)
+   ("`"          . jinx-next)
+   ("M-g M-i"    . jinx-previous)
+   ("M-g C-<up>" . jinx-previous)
+   ("M-i"        . jinx-previous)
+   ("C-<up>"     . jinx-previous)
+   ("i"          . jinx-previous))
   :init
   (dolist (hook '(text-mode-hook))
     (add-hook hook #'jinx-mode))
-  (dolist (hook '(change-log-mode-hook log-edit-mode-hook sgml-mode-hook))
+  (dolist (hook '(change-log-mode-hook log-edit-mode-hook sgml-mode-hook nxml-mode-hook))
     (add-hook hook (lambda () (jinx-mode -1))))
   :config
   (set-face-attribute 'jinx-misspelled nil
@@ -810,7 +891,10 @@ _vr_ reset      ^^                       ^^                 ^^
 
 ;;   (setq flyspell-correct-interface #'frog-menu-flyspell-correct))
 
-(use-package cdlatex
-  :commands 'turn-on-cdlatex)
+
+;;; Latex
+
+;; (use-package cdlatex
+;;   :commands 'turn-on-cdlatex)
 
 ;; (use-package latex-preview-pane)

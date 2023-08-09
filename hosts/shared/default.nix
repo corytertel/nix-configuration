@@ -59,25 +59,7 @@
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_phonetic_minimak";
         };
       };
-      libinput = {
-        enable = true;
-        mouse = {
-          # Mouse
-          accelProfile = "flat";
-          accelSpeed = null;
-          disableWhileTyping = true;
-
-          # Trackball
-          # accelProfile = "flat";
-          # accelSpeed = null;
-          # buttonMapping = "1 8 2 4 5 6 7 3 9";
-          # disableWhileTyping = true;
-          # naturalScrolling = true;
-          # scrollButton = 3;
-          # scrollMethod = "button";
-          # transformationMatrix = "2.5 0 0 0 2.5 0 0 0 1";
-        };
-      };
+      libinput.enable = true;
     };
     # postgresql = {
     #   enable = true;
@@ -147,6 +129,7 @@
       # CLASSPATH = "${postgresql_jdbc}/share/java/postgresql-jdbc.jar";
       CHICKEN_REPOSITORY_PATH =
         "${chicken-pkgs}/lib/chicken/${toString chicken.binaryVersion}";
+      CHICKEN_DOC_REPOSITORY = "${pkgs.chicken-docs}";
       # CHICKEN_INCLUDE_PATH = "${chicken}/share";
       _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd";
     };
@@ -168,21 +151,36 @@
     ];
   };
 
-  fonts.fonts = with pkgs; [
-    config.theme.font.system.package
-    config.theme.font.monospace.package
-    corefonts
-    vistafonts
-    liberation_ttf
-    dejavu_fonts
-    julia-mono
-  ];
+  fonts = with config.theme.font; {
+    enableDefaultFonts = true;
+    fontDir.enable = true;
+    fonts = with pkgs; [
+      serif.package
+      sansSerif.package
+      monospace.package
+      corefonts
+      vistafonts
+      whatsapp-emoji-font
+      # iosevka-slab
+      # iosevka-etoile
+      # iosevka-aile
+    ];
+    fontconfig = {
+      enable = true;
+      defaultFonts = {
+        serif = [ "${serif.name}" ];
+        sansSerif = [ "${sansSerif.name}" ];
+        monospace = [ "${monospace.name}" ];
+        emoji = [ "Apple Color Emoji" ];
+      };
+      # FIXME apple emojis for discord
+      localConf = builtins.readFile ./fontconfig.xml;
+    };
+  };
 
   virtualisation = {
     virtualbox.host.enable = true; # Virtual Box
     libvirtd.enable = true; # virt-manager
-    # anbox.enable = true;
-    # waydroid.enable = true;
   };
 
   programs = {
@@ -322,6 +320,7 @@
         # scheme
         chicken
         chicken-pkgs
+        chicken-docs
 
         # racket
         racket

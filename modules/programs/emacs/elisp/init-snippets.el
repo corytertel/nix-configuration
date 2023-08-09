@@ -1,7 +1,5 @@
 ;; Snippets
 (use-package yasnippet
-  :hook
-  (emacs-lisp-mode . cory/elisp-super-capf)
   :custom-face
   (yas-field-highlight-face ((t (:inherit nil :background "light goldenrod yellow"))))
   :config
@@ -29,19 +27,9 @@
 	  (define-key map "\C-c&\C-v" 'yas-visit-snippet-file)
 	  map))
 
-  (yas-global-mode 1)
+  (yas-global-mode 1))
 
-  (defun cory/elisp-super-capf ()
-    (setq-local completion-at-point-functions
-		(list (cape-super-capf
-		       ;; #'tempel-complete
-		       (cape-company-to-capf #'company-yasnippet)
-		       ;; #'cape-yasnippet
-		       #'elisp-completion-at-point)
-		      #'cape-dabbrev
-		      #'cape-file))))
-
-(use-package yasnippet-snippets)
+;; (use-package yasnippet-snippets)
 
 (use-package common-lisp-snippets)
 

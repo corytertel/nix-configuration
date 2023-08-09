@@ -3,7 +3,7 @@ with config.theme;
 
 pkgs.writeText "config.rasi" ''
 configuration {
-	font:							"${font.system.name} Bold ${toString (font.system.size + 14)}";
+	font:							"${font.serif.name} Bold ${toString (font.serif.size + 14)}";
     show-icons:                     true;
 	icon-theme: 					"${icons.name}";
     display-drun: 					"";

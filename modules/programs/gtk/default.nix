@@ -119,8 +119,8 @@ in {
         enable = true;
 
         font = {
-          package = theme.font.system.package;
-          name = "${theme.font.system.name} ${toString (theme.font.system.size)}";
+          package = theme.font.serif.package;
+          name = "${theme.font.serif.name} ${toString (theme.font.serif.size)}";
         };
 
         cursorTheme = {
@@ -186,22 +186,19 @@ in {
         libsForQt5.breeze-qt5
       ];
 
-      home.pointerCursor = {
-        package = theme.cursor.package;
+      home.pointerCursor = with config.theme; {
+        name = cursor.theme;
+        size = cursor.size;
         gtk.enable = true;
-        name = theme.cursor.theme;
-        size = theme.cursor.size;
-        x11.enable = true;
+        package = cursor.package;
+        x11 = {
+          enable = true;
+          defaultCursor = "left_ptr";
+        };
       };
 
-      home.file.".icons/default/index.theme" = {
-        text = ''
-          [Icon Theme]
-          Name=Default
-          Comment=Default Cursor Theme
-          Inherits=${theme.cursor.theme}
-        '';
-      };
+      home.file.".icons/default".source =
+        with config.theme; "${cursor.package}/share/icons/${cursor.theme}";
     };
   };
 }

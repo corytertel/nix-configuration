@@ -55,24 +55,41 @@
         user = "cory";
       };
       layout = "us_minimak";
-      libinput.touchpad = {
-        accelProfile = "adaptive";
-        accelSpeed = "0.5";
-        additionalOptions = "";
-        buttonMapping = null;
-        calibrationMatrix = null;
-        clickMethod = "clickfinger"; #sets trackpad to two-finger rightclick instead of button areas
-        dev = null;
-        disableWhileTyping = true;
-        horizontalScrolling = true;
-        leftHanded = false;
-        middleEmulation = false;
-        naturalScrolling = true;
-        scrollButton = null;
-        scrollMethod = "twofinger";
-        sendEventsMode = "enabled";
-        tapping = false;
-        tappingDragLock = false;
+      libinput = {
+        touchpad = {
+          accelProfile = "adaptive";
+          accelSpeed = "0.5";
+          additionalOptions = "";
+          buttonMapping = null;
+          calibrationMatrix = null;
+          clickMethod = "clickfinger"; #sets trackpad to two-finger rightclick instead of button areas
+          dev = null;
+          disableWhileTyping = true;
+          horizontalScrolling = true;
+          leftHanded = false;
+          middleEmulation = false;
+          naturalScrolling = true;
+          scrollButton = null;
+          scrollMethod = "twofinger";
+          sendEventsMode = "enabled";
+          tapping = false;
+          tappingDragLock = false;
+        };
+        mouse = {
+          # Trackball
+          # accelProfile = "flat";
+          # accelSpeed = null;
+          accelProfile = "adaptive";
+          accelSpeed = "0.5";
+          buttonMapping = "1 8 2 4 5 6 7 3 9";
+          # buttonMapping = "1 2 8 4 5 6 7 3 9";
+          disableWhileTyping = true;
+          naturalScrolling = true;
+          scrollButton = 3;
+          # scrollButton = 2;
+          scrollMethod = "button";
+          # transformationMatrix = "2.5 0 0 0 2.5 0 0 0 1";
+        };
       };
     };
   };
