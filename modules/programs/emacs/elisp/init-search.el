@@ -92,7 +92,7 @@
 
 (use-package symbol-overlay
   :bind
-  ("M-i" . symbol-overlay-jump-prev)
+  ("M-t" . symbol-overlay-jump-prev)
   ("C-<up>" . symbol-overlay-jump-prev)
-  ("M-e" . symbol-overlay-jump-next)
+  ("M-h" . symbol-overlay-jump-next)
   ("C-<down>" . symbol-overlay-jump-next))

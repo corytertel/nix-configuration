@@ -48,9 +48,9 @@
 (use-package web-mode
   :bind
   (:map web-mode-map
-   ("C-M-b" . backward-paragraph)
-   ("C-M-h" . mark-paragraph)
-   ("C-M-y" . forward-paragraph)
+   ("C-M-a" . backward-paragraph)
+   ("C-M-i" . mark-paragraph)
+   ("C-M-e" . forward-paragraph)
    ("<" . cory/insert-angled-pair-or-wrap)
    (">" . cory/close-angled-pair)
    ;; ("C-M-u" . web-mode-element-beginning)
@@ -61,7 +61,7 @@
    ;; ("C-M-j" . web-mode-element-previous)
    ;; ("C-M-k" . web-mode-element-kill)
    ;; ("C-M-t" . web-mode-element-transpose)
-   ("M-h" . web-mode-element-select))
+   ("M-i" . web-mode-element-select))
 
   :custom
   (web-mode-enable-css-colorization t)

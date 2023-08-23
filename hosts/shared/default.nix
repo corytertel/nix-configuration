@@ -43,6 +43,11 @@
           languages = [ "eng" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_qwerty";
         };
+        us_dvorak = {
+          description = "US standard layout";
+          languages = [ "eng" ];
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_dvorak";
+        };
         us_minimak = {
           description = "US layout with d, t, k, and e switched";
           languages = [ "eng" ];
@@ -152,9 +157,9 @@
   };
 
   fonts = with config.theme.font; {
-    enableDefaultFonts = true;
+    enableDefaultPackages = true;
     fontDir.enable = true;
-    fonts = with pkgs; [
+    packages = with pkgs; [
       serif.package
       sansSerif.package
       monospace.package
@@ -340,7 +345,6 @@
         # nil
 
         # apl
-        gnuapl
         dyalog
         # ride
 
@@ -405,6 +409,7 @@
         firefox
         chromium
         zeal # offline documentation
+        megasync
 
         # iphone utils
         ifuse

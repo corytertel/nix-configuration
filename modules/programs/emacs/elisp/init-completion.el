@@ -133,9 +133,9 @@
     (define-key vertico-map (kbd "/") #'cory/vertico-slash)
     (define-key vertico-map (kbd "M-m") #'vertico-quick-jump)
     (define-key vertico-map (kbd "RET") #'vertico-exit)
-    (define-key vertico-reverse-map (kbd "M-n") #'vertico-grid-scroll-up)
+    (define-key vertico-reverse-map (kbd "M-p") #'vertico-grid-scroll-up)
     (define-key vertico-reverse-map (kbd "<prior>") #'vertico-grid-scroll-up)
-    (define-key vertico-reverse-map (kbd "C-n") #'vertico-grid-scroll-down)
+    (define-key vertico-reverse-map (kbd "C-p") #'vertico-grid-scroll-down)
     (define-key vertico-reverse-map (kbd "<next>") #'vertico-grid-scroll-down))
 
   (vertico-mode t)

@@ -5,24 +5,24 @@ xkb_symbols "basic" {
 
     name[Group1]= "English";
 
-    key <TLDE> { [       grave,	asciitilde, dead_grave, dead_tilde	] };
+    key <TLDE> { [       grave,	asciitilde	] };
 
     key <AE01> { [	    1,	exclam	    	]	};
     key <AE02> { [	    2,	at		]	};
     key <AE03> { [	    3,	numbersign	]	};
     key <AE04> { [	    4,	dollar		]	};
     key <AE05> { [	    5,	percent		]	};
-    key <AE06> { [	    6,	asciicircum, dead_circumflex, dead_circumflex ]	};
+    key <AE06> { [	    6,	asciicircum     ]	};
     key <AE07> { [	    7,	ampersand	]	};
     key <AE08> { [	    8,	asterisk	]	};
-    key <AE09> { [	    9,	bracketleft,  dead_grave]	};
+    key <AE09> { [	    9,	bracketleft     ]	};
     key <AE10> { [	    0,	bracketright	]	};
     key <AE11> { [  parenleft,	braceleft	]	};
-    key <AE12> { [ parenright,  braceright,  dead_tilde] };
+    key <AE12> { [ parenright,  braceright      ] };
 
-    key <AD01> { [  apostrophe,	quotedbl, dead_acute, dead_diaeresis	] };
-    key <AD02> { [	comma,	less,   dead_cedilla, dead_caron	] };
-    key <AD03> { [      period,	greater, dead_abovedot, periodcentered	] };
+    key <AD01> { [  apostrophe,	quotedbl	] };
+    key <AD02> { [	comma,	less    	] };
+    key <AD03> { [      period,	greater 	] };
     key <AD04> { [	    p,	P, Page_Down, Page_Up	]	};
     key <AD05> { [	    y,	Y, Delete, Delete ]	};
     key <AD06> { [	    f,	F, Find, Find	]	};
@@ -45,7 +45,7 @@ xkb_symbols "basic" {
     key <AC10> { [	    s,	S		]	};
     key <AC11> { [	minus,	underscore	]	};
 
-    key <AB01> { [   semicolon,	colon, dead_ogonek, dead_doubleacute ] };
+    key <AB01> { [   semicolon,	colon           ] };
     key <AB02> { [	    q,	Q		]	};
     key <AB03> { [	    j,	J       	]	};
     key <AB04> { [	    k,	K		]	};
@@ -54,6 +54,7 @@ xkb_symbols "basic" {
     key <AB07> { [	    m,	M		]	};
     key <AB08> { [	    w,	W		]	};
     key <AB09> { [	    v,	V, Paste, Paste	]	};
+    key <AB10> { [	    z,  Z, Undo, Redo	]	};
 
     // Trigger caps lock when both shifts are pressed
     key <LFSH> {
@@ -68,16 +69,4 @@ xkb_symbols "basic" {
     // Eliminate CapsLock, making it another Ctrl.
     replace key <CAPS> { [ Control_L, Control_L ] };
     modifier_map  Control { <CAPS>, <LCTL> };
-
-    // Make Z into AltGr
-    key <AB10> {
-      type= "ONE_LEVEL",
-      symbols[Group1]= [ ISO_Level3_Shift ]
-    };
-	
-    // Make Control_R into Z
-    key <RCTL> {
-      type= "FOUR_LEVEL",
-      symbols[Group1]= [ z, Z, Undo, Redo ]
-    };
 };

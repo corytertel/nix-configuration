@@ -52,14 +52,10 @@
   ;; (define-key c-mode-base-map (kbd "DEL") nil)
   ;; (define-key c-mode-base-map (kbd "{") nil)
   ;; (define-key c-mode-base-map (kbd "}") nil)
-  (define-key c-mode-base-map (kbd "C-M-a") nil)
-  (define-key c-mode-base-map (kbd "C-M-b") #'c-beginning-of-defun)
-  (define-key c-mode-base-map (kbd "C-M-e") nil)
-  (define-key c-mode-base-map (kbd "C-M-y") #'c-end-of-defun)
   (define-key c-mode-base-map (kbd "C-c C-n") nil)
-  (define-key c-mode-base-map (kbd "C-c C-e") #'c-forward-conditional)
+  (define-key c-mode-base-map (kbd "C-c C-h") #'c-forward-conditional)
   (define-key c-mode-base-map (kbd "C-c C-p") nil)
-  (define-key c-mode-base-map (kbd "C-c C-i") #'c-backward-conditional))
+  (define-key c-mode-base-map (kbd "C-c C-t") #'c-backward-conditional))
 
 ;; Undo
 (use-package undo-tree
@@ -132,7 +128,7 @@
 	 ("C-^" . crux-top-join-line)
 	 ([remap kill-line] . cory/kill-line)
 	 ([remap kill-whole-line] . crux-kill-whole-line)
-         ("C-b" . crux-move-beginning-of-line)
+         ("C-a" . crux-move-beginning-of-line)
          ("<home>" . crux-move-beginning-of-line)
 	 :map ctl-x-4-map
 	 ("t" . crux-transpose-windows))
@@ -185,15 +181,15 @@
    ;; ("C-<right>" . sp-forward-slurp-sexp)
    ("M-<down>" . sp-splice-sexp-killing-forward)
    ("M-<up>" . sp-splice-sexp-killing-backward)
-   ("C-M-d" . sp-down-sexp)
-   ("C-M-e" . sp-up-sexp)
-   ("C-M-i" . sp-backward-down-sexp)
-   ("C-M-j" . sp-backward-sexp)
-   ("C-M-l" . sp-forward-sexp)
+   ("C-M-y" . sp-down-sexp)
+   ("C-M-h" . sp-up-sexp)
+   ("C-M-t" . sp-backward-down-sexp)
+   ("C-M-d" . sp-backward-sexp)
+   ("C-M-n" . sp-forward-sexp)
    ("C-M-u" . sp-backward-up-sexp)
    ("M-J" . sp-join-sexp)
    ("M-S" . sp-split-sexp)
-   ("M-d" . sp-kill-word)
+   ("M-y" . sp-kill-word)
    ("M-q" . sp-indent-defun)
    ("M-r" . sp-raise-sexp)
    ("M-s" . sp-splice-sexp)
@@ -319,8 +315,8 @@
 
 ;; Move text
 ;; (use-package move-text
-;;   :bind (("M-e" . move-text-down)
-;; 	 ("M-i" . move-text-up)))
+;;   :bind (("M-h" . move-text-down)
+;; 	 ("M-t" . move-text-up)))
 
 ;; Code folding
 ;; (dolist (mode '(c-mode-common-hook
@@ -357,6 +353,8 @@
 	    (lambda ()
 	      (global-devil-mode 1)))
   :custom
+  ;; (devil-key ",")
+  (devil-key ".")
   ;; (devil-repeatable-keys
   ;;  (list "%k i"
   ;;        "%k e"
@@ -373,12 +371,12 @@
   ;;        "%k x o"))
   (devil-repeatable-keys nil)
   (devil-translations
-   (list (cons "%k m m" "C-M-")
-         (cons "%k m %k" "M-,")
-         (cons "%k m /" "M-")
-         (cons "%k m" "M-")
+   (list (cons "%k , ," "C-M-")
+         (cons "%k , %k" "M-.")
+         (cons "%k , '" "M-")
+         (cons "%k ," "M-")
          (cons "%k %k" "%k")
-         (cons "%k /" "C-")
+         (cons "%k '" "C-")
 	 (cons "%k x" "C-q")
 	 (cons "%k q" "C-x")
 	 (cons "%k c" "C-w")

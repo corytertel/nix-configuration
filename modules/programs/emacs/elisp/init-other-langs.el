@@ -148,16 +148,16 @@
 				 #'cape-dabbrev)))))
 
   (define-key nxml-mode-map (kbd "C-M-s") #'completion-at-point)
-  (define-key nxml-mode-map (kbd "C-M-e") #'nxml-forward-element)
+  (define-key nxml-mode-map (kbd "C-M-h") #'nxml-forward-element)
   (define-key nxml-mode-map (kbd "C-M-n") nil)
   (define-key nxml-mode-map (kbd "C-M-p") nil)
-  (define-key nxml-mode-map (kbd "C-M-i") #'nxml-backward-element)
-  (define-key nxml-mode-map (kbd "C-M-b") #'nxml-backward-paragraph)
-  (define-key nxml-mode-map (kbd "C-M-y") #'nxml-forward-paragraph)
-  (define-key nxml-mode-map (kbd "C-M-h") #'nxml-mark-paragraph)
+  (define-key nxml-mode-map (kbd "C-M-t") #'nxml-backward-element)
+  (define-key nxml-mode-map (kbd "C-M-a") #'nxml-backward-paragraph)
+  (define-key nxml-mode-map (kbd "C-M-e") #'nxml-forward-paragraph)
+  (define-key nxml-mode-map (kbd "C-M-i") #'nxml-mark-paragraph)
   (define-key nxml-mode-map (kbd "M-{") nil)
   (define-key nxml-mode-map (kbd "M-}") nil)
-  (define-key nxml-mode-map (kbd "M-h") nil))
+  (define-key nxml-mode-map (kbd "M-i") nil))
 
 ;;; APL
 

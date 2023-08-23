@@ -135,8 +135,8 @@ myAdditionalKeys =
     , ("<F12>", spawn "layout-switch")
     , ("M-<F12>", runSelectedAction def
                 { gs_navigate = myGsnavigation }
-                [ ("US Minimak", spawn "setxkbmap us_minimak")
-                , ("RU Minimak", spawn "setxkbmap ru_phonetic_minimak")
+                [ ("US Dvorak", spawn "setxkbmap us_dvorak")
+                , ("RU Dvorak", spawn "setxkbmap ru_phonetic_dvorak")
                 , ("US Qwerty",  spawn "setxkbmap us_qwerty")
                 , ("RU Qwerty",  spawn "setxkbmap ru_phonetic_qwerty")
                 ])

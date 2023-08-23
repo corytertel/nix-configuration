@@ -23,5 +23,8 @@ in {
       desktopFile = "firefox.desktop";
       package = pkgs.firefox;
     };
+    home-manager.users.cory.home.packages = with pkgs; [
+      speechd
+    ];
   };
 }

@@ -5,13 +5,13 @@
   (;; ([remap goto-line] . avy-goto-line)
    ("M-g c" . avy-goto-char-in-line)
    ("M-g m" . avy-move-line)
-   ("M-m" . cory/avy)
-   ("C-M-m" . avy-goto-char-in-line)
-   ("C-S-m" . avy-pop-mark)
+   ("C-j" . cory/avy)
+   ;; ("C-M-m" . avy-goto-char-in-line)
+   ;; ("C-S-m" . avy-pop-mark)
    ;; ([remap isearch-forward-regexp] . isearch-forward-other-window)
    ;; ([remap isearch-backward-regexp] . isearch-backward-other-window)
    :map isearch-mode-map
-   ("M-m" . avy-isearch))
+   ("C-j" . avy-isearch))
 
   :custom
   (avy-keys (append (string-to-list "atenisubopyflmc")))

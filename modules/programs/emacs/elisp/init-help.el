@@ -6,14 +6,14 @@
    ([remap describe-key]      . helpful-key)
    ([remap describe-variable] . helpful-variable)
    ([remap describe-function] . helpful-callable)
-   ("C-h V" . describe-face)
-   ("C-h <down>" . view-external-packages)
+   ("<C-i> V" . describe-face)
+   ("<C-i> <down>" . view-external-packages)
    ;; Minimak binds
    :map helpful-mode-map
    ("n" . nil)
-   ("e" . forward-button)
+   ("h" . forward-button)
    ("p" . nil)
-   ("i" . backward-button)))
+   ("t" . backward-button)))
 
 (use-package eldoc
   :ensure nil

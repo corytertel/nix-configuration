@@ -4,7 +4,7 @@
   :commands (sly sly-connect)
   :bind
   (:map sly-mode-map
-   ("C-x C-e" . sly-eval-last-expression)
+   ("C-x C-h" . sly-eval-last-expression)
    ("C-x <down>" . sly-eval-last-expression))
   :init
   (setq-default sly-symbol-completion-mode nil)

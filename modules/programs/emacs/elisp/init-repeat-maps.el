@@ -45,89 +45,89 @@ together in sequence."
 
 (defvar repeaters-maps
   '(("buffer-switch"
-     previous-buffer                   "C-x C-<left>" "C-x <left>" "C-<left>" "<left>" "j"
-     next-buffer                       "C-x C-<right>" "C-x <right>" "C-<right>" "<right>" "l")
+     previous-buffer                   "C-x C-<left>" "C-x <left>" "C-<left>" "<left>" "d"
+     next-buffer                       "C-x C-<right>" "C-x <right>" "C-<right>" "<right>" "n")
 
     ("calendar-nav"
-     calendar-forward-day              "C-l" "l"
-     calendar-backward-day             "C-j" "j"
-     calendar-forward-week             "C-e" "e"
-     calendar-backward-week            "<C-i>" "i"
+     calendar-forward-day              "C-n" "n"
+     calendar-backward-day             "C-d" "d"
+     calendar-forward-week             "C-h" "h"
+     calendar-backward-week            "C-t" "t"
      calendar-forward-month            "M-}" "}" "]"
      calendar-backward-month           "M-{" "{" "["
      calendar-forward-year             "C-x ]"
      calendar-backward-year            "C-x [")
 
     ("navigation"
-     backward-char                     "C-j" "j" "<left>"
-     forward-char                      "C-l" "l" "<right>"
-     next-line                         "C-e" "e" "<down>"
-     previous-line                     "<C-i>" "i" "<up>"
-     crux-move-beginning-of-line       "C-b" "b" "<home>"
-     end-of-visual-line                "C-y" "y" "<end>"
+     backward-char                     "C-d" "d" "<left>"
+     forward-char                      "C-n" "n" "<right>"
+     next-line                         "C-h" "h" "<down>"
+     previous-line                     "C-t" "t" "<up>"
+     crux-move-beginning-of-line       "C-a" "a" "<home>"
+     end-of-visual-line                "C-e" "e" "<end>"
      smart-region                      "C-SPC"
      cory/mark-line                    "C-M-SPC"
-     exchange-point-and-mark           "C-x C-x" "q"
-     cory/scroll-down                  "C-n" "n"                     :exitonly
-     cory/scroll-up                    "M-n"                         :exitonly)
+     exchange-point-and-mark           "C-x C-x" "'"
+     cory/scroll-down                  "C-p" "p"                     :exitonly
+     cory/scroll-up                    "M-p"                         :exitonly)
 
     ("rectangle-nav"
      rectangle-mark-mode               "C-x SPC"
-     rectangle-previous-line           "<C-i>" "i" "<up>"
-     rectangle-next-line               "C-e" "e" "<down>"
-     rectangle-backward-char           "C-j" "j" "<left>"
-     rectangle-forward-char            "C-l" "l" "<right>"
+     rectangle-previous-line           "C-t" "t" "<up>"
+     rectangle-next-line               "C-h" "h" "<down>"
+     rectangle-backward-char           "C-d" "d" "<left>"
+     rectangle-forward-char            "C-n" "n" "<right>"
      open-rectangle                    "C-o" "o"
-     string-rectangle                  "C-t" "t"
-     rectangle-exchange-point-and-mark "C-x C-x" "q")
+     string-rectangle                  "C-b" "b"
+     rectangle-exchange-point-and-mark "C-x C-x" "'")
 
     ("defun-nav"
-     beginning-of-defun                "C-M-b" "M-b" "b" "ESC M-b"
-     end-of-defun                      "C-M-y" "M-y" "y" "ESC M-y")
+     beginning-of-defun                "C-M-a" "M-a" "a" "ESC M-a"
+     end-of-defun                      "C-M-e" "M-e" "e" "ESC M-e")
 
     ("del-char"
-     delete-char                       "C-d" "d" "<deletechar>")
+     delete-char                       "C-y" "y" "<deletechar>")
 
     ("sexp-nav"
-     backward-sexp                     "C-M-j" "j" "ESC M-j"
-     forward-sexp                      "C-M-l" "l" "ESC M-l")
+     backward-sexp                     "C-M-d" "d" "ESC M-d"
+     forward-sexp                      "C-M-n" "n" "ESC M-n")
 
     ("paragraph-nav"
-     backward-paragraph                "M-i" "i" "C-M-b" "b" "C-<up>" "<up>" "M-{" "M-[" "{" "["
-     forward-paragraph                 "M-e" "e" "C-M-y" "y" "C-<down>" "<down>" "M-}" "M-]" "}" "]")
+     backward-paragraph                "M-t" "t" "C-M-a" "a" "C-<up>" "<up>" "M-{" "M-[" "{" "["
+     forward-paragraph                 "M-h" "h" "C-M-e" "e" "C-<down>" "<down>" "M-}" "M-]" "}" "]")
 
     ("sentence-nav"
-     backward-sentence                 "M-b" "b"
-     forward-sentence                  "M-y" "y")
+     backward-sentence                 "M-a" "a"
+     forward-sentence                  "M-e" "e")
 
     ("org-sentence-nav"
-     org-backward-sentence             "M-b" "b"
-     org-forward-sentence              "M-y" "y")
+     org-backward-sentence             "M-a" "a"
+     org-forward-sentence              "M-e" "e")
 
     ("page-nav"
      backward-page                     "C-x [" "["
      forward-page                      "C-x ]" "]")
 
     ("list-nav"
-     backward-list                     "C-M-i" "i" "ESC M-i"
-     forward-list                      "C-M-e" "e" "ESC M-e"
+     backward-list                     "C-M-t" "t" "ESC M-t"
+     forward-list                      "C-M-h" "h" "ESC M-h"
      backward-up-list                  "C-M-<up>" "C-M-u" "<up>" "u" "ESC M-u"
-     down-list                         "C-M-<down>" "C-M-d" "<down>" "d" "ESC M-d")
+     down-list                         "C-M-<down>" "C-M-y" "<down>" "y" "ESC M-y")
 
     ("mid-top-bottom-move"
-     recenter-top-bottom               "C-p" "p"
+     recenter-top-bottom               "C-l" "l"
      move-to-window-line-top-bottom    "M-r" "r"
-     back-to-indentation               "M-m" "m"                     :exitonly)
+     back-to-indentation               "C-j" "j"                     :exitonly)
 
     ("fix-case"
      upcase-word                       "M-u" "u"
 
      ;; Easy way to manually set title case
-     downcase-word                     "M-p" "p" "d"
+     downcase-word                     "M-l" "l"
      capitalize-word                   "M-c" "c")
 
     ("kill-word"
-     kill-word                         "M-d" "C-<delete>" "d")
+     kill-word                         "M-y" "C-<delete>" "y")
 
     ("kill-line"
      kill-line                         "C-k" "k")
@@ -150,68 +150,68 @@ together in sequence."
      yank-pop                          "M-v" "v" "e")
 
     ("kmacro-cycle"
-     kmacro-cycle-ring-next            "C-x C-k C-e" "C-e" "e"
-     kmacro-cycle-ring-previous        "C-x C-k C-i" "<C-i>" "i")
+     kmacro-cycle-ring-next            "C-x C-k C-h" "C-h" "h"
+     kmacro-cycle-ring-previous        "C-x C-k C-t" "C-t" "t")
 
     ("tab-bar-nav"
-     tab-next                          "C-x t o" "o" "e"
-     tab-previous                      "C-x t O" "O" "i")
+     tab-next                          "C-x t o" "o" "h"
+     tab-previous                      "C-x t O" "O" "t")
 
     ("transpose-chars"
-     transpose-chars                    "C-t" "t")
+     transpose-chars                    "C-b" "b")
 
     ("transpose-words"
-     transpose-words                   "M-t" "t")
+     transpose-words                   "M-b" "b")
 
     ("transpose-sexps"
-     transpose-sexps                   "C-M-t" "t" "ESC M-t")
+     transpose-sexps                   "C-M-b" "b" "ESC M-b")
 
     ("transpose-lines"
-     transpose-lines                   "C-x C-t" "t")
+     transpose-lines                   "C-x C-b" "b")
 
     ("scroll-down"
-     cory/scroll-down                  "C-n" "n" "<next>"
+     cory/scroll-down                  "C-p" "p" "<next>"
      cory/beginning-of-workspace       "M-<" "<"
      cory/end-of-workspace             "M->" ">"                     :exitonly
-     cory/scroll-up                    "M-n" "<prior>"               :exitonly
+     cory/scroll-up                    "M-p" "<prior>"               :exitonly
      ;; same as navigation
-     backward-char                     "C-j" "j" "<left>"            :exitonly
-     forward-char                      "C-l" "l" "<right>"           :exitonly
-     next-line                         "C-e" "e" "<down>"            :exitonly
-     previous-line                     "<C-i>" "i" "<up>"            :exitonly
-     crux-move-beginning-of-line       "C-b" "b" "<home>"            :exitonly
-     end-of-visual-line                "C-y" "y" "<end>"             :exitonly
+     backward-char                     "C-d" "d" "<left>"            :exitonly
+     forward-char                      "C-n" "n" "<right>"           :exitonly
+     next-line                         "C-h" "h" "<down>"            :exitonly
+     previous-line                     "C-t" "t" "<up>"            :exitonly
+     crux-move-beginning-of-line       "C-a" "a" "<home>"            :exitonly
+     end-of-visual-line                "C-e" "e" "<end>"             :exitonly
      smart-region                      "C-SPC"                       :exitonly
      cory/mark-line                    "C-M-SPC"                     :exitonly
-     exchange-point-and-mark           "C-x C-x" "q"                 :exitonly)
+     exchange-point-and-mark           "C-x C-x" "'"                 :exitonly)
 
     ("scroll-up"
-     cory/scroll-up                    "M-n" "n" "<prior>"
+     cory/scroll-up                    "M-p" "p" "<prior>"
      cory/end-of-workspace             "M->" ">"
      cory/beginning-of-workspace       "M-<" "<"                     :exitonly
-     cory/scroll-down                  "C-n" "<next>"                :exitonly
+     cory/scroll-down                  "C-p" "<next>"                :exitonly
      ;; same as navigation
-     backward-char                     "C-j" "j" "<left>"            :exitonly
-     forward-char                      "C-l" "l" "<right>"           :exitonly
-     next-line                         "C-e" "e" "<down>"            :exitonly
-     previous-line                     "<C-i>" "i" "<up>"            :exitonly
-     crux-move-beginning-of-line       "C-b" "b" "<home>"            :exitonly
-     end-of-visual-line                "C-y" "y" "<end>"             :exitonly
+     backward-char                     "C-d" "d" "<left>"            :exitonly
+     forward-char                      "C-n" "n" "<right>"           :exitonly
+     next-line                         "C-h" "h" "<down>"            :exitonly
+     previous-line                     "C-t" "t" "<up>"            :exitonly
+     crux-move-beginning-of-line       "C-a" "a" "<home>"            :exitonly
+     end-of-visual-line                "C-e" "e" "<end>"             :exitonly
      smart-region                      "C-SPC"                       :exitonly
      cory/mark-line                    "C-M-SPC"                     :exitonly
-     exchange-point-and-mark           "C-x C-x" "q"                 :exitonly)
+     exchange-point-and-mark           "C-x C-x" "'"                 :exitonly)
 
     ("scroll-otherwin"
-     scroll-other-window               "C-M-n" "n" "ESC M-n"
+     scroll-other-window               "C-M-p" "p" "ESC M-p"
      beginning-of-buffer-other-window  "M-<home>" "<"
      end-of-buffer-other-window        "M-<end>" ">"                 :exitonly
-     scroll-other-window-down          "C-M-S-n" "M-n" "ESC M-N" "N" :exitonly)
+     scroll-other-window-down          "C-M-S-p" "M-p" "ESC M-P" "P" :exitonly)
 
     ("scroll-otherwin-down"
-     scroll-other-window-down          "C-M-S-n" "M-n" "n" "ESC M-N" "N"
+     scroll-other-window-down          "C-M-S-p" "M-p" "p" "ESC M-P" "P"
      end-of-buffer-other-window        "M-<end>" ">"
      beginning-of-buffer-other-window  "M-<home>" "<"                :exitonly
-     scroll-other-window               "C-M-n" "C-n" "ESC M-n"       :exitonly)
+     scroll-other-window               "C-M-p" "C-p" "ESC M-p"       :exitonly)
 
     ("scroll-sideways"
      scroll-left                       "C-x <" "<"
@@ -228,23 +228,23 @@ together in sequence."
 
     ;; Repeat Maps for Org-Mode
     ("org-nav"
-     org-backward-heading-same-level   "C-c C-j" "C-j" "j"
-     org-forward-heading-same-level    "C-c C-l" "C-l" "l"
-     org-previous-visible-heading      "C-c <C-i>" "<C-i>" "i"
-     org-next-visible-heading          "C-c C-e" "C-e" "e"
+     org-backward-heading-same-level   "C-c C-d" "C-d" "d"
+     org-forward-heading-same-level    "C-c C-n" "C-n" "n"
+     org-previous-visible-heading      "C-c C-t" "C-t" "t"
+     org-next-visible-heading          "C-c C-h" "C-h" "h"
      outline-up-heading                "C-c C-u" "C-u" "u"
-     org-next-block                    "C-c M-l" "M-l" "L"
-     org-previous-block                "C-c M-j" "M-j" "J"
+     org-next-block                    "C-c M-n" "M-n" "N"
+     org-previous-block                "C-c M-d" "M-d" "D"
      org-goto                          "C-c C-g" "g"
      org-refile                        "C-c C-w" "r")
 
     ("org-editing"
-     org-metadown                      "M-<down>" "<down>" "e"
-     org-metaup                        "M-<up>" "<up>" "i"
-     org-metaleft                      "M-<left>" "<left>" "j"
-     org-metaright                     "M-<right>" "<right>" "l"
-     org-shiftmetaleft                 "M-S-<left>" "S-<left>" "J"
-     org-shiftmetaright                "M-S-<right>" "S-<right>" "L"
+     org-metadown                      "M-<down>" "<down>" "h"
+     org-metaup                        "M-<up>" "<up>" "t"
+     org-metaleft                      "M-<left>" "<left>" "d"
+     org-metaright                     "M-<right>" "<right>" "n"
+     org-shiftmetaleft                 "M-S-<left>" "S-<left>" "D"
+     org-shiftmetaright                "M-S-<right>" "S-<right>" "N"
      org-demote-subtree                "C->" ">"
      org-promote-subtree               "C-<" "<")
 
@@ -256,8 +256,8 @@ together in sequence."
      org-deadline                      "C-c C-d" "C-d" "d")
 
     ("word-nav"
-     backward-word                     "M-j" "j" "C-<left>"
-     forward-word                      "M-l" "l" "C-<right>")
+     backward-word                     "M-d" "d" "C-<left>"
+     forward-word                      "M-n" "n" "C-<right>")
 
     ;; ("set-mark"
     ;;  smart-region                      "C-SPC" "SPC")
@@ -266,7 +266,7 @@ together in sequence."
     ;;  cory/mark-line                    "C-M-SPC" "SPC")
 
     ("repeat"
-     repeat                            "C-'" "'")
+     repeat                            "C-w" "w")
 
     ("macrursors"
      macrursors-mark-next-instance-of     "C->" ">" "."
@@ -276,44 +276,44 @@ together in sequence."
      macrursors-select                 "C-; SPC" "C-c SPC" "SPC")
 
     ("vertico"
-     vertico-previous                  "C-e" "e" "<down>" "<backtab>"
-     vertico-next                      "<C-i>" "i" "<up>" "TAB"
-     vertico-grid-scroll-down          "C-n" "n" "<next>"
-     vertico-grid-scroll-up            "M-n" "<prior>")
+     vertico-previous                  "C-h" "h" "<down>" "<backtab>"
+     vertico-next                      "C-t" "t" "<up>" "TAB"
+     vertico-grid-scroll-down          "C-p" "p" "<next>"
+     vertico-grid-scroll-up            "M-p" "<prior>")
 
     ("smartparens-nav"
-     sp-forward-sexp                   "C-M-l" "l"
-     sp-backward-sexp                  "C-M-j" "j"
-     sp-down-sexp                      "C-M-d" "d"
-     sp-backward-down-sexp             "C-M-i" "i"
-     sp-up-sexp                        "C-M-e" "e"
+     sp-forward-sexp                   "C-M-n" "n"
+     sp-backward-sexp                  "C-M-d" "d"
+     sp-down-sexp                      "C-M-y" "y"
+     sp-backward-down-sexp             "C-M-t" "t"
+     sp-up-sexp                        "C-M-h" "h"
      sp-backward-up-sexp               "C-M-u" "u")
 
     ("smartparens-del-char"
-     sp-delete-char                    "C-d" "d" "<deletechar>")
+     sp-delete-char                    "C-y" "y" "<deletechar>")
 
     ("org-del-char"
-     org-delete-char                   "C-d" "d" "<deletechar>")
+     org-delete-char                   "C-y" "y" "<deletechar>")
 
     ("smartparens-kill-word"
-     sp-kill-word                      "M-d" "d" "C-<delete>")
+     sp-kill-word                      "M-y" "y" "C-<delete>")
 
     ("corfu"
-     corfu-next                        "TAB" "<tab>" "e"
-     corfu-previous                    "S-TAB" "<backtab>" "i")
+     corfu-next                        "TAB" "<tab>" "h"
+     corfu-previous                    "S-TAB" "<backtab>" "t")
 
     ("error-nav"
-     next-error                        "M-g M-e" "M-e" "M-g C-<down>" "C-<down>" "e" "C-x `" "`"
-     previous-error                    "M-g M-i" "M-i" "M-g C-<up>" "C-<up>" "i")
+     next-error                        "M-g M-h" "M-h" "M-g C-<down>" "C-<down>" "h" "C-x `" "`"
+     previous-error                    "M-g M-t" "M-t" "M-g C-<up>" "C-<up>" "t")
 
     ;; ("jinx"
-    ;;  jinx-next                         "M-g M-e" "M-e" "e" "C-x `" "`"
-    ;;  jinx-previous                     "M-g M-i" "M-i" "i"
+    ;;  jinx-next                         "M-g M-h" "M-h" "h" "C-x `" "`"
+    ;;  jinx-previous                     "M-g M-t" "M-t" "t"
     ;;  jinx-correct                      "M-$" "$" :exitonly)
 
     ("flymake-error-nav"
-     flymake-goto-next-error           "M-g M-e" "M-e" "M-g C-<down>" "C-<down>" "e" "C-x `" "`"
-     flymake-goto-prev-error           "M-g M-i" "M-i" "M-g C-<up>" "C-<up>" "i"
+     flymake-goto-next-error           "M-g M-h" "M-h" "M-g C-<down>" "C-<down>" "h" "C-x `" "`"
+     flymake-goto-prev-error           "M-g M-t" "M-t" "M-g C-<up>" "C-<up>" "t"
      flymake-show-buffer-diagnostics   "M-g d" "d" :exitonly))
 
   "List of lists containing repeater-map definitions.

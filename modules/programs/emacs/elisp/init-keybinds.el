@@ -49,8 +49,21 @@
   `(dolist (pair ',l)
      (define-key ,map (kbd (car pair)) (cdr pair))))
 
-;; Swap "C-q" and "C-x"
-;; Swap "C-w" and "C-c"
+;; Swap C-' and C-x
+;; Swap C-, and C-c
+;; (key-translate [67108903] ?\C-x)
+;; (keyboard-translate ?\C-' ?\C-x)
+;; (keyboard-translate ?\C-x ?\C-')
+;; (keyboard-translate ?\C-, ?\C-c)
+;; (keyboard-translate ?\C-c ?\C-,)
+;; (add-hook 'server-after-make-frame-hook
+;; 	  (lambda ()
+;; 	    (keyboard-translate ?\C-' ?\C-x)
+;; 	    (keyboard-translate ?\C-x ?\C-')
+;; 	    (keyboard-translate ?\C-, ?\C-c)
+;; 	    (keyboard-translate ?\C-c ?\C-,)))
+;; ;; (global-set-key "\C-'" ctl-x-map)
+;; ;; (global-set-key "\C-x" 'kill-region)
 (keyboard-translate ?\C-q ?\C-x)
 (keyboard-translate ?\C-x ?\C-q)
 (keyboard-translate ?\C-w ?\C-c)
@@ -65,6 +78,7 @@
 ;; (global-set-key "\C-x" 'kill-region)
 
 (global-set-key (kbd "M-f") search-map)
+(global-set-key (kbd "<C-i>") help-map)
 
 ;; global binds
 (cory/define-keys
@@ -73,18 +87,17 @@
  ("<right>" . forward-char)
  ("C-<left>" . backward-word)
  ("C-<right>" . forward-word)
- ("C-y" . move-end-of-line)
- ("<C-i>" . previous-line)
+ ("C-e" . move-end-of-line)
+ ("C-t" . previous-line)
  ("C-o" . find-file)
- ("C-p" . recenter-top-bottom)
- ("C-a" . mark-whole-buffer)
+ ("C-l" . recenter-top-bottom)
  ("C-s" . save-buffer)
  ("C-S-s" . write-file)
  ("C-f" . isearch-forward)
  ("<find>" . isearch-forward)
- ("C-j" . backward-char)
- ("C-e" . next-line)
- ("C-l" . forward-char)
+ ("C-d" . backward-char)
+ ("C-h" . next-line)
+ ("C-n" . forward-char)
  ("C-z" . undo-only)
  ("C-S-z" . undo-redo)
  ("<undo>" . undo-only)
@@ -92,42 +105,55 @@
  ("C-q" . kill-region)
  ("C-w" . kill-ring-save)
  ("C-v" . yank)
- ("C-b" . move-beginning-of-line)
- ("C-n" . scroll-up-command)
+ ("C-a" . move-beginning-of-line)
+ ("C-p" . scroll-up-command)
  ("<next>" . scroll-up-command)
  ("C-/" . nil)
  ("C-\\" . quoted-insert)
  ("M-w" . nil)
- ("M-y" . forward-sentence)
- ("M-p" . downcase-word)
- ("M-a" . default-indent-new-line)
+ ("M-e" . forward-sentence)
+ ("M-l" . downcase-word)
+ ("M-j" . default-indent-new-line)
  ("M-s" . tab-to-tab-stop)
- ("M-j" . backward-word)
- ("M-l" . forward-word)
+ ("M-d" . backward-word)
+ ("M-n" . forward-word)
  ("M-v" . yank-pop)
- ("M-b" . backward-sentence)
- ("M-n" . scroll-down-command)
+ ("M-a" . backward-sentence)
+ ("M-p" . scroll-down-command)
  ("<prior>" . scroll-down-command)
- ("C-M-i" . backward-list)
- ("C-M-a" . default-indent-new-line)
- ("C-M-b" . beginning-of-defun)
- ("C-M-e" . forward-list)
+ ("C-M-t" . backward-list)
+ ("C-M-j" . default-indent-new-line)
+ ("C-M-a" . beginning-of-defun)
+ ("C-M-h" . forward-list)
  ("C-M-f" . isearch-forward-regexp)
  ("M-<find>" . isearch-forward-regexp)
- ("C-M-j" . backward-sexp)
- ("C-M-l" . forward-sexp)
- ("C-M-n" . scroll-other-window)
- ("C-M-S-n" . scroll-other-window-down)
- ("C-M-p" . reposition-window)
+ ("C-M-d" . backward-sexp)
+ ("C-M-n" . forward-sexp)
+ ("C-M-p" . scroll-other-window)
+ ("C-M-S-p" . scroll-other-window-down)
+ ("C-M-l" . reposition-window)
  ("C-M-s" . completion-at-point)
  ("C-M-v" . nil)
  ("C-M-S-v" . nil)
  ("C-M-w" . nil)
- ("C-M-y" . end-of-defun)
+ ("C-M-e" . end-of-defun)
  ("C-M-x" . append-next-kill)
  ("C-M-\\" . toggle-input-method)
  ("C-x <down>" . eval-last-sexp)
- ("C-x <home>" . list-buffers))
+ ("C-x <home>" . list-buffers)
+ ;; ("C-b" . transpose-chars)
+ ("C-b" . switch-to-buffer)
+ ("M-b" . transpose-words)
+ ("C-M-b" . transpose-sexps)
+ ("C-x C-t" . nil)
+ ("C-x C-b" . transpose-lines)
+ ("C-a" . mark-whole-buffer)
+ ("C-j" . nil)
+ ("C-y" . delete-char)
+ ("M-y" . kill-word)
+ ("C-M-y" . down-list)
+ ("M-i" . mark-paragraph)
+ ("C-M-i" . mark-defun))
 
 ;; minibuffer binds
 (cory/define-keys
@@ -135,8 +161,8 @@
  ("C-j" . nil)
  ("M-n" . nil)
  ("M-p" . nil)
- ("M-e" . next-history-element)
- ("M-i" . previous-history-element)
+ ("M-h" . next-history-element)
+ ("M-t" . previous-history-element)
  ("C-<up>" . previous-history-element)
  ("C-<down>" . next-history-element)
  ("M-s" . nil)
@@ -145,12 +171,12 @@
 (cory/define-keys
  minibuffer-local-completion-map
  ("C-j" . nil)
- ("M-n" . switch-to-completions)
- ("M-p" . nil)
+ ("M-p" . switch-to-completions)
+ ("M-n" . nil)
  ("M-v" . nil)
- ("M-i" . previous-history-element)
+ ("M-t" . previous-history-element)
  ("C-<up>" . previous-history-element)
- ("M-e" . next-history-element)
+ ("M-h" . next-history-element)
  ("C-<down>" . next-history-element)
  ("M-s" . nil)
  ("M-f" . next-matching-history-element))
@@ -167,8 +193,8 @@
  completion-list-mode-map
  ("n" . nil)
  ("p" . nil)
- ("e" . next-completion)
- ("i" . previous-completion))
+ ("h" . next-completion)
+ ("t" . previous-completion))
 
 ;; isearch binds
 (cory/define-keys
@@ -188,12 +214,12 @@
  ("C-x" . isearch-yank-word-or-char)
  ("C-y" . nil)
  ("C-v" . isearch-yank-kill)
- ("M-y" . isearch-edit-string)
+ ("M-e" . isearch-edit-string)
  ("M-p" . nil)
  ("M-n" . nil)
- ("M-i" . isearch-ring-retreat)
+ ("M-t" . isearch-ring-retreat)
  ("C-<up>" . isearch-ring-retreat)
- ("M-e" . isearch-ring-advance)
+ ("M-h" . isearch-ring-advance)
  ("C-<down>" . isearch-ring-advance)
  ("M-v" . isearch-yank-pop-only)
  ("M-s '" . nil)
@@ -211,7 +237,7 @@
  ("M-s r" . nil)
  ("M-s w" . nil)
  ("M-f '" . isearch-toggle-char-fold)
- ("M-f C-y" . isearch-yank-line)
+ ("M-f C-e" . isearch-yank-line)
  ("M-f M-<" . isearch-beginning-of-buffer)
  ("M-f M->" . isearch-end-of-buffer)
  ("M-f SPC" . isearch-toggle-lax-whitespace)
@@ -229,31 +255,31 @@
 (with-eval-after-load 'kmacro
   (define-key kmacro-keymap (kbd "C-n") nil)
   (define-key kmacro-keymap (kbd "C-p") nil)
-  (define-key kmacro-keymap (kbd "<C-i>") #'kmacro-cycle-ring-previous)
-  (define-key kmacro-keymap (kbd "C-e") #'kmacro-cycle-ring-next)
-  (define-key kmacro-keymap (kbd "C-y") #'kmacro-edit-macro-repeat)
+  (define-key kmacro-keymap (kbd "C-t") #'kmacro-cycle-ring-previous)
+  (define-key kmacro-keymap (kbd "C-h") #'kmacro-cycle-ring-next)
+  (define-key kmacro-keymap (kbd "C-e") #'kmacro-edit-macro-repeat)
   (define-key kmacro-keymap (kbd "<up>") #'kmacro-cycle-ring-previous)
   (define-key kmacro-keymap (kbd "<down>") #'kmacro-cycle-ring-next))
 
 ;; info binds
 (with-eval-after-load 'info
-  (define-key Info-mode-map (kbd "C-M-e") #'Info-next-reference)
+  (define-key Info-mode-map (kbd "C-M-h") #'Info-next-reference)
   (define-key Info-mode-map (kbd "S") nil)
   (define-key Info-mode-map (kbd "F") #'Info-search-case-sensitively)
   (define-key Info-mode-map (kbd "n") nil)
-  (define-key Info-mode-map (kbd "y") #'end-of-buffer)
-  (define-key Info-mode-map (kbd "e") #'Info-next)
-  (define-key Info-mode-map (kbd "p") #'Info-index)
-  (define-key Info-mode-map (kbd "i") #'Info-prev)
+  (define-key Info-mode-map (kbd "e") #'end-of-buffer)
+  (define-key Info-mode-map (kbd "h") #'Info-next)
+  (define-key Info-mode-map (kbd "i") #'Info-index)
+  (define-key Info-mode-map (kbd "t") #'Info-prev)
   (define-key Info-mode-map (kbd "s") #'Info-follow-reference)
   (define-key Info-mode-map (kbd "f") #'Info-search))
 
 ;; tetris binds
 (with-eval-after-load 'tetris
-  (define-key tetris-mode-map (kbd "e") #'tetris-move-down)
-  (define-key tetris-mode-map (kbd "i") #'tetris-rotate-prev)
-  (define-key tetris-mode-map (kbd "l") #'tetris-move-right)
-  (define-key tetris-mode-map (kbd "j") #'tetris-move-left))
+  (define-key tetris-mode-map (kbd "h") #'tetris-move-down)
+  (define-key tetris-mode-map (kbd "t") #'tetris-rotate-prev)
+  (define-key tetris-mode-map (kbd "d") #'tetris-move-right)
+  (define-key tetris-mode-map (kbd "n") #'tetris-move-left))
 
 ;; goto binds
 (cory/define-keys
@@ -262,10 +288,16 @@
  ("M-p" . nil)
  ("n" . nil)
  ("p" . nil)
- ("M-e" . next-error)
+ ("M-h" . next-error)
  ("C-<down>" . next-error)
- ("M-i" . previous-error)
+ ("M-t" . previous-error)
  ("C-<up>" . previous-error))
+
+;; help binds
+(cory/define-keys
+ help-map
+ ("C-h" . nil)
+ ("<C-i>" . help-for-help))
 
 ;;
 ;; --- GENERAL KEYBINDS ---
@@ -288,12 +320,12 @@
 (global-set-key [remap find-file] #'cory/find-file)
 
 ;; TODO `k' and `SPC' key variation in text and prog modes
-;; `M-b' and `M-y' binds in prog modes
-;; The swaping of `q' and `x' and `w' and `c'
+;; `M-a' and `M-e' binds in prog modes
+;; The swaping of `'' and `x' and `,' and `c'
 
 (cory/define-keys
  global-map
- ("C-M-a" . cory/join-next-line)
+ ("C-M-j" . cory/join-next-line)
  ("C-x K" . kill-buffer)
  ("C-c w" . woman)
  ("C-'"   . repeat)
@@ -345,53 +377,5 @@
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
 ;;; Misc useful functions
-
-(defun cory/describe-all-keymaps ()
-  "Describe all keymaps in currently-defined variables."
-  (interactive)
-  (with-output-to-temp-buffer "*keymaps*"
-    (let (symbs seen)
-      (mapatoms (lambda (s)
-                  (when (and (boundp s) (keymapp (symbol-value s)))
-                    (push (indirect-variable s) symbs))))
-      (dolist (keymap symbs)
-        (unless (memq keymap seen)
-          (princ (format "* %s\n\n" keymap))
-          (princ (substitute-command-keys (format "\\{%s}" keymap)))
-          (princ (format "\f\n%s\n\n" (make-string (min 80 (window-width)) ?-)))
-          (push keymap seen))))
-    (with-current-buffer standard-output ;; temp buffer
-      (setq help-xref-stack-item (list #'describe-all-keymaps)))))
-
-(defun cory/delete-current-buffer-file ()
-  "Removes file connected to current buffer and kills buffer."
-  (interactive)
-  (let ((filename (buffer-file-name))
-        (buffer (current-buffer))
-        (name (buffer-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (ido-kill-buffer)
-      (when (yes-or-no-p "Are you sure you want to remove this file? ")
-        (delete-file filename)
-        (kill-buffer buffer)
-        (message "File '%s' successfully removed" filename)))))
-
-(defun cory/rename-current-buffer-file ()
-  "Renames current buffer and file it is visiting."
-  (interactive)
-  (let ((name (buffer-name))
-        (filename (buffer-file-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (error "Buffer '%s' is not visiting a file!" name)
-      (let ((new-name (read-file-name "New name: " filename)))
-        (if (get-buffer new-name)
-            (error "A buffer named '%s' already exists!" new-name)
-          (rename-file filename new-name 1)
-          (rename-buffer new-name)
-          (set-visited-file-name new-name)
-          (set-buffer-modified-p nil)
-          (message "File '%s' successfully renamed to '%s'"
-                   name (file-name-nondirectory new-name)))))))
-
 (global-set-key (kbd "C-x x k") 'cory/delete-current-buffer-file)
 (global-set-key (kbd "C-x x r") 'cory/rename-current-buffer-file)

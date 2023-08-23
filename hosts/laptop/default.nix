@@ -54,7 +54,7 @@
         enable = true;
         user = "cory";
       };
-      layout = "us_minimak";
+      layout = "us_dvorak";
       libinput = {
         touchpad = {
           accelProfile = "adaptive";

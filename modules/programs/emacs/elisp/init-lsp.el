@@ -103,7 +103,7 @@
          ("C-c C-a a" . lsp-execute-code-action)
          ("C-c C-a r" . lsp-find-references)
 	 ;; :map global-map
-	 ("C-h ." . cory/display-local-help)
+	 ("<C-i> ." . cory/display-local-help)
 	 ("<help> ." . cory/display-local-help)
 	 ;; :map help-map
 	 ;; ("." . cory/display-local-help)
