@@ -34,15 +34,29 @@
     gamemode.enable = true;
   };
 
-  services = {
-    xserver.videoDrivers = [ "nvidia" ];
-    xserver.layout = "us_qwerty";
+  services.xserver = {
+    videoDrivers = [ "nvidia" ];
+    layout = "us_qwerty";
     libinput.mouse = {
       # Mouse
-      accelProfile = "flat";
-      accelSpeed = null;
+      # accelProfile = "flat";
+      # accelSpeed = null;
+      # disableWhileTyping = true;
+
+      # Trackball
+      # accelProfile = "flat";
+      # accelSpeed = null;
+      accelProfile = "adaptive";
+      accelSpeed = "0.5";
+      buttonMapping = "1 8 2 4 5 6 7 3 9";
+      # buttonMapping = "1 2 8 4 5 6 7 3 9";
       disableWhileTyping = true;
-    };
+      naturalScrolling = true;
+      scrollButton = 3;
+      # scrollButton = 2;
+      scrollMethod = "button";
+      # transformationMatrix = "2.5 0 0 0 2.5 0 0 0 1";
+      };
   };
 
   hardware.opengl = {

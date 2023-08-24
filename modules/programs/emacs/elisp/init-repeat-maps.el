@@ -67,7 +67,7 @@ together in sequence."
      end-of-visual-line                "C-e" "e" "<end>"
      smart-region                      "C-SPC"
      cory/mark-line                    "C-M-SPC"
-     exchange-point-and-mark           "C-x C-x" "'"
+     exchange-point-and-mark           "C-x C-x" "q"
      cory/scroll-down                  "C-p" "p"                     :exitonly
      cory/scroll-up                    "M-p"                         :exitonly)
 
@@ -78,8 +78,8 @@ together in sequence."
      rectangle-backward-char           "C-d" "d" "<left>"
      rectangle-forward-char            "C-n" "n" "<right>"
      open-rectangle                    "C-o" "o"
-     string-rectangle                  "C-b" "b"
-     rectangle-exchange-point-and-mark "C-x C-x" "'")
+     string-rectangle                  "C-b" "bq"
+     rectangle-exchange-point-and-mark "C-x C-x" "q")
 
     ("defun-nav"
      beginning-of-defun                "C-M-a" "M-a" "a" "ESC M-a"
@@ -139,13 +139,19 @@ together in sequence."
     ("kill-sexp"
      kill-sexp                         "C-M-k" "k" "ESC M-k")
 
+    ("backward-kill-word"
+     backward-kill-word                "C-<backspace>" "<backspace>" "M-DEL" "DEL")
+
+    ("smartparens-backward-kill-word"
+     sp-backward-kill-word             "C-<backspace>" "<backspace>" "M-DEL" "DEL")
+
     ;; Yank same text repeatedly with “C-v v v v”...
     ("yank-only"
      yank                              "C-v" "v"
      yank-pop                          "M-v" "e"                     :exitonly)
 
-    ;; Cycle through the kill-ring with “C-v e e e”...
-    ;; You can reverse direction too “C-v e e C-- e e”
+    ;; Cycle through the kill-ring with “C-v h h h h”...
+    ;; You can reverse direction too “C-v h h C-- h h”
     ("yank-popping"
      yank-pop                          "M-v" "v" "e")
 
@@ -183,7 +189,7 @@ together in sequence."
      end-of-visual-line                "C-e" "e" "<end>"             :exitonly
      smart-region                      "C-SPC"                       :exitonly
      cory/mark-line                    "C-M-SPC"                     :exitonly
-     exchange-point-and-mark           "C-x C-x" "'"                 :exitonly)
+     exchange-point-and-mark           "C-x C-x" "q"                 :exitonly)
 
     ("scroll-up"
      cory/scroll-up                    "M-p" "p" "<prior>"
@@ -199,7 +205,7 @@ together in sequence."
      end-of-visual-line                "C-e" "e" "<end>"             :exitonly
      smart-region                      "C-SPC"                       :exitonly
      cory/mark-line                    "C-M-SPC"                     :exitonly
-     exchange-point-and-mark           "C-x C-x" "'"                 :exitonly)
+     exchange-point-and-mark           "C-x C-x" "q"                 :exitonly)
 
     ("scroll-otherwin"
      scroll-other-window               "C-M-p" "p" "ESC M-p"
@@ -265,15 +271,18 @@ together in sequence."
     ;; ("mark-line"
     ;;  cory/mark-line                    "C-M-SPC" "SPC")
 
+    ("mark-list"
+     cory/mark-list                    "M-i" "i")
+
     ("repeat"
-     repeat                            "C-w" "w")
+     repeat                            "C-'" "'")
 
     ("macrursors"
      macrursors-mark-next-instance-of     "C->" ">" "."
      macrursors-mark-previous-instance-of "C-<" "<" ",")
 
     ("macrursors-select"
-     macrursors-select                 "C-; SPC" "C-c SPC" "SPC")
+     macrursors-select                 "C-; SPC" "SPC")
 
     ("vertico"
      vertico-previous                  "C-h" "h" "<down>" "<backtab>"
@@ -314,7 +323,11 @@ together in sequence."
     ("flymake-error-nav"
      flymake-goto-next-error           "M-g M-h" "M-h" "M-g C-<down>" "C-<down>" "h" "C-x `" "`"
      flymake-goto-prev-error           "M-g M-t" "M-t" "M-g C-<up>" "C-<up>" "t"
-     flymake-show-buffer-diagnostics   "M-g d" "d" :exitonly))
+     flymake-show-buffer-diagnostics   "M-g d" "d" :exitonly)
+
+    ("smartparens-parens"
+     sp-backward-slurp-sexp            "C-(" "("
+     sp-forward-slurp-sexp             "C-)" ")"))
 
   "List of lists containing repeater-map definitions.
 This must be in the form required by the

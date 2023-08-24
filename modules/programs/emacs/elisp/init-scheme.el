@@ -79,6 +79,13 @@
 ;;    (font-lock-add-keywords nil `((,(rx bol ";;;;" (one-or-more nonl) eol) . scheme-comment-4)))
 ;;    (font-lock-add-keywords nil `((,(rx bol ";;;" (one-or-more nonl) eol) . scheme-comment-3)))))
 
+(add-hook
+ 'scheme-mode-hook
+ (lambda ()
+   (interactive)
+   (font-lock-add-keywords nil '(("set-car!" . 'font-lock-keyword-face)))
+   (font-lock-add-keywords nil '(("set-cdr!" . 'font-lock-keyword-face)))))
+
 (let ((str (make-string 200 ?a)))
   (substring str 0 (min 50 (length str))))
 

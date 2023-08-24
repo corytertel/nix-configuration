@@ -91,7 +91,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
-    [ ("M-x", spawn "rofi -matching fuzzy -show drun -modi drun,run -show -scroll-method 0 -sort -hover-select -me-select-entry '' -me-accept-entry MousePrimary -icon-theme \"crystal-nova\" -show-icons -terminal kitty")
+    [ ("M-<f1>", spawn "jgmenu_run")
     , ("M-<Escape>", spawn "mate-system-monitor --show-processes-tab")
     , ("M-f", spawn "caja --browser \"/home/cory\"")
     , ("M-e", spawn "emacsclient -c")
@@ -162,8 +162,10 @@ myAdditionalKeys =
 myMouseBindings :: [((ButtonMask, Button), Window -> X ())]
 myMouseBindings =
   [ ((mod4Mask, button2), (\_ -> withFocused $ windows . W.sink))
-  , ((0, 8), (\_ -> windows W.focusUp))
-  , ((0, 9), (\_ -> windows W.focusDown))
+  -- , ((0, 8), (\_ -> windows W.focusUp))
+  -- , ((0, 9), (\_ -> windows W.focusDown))
+  , ((0, 8), (\_ -> spawn "jgmenu_run"))
+  , ((0, 9), (\_ -> windows W.focusUp))
   ]
 
 ------------------------------------------------------------------------

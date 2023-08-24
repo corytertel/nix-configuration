@@ -47,6 +47,7 @@ in {
         "xmobar/7.xpm".source = ./images/7.xpm;
         "xmobar/8.xpm".source = ./images/8.xpm;
         "xmobar/9.xpm".source = ./images/9.xpm;
+        "xdg/jgmenu/jgmenurc".source = ./jgmenurc;
       };
       systemPackages = let
         vol =
@@ -84,6 +85,8 @@ in {
         lua
         lm_sensors
         lsb-release
+
+        jgmenu
       ];
     };
   };
