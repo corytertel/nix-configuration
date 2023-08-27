@@ -172,7 +172,7 @@
   (dyalog-mode . (lambda () (set-input-method "dyalog-apl-prefix")))
   :bind
   (:map dyalog-mode-map
-   ("C-c <C-i>" . cory/display-dyalog-symbols-help))
+   ("C-c C-h" . cory/display-dyalog-symbols-help))
   :init
   (add-to-list 'auto-mode-alist '("\\.apl.?\\'" . dyalog-mode))
   :config

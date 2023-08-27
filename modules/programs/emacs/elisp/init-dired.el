@@ -96,7 +96,7 @@
 (define-key dired-mode-map (kbd "C-o") nil)
 (define-key dired-mode-map (kbd "C-d") #'dired-display-file)
 (define-key dired-mode-map (kbd "* C-n") nil)
-(define-key dired-mode-map (kbd "* C-h") #'dired-next-marked-file)
+(define-key dired-mode-map (kbd "* <C-h>") #'dired-next-marked-file)
 (define-key dired-mode-map (kbd "* C-p") nil)
 (define-key dired-mode-map (kbd "* C-t") #'dired-prev-marked-file)
 (define-key dired-mode-map (kbd "M-s a C-M-s") nil)

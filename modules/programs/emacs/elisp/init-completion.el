@@ -84,10 +84,10 @@
   (kbd "DEL") #'cory/kill-dir-or-char)
 
 ;; (define-key minibuffer-local-completion-map
-;;   (kbd "C-e") #'cory/switch-to-completions-beginning)
+;;   (kbd "<C-h>") #'cory/switch-to-completions-beginning)
 
 ;; (define-key minibuffer-local-completion-map
-;;   (kbd "<C-i>") #'cory/switch-to-completions-end)
+;;   (kbd "C-t") #'cory/switch-to-completions-end)
 
 ;; (define-key minibuffer-local-completion-map
 ;;   (kbd "<down>") #'cory/switch-to-completions-beginning)

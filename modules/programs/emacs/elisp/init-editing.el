@@ -53,7 +53,7 @@
   ;; (define-key c-mode-base-map (kbd "{") nil)
   ;; (define-key c-mode-base-map (kbd "}") nil)
   (define-key c-mode-base-map (kbd "C-c C-n") nil)
-  (define-key c-mode-base-map (kbd "C-c C-h") #'c-forward-conditional)
+  (define-key c-mode-base-map (kbd "C-c <C-h>") #'c-forward-conditional)
   (define-key c-mode-base-map (kbd "C-c C-p") nil)
   (define-key c-mode-base-map (kbd "C-c C-t") #'c-backward-conditional))
 
@@ -342,33 +342,72 @@
   :config
   (global-origami-mode))
 
-;;; Delete selection mode
+;; Delete selection mode
 (delete-selection-mode 1)
+
+;; God mode
+;; (use-package god-mode
+;;   :custom
+;;   (god-mode-alist
+;;    '((nil . "C-")
+;;      ("." . "M-")
+;;      (">" . "C-M-")))
+;;   (god-exempt-major-modes nil)
+;;   (god-exempt-predicates nil)
+;;   (god-mode-enable-function-key-translation nil)
+;;   :config
+;;   (defun cory/god-mode-update-cursor-type ()
+;;     (setq cursor-type (if god-local-mode 'box 'hollow)))
+
+;;   (add-hook 'post-command-hook #'cory/god-mode-update-cursor-type)
+
+;;   (global-set-key (kbd ",") #'god-mode-all)
+;;   (global-set-key (kbd "C-x C-0") #'delete-window)
+;;   (global-set-key (kbd "C-x C-1") #'delete-other-windows)
+;;   (global-set-key (kbd "C-x C-2") #'split-and-follow-below)
+;;   (global-set-key (kbd "C-x C-3") #'split-and-follow-right)
+
+;;   (setq god-local-mode-map
+;; 	(let ((map (make-sparse-keymap)))
+;; 	  (suppress-keymap map t)
+;; 	  (define-key map [remap self-insert-command] 'god-mode-self-insert)
+;; 	  (let ((i ?\s))
+;; 	    (while (< i 256)
+;;               (define-key map (vector i) 'god-mode-self-insert)
+;;               (setq i (1+ i))))
+;; 	  (when god-mode-enable-function-key-translation
+;; 	    (dotimes (i 35)
+;;               (define-key map (vector (god-mode-make-f-key (1+ i))) 'god-mode-self-insert)
+;;               (define-key map (vector (god-mode-make-f-key (1+ i) t)) 'god-mode-self-insert)))
+;; 	  (define-key map (kbd "DEL") nil)
+;; 	  ;; (define-key map (kbd "C-h k") #'god-mode-describe-key)
+;; 	  (define-key map (kbd ",")
+;; 	    (lambda () (interactive) (insert ?,) (god-mode-all)))
+;; 	  (define-key map (kbd "SPC")
+;; 	    (lambda () (interactive) (insert ?,) (insert ? ) (god-mode-all)))
+;; 	  (define-key map (kbd "g") #'god-mode-all)
+;; 	  (define-key map (kbd "'") #'repeat)
+;; 	  map)))
 
 ;; Devil mode
 (use-package devil
+  :bind
+  (("C-h k" . devil-describe-key))
   :config
+  (defun devil--invalid-key-p (translated-key)
+    "Return t iff TRANSLATED-KEY is an invalid Emacs key sequence."
+    (catch 'break
+      (dolist (chunk (split-string translated-key " "))
+	(when (or (string= chunk "")
+		 (not (string-match-p "^\\(?:[ACHMSs]-\\)*\\([^-]*\\|<.*>\\)$" chunk))
+		 (string-match-p "\\([ACHMSs]-\\)[^ ]*\\1" chunk))
+          (throw 'break t)))))
   (global-devil-mode 1)
   (add-hook 'server-after-make-frame-hook
 	    (lambda ()
 	      (global-devil-mode 1)))
   :custom
-  ;; (devil-key ",")
   (devil-key ".")
-  ;; (devil-repeatable-keys
-  ;;  (list "%k i"
-  ;;        "%k e"
-  ;;        "%k l"
-  ;;        "%k j"
-  ;;        "%k d"
-  ;;        "%k k"
-  ;;        "%k f"
-  ;;        "%k z"
-  ;;        "%k m l"
-  ;;        "%k m j"
-  ;;        "%k m v"
-  ;;        "%k m ^"
-  ;;        "%k x o"))
   (devil-repeatable-keys nil)
   (devil-translations
    (list (cons "%k , ," "C-M-")
@@ -381,4 +420,6 @@
 	 (cons "%k q" "C-x")
 	 (cons "%k c" "C-w")
 	 (cons "%k w" "C-c")
+	 (cons "%k h" "<C-h>")
+	 (cons "%k i" "C-h")
          (cons "%k"  "C-"))))

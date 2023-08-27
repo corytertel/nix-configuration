@@ -137,7 +137,7 @@
 		    "C-c <deletechar> <deletechar>"
 		    "C-c <deletechar> i"
 		    "C-c <deletechar> TAB"
-		    "<C-i> ."))
+		    "C-h ."))
       (define-key
 	geiser-mode-map
 	(kbd bind)

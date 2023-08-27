@@ -1,11 +1,11 @@
 ;;; Keybinding Fix
 
-;; (define-key input-decode-map [?\C-m] [C-m])
-(define-key input-decode-map [?\C-i] [C-i])
-(add-hook 'server-after-make-frame-hook
-	  (lambda ()
-	    ;; (define-key input-decode-map [?\C-m] [C-m])
-	    (define-key input-decode-map [?\C-i] [C-i])))
+;; ;; (define-key input-decode-map [?\C-m] [C-m])
+;; (define-key input-decode-map [?\C-i] [C-i])
+;; (add-hook 'server-after-make-frame-hook
+;; 	  (lambda ()
+;; 	    ;; (define-key input-decode-map [?\C-m] [C-m])
+;; 	    (define-key input-decode-map [?\C-i] [C-i])))
 
 ;; Now:
 ;; (equal (kbd "TAB") (kbd "C-i"))   ; -> t
@@ -24,61 +24,19 @@
 ;; --- CUA Keybinds ---
 ;;
 
-;; List of things to rebind to make Emacs have CUA:
-;; - global binds
-;; - minibuffer binds
-;; - search-map binds
-;; - goto-map binds
-;; - isearch binds
-;; - kmacro-binds
-;; - dired binds
-;; - eww binds?
-;; - sgml binds
-;; - paredit binds
-;; - org-mode binds
-;; - org agenda binds
-;; - ibuffer binds
-;; - eshell binds
-;; - repeat maps
-;; - helpful binds
-;; - geiser binds
-;; - info binds
-
 (defmacro cory/define-keys (map &rest l)
   ""
   `(dolist (pair ',l)
      (define-key ,map (kbd (car pair)) (cdr pair))))
 
-;; Swap C-' and C-x
-;; Swap C-, and C-c
-;; (key-translate [67108903] ?\C-x)
-;; (keyboard-translate ?\C-' ?\C-x)
-;; (keyboard-translate ?\C-x ?\C-')
-;; (keyboard-translate ?\C-, ?\C-c)
-;; (keyboard-translate ?\C-c ?\C-,)
-;; (add-hook 'server-after-make-frame-hook
-;; 	  (lambda ()
-;; 	    (keyboard-translate ?\C-' ?\C-x)
-;; 	    (keyboard-translate ?\C-x ?\C-')
-;; 	    (keyboard-translate ?\C-, ?\C-c)
-;; 	    (keyboard-translate ?\C-c ?\C-,)))
-;; ;; (global-set-key "\C-'" ctl-x-map)
-;; ;; (global-set-key "\C-x" 'kill-region)
-(keyboard-translate ?\C-q ?\C-x)
-(keyboard-translate ?\C-x ?\C-q)
-(keyboard-translate ?\C-w ?\C-c)
-(keyboard-translate ?\C-c ?\C-w)
-(add-hook 'server-after-make-frame-hook
-	  (lambda ()
-	    (keyboard-translate ?\C-q ?\C-x)
-	    (keyboard-translate ?\C-x ?\C-q)
-	    (keyboard-translate ?\C-w ?\C-c)
-	    (keyboard-translate ?\C-c ?\C-w)))
-;; (global-set-key "\C-q" ctl-x-map)
-;; (global-set-key "\C-x" 'kill-region)
+(define-key input-decode-map [?\C-q] [?\C-x])
+(define-key input-decode-map [?\C-x] [?\C-q])
+(define-key input-decode-map [?\C-w] [?\C-c])
+(define-key input-decode-map [?\C-c] [?\C-w])
+(define-key input-decode-map [?\C-i] [?\C-h])
+(define-key input-decode-map [?\C-h] [C-h])
 
 (global-set-key (kbd "M-f") search-map)
-(global-set-key (kbd "<C-i>") help-map)
 
 ;; global binds
 (cory/define-keys
@@ -96,7 +54,7 @@
  ("C-f" . isearch-forward)
  ("<find>" . isearch-forward)
  ("C-d" . backward-char)
- ("C-h" . next-line)
+ ("<C-h>" . next-line)
  ("C-n" . forward-char)
  ("C-z" . undo-only)
  ("C-S-z" . undo-redo)
@@ -256,7 +214,7 @@
   (define-key kmacro-keymap (kbd "C-n") nil)
   (define-key kmacro-keymap (kbd "C-p") nil)
   (define-key kmacro-keymap (kbd "C-t") #'kmacro-cycle-ring-previous)
-  (define-key kmacro-keymap (kbd "C-h") #'kmacro-cycle-ring-next)
+  (define-key kmacro-keymap (kbd "<C-h>") #'kmacro-cycle-ring-next)
   (define-key kmacro-keymap (kbd "C-e") #'kmacro-edit-macro-repeat)
   (define-key kmacro-keymap (kbd "<up>") #'kmacro-cycle-ring-previous)
   (define-key kmacro-keymap (kbd "<down>") #'kmacro-cycle-ring-next))
@@ -292,12 +250,6 @@
  ("C-<down>" . next-error)
  ("M-t" . previous-error)
  ("C-<up>" . previous-error))
-
-;; help binds
-(cory/define-keys
- help-map
- ("C-h" . nil)
- ("<C-i>" . help-for-help))
 
 ;;
 ;; --- GENERAL KEYBINDS ---

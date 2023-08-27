@@ -51,7 +51,7 @@ together in sequence."
     ("calendar-nav"
      calendar-forward-day              "C-n" "n"
      calendar-backward-day             "C-d" "d"
-     calendar-forward-week             "C-h" "h"
+     calendar-forward-week             "<C-h>" "h"
      calendar-backward-week            "C-t" "t"
      calendar-forward-month            "M-}" "}" "]"
      calendar-backward-month           "M-{" "{" "["
@@ -61,24 +61,27 @@ together in sequence."
     ("navigation"
      backward-char                     "C-d" "d" "<left>"
      forward-char                      "C-n" "n" "<right>"
-     next-line                         "C-h" "h" "<down>"
+     next-line                         "<C-h>" "h" "<down>"
      previous-line                     "C-t" "t" "<up>"
      crux-move-beginning-of-line       "C-a" "a" "<home>"
      end-of-visual-line                "C-e" "e" "<end>"
-     smart-region                      "C-SPC"
+     smart-region                      "C-SPC" "SPC"
      cory/mark-line                    "C-M-SPC"
      exchange-point-and-mark           "C-x C-x" "q"
      cory/scroll-down                  "C-p" "p"                     :exitonly
-     cory/scroll-up                    "M-p"                         :exitonly)
+     cory/scroll-up                    "M-p"                         :exitonly
+     cory/beginning-of-workspace       "M-<" "<"                     :exitonly
+     cory/end-of-workspace             "M->" ">"                     :exitonly
+     cory/avy                          "C-j" "j")
 
     ("rectangle-nav"
      rectangle-mark-mode               "C-x SPC"
      rectangle-previous-line           "C-t" "t" "<up>"
-     rectangle-next-line               "C-h" "h" "<down>"
+     rectangle-next-line               "<C-h>" "h" "<down>"
      rectangle-backward-char           "C-d" "d" "<left>"
      rectangle-forward-char            "C-n" "n" "<right>"
      open-rectangle                    "C-o" "o"
-     string-rectangle                  "C-b" "bq"
+     string-rectangle                  "C-b" "b"
      rectangle-exchange-point-and-mark "C-x C-x" "q")
 
     ("defun-nav"
@@ -156,7 +159,7 @@ together in sequence."
      yank-pop                          "M-v" "v" "e")
 
     ("kmacro-cycle"
-     kmacro-cycle-ring-next            "C-x C-k C-h" "C-h" "h"
+     kmacro-cycle-ring-next            "C-x C-k <C-h>" "<C-h>" "h"
      kmacro-cycle-ring-previous        "C-x C-k C-t" "C-t" "t")
 
     ("tab-bar-nav"
@@ -183,13 +186,14 @@ together in sequence."
      ;; same as navigation
      backward-char                     "C-d" "d" "<left>"            :exitonly
      forward-char                      "C-n" "n" "<right>"           :exitonly
-     next-line                         "C-h" "h" "<down>"            :exitonly
-     previous-line                     "C-t" "t" "<up>"            :exitonly
+     next-line                         "<C-h>" "h" "<down>"            :exitonly
+     previous-line                     "C-t" "t" "<up>"              :exitonly
      crux-move-beginning-of-line       "C-a" "a" "<home>"            :exitonly
      end-of-visual-line                "C-e" "e" "<end>"             :exitonly
-     smart-region                      "C-SPC"                       :exitonly
+     smart-region                      "C-SPC" "SPC"                 :exitonly
      cory/mark-line                    "C-M-SPC"                     :exitonly
-     exchange-point-and-mark           "C-x C-x" "q"                 :exitonly)
+     exchange-point-and-mark           "C-x C-x" "q"                 :exitonly
+     cory/avy                          "C-j" "j"                     :exitonly)
 
     ("scroll-up"
      cory/scroll-up                    "M-p" "p" "<prior>"
@@ -199,13 +203,14 @@ together in sequence."
      ;; same as navigation
      backward-char                     "C-d" "d" "<left>"            :exitonly
      forward-char                      "C-n" "n" "<right>"           :exitonly
-     next-line                         "C-h" "h" "<down>"            :exitonly
-     previous-line                     "C-t" "t" "<up>"            :exitonly
+     next-line                         "<C-h>" "h" "<down>"            :exitonly
+     previous-line                     "C-t" "t" "<up>"              :exitonly
      crux-move-beginning-of-line       "C-a" "a" "<home>"            :exitonly
      end-of-visual-line                "C-e" "e" "<end>"             :exitonly
-     smart-region                      "C-SPC"                       :exitonly
+     smart-region                      "C-SPC" "SPC"                 :exitonly
      cory/mark-line                    "C-M-SPC"                     :exitonly
-     exchange-point-and-mark           "C-x C-x" "q"                 :exitonly)
+     exchange-point-and-mark           "C-x C-x" "q"                 :exitonly
+     cory/avy                          "C-j" "j"                     :exitonly)
 
     ("scroll-otherwin"
      scroll-other-window               "C-M-p" "p" "ESC M-p"
@@ -237,7 +242,7 @@ together in sequence."
      org-backward-heading-same-level   "C-c C-d" "C-d" "d"
      org-forward-heading-same-level    "C-c C-n" "C-n" "n"
      org-previous-visible-heading      "C-c C-t" "C-t" "t"
-     org-next-visible-heading          "C-c C-h" "C-h" "h"
+     org-next-visible-heading          "C-c <C-h>" "<C-h>" "h"
      outline-up-heading                "C-c C-u" "C-u" "u"
      org-next-block                    "C-c M-n" "M-n" "N"
      org-previous-block                "C-c M-d" "M-d" "D"
@@ -285,7 +290,7 @@ together in sequence."
      macrursors-select                 "C-; SPC" "SPC")
 
     ("vertico"
-     vertico-previous                  "C-h" "h" "<down>" "<backtab>"
+     vertico-previous                  "<C-h>" "h" "<down>" "<backtab>"
      vertico-next                      "C-t" "t" "<up>" "TAB"
      vertico-grid-scroll-down          "C-p" "p" "<next>"
      vertico-grid-scroll-up            "M-p" "<prior>")

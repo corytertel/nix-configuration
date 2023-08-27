@@ -7,48 +7,38 @@ super: self: {
       paths = with pkgs.chickenPackages_5.chickenEggs; [
         pkgs.chicken
 
-        apropos
-        chicken-doc
+        # Eggs for geiser
+        apropos # srfi-1, utf8, check-errors, symbol-utils, string-utils
+        chicken-doc # deps: srfi-1, srfi-13, srfi-69, fmt, matchable, sxml-transforms
         check-errors
         fmt
         iset
         lazy-seq
+        matchable # pattern matching
         miscmacros
-        r7rs
         regex
-        string-utils
-        sxml-transforms
-        symbol-utils
-        trie
-        utf8
-        vector-lib
-        imlib2
-
-        coops
-        matchable
-        record-variants
-
         srfi-1
         srfi-13
         srfi-14
         srfi-18 # threading
-        srfi-25 # multi-dimensional arrays
-        srfi-34 # exception handling
-        srfi-47 # arrays
-        srfi-63 # homogeneous and heterogeneous arrays
         srfi-69 # hash-table library
-        srfi-78 # lightweight testing
+        string-utils # deps: check-errors, miscmacros, srfi-1, srfi-13, srfi-69, utf8
+        sxml-transforms
+        symbol-utils # deps: utf8
+        utf8
+
+        # Other eggs
+        # typed-records
+        defstruct # idk
+
+        coops # object-system; deps: matchable, record-variants
+        r7rs
+        record-variants # optimized record variants
         srfi-95 # sorting and merging
-        srfi-99 # record types
         srfi-113 # sets and bags
-        srfi-130
-        srfi-141
-        srfi-158 # generators and accumulators
-        srfi-193 # command line
-        srfi-196 # range objects
+        srfi-133 # vector-library
+        srfi-196 # range objects; deps: srfi-1, srfi-133, utf8, typed-records
         srfi-197 # pipeline operators
-        srfi-203 # sicp programmatic drawing of pictures
-        srfi-216 # sicp prerequisites
       ];
     };
 }
