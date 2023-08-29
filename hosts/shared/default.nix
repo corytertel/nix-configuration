@@ -134,8 +134,7 @@
       # CLASSPATH = "${postgresql_jdbc}/share/java/postgresql-jdbc.jar";
       CHICKEN_REPOSITORY_PATH =
         "${chicken-pkgs}/lib/chicken/${toString chicken.binaryVersion}";
-      CHICKEN_DOC_REPOSITORY = "${pkgs.chicken-docs}";
-      # CHICKEN_INCLUDE_PATH = "${chicken}/share";
+      # CHICKEN_DOC_REPOSITORY = "${pkgs.chicken-docs}";
       _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd";
     };
     sessionVariables = with pkgs; {
@@ -325,7 +324,7 @@
         # scheme
         chicken
         chicken-pkgs
-        chicken-docs
+        # chicken-docs
 
         # racket
         racket

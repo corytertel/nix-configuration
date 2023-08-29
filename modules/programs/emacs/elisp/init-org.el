@@ -80,6 +80,8 @@
    ("C-x C-e" . org-babel-execute-src-block)
    ("C-'" . nil)
    ("C-j" . nil)
+   ("M-h" . nil)
+   ("M-i" . org-mark-element)
    ("C-c M-b" . nil)
    ("C-c M-d" . org-previous-block)
    ("C-c M-f" . nil)

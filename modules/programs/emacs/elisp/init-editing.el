@@ -39,7 +39,6 @@
 
 ;; (electric-pair-mode 1)
 
-;;; C Mode Minimak binds
 (with-eval-after-load 'cc-mode
   ;; (define-key c-mode-base-map (kbd "#") nil)
   ;; (define-key c-mode-base-map (kbd "(") nil)
@@ -57,7 +56,6 @@
   (define-key c-mode-base-map (kbd "C-c C-p") nil)
   (define-key c-mode-base-map (kbd "C-c C-t") #'c-backward-conditional))
 
-;; Undo
 (use-package undo-tree
   :defer 1
   :diminish undo-tree-mode

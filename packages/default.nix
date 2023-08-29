@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 [
-  (import ./chicken-docs.nix { inherit pkgs; })
+  # (import ./chicken-docs.nix { inherit pkgs; })
   (import ./chicken-pkgs.nix { inherit pkgs; })
   (import ./crystal-nova.nix { inherit lib pkgs; })
   (import ./crystal-remix.nix { inherit lib pkgs; })
