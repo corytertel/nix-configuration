@@ -50,6 +50,7 @@ in {
         "xmobar/8.xpm".source = ./images/8.xpm;
         "xmobar/9.xpm".source = ./images/9.xpm;
         "xdg/jgmenu/jgmenurc".source = ./jgmenurc;
+        "xdg/jgmenu/menu.csv".source = ./menu.csv;
       };
       systemPackages = let
         vol =

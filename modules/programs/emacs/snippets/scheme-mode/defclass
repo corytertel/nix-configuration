@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: defclass
+# key: defclass
+# --
+define-class <${1:NAME}> (${2:SUPERCLASS})
+((${3:SLOTNAME} ${4:INITFORM})$0)

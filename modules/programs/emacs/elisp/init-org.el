@@ -6,7 +6,7 @@
 			       #'cape-dict)))))
 
 (use-package org
-  :defer
+  ;; :defer
   :hook
   (org-mode . (lambda ()
 		(org-indent-mode)
@@ -14,10 +14,8 @@
 		;; (auto-fill-mode) ; line breaks
 		(visual-line-mode)
 		(setq-local completion-styles '(emacs21)
-			    completion-at-point-functions
-			    (list (cape-super-capf
-				   #'pcomplete-completions-at-point
-				   #'cape-dict)))
+			    completion-at-point-functions (list #'cape-dict)
+			    completion-cycle-threshold t)
 		;; (org-cdlatex-mode)
 		(corfu-mode -1)))
 
@@ -60,8 +58,7 @@
                                                ("DEADLINE:" . " ")
                                                ("#+begin_defn" . " ")
                                                ("#+end_defn" . "―")
-					       ;; ("|" . "│")
-					       ))
+					       ("|" . "│")))
                 (prettify-symbols-mode)))
 
   :bind
@@ -78,6 +75,10 @@
    ;; ([(control shift return)] . crux-smart-open-line-above)
    ;; ([(meta return)] . org-insert-heading-respect-content)
    ("C-x C-e" . org-babel-execute-src-block)
+   ;; TODO fix org dictionary completion
+   ("C-M-s" . completion-at-point)
+   ("TAB" . completion-at-point)
+   ("C-<tab>" . org-cycle)
    ("C-'" . nil)
    ("C-j" . nil)
    ("M-h" . nil)
@@ -187,9 +188,9 @@
   (org-startup-with-latex-preview t)
   (org-highlight-latex-and-related '(native))
   ;; (org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
-  (org-latex-listings 'minted)
-  (org-latex-packages-alist '(("" "minted")))
   (org-latex-tables-centered t)
+  (org-latex-src-block-backend 'minted)
+  (org-latex-packages-alist '(("newfloat" "minted")))
   (org-latex-compiler "lualatex")
   (org-preview-latex-default-process 'dvisvgm)
   (org-latex-pdf-process
@@ -407,6 +408,9 @@
 
   (add-hook 'after-init-hook #'cory/display-weekly-agenda)
 
+  ;; Latex
+  (require 'ox-latex)
+
   ;; Org-babel languages
   (org-babel-do-load-languages 'org-babel-load-languages
 			       '((latex . t)
@@ -575,92 +579,91 @@
     (insert (concat "[[" (read-file-name "Image: ") "]]"))
     (org-display-inline-images)))
 
-;;; Hydra for Agenda
-;; Hydra for org agenda (graciously offered by Spacemacs)
-(with-eval-after-load 'org-agenda
-  (defhydra cory/hydra-org-agenda (:color pink :hint none)
-    "
-Org agenda (_q_uit)
-^Clock^      ^Visit entry^              ^Date^             ^Other^
-^-----^----  ^-----------^------------  ^----^-----------  ^-----^---------
-_ci_ in      _SPC_ in other window      _ds_ schedule      _gr_ reload
-_co_ out     _TAB_ & go to location     _dd_ set deadline  _._  go to today
-_cq_ cancel  _RET_ & del other windows  _dt_ timestamp     _gd_ go to date
-_cj_ jump    _o_   link                 _+_  do later      ^^
-^^           ^^                         _-_  do earlier    ^^
-^^           ^^                         ^^                 ^^
-^View^          ^Filter^                 ^Headline^         ^Toggle mode^
-^----^--------  ^------^---------------  ^--------^-------  ^-----------^----
-_vd_ day        _ft_ by tag              _ht_ set status    _tf_ follow
-_vw_ week       _fr_ refine by tag       _hk_ kill          _tl_ log
-_vt_ fortnight  _fc_ by category         _hr_ refile        _ta_ archive trees
-_vm_ month      _fh_ by top headline     _hA_ archive       _tA_ archive files
-_vy_ year       _fx_ by regexp           _h:_ set tags      _tr_ clock report
-_vn_ next span  _fd_ delete all filters  _hp_ set priority  _td_ diaries
-_vp_ prev span  ^^                       ^^                 ^^
-_vr_ reset      ^^                       ^^                 ^^
-^^              ^^                       ^^                 ^^
-"
-    ;; Entry
-    ("hA" org-agenda-archive-default)
-    ("hk" org-agenda-kill)
-    ("hp" org-agenda-priority)
-    ("hr" org-agenda-refile)
-    ("h:" org-agenda-set-tags)
-    ("ht" org-agenda-todo)
-    ;; Visit entry
-    ("o"   link-hint-open-link :exit t)
-    ("<tab>" org-agenda-goto :exit t)
-    ("TAB" org-agenda-goto :exit t)
-    ("SPC" org-agenda-show-and-scroll-up)
-    ("RET" org-agenda-switch-to :exit t)
-    ;; Date
-    ("dt" org-agenda-date-prompt)
-    ("dd" org-agenda-deadline)
-    ("+" org-agenda-do-date-later)
-    ("-" org-agenda-do-date-earlier)
-    ("ds" org-agenda-schedule)
-    ;; View
-    ("vd" org-agenda-day-view)
-    ("vw" org-agenda-week-view)
-    ("vt" org-agenda-fortnight-view)
-    ("vm" org-agenda-month-view)
-    ("vy" org-agenda-year-view)
-    ("vn" org-agenda-later)
-    ("vp" org-agenda-earlier)
-    ("vr" org-agenda-reset-view)
-    ;; Toggle mode
-    ("ta" org-agenda-archives-mode)
-    ("tA" (org-agenda-archives-mode 'files))
-    ("tr" org-agenda-clockreport-mode)
-    ("tf" org-agenda-follow-mode)
-    ("tl" org-agenda-log-mode)
-    ("td" org-agenda-toggle-diary)
-    ;; Filter
-    ("fc" org-agenda-filter-by-category)
-    ("fx" org-agenda-filter-by-regexp)
-    ("ft" org-agenda-filter-by-tag)
-    ("fr" org-agenda-filter-by-tag-refine)
-    ("fh" org-agenda-filter-by-top-headline)
-    ("fd" org-agenda-filter-remove-all)
-    ;; Clock
-    ("cq" org-agenda-clock-cancel)
-    ("cj" org-agenda-clock-goto :exit t)
-    ("ci" org-agenda-clock-in :exit t)
-    ("co" org-agenda-clock-out)
-    ;; Other
-    ("q" nil :exit t)
-    ("gd" org-agenda-goto-date)
-    ("." org-agenda-goto-today)
-    ("gr" org-agenda-redo)))
+;; ;;; Hydra for Agenda
+;; ;; Hydra for org agenda (graciously offered by Spacemacs)
+;; (with-eval-after-load 'org-agenda
+;;   (defhydra cory/hydra-org-agenda (:color pink :hint none)
+;;     "
+;; Org agenda (_q_uit)
+;; ^Clock^      ^Visit entry^              ^Date^             ^Other^
+;; ^-----^----  ^-----------^------------  ^----^-----------  ^-----^---------
+;; _ci_ in      _SPC_ in other window      _ds_ schedule      _gr_ reload
+;; _co_ out     _TAB_ & go to location     _dd_ set deadline  _._  go to today
+;; _cq_ cancel  _RET_ & del other windows  _dt_ timestamp     _gd_ go to date
+;; _cj_ jump    _o_   link                 _+_  do later      ^^
+;; ^^           ^^                         _-_  do earlier    ^^
+;; ^^           ^^                         ^^                 ^^
+;; ^View^          ^Filter^                 ^Headline^         ^Toggle mode^
+;; ^----^--------  ^------^---------------  ^--------^-------  ^-----------^----
+;; _vd_ day        _ft_ by tag              _ht_ set status    _tf_ follow
+;; _vw_ week       _fr_ refine by tag       _hk_ kill          _tl_ log
+;; _vt_ fortnight  _fc_ by category         _hr_ refile        _ta_ archive trees
+;; _vm_ month      _fh_ by top headline     _hA_ archive       _tA_ archive files
+;; _vy_ year       _fx_ by regexp           _h:_ set tags      _tr_ clock report
+;; _vn_ next span  _fd_ delete all filters  _hp_ set priority  _td_ diaries
+;; _vp_ prev span  ^^                       ^^                 ^^
+;; _vr_ reset      ^^                       ^^                 ^^
+;; ^^              ^^                       ^^                 ^^
+;; "
+;;     ;; Entry
+;;     ("hA" org-agenda-archive-default)
+;;     ("hk" org-agenda-kill)
+;;     ("hp" org-agenda-priority)
+;;     ("hr" org-agenda-refile)
+;;     ("h:" org-agenda-set-tags)
+;;     ("ht" org-agenda-todo)
+;;     ;; Visit entry
+;;     ("o"   link-hint-open-link :exit t)
+;;     ("<tab>" org-agenda-goto :exit t)
+;;     ("TAB" org-agenda-goto :exit t)
+;;     ("SPC" org-agenda-show-and-scroll-up)
+;;     ("RET" org-agenda-switch-to :exit t)
+;;     ;; Date
+;;     ("dt" org-agenda-date-prompt)
+;;     ("dd" org-agenda-deadline)
+;;     ("+" org-agenda-do-date-later)
+;;     ("-" org-agenda-do-date-earlier)
+;;     ("ds" org-agenda-schedule)
+;;     ;; View
+;;     ("vd" org-agenda-day-view)
+;;     ("vw" org-agenda-week-view)
+;;     ("vt" org-agenda-fortnight-view)
+;;     ("vm" org-agenda-month-view)
+;;     ("vy" org-agenda-year-view)
+;;     ("vn" org-agenda-later)
+;;     ("vp" org-agenda-earlier)
+;;     ("vr" org-agenda-reset-view)
+;;     ;; Toggle mode
+;;     ("ta" org-agenda-archives-mode)
+;;     ("tA" (org-agenda-archives-mode 'files))
+;;     ("tr" org-agenda-clockreport-mode)
+;;     ("tf" org-agenda-follow-mode)
+;;     ("tl" org-agenda-log-mode)
+;;     ("td" org-agenda-toggle-diary)
+;;     ;; Filter
+;;     ("fc" org-agenda-filter-by-category)
+;;     ("fx" org-agenda-filter-by-regexp)
+;;     ("ft" org-agenda-filter-by-tag)
+;;     ("fr" org-agenda-filter-by-tag-refine)
+;;     ("fh" org-agenda-filter-by-top-headline)
+;;     ("fd" org-agenda-filter-remove-all)
+;;     ;; Clock
+;;     ("cq" org-agenda-clock-cancel)
+;;     ("cj" org-agenda-clock-goto :exit t)
+;;     ("ci" org-agenda-clock-in :exit t)
+;;     ("co" org-agenda-clock-out)
+;;     ;; Other
+;;     ("q" nil :exit t)
+;;     ("gd" org-agenda-goto-date)
+;;     ("." org-agenda-goto-today)
+;;     ("gr" org-agenda-redo)))
 
-(use-package org-bullets
-  :disabled t
-  :after org
-  :hook (org-mode . org-bullets-mode)
-  :custom
-  (org-bullets-bullet-list '("
-\u200b" "\u200b" "•" "-" "•" "–" "•" "–")))
+;; (use-package org-bullets
+;;   :after org
+;;   :hook (org-mode . org-bullets-mode)
+;;   :custom
+;;   (org-bullets-bullet-list '("
+;; \u200b" "\u200b" "•" "-" "•" "–" "•" "–")))
 
 ;; show markup at point -- this should be part of org!
 (use-package org-appear
@@ -676,14 +679,12 @@ _vr_ reset      ^^                       ^^                 ^^
   :hook (org-mode . org-modern-mode)
   :custom
   (org-modern-hide-stars nil) ;; compatibility w/org-indent
-  ;; don't use other faces
-  (org-modern-priority nil)
-  (org-modern-todo nil)
+  ;; (org-modern-priority nil)
+  ;; (org-modern-todo nil)
   (org-modern-tag t)
+  (org-modern-table nil)
   ;; Customize this per your font
   (org-modern-label-border .25)
-  ;; Note that these stars allow differentiation of levels
-  ;; "①" "②" "③" "④" "⑤" "⑥" "⑦"
   (org-modern-star ["
 \u200b" "\u200b" "•" "-" "•" "–" "•" "–"])
   :config
@@ -760,9 +761,7 @@ _vr_ reset      ^^                       ^^                 ^^
       :unnarrowed t)))
   :bind (("C-c o n l" . org-roam-buffer-toggle)
 	 ("C-c o n f" . org-roam-node-find)
-	 ("C-c o n i" . org-roam-node-insert)
-	 :map org-mode-map
-	 ("C-M-s" . completion-at-point))
+	 ("C-c o n i" . org-roam-node-insert))
   :config
   (org-roam-setup))
 
@@ -831,65 +830,6 @@ _vr_ reset      ^^                       ^^                 ^^
   :config
   (set-face-attribute 'jinx-misspelled nil
 		      :underline '(:style wave :color "red")))
-
-;; (dolist (hook '(text-mode-hook))
-;;   (add-hook hook (lambda () (flyspell-mode 1))))
-;; (dolist (hook '(change-log-mode-hook log-edit-mode-hook sgml-mode-hook org-mode-hook))
-;;   (add-hook hook (lambda () (flyspell-mode -1))))
-
-;; (with-eval-after-load 'flyspell
-;;   (setq flyspell-mode-map
-;; 	(let ((map (make-sparse-keymap)))
-;; 	  ;; (if flyspell-use-meta-tab
-;; 	  ;;     (define-key map "\M-\t" 'flyspell-auto-correct-word))
-;; 	  ;; (define-key map flyspell-auto-correct-binding 'flyspell-auto-correct-previous-word)
-;; 	  ;; (define-key map [(control ?\,)] 'flyspell-goto-next-error)
-;; 	  ;; (define-key map [(control ?\.)] 'flyspell-auto-correct-word)
-;; 	  (define-key map [?\C-c ?$] 'flyspell-correct-word-before-point)
-;; 	  map))
-
-;;   (define-key flyspell-mouse-map (kbd "<mouse-2>") nil)
-;;   (define-key flyspell-mouse-map (kbd "<mouse-3>") #'flyspell-correct-word))
-
-;; ;; FIXME
-;; (use-package flyspell-correct
-;;   :after flyspell
-;;   :init
-;;   (add-to-list 'ispell-skip-region-alist '("+begin_src" . "+end_src"))
-;;   (setq flyspell-use-meta-tab nil)
-;;   :bind (:map flyspell-mode-map ("C-\"" . flyspell-correct-wrapper)))
-
-;; (use-package frog-menu
-;;   :custom
-;;   ;; Need to redefine keys to account for custom keyboard layout
-;;   (frog-menu-avy-keys (append (string-to-list "atenisubopyflmc")
-;; 			      (string-to-list (upcase "atenisubopyflmc"))
-;; 			      (number-sequence ?, ?@)))
-;;   :config
-;;   (defun frog-menu-flyspell-correct (candidates word)
-;;     "Run `frog-menu-read' for the given CANDIDATES.
-
-;; List of CANDIDATES is given by flyspell for the WORD.
-
-;; Return selected word to use as a replacement or a tuple
-;; of (command . word) to be used by `flyspell-do-correct'."
-;;     (let* ((corrects (if flyspell-sort-corrections
-;; 			 (sort candidates 'string<)
-;;                        candidates))
-;;            (actions `(("C-s" "Save word"         (save    . ,word))
-;;                       ("C-a" "Accept (session)"  (session . ,word))
-;;                       ("C-b" "Accept (buffer)"   (buffer  . ,word))
-;;                       ("C-c" "Skip"              (skip    . ,word))))
-;;            (prompt   (format "Dictionary: [%s]"  (or ispell-local-dictionary
-;;                                                      ispell-dictionary
-;;                                                      "default")))
-;;            (res      (frog-menu-read prompt corrects actions)))
-;;       (unless res
-;; 	(error "Quit"))
-;;       res))
-
-;;   (setq flyspell-correct-interface #'frog-menu-flyspell-correct))
-
 
 ;;; Latex
 

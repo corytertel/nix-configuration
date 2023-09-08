@@ -420,4 +420,12 @@
 	 (cons "%k w" "C-c")
 	 (cons "%k h" "<C-h>")
 	 (cons "%k i" "C-h")
-         (cons "%k"  "C-"))))
+	 ;; (cons "%r %k g" "C-g")
+         (cons "%k"  "C-")))
+  (devil-special-keys
+   (list (cons "%k %k" (devil-key-executor "%k"))
+	 (cons "%k SPC" (devil-key-executor "%k SPC"))
+	 (cons "%k RET" (devil-key-executor "%k RET"))
+	 (cons "%k <return>" (devil-key-executor "%k <return>"))
+	 (cons "%k i %k k" #'devil-describe-key)
+	 (cons "%k i %k l" #'devil-toggle-logging))))

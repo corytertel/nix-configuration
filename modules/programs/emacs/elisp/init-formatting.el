@@ -7,6 +7,18 @@
   ;; (ws-butler-keep-whitespace-before-point nil)
   )
 
+;; Redefine this function to rid of the annoying indentation messaging
+(with-eval-after-load 'indent
+  (defun indent-region-line-by-line (start end)
+    (save-excursion
+      (setq end (copy-marker end))
+      (goto-char start)
+      (while (< (point) end)
+	(or (and (bolp) (eolp))
+	   (indent-according-to-mode t))
+	(forward-line 1))
+      (move-marker end nil))))
+
 ;; Indenting
 (use-package aggressive-indent
   :custom

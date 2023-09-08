@@ -6,11 +6,15 @@
       mouse-autoselect-window t
       pop-up-frames t)
 
+;; Smooth scrolling
 (pixel-scroll-precision-mode t)
-
 (with-eval-after-load 'pixel-scroll
   (define-key pixel-scroll-precision-mode-map (kbd "<next>") nil)
   (define-key pixel-scroll-precision-mode-map (kbd "<prior>") nil))
+
+;; Mouse scrolling in terminal emacs
+;; (mouse-wheel-mode 1)
+;; (xterm-mouse-mode 1)
 
 (defun split-and-follow-below ()
   "Open a new window vertically."

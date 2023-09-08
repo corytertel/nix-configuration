@@ -58,6 +58,11 @@
           languages = [ "rus" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_phonetic_qwerty";
         };
+        ru_phonetic_dvorak = {
+          description = "Russian phonetic translation of the US dvorak layout";
+          languages = [ "rus" ];
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_phonetic_dvorak";
+        };
         ru_phonetic_minimak = {
           description = "Russian phonetic translation of the US minimak layout";
           languages = [ "rus" ];
@@ -348,11 +353,11 @@
         # ride
 
         # python
-        python39
-        # (python39.withPackages (ps: [ ps.epc ps.python-lsp-server ]))
-        # python39Full
-        # python39Packages.pip
-        # python39Packages.python-lsp-server
+        (python311.withPackages (ps: with ps; [
+          epc
+          python-lsp-server
+          pygments
+        ]))
 
         # postgres
         postgresql
@@ -360,8 +365,10 @@
         postgresql_jdbc # for java
 
         # smalltalk
-        # pharo
         squeak
+
+        # powershell
+        powershell
 
         # desktop apps
         tdesktop

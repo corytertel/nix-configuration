@@ -130,11 +130,19 @@ in {
     };
 
     environment.systemPackages = let
-      tex = (pkgs.texlive.combine {
-        inherit (pkgs.texlive) scheme-basic
-          dvisvgm dvipng # for preview and export as html
-          wrapfig amsmath ulem hyperref capt-of;
-      });
+      # tex = (pkgs.texlive.combine {
+      #   inherit (pkgs.texlive)
+      #     # scheme-basic
+      #     scheme-small
+      #     dvisvgm
+      #     dvipng
+      #     wrapfig
+      #     amsmath
+      #     ulem
+      #     hyperref
+      #     capt-of;
+      # });
+      tex = pkgs.texlive.combined.scheme-full;
     in with pkgs; [
       tex
       git

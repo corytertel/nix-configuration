@@ -14,7 +14,7 @@
    ("C-j" . avy-isearch))
 
   :custom
-  (avy-keys (append (string-to-list "atenisubopyflmc")))
+  (avy-keys (append (string-to-list "tehunocrsa")))
   (avy-timeout-seconds 0.25)
 
   :config

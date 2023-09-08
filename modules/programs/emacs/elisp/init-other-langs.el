@@ -8,6 +8,9 @@
 ;; (use-package eglot-fsharp
 ;;   :hook (fsharp-mode . cory/eglot-ensure))
 
+;; Powershell
+(use-package powershell)
+
 ;; prettify symbols
 (defun fsharp-enable-prettify-symbols ()
   (let ((alist '(("->" . #x2192)

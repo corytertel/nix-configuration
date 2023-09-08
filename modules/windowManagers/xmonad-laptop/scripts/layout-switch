@@ -2,12 +2,12 @@
 
 layout=$(setxkbmap -query | grep layout | awk 'END{print $2}')
 
-if [[ "$layout" == "us_minimak" ]]
+if [[ "$layout" == "us_dvorak" ]]
 then
-  setxkbmap "ru_phonetic_minimak"
-elif [[ "$layout" == "ru_phonetic_minimak" ]]
+  setxkbmap "ru_phonetic_dvorak"
+elif [[ "$layout" == "ru_phonetic_dvorak" ]]
 then
-  setxkbmap "us_minimak"
+  setxkbmap "us_dvorak"
 elif [[ "$layout" == "us_qwerty" ]]
 then
   setxkbmap "ru_phonetic_qwerty"
@@ -15,5 +15,5 @@ elif [[ "$layout" == "ru_phonetic_qwerty" ]]
 then
   setxkbmap "us_qwerty"
 else
-  setxkbmap "us_minimak"
+  setxkbmap "us_dvorak"
 fi

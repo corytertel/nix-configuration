@@ -34,6 +34,7 @@ super: self: {
         coops # object-system; deps: matchable, record-variants
         r7rs
         record-variants # optimized record variants
+        srfi-63 # homogeneous and heterogeneous arrays
         srfi-95 # sorting and merging
         srfi-113 # sets and bags
         srfi-133 # vector-library
