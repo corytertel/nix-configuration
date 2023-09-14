@@ -361,7 +361,7 @@ Style * SloppyFocus, MouseFocusClickRaises
 Module FvwmAuto 1000 "Silent AutoRaise"
 
 # Default Font
-DefaultFont "xft:JuliaMono:size=11:antialias=True"
+DefaultFont "xft:JuliaMono Nerd Font:size=11:antialias=True"
 
 # Window Placement
 # Style * MinOverlapPlacement, GrabFocusOff, !UsePPosition
@@ -480,7 +480,7 @@ MenuStyle * MenuColorset 5, ActiveColorset 6, GreyedColorset 7, TitleColorset 8
 MenuStyle * Hilight3DOff, HilightBack, HilightTitleBack, SeparatorsLong
 MenuStyle * TrianglesSolid, TrianglesUseFore
 MenuStyle * ItemFormat "%|%8.0i%24.24l%10.4>%|"
-MenuStyle * Font "xft:JuliaMono:size=11:antialias=True"
+MenuStyle * Font "xft:JuliaMono Nerd Font:size=11:antialias=True"
 
 MenuStyle * PopupDelayed, PopupDelay 300, PopdownImmediately
 MenuStyle * PopupOffset -5 100, TitleWarpOff
@@ -928,7 +928,7 @@ AddToDecor   FullScreenDecor
 # a window. One use is getting the class/resource/name of a window.
 DestroyModuleConfig FvwmIdent:*
 *FvwmIdent: Colorset 10
-*FvwmIdent: Font "xft:JuliaMono:size=13:antialias=True"
+*FvwmIdent: Font "xft:JuliaMono Nerd Font:size=13:antialias=True"
 
 # FvwmScript
 #
@@ -940,7 +940,7 @@ DestroyModuleConfig FvwmIdent:*
 #     quitting fvwm.
 DestroyModuleConfig FvwmScript:*
 *FvwmScript: DefaultColorset 10
-*FvwmScript: Font "xft:JuliaMono:size=13"
+*FvwmScript: Font "xft:JuliaMono Nerd Font:size=13"
 
 # FvwmButtons - RightPanel
 #
@@ -956,7 +956,7 @@ DestroyModuleConfig RightPanel:*
 *RightPanel: Rows 380
 *RightPanel: Columns 120
 *RightPanel: Frame 0
-*RightPanel: Font "xft:JuliaMono:size=13:antialias=True"
+*RightPanel: Font "xft:JuliaMono Nerd Font:size=13:antialias=True"
 *RightPanel: (120x200, Icon "$[fvwm_img]/nixos-logo.png", Frame 0)
 *RightPanel: (120x5, Frame 0)
 *RightPanel: (5x120, Frame 0)
@@ -980,7 +980,7 @@ DestroyModuleConfig FvwmPager:*
 *FvwmPager: WindowColorsets 10 11
 *FvwmPager: Font None
 *FvwmPager: Balloons All
-*FvwmPager: BalloonFont "xft:JuliaMono:size=11:antialias=True"
+*FvwmPager: BalloonFont "xft:JuliaMono Nerd Font:size=11:antialias=True"
 *FvwmPager: BallonYOffset +2
 # *FvwmPager: Window3dBorders
 *FvwmPager: MiniIcons
@@ -1005,7 +1005,7 @@ DestroyModuleConfig FvwmIconMan:*
 *FvwmIconMan: DrawIcons always
 *FvwmIconMan: ReliefThickness 0
 *FvwmIconMan: Format "%t"
-*FvwmIconMan: Font "xft:JuliaMono:size=11:antialias=True"
+*FvwmIconMan: Font "xft:JuliaMono Nerd Font:size=11:antialias=True"
 *FvwmIconMan: Action Mouse 0 A ret
 *FvwmIconMan: Action Mouse 1 A sendcommand IconManClick
 *FvwmIconMan: Action Mouse 3 A sendcommand "Menu MenuIconOps"

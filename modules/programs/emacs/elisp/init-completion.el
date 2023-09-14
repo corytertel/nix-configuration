@@ -122,9 +122,10 @@
 
   (defun cory/vertico-slash ()
     (interactive)
-    (if (string-match-p "^.*/$" (nth (if (< vertico--index 0) 0 vertico--index) vertico--candidates))
-	(vertico-insert)
-      (insert "/")))
+    (let ((str (nth (if (< vertico--index 0) 0 vertico--index) vertico--candidates)))
+      (if (and str (string-match-p "^.*/$" str))
+	  (vertico-insert)
+	(insert "/"))))
 
   (with-eval-after-load 'vertico-reverse
     ;; TODO work on tab behavior

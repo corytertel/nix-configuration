@@ -133,7 +133,16 @@ together in sequence."
      kill-word                         "M-y" "C-<delete>" "y")
 
     ("kill-line"
-     kill-line                         "C-k" "k")
+     kill-line                         "C-k" "k" "<deleteline>")
+
+    ("kill-visual-line"
+     kill-visual-line                  "C-k" "k" "<deleteline>")
+
+    ("org-kill-line"
+     org-kill-line                     "C-k" "k" "<deleteline>")
+
+    ("sp-kill-line"
+     sp-kill-hybrid-sexp               "C-k" "k" "<deleteline>")
 
     ("kill-sentence"
      kill-sentence                     "M-k" "k"

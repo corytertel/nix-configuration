@@ -18,6 +18,7 @@
   (import ./layout-switch.nix {inherit pkgs; })
   (import ./newaita-reborn.nix { inherit lib pkgs; })
   (import ./new-tab-override.nix { inherit lib pkgs; })
+  (import ./nf-julia.nix { inherit lib pkgs; })
   (import ./nf-noto.nix { inherit lib pkgs; })
   (import ./nf-oxygen.nix { inherit lib pkgs; })
   (import ./nf-victormono.nix { inherit lib pkgs; })

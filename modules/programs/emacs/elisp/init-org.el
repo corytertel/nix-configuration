@@ -15,7 +15,8 @@
 		(visual-line-mode)
 		(setq-local completion-styles '(emacs21)
 			    completion-at-point-functions (list #'cape-dict)
-			    completion-cycle-threshold t)
+			    completion-cycle-threshold t
+			    completion-ignore-case nil)
 		;; (org-cdlatex-mode)
 		(corfu-mode -1)))
 

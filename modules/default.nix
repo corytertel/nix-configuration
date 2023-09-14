@@ -17,6 +17,7 @@
     ./programs/lximage-qt
     ./programs/mpc-qt
     ./programs/neofetch
+    ./programs/powershell
     ./programs/qpdfview
     ./programs/sxiv
     ./programs/ungoogled-chromium

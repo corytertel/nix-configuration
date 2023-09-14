@@ -401,9 +401,9 @@
 		 (string-match-p "\\([ACHMSs]-\\)[^ ]*\\1" chunk))
           (throw 'break t)))))
   (global-devil-mode 1)
-  (add-hook 'server-after-make-frame-hook
-	    (lambda ()
-	      (global-devil-mode 1)))
+  ;; (add-hook 'server-after-make-frame-hook
+  ;; 	    (lambda ()
+  ;; 	      (global-devil-mode 1)))
   :custom
   (devil-key ".")
   (devil-repeatable-keys nil)
@@ -420,7 +420,6 @@
 	 (cons "%k w" "C-c")
 	 (cons "%k h" "<C-h>")
 	 (cons "%k i" "C-h")
-	 ;; (cons "%r %k g" "C-g")
          (cons "%k"  "C-")))
   (devil-special-keys
    (list (cons "%k %k" (devil-key-executor "%k"))

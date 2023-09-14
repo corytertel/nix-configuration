@@ -106,8 +106,8 @@
         size = 11;
       };
       monospace = {
-        package = julia-mono;
-        name = "JuliaMono";
+        package = julia-mono-nerdfont;
+        name = "JuliaMono Nerd Font";
         size = 10;
       };
     };

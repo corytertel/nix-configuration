@@ -1,18 +1,5 @@
 ;;; Keybinding Fix
 
-;; ;; (define-key input-decode-map [?\C-m] [C-m])
-;; (define-key input-decode-map [?\C-i] [C-i])
-;; (add-hook 'server-after-make-frame-hook
-;; 	  (lambda ()
-;; 	    ;; (define-key input-decode-map [?\C-m] [C-m])
-;; 	    (define-key input-decode-map [?\C-i] [C-i])))
-
-;; Now:
-;; (equal (kbd "TAB") (kbd "C-i"))   ; -> t
-;; (equal (kbd "TAB") (kbd "<C-i>")) ; -> nil
-;; (equal (kbd "RET") (kbd "C-m"))   ; -> t
-;; (equal (kbd "RET") (kbd "<C-m>")) ; -> nil
-
 (define-key function-key-map
   [(control shift iso-lefttab)] [(control shift tab)])
 (define-key function-key-map

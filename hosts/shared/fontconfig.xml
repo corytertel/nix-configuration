@@ -15,7 +15,7 @@
   </alias>
   <alias>
     <family>monospace</family>
-    <prefer><family>JuliaMono</family></prefer>
+    <prefer><family>JuliaMono Nerd Font</family></prefer>
   </alias>
 
   <!-- This adds Apple Color Emoji to the font families sans, serif, sans-serif and monospace -->

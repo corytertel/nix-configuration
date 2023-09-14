@@ -82,7 +82,8 @@
     js-mode
     js-jsx-mode
     js-ts-mode
-    typescript-ts-mode)
+    typescript-ts-mode
+    powershell-mode)
    . cory/lsp)
   (lsp-mode . (lambda ()
 		(setq-local completion-at-point-functions

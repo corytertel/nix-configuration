@@ -39,20 +39,20 @@ in {
           bindkey "^[[3~" delete-char
           bindkey "^H" backward-kill-word
           bindkey "^U" backward-kill-line
-          bindkey "^J" backward-char
-          bindkey "^L" forward-char
-          bindkey "^[l" emacs-forward-word
-          bindkey "^[j" emacs-backward-word
+          bindkey "^D" backward-char
+          bindkey "^N" forward-char
+          bindkey "^[d" emacs-forward-word
+          bindkey "^[n" emacs-backward-word
           bindkey "^[[1;5C" emacs-forward-word
           bindkey "^[[1;5D" emacs-backward-word
-          bindkey "^[i" history-substring-search-up
-          bindkey "^[e" history-substring-search-down
+          bindkey "^[t" history-substring-search-up
+          bindkey "^[h" history-substring-search-down
           bindkey "^[[H" beginning-of-line
           bindkey "^[[F" end-of-line
-          bindkey "^B" beginning-of-line
-          bindkey "^Y" end-of-line
           bindkey "^\\" quoted-insert
-          bindkey "^P" clear-screen
+          bindkey "^L" clear-screen
+          bindkey "^D" delete-char-or-list
+          bindkey "^V" yank
 
           # setopt promptsubst
           # PROMPT="╭╴%F{cyan}  %f%F{blue}%B\$(_directory)%b%f %F{green}%U\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)%u%f

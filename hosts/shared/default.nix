@@ -170,9 +170,6 @@
       corefonts
       vistafonts
       whatsapp-emoji-font
-      # iosevka-slab
-      # iosevka-etoile
-      # iosevka-aile
     ];
     fontconfig = {
       enable = true;
@@ -385,6 +382,7 @@
         zoom-us
         qbittorrent
         xarchiver
+        xournalpp
 
         # command line utils
         mg

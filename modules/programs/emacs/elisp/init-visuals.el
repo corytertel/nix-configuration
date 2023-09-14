@@ -144,9 +144,9 @@
 ;;
 
 ;; Setting the font
-(set-face-attribute 'default nil :family "JuliaMono" :height 100)
+(set-face-attribute 'default nil :family "JuliaMono Nerd Font" :height 100)
 ;; Set fixed pitch face
-(set-face-attribute 'fixed-pitch nil :family "JuliaMono" :height 100)
+(set-face-attribute 'fixed-pitch nil :family "JuliaMono Nerd Font" :height 100)
 ;; Set variable pitch face
 (set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 115)
 
