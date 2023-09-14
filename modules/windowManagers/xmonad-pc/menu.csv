@@ -1,0 +1,47 @@
+Home,         ^checkout(home),        user-home
+Applications, ^pipe(jgmenu_run apps), applications-all
+Terminal,     kitty,                  utilities-terminal
+Editor,       emacsclient -c,         accessories-text-editor
+Browser,      firefox,                internet-web-browser
+Media,        ^checkout(media),       applications-multimedia
+Chat,         discord,                internet-telephony
+Mail,         thunderbird,            internet-mail
+System,       ^checkout(system),      applications-system
+
+^tag(home)
+Classes,   caja --browser /home/cory/Classes,                  folder-text
+Code,      caja --browser /home/cory/Code,                     folder-development
+Desktop,   caja --browser /home/cory/Desktop,                  desktop
+Documents, caja --browser /home/cory/Documents,                folder-documents
+Downloads, caja --browser /home/cory/Downloads,                folder-downloads
+Music,     caja --browser /home/cory/Music,                    folder-sound
+Pictures,  caja --browser /home/cory/Pictures,                 folder-pictures
+Videos,    caja --browser /home/cory/Videos,                   folder-videos
+Trash,     caja --browser /home/cory/.local/share/Trash/files, user-trash
+Work,      caja --browser /home/cory/Work,                     folder-text
+
+^tag(media)
+Open Player,    strawberry,              applications-multimedia
+Play/Pause,     strawberry --play-pause, media-playback-start
+Next Track,     strawberry --next,       media-skip-forward.png
+Previous Track, strawberry --previous,   media-skip-backward
+Stop,           strawberry --stop,       media-playback-stop
+
+^tag(system)
+Keyboard Layout,     ^checkout(keyboard),  preferences-desktop-keyboard
+Wallpaper,           nitrogen,             photo
+System Monitor,      mate-system-monitor,  utilities-system-monitor
+Volume Control,      mate-volume-control,  preferences-desktop-sound
+Wi-Fi Settings,      nm-connection-editor, preferences-system-network
+Bluetooth Settings,  blueman-manager,      preferences-system-bluetooth
+^sep()
+Do Not Disturb, dunstctl set-paused toggle, edit-comment
+Sleep,          systemctl -i suspend,       system-log-out
+Reboot,         systemctl -i reboot,        system-reboot
+Poweroff,       systemctl -i poweroff,      system-shutdown
+
+^tag(keyboard)
+US (Dvorak), setxkbmap us_dvorak
+US (Qwerty), setxkbmap us_qwerty
+RU (Dvorak), setxkbmap ru_phonetic_dvorak
+RU (Qwerty), setxkbmap ru_phonetic_qwerty
