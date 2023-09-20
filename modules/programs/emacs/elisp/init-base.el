@@ -65,14 +65,12 @@
 (setq vc-make-backup-files t)
 
 ;; Automatically purge backup files not accessed in a week:
-(defun fifth (list)
-  (nth 4 list))
 (message "Deleting old backup files...")
 (let ((week (* 60 60 24 7))
       (current (float-time (current-time))))
   (dolist (file (directory-files temporary-file-directory t))
     (when (and (backup-file-name-p file)
-             (> (- current (float-time (fifth (file-attributes file))))
+             (> (- current (float-time (nth 4 (file-attributes file))))
                 week))
       (message "%s" file)
       (delete-file file))))

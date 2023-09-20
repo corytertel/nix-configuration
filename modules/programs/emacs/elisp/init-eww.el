@@ -4,7 +4,9 @@
 
 (with-eval-after-load 'eww
   (setq eww-auto-rename-buffer 'title
-        browse-url-browser-function #'eww-browse-url))
+        browse-url-browser-function #'eww-browse-url)
+  (define-key eww-mode-map (kbd "C-M-s") #'shr-previous-link)
+  (define-key eww-mode-map (kbd "C-M-i") nil))
 
 (defun cory/eww ()
   "Prompt for a URL or keywords to search the web for."

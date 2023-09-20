@@ -86,7 +86,6 @@
  ("C-M-\\" . toggle-input-method)
  ("C-x <down>" . eval-last-sexp)
  ("C-x <home>" . list-buffers)
- ;; ("C-b" . transpose-chars)
  ("C-b" . switch-to-buffer)
  ("M-b" . transpose-words)
  ("C-M-b" . transpose-sexps)
@@ -223,8 +222,8 @@
 (with-eval-after-load 'tetris
   (define-key tetris-mode-map (kbd "h") #'tetris-move-down)
   (define-key tetris-mode-map (kbd "t") #'tetris-rotate-prev)
-  (define-key tetris-mode-map (kbd "d") #'tetris-move-right)
-  (define-key tetris-mode-map (kbd "n") #'tetris-move-left))
+  (define-key tetris-mode-map (kbd "d") #'tetris-move-left)
+  (define-key tetris-mode-map (kbd "n") #'tetris-move-right))
 
 ;; goto binds
 (cory/define-keys
@@ -237,6 +236,22 @@
  ("C-<down>" . next-error)
  ("M-t" . previous-error)
  ("C-<up>" . previous-error))
+
+;; c binds
+(with-eval-after-load 'cc-mode
+  (define-key c-mode-base-map (kbd "C-M-i") #'c-mark-function)
+  (define-key c-mode-base-map (kbd "C-M-h") nil)
+  (define-key c-mode-base-map (kbd "C-y") #'c-electric-delete-forward)
+  (define-key c-mode-base-map (kbd "C-d") nil)
+  (define-key c-mode-base-map (kbd "C-c C-n") nil)
+  (define-key c-mode-base-map (kbd "C-c <C-h>") #'c-forward-conditional)
+  (define-key c-mode-base-map (kbd "C-c C-p") nil)
+  (define-key c-mode-base-map (kbd "C-c C-t") #'c-backward-conditional))
+
+;; elisp binds
+(with-eval-after-load 'elisp-mode
+  (define-key emacs-lisp-mode-map (kbd "C-M-i") nil)
+  (define-key emacs-lisp-mode-map (kbd "C-M-s") #'completion-at-point))
 
 ;;
 ;; --- GENERAL KEYBINDS ---

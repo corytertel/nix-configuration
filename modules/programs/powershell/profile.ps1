@@ -42,6 +42,8 @@ New-Alias -Name write	-Value Write-Output
 
 # Extra Linux compatibility aliases
 New-Alias -Name grep -Value Select-String
+New-Alias -Name wget -Value Invoke-WebRequest
+New-Alias -Name curl -Value Invoke-WebRequest
 
 # Personal Aliases
 New-Alias -Name l -Value Get-ChildItem

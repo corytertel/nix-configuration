@@ -39,23 +39,6 @@
 
 ;; (electric-pair-mode 1)
 
-(with-eval-after-load 'cc-mode
-  ;; (define-key c-mode-base-map (kbd "#") nil)
-  ;; (define-key c-mode-base-map (kbd "(") nil)
-  ;; (define-key c-mode-base-map (kbd ")") nil)
-  ;; (define-key c-mode-base-map (kbd "*") nil)
-  ;; (define-key c-mode-base-map (kbd ",") nil)
-  ;; (define-key c-mode-base-map (kbd "/") nil)
-  ;; (define-key c-mode-base-map (kbd ":") nil)
-  ;; (define-key c-mode-base-map (kbd ";") nil)
-  ;; (define-key c-mode-base-map (kbd "DEL") nil)
-  ;; (define-key c-mode-base-map (kbd "{") nil)
-  ;; (define-key c-mode-base-map (kbd "}") nil)
-  (define-key c-mode-base-map (kbd "C-c C-n") nil)
-  (define-key c-mode-base-map (kbd "C-c <C-h>") #'c-forward-conditional)
-  (define-key c-mode-base-map (kbd "C-c C-p") nil)
-  (define-key c-mode-base-map (kbd "C-c C-t") #'c-backward-conditional))
-
 (use-package undo-tree
   :defer 1
   :diminish undo-tree-mode
@@ -282,13 +265,13 @@
   (global-set-key (kbd "C-;") 'macrursors-mark-map)
   (define-key macrursors-mark-map (kbd "C-;") #'macrursors-mark-all-lines-or-instances)
   (define-key macrursors-mark-map (kbd ";") #'macrursors-mark-all-lines-or-instances)
-  (define-key macrursors-mark-map (kbd "l") #'macrursors-mark-all-lists)
+  (define-key macrursors-mark-map (kbd "L") #'macrursors-mark-all-lists)
   (define-key macrursors-mark-map (kbd "s") #'macrursors-mark-all-symbols)
   (define-key macrursors-mark-map (kbd "e") #'macrursors-mark-all-sexps)
   (define-key macrursors-mark-map (kbd "f") #'macrursors-mark-all-defuns)
   (define-key macrursors-mark-map (kbd "n") #'macrursors-mark-all-numbers)
   (define-key macrursors-mark-map (kbd ".") #'macrursors-mark-all-sentences)
-  (define-key macrursors-mark-map (kbd "r") #'macrursors-mark-all-lines)
+  (define-key macrursors-mark-map (kbd "l") #'macrursors-mark-all-lines)
   (define-key macrursors-mark-map (kbd "C-SPC") #'macrursors-select)
   (define-key macrursors-mark-map (kbd "SPC") #'macrursors-select)
   (define-key isearch-mode-map (kbd "C-;") #'macrursors-mark-from-isearch)
@@ -391,6 +374,8 @@
 (use-package devil
   :bind
   (("C-h k" . devil-describe-key))
+  :hook
+  (emacs-startup . global-devil-mode)
   :config
   (defun devil--invalid-key-p (translated-key)
     "Return t iff TRANSLATED-KEY is an invalid Emacs key sequence."
@@ -400,10 +385,6 @@
 		 (not (string-match-p "^\\(?:[ACHMSs]-\\)*\\([^-]*\\|<.*>\\)$" chunk))
 		 (string-match-p "\\([ACHMSs]-\\)[^ ]*\\1" chunk))
           (throw 'break t)))))
-  (global-devil-mode 1)
-  ;; (add-hook 'server-after-make-frame-hook
-  ;; 	    (lambda ()
-  ;; 	      (global-devil-mode 1)))
   :custom
   (devil-key ".")
   (devil-repeatable-keys nil)

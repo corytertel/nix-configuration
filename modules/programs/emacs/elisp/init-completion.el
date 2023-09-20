@@ -257,6 +257,13 @@
   ;; (corfu-popupinfo ((t (:height 'unspecified))))
 
   :init
+  (defun cory/corfu-select-index (index)
+    (eval `(lambda ()
+	     (interactive)
+	     (cond ((< ,index corfu--total)
+		    (setq corfu--index ,index)
+		    (corfu-insert))
+		   (t (message "Out of range"))))))
   ;; Need to recreate the map in order to preserve movement keys
   ;; Don't touch my movement keys!!
   ;; TAB cycles through completion options
@@ -269,15 +276,22 @@
 	  (define-key map [backtab] #'corfu-previous)
 	  (define-key map (kbd "TAB") #'corfu-next)
 	  (define-key map (kbd "S-TAB") #'corfu-previous)
-	  (define-key map [return] #'corfu-insert)
-	  (define-key map (kbd "<return>") #'corfu-insert)
+	  ;; (define-key map [return] #'corfu-insert)
+	  ;; (define-key map (kbd "<return>") #'corfu-insert)
 	  (define-key map (kbd "M-.") #'corfu-info-location)
 	  (define-key map (kbd "M-SPC") #'corfu-insert-separator)
+	  (let ((i 0))
+	    (while (< i 10)
+	      (define-key map (kbd (int-to-string i)) (cory/corfu-select-index i))
+	      (setq i (1+ i))))
 	  map))
+
+  (kbd (int-to-string 0))
 
   (global-corfu-mode)
   (corfu-history-mode)
   (corfu-popupinfo-mode)
+  (corfu-indexed-mode)
 
   :config
   ;; Background
@@ -298,7 +312,7 @@
       (corfu-mode 1)))
   (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
 
-   ;; Icons for corfu
+  ;; Icons for corfu
   (defvar kind-all-the-icons--cache nil
     "The cache of styled and padded label (text or icon).
 An alist.")
