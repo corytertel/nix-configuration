@@ -243,3 +243,10 @@ Else, goto the end of the buffer."
           (set-buffer-modified-p nil)
           (message "File '%s' successfully renamed to '%s'"
                    name (file-name-nondirectory new-name)))))))
+
+(defun cory/toggle-double-space ()
+  (interactive)
+  (setq line-spacing
+	(if line-spacing
+	    (default-font-height)
+	  nil)))

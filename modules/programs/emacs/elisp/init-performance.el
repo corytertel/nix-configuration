@@ -1,6 +1,4 @@
-;;
-;; --- GARBAGE COLLECTION ---
-;;
+;;; Garbage Collection
 
 ;; Taken from https://gitlab.com/rycee/nur-expressions/blob/master/hm-modules/emacs-init.nix
 (defun hm/reduce-gc ()
@@ -39,9 +37,7 @@
     (unless (frame-focus-state)
       (garbage-collect))))
 
-;;
-;; --- ASYNC ---
-;;
+;;; Async
 
 ;; Emacs look SIGNIFICANTLY less often which is a good thing.
 ;; asynchronous bytecode compilation and various other actions makes
@@ -53,9 +49,7 @@
   (async-bytecomp-package-mode 1)
   :custom (async-bytecomp-allowed-packages '(all)))
 
-;;
-;; --- NATIVE COMP ---
-;;
+;;; Native Comp
 
 ;; Silence compiler warnings as they can be pretty disruptive
 ;; (setq comp-async-report-warnings-errors nil)
@@ -73,3 +67,7 @@
 ;; Suppressing compilation warnings
 (setq native-comp-async-report-warnings-errors 'silent)
 (setq warning-minimum-level :error)
+
+;;; Subprocess speed
+
+(setq read-process-output-max (* 1024 1024)) ;; 1mb

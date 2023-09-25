@@ -414,6 +414,7 @@
         chromium
         zeal # offline documentation
         megasync
+        ace-of-penguins
 
         # iphone utils
         ifuse

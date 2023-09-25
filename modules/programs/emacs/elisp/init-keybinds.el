@@ -91,7 +91,6 @@
  ("C-M-b" . transpose-sexps)
  ("C-x C-t" . nil)
  ("C-x C-b" . transpose-lines)
- ("C-a" . mark-whole-buffer)
  ("C-j" . nil)
  ("C-y" . delete-char)
  ("M-y" . kill-word)

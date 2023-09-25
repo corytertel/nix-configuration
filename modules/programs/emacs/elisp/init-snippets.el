@@ -29,15 +29,6 @@
 
   (yas-global-mode 1))
 
-;; (use-package yasnippet-snippets)
-
-(use-package common-lisp-snippets)
-
-(use-package clojure-snippets)
-
-(use-package gitignore-snippets
-  :config (gitignore-snippets-init))
-
 (use-package cape-yasnippet)
 
 ;; Boilerplate code files
@@ -90,3 +81,15 @@
 	    "}")
     (previous-line)
     (move-end-of-line nil)))
+
+(define-auto-insert "\\.c\\'"
+  (lambda ()
+    (insert "#include <stdio.h>\n\n"
+	    "int main(int argc, char** argv) {\n\n"
+            "}\n")))
+
+(define-auto-insert "\\.cpp\\'"
+  (lambda ()
+    (insert "#include <iostream>\n\n"
+	    "auto main(int argc, char** argv) -> int {\n\n"
+	    "}\n")))

@@ -341,7 +341,10 @@ together in sequence."
 
     ("smartparens-parens"
      sp-backward-slurp-sexp            "C-(" "("
-     sp-forward-slurp-sexp             "C-)" ")"))
+     sp-forward-slurp-sexp             "C-)" ")")
+
+    ("kill-this-buffer"
+     kill-this-buffer                  "C-<f4>" "<f4>" "C-x k" "k"))
 
   "List of lists containing repeater-map definitions.
 This must be in the form required by the

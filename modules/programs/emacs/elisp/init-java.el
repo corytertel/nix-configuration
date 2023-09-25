@@ -2,31 +2,32 @@
 
 (add-hook 'java-mode-hook #'subword-mode)
 
-;; (use-package eglot-java
-;;   :hook
-;;   (java-mode . eglot-java-mode)
-;;   :bind
-;;   (:map eglot-java-mode-map
-;;    ("C-c C-l n" . eglot-java-file-new)
-;;    ("C-c C-l x" . eglot-java-run-main)
-;;    ("C-c C-l t" . eglot-java-run-test)
-;;    ("C-c C-l N" . eglot-java-project-new)
-;;    ("C-c C-l T" . eglot-java-project-build-task)
-;;    ("C-c C-l R" . eglot-java-project-build-refresh)))
+(use-package eglot-java
+  :hook
+  (java-mode . (unless (file-remote-p buffer-file-name)
+		 (eglot-java-mode)))
+  :bind
+  (:map eglot-java-mode-map
+   ("C-c C-l n" . eglot-java-file-new)
+   ("C-c C-l x" . eglot-java-run-main)
+   ("C-c C-l t" . eglot-java-run-test)
+   ("C-c C-l N" . eglot-java-project-new)
+   ("C-c C-l T" . eglot-java-project-build-task)
+   ("C-c C-l R" . eglot-java-project-build-refresh)))
 
-(use-package lsp-java
-  :after lsp
-  :config
-  (require 'dap-java))
+;; (use-package lsp-java
+;;   :after lsp
+;;   :config
+;;   (require 'dap-java))
 
-(with-eval-after-load 'lsp-java
-  ;; TODO make the version of jdtls match automatically with the version nix uses
-  ;; TODO make lsp-java use the jdtls that nix installs, don't install it's own
-  (let ((version "1.19.0")
-	(timestamp "202301171536"))
-    (setq lsp-java-jdt-download-url
-	  (concat "https://download.eclipse.org/jdtls/milestones/" version
-		  "/jdt-language-server-" version "-" timestamp ".tar.gz"))))
+;; (with-eval-after-load 'lsp-java
+;;   ;; TODO make the version of jdtls match automatically with the version nix uses
+;;   ;; TODO make lsp-java use the jdtls that nix installs, don't install it's own
+;;   (let ((version "1.19.0")
+;; 	(timestamp "202301171536"))
+;;     (setq lsp-java-jdt-download-url
+;; 	  (concat "https://download.eclipse.org/jdtls/milestones/" version
+;; 		  "/jdt-language-server-" version "-" timestamp ".tar.gz"))))
 
 ;; jdtls has a problem with auto save
 (add-hook 'java-mode-hook
