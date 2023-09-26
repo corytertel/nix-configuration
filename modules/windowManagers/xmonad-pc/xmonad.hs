@@ -91,7 +91,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
-    [ ("M-<f1>", spawn "jgmenu_run")
+    [ ("M-<f1>", spawn "jgmenu --simple --csv-file=/etc/xdg/jgmenu/menu.csv")
     , ("M-<Escape>", spawn "mate-system-monitor --show-processes-tab")
     , ("M-f", spawn "caja --browser \"/home/cory\"")
     , ("M-e", spawn "emacsclient -c")
@@ -164,7 +164,7 @@ myMouseBindings =
   [ ((mod4Mask, button2), (\_ -> withFocused $ windows . W.sink))
   -- , ((0, 8), (\_ -> windows W.focusUp))
   -- , ((0, 9), (\_ -> windows W.focusDown))
-  , ((0, 8), (\_ -> spawn "jgmenu_run"))
+  , ((0, 8), (\_ -> spawn "jgmenu --simple --csv-file=/etc/xdg/jgmenu/menu.csv"))
   , ((0, 9), (\_ -> windows W.focusUp))
   ]
 

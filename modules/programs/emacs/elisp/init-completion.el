@@ -154,6 +154,8 @@
   ;; Tidy shadowed file names
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
+;; TODO vertico-frame adopt from vertico-posframe
+
 (use-package marginalia
   :disabled t
   :after vertico

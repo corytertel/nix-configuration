@@ -109,6 +109,7 @@
 (use-package perfect-margin
   :custom
   (perfect-margin-visible-width 100)
+  (perfect-margin-ignore-regexps '())
   :config
   ;; enable perfect-mode
   (perfect-margin-mode t)
@@ -121,7 +122,9 @@
     (global-set-key (kbd (concat margin "<mouse-1>")) 'ignore)
     (global-set-key (kbd (concat margin "<mouse-3>")) 'ignore)
     (global-set-key (kbd (concat margin "<wheel-up>")) 'mwheel-scroll)
-    (global-set-key (kbd (concat margin "<wheel-down>")) 'mwheel-scroll)))
+    (global-set-key (kbd (concat margin "<wheel-down>")) 'mwheel-scroll))
+
+  (add-hook 'eww-mode-hook (lambda () (setq-local perfect-margin-visible-width 128))))
 
 ;; (use-package visual-fill-column
 ;;   :hook

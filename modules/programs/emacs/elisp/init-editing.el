@@ -406,6 +406,7 @@
    (list (cons "%k %k" (devil-key-executor "%k"))
 	 (cons "%k SPC" (devil-key-executor "%k SPC"))
 	 (cons "%k RET" (devil-key-executor "%k RET"))
+	 (cons "%k \"" (devil-key-executor "%k \""))
 	 (cons "%k <return>" (devil-key-executor "%k <return>"))
 	 (cons "%k i %k k" #'devil-describe-key)
 	 (cons "%k i %k l" #'devil-toggle-logging))))
