@@ -84,6 +84,18 @@
   (call-interactively #'make-empty-file)
   (call-interactively #'revert-buffer))
 
+(defun dired-isearch-filenames-backward ()
+  "Search backwards for a string using Isearch only in file names in the Dired buffer."
+  (interactive)
+  (setq-local dired-isearch-filenames t)
+  (isearch-backward nil t))
+
+(defun dired-isearch-filenames-backward-regexp ()
+  "Search backwards for a regexp using Isearch only in file names in the Dired buffer."
+  (interactive)
+  (setq-local dired-isearch-filenames t)
+  (isearch-backward-regexp nil t))
+
 ;; Binds
 (global-set-key (kbd "C-/") #'cory/dired)
 (define-key dired-mode-map (kbd "C-/") #'cory/goto-last-buffer-not-dired)
@@ -107,16 +119,19 @@
 (define-key dired-mode-map (kbd "M-f f C-f") #'dired-isearch-filenames-regexp)
 (define-key dired-mode-map (kbd "M-s f C-s") nil)
 (define-key dired-mode-map (kbd "M-f f C-M-f") #'dired-isearch-filenames)
+(define-key dired-mode-map (kbd "f") #'dired-isearch-filenames-regexp)
+(define-key dired-mode-map (kbd "r") #'dired-isearch-filenames-backward-regexp)
 (define-key dired-mode-map (kbd "n") nil)
 (define-key dired-mode-map (kbd "h") #'dired-next-line)
-(define-key dired-mode-map (kbd "l") #'dired-do-redisplay)
 (define-key dired-mode-map (kbd "t") #'dired-previous-line)
 (define-key dired-mode-map (kbd "p") #'dired-maybe-insert-subdir)
 (define-key dired-mode-map (kbd "C-M-f") #'dired-isearch-filenames)
+(define-key dired-mode-map (kbd "C-M-r") #'dired-isearch-filenames-backward)
 (define-key dired-mode-map (kbd "C-f") #'dired-isearch-filenames-regexp)
+(define-key dired-mode-map (kbd "C-r") #'dired-isearch-filenames-backward-regexp)
 (define-key dired-mode-map (kbd "<find>") #'dired-isearch-filenames-regexp)
 (define-key dired-mode-map (kbd "M-<find>") #'dired-isearch-filenames)
-(define-key dired-mode-map (kbd "C-c C-n") #'cory/dired-make-directory)
+(define-key dired-mode-map (kbd "C-c C-d") #'cory/dired-make-directory)
 (define-key dired-mode-map (kbd "C-c C-f") #'cory/dired-make-file)
 (define-key dired-mode-map (kbd "C-t") nil)
 (define-key dired-mode-map (kbd "C-t .") nil)

@@ -118,12 +118,12 @@
   (defun crux-kill-and-join-backward ()
     (interactive)
     (if (and (save-mark-and-excursion
-	     (let ((orig-point (point)))
-	       (move-beginning-of-line 1)
-	       (while (looking-at "[[:space:]\t]")
-		 (forward-char 1))
-	       (= orig-point (point))))
-	   (not (eolp)))
+	       (let ((orig-point (point)))
+		 (move-beginning-of-line 1)
+		 (while (looking-at "[[:space:]\t]")
+		   (forward-char 1))
+		 (= orig-point (point))))
+	     (not (eolp)))
 	(delete-indentation)
       (kill-line 0)
       (indent-according-to-mode)))
@@ -174,6 +174,13 @@
    ("M-q" . sp-indent-defun)
    ("M-r" . sp-raise-sexp)
    ("M-s" . sp-splice-sexp)
+   ("C-M-k" . sp-kill-whole-line)
+   ("C-k"   . sp-kill-hybrid-sexp)
+   ("C-q"   . sp-kill-region)
+   ("C-y"   . sp-delete-char)
+   ("DEL"   . sp-backward-delete-char)
+   ("M-DEL" . sp-backward-kill-word)
+   ("M-y"   . sp-kill-word)
    :map emacs-lisp-mode-map
    (";" . sp-comment)
    :map scheme-mode-map
@@ -249,8 +256,7 @@
   (defvar cory/macrursors-stored-modes '())
   (add-hook 'macrursors-pre-finish-hook
 	    (lambda ()
-	      (dolist (mode '(aggressive-indent-mode
-			      corfu-mode))
+	      (dolist (mode '(corfu-mode))
 		(when (eval mode)
 		  (add-to-list 'cory/macrursors-stored-modes mode)
 		  (funcall mode -1)))))
@@ -373,7 +379,8 @@
 ;; Devil mode
 (use-package devil
   :bind
-  (("C-h k" . devil-describe-key))
+  (;; ("C-h k" . devil-helpful-key)
+   ("C-h k" . devil-describe-key))
   :hook
   (emacs-startup . global-devil-mode)
   :config
@@ -385,6 +392,26 @@
 		 (not (string-match-p "^\\(?:[ACHMSs]-\\)*\\([^-]*\\|<.*>\\)$" chunk))
 		 (string-match-p "\\([ACHMSs]-\\)[^ ]*\\1" chunk))
           (throw 'break t)))))
+
+  ;; (defun devil-helpful-key ()
+  ;;   "Describe a Devil key sequence with helpful."
+  ;;   (interactive)
+  ;;   (devil--log "Activated with %s" (key-description (this-command-keys)))
+  ;;   (let* ((result (devil--read-key devil-describe-prompt (vector)))
+  ;;          (key (devil--aget 'key result))
+  ;;          (translated-key (devil--aget 'translated-key result))
+  ;;          (binding (devil--aget 'binding result)))
+  ;;     (devil--log "Read key: %s => %s => %s => %s"
+  ;;                 key (key-description key) translated-key binding)
+  ;;     (if translated-key
+  ;;         (helpful-key (kbd translated-key))
+  ;; 	;; Create a transient keymap to describe special key sequence.
+  ;; 	(let* ((virtual-keymap (make-sparse-keymap))
+  ;;              (exit-function (set-transient-map virtual-keymap)))
+  ;;         (define-key virtual-keymap key binding)
+  ;;         (helpful-key key)
+  ;;         (funcall exit-function)))))
+
   :custom
   (devil-key ".")
   (devil-repeatable-keys nil)

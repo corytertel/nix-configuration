@@ -68,12 +68,31 @@ let
 
   emacsBasePackage = pkgs.emacs-git.override {
     withGTK3 = true;
+    withTreeSitter = true;
   };
 
   emacsPackages = epkgs: with epkgs; [
     init
     use-package
     vterm
+    (treesit-grammars.with-grammars (p: with p; [
+      tree-sitter-c
+      tree-sitter-cpp
+      tree-sitter-bash
+      tree-sitter-java
+      tree-sitter-javascript
+      tree-sitter-html
+      tree-sitter-css
+      tree-sitter-haskell
+      tree-sitter-ocaml
+      tree-sitter-elisp
+      tree-sitter-nix
+      tree-sitter-nu
+      # don't need these three rn because of scope highlighting
+      # tree-sitter-scheme
+      # tree-sitter-commonlisp
+      # tree-sitter-clojure
+    ]))
   ];
 
   emacsPackage = pkgs.emacsWithPackagesFromUsePackage {

@@ -1,30 +1,3 @@
-;;
-;; --- RACKET ---
-;;
-
-(use-package racket-mode
-  :mode "\\.rkt\\'"
-  :bind
-  (:map racket-mode-map
-   ("C-c C-r" . racket-run)
-   :map racket-repl-mode-map
-   ("C-c C-r" . racket-run))
-  :config
-  (defun setup-racket-eldoc ()
-    (eldoc-mode +1)
-    (setq eldoc-documentation-function #'racket-xp-eldoc-function))
-
-  (add-hook 'racket-mode-hook      #'racket-unicode-input-method-enable)
-  (add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
-  (add-hook 'racket-mode-hook      #'setup-racket-eldoc)
-  (add-hook 'racket-mode-hook      #'racket-xp-mode))
-
-(use-package dr-racket-like-unicode)
-;; (use-package bracketed-paste)
-
-;;
-;; --- CHICKEN SCHEME ---
-;;
 
 (custom-set-variables '(scheme-program-name "csi -R r7rs"))
 
@@ -40,12 +13,18 @@
 
 (defun scheme-module-indent (state indent-point normal-indent) 0)
 
-(defun scheme-indent-hook ()
-  (put 'module 'scheme-indent-function 'scheme-module-indent)
-  (put 'define-library 'scheme-indent-function 'scheme-module-indent)
-  (put 'define-module 'scheme-indent-function 'scheme-module-indent))
-
-(add-hook 'scheme-mode-hook 'scheme-indent-hook)
+(add-hook
+ 'scheme-mode-hook
+ (lambda ()
+   (put 'module 'scheme-indent-function 'scheme-module-indent)
+   (put 'define-library 'scheme-indent-function 'scheme-module-indent)
+   (put 'define-module 'scheme-indent-function 'scheme-module-indent)
+   (put 'and-let* 'scheme-indent-function 1)
+   (put 'parameterize 'scheme-indent-function 1)
+   (put 'handle-exceptions 'scheme-indent-function 1)
+   (put 'when 'scheme-indent-function 1)
+   (put 'unless 'scheme-indent-function 1)
+   (put 'match 'scheme-indent-function 1)))
 
 ;; Faces
 (defface scheme-comment-5
@@ -84,7 +63,9 @@
  (lambda ()
    (interactive)
    (font-lock-add-keywords nil '(("set-car!" . 'font-lock-keyword-face)))
-   (font-lock-add-keywords nil '(("set-cdr!" . 'font-lock-keyword-face)))))
+   (font-lock-add-keywords nil '(("set-cdr!" . 'font-lock-keyword-face)))
+   (font-lock-add-keywords nil '(("define-message" . 'font-lock-keyword-face)))
+   (font-lock-add-keywords nil '(("define-object" . 'font-lock-keyword-face)))))
 
 (let ((str (make-string 200 ?a)))
   (substring str 0 (min 50 (length str))))
@@ -133,10 +114,6 @@
 		    "C-c C-d C-d"
 		    "C-c C-d i"
 		    "C-c C-d TAB"
-		    "C-c <deletechar> d"
-		    "C-c <deletechar> <deletechar>"
-		    "C-c <deletechar> i"
-		    "C-c <deletechar> TAB"
 		    "C-h ."))
       (define-key
 	geiser-mode-map
@@ -190,7 +167,7 @@ With prefix argument, ask for the lookup symbol (with completion)."
     (unless (geiser-doc--manual-available-p)
       (error "No manual available"))
     (let ((symbol (or (and (not arg) (geiser--symbol-at-point))
-                      (geiser-completion--read-symbol "Symbol: ")))
+                     (geiser-completion--read-symbol "Symbol: ")))
 	  (current (buffer-name (current-buffer))))
       (eww (concat "http://api.call-cc.org/5/cdoc/?q="
 		   (symbol-name symbol)
@@ -212,7 +189,11 @@ With prefix argument, ask for the lookup symbol (with completion)."
                              (format "(require-library chicken-doc) ,doc %S\n" func))
 	(save-selected-window
           (select-window (display-buffer (get-buffer scheme-buffer) t))
-          (goto-char (point-max)))))))
+          (goto-char (point-max))))))
+
+  ;; Geiser REPL binds
+  (with-eval-after-load 'geiser-repl
+    (define-key geiser-repl-mode-map (kbd "M-i") #'cory/mark-list)))
 
 (use-package geiser-chicken
   :after geiser)

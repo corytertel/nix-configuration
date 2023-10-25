@@ -86,10 +86,12 @@
   (lambda ()
     (insert "#include <stdio.h>\n\n"
 	    "int main(int argc, char** argv) {\n\n"
+	    "return 0;\n"
             "}\n")))
 
 (define-auto-insert "\\.cpp\\'"
   (lambda ()
     (insert "#include <iostream>\n\n"
 	    "auto main(int argc, char** argv) -> int {\n\n"
+	    "return 0;\n"
 	    "}\n")))

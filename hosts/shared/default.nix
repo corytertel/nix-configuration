@@ -327,6 +327,7 @@
         chicken
         chicken-pkgs
         # chicken-docs
+        tcl
 
         # racket
         racket
@@ -343,7 +344,7 @@
 
         # nix
         # rnix-lsp
-        # nil
+        nil
 
         # apl
         dyalog
@@ -365,7 +366,7 @@
         squeak
 
         # powershell
-        powershell
+        # powershell
 
         # desktop apps
         tdesktop
@@ -415,6 +416,7 @@
         zeal # offline documentation
         megasync
         ace-of-penguins
+        urn-timer
 
         # iphone utils
         ifuse

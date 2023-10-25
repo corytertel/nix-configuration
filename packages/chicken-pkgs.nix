@@ -41,6 +41,13 @@ super: self: {
         srfi-133 # vector-library
         srfi-196 # range objects; deps: srfi-1, srfi-133, utf8, typed-records
         srfi-197 # pipeline operators
+        # fast-generic # multi-dispatch library eerily similar to mine, designed by disney
+        # sequences # sequences lib dependent on fast-generic
+        test # testing lib
+        pstk # gui lib
+        simple-timer # simple timer; deps: llrb-tree, pigeon-hole
+        llrb-tree
+        pigeon-hole
       ];
     };
 }

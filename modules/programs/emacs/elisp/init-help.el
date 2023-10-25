@@ -1,18 +1,18 @@
 ;; Better help information
-(use-package helpful
-  :ensure
-  :bind
-  (([remap describe-command]  . helpful-command)
-   ([remap describe-key]      . helpful-key)
-   ([remap describe-variable] . helpful-variable)
-   ([remap describe-function] . helpful-callable)
-   ("C-h V" . describe-face)
-   ("C-h <down>" . view-external-packages)
-   :map helpful-mode-map
-   ("n" . nil)
-   ("h" . forward-button)
-   ("p" . nil)
-   ("t" . backward-button)))
+;; (use-package helpful
+;;   :ensure
+;;   :bind
+;;   (([remap describe-command]  . helpful-command)
+;;    ([remap describe-key]      . helpful-key)
+;;    ([remap describe-variable] . helpful-variable)
+;;    ([remap describe-function] . helpful-callable)
+;;    ("C-h V" . describe-face)
+;;    ("C-h <down>" . view-external-packages)
+;;    :map helpful-mode-map
+;;    ("n" . nil)
+;;    ("h" . forward-button)
+;;    ("p" . nil)
+;;    ("t" . backward-button)))
 
 (use-package eldoc
   :ensure nil

@@ -1,7 +1,26 @@
+;;; C
+
+;; Tags Setup
+(add-hook 'c-mode-hook
+	  (lambda ()
+	    (setq-local completion-at-point-functions
+			(list (cape-super-capf
+			       (cape-company-to-capf #'company-yasnippet)
+			       ;; #'cape-yasnippet
+			       #'cape-dabbrev
+			       #'tags-completion-at-point-function)
+			      #'cape-file))
+	    (let ((tags-dir (locate-dominating-file default-directory "TAGS")))
+	      (cond ((not tags-dir)
+		     (message "Unable to locate tags file"))
+		    ((yes-or-no-p "Found tags file. Load?")
+		     (message "Loading tags file: %sTAGS" tags-dir)
+		     (visit-tags-table (concat tags-dir "TAGS")))))))
+
 ;;; C++
-(use-package modern-cpp-font-lock
-  :ensure t)
-(modern-c++-font-lock-global-mode t)
+;; (use-package modern-cpp-font-lock
+;;   :ensure t)
+;; (modern-c++-font-lock-global-mode t)
 
 (use-package cpp-auto-include)
 
@@ -23,14 +42,14 @@
 ;; (use-package irony-eldoc
 ;;   :hook (irony-mode . irony-eldoc))
 
-(use-package srefactor
-  :bind
-  (:map c-mode-map
-   ("C-c C-r" . srefactor-refactor-at-point)
-   :map c++-mode-map
-   ("C-c C-r" . srefactor-refactor-at-point))
-  :config
-  (semantic-mode 1))
+;; (use-package srefactor
+;;   :bind
+;;   (:map c-mode-map
+;;    ("C-c C-r" . srefactor-refactor-at-point)
+;;    :map c++-mode-map
+;;    ("C-c C-r" . srefactor-refactor-at-point))
+;;   :config
+;;   (semantic-mode 1))
 
 ;; (defun code-compile ()
 ;;   (interactive)

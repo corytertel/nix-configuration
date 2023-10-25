@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: ir-macro-transformer...
+# key: ir-macro-transformer
+# --
+ir-macro-transformer
+  (lambda (exp inject compare)
+    (let ((${1:name} ${2:expression})$3)
+      $0))

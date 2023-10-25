@@ -14,15 +14,13 @@
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
-(use-package tree-sitter-langs)
+;; (use-package tree-sitter-langs)
 
 ;; Eglot
 (use-package eglot
   :after corfu flymake
   :hook
-  (( ;; java-mode
-    c-mode
-    c++-mode
+  ((c++-mode
     python-mode
     clojure-mode
     clojurescript-mode
@@ -31,10 +29,7 @@
     js-jsx-mode
     js-ts-mode
     typescript-ts-mode
-    ;; TODO port lsp-pwsh to eglot
-    ;; https://github.com/emacs-lsp/lsp-mode/blob/master/clients/lsp-pwsh.el
-    ;; powershell-mode
-    )
+    nix-mode)
    . cory/eglot)
   (eglot-managed-mode
    . (lambda ()
@@ -61,6 +56,60 @@
     (interactive)
     (unless (file-remote-p buffer-file-name)
       (eglot-ensure)))
+
+  ;; Add nix lsp
+  (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
+
+  ;; Ignore logging for speed
+  (fset #'jsonrpc--log-event #'ignore)
+
+  ;; List of language server capabilities:
+  ;; (const :tag "Documentation on hover" :hoverProvider)
+  ;; (const :tag "Code completion" :completionProvider)
+  ;; (const :tag "Function signature help" :signatureHelpProvider)
+  ;; (const :tag "Go to definition" :definitionProvider)
+  ;; (const :tag "Go to type definition" :typeDefinitionProvider)
+  ;; (const :tag "Go to implementation" :implementationProvider)
+  ;; (const :tag "Go to declaration" :declarationProvider)
+  ;; (const :tag "Find references" :referencesProvider)
+  ;; (const :tag "Highlight symbols automatically" :documentHighlightProvider)
+  ;; (const :tag "List symbols in buffer" :documentSymbolProvider)
+  ;; (const :tag "List symbols in workspace" :workspaceSymbolProvider)
+  ;; (const :tag "Execute code actions" :codeActionProvider)
+  ;; (const :tag "Code lens" :codeLensProvider)
+  ;; (const :tag "Format buffer" :documentFormattingProvider)
+  ;; (const :tag "Format portion of buffer" :documentRangeFormattingProvider)
+  ;; (const :tag "On-type formatting" :documentOnTypeFormattingProvider)
+  ;; (const :tag "Rename symbol" :renameProvider)
+  ;; (const :tag "Highlight links in document" :documentLinkProvider)
+  ;; (const :tag "Decorate color references" :colorProvider)
+  ;; (const :tag "Fold regions of buffer" :foldingRangeProvider)
+  ;; (const :tag "Execute custom commands" :executeCommandProvider)
+  ;; (const :tag "Inlay hints" :inlayHintProvider)
+
+  ;; Disable some capabilities for speed
+  (setq eglot-ignored-server-capabilities
+	'(:hoverProvider
+	  :signatureHelpProvider
+	  :definitionProvider
+	  :typeDefinitionProvider
+	  :implementationProvider
+	  :declarationProvider
+	  :referencesProvider
+	  :documentHighlightProvider
+	  :documentSymbolProvider
+	  :workspaceSymbolProvider
+	  :codeActionProvider
+	  :codeLensProvider
+	  :documentFormattingProvider
+	  :documentRangeFormattingProvider
+	  :documentOnTypeFormattingProvider
+	  :renameProvider
+	  :documentLinkProvider
+	  :colorProvider
+	  :foldingRangeProvider
+	  :executeCommandProvider
+	  :inlayHintProvider))
 
   :bind (:map eglot-mode-map
 	 ("C-c C-a" . eglot-code-actions)

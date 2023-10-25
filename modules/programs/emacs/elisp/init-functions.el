@@ -250,3 +250,11 @@ Else, goto the end of the buffer."
 	(if line-spacing
 	    (default-font-height)
 	  nil)))
+
+(defun cory/yank (&optional arg)
+  (interactive "*P")
+  (when (and mark-active delete-selection-mode)
+    (if (> (point) (mark))
+	(delete-region (mark) (point))
+      (delete-region (point) (mark))))
+  (yank arg))

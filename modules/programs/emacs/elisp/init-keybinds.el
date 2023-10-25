@@ -96,7 +96,9 @@
  ("M-y" . kill-word)
  ("C-M-y" . down-list)
  ("M-i" . mark-paragraph)
- ("C-M-i" . mark-defun))
+ ("C-M-i" . mark-defun)
+ ("C-x i" . mark-whole-buffer)
+ ("C-x h" . insert-file))
 
 ;; minibuffer binds
 (cory/define-keys
@@ -271,6 +273,7 @@
 (global-set-key [remap end-of-buffer] #'cory/end-of-workspace)
 (global-set-key [remap kill-buffer] #'kill-this-buffer)
 (global-set-key [remap find-file] #'cory/find-file)
+(global-set-key [remap yank] #'cory/yank)
 
 ;; TODO `k' and `SPC' key variation in text and prog modes
 ;; `M-a' and `M-e' binds in prog modes

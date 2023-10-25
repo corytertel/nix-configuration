@@ -61,7 +61,8 @@
    ;; ("C-M-j" . web-mode-element-previous)
    ;; ("C-M-k" . web-mode-element-kill)
    ;; ("C-M-t" . web-mode-element-transpose)
-   ("M-i" . web-mode-element-select))
+   ("M-i" . web-mode-element-select)
+   ("C-c C-o" . cory/open-current-file-in-firefox))
 
   :custom
   (web-mode-enable-css-colorization t)
@@ -99,7 +100,8 @@
 
   (defun cory/web-mode-hook ()
     "Hooks for Web mode."
-    (setq web-mode-markup-indent-offset 2))
+    (setq web-mode-markup-indent-offset 2)
+    (whitespace-mode 0))
   (add-hook 'web-mode-hook  'cory/web-mode-hook)
 
   (defun cory/insert-angled-pair-or-wrap ()

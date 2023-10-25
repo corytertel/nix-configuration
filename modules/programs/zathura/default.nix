@@ -60,17 +60,16 @@ in {
           zoom-step = 3;
         };
         extraConfig = ''
-          map [normal] <C-j> scroll left
-          map [normal] <C-e> scroll down
-          map [normal] <C-i> scroll up
-          map [normal] <C-l> scroll right
+          map [normal] <C-d> scroll left
+          map [normal] <C-h> scroll down
+          map [normal] <C-t> scroll up
+          map [normal] <C-n> scroll right
           map [normal] <C-g> abort
           map [insert] <C-g> abort
-          map [normal] <C-[> abort
           map [normal] <A-\<> goto top
           map [normal] <A-\>> goto bottom
           map [normal] a adjust_window best-fit
-          map [normal] s adjust_window width
+          map [normal] e adjust_window width
           map [normal] F display_link
           map [normal] <C-c> copy_link
           map [normal] f follow
@@ -91,41 +90,22 @@ in {
           map [normal] <Up> scroll up
           map [normal] <Down> scroll down
           map [normal] <Right> scroll right
-          map [normal] <A-b> scroll half-left
-          map [normal] <C-N> scroll half-down
-          map [normal] <A-N> scroll half-up
-          map [normal] <A-y> scroll half-right
-          map [normal] <C-b> scroll full-left
-          map [normal] <C-n> scroll full-down
-          map [normal] e scroll full-down
+          map [normal] h scroll full-down
+          map [normal] t scroll full-up
           map [normal] <Return> scroll full-down
-          map [normal] <A-n> scroll full-up
-          map [normal] i scroll full-up
           map [normal] <C-y> scroll full-right
           map [normal] <Space> scroll full-down
-          map [normal] <C-h> scroll full-up
           map [normal] <BackSpace> scroll full-up
           map [normal] <S-Space> scroll full-up
-          map [normal] l jumplist backward
-          map [normal] r jumplist forward
-          map [normal] <A-r> bisect forward
-          map [normal] <A-l> bisect backward
           # still need to use '/' to trigger search
           map [normal] <C-f> search forward
           map [normal] <C-r> search backward
           map [normal] p snap_to_page
-          map [normal] <C-t> toggle_index
-          map [normal] t toggle_index
           map [normal] <Tab> toggle_index
-          map [normal] <A-s> toggle_statusbar
-          map [normal] <A-i> focus_inputbar
           map [normal] d toggle_page_mode
           map [normal] q quit
           map [normal] + zoom in
           map [normal] - zoom out
-          map [normal] = zoom in
-          map [normal] <A-P> toggle_presentation
-          map [normal] <A-F> toggle_fullscreen
           map [normal] f toggle_fullscreen
           map [fullscreen] f toggle_fullscreen
           map [fullscreen] q toggle_fullscreen

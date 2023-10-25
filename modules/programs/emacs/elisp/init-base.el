@@ -100,9 +100,6 @@
 ;; Add newlines when C-n at the end of file
 (setq next-line-add-newlines t)
 
-;; Set the fringe to an big enough width
-(setq-default fringe-mode 20)
-
 ;; Show the time in Phoenix and Moscow in world-clock
 (with-eval-after-load 'time
   (add-to-list 'zoneinfo-style-world-list '("America/Phoenix" "Phoenix"))

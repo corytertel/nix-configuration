@@ -4,8 +4,8 @@
 
 (use-package eglot-java
   :hook
-  (java-mode . (unless (file-remote-p buffer-file-name)
-		 (eglot-java-mode)))
+  (java-mode . (lambda () (unless (file-remote-p buffer-file-name)
+		       (eglot-java-mode 1))))
   :bind
   (:map eglot-java-mode-map
    ("C-c C-l n" . eglot-java-file-new)

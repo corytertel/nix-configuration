@@ -59,7 +59,7 @@
   # Shell
   programs.cory.bat.enable = true;
   programs.cory.neofetch.enable = true;
-  programs.cory.powershell.enable = true;
+  programs.cory.nushell.enable = true;
 
   # Gestures
   services.cory.touchegg = {

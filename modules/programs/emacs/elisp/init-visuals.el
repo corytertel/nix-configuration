@@ -110,6 +110,12 @@
   :custom
   (perfect-margin-visible-width 100)
   (perfect-margin-ignore-regexps '())
+  (perfect-margin-hide-fringes nil)
+  :init
+  ;; Set fringes before turning on perfect-margin
+  ;; Set the fringe to an big enough widthh
+  (setq-default fringe-mode 20)
+  (set-fringe-mode 20)
   :config
   ;; enable perfect-mode
   (perfect-margin-mode t)
@@ -419,20 +425,20 @@
 (setq-default
  mode-line-format
  '("  "
-   (:eval (let ((icon (all-the-icons-icon-for-mode major-mode)))
-	    (propertize
-	     icon
-	     'face
-	     (plist-put
-	      (get-text-property 0 'face icon)
-	      :height 1.0)
-	     'font-lock-face
-	     (plist-put
-	      (get-text-property 0 'font-lock-face icon)
-	      :height 1.0)
-	     'display
-	     '(raise 0))))
-   "  "
+   ;; (:eval (let ((icon (all-the-icons-icon-for-mode major-mode)))
+   ;; 	    (propertize
+   ;; 	     icon
+   ;; 	     'face
+   ;; 	     (plist-put
+   ;; 	      (get-text-property 0 'face icon)
+   ;; 	      :height 1.0)
+   ;; 	     'font-lock-face
+   ;; 	     (plist-put
+   ;; 	      (get-text-property 0 'font-lock-face icon)
+   ;; 	      :height 1.0)
+   ;; 	     'display
+   ;; 	     '(raise 0))))
+   ;; "  "
    (:eval (let ((str (if buffer-read-only
                          (if (buffer-modified-p) "%%*" "%%%%")
                        (if (buffer-modified-p) "**" "--"))))

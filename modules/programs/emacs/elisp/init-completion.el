@@ -185,8 +185,6 @@
    ([remap imenu] . consult-imenu)
    ([remap repeat-complex-command] . consult-complex-command)
    ([remap goto-line] . consult-goto-line)
-   :map goto-map
-   ("f"       . consult-flymake)
    :map search-map
    ("g"       . consult-grep)
    ("M-g"     . consult-grep)
@@ -232,16 +230,15 @@
   (corfu-auto t)                   ; Enable auto completion
   (corfu-auto-prefix 1)            ; Enable auto completion
   (corfu-auto-delay 0.0)           ; Enable auto completion
-  (corfu-quit-at-boundary 'separator)
-  ;; (corfu-quit-at-boundary nil)
+  (corfu-quit-at-boundary t)
   (corfu-echo-documentation t)     ; Enable auto documentation in the minibuffer
-  ;; (corfu-preview-current 'insert)  ; Insert preview of candidate when selected
-  ;; (corfu-preselect-first nil)
   (corfu-preview-current nil)
-  (corfu-preselect-first t)
+  (corfu-preselect-first nil)
   (corfu-popupinfo-max-width 60)
   (corfu-popupinfo-max-height 30)
   (corfu-popupinfo-delay nil)
+  (corfu-indexed-start 1)
+  (corfu-count 9)
 
   ;; :custom-face
   ;; (corfu-popupinfo ((t (:height 'unspecified))))
@@ -262,17 +259,15 @@
 	  (define-key map [remap completion-at-point] #'corfu-complete)
 	  (define-key map [remap keyboard-escape-quit] #'corfu-quit)
 	  (define-key map [remap keyboard-quit] #'corfu-quit)
-	  (define-key map [tab] #'corfu-next)
-	  (define-key map [backtab] #'corfu-previous)
-	  (define-key map (kbd "TAB") #'corfu-next)
-	  (define-key map (kbd "S-TAB") #'corfu-previous)
-	  ;; (define-key map [return] #'corfu-insert)
-	  ;; (define-key map (kbd "<return>") #'corfu-insert)
+	  (define-key map [tab] #'corfu-scroll-up)
+	  (define-key map [backtab] #'corfu-scroll-down)
+	  (define-key map (kbd "TAB") #'corfu-scroll-up)
+	  (define-key map (kbd "S-TAB") #'corfu-scroll-down)
 	  (define-key map (kbd "M-.") #'corfu-info-location)
 	  (define-key map (kbd "M-SPC") #'corfu-insert-separator)
-	  (let ((i 0))
+	  (let ((i 1))
 	    (while (< i 10)
-	      (define-key map (kbd (int-to-string i)) (cory/corfu-select-index i))
+	      (define-key map (kbd (int-to-string i)) (cory/corfu-select-index (- i 1)))
 	      (setq i (1+ i))))
 	  map))
 
@@ -398,11 +393,17 @@
   ;; 	       #'kind-all-the-icons-margin-formatter)
   )
 
+;; Dabbrev
+(require 'dabbrev)
+(setq dabbrev-check-other-buffers nil
+      dabbrev-check-all-buffers nil)
+
 ;; Completion at point extensions
 (use-package cape
   :ensure t
   :custom
   (cape-dict-file "/home/cory/.local/share/dict/words")
+  (cape-dabbrev-check-other-buffers nil)
   ;; :bind
   ;; (("C-c p i" . cape-ispell)
   ;;  ("C-c p w" . cape-dict)

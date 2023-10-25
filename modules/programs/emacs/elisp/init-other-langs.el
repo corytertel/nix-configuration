@@ -1,4 +1,10 @@
-;;; Haskell
+;; Nushell
+(use-package nushell-mode
+  :hook (nushell-mode . (lambda () (setq-local indent-line-function #'ignore))))
+
+;; (use-package nushell-ts-mode)
+
+;; Haskell
 (use-package haskell-mode
   :hook (haskell-mode . haskell-indentation-mode))
 

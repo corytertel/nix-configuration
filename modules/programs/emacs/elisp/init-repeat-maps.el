@@ -144,6 +144,12 @@ together in sequence."
     ("sp-kill-line"
      sp-kill-hybrid-sexp               "C-k" "k" "<deleteline>")
 
+    ("kill-whole-line"
+     kill-whole-line                   "C-M-k" "k" "C-S-<backspace>" "<backspace>" "S-<delete>" "<delete>")
+
+    ("sp-kill-whole-line"
+     sp-kill-whole-line                "C-M-k" "k" "C-S-<backspace>" "<backspace>" "S-<delete>" "<delete>")
+
     ("kill-sentence"
      kill-sentence                     "M-k" "k"
      backward-kill-sentence            "C-x DEL" "DEL")
@@ -271,7 +277,7 @@ together in sequence."
     ("org-task"
      org-todo                          "C-c C-t" "C-t" "t"
      org-priority                      "C-c ," ","
-     org-time-stamp                    "C-c ." "."
+     org-time-stamp                    "C-c ." ;; "."
      org-schedule                      "C-c C-s" "C-s" "s"
      org-deadline                      "C-c C-d" "C-d" "d")
 
@@ -288,12 +294,15 @@ together in sequence."
     ("mark-list"
      cory/mark-list                    "M-i" "i")
 
+    ("web-mode-element-select"
+     web-mode-element-select           "M-i" "i")
+
     ("repeat"
      repeat                            "C-'" "'")
 
     ("macrursors"
-     macrursors-mark-next-instance-of     "C->" ">" "."
-     macrursors-mark-previous-instance-of "C-<" "<" ",")
+     macrursors-mark-next-instance-of     "C->" ">"
+     macrursors-mark-previous-instance-of "C-<" "<")
 
     ("macrursors-select"
      macrursors-select                 "C-; SPC" "SPC")
@@ -334,10 +343,10 @@ together in sequence."
     ;;  jinx-previous                     "M-g M-t" "M-t" "t"
     ;;  jinx-correct                      "M-$" "$" :exitonly)
 
-    ("flymake-error-nav"
-     flymake-goto-next-error           "M-g M-h" "M-h" "M-g C-<down>" "C-<down>" "h" "C-x `" "`"
-     flymake-goto-prev-error           "M-g M-t" "M-t" "M-g C-<up>" "C-<up>" "t"
-     flymake-show-buffer-diagnostics   "M-g d" "d" :exitonly)
+    ("flycheck-error-nav"
+     flycheck-next-error               "M-g M-h" "M-h" "M-g C-<down>" "C-<down>" "h" "C-x `" "`"
+     flycheck-previous-error           "M-g M-t" "M-t" "M-g C-<up>" "C-<up>" "t"
+     consult-flycheck                  "M-f M-f" "M-f" "f" :exitonly)
 
     ("smartparens-parens"
      sp-backward-slurp-sexp            "C-(" "("
