@@ -435,11 +435,53 @@
 	(goto-char (point-min))
 	(local-set-key (kbd "q") 'kill-buffer-and-window)
 	(not-modified)
-	(read-only-mode)
-	(olivetti-mode t)
+	(read-only-mode 1)
 	(setq-local cursor-type nil))
       (pop-to-buffer buffer-name '((display-buffer-in-side-window)
 				   (side . top)
 				   (window-parameters . ((no-other-window . nil)
 							 (mode-line-format . none)))
-				   (window-height . fit-window-to-buffer))))))
+				   (window-height . fit-window-to-buffer)))))
+
+  (defface apl-eval-result-overlay-face
+    '((t (:background "grey90")))
+    "Face used to display evaluation results at the end of line."
+    :group 'apl-faces)
+
+  (defvar apl--last-post-command-position 0
+    "Holds the cursor position from the last run of post-command-hooks.")
+
+  (make-variable-buffer-local 'apl--last-post-command-position)
+
+  (defun cory/apl--remove-overlay ()
+    (unless (equal (point) apl--last-post-command-position)
+      (remove-overlays (point-min) (point-max) 'category 'apl-eval-result))
+    (setq apl--last-post-command-position (point)))
+
+  (defun cory/apl-eval-last-sexp ()
+    (interactive)
+    (let* ((str
+	    (string-trim-left
+	     (shell-command-to-string
+	      (concat
+
+	       "dyalogscript /dev/fd/3 3<<-EOF\n)load buildse\nBUILD_SESSION 'US'\n]box on -style=max\n⎕ ← "
+	       (string-trim-left
+		(buffer-substring-no-properties (line-beginning-position) (line-end-position))
+		" *⎕ ← ")
+	       "\nEOF"))
+	     ".*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n"))
+	   (pt (save-excursion (forward-line 1)
+			       (move-beginning-of-line nil)
+			       (point)))
+	   (ov (make-overlay pt pt)))
+      (overlay-put ov 'category 'apl-eval-result)
+      (overlay-put ov 'after-string
+		   (propertize str
+			       'face
+			       'apl-eval-result-overlay-face))))
+
+  (define-key dyalog-mode-map [remap eval-last-sexp] #'cory/apl-eval-last-sexp)
+
+  (add-hook 'dyalog-mode-hook
+	    (lambda () (add-to-list 'post-command-hook #'cory/apl--remove-overlay))))

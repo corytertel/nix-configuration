@@ -9,7 +9,7 @@ Mail,         thunderbird,            internet-mail
 System,       ^checkout(system),      applications-system
 
 ^tag(home)
-Books,     caja --browser /home/cory/Classes,                  folder-text
+Books,     caja --browser /home/cory/Books,                    folder-text
 Classes,   caja --browser /home/cory/Classes,                  folder-text
 Code,      caja --browser /home/cory/Code,                     folder-development
 Desktop,   caja --browser /home/cory/Desktop,                  desktop

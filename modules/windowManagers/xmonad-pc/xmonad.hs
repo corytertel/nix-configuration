@@ -98,8 +98,14 @@ myAdditionalKeys =
     , ("S-M-e", spawn "emacsclient -e '(emacs-everywhere)'")
     , ("M-t", spawn myTerminal)
     , ("M-l", spawn "xscreensaver-command -lock")
-    , ("M-s",   sendMessage $ Swap)
-    , ("M-r",   sendMessage $ Rotate)
+    , ("M-s", sendMessage $ Swap)
+    , ("M-r", sendMessage $ Rotate)
+    , ("M-b", sendMessage $ Balance)
+    , ("M-=", sendMessage $ Equalize)
+    , ("M-p", sendMessage $ SplitShift Prev)
+    , ("M-n", sendMessage $ SplitShift Next)
+    , ("M-c", sendMessage $ RotateL)
+    , ("S-M-c", sendMessage $ RotateR)
     ----------------------------------------------------------------------
     --                          Brightness                              --
     ----------------------------------------------------------------------

@@ -2,6 +2,7 @@
 
 [
   # (import ./chicken-docs.nix { inherit pkgs; })
+  (import ./apl385.nix { inherit lib pkgs; })
   (import ./chicken-pkgs.nix { inherit pkgs; })
   (import ./crystal-nova.nix { inherit lib pkgs; })
   (import ./crystal-remix.nix { inherit lib pkgs; })

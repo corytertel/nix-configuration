@@ -16,12 +16,9 @@
     nur.url = "github:nix-community/NUR";
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
-    epkg-skempo.inputs.emacs-overlay.follows = "emacs-overlay";
-    epkg-skempo.inputs.nixpkgs.follows = "nixpkgs";
-    epkg-skempo.url = "github:xFA25E/skempo";
   };
 
-  outputs = { nixpkgs, home-manager, nur, emacs-overlay, epkg-skempo, ... }:
+  outputs = { nixpkgs, home-manager, nur, emacs-overlay, ... }:
     let
       system = "x86_64-linux";
 

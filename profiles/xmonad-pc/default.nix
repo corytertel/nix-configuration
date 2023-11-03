@@ -84,12 +84,12 @@
       serif = {
         package = liberation_ttf;
         name = "Liberation Serif";
-        size = 11;
+        size = 12;
       };
       sansSerif = {
         package = liberation_ttf;
         name = "Liberation Sans";
-        size = 11;
+        size = 12;
       };
       monospace = {
         package = julia-mono-nerdfont;

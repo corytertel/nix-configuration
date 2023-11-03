@@ -7,18 +7,18 @@ xkb_symbols "basic" {
 
     key <TLDE> { [       grave,	asciitilde, dead_grave, dead_tilde	] };
 
-    key <AE01> { [	    1,	exclam  	]	};
-    key <AE02> { [	    2,	at		]	};
-    key <AE03> { [	    3,	numbersign	]	};
-    key <AE04> { [	    4,	dollar		]	};
-    key <AE05> { [	    5,	percent		]	};
-    key <AE06> { [	    6,	asciicircum, dead_circumflex, dead_circumflex ]	};
-    key <AE07> { [	    7,	ampersand	]	};
-    key <AE08> { [	    8,	asterisk	]	};
-    key <AE09> { [	    9,	bracketleft,  dead_grave]	};
-    key <AE10> { [	    0,	bracketright	]	};
-    key <AE11> { [	minus,	underscore	]	};
-    key <AE12> { [	equal,	plus		]	};
+    key <AE01> { [       exclam, 1  	        ]	};
+    key <AE02> { [           at, 2		]	};
+    key <AE03> { [   numbersign, 3 	        ]	};
+    key <AE04> { [       dollar, 4		]	};
+    key <AE05> { [      percent, 5		]	};
+    key <AE06> { [  asciicircum, 6              ]	};
+    key <AE07> { [    ampersand, 7	        ]	};
+    key <AE08> { [     asterisk, 8       	]	};
+    key <AE09> { [  bracketleft, 9              ]	};
+    key <AE10> { [ bracketright, 0	        ]	};
+    key <AE11> { [	  minus, underscore	]	};
+    key <AE12> { [	  equal, plus		]	};
 
     key <AD01> { [	    q,	Q		]	};
     key <AD02> { [	    w,	W		]	};
@@ -55,4 +55,14 @@ xkb_symbols "basic" {
     key <AB08> { [	comma,	less,   dead_cedilla, dead_caron	] };
     key <AB09> { [      period,	greater, dead_abovedot, periodcentered	] };
     key <AB10> { [	slash,	question	]	};
+
+    // Trigger caps lock when both shifts are pressed
+    key <LFSH> {
+      type[Group1]="TWO_LEVEL",
+      symbols[Group1] = [ Shift_L, Caps_Lock ]
+    };
+    key <RTSH> {
+      type[Group1]="TWO_LEVEL",
+      symbols[Group1] = [ Shift_R, Caps_Lock ]
+    };
 };

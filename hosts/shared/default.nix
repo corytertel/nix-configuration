@@ -293,7 +293,9 @@
       username = "cory";
       homeDirectory = "/home/cory";
 
-      packages = with pkgs; [
+      packages = let
+        dyalogscript = import ./dyalogscript.nix {inherit pkgs;};
+      in with pkgs; [
         # c/c++
         ccls
         clang_12
@@ -348,6 +350,7 @@
 
         # apl
         dyalog
+        dyalogscript
         # ride
 
         # python
