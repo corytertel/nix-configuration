@@ -133,6 +133,14 @@
     system = "x86_64-linux";
   };
 
+  # TODO potentially split these up like in a normal system between sh and bash
+  system.activationScripts.binbash = {
+    deps = [ "binsh" ];
+    text = ''
+      ln -sfn /bin/sh /bin/bash
+    '';
+  };
+
   environment = {
     variables = with pkgs; {
       BROWSER = config.apps.browser.command;

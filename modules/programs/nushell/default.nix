@@ -9,10 +9,14 @@ in {
   };
 
   config = mkIf cfg.enable {
-    users.users.cory.shell = pkgs.dash;
-    users.defaultUserShell = pkgs.dash;
-    environment.shells = [ pkgs.dash pkgs.nushell pkgs.bash ];
-    environment.binsh = "${pkgs.dash}/bin/dash";
+    # users.users.cory.shell = pkgs.dash;
+    # users.defaultUserShell = pkgs.dash;
+    # environment.shells = [ pkgs.dash pkgs.nushell pkgs.bash ];
+    # environment.binsh = "${pkgs.dash}/bin/dash";
+    users.users.cory.shell = pkgs.bash;
+    users.defaultUserShell = pkgs.bash;
+    environment.shells = [ pkgs.nushell pkgs.bash ];
+    environment.binsh = "${pkgs.bash}/bin/bash";
 
     environment.systemPackages = with pkgs; [
       nushell

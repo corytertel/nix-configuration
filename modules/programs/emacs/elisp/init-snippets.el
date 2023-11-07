@@ -95,3 +95,10 @@
 	    "auto main(int argc, char** argv) -> int {\n\n"
 	    "return 0;\n"
 	    "}\n")))
+
+(define-auto-insert "\\.apl\\'"
+  (lambda ()
+    (insert ")load buildse\n"
+	    "BUILD_SESSION 'US'\n"
+	    "]box on -style=max\n"
+	    "⎕IO ← 0\n\n")))

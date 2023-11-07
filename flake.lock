@@ -1,22 +1,5 @@
 {
   "nodes": {
-    "eldev": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1662672849,
-        "narHash": "sha256-yna3SPVUb6Dzt0Wrl7EY05oNrGHSFVJL1QFhUKNb3DQ=",
-        "owner": "doublep",
-        "repo": "eldev",
-        "rev": "659f4d9c97a44cf29ded5594b3f5de8da99ec973",
-        "type": "github"
-      },
-      "original": {
-        "owner": "doublep",
-        "ref": "1.2.2",
-        "repo": "eldev",
-        "type": "github"
-      }
-    },
     "emacs-overlay": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -34,30 +17,6 @@
       "original": {
         "owner": "nix-community",
         "repo": "emacs-overlay",
-        "type": "github"
-      }
-    },
-    "epkg-skempo": {
-      "inputs": {
-        "eldev": "eldev",
-        "emacs-overlay": [
-          "emacs-overlay"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1671403775,
-        "narHash": "sha256-9P9T1kJwi4+vaqzuwWqYWBnkVH2TGLcX8BHxcY8VLTE=",
-        "owner": "xFA25E",
-        "repo": "skempo",
-        "rev": "43e8b7c83781d32c58484272d53d578da24a9a63",
-        "type": "github"
-      },
-      "original": {
-        "owner": "xFA25E",
-        "repo": "skempo",
         "type": "github"
       }
     },
@@ -180,7 +139,6 @@
     "root": {
       "inputs": {
         "emacs-overlay": "emacs-overlay",
-        "epkg-skempo": "epkg-skempo",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-unstable": "nixpkgs-unstable",
