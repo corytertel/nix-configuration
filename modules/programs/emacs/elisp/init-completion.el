@@ -164,14 +164,6 @@
   ;; Tidy shadowed file names
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
-;; vertico-frame for wm integration
-(setq vertico-frame-frame-alist
-      '((name . "vertico-frame")
-	(minibuffer . nil)
-	(width . 150)
-	(height . 12)))
-(vertico-frame-mode t)
-
 (use-package marginalia
   :disabled t
   :after vertico

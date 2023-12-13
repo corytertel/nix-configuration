@@ -154,11 +154,11 @@
 ;;
 
 ;; Setting the font
-(set-face-attribute 'default nil :family "JuliaMono Nerd Font" :height 100)
+(set-face-attribute 'default nil :family monospace-font-name :height monospace-font-height)
 ;; Set fixed pitch face
-(set-face-attribute 'fixed-pitch nil :family "JuliaMono Nerd Font" :height 100)
+(set-face-attribute 'fixed-pitch nil :family monospace-font-name :height monospace-font-height)
 ;; Set variable pitch face
-(set-face-attribute 'variable-pitch nil :family "Liberation Serif" :height 115)
+(set-face-attribute 'variable-pitch nil :family variable-font-name :height variable-font-height)
 
 ;; Don't unload fonts when not in use
 (setq inhibit-compacting-font-caches t)
@@ -166,8 +166,8 @@
 ;; Font locks
 (set-face-attribute 'font-lock-comment-face nil
 		    :foreground "dark red"
-		    :family "Liberation Serif"
-		    :height 115)
+		    :family variable-font-name
+		    :height variable-font-height)
 (set-face-attribute 'font-lock-comment-delimiter-face nil
 		    :foreground "dark red"
 		    :inherit nil)
@@ -217,7 +217,7 @@
   (all-the-icons-default-adjust 0.0)
   :config
   (when (and (not (if (find-font (font-spec :name "all-the-icons")) t nil))
-           (window-system))
+             (window-system))
     (all-the-icons-install-fonts t)))
 
 ;; Ligatures and Indicators
@@ -286,30 +286,30 @@
 ;; 		    :box '(:line-width 1 :color "#3647d9" :style nil)
 ;; 		    :underline nil
 ;; 		    :overline nil
-;; 		    :family "Liberation Serif"
-;; 		    :height 115)
+;; 		    :family variable-font-name
+;; 		    :height variable-font-height)
 (set-face-attribute 'mode-line nil
     		    :foreground "#141404"
 		    :background "#ffffff"
 		    :box '(:line-width 1 :color "#3647d9" :style nil)
 		    :underline nil
 		    :overline nil
-		    :family "Liberation Serif"
-		    :height 115)
+		    :family variable-font-name
+		    :height variable-font-height)
 (set-face-attribute 'mode-line-inactive nil
     		    :foreground "#141404"
 		    :background "#ffffff"
 		    :box '(:line-width 1 :color "#3647d9" :style nil)
 		    :underline nil
 		    :overline nil
-		    :family "Liberation Serif"
-		    :height 115)
+		    :family variable-font-name
+		    :height variable-font-height)
 (set-face-attribute 'mode-line-buffer-id nil
 		    :inherit 'bold
 		    :foreground "#3647d9"
 		    :background nil
-		    :family "Liberation Serif"
-		    :height 115)
+		    :family variable-font-name
+		    :height variable-font-height)
 ;; (set-face-attribute 'mode-line-emphasis
 ;; 		      :weight 'bold)
 (set-face-attribute 'mode-line-highlight nil
@@ -317,10 +317,10 @@
 		    :box '(:line-width 1 :color "grey40" :style flat-button))
 (set-face-attribute 'header-line nil
 		    :background "#ffffff"
-		    :family "Liberation Serif"
+		    :family variable-font-name
 		    :underline nil
 		    :overline nil
-		    :height 115)
+		    :height variable-font-height)
 (set-face-attribute 'fringe nil
 		    :background "#ffffff")
 (set-face-attribute 'secondary-selection nil
@@ -333,17 +333,17 @@
 
 ;; Buffer state in modeline
 (defface modeline-narrow-face
-  '((t (:foreground "#141404" :background "#ed8f23" :family "Liberation Serif" :height 115)))
+  `((t (:foreground "#141404" :background "#ed8f23" :family ,variable-font-name :height ,variable-font-height)))
   "Todo/fixme highlighting."
   :group 'faces)
 
 (defface modeline-read-only-face
-  '((t (:foreground "#141404" :background "#9feaae" :family "Liberation Serif" :height 115)))
+  `((t (:foreground "#141404" :background "#9feaae" :family ,variable-font-name :height ,variable-font-height)))
   "Read-only buffer highlighting."
   :group 'faces)
 
 (defface modeline-modified-face
-  '((t (:foreground "#d8d8d8" :background "#e60909" :family "Liberation Serif" :height 115)))
+  `((t (:foreground "#d8d8d8" :background "#e60909" :family ,variable-font-name :height ,variable-font-height)))
   "Modified buffer highlighting."
   :group 'faces)
 

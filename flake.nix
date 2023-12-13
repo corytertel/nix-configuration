@@ -2,23 +2,17 @@
   description = "Cory's system configuration";
 
   inputs = {
-    # Unstable Branch
     nixpkgs.url = "nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "nixpkgs/master";
     home-manager.url = "github:nix-community/home-manager/master";
-
-    # Stable Branch
-    # nixpkgs.url = "nixpkgs/nixos-22.05";
-    # nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
-    # home-manager.url = "github:nix-community/home-manager/release-22.05";
-
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nur.url = "github:nix-community/NUR";
-
+    nixos-wsl.url = "github:nix-community/NixOS-WSL";
+    nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
   };
 
-  outputs = { nixpkgs, home-manager, nur, emacs-overlay, ... }:
+  outputs = { nixpkgs, home-manager, nur, nixos-wsl, emacs-overlay, ... }:
     let
       system = "x86_64-linux";
 
@@ -51,6 +45,23 @@
         pc = mkHost [ ./hosts/pc  ];
         laptop = mkHost [ ./hosts/laptop ];
         vm = mkHost [ ./hosts/vm ];
+
+        wsl = lib.nixosSystem {
+          inherit system pkgs;
+          specialArgs = {
+            isContainer = true;
+          };
+          modules = [
+            ./hosts/wsl
+            nixos-wsl.nixosModules.wsl
+          ] ++ [
+            ./modules
+            home-manager.nixosModules.home-manager {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+            }
+          ];
+        };
       };
     };
 }

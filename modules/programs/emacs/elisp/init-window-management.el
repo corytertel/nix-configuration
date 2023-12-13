@@ -3,8 +3,7 @@
 ;;
 
 (setq focus-follows-mouse t
-      mouse-autoselect-window t
-      pop-up-frames t)
+      mouse-autoselect-window t)
 
 ;; Smooth scrolling
 (pixel-scroll-precision-mode t)
@@ -88,9 +87,9 @@
              (this-win-edges (window-edges (selected-window)))
              (next-win-edges (window-edges (next-window)))
              (this-win-2nd (not (and (<= (car this-win-edges)
-                                    (car next-win-edges))
+				    (car next-win-edges))
                                  (<= (cadr this-win-edges)
-                                    (cadr next-win-edges)))))
+				    (cadr next-win-edges)))))
              (splitter
               (if (= (car this-win-edges)
                      (car (window-edges (next-window))))
@@ -121,10 +120,8 @@
 
 (global-set-key (kbd "C-x 0") #'delete-window)
 (global-set-key (kbd "C-x 1") #'delete-other-windows)
-;; (global-set-key (kbd "C-x 2") #'split-and-follow-below)
-;; (global-set-key (kbd "C-x 3") #'split-and-follow-right)
-(global-set-key (kbd "C-x 2") #'make-frame-command)
-(global-set-key (kbd "C-x 3") #'make-frame-command)
+(global-set-key (kbd "C-x 2") #'split-and-follow-below)
+(global-set-key (kbd "C-x 3") #'split-and-follow-right)
 (global-set-key (kbd "C-x 4 q") #'kill-all-buffers-and-windows)
 (global-set-key (kbd "<f1>") #'mode-line-other-buffer)
 (global-set-key (kbd "C-<f1>") #'mode-line-other-buffer)

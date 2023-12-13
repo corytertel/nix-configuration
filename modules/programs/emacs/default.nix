@@ -15,6 +15,14 @@ let
   + (builtins.readFile ./elisp/init-eww.el)
 
   + (builtins.readFile ./elisp/init-help.el)
+
+  +
+  ''
+  (defvar monospace-font-name "${config.programs.cory.emacs.fonts.monospace.name}")
+  (defvar monospace-font-height ${toString config.programs.cory.emacs.fonts.monospace.size})
+  (defvar variable-font-name "${config.programs.cory.emacs.fonts.variable.name}")
+  (defvar variable-font-height ${toString config.programs.cory.emacs.fonts.variable.size})
+  ''
   + (builtins.readFile ./elisp/init-visuals.el)
 
   # Completion
@@ -55,6 +63,7 @@ let
 
   # Window Management
   + (builtins.readFile ./elisp/init-window-management.el)
+  + (if config.programs.cory.emacs.popup then builtins.readFile ./elisp/init-popup.el else "")
 
   # Informal Packages
   # + (builtins.readFile ./elisp/eshell-undistract-me.el)
@@ -90,6 +99,7 @@ let
       tree-sitter-elisp
       tree-sitter-nix
       tree-sitter-nu
+      tree-sitter-python
       # don't need these three rn because of scope highlighting
       # tree-sitter-scheme
       # tree-sitter-commonlisp
@@ -112,6 +122,32 @@ in {
 
   options.programs.cory.emacs = {
     enable = mkEnableOption "Enables emacs";
+    popup = mkOption {
+      type = types.bool;
+      default = false;
+    };
+    fonts = {
+      monospace = {
+        name = mkOption {
+          type = types.str;
+          default = "monospace";
+        };
+        size = mkOption {
+          type = types.int;
+          default = 100;
+        };
+      };
+      variable = {
+        name = mkOption {
+          type = types.str;
+          default = "serif";
+        };
+        size = mkOption {
+          type = types.int;
+          default = 100;
+        };
+      };
+    };
   };
 
   config = mkIf cfg.enable {
