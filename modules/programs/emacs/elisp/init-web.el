@@ -98,12 +98,6 @@
 		      :foreground 'unspecified
 		      :background "turquoise")
 
-  (defun cory/web-mode-hook ()
-    "Hooks for Web mode."
-    (setq web-mode-markup-indent-offset 2)
-    (whitespace-mode 0))
-  (add-hook 'web-mode-hook  'cory/web-mode-hook)
-
   (defun cory/insert-angled-pair-or-wrap ()
     (interactive)
     (cond (mark-active (call-interactively #'web-mode-element-wrap))
@@ -183,20 +177,25 @@
       (when (looking-at " ")
 	(delete-char 1))))
 
+  (defun cory/web-mode-hook ()
+    "Hooks for Web mode."
+    (setq web-mode-markup-indent-offset 2)
+    (whitespace-mode -1))
+
   (defun cory/web-mode-html-hook ()
     (setq-local completion-at-point-functions '(cory/web-mode-html-capf t))
-    ;; (local-set-key (kbd "TAB") #'cory/forward-indent)
-    ;; (local-set-key (kbd "<backtab>") #'cory/backward-indent)
-    ;; (local-set-key (kbd "C-<tab>") #'indent-for-tab-command)
-    (aggressive-indent-mode 1))
+    ;; (aggressive-indent-mode 1)
+    )
 
   (defun cory/web-mode-css-hook ()
     (require 'css-mode)
     (setq-local completion-at-point-functions '(css-completion-at-point t))
-    (aggressive-indent-mode 1))
+    ;; (aggressive-indent-mode 1)
+    )
 
   (add-hook 'web-mode-hook
 	    (lambda ()
+	      (cory/web-mode-hook)
 	      (cond
 	       ((and buffer-file-name
 		   (string-match ".*\.html" buffer-file-name))

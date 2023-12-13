@@ -307,11 +307,16 @@ together in sequence."
     ("macrursors-select"
      macrursors-select                 "C-; SPC" "SPC")
 
+    ;; ("vertico"
+    ;;  vertico-previous                  "<C-h>" "h" "<down>" "<backtab>"
+    ;;  vertico-next                      "C-t" "t" "<up>" "TAB"
+    ;;  vertico-grid-scroll-down          "C-p" "p" "<next>"
+    ;;  vertico-grid-scroll-up            "M-p" "<prior>")
     ("vertico"
-     vertico-previous                  "<C-h>" "h" "<down>" "<backtab>"
-     vertico-next                      "C-t" "t" "<up>" "TAB"
-     vertico-grid-scroll-down          "C-p" "p" "<next>"
-     vertico-grid-scroll-up            "M-p" "<prior>")
+     vertico-next                      "<C-h>" "h" "<down>" "TAB"
+     vertico-previous                  "C-t" "t" "<up>" "<backtab>"
+     vertico-grid-scroll-up            "C-p" "p" "<next>"
+     vertico-grid-scroll-down          "M-p" "<prior>")
 
     ("smartparens-nav"
      sp-forward-sexp                   "C-M-n" "n"
@@ -373,9 +378,12 @@ This must be in the form required by the
 						   :foreground "#141404"
 						   :background "#ffffff"))
 			      (t
+			       ;; (set-face-attribute 'mode-line nil
+			       ;; 			   :foreground "#141404"
+			       ;; 			   :background "#c0daff")
 			       (set-face-attribute 'mode-line nil
 						   :foreground "#141404"
-						   :background "#c0daff")
+						   :background "#ffffff")
 			       (set-face-attribute 'mode-line-inactive nil
 						   :foreground "#141404"
 						   :background "#ffffff")))))

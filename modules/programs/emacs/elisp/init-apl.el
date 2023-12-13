@@ -307,7 +307,7 @@ meaning this function does not consider the current workspace."
 					       "Multiple workspace files found, please select one:"
 					       files)))))))))
       (cond ((and (not workspace-dir)
-		(yes-or-no-p "Unable to locate a workspace file, would you like to create one?"))
+		  (yes-or-no-p "Unable to locate a workspace file, would you like to create one?"))
 	     (setq cory/apl-workspace-file
 		   (concat
 		    (expand-file-name default-directory)
@@ -332,8 +332,8 @@ meaning this function does not consider the current workspace."
 		 "Find workspace: "
 		 (confirm-nonexistent-file-or-buffer))))))
 
-  (defun cory/apl-send-to-workspace ()
-    (interactive)
+  (defun cory/apl-send-to-workspace (arg)
+    (interactive "P")
     (cond ((not cory/apl-workspace-file)
 	   (message "No workspace file loaded."))
 	  (t
@@ -351,25 +351,30 @@ meaning this function does not consider the current workspace."
 		      cory/apl-workspace-file
 		      "\n"
 		      (seq-reduce (lambda (x y) (concat x y "\n")) cory/apl-session-commands "")
-		      ((lambda (str) (cond ((string-match " *).*" str) str)
-				      ((string-match " *].*" str) str)
-				      ((string-match " *⎕ *←.*" str) str)
+		      ((lambda (str) (cond ((string-match "^ *).*" str) str)
+				      ((string-match "^ *].*" str) str)
+				      ((string-match "^ *⎕ *←.*" str) str)
 				      (t (concat "⎕ ← " str))))
 		       (buffer-substring-no-properties beg end))
 		      "\n)save "
 		      cory/apl-workspace-file
 		      "\")"))
 		    ".*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n.*\n"
-		    "\n.*\n"))
-		  (pt (save-excursion (forward-line 1)
-				      (move-beginning-of-line nil)
-				      (point)))
-		  (ov (make-overlay pt pt)))
-	     (overlay-put ov 'category 'apl-eval-result)
-	     (overlay-put ov 'after-string
-			  (propertize str
-				      'face
-				      'apl-eval-result-overlay-face))))))
+		    "\n.*\n")))
+	     (cond (arg
+		    (move-end-of-line nil)
+		    (newline)
+		    (insert str))
+		   (t
+		    (let* ((pt (save-excursion (forward-line 1)
+					       (move-beginning-of-line nil)
+					       (point)))
+			   (ov (make-overlay pt pt)))
+		      (overlay-put ov 'category 'apl-eval-result)
+		      (overlay-put ov 'after-string
+				   (propertize str
+					       'face
+					       'apl-eval-result-overlay-face)))))))))
 
   (define-key dyalog-mode-map [remap eval-last-sexp] #'cory/apl-send-to-workspace)
 

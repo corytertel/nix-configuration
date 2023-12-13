@@ -127,13 +127,22 @@
 	  (vertico-insert)
 	(insert "/"))))
 
+  ;; TODO work on tab behavior
+  (define-key vertico-map (kbd "TAB") #'vertico-next)
+  (define-key vertico-map (kbd "<backtab>") #'vertico-previous)
+  (define-key vertico-map (kbd "<C-h>") #'vertico-next)
+  (define-key vertico-map (kbd "<down>") #'vertico-next)
+  (define-key vertico-map (kbd "C-t") #'vertico-previous)
+  (define-key vertico-map (kbd "<up>") #'vertico-previous)
+  (define-key vertico-map (kbd "C-p") #'vertico-grid-scroll-up)
+  (define-key vertico-map (kbd "<next>") #'vertico-grid-scroll-up)
+  (define-key vertico-map (kbd "M-p") #'vertico-grid-scroll-down)
+  (define-key vertico-map (kbd "<prior>") #'vertico-grid-scroll-down)
+  (define-key vertico-map (kbd "/") #'cory/vertico-slash)
+  (define-key vertico-map (kbd "M-m") #'vertico-quick-jump)
+  (define-key vertico-map (kbd "RET") #'vertico-exit)
+
   (with-eval-after-load 'vertico-reverse
-    ;; TODO work on tab behavior
-    (define-key vertico-map (kbd "TAB") #'vertico-next)
-    (define-key vertico-map (kbd "<backtab>") #'vertico-previous)
-    (define-key vertico-map (kbd "/") #'cory/vertico-slash)
-    (define-key vertico-map (kbd "M-m") #'vertico-quick-jump)
-    (define-key vertico-map (kbd "RET") #'vertico-exit)
     (define-key vertico-reverse-map (kbd "M-p") #'vertico-grid-scroll-up)
     (define-key vertico-reverse-map (kbd "<prior>") #'vertico-grid-scroll-up)
     (define-key vertico-reverse-map (kbd "C-p") #'vertico-grid-scroll-down)
@@ -141,7 +150,8 @@
 
   (vertico-mode t)
   (vertico-grid-mode t)
-  (vertico-reverse-mode t))
+  ;; (vertico-reverse-mode t)
+  )
 
 ;; Configure directory extension.
 (use-package vertico-directory
@@ -154,7 +164,13 @@
   ;; Tidy shadowed file names
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
-;; TODO vertico-frame adopt from vertico-posframe
+;; vertico-frame for wm integration
+(setq vertico-frame-frame-alist
+      '((name . "vertico-frame")
+	(minibuffer . nil)
+	(width . 150)
+	(height . 12)))
+(vertico-frame-mode t)
 
 (use-package marginalia
   :disabled t

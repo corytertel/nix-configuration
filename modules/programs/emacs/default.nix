@@ -20,6 +20,7 @@ let
   # Completion
   + ''(add-to-list 'load-path "${(pkgs.callPackage ./hotfuzz-module.nix
     { inherit pkgs; emacs = emacsBasePackage; })}")''
+  + (builtins.readFile ./elisp/vertico-frame.el)
   + (builtins.readFile ./elisp/init-completion.el)
   + (builtins.readFile ./elisp/init-lsp.el)
   + (builtins.readFile ./elisp/init-snippets.el)

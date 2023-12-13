@@ -1,11 +1,19 @@
 {-# LANGUAGE FlexibleInstances, FlexibleContexts, MultiParamTypeClasses, TupleSections, PatternGuards, NoMonomorphismRestriction #-}
 {-# OPTIONS_GHC -Wunused-imports #-}
 
-import XMonad hiding (focus)
+import XMonad hiding ((|||))
 
-import Data.Maybe (isJust)
+import Data.Monoid (mappend)
+import Data.Map (fromList, lookup)
+import Data.Maybe (fromJust, isJust)
+import Data.Ratio ((%)) -- for video
 
 import Control.Monad
+import Foreign.C.Types(CInt)
+
+import Graphics.X11.ExtraTypes.XF86
+
+import System.Exit
 
 import XMonad.Util.SpawnOnce
 import XMonad.Util.EZConfig
@@ -15,6 +23,11 @@ import XMonad.Util.Types
 import XMonad.Util.WorkspaceCompare
 import XMonad.Util.NamedScratchpad
   (customFloating, namedScratchpadAction, namedScratchpadManageHook, NamedScratchpad(..))
+
+import XMonad.Util.Image
+import XMonad.Util.PositionStore
+import XMonad.Util.XUtils
+import XMonad.Util.WindowPropertiesRE ((~?))
 
 import XMonad.Layout.Spacing
 import XMonad.Layout.NoBorders
@@ -30,7 +43,9 @@ import XMonad.Layout.LayoutCombinators (JumpToLayout)
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.SideBorderDecoration
 import XMonad.Layout.NoBorders
-import XMonad.Layout.MultiColumns
+import XMonad.Layout.Decoration
+import XMonad.Layout.DecorationAddons
+import XMonad.Layout.WindowArranger
 
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
@@ -39,7 +54,7 @@ import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat)
 import XMonad.Hooks.SetWMName (setWMName)
 import XMonad.Hooks.DynamicLog hiding (statusBar)
 import XMonad.Hooks.StatusBar hiding (withEasySB)
-import XMonad.Hooks.ManageHelpers (doCenterFloat)
+import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.RefocusLast
 
 import XMonad.Actions.GroupNavigation
@@ -47,7 +62,6 @@ import XMonad.Actions.Plane
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.GridSelect
 
-import XMonad.StackSet ( Workspace (..), Stack(..) )
 import qualified XMonad.StackSet as W
 import qualified XMonad.Core as C
 import qualified Data.Map as M
@@ -69,9 +83,12 @@ myClickJustFocuses = False
 myBorderWidth = 2
 
 myNormalBorderColor  = "#ffffff"
-myFocusedBorderColor = "#3647d9"
+-- myFocusedBorderColor = "#3647d9"
+myFocusedBorderColor = "#c0daff"
 
 cornerWidth = 400
+
+barWidth = 33
 
 myModMask = mod4Mask
 
@@ -86,9 +103,7 @@ myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
     [ ("M-<f1>", spawn "jgmenu --simple --csv-file=/etc/xdg/jgmenu/menu.csv")
     , ("M-<Escape>", spawn "mate-system-monitor --show-processes-tab")
-    , ("M-f", spawn "caja --browser \"/home/cory\"")
-    , ("M-e", spawn "emacsclient -c")
-    , ("S-M-e", spawn "emacsclient -e '(emacs-everywhere)'")
+    -- , ("M-f", spawn "caja --browser \"/home/cory\"")
     , ("M-t", spawn myTerminal)
     , ("M-l", spawn "xscreensaver-command -lock")
     , ("M-s", sendMessage $ Swap)
@@ -99,6 +114,14 @@ myAdditionalKeys =
     , ("M-n", sendMessage $ SplitShift Next)
     , ("M-c", sendMessage $ RotateL)
     , ("S-M-c", sendMessage $ RotateR)
+    ----------------------------------------------------------------------
+    --                          Emacs                                   --
+    ----------------------------------------------------------------------
+    -- , ("M-e", spawn "emacsclient -c")
+    -- , ("S-M-e", spawn "emacsclient -e '(emacs-everywhere)'")
+    , ("M-o" , emacsCmd "cory/find-file")
+    , ("M-f" , emacsCmd "consult-recent-file")
+    , ("M-x" , emacsCmd "execute-extended-command nil")
     ----------------------------------------------------------------------
     --                          Brightness                              --
     ----------------------------------------------------------------------
@@ -168,6 +191,19 @@ myMouseBindings =
   , ((0, 9), (\_ -> windows W.focusUp))
   ]
 
+isOnAnyVisibleWSWithFocused :: Query Bool
+isOnAnyVisibleWSWithFocused = do
+  w <- ask
+  ws <- liftX $ gets windowset
+  let allVisible = concatMap (maybe [] W.integrate . W.stack . W.workspace) (W.current ws:W.visible ws)
+      visibleWs = w `elem` allVisible
+  return $ visibleWs
+
+emacsCmd :: String -> X ()
+emacsCmd fn = nextMatchOrDo Forward
+              (isOnAnyVisibleWSWithFocused <&&> className =? "Emacs")
+              (spawn "emacsclient -c") >> spawn ("emacsclient -e '(" ++ fn ++ ")'")
+
 ------------------------------------------------------------------------
 
 myGsconfig colorizer = (buildDefaultGSConfig colorizer)
@@ -229,218 +265,264 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
       where
         h = 0.50
         w = 0.9375
-        t = 0.50
+        t = 0.0
         l = 0.0
 
 ------------------------------------------------------------------------
 
--- convertToBool' :: [Int] -> [Bool]
--- convertToBool' = map (== 1)
+-- buttons have 2px offset on the top to account for
+-- the 4px border on the bottom of the decoration
 
--- convertToBool :: [[Int]] -> [[Bool]]
--- convertToBool = map convertToBool'
+convertToBool' :: [Int] -> [Bool]
+convertToBool' = map (== 1)
 
--- menuButton' :: [[Int]]
--- menuButton' = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+convertToBool :: [[Int]] -> [[Bool]]
+convertToBool = map convertToBool'
 
--- menuButton :: [[Bool]]
--- menuButton = convertToBool menuButton'
+emptyButton' :: [[Int]]
+emptyButton' = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
 
--- miniButton' :: [[Int]]
--- miniButton' = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
---                [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
---                [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
---                [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
---                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
---                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
---                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
---                [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
---                [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
---                [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
---                [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
---                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
---                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
---                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
---                [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
---                [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
---                [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
---                [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+emptyButton :: [[Bool]]
+emptyButton = convertToBool emptyButton'
 
--- miniButton :: [[Bool]]
--- miniButton = convertToBool miniButton'
+maxiButton' :: [[Int]]
+maxiButton' = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+               [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+               [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+               [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
 
--- maxiButton' :: [[Int]]
--- maxiButton' = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
---                [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
---                [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
---                [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
---                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
---                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
---                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
---                [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
---                [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
---                [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
---                [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
---                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
---                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
---                [0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
---                [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
---                [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0],
---                [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0],
---                [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+maxiButton :: [[Bool]]
+maxiButton = convertToBool maxiButton'
 
--- maxiButton :: [[Bool]]
--- maxiButton = convertToBool maxiButton'
+closeButton' :: [[Int]]
+closeButton' = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+                [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,1,0,0,0,1,1,0,0,0,1,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,0,0,0,1,1,1,1,0,0,0,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+                [1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1],
+                [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
 
--- closeButton' :: [[Int]]
--- closeButton' = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                 [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                 [0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
---                 [0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
---                 [0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],
---                 [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
---                 [0,0,0,0,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0,0],
---                 [0,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,0],
---                 [0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0],
---                 [0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0],
---                 [0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0],
---                 [0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0],
---                 [0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0],
---                 [0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0],
---                 [0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0],
---                 [0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0],
---                 [0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0],
---                 [0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0],
---                 [0,0,0,1,1,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0],
---                 [0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,0,0,0,0],
---                 [0,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,0],
---                 [0,0,0,0,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,0,0,0,0],
---                 [0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0],
---                 [0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0],
---                 [0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0],
---                 [0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
---                 [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
---                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+closeButton :: [[Bool]]
+closeButton = convertToBool closeButton'
 
--- closeButton :: [[Bool]]
--- closeButton = convertToBool closeButton'
+buttonSize :: Int
+buttonSize = 26
 
--- buttonSize :: Int
--- buttonSize = 30
+maximizeButtonOffset :: Int
+maximizeButtonOffset = 34
 
--- menuButtonOffset :: Int
--- menuButtonOffset = 30
+closeButtonOffset :: Int
+closeButtonOffset = 4
 
--- maximizeButtonOffset :: Int
--- maximizeButtonOffset = 90
+imageTitleBarButtonHandler :: Window -> Int -> Int -> X Bool
+imageTitleBarButtonHandler mainw distFromLeft distFromRight = do
+    let action
+          | fi distFromRight >= closeButtonOffset &&
+            fi distFromRight <= closeButtonOffset + buttonSize = focus mainw >> kill >> return True
+          | fi distFromRight >= maximizeButtonOffset &&
+            fi distFromRight <= maximizeButtonOffset + buttonSize = focus mainw >> sendMessage (maximizeRestore mainw) >> return True
+          | otherwise = return False
+    action
 
--- minimizeButtonOffset :: Int
--- minimizeButtonOffset = 150
+defaultThemeWithImageButtons :: Theme
+defaultThemeWithImageButtons =
+  def { fontName = "xft:Liberation Serif:size=12"
+      , inactiveBorderColor = "#ffffff"
+      , inactiveColor = "#ffffff"
+      , inactiveTextColor = "#999999"
+      , inactiveBorderWidth = 0
+      , activeBorderColor = "#c0daff"
+      , activeColor = "#c0daff"
+      , activeTextColor = "#000000"
+      , activeBorderWidth = 0
+      , urgentBorderColor = "#c0daff"
+      , urgentColor = "#c0daff"
+      , urgentTextColor = "#e60909"
+      , urgentBorderWidth = 0
+      , decoHeight = 33
+      , windowTitleIcons = [ (emptyButton, CenterLeft 4),
+                             (closeButton, CenterRight 4),
+                             (maxiButton, CenterRight 34),
+                             (emptyButton, CenterRight 64) ]
+      }
 
--- closeButtonOffset :: Int
--- closeButtonOffset = 30
+imageButtonDeco :: (Eq a, Shrinker s) => s -> Theme
+                   -> l a -> ModifiedLayout (Decoration ImageButtonDecoration s) l a
+imageButtonDeco s c = decoration s c $ NFD True
 
--- imageTitleBarButtonHandler :: Window -> Int -> Int -> X Bool
--- imageTitleBarButtonHandler mainw distFromLeft distFromRight = do
---     let action
---           | fi distFromLeft >= menuButtonOffset &&
---              fi distFromLeft <= menuButtonOffset + buttonSize = focus mainw >> windowMenu >> return True
---           | fi distFromRight >= closeButtonOffset &&
---             fi distFromRight <= closeButtonOffset + buttonSize = focus mainw >> kill >> return True
---           | fi distFromRight >= maximizeButtonOffset &&
---             fi distFromRight <= maximizeButtonOffset + buttonSize = focus mainw >> sendMessage (maximizeRestore mainw) >> return True
---           | fi distFromRight >= minimizeButtonOffset &&
---             fi distFromRight <= minimizeButtonOffset + buttonSize = focus mainw >> minimizeWindow mainw >> return True
---           | otherwise = return False
---     action
+newtype ImageButtonDecoration a = NFD Bool deriving (Show, Read)
 
--- defaultThemeWithImageButtons :: Theme
--- defaultThemeWithImageButtons = def
---                                { fontName = "xft:M+ 1c:size=11"
---                                , inactiveBorderColor = "#1e2731"
---                                , inactiveColor = "#000507"
---                                , inactiveTextColor = "#1e2731"
---                                , inactiveBorderWidth = 0
---                                , activeBorderColor = "#81a1c1"
---                                , activeColor = "#000507"
---                                , activeTextColor = "#81a1c1"
---                                , activeBorderWidth = 0
---                                , urgentBorderColor = "#bf616a"
---                                , urgentColor = "#000507"
---                                , urgentTextColor = "#bf616a"
---                                , urgentBorderWidth = 0
---                                , decoHeight = 70
---                                , windowTitleIcons = [ (menuButton, CenterLeft 30),
---                                                       (closeButton, CenterRight 30),
---                                                       (maxiButton, CenterRight 90),
---                                                       (miniButton, CenterRight 150) ]
---                                }
+instance Eq a => DecorationStyle ImageButtonDecoration a where
+    describeDeco _ = "ImageButtonDeco"
+    decorationCatchClicksHook _ mainw dFL dFR = imageTitleBarButtonHandler mainw dFL dFR
+    decorationWhileDraggingHook _ ex ey (mainw, r) x y = handleDraggingInProgress ex ey (mainw, r) x y
+    decorationAfterDraggingHook _ (mainw, _) decoWin = focus mainw >> handleScreenCrossing mainw decoWin >> return ()
 
--- imageButtonDeco :: (Eq a, Shrinker s) => s -> Theme
---                    -> l a -> ModifiedLayout (Decoration ImageButtonDecoration s) l a
--- imageButtonDeco s c = decoration s c $ NFD True
+handleDraggingInProgress :: CInt -> CInt -> (Window, Rectangle)
+  -> XMonad.Position -> XMonad.Position -> X ()
+handleDraggingInProgress ex ey (_, r) x y = withDisplay $ \dpy ->
+    let dw = displayWidth  dpy (defaultScreen dpy)
+        dh = displayHeight dpy (defaultScreen dpy)
+        wx = x - (fi ex - rect_x r)
+        wy = y - (fi ey - rect_y r)
+        regionWidth = 5
+        rect =
+          if y <= regionWidth
+          then
+            Rectangle 0 0 ((fi dw) - barWidth) (fi dh)
+          else if x <= regionWidth
+               then
+                 Rectangle 0 0 (((fi dw) - barWidth) `div` 2) (fi dh)
+          else if x >= (((fi dw) - 1) - regionWidth - (fi barWidth))
+               then
+                 Rectangle (fi (((fi dw) - barWidth) `div` 2)) 0 (((fi dw) - barWidth) `div` 2) (fi dh)
+          else
+            Rectangle wx wy (rect_width  r) (rect_height r)
+    in sendMessage $ SetGeometry rect
 
--- newtype ImageButtonDecoration a = NFD Bool deriving (Show, Read)
+windowSwitcherDecorationWithImageButtons :: (Eq a, Shrinker s) => s -> Theme
+  -> l a -> ModifiedLayout (Decoration ImageWindowSwitcherDecoration s) l a
+windowSwitcherDecorationWithImageButtons s c = decoration s c $ IWSD True
 
--- instance Eq a => DecorationStyle ImageButtonDecoration a where
---     describeDeco _ = "ImageButtonDeco"
---     decorationCatchClicksHook _ mainw dFL dFR = imageTitleBarButtonHandler mainw dFL dFR
---     decorationAfterDraggingHook _ (mainw, _) decoWin = focus mainw >> handleScreenCrossing mainw decoWin >> return ()
+data ImageWindowSwitcherDecoration a = IWSD Bool deriving (Show, Read)
+
+instance Eq a => DecorationStyle ImageWindowSwitcherDecoration a where
+    describeDeco _ = "ImageWindowSwitcherDeco"
+
+    decorationCatchClicksHook (IWSD withButtons) mainw dFL dFR = if withButtons
+      then imageTitleBarButtonHandler mainw dFL dFR
+      else return False
+    decorationWhileDraggingHook _ ex ey (mainw, r) x y = handleTiledDraggingInProgress ex ey (mainw, r) x y
+    decorationAfterDraggingHook _ (mainw, _) decoWin =
+      do focus mainw
+         hasCrossed <- handleScreenCrossing mainw decoWin
+         unless hasCrossed $
+           do sendMessage $ DraggingStopped
+              performWindowSwitching mainw
+
+handleTiledDraggingInProgress ex ey (mainw, r) x y = do
+    let rect = Rectangle (x - (fi ex - rect_x r))
+                         (y - (fi ey - rect_y r))
+                         (rect_width  r)
+                         (rect_height r)
+    sendMessage $ DraggingWindow mainw rect
+
+performWindowSwitching :: Window -> X ()
+performWindowSwitching win =
+    withDisplay $ \d -> do
+       root <- asks theRoot
+       (_, _, selWin, _, _, _, _, _) <- io $ queryPointer d root
+       ws <- gets windowset
+       let allWindows = W.index ws
+       -- do a little double check to be sure
+       if (win `elem` allWindows) && (selWin `elem` allWindows)
+            then do
+                let allWindowsSwitched = map (switchEntries win selWin) allWindows
+                let (ls, t:rs) = break (win ==) allWindowsSwitched
+                let newStack = W.Stack t (reverse ls) rs
+                windows $ W.modify' $ \_ -> newStack
+            else return ()
+    where
+        switchEntries a b x
+            | x == a    = b
+            | x == b    = a
+            | otherwise = x
+
+------------------------------------------------------------------------
+
+newtype SimpleFloat a = SF Dimension deriving (Show, Read)
+instance LayoutClass SimpleFloat Window where
+    description _ = "Float"
+    doLayout (SF i) sc (W.Stack w l r) = do
+        wrs <- mapM (getSize i sc) (w : reverse l ++ r)
+        return (wrs, Nothing)
+
+-- arguement is vertical offset for bar
+getSize :: Dimension -> Rectangle -> Window -> X (Window,Rectangle)
+getSize i (Rectangle rx ry _ _) w = do
+  d  <- asks display
+  bw <- asks (borderWidth . config)
+  wa <- io $ getWindowAttributes d w
+  withDisplay $ \dpy ->
+    let -- deco = 45 - myBorderWidth
+        dw = fi (displayWidth  dpy (defaultScreen dpy))
+        dh = fi (displayHeight dpy (defaultScreen dpy))
+        wh = fi (wa_width  wa) + (bw * 2)
+        ht = fi (wa_height wa) + (bw * 2)
+        -- ht = fi (wa_height wa) + (bw * 2) + deco
+        nx = if rx == 0 then ((dw - (fi i)) - (fi wh)) `div` 2 else rx
+        ny = if ry == 0 then (dh - (fi ht)) `div` 2 else ry
+        -- ny = if ry == 0 then (dh - (fi ht)) `div` 2 else ry - (fi deco)
+        x  =  max nx $ fi $ wa_x wa
+        y  =  max ny $ fi $ wa_y wa
+    in return (w, Rectangle x y wh ht)
 
 ------------------------------------------------------------------------
 
@@ -452,21 +534,34 @@ gaps = spacingRaw False (Border 0 0 140 0)
 bsp =
   renamed [Replace "bsp"] $ emptyBSP
 
-cols =
-  multiCol [1] 1 0.01 (-0.5)
-
-rows =
-  Mirror (multiCol [2] 2 0.01 (-0.5))
-
 -- windowDeco = imageButtonDeco shrinkText defaultThemeWithImageButtons
+windowDeco = windowSwitcherDecorationWithImageButtons shrinkText defaultThemeWithImageButtons
 
 myLayout = screenCornerLayoutHook
   . gaps
   . smartBorders
   . refocusLastLayoutHook
-  -- . windowDeco
+  . windowDeco
   $ Mag.magnifiercz 1.618 (bsp)
-  -- $ Mag.magnifiercz 1.618 (rows)
+
+-- gaps = spacingRaw False (Border 0 0 140 0)
+--   True (Border 0 0 0 0) True
+
+-- windowDeco = windowSwitcherDecorationWithImageButtons
+--              shrinkText defaultThemeWithImageButtons
+-- floatingDeco = imageButtonDeco shrinkText defaultThemeWithImageButtons
+
+-- bsp =
+--   renamed [Replace "bsp"] $
+--   (windowDeco . draggingVisualizer . (maximizeWithPadding 0)
+--    . subLayout [] StateFull . gaps . smartBorders . refocusLastLayoutHook
+--   . windowDeco$ emptyBSP)
+
+-- myLayout = screenCornerLayoutHook
+--          . (WN.configurableNavigation WN.noNavigateBorders)
+--          . lessBorders OnlyScreenFloat
+--          . BW.boringWindows
+--          $ Mag.magnifiercz 1.618 (bsp)
 
 ------------------------------------------------------------------------
 
@@ -478,7 +573,7 @@ infix 0 -!>
 (-!>) :: (Monad m, Monoid a) => m Bool -> m a -> m a
 p -!> f = p >>= \b -> if b then return mempty else f
 
--- | @q =? x@. if the result of @q@ equals @x@, return 'False'.
+-- | @q =!? x@. if the result of @q@ equals @x@, return 'False'.
 (=!?) :: Eq a => C.Query a -> a -> C.Query Bool
 q =!? x = fmap (/= x) q
 
@@ -498,7 +593,7 @@ myManageHook = composeAll
   , title     =? "Save File"                                  --> doCenterFloat
   , title     =? "Open"                                       --> doCenterFloat
   , title     =? "Open Files"                                 --> doCenterFloat
-  , title     =? "emacs-run-launcher"                         --> doCenterFloat
+  , title     =? "vertico-frame"                              --> doSideFloat SC
   , resource  =? "nm-applet"                                  --> doCenterFloat
   , resource  =? "stalonetray"                                --> doIgnore
   , resource  =? "desktop_window"                             --> doIgnore

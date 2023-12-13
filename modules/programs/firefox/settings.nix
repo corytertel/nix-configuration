@@ -132,9 +132,9 @@ in {
   "general.autoScroll" = true;
   # Scrollbar
   "widget.non-native-theme.enabled" = false;
-  "widget.non-native-theme.scrollbar.size.override" = 30;
+  "widget.non-native-theme.scrollbar.size.override" = 10;
   "widget.non-native-theme.scrollbar.dark-themed" = false;
-  "widget.non-native-theme.scrollbar.style" = 0;
+  "widget.non-native-theme.scrollbar.style" = 4;
   # Backspace goes back a page
   "browser.backspace_action" = 0;
   # Extra

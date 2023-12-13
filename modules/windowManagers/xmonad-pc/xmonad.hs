@@ -77,8 +77,6 @@ myModMask = mod4Mask
 myWorkspaces = [ "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
 
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
-  -- mod-[1..9], Switch to workspace N
-  -- mod-control-[1..9], Move client to workspace N
   [((m .|. modm, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
         , (f, m) <- [(W.greedyView, 0), (W.shift, controlMask)]]
@@ -142,6 +140,7 @@ myAdditionalKeys =
     , ("<F6>", nextMatch History (resource =!? "scratchpad"))
     , ("<F7>", sendMessage Mag.Toggle)
     , ("<F8>", kill)
+    , ("M1-<F4>", kill)
     , ("<F9>" , nextMatchOrDo Forward (className =? "Emacs") (spawn "emacsclient -c"))
     , ("<F10>", nextMatchOrDo Forward (className =? "firefox" <||> className =? "Chromium-browser") (spawn "firefox"))
     , ("<F11>", nextMatchOrDo Forward (className =? "kitty") (spawn "kitty"))
@@ -150,10 +149,10 @@ myAdditionalKeys =
                 { gs_navigate = myGsnavigation }
                 [ ("US Qwerty",  spawn "setxkbmap us_qwerty")
                 , ("RU Qwerty",  spawn "setxkbmap ru_phonetic_qwerty")
-                , ("US Minimak", spawn "setxkbmap us_minimak")
-                , ("RU Minimak", spawn "setxkbmap ru_phonetic_minimak")
+                , ("US Dvorak", spawn "setxkbmap us_dvorak")
+                , ("RU Dvorak", spawn "setxkbmap ru_phonetic_dvorak")
                 ])
-    -- , ("<Scroll_Lock>", nextMatchOrDo Forward (className =? "discord" <||> className =? "telegram-desktop") (spawn "discord"))
+    , ("<Scroll_Lock>", nextMatchOrDo Forward (className =? "discord" <||> className =? "telegram-desktop") (spawn "discord"))
     , ("C-M-<Up>", planeMove (Lines 3) Circular ToUp)
     , ("C-M-<Down>", planeMove (Lines 3) Circular ToDown)
     , ("C-M-<Left>", planeMove (Lines 3) Circular ToLeft)

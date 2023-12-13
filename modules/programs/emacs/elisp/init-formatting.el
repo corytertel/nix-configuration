@@ -3,8 +3,9 @@
   :hook
   ((text-mode prog-mode) . ws-butler-mode)
   ;; (java-mode . (lambda () (ws-butler-mode -1)))
-  :custom
-  (ws-butler-keep-whitespace-before-point nil))
+  ;; :custom
+  ;; (ws-butler-keep-whitespace-before-point nil)
+  )
 
 ;; Redefine this function to rid of the annoying indentation messaging
 (defun indent-region-line-by-line (start end)

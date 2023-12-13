@@ -48,11 +48,6 @@
           languages = [ "eng" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_dvorak";
         };
-        us_minimak = {
-          description = "US layout with d, t, k, and e switched";
-          languages = [ "eng" ];
-          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_minimak";
-        };
         ru_phonetic_qwerty = {
           description = "Russian phonetic translation of the US qwerty layout";
           languages = [ "rus" ];
@@ -62,11 +57,6 @@
           description = "Russian phonetic translation of the US dvorak layout";
           languages = [ "rus" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_phonetic_dvorak";
-        };
-        ru_phonetic_minimak = {
-          description = "Russian phonetic translation of the US minimak layout";
-          languages = [ "rus" ];
-          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_phonetic_minimak";
         };
       };
       libinput.enable = true;
@@ -389,12 +379,13 @@
         qalculate-gtk
         thunderbird
         obs-studio
-        # peek
+        peek
         drawio
         zoom-us
         qbittorrent
         xarchiver
         xournalpp
+        teams-for-linux
 
         # command line utils
         mg

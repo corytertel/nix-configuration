@@ -109,7 +109,8 @@
 (use-package perfect-margin
   :custom
   (perfect-margin-visible-width 100)
-  (perfect-margin-ignore-regexps '())
+  ;; (perfect-margin-ignore-regexps '())
+  (perfect-margin-ignore-regexps '(" \\*Minibuf-[0-9]+\\*"))
   (perfect-margin-hide-fringes nil)
   :init
   ;; Set fringes before turning on perfect-margin
@@ -279,9 +280,17 @@
 ;; (add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-light t)))
 
 ;; Basic theme settings
+;; (set-face-attribute 'mode-line nil
+;;     		    :foreground "#141404"
+;; 		    :background "#c0daff"
+;; 		    :box '(:line-width 1 :color "#3647d9" :style nil)
+;; 		    :underline nil
+;; 		    :overline nil
+;; 		    :family "Liberation Serif"
+;; 		    :height 115)
 (set-face-attribute 'mode-line nil
     		    :foreground "#141404"
-		    :background "#c0daff"
+		    :background "#ffffff"
 		    :box '(:line-width 1 :color "#3647d9" :style nil)
 		    :underline nil
 		    :overline nil
