@@ -27,7 +27,7 @@ let
 
   # Completion
   + ''(add-to-list 'load-path "${(pkgs.callPackage ./hotfuzz-module.nix
-    { inherit pkgs; emacs = emacsBasePackage; })}")''
+    { inherit pkgs; emacs = config.programs.cory.emacs.package; })}")''
   + (builtins.readFile ./elisp/vertico-frame.el)
   + (builtins.readFile ./elisp/init-completion.el)
   + (builtins.readFile ./elisp/init-lsp.el)
@@ -70,17 +70,14 @@ let
   + (builtins.readFile ./elisp/app-launcher.el)
 
   # Repeat Maps (last)
-  + (builtins.readFile ./elisp/init-repeat-maps.el);
+  + (builtins.readFile ./elisp/init-repeat-maps.el)
+
+  + config.programs.cory.emacs.extraConfig;
 
   init = pkgs.runCommand "default.el" {} ''
     mkdir -p $out/share/emacs/site-lisp
     cp ${pkgs.writeText "default.el" initFile} $out/share/emacs/site-lisp/default.el
   '';
-
-  emacsBasePackage = pkgs.emacs-git.override {
-    withGTK3 = true;
-    withTreeSitter = true;
-  };
 
   emacsPackages = epkgs: with epkgs; [
     init
@@ -110,7 +107,7 @@ let
   emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
     config = initFile;
     alwaysEnsure = true;
-    package = emacsBasePackage;
+    package = config.programs.cory.emacs.package;
     extraEmacsPackages = emacsPackages;
     override = epkgs: epkgs // {
       macrursors = pkgs.callPackage ./macrursors.nix {};
@@ -122,6 +119,13 @@ in {
 
   options.programs.cory.emacs = {
     enable = mkEnableOption "Enables emacs";
+    package = mkOption {
+      type = types.pkg;
+      default = pkgs.emacs-git.override {
+        withGTK3 = true;
+        withTreeSitter = true;
+      };
+    };
     popup = mkOption {
       type = types.bool;
       default = false;
@@ -130,7 +134,7 @@ in {
       monospace = {
         name = mkOption {
           type = types.str;
-          default = "monospace";
+          default = config.theme.font.monospace.name;
         };
         size = mkOption {
           type = types.int;
@@ -140,13 +144,17 @@ in {
       variable = {
         name = mkOption {
           type = types.str;
-          default = "serif";
+          default = config.theme.font.serif.name;
         };
         size = mkOption {
           type = types.int;
           default = 100;
         };
       };
+    };
+    extraConfig = mkOption {
+      type = types.str;
+      default = "";
     };
   };
 

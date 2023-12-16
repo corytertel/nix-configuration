@@ -9,14 +9,8 @@
     enable = true;
     popup = true;
     fonts = {
-      monospace = {
-        name ="JuliaMono Nerd Font";
-        size = 100;
-      };
-      variable = {
-        name ="Liberation Serif";
-        size = 115;
-      };
+      monospace.size = 100;
+      variable.size = 115;
     };
   };
 

@@ -3,6 +3,7 @@
 {
   imports = [
     "${modulesPath}/profiles/minimal.nix"
+    ./network-drive.nix
     ../../profiles/wsl
   ];
 
@@ -87,16 +88,6 @@
     '';
   };
 
-  # #  to share windows fonts with wsl
-  # environment.variables."FONTCONFIG_PATH" = "/etc/fonts";
-  # environment.etc."fonts/local.conf".text = ''
-  #   <?xml version="1.0"?>
-  #   <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
-  #   <fontconfig>
-  #       <dir>/mnt/c/Windows/Fonts</dir>
-  #   </fontconfig>
-  # '';
-
   fonts = with config.theme.font; {
     enableDefaultPackages = true;
     fontDir.enable = true;
@@ -104,9 +95,6 @@
       serif.package
       sansSerif.package
       monospace.package
-      corefonts
-      vistafonts
-      whatsapp-emoji-font
     ];
     fontconfig = {
       # TODO figure out what sets this and remove it rather than use mkForce
@@ -119,7 +107,6 @@
         serif = [ "${serif.name}" ];
         sansSerif = [ "${sansSerif.name}" ];
         monospace = [ "${monospace.name}" ];
-        emoji = [ "Apple Color Emoji" ];
       };
     };
   };
@@ -169,19 +156,26 @@
         nil
 
         # python
+        jetbrains.pycharm-community
+        pipreqs
         (python311.withPackages (ps: with ps; [
           epc
           python-lsp-server
+          hy
           pygments
+          pip
+          python-dotenv
           flask
           flask-wtf
           flask-sqlalchemy
           flask_migrate
-          python-dotenv
+          psycopg2
+          pandas
         ]))
 
         # postgres
         postgresql
+        postgresql_jdbc
         dbeaver
 
         # utils
@@ -193,9 +187,9 @@
         imagemagick
       ];
 
-      stateVersion = "23.05";
+      stateVersion = "23.11";
     };
   };
 
-  system.stateVersion = "23.05";
+  system.stateVersion = "23.11";
 }
