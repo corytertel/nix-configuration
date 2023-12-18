@@ -120,7 +120,7 @@ in {
   options.programs.cory.emacs = {
     enable = mkEnableOption "Enables emacs";
     package = mkOption {
-      type = types.pkg;
+      type = types.package;
       default = pkgs.emacs-git.override {
         withGTK3 = true;
         withTreeSitter = true;

@@ -41,3 +41,5 @@
   (numpydoc-template-long nil)
   :bind (:map python-mode-map
          ("C-c C-n" . numpydoc-generate)))
+
+(use-package hy-mode)
