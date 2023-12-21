@@ -40,7 +40,8 @@
 ;; --- MISC ---
 ;;
 
-(setq ;; visible-bell nil
+(setq visible-bell nil
+      ring-bell-function #'ignore
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
 (setq-default left-margin-width 1

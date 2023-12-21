@@ -3,6 +3,7 @@
 {
   programs.cory.emacs = {
     enable = true;
+    package = pkgs.emacs-pgtk;
     popup = false;
     fonts = {
       monospace.size = 140;

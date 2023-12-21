@@ -173,6 +173,11 @@
           pandas
         ]))
 
+        # web
+        yarn
+        nodejs
+        nodePackages_latest.typescript-language-server
+
         # postgres
         postgresql
         postgresql_jdbc
@@ -185,6 +190,8 @@
         unzip
         nix-prefetch-github
         imagemagick
+
+        gnome.gnome-tweaks
       ];
 
       stateVersion = "23.11";
