@@ -65,13 +65,13 @@ together in sequence."
      previous-line                     "C-t" "t" "<up>"
      crux-move-beginning-of-line       "C-a" "a" "<home>"
      end-of-visual-line                "C-e" "e" "<end>"
-     smart-region                      "C-SPC" "SPC"
+     smart-region                      "C-SPC"
      cory/mark-line                    "C-M-SPC"
-     exchange-point-and-mark           "C-x C-x" "q"
+     exchange-point-and-mark           "C-x C-x"
      cory/scroll-down                  "C-p" "p"                     :exitonly
      cory/scroll-up                    "M-p"                         :exitonly
-     cory/beginning-of-workspace       "M-<" "<"                     :exitonly
-     cory/end-of-workspace             "M->" ">"                     :exitonly
+     cory/beginning-of-workspace       "M-<"                         :exitonly
+     cory/end-of-workspace             "M->"                         :exitonly
      cory/avy                          "C-j" "j")
 
     ("rectangle-nav"
@@ -82,7 +82,7 @@ together in sequence."
      rectangle-forward-char            "C-n" "n" "<right>"
      open-rectangle                    "C-o" "o"
      string-rectangle                  "C-b" "b"
-     rectangle-exchange-point-and-mark "C-x C-x" "q")
+     rectangle-exchange-point-and-mark "C-x C-x")
 
     ("defun-nav"
      beginning-of-defun                "C-M-a" "M-a" "a" "ESC M-a"
@@ -195,8 +195,8 @@ together in sequence."
 
     ("scroll-down"
      cory/scroll-down                  "C-p" "p" "<next>"
-     cory/beginning-of-workspace       "M-<" "<"
-     cory/end-of-workspace             "M->" ">"                     :exitonly
+     cory/beginning-of-workspace       "M-<"
+     cory/end-of-workspace             "M->"                         :exitonly
      cory/scroll-up                    "M-p" "<prior>"               :exitonly
      ;; same as navigation
      backward-char                     "C-d" "d" "<left>"            :exitonly
@@ -205,15 +205,15 @@ together in sequence."
      previous-line                     "C-t" "t" "<up>"              :exitonly
      crux-move-beginning-of-line       "C-a" "a" "<home>"            :exitonly
      end-of-visual-line                "C-e" "e" "<end>"             :exitonly
-     smart-region                      "C-SPC" "SPC"                 :exitonly
+     smart-region                      "C-SPC"                       :exitonly
      cory/mark-line                    "C-M-SPC"                     :exitonly
-     exchange-point-and-mark           "C-x C-x" "q"                 :exitonly
+     exchange-point-and-mark           "C-x C-x"                     :exitonly
      cory/avy                          "C-j" "j"                     :exitonly)
 
     ("scroll-up"
      cory/scroll-up                    "M-p" "p" "<prior>"
-     cory/end-of-workspace             "M->" ">"
-     cory/beginning-of-workspace       "M-<" "<"                     :exitonly
+     cory/end-of-workspace             "M->"
+     cory/beginning-of-workspace       "M-<"                         :exitonly
      cory/scroll-down                  "C-p" "<next>"                :exitonly
      ;; same as navigation
      backward-char                     "C-d" "d" "<left>"            :exitonly
@@ -222,26 +222,10 @@ together in sequence."
      previous-line                     "C-t" "t" "<up>"              :exitonly
      crux-move-beginning-of-line       "C-a" "a" "<home>"            :exitonly
      end-of-visual-line                "C-e" "e" "<end>"             :exitonly
-     smart-region                      "C-SPC" "SPC"                 :exitonly
+     smart-region                      "C-SPC"                       :exitonly
      cory/mark-line                    "C-M-SPC"                     :exitonly
-     exchange-point-and-mark           "C-x C-x" "q"                 :exitonly
+     exchange-point-and-mark           "C-x C-x"                     :exitonly
      cory/avy                          "C-j" "j"                     :exitonly)
-
-    ("scroll-otherwin"
-     scroll-other-window               "C-M-p" "p" "ESC M-p"
-     beginning-of-buffer-other-window  "M-<home>" "<"
-     end-of-buffer-other-window        "M-<end>" ">"                 :exitonly
-     scroll-other-window-down          "C-M-S-p" "M-p" "ESC M-P" "P" :exitonly)
-
-    ("scroll-otherwin-down"
-     scroll-other-window-down          "C-M-S-p" "M-p" "p" "ESC M-P" "P"
-     end-of-buffer-other-window        "M-<end>" ">"
-     beginning-of-buffer-other-window  "M-<home>" "<"                :exitonly
-     scroll-other-window               "C-M-p" "C-p" "ESC M-p"       :exitonly)
-
-    ("scroll-sideways"
-     scroll-left                       "C-x <" "<"
-     scroll-right                      "C-x >" ">")
 
     ("search-nav"
      isearch-repeat-forward            "C-f" "f" "C-M-f" "ESC M-f"
