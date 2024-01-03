@@ -3,7 +3,7 @@
 with pkgs;
 mkShell {
   name = "flakeEnv";
-  buildInputs = [ rnix-lsp ];
+  buildInputs = [ nil ];
   shellHook = ''
     alias nrb="nixos-rebuild build --flake ."
     alias nrt="sudo nixos-rebuild test --flake ."

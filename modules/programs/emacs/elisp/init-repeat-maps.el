@@ -65,8 +65,6 @@ together in sequence."
      previous-line                     "C-t" "t" "<up>"
      crux-move-beginning-of-line       "C-a" "a" "<home>"
      end-of-visual-line                "C-e" "e" "<end>"
-     smart-region                      "C-SPC"
-     cory/mark-line                    "C-M-SPC"
      exchange-point-and-mark           "C-x C-x"
      cory/scroll-down                  "C-p" "p"                     :exitonly
      cory/scroll-up                    "M-p"                         :exitonly
@@ -205,7 +203,6 @@ together in sequence."
      previous-line                     "C-t" "t" "<up>"              :exitonly
      crux-move-beginning-of-line       "C-a" "a" "<home>"            :exitonly
      end-of-visual-line                "C-e" "e" "<end>"             :exitonly
-     smart-region                      "C-SPC"                       :exitonly
      cory/mark-line                    "C-M-SPC"                     :exitonly
      exchange-point-and-mark           "C-x C-x"                     :exitonly
      cory/avy                          "C-j" "j"                     :exitonly)
@@ -222,7 +219,6 @@ together in sequence."
      previous-line                     "C-t" "t" "<up>"              :exitonly
      crux-move-beginning-of-line       "C-a" "a" "<home>"            :exitonly
      end-of-visual-line                "C-e" "e" "<end>"             :exitonly
-     smart-region                      "C-SPC"                       :exitonly
      cory/mark-line                    "C-M-SPC"                     :exitonly
      exchange-point-and-mark           "C-x C-x"                     :exitonly
      cory/avy                          "C-j" "j"                     :exitonly)
@@ -269,8 +265,17 @@ together in sequence."
      backward-word                     "M-d" "d" "C-<left>"
      forward-word                      "M-n" "n" "C-<right>")
 
-    ;; ("set-mark"
-    ;;  smart-region                      "C-SPC" "SPC")
+    ("set-mark"
+     backward-char                     "C-d" "d" "<left>"            :exitonly
+     forward-char                      "C-n" "n" "<right>"           :exitonly
+     next-line                         "<C-h>" "h" "<down>"          :exitonly
+     previous-line                     "C-t" "t" "<up>"              :exitonly
+     crux-move-beginning-of-line       "C-a" "a" "<home>"            :exitonly
+     end-of-visual-line                "C-e" "e" "<end>"             :exitonly
+     smart-region                      "C-SPC" "SPC"
+     cory/mark-line                    "C-M-SPC"
+     exchange-point-and-mark           "C-x C-x"                     :exitonly
+     cory/avy                          "C-j" "j"                     :exitonly)
 
     ;; ("mark-line"
     ;;  cory/mark-line                    "C-M-SPC" "SPC")

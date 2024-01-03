@@ -62,23 +62,15 @@
       experimental-features = nix-command flakes
     '';
     gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
+      automatic = false;
     };
     optimise = {
-      automatic = true;
-      dates = [ "weekly" ];
+      automatic = false;
     };
     settings = {
-      auto-optimise-store = true;
+      auto-optimise-store = false;
       trusted-users = [ "root" "cory" ];
     };
-  };
-
-  nixpkgs = {
-    config.allowUnfree = true;
-    system = "x86_64-linux";
   };
 
   system.activationScripts.binbash = {
@@ -190,8 +182,6 @@
         unzip
         nix-prefetch-github
         imagemagick
-
-        gnome.gnome-tweaks
       ];
 
       stateVersion = "23.11";

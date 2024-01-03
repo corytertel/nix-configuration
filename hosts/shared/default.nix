@@ -118,11 +118,6 @@
     };
   };
 
-  nixpkgs = {
-    config.allowUnfree = true;
-    system = "x86_64-linux";
-  };
-
   # TODO potentially split these up like in a normal system between sh and bash
   system.activationScripts.binbash = {
     deps = [ "binsh" ];
