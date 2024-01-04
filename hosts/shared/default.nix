@@ -286,6 +286,9 @@
       username = "cory";
       homeDirectory = "/home/cory";
 
+      # Make nix-shell work with nixpkgs from system flake
+      sessionVariables.NIX_PATH = "nixpkgs=${pkgs.outPath}";
+
       packages = let
         dyalogscript = import ./dyalogscript.nix {inherit pkgs;};
       in with pkgs; [

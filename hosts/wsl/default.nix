@@ -143,6 +143,9 @@
       username = "cory";
       homeDirectory = "/home/cory";
 
+      # Make nix-shell work with nixpkgs from system flake
+      sessionVariables.NIX_PATH = "nixpkgs=${pkgs.outPath}";
+
       packages = with pkgs; [
         # nix
         nil
