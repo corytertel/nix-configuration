@@ -17,6 +17,7 @@
   (web-mode-markup-indent-offset 2)
   (web-mode-css-indent-offset 2)
   (web-mode-code-indent-offset 2)
+  ;; (web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
 
   :init
   (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
@@ -133,19 +134,19 @@
 
   (defun cory/web-mode-html-hook ()
     (setq-local completion-at-point-functions '(cory/web-mode-html-capf t))
-    ;; (aggressive-indent-mode 1)
-    )
+    (aggressive-indent-mode 1))
 
   (defun cory/web-mode-css-hook ()
     (require 'css-mode)
     (setq-local completion-at-point-functions '(css-completion-at-point t))
-    ;; (aggressive-indent-mode 1)
-    )
+    (aggressive-indent-mode 1))
 
   (defun cory/web-mode-js-hook ()
-    ;; (aggressive-indent-mode 1)
+    (aggressive-indent-mode 1)
     (require 'eglot)
-    (cory/eglot))
+    (cory/eglot)
+    (when (equal web-mode-content-type "javascript")
+      (web-mode-set-content-type "jsx")))
 
   (add-hook 'web-mode-hook
 	    (lambda ()
