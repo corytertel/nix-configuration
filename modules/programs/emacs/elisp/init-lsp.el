@@ -25,10 +25,10 @@
     clojure-mode
     clojurescript-mode
     javascript-mode
-    js-mode
-    js-jsx-mode
-    js-ts-mode
-    typescript-ts-mode
+    ;; js-mode
+    ;; js-jsx-mode
+    ;; js-ts-mode
+    ;; typescript-ts-mode
     nix-mode)
    . cory/eglot)
   (eglot-managed-mode
@@ -59,6 +59,11 @@
 
   ;; Add nix lsp
   (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
+
+  ;; Add web-mode
+  (add-to-list 'eglot-server-programs
+	       '((web-mode)
+		 "typescript-language-server" "--stdio"))
 
   ;; Ignore logging for speed
   (fset #'jsonrpc--log-event #'ignore)

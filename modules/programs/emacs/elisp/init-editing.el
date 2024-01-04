@@ -389,8 +389,8 @@
     (catch 'break
       (dolist (chunk (split-string translated-key " "))
 	(when (or (string= chunk "")
-		 (not (string-match-p "^\\(?:[ACHMSs]-\\)*\\([^-]*\\|<.*>\\)$" chunk))
-		 (string-match-p "\\([ACHMSs]-\\)[^ ]*\\1" chunk))
+		  (not (string-match-p "^\\(?:[ACHMSs]-\\)*\\([^-]*\\|<.*>\\)$" chunk))
+		  (string-match-p "\\([ACHMSs]-\\)[^ ]*\\1" chunk))
           (throw 'break t)))))
 
   ;; (defun devil-helpful-key ()

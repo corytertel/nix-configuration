@@ -1,50 +1,4 @@
 
-(defun cory/open-current-file-in-firefox ()
-  "Opens the current file in Firefox."
-  (interactive)
-  (let ((file
-	 (if (not (file-remote-p buffer-file-name))
-	     buffer-file-name
-	   (let ((buf (current-buffer)))
-	     (write-file (concat "/tmp/" (replace-regexp-in-string "/" "!" buffer-file-name)))
-	     (async-shell-command (concat "firefox file://" buffer-file-name) nil nil)
-	     (switch-to-buffer buf))))))
-  (async-shell-command (concat "firefox file://" buffer-file-name) nil nil))
-
-(with-eval-after-load 'mhtml-mode
-  (define-key mhtml-mode-map (kbd "C-c C-o") #'cory/open-current-file-in-firefox))
-
-;; (defun cory/sgml-mark-tag ()
-;;   (interactive)
-;;   (call-interactively #'sgml-skip-tag-backward)
-;;   (call-interactively #'set-mark-command)
-;;   (call-interactively #'sgml-skip-tag-forward))
-
-;; ;; Automatically close html tags when you type '</'
-;; (setq sgml-quick-keys 'close)
-;; (with-eval-after-load 'sgml-mode
-;;   ;; remove annoying binds
-;;   (define-key sgml-mode-map (kbd "<") nil)
-;;   (define-key sgml-mode-map (kbd ">") nil)
-;;   (define-key sgml-mode-map (kbd "\"") nil)
-;;   (define-key sgml-mode-map (kbd "&") nil)
-;;   (define-key sgml-mode-map (kbd "'") nil)
-;;   (define-key sgml-mode-map (kbd "SPC") nil)
-;;   (define-key sgml-mode-map (kbd "C-c C-o") nil)
-;;   ;; Minimak binds
-;;   (define-key sgml-mode-map  (kbd "C-M-a") nil)
-;;   (define-key sgml-mode-map  (kbd "C-M-e") nil)
-;;   (define-key sgml-mode-map  (kbd "C-M-i") nil)
-;;   (define-key sgml-mode-map  (kbd "C-M-b") #'sgml-skip-tag-backward)
-;;   (define-key sgml-mode-map  (kbd "C-M-y") #'sgml-skip-tag-forward)
-;;   (define-key sgml-mode-map  (kbd "C-M-h") #'cory/sgml-mark-tag)
-;;   (define-key sgml-mode-map  (kbd "C-M-s") #'ispell-complete-word)
-;;   (define-key sgml-mode-map  (kbd "C-c C-b") nil)
-;;   (define-key sgml-mode-map  (kbd "C-c C-f") nil)
-;;   (define-key sgml-mode-map  (kbd "C-c C-j") #'sgml-skip-tag-backward)
-;;   (define-key html-mode-map (kbd "C-c C-j") #'sgml-skip-tag-backward)
-;;   (define-key sgml-mode-map  (kbd "C-c C-l") #'sgml-skip-tag-forward))
-
 (use-package web-mode
   :bind
   (:map web-mode-map
@@ -53,14 +7,6 @@
    ("C-M-e" . forward-paragraph)
    ("<" . cory/insert-angled-pair-or-wrap)
    (">" . cory/close-angled-pair)
-   ;; ("C-M-u" . web-mode-element-beginning)
-   ;; ("C-M-e" . web-mode-element-end)
-   ;; ("C-M-d" . web-mode-element-child)
-   ;; ("C-M-i" . web-mode-element-parent)
-   ;; ("C-M-l" . web-mode-element-next)
-   ;; ("C-M-j" . web-mode-element-previous)
-   ;; ("C-M-k" . web-mode-element-kill)
-   ;; ("C-M-t" . web-mode-element-transpose)
    ("M-i" . web-mode-element-select)
    ("C-c C-o" . cory/open-current-file-in-firefox))
 
@@ -84,6 +30,10 @@
   (add-to-list 'auto-mode-alist ' ("\\.css\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.less\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.scss\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.ts\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
 
   :config
   ;; (setq web-mode-engines-alist
@@ -101,7 +51,6 @@
   (defun cory/insert-angled-pair-or-wrap ()
     (interactive)
     (cond (mark-active (call-interactively #'web-mode-element-wrap))
-	  ((looking-at "<") (forward-char 1))
 	  (t (progn (insert ?<)
 		    (save-excursion
 		      (insert ?>))))))
@@ -193,21 +142,41 @@
     ;; (aggressive-indent-mode 1)
     )
 
+  (defun cory/web-mode-js-hook ()
+    ;; (aggressive-indent-mode 1)
+    (require 'eglot)
+    (cory/eglot))
+
   (add-hook 'web-mode-hook
 	    (lambda ()
 	      (cory/web-mode-hook)
 	      (cond
 	       ((and buffer-file-name
-		   (string-match ".*\.html" buffer-file-name))
+		   (string-match ".*\\.html" buffer-file-name))
 		(cory/web-mode-html-hook))
 	       ((and buffer-file-name
-		   (string-match ".*\.css" buffer-file-name))
+		   (string-match ".*\\.css" buffer-file-name))
 		(cory/web-mode-css-hook))
-	       (t nil)))))
+	       ((and buffer-file-name
+		   (string-match "\\(.*\\.js\\)\\|\\(.*\\.jsx\\)\\|\\(.*\\.ts\\)\\|\\(.*\\.tsx\\)" buffer-file-name))
+		(cory/web-mode-js-hook))
+	       (t nil))))
+
+  (defun cory/open-current-file-in-firefox ()
+    "Opens the current file in Firefox."
+    (interactive)
+    (let ((file
+	   (if (not (file-remote-p buffer-file-name))
+	       buffer-file-name
+	     (let ((buf (current-buffer)))
+	       (write-file (concat "/tmp/" (replace-regexp-in-string "/" "!" buffer-file-name)))
+	       (async-shell-command (concat "firefox file://" buffer-file-name) nil nil)
+	       (switch-to-buffer buf))))))
+    (async-shell-command (concat "firefox file://" buffer-file-name) nil nil)))
 
 ;; Typescript
-(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
+;; (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+;; (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
 
 ;; Javascript
 (setq js-indent-level 2)
