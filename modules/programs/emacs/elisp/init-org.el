@@ -29,7 +29,7 @@
    ("C-x C-e" . org-babel-execute-src-block)
    ;; TODO fix org dictionary completion
    ("C-M-s" . completion-at-point)
-   ("TAB" . completion-at-point)
+   ("TAB" . cory/indent-or-completion-at-point)
    ("C-<tab>" . org-cycle)
    ("C-'" . nil)
    ("C-j" . nil)
@@ -108,6 +108,9 @@
   ;; Searching
   (org-imenu-depth 8) ;; scan to depth 8 w/imenu
   (imenu-auto-rescan t) ;; make sure imenu refreshes
+
+  ;; Yankning
+  (org-yank-folded-subtrees nil)
 
   ;; Source block settings
   (org-src-fontify-natively t) ;; use lang-specific fontification
@@ -224,7 +227,19 @@
   (defun cory/org-insert-image ()
     (interactive)
     (insert (concat "[[" (read-file-name "Image: ") "]]"))
-    (org-display-inline-images)))
+    (org-display-inline-images))
+
+  ;; Completion
+  (defun cory/indent-or-completion-at-point ()
+    (interactive)
+    (if (string-match-p "\\`\\s-*$"
+			(buffer-substring-no-properties
+			 (save-excursion
+			   (beginning-of-line)
+			   (point))
+			 (point)))
+	(insert "	")
+      (completion-at-point))))
 
 ;; show markup at point -- this should be part of org!
 (use-package org-appear
