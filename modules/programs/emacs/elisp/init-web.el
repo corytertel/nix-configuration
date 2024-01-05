@@ -8,7 +8,8 @@
    ("<" . cory/insert-angled-pair-or-wrap)
    (">" . cory/close-angled-pair)
    ("M-i" . web-mode-element-select)
-   ("C-c C-o" . cory/open-current-file-in-firefox))
+   ("C-c C-o" . cory/open-current-file-in-firefox)
+   ("M-SPC" . cory/mark-word))
 
   :custom
   (web-mode-enable-css-colorization t)
@@ -153,13 +154,13 @@
 	      (cory/web-mode-hook)
 	      (cond
 	       ((and buffer-file-name
-		   (string-match ".*\\.html" buffer-file-name))
+		     (string-match ".*\\.html" buffer-file-name))
 		(cory/web-mode-html-hook))
 	       ((and buffer-file-name
-		   (string-match ".*\\.css" buffer-file-name))
+		     (string-match ".*\\.css" buffer-file-name))
 		(cory/web-mode-css-hook))
 	       ((and buffer-file-name
-		   (string-match "\\(.*\\.js\\)\\|\\(.*\\.jsx\\)\\|\\(.*\\.ts\\)\\|\\(.*\\.tsx\\)" buffer-file-name))
+		     (string-match "\\(.*\\.js\\)\\|\\(.*\\.jsx\\)\\|\\(.*\\.ts\\)\\|\\(.*\\.tsx\\)" buffer-file-name))
 		(cory/web-mode-js-hook))
 	       (t nil))))
 
