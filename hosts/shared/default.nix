@@ -385,7 +385,7 @@
         qalculate-gtk
         thunderbird
         obs-studio
-        peek
+        # peek
         drawio
         zoom-us
         qbittorrent

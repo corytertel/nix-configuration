@@ -4,8 +4,15 @@
   # Window Manager
   windowManagers.cory.xmonad-pc.enable = true;
 
-  # # Editor
-  programs.cory.emacs.enable = true;
+  # Editor
+  programs.cory.emacs = {
+    enable = true;
+    popup = true;
+    fonts = {
+      monospace.size = 100;
+      variable.size = 115;
+    };
+  };
 
   # Terminal
   programs.cory.kitty.enable = true;

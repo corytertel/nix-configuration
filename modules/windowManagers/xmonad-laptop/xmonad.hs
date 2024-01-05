@@ -265,7 +265,7 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
       where
         h = 0.50
         w = 0.9375
-        t = 0.0
+        t = 0.50
         l = 0.0
 
 ------------------------------------------------------------------------
