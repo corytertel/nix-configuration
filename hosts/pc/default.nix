@@ -44,10 +44,11 @@
       # disableWhileTyping = true;
 
       # Trackball
-      accelProfile = "flat";
-      accelSpeed = null;
-      # accelProfile = "adaptive";
+      # accelProfile = "flat";
+      # accelSpeed = null;
+      accelProfile = "adaptive";
       # accelSpeed = "0.5";
+      accelSpeed = "0.7";
       buttonMapping = "1 8 2 4 5 6 7 3 9";
       # buttonMapping = "1 2 8 4 5 6 7 3 9";
       disableWhileTyping = true;
@@ -55,7 +56,7 @@
       scrollButton = 3;
       # scrollButton = 2;
       scrollMethod = "button";
-      transformationMatrix = "5 0 0 0 5 0 0 0 1";
+      # transformationMatrix = "5 0 0 0 5 0 0 0 1";
     };
   };
 

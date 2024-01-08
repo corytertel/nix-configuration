@@ -44,21 +44,7 @@ together in sequence."
              map)))))
 
 (defvar repeaters-maps
-  '(("buffer-switch"
-     previous-buffer                   "C-x C-<left>" "C-x <left>" "C-<left>" "<left>" "d"
-     next-buffer                       "C-x C-<right>" "C-x <right>" "C-<right>" "<right>" "n")
-
-    ("calendar-nav"
-     calendar-forward-day              "C-n" "n"
-     calendar-backward-day             "C-d" "d"
-     calendar-forward-week             "<C-h>" "h"
-     calendar-backward-week            "C-t" "t"
-     calendar-forward-month            "M-}" "}" "]"
-     calendar-backward-month           "M-{" "{" "["
-     calendar-forward-year             "C-x ]"
-     calendar-backward-year            "C-x [")
-
-    ("navigation"
+  '(("navigation"
      backward-char                     "C-d" "d" "<left>"
      forward-char                      "C-n" "n" "<right>"
      next-line                         "<C-h>" "h" "<down>"
@@ -143,7 +129,7 @@ together in sequence."
      sp-kill-hybrid-sexp               "C-k" "k" "<deleteline>")
 
     ("kill-whole-line"
-     kill-whole-line                   "C-M-k" "k" "C-S-<backspace>" "<backspace>" "S-<delete>" "<delete>")
+     crux-kill-whole-line              "C-M-k" "k" "C-S-<backspace>" "<backspace>" "S-<delete>" "<delete>")
 
     ("sp-kill-whole-line"
      sp-kill-whole-line                "C-M-k" "k" "C-S-<backspace>" "<backspace>" "S-<delete>" "<delete>")
@@ -347,7 +333,13 @@ together in sequence."
      sp-forward-slurp-sexp             "C-)" ")")
 
     ("kill-this-buffer"
-     kill-this-buffer                  "C-<f4>" "<f4>" "C-x k" "k"))
+     kill-this-buffer                  "C-<f4>" "<f4>" "C-x k" "k")
+
+    ("join-line"
+     join-line                         "M-j" "j")
+
+    ("cory/join-next-line"
+     cory/join-next-line               "C-M-j" "j"))
 
   "List of lists containing repeater-map definitions.
 This must be in the form required by the

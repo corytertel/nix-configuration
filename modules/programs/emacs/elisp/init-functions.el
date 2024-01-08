@@ -258,3 +258,30 @@ Else, goto the end of the buffer."
 	(delete-region (mark) (point))
       (delete-region (point) (mark))))
   (yank arg))
+
+(defun cory/describe-symbol-at-point ()
+  (interactive)
+  (let* ((v-or-f (symbol-at-point))
+	 (found (if v-or-f (cl-some (lambda (x) (funcall (nth 1 x) v-or-f))
+				    describe-symbol-backends)))
+	 (v-or-f (if found v-or-f (function-called-at-point)))
+	 (found (or found v-or-f)))
+    (if found
+	(describe-symbol (symbol-name v-or-f))
+      (message "Error: symbol not found"))))
+
+;; Dictionary search dwim
+(defun dictionary-search-dwim (&optional arg)
+  "Search for definition of word at point. If region is active,
+search for contents of region instead. If called with a prefix
+argument, query for word to search."
+  (interactive "P")
+  (if arg
+      (dictionary-search nil)
+    (if (use-region-p)
+        (dictionary-search (buffer-substring-no-properties
+                            (region-beginning)
+                            (region-end)))
+      (if (thing-at-point 'word)
+          (dictionary-lookup-definition)
+        (dictionary-search-dwim '(4))))))

@@ -154,6 +154,8 @@
   (:map smartparens-mode-map
    ("C-(" . sp-backward-slurp-sexp)
    ("C-)" . sp-forward-slurp-sexp)
+   ("C-[" . sp-backward-slurp-sexp)
+   ("C-]" . sp-forward-slurp-sexp)
    ("C-{" . sp-backward-barf-sexp)
    ("C-}" . sp-forward-barf-sexp)
    ("C-M-<left>" . sp-backward-slurp-sexp)
