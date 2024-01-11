@@ -154,8 +154,8 @@
   (:map smartparens-mode-map
    ("C-(" . sp-backward-slurp-sexp)
    ("C-)" . sp-forward-slurp-sexp)
-   ("C-[" . sp-backward-slurp-sexp)
-   ("C-]" . sp-forward-slurp-sexp)
+   ;; ("C-[" . sp-backward-slurp-sexp)
+   ;; ("C-]" . sp-forward-slurp-sexp)
    ("C-{" . sp-backward-barf-sexp)
    ("C-}" . sp-forward-barf-sexp)
    ("C-M-<left>" . sp-backward-slurp-sexp)
@@ -383,7 +383,7 @@
   :bind
   (("C-h k" . devil-helpful-key)
    ;; ("C-h k" . devil-describe-key)
-   )
+   ("C-\\" . devil-quoted-insert))
   :hook
   (emacs-startup . global-devil-mode)
   :config
@@ -438,6 +438,25 @@ locally."
                (exit-function (set-transient-map virtual-keymap)))
           (define-key virtual-keymap key binding)
           (helpful-key key)
+          (funcall exit-function)))))
+
+  (defun devil-quoted-insert ()
+    "Describe a Devil key sequence with helpful."
+    (interactive)
+    (devil--log "Activated with %s" (key-description (this-command-keys)))
+    (let* ((result (devil--read-key devil-describe-prompt (vector)))
+           (key (devil--aget 'key result))
+           (translated-key (devil--aget 'translated-key result))
+           (binding (devil--aget 'binding result)))
+      (devil--log "Read key: %s => %s => %s => %s"
+                  key (key-description key) translated-key binding)
+      (if translated-key
+          (insert (kbd translated-key))
+  	;; Create a transient keymap to describe special key sequence.
+  	(let* ((virtual-keymap (make-sparse-keymap))
+               (exit-function (set-transient-map virtual-keymap)))
+          (define-key virtual-keymap key binding)
+          (insert key)
           (funcall exit-function)))))
 
   :custom
