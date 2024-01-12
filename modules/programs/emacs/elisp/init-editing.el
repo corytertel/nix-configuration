@@ -381,8 +381,9 @@
 ;; Devil mode
 (use-package devil
   :bind
-  (;; ("C-h k" . devil-helpful-key)
-   ("C-h k" . devil-describe-key))
+  (("C-h k" . devil-helpful-key)
+   ;; ("C-h k" . devil-describe-key)
+   )
   :hook
   (emacs-startup . global-devil-mode)
   :config
@@ -391,28 +392,53 @@
     (catch 'break
       (dolist (chunk (split-string translated-key " "))
 	(when (or (string= chunk "")
-		  (not (string-match-p "^\\(?:[ACHMSs]-\\)*\\([^-]*\\|<.*>\\)$" chunk))
-		  (string-match-p "\\([ACHMSs]-\\)[^ ]*\\1" chunk))
+		 (not (string-match-p "^\\(?:[ACHMSs]-\\)*\\([^-]*\\|<.*>\\)$" chunk))
+		 (string-match-p "\\([ACHMSs]-\\)[^ ]*\\1" chunk))
           (throw 'break t)))))
 
-  ;; (defun devil-helpful-key ()
-  ;;   "Describe a Devil key sequence with helpful."
-  ;;   (interactive)
-  ;;   (devil--log "Activated with %s" (key-description (this-command-keys)))
-  ;;   (let* ((result (devil--read-key devil-describe-prompt (vector)))
-  ;;          (key (devil--aget 'key result))
-  ;;          (translated-key (devil--aget 'translated-key result))
-  ;;          (binding (devil--aget 'binding result)))
-  ;;     (devil--log "Read key: %s => %s => %s => %s"
-  ;;                 key (key-description key) translated-key binding)
-  ;;     (if translated-key
-  ;;         (helpful-key (kbd translated-key))
-  ;; 	;; Create a transient keymap to describe special key sequence.
-  ;; 	(let* ((virtual-keymap (make-sparse-keymap))
-  ;;              (exit-function (set-transient-map virtual-keymap)))
-  ;;         (define-key virtual-keymap key binding)
-  ;;         (helpful-key key)
-  ;;         (funcall exit-function)))))
+  (defcustom devil-global-sets-buffer-default nil
+    "Non-nil iff `global-devil-mode' modifies new buffer defaults.
+When non-nil and `global-devil-mode' is enabled, `devil-mode'
+will be enabled in all new buffers without relying on the
+standard global minor-mode hooks.
+While this solves issues with `devil-mode' not being active in
+buffers which have not called the hooks where a minor-mode could
+be applied, the decision to bypass these hooks is likely to have
+been intentional.  It is not recommended to enable this option
+unless you are absolutely sure of the consequences.
+To work around the most common issue, where `global-devil-mode'
+is enabled during start-up but `devil-mode' is not enabled in the
+default Emacs startup screen, a safer solution is to advise the
+function which creates the startup screen to enable the mode
+locally."
+    :type 'boolean)
+
+  (define-globalized-minor-mode
+    global-devil-mode devil-mode devil--on
+    (if global-devil-mode (devil--add-extra-keys) (devil--remove-extra-keys))
+    (when devil-global-sets-buffer-default
+      (setq-default devil-mode global-devil-mode)))
+
+  (setq devil-global-sets-buffer-default t)
+
+  (defun devil-helpful-key ()
+    "Describe a Devil key sequence with helpful."
+    (interactive)
+    (devil--log "Activated with %s" (key-description (this-command-keys)))
+    (let* ((result (devil--read-key devil-describe-prompt (vector)))
+           (key (devil--aget 'key result))
+           (translated-key (devil--aget 'translated-key result))
+           (binding (devil--aget 'binding result)))
+      (devil--log "Read key: %s => %s => %s => %s"
+                  key (key-description key) translated-key binding)
+      (if translated-key
+          (helpful-key (kbd translated-key))
+  	;; Create a transient keymap to describe special key sequence.
+  	(let* ((virtual-keymap (make-sparse-keymap))
+               (exit-function (set-transient-map virtual-keymap)))
+          (define-key virtual-keymap key binding)
+          (helpful-key key)
+          (funcall exit-function)))))
 
   :custom
   (devil-key ".")
@@ -437,5 +463,6 @@
 	 (cons "%k RET" (devil-key-executor "%k RET"))
 	 (cons "%k \"" (devil-key-executor "%k \""))
 	 (cons "%k <return>" (devil-key-executor "%k <return>"))
-	 (cons "%k i %k k" #'devil-describe-key)
+	 ;; (cons "%k i %k k" #'devil-describe-key)
+	 (cons "%k i %k k" #'devil-helpful-key)
 	 (cons "%k i %k l" #'devil-toggle-logging))))
