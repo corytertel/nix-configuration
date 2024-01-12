@@ -160,12 +160,12 @@
           pygments
           pip
           python-dotenv
-          flask
-          flask-wtf
-          flask-sqlalchemy
-          flask_migrate
-          psycopg2
-          pandas
+          # flask
+          # flask-wtf
+          # flask-sqlalchemy
+          # flask_migrate
+          # psycopg2
+          # pandas
         ]))
 
         # web
