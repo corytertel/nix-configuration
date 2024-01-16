@@ -316,13 +316,13 @@
         # irony-server
 
         # clojure
-        clisp
+        # clisp
         clojure
-        clojure-lsp
-        leiningen
-        # joker
-        clj-kondo
-        babashka
+        # clojure-lsp
+        # leiningen
+        # # joker
+        # clj-kondo
+        # babashka
 
         # common lisp
         clisp
@@ -340,6 +340,7 @@
 
         # web
         nodejs
+        yarn
         nodePackages_latest.typescript-language-server
 
         # java
