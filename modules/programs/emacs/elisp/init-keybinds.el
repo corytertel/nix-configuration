@@ -18,8 +18,8 @@
 
 (define-key input-decode-map [?\C-q] [?\C-x])
 (define-key input-decode-map [?\C-x] [?\C-q])
-(define-key input-decode-map [?\C-w] [?\C-c])
-(define-key input-decode-map [?\C-c] [?\C-w])
+(define-key input-decode-map [?\C-j] [?\C-c])
+(define-key input-decode-map [?\C-c] [?\C-j])
 (define-key input-decode-map [?\C-i] [?\C-h])
 (define-key input-decode-map [?\C-h] [C-h])
 
@@ -48,7 +48,7 @@
  ("<undo>" . undo-only)
  ("<redo>" . undo-redo)
  ("C-q" . kill-region)
- ("C-w" . kill-ring-save)
+ ("C-j" . kill-ring-save)
  ("C-v" . yank)
  ("C-a" . move-beginning-of-line)
  ("C-p" . scroll-up-command)
@@ -91,7 +91,7 @@
  ("C-M-b" . transpose-sexps)
  ("C-x C-t" . nil)
  ("C-x C-b" . transpose-lines)
- ("C-j" . nil)
+ ("C-w" . nil)
  ("C-y" . delete-char)
  ("M-y" . kill-word)
  ("C-M-y" . down-list)
@@ -296,7 +296,9 @@
  ("C-M-SPC" . cory/mark-line)
  ("C-M-<return>" . open-line)
  ("C-<f4>" . kill-this-buffer)
- ("<deletechar>" . delete-char))
+ ("<deletechar>" . delete-char)
+ ("C-x c" . set-goal-column)
+ ("C-x C-n" . make-frame-command))
 
 ;; Scroll Keybinds
 (global-set-key (kbd "C-<mouse-4>") #'ignore)

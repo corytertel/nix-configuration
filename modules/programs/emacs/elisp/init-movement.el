@@ -3,9 +3,9 @@
   :ensure t
   :after devil
   :bind
-  (("C-j" . cory/avy)
+  (("C-w" . cory/avy)
    :map isearch-mode-map
-   ("C-j" . avy-isearch))
+   ("C-w" . avy-isearch))
 
   :custom
   (avy-keys '(?a ?o ?e ?u ?d ?h ?t ?n ?s ?, ?p ?r))

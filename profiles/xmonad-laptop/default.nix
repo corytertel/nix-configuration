@@ -9,7 +9,12 @@
     enable = true;
     popup = true;
     fonts = {
-      monospace.size = 100;
+      # monospace.size = 100;
+      monospace = {
+        package = pkgs.librecode;
+        name = "Librecode";
+        size = 115;
+      };
       variable.size = 115;
     };
   };
@@ -101,6 +106,9 @@
         package = julia-mono-nerdfont;
         name = "JuliaMono Nerd Font";
         size = 10;
+        # package = librecode;
+        # name = "Librecode";
+        # size = 12;
       };
     };
     color = {

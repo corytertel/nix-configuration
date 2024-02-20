@@ -167,7 +167,7 @@ With prefix argument, ask for the lookup symbol (with completion)."
     (unless (geiser-doc--manual-available-p)
       (error "No manual available"))
     (let ((symbol (or (and (not arg) (geiser--symbol-at-point))
-                     (geiser-completion--read-symbol "Symbol: ")))
+                      (geiser-completion--read-symbol "Symbol: ")))
 	  (current (buffer-name (current-buffer))))
       (eww (concat "http://api.call-cc.org/5/cdoc/?q="
 		   (symbol-name symbol)
@@ -193,7 +193,9 @@ With prefix argument, ask for the lookup symbol (with completion)."
 
   ;; Geiser REPL binds
   (with-eval-after-load 'geiser-repl
-    (define-key geiser-repl-mode-map (kbd "M-i") #'cory/mark-list)))
+    (define-key geiser-repl-mode-map (kbd "M-i") #'cory/mark-list)
+    (define-key geiser-repl-mode-map (kbd "C-j") nil)
+    (define-key geiser-repl-mode-map (kbd "C-d") nil)))
 
 (use-package geiser-chicken
   :after geiser)

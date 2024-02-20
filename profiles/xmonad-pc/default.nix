@@ -9,7 +9,12 @@
     enable = true;
     popup = true;
     fonts = {
-      monospace.size = 100;
+      # monospace.size = 100;
+      monospace = {
+        package = pkgs.librecode;
+        name = "Librecode";
+        size = 115;
+      };
       variable.size = 115;
     };
   };

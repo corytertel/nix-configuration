@@ -132,6 +132,10 @@ in {
     };
     fonts = {
       monospace = {
+        package = mkOption {
+          type = types.package;
+          default = config.theme.font.monospace.package;
+        };
         name = mkOption {
           type = types.str;
           default = config.theme.font.monospace.name;
@@ -142,6 +146,10 @@ in {
         };
       };
       variable = {
+        package = mkOption {
+          type = types.package;
+          default = config.theme.font.serif.package;
+        };
         name = mkOption {
           type = types.str;
           default = config.theme.font.serif.name;
@@ -159,6 +167,11 @@ in {
   };
 
   config = mkIf cfg.enable {
+
+    fonts.packages = [
+      config.programs.cory.emacs.fonts.monospace.package
+      config.programs.cory.emacs.fonts.variable.package
+    ];
 
     environment.variables = {
       ALTERNATE_EDITOR = "emacs -nw";

@@ -56,7 +56,7 @@ together in sequence."
      cory/scroll-up                    "M-p"                         :exitonly
      cory/beginning-of-workspace       "M-<"                         :exitonly
      cory/end-of-workspace             "M->"                         :exitonly
-     cory/avy                          "C-j" "j")
+     cory/avy                          "C-w" "w")
 
     ("rectangle-nav"
      rectangle-mark-mode               "C-x SPC"
@@ -103,8 +103,7 @@ together in sequence."
 
     ("mid-top-bottom-move"
      recenter-top-bottom               "C-l" "l"
-     move-to-window-line-top-bottom    "M-r" "r"
-     back-to-indentation               "C-j" "j"                     :exitonly)
+     move-to-window-line-top-bottom    "M-r" "r")
 
     ("fix-case"
      upcase-word                       "M-u" "u"
@@ -191,7 +190,7 @@ together in sequence."
      end-of-visual-line                "C-e" "e" "<end>"             :exitonly
      cory/mark-line                    "C-M-SPC"                     :exitonly
      exchange-point-and-mark           "C-x C-x"                     :exitonly
-     cory/avy                          "C-j" "j"                     :exitonly)
+     cory/avy                          "C-w" "w"                     :exitonly)
 
     ("scroll-up"
      cory/scroll-up                    "M-p" "p" "<prior>"
@@ -207,7 +206,7 @@ together in sequence."
      end-of-visual-line                "C-e" "e" "<end>"             :exitonly
      cory/mark-line                    "C-M-SPC"                     :exitonly
      exchange-point-and-mark           "C-x C-x"                     :exitonly
-     cory/avy                          "C-j" "j"                     :exitonly)
+     cory/avy                          "C-w" "w"                     :exitonly)
 
     ("search-nav"
      isearch-repeat-forward            "C-f" "f" "C-M-f" "ESC M-f"
@@ -261,7 +260,7 @@ together in sequence."
      smart-region                      "C-SPC" "SPC"
      cory/mark-line                    "C-M-SPC"
      exchange-point-and-mark           "C-x C-x"                     :exitonly
-     cory/avy                          "C-j" "j"                     :exitonly)
+     cory/avy                          "C-w" "w"                     :exitonly)
 
     ;; ("mark-line"
     ;;  cory/mark-line                    "C-M-SPC" "SPC")

@@ -32,6 +32,66 @@
 (use-package cape-yasnippet)
 
 ;; Boilerplate code files
+(require 'autoinsert)
+
+(defun auto-insert ()
+  "Insert default contents into new files if variable `auto-insert' is non-nil.
+Matches the visited file name against the elements of `auto-insert-alist'."
+  (interactive)
+  (and (not buffer-read-only)
+     (or (eq this-command 'auto-insert)
+	(and auto-insert
+	   (bobp) (eobp)))
+     (let* ((case-fold-search nil)
+            (desc nil)
+            ;; Find first matching alist entry.
+            (action
+             (seq-some
+              (pcase-lambda (`(,cond . ,action))
+                (if (atom cond)
+                    (setq desc cond)
+                  (setq desc (cdr cond)
+                        cond (car cond)))
+                (when (if (symbolp cond)
+                          (derived-mode-p cond)
+                        (and buffer-file-name
+                           (string-match cond buffer-file-name)))
+                  action))
+              auto-insert-alist)))
+       (goto-char 1)
+       ;; Now, if we found something, do it
+       (and action
+	  (or (not (stringp action))
+             (file-readable-p (expand-file-name
+                               action auto-insert-directory)))
+	  (or (not auto-insert-query)
+             (if (eq auto-insert-query 'function)
+                 (eq this-command 'auto-insert)))
+	  (mapc
+	   (lambda (action)
+	     (if (stringp action)
+		 (if (file-readable-p
+		      (setq action (expand-file-name
+                                    action auto-insert-directory)))
+		     (insert-file-contents action))
+	       (save-window-excursion
+		 ;; make buffer visible before skeleton or function
+		 ;; which might ask the user for something
+		 (switch-to-buffer (current-buffer))
+		 (if (and (consp action)
+			(not (functionp action)))
+		     (skeleton-insert action)
+		   (funcall action)))))
+	   (if (vectorp action)
+	       action
+	     (vector action))))
+       (and (buffer-modified-p)
+	  (not (eq this-command 'auto-insert))
+	  (set-buffer-modified-p (eq auto-insert t)))))
+  ;; Return nil so that it could be used in
+  ;; `find-file-not-found-functions', though that's probably inadvisable.
+  nil)
+
 (auto-insert-mode t)
 
 (define-auto-insert "\\.org\\'"

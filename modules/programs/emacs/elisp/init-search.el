@@ -77,6 +77,13 @@
       (call-interactively #'kmacro-call-macro)
       (isearch-resume string regexp word forward message case-fold))))
 
+(defun cory/isearch-printing-space ()
+  (interactive)
+  (if isearch-regexp
+      (progn (isearch-printing-char ?. 1)
+	     (isearch-printing-char ?* 1))
+    (isearch-printing-char ?  1)))
+
 (global-set-key [remap isearch-forward] #'cory/isearch-forward-regex-dwim)
 (global-set-key [remap isearch-backward] #'cory/isearch-backward-regex-dwim)
 (global-set-key [remap isearch-forward-regexp] #'cory/isearch-forward-dwim)
@@ -84,11 +91,7 @@
 (define-key isearch-mode-map [remap kmacro-start-macro-or-insert-counter]
   #'cory/isearch-start-macro-at-point)
 (define-key isearch-mode-map [remap kmacro-end-or-call-macro] #'cory/isearch-call-macro-at-point)
-(define-key isearch-mode-map (kbd "SPC")
-  (lambda () (interactive) (if isearch-regexp
-			  (progn (isearch-printing-char ?. 1)
-				 (isearch-printing-char ?* 1))
-			(isearch-printing-char ?  1))))
+(define-key isearch-mode-map (kbd "SPC") #'cory/isearch-printing-space)
 
 (use-package symbol-overlay
   :bind

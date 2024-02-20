@@ -441,7 +441,7 @@ locally."
           (funcall exit-function)))))
 
   (defun devil-quoted-insert ()
-    "Describe a Devil key sequence with helpful."
+    "Insert a Devil key sequence."
     (interactive)
     (devil--log "Activated with %s" (key-description (this-command-keys)))
     (let* ((result (devil--read-key devil-describe-prompt (vector)))
@@ -459,25 +459,65 @@ locally."
           (insert key)
           (funcall exit-function)))))
 
+  ;; Fix inability to type . and , in isearch
+  (define-key isearch-mode-map (kbd ",") #'isearch-printing-char)
+
+  ;; TODO find cleaner solution that doesn't require repeating oneself
+  (add-hook 'isearch-mode-hook
+	    (lambda ()
+	      (setq-local devil-special-keys
+			  (list (cons "%k %k" (lambda () (interactive) (isearch-printing-char ?.)))
+				(cons "%k SPC"
+				      (lambda () (interactive)
+					(if isearch-regexp
+					    (progn (isearch-printing-char ?\\ 1)
+						   (isearch-printing-char ?. 1)
+						   (isearch-printing-char ?. 1)
+						   (isearch-printing-char ?* 1))
+					  (isearch-printing-char ?. 1)
+					  (isearch-printing-char ?  1))))
+				(cons "%k SPC" (devil-key-executor "%k SPC"))
+				(cons "%k RET" (devil-key-executor "%k RET"))
+				(cons "%k \"" (devil-key-executor "%k \""))
+				(cons "%k <return>" (devil-key-executor "%k <return>"))
+				;; (cons "%k i %k k" #'devil-describe-key)
+				(cons "%k i %k k" #'devil-helpful-key)
+				(cons "%k i %k l" #'devil-toggle-logging)))))
+
+  ;; TODO find cleaner solution that doesn't require repeating oneself
+  (add-hook 'isearch-mode-end-hook
+	    (lambda ()
+	      (setq-local devil-special-keys
+			  (list (cons "%k %k" (devil-key-executor "%k"))
+				(cons "%k SPC" (devil-key-executor "%k SPC"))
+				(cons "%k SPC" (devil-key-executor "%k SPC"))
+				(cons "%k RET" (devil-key-executor "%k RET"))
+				(cons "%k \"" (devil-key-executor "%k \""))
+				(cons "%k <return>" (devil-key-executor "%k <return>"))
+				;; (cons "%k i %k k" #'devil-describe-key)
+				(cons "%k i %k k" #'devil-helpful-key)
+				(cons "%k i %k l" #'devil-toggle-logging)))))
+
   :custom
   (devil-key ".")
   (devil-repeatable-keys nil)
   (devil-translations
    (list (cons "%k , ," "C-M-")
-         (cons "%k , %k" "M-.")
-         (cons "%k , '" "M-")
-         (cons "%k ," "M-")
-         (cons "%k %k" "%k")
-         (cons "%k '" "C-")
+	 (cons "%k , %k" "M-.")
+	 (cons "%k , '" "M-")
+	 (cons "%k ," "M-")
+	 (cons "%k %k" "%k")
+	 (cons "%k '" "C-")
 	 (cons "%k x" "C-q")
 	 (cons "%k q" "C-x")
-	 (cons "%k c" "C-w")
-	 (cons "%k w" "C-c")
+	 (cons "%k c" "C-j")
+	 (cons "%k j" "C-c")
 	 (cons "%k h" "<C-h>")
 	 (cons "%k i" "C-h")
-         (cons "%k"  "C-")))
+	 (cons "%k"  "C-")))
   (devil-special-keys
    (list (cons "%k %k" (devil-key-executor "%k"))
+	 (cons "%k SPC" (devil-key-executor "%k SPC"))
 	 (cons "%k SPC" (devil-key-executor "%k SPC"))
 	 (cons "%k RET" (devil-key-executor "%k RET"))
 	 (cons "%k \"" (devil-key-executor "%k \""))
