@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: importReactWithPureComponentAndPropTypes
+# key: imrpcp
+# --
+import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types'
+

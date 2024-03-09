@@ -1,0 +1,21 @@
+# -*- mode: snippet -*-
+# name: typescriptReactClassExportComponent
+# key: tsrce
+# --
+import React, { Component } from 'react'
+
+type Props = {}
+
+type State = {}
+
+class ${1:${TM_FILENAME_BASE}} extends Component<Props, State> {
+  state = {}
+
+  render() {
+    return (
+      <div>${1:first}</div>
+    )
+  }
+}
+
+export default ${1:${TM_FILENAME_BASE}}

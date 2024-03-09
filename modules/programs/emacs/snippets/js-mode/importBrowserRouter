@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: importBrowserRouter
+# key: imbr
+# --
+import { BrowserRouter as Router } from 'react-router-dom'

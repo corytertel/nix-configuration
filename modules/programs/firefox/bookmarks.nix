@@ -6,7 +6,7 @@
     url = "https://search.nixos.org/packages";
   };
   "home-manager" = {
-    url = "https://nix-community.github.io/home-manager/options.html";
+    url = "https://nix-community.github.io/home-manager/options.xhtml";
     keyword = "home-manager";
   };
   "nix-configuration" = {
@@ -50,5 +50,9 @@
   "codeforces" = {
     url = "https://codeforces.com/problemset";
     keyword = "codeforces";
+  };
+  "desmos" = {
+    url = "https://www.desmos.com/calculator";
+    keyword = "desmos";
   };
 }

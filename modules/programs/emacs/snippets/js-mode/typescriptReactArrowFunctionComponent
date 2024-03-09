@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: typescriptReactArrowFunctionComponent
+# key: tsrafc
+# --
+import React from 'react'
+
+type Props = {}
+
+const ${1:${TM_FILENAME_BASE}} = (props: Props) => {
+  return (
+    <div>${1:first}</div>
+  )
+}

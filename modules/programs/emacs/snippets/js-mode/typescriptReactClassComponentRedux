@@ -1,0 +1,26 @@
+# -*- mode: snippet -*-
+# name: typescriptReactClassComponentRedux
+# key: tsrcredux
+# --
+import { connect } from 'react-redux'
+import React, { Component } from 'react'
+
+type Props = {}
+
+type State = {}
+
+export class ${1:${TM_FILENAME_BASE}} extends Component<Props, State> {
+  state = {}
+
+  render() {
+    return (
+      <div>${1:first}</div>
+    )
+  }
+}
+
+const mapStateToProps = (state) => ({})
+
+const mapDispatchToProps = {}
+
+export default connect(mapStateToProps, mapDispatchToProps)(${1:${TM_FILENAME_BASE}})

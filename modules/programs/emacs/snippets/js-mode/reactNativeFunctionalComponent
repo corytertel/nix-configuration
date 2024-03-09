@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: reactNativeFunctionalComponent
+# key: rnf
+# --
+import { View, Text } from 'react-native'
+import React from 'react'
+
+export default function ${1:${TM_FILENAME_BASE}}() {
+  return (
+    <View>
+      <Text>${1:first}</Text>
+    </View>
+  )
+}

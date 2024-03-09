@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: exportType
+# key: exptp
+# --
+export type ${1:first} = {${2:second}}

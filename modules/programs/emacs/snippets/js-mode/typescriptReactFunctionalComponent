@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: typescriptReactFunctionalComponent
+# key: tsrfc
+# --
+import React from 'react'
+
+type Props = {}
+
+export default function ${1:${TM_FILENAME_BASE}}({}: Props) {
+  return (
+    <div>${1:first}</div>
+  )
+}

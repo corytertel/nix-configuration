@@ -2,4 +2,4 @@
 # name: propTypeEnum
 # key: pte
 # --
-PropTypes.oneOf(['$0']),
+PropTypes.oneOf(['$0'])

@@ -2,4 +2,4 @@
 # name: propTypeArrayOf
 # key: ptao
 # --
-PropTypes.arrayOf($0),
+PropTypes.arrayOf($0)

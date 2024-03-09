@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: importRouterSwitch
+# key: imbrs
+# --
+import { Switch } from 'react-router-dom'

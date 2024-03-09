@@ -2,21 +2,16 @@
 # name: reactClassComponentPropTypes
 # key: rccp
 # --
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 
-class ${1:`(file-name-sans-extension (buffer-name))`} extends Component {
-    render() {
-        return (
-            <div>
-                $0
-            </div>
-        );
-    }
+export default class ${1:${TM_FILENAME_BASE}} extends Component {
+  static propTypes = {${2:second}: ${3:third}}
+
+  render() {
+    return (
+      <div>${1:first}</div>
+    )
+  }
 }
 
-${1:`(file-name-sans-extension (buffer-name))`}.propTypes = {
-
-};
-
-export default ${1:`(file-name-sans-extension (buffer-name))`};

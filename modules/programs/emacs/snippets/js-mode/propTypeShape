@@ -3,5 +3,5 @@
 # key: ptsh
 # --
 PropTypes.shape({
-    $0
-}),
+  $0
+})

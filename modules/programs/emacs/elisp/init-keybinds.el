@@ -108,8 +108,6 @@
  ("M-p" . nil)
  ("M-h" . next-history-element)
  ("M-t" . previous-history-element)
- ("C-<up>" . previous-history-element)
- ("C-<down>" . next-history-element)
  ("M-s" . nil)
  ("M-f" . next-matching-history-element))
 
@@ -120,9 +118,7 @@
  ("M-n" . nil)
  ("M-v" . nil)
  ("M-t" . previous-history-element)
- ("C-<up>" . previous-history-element)
  ("M-h" . next-history-element)
- ("C-<down>" . next-history-element)
  ("M-s" . nil)
  ("M-f" . next-matching-history-element))
 
@@ -163,9 +159,7 @@
  ("M-p" . nil)
  ("M-n" . nil)
  ("M-t" . isearch-ring-retreat)
- ("C-<up>" . isearch-ring-retreat)
  ("M-h" . isearch-ring-advance)
- ("C-<down>" . isearch-ring-advance)
  ("M-v" . isearch-yank-pop-only)
  ("M-s '" . nil)
  ("M-s C-e" . nil)
@@ -234,9 +228,9 @@
  ("n" . nil)
  ("p" . nil)
  ("M-h" . next-error)
- ("C-<down>" . next-error)
  ("M-t" . previous-error)
- ("C-<up>" . previous-error))
+ ("h" . next-error)
+ ("t" . previous-error))
 
 ;; c binds
 (with-eval-after-load 'cc-mode

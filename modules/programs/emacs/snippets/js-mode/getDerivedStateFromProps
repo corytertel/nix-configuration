@@ -2,6 +2,4 @@
 # name: getDerivedStateFromProps
 # key: gdsfp
 # --
-static getDerivedStateFromProps(nextProps, prevState) {
-    $0
-}
+static getDerivedStateFromProps(props, state) {${1:first}}

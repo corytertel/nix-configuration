@@ -3,5 +3,5 @@
 # key: ptet
 # --
 PropTypes.oneOfType([
-    $0
-]),
+  $0
+])

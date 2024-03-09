@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: typescriptReactArrowFunctionExportComponent
+# key: tsrafce
+# --
+import React from 'react'
+
+type Props = {}
+
+const ${1:${TM_FILENAME_BASE}} = (props: Props) => {
+  return (
+    <div>${1:first}</div>
+  )
+}
+
+export default ${1:${TM_FILENAME_BASE}}

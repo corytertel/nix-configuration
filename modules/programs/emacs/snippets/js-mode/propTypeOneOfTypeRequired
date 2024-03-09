@@ -3,5 +3,5 @@
 # key: ptetr
 # --
 PropTypes.oneOfType([
-    $0
-]).isRequired,
+  $0
+]).isRequired

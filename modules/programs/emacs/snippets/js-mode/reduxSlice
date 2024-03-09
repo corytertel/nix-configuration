@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+# name: reduxSlice
+# key: rxslice
+# --
+import { createSlice } from '@reduxjs/toolkit'
+
+const initialState = {
+
+}
+
+const ${1:${TM_FILENAME_BASE}} = createSlice({
+  name: ${2:second},
+  initialState,
+  reducers: {}
+});
+
+export const {} = ${1:${TM_FILENAME_BASE}}.actions
+
+export default ${1:${TM_FILENAME_BASE}}.reducer

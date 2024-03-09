@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: exportDefaultFunction
+# key: edf
+# --
+export default (${1:first}) => {${2:second}}

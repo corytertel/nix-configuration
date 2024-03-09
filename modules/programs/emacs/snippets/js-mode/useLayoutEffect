@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: useLayoutEffect
+# key: useLayoutEffectSnippet
+# --
+useLayoutEffect(() => {
+  ${1:first}
+
+  return () => {
+    ${2:second}
+  };
+}, [${3:third}])

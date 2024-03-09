@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: reactNativeFunctionalExportComponent
+# key: rnfe
+# --
+import { View, Text } from 'react-native'
+import React from 'react'
+
+const ${1:${TM_FILENAME_BASE}} = () => {
+  return (
+    <View>
+      <Text>${1:first}</Text>
+    </View>
+  )
+}
+
+export default ${1:${TM_FILENAME_BASE}}

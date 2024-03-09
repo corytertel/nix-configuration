@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: propertyGet
+# key: pge
+# --
+get ${1:first}() {
+  return this.${2:second}
+}

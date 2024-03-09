@@ -2,4 +2,4 @@
 # name: propTypeFuncRequired
 # key: ptfr
 # --
-PropTypes.func.isRequired,
+PropTypes.func.isRequired

@@ -2,4 +2,4 @@
 # name: propTypeNode
 # key: ptnd
 # --
-PropTypes.node,
+PropTypes.node

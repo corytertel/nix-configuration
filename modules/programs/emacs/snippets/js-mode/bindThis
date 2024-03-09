@@ -2,4 +2,4 @@
 # name: bindThis
 # key: bnd
 # --
-this.$1 = this.$1.bind(this);$0
+this.${1:first} = this.${1:first}.bind(this)

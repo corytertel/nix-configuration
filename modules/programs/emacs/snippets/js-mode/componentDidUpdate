@@ -2,6 +2,4 @@
 # name: componentDidUpdate
 # key: cdup
 # --
-componentDidUpdate(prevProps, prevState) {
-    $0
-}
+componentDidUpdate(prevProps, prevState) { ${1:first}}

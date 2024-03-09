@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: typeofSnippet
+# key: tpf
+# --
+typeof ${1:first}

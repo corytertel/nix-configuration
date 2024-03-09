@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: reactClassExportPureComponent
+# key: rpce
+# --
+import React, { PureComponent } from 'react'
+
+export class ${1:${TM_FILENAME_BASE}} extends PureComponent {
+  render() {
+    return (
+      <div>${1:first}</div>
+    )
+  }
+}
+
+export default ${1:${TM_FILENAME_BASE}}

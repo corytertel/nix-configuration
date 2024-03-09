@@ -2,6 +2,4 @@
 # name: componentDidMount
 # key: cdm
 # --
-componentDidMount() {
-    $0
-}
+componentDidMount() { ${1:first} }

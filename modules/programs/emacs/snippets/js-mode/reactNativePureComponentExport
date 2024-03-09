@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: reactNativePureComponentExport
+# key: rnpce
+# --
+import { Text, View } from 'react-native'
+import React, { PureComponent } from 'react'
+
+export class ${1:${TM_FILENAME_BASE}} extends PureComponent {
+  render() {
+    return (
+      <View>
+        <Text>${1:first}</Text>
+      </View>
+    )
+  }
+}
+
+export default ${1:${TM_FILENAME_BASE}}

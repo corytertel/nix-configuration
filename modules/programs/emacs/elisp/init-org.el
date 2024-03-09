@@ -14,10 +14,25 @@
 		(visual-line-mode)
 		(setq-local completion-styles '(emacs21)
 			    completion-at-point-functions (list #'cape-dict)
-			    completion-cycle-threshold t
-			    completion-ignore-case nil)
+			    ;; completion-cycle-threshold t
+			    ;; completion-ignore-case nil
+			    corfu-count 3
+			    corfu-preselect 'first
+			    corfu-map
+			    (let ((map (make-sparse-keymap))
+				  (f (lambda (x) (lambda () (interactive)
+					      (funcall (cory/corfu-select-index x))
+					      (insert " ")))))
+			      (define-key map [remap completion-at-point] #'corfu-complete)
+			      (define-key map [remap keyboard-escape-quit] #'corfu-quit)
+			      (define-key map [remap keyboard-quit] #'corfu-quit)
+			      (define-key map (kbd "!") (funcall f 0))
+			      (define-key map (kbd "@") (funcall f 1))
+			      (define-key map (kbd "#") (funcall f 2))
+			      map))
 		;; (org-cdlatex-mode)
-		(corfu-mode -1)))
+		;; (corfu-mode -1)
+		))
 
   :bind
   (:map org-mode-map
@@ -373,30 +388,22 @@
    ("M-n" . nil)
    ("M-p" . nil)
    ("M-h" . jinx-next)
-   ("C-<down>" . jinx-next)
    ("M-t" . jinx-previous)
-   ("C-<up>" . jinx-previous)
    :map jinx-correct-map
    ("M-n" . nil)
    ("M-p" . nil)
    ("M-h" . jinx-next)
-   ("C-<down>" . jinx-next)
    ("M-t" . jinx-previous)
-   ("C-<up>" . jinx-previous)
    :map jinx-repeat-map
    ("M-n"        . nil)
    ("M-p"        . nil)
    ("M-g M-h"    . jinx-next)
-   ("M-g C-<down>" . jinx-next)
    ("M-h"        . jinx-next)
-   ("C-<down>"   . jinx-next)
    ("h"          . jinx-next)
    ("C-x `"      . jinx-next)
    ("`"          . jinx-next)
    ("M-g M-t"    . jinx-previous)
-   ("M-g C-<up>" . jinx-previous)
    ("M-t"        . jinx-previous)
-   ("C-<up>"     . jinx-previous)
    ("t"          . jinx-previous))
   :init
   (dolist (hook '(text-mode-hook))

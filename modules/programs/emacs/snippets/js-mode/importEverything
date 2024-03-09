@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: importEverything
+# key: ime
+# --
+import * as ${2:second} from '${1:first}'

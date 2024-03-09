@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: importReactDom
+# key: imrd
+# --
+import ReactDOM from 'react-dom'

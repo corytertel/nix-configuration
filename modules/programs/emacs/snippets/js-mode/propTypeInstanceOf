@@ -2,4 +2,4 @@
 # name: propTypeInstanceOf
 # key: pti
 # --
-PropTypes.instanceOf($0),
+PropTypes.instanceOf($0)

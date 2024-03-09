@@ -3,5 +3,5 @@
 # key: ptshr
 # --
 PropTypes.shape({
-    $0
-}).isRequired,
+  $0
+}).isRequired

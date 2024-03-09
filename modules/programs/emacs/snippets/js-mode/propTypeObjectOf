@@ -2,4 +2,4 @@
 # name: propTypeObjectOf
 # key: ptoo
 # --
-PropTypes.objectOf($0),
+PropTypes.objectOf($0)

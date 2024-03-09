@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: namedFunction
+# key: nfn
+# --
+const ${1:first} = (${2:second}) => { ${3:third} }

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: importReduxConnect
+# key: redux
+# --
+import { connect } from 'react-redux'

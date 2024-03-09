@@ -2,6 +2,4 @@
 # name: shouldComponentUpdate
 # key: scu
 # --
-shouldComponentUpdate(nextProps, nextState) {
-    $0
-}
+shouldComponentUpdate(nextProps, nextState) { ${1:first} }

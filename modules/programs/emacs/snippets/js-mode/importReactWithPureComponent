@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: importReactWithPureComponent
+# key: imrpc
+# --
+import React, { PureComponent } from 'react'

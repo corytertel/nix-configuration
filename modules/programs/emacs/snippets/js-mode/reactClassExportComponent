@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: reactClassExportComponent
+# key: rce
+# --
+import React, { Component } from 'react'
+
+export class ${1:${TM_FILENAME_BASE}} extends Component {
+  render() {
+    return (
+      <div>${1:first}</div>
+    )
+  }
+}
+
+export default ${1:${TM_FILENAME_BASE}}

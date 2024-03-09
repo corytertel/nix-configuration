@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: reactFunctionMemoComponentWithPropTypes
+# key: rmcp
+# --
+import PropTypes from 'prop-types'
+import React, { memo } from 'react'
+
+const ${1:${TM_FILENAME_BASE}} = memo((props) => {
+  return (
+    <div>${1:first}</div>
+  )
+})
+
+${1:${TM_FILENAME_BASE}}.propTypes = {}
+
+export default ${1:${TM_FILENAME_BASE}}

@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: propTypeObjectOfShapeRequired
-# key: ptoosr
-# --
-PropTypes.objectOf(PropTypes.shape($0)).isRequired,

@@ -2,4 +2,4 @@
 # name: propTypeEnumRequired
 # key: pter
 # --
-PropTypes.oneOf(['$0']).isRequired,
+PropTypes.oneOf(['$0']).isRequired

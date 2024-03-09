@@ -2,4 +2,4 @@
 # name: propTypeElementRequired
 # key: ptelr
 # --
-PropTypes.element.isRequired,
+PropTypes.element.isRequired

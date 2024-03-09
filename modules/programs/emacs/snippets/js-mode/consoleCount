@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: consoleCount
+# key: cco
+# --
+console.count(${1:first})

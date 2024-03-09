@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: useReducer
+# key: useReducerSnippet
+# --
+const [state, dispatch] = useReducer(${1:first}, ${2:second}, ${3:third})

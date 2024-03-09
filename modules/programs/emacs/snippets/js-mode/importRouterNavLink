@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: importRouterNavLink
+# key: imbrnl
+# --
+import { NavLink } from 'react-router-dom'

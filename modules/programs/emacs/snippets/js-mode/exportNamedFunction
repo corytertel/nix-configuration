@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: exportNamedFunction
+# key: enf
+# --
+export const ${1:first} = (${2:second}) => {${3:third}}

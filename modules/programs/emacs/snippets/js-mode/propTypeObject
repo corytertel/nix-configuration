@@ -2,4 +2,4 @@
 # name: propTypeObject
 # key: pto
 # --
-PropTypes.object,
+PropTypes.object

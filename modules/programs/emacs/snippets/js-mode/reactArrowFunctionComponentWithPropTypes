@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: reactArrowFunctionComponentWithPropTypes
+# key: rafcp
+# --
+import React from 'react'
+import PropTypes from 'prop-types'
+
+const ${1:${TM_FILENAME_BASE}} = props => {
+  return (
+    <div>${1:first}</div>
+  )
+}
+
+${1:${TM_FILENAME_BASE}}.propTypes = {}
+
+export default ${1:${TM_FILENAME_BASE}}

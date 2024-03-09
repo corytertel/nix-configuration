@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: createContext
+# key: rcontext
+# --
+const ${1:first} = React.createContext()

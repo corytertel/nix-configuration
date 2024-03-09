@@ -2,4 +2,4 @@
 # name: propTypeNumber
 # key: ptn
 # --
-PropTypes.number,
+PropTypes.number

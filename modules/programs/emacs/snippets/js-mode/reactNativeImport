@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: reactNativeImport
+# key: imrn
+# --
+import { ${1:first} } from 'react-native'

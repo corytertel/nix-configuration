@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# name: dispatchRedux
-# key: disp
-# --
-function mapDispatchToProps(dispatch) {
-    return {
-
-    }
-}

@@ -2,4 +2,4 @@
 # name: propTypeNumberRequired
 # key: ptnr
 # --
-PropTypes.number.isRequired,
+PropTypes.number.isRequired

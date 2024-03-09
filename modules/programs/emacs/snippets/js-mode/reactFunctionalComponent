@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: reactFunctionalComponent
+# key: rfc
+# --
+import React from 'react'
+
+export default function ${1:${TM_FILENAME_BASE}}() {
+  return (
+    <div>${1:first}</div>
+  )
+}
+

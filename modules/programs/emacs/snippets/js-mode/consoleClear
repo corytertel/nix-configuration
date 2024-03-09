@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: consoleClear
+# key: ccl
+# --
+console.clear()

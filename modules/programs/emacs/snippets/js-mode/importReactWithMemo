@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: importReactWithMemo
+# key: imrm
+# --
+import React, { memo } from 'react'

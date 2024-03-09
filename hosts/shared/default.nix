@@ -363,6 +363,8 @@
           epc
           python-lsp-server
           pygments
+          pip
+          numpy
         ]))
 
         # postgres
@@ -398,6 +400,8 @@
         mg
         fd
         ripgrep
+        file
+        jq
         yt-dlp
         unzip
         nix-prefetch-github
@@ -422,10 +426,7 @@
         sshfs
         firefox
         chromium
-        zeal # offline documentation
         megasync
-        ace-of-penguins
-        urn-timer
 
         # iphone utils
         ifuse

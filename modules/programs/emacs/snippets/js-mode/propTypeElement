@@ -2,4 +2,4 @@
 # name: propTypeElement
 # key: ptel
 # --
-PropTypes.element,
+PropTypes.element

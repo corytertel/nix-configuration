@@ -69,8 +69,14 @@ together in sequence."
      rectangle-exchange-point-and-mark "C-x C-x")
 
     ("defun-nav"
-     beginning-of-defun                "C-M-a" "M-a" "a" "ESC M-a"
-     end-of-defun                      "C-M-e" "M-e" "e" "ESC M-e")
+     beginning-of-defun                "C-M-a" "a"
+     end-of-defun                      "C-M-e" "e"
+     mark-defun                        "C-M-i" "i")
+
+    ("c-defun-nav"
+     c-beginning-of-defun              "C-M-a" "a"
+     c-end-of-defun                    "C-M-e" "e"
+     c-mark-function                   "C-M-i" "i")
 
     ("del-char"
      delete-char                       "C-y" "y" "<deletechar>")
@@ -80,8 +86,8 @@ together in sequence."
      forward-sexp                      "C-M-n" "n" "ESC M-n")
 
     ("paragraph-nav"
-     backward-paragraph                "M-t" "t" "C-M-a" "a" "C-<up>" "<up>" "M-{" "M-[" "{" "["
-     forward-paragraph                 "M-h" "h" "C-M-e" "e" "C-<down>" "<down>" "M-}" "M-]" "}" "]")
+     backward-paragraph                "M-t" "t" "C-M-a" "a" "M-{" "M-[" "{" "["
+     forward-paragraph                 "M-h" "h" "C-M-e" "e" "M-}" "M-]" "}" "]")
 
     ("sentence-nav"
      backward-sentence                 "M-a" "a"
@@ -96,10 +102,10 @@ together in sequence."
      forward-page                      "C-x ]" "]")
 
     ("list-nav"
-     backward-list                     "C-M-t" "t" "ESC M-t"
-     forward-list                      "C-M-h" "h" "ESC M-h"
-     backward-up-list                  "C-M-<up>" "C-M-u" "<up>" "u" "ESC M-u"
-     down-list                         "C-M-<down>" "C-M-y" "<down>" "y" "ESC M-y")
+     backward-list                     "C-M-t" "t"
+     forward-list                      "C-M-h" "h"
+     backward-up-list                  "C-M-u" "u"
+     down-list                         "C-M-y" "y")
 
     ("mid-top-bottom-move"
      recenter-top-bottom               "C-l" "l"
@@ -314,18 +320,17 @@ together in sequence."
      corfu-previous                    "S-TAB" "<backtab>" "t")
 
     ("error-nav"
-     next-error                        "M-g M-h" "M-h" "M-g C-<down>" "C-<down>" "h" "C-x `" "`"
-     previous-error                    "M-g M-t" "M-t" "M-g C-<up>" "C-<up>" "t")
+     next-error                        "M-g M-h" "M-g h" "h" "C-x `" "`"
+     previous-error                    "M-g M-t" "M-g t" "t")
+
+    ("flymake-error-nav"
+     flymake-goto-next-error           "M-g M-h" "M-g h" "h" "C-x `" "`"
+     flymake-goto-prev-error           "M-g M-t" "M-g t" "t")
 
     ;; ("jinx"
-    ;;  jinx-next                         "M-g M-h" "M-h" "h" "C-x `" "`"
-    ;;  jinx-previous                     "M-g M-t" "M-t" "t"
+    ;;  jinx-next                         "M-g M-h" "M-g h" "h" "C-x `" "`"
+    ;;  jinx-previous                     "M-g M-t" "M-g t" "t"
     ;;  jinx-correct                      "M-$" "$" :exitonly)
-
-    ("flycheck-error-nav"
-     flycheck-next-error               "M-g M-h" "M-h" "M-g C-<down>" "C-<down>" "h" "C-x `" "`"
-     flycheck-previous-error           "M-g M-t" "M-t" "M-g C-<up>" "C-<up>" "t"
-     consult-flycheck                  "M-f M-f" "M-f" "f" :exitonly)
 
     ("smartparens-parens"
      sp-backward-slurp-sexp            "C-(" "("

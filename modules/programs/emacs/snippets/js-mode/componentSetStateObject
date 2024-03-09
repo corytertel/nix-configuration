@@ -2,4 +2,4 @@
 # name: componentSetStateObject
 # key: sst
 # --
-this.setState($0);
+this.setState({${1:first}})

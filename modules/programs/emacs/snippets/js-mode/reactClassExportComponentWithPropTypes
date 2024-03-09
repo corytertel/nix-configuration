@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: reactClassExportComponentWithPropTypes
+# key: rcep
+# --
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+
+export class ${1:${TM_FILENAME_BASE}} extends Component {
+  static propTypes = {}
+
+  render() {
+    return (
+      <div>${1:first}</div>
+    )
+  }
+}
+
+export default ${1:${TM_FILENAME_BASE}}

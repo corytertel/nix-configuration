@@ -1,8 +1,11 @@
 # -*- mode: snippet -*-
 # name: classConstructor
-# key: con
+# key: rconst
 # --
 constructor(props) {
-    super(props);
-    $0
+  super(props)
+
+  this.state = {
+     ${1:first}
+  }
 }

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: createRef
+# key: cref
+# --
+this.${1:first}Ref = React.createRef()

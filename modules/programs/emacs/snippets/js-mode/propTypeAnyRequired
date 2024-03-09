@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: propTypeAnyRequired
-# key: ptanr
-# --
-PropTypes.any.isRequired,

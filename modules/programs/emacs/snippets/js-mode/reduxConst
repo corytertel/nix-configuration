@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: reduxConst
+# key: rxconst
+# --
+export const ${1:first} = '${1:first}'

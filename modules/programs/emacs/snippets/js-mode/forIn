@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: forIn
+# key: fin
+# --
+for(let ${1:first} in ${2:second}) {${3:third}}

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: importAs
+# key: ima
+# --
+import { ${2:second} as ${3:third} } from '${1:first}'

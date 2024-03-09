@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: componentWillReceiveProps
-# key: cwr
-# --
-componentWillReceiveProps(nextProps) {
-    $0
-}

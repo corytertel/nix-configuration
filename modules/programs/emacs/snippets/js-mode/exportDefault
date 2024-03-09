@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: exportDefault
+# key: exp
+# --
+export default ${1:first}

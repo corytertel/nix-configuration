@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: exportInterface
+# key: expint
+# --
+export interface ${1:first} {${2:second}}

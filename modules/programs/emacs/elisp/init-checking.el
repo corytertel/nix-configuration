@@ -135,32 +135,3 @@
 ;; Display help messages automatically in echo area
 (setq help-at-pt-timer-delay 0.1)
 (setq help-at-pt-display-when-idle '(flymake-diagnostic))
-
-;; (use-package flycheck
-;;   :hook
-;;   (prog-mode . flycheck-mode)
-;;   :bind
-;;   (:map flycheck-mode-map
-;;    ([remap next-error] . flycheck-next-error)
-;;    ([remap previous-error] . flycheck-previous-error)
-;;    ;; :map goto-map
-;;    ;; ("d"   . flymake-show-buffer-diagnostics)
-;;    ;; ("M-d" . flymake-show-project-diagnostics)
-;;    )
-;;   )
-
-;; (use-package flycheck-pos-tip
-;;   :after flycheck
-;;   :config
-;;   (flycheck-pos-tip-mode 1))
-
-;; (use-package consult-flycheck
-;;   :after (consult flycheck)
-;;   :bind (:map flycheck-mode-map
-;; 	 ("M-f f" . consult-flycheck)
-;; 	 ("M-f M-f" . consult-flycheck)))
-
-;; (use-package flycheck-eglot
-;;   ;; :after (flycheck eglot)
-;;   :config
-;;   (global-flycheck-eglot-mode 1))

@@ -2,4 +2,4 @@
 # name: propTypeArray
 # key: pta
 # --
-PropTypes.array,
+PropTypes.array

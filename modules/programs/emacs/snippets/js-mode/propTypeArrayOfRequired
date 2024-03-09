@@ -2,4 +2,4 @@
 # name: propTypeArrayOfRequired
 # key: ptaor
 # --
-PropTypes.arrayOf($0).isRequired,
+PropTypes.arrayOf($0).isRequired

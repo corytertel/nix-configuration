@@ -2,4 +2,4 @@
 # name: propTypeBool
 # key: ptb
 # --
-PropTypes.bool,
+PropTypes.bool

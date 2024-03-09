@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: typescriptReactNativeArrowFunctionComponent
+# key: tsrnf
+# --
+import { View, Text } from 'react-native'
+import React from 'react'
+
+type Props = {}
+
+const ${1:${TM_FILENAME_BASE}} = (props: Props) => {
+  return (
+    <View>
+      <Text>${1:first}</Text>
+    </View>
+  )
+}
+
+export default ${1:${TM_FILENAME_BASE}}

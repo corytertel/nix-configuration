@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: consoleInfo
+# key: cin
+# --
+console.info(${1:first})

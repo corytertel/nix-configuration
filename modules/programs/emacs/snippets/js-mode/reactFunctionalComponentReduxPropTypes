@@ -1,0 +1,23 @@
+# -*- mode: snippet -*-
+# name: reactFunctionalComponentReduxPropTypes
+# key: rfcreduxp
+# --
+import PropTypes from 'prop-types'
+import React from 'react'
+import { connect } from 'react-redux'
+
+export const ${1:${TM_FILENAME_BASE}} = (props) => {
+  return (
+    <div>${1:first}</div>
+  )
+}
+
+${1:${TM_FILENAME_BASE}}.propTypes = {
+  ${2:second}: PropTypes.${3:third}
+}
+
+const mapStateToProps = (state) => ({})
+
+const mapDispatchToProps = {}
+
+export default connect(mapStateToProps, mapDispatchToProps)(${1:${TM_FILENAME_BASE}})

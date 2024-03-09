@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: reactArrowFunctionComponent
+# key: rafc
+# --
+import React from 'react'
+
+export const ${1:${TM_FILENAME_BASE}} = () => {
+  return (
+    <div>${1:first}</div>
+  )
+}
+

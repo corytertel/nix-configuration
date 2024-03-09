@@ -2,4 +2,4 @@
 # name: propTypeObjectOfRequired
 # key: ptoor
 # --
-PropTypes.objectOf($0).isRequired,
+PropTypes.objectOf($0).isRequired

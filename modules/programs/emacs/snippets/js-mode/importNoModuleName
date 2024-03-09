@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: importNoModuleName
+# key: imn
+# --
+import '${1:first}'

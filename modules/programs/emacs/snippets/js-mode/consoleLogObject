@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: consoleLogObject
+# key: clo
+# --
+console.log('${1:first}', ${1:first})

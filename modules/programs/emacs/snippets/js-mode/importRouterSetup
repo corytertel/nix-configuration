@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: importRouterSetup
+# key: imbrc
+# --
+import { Route, Switch, NavLink, Link } from 'react-router-dom'

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: consoleTime
+# key: ctm
+# --
+console.time('${1:first}')
