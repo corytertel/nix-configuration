@@ -18,7 +18,6 @@
   (web-mode-markup-indent-offset 2)
   (web-mode-css-indent-offset 2)
   (web-mode-code-indent-offset 2)
-  ;; (web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
 
   :init
   (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
@@ -32,14 +31,12 @@
   (add-to-list 'auto-mode-alist ' ("\\.css\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.less\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.scss\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.ts\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.ts\\'" . web-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
 
   :config
-  ;; (setq web-mode-engines-alist
-  ;; 	'(("php"    . "\\.phtml\\'")))
 
   ;; Faces
   (set-face-attribute 'web-mode-html-tag-face nil
@@ -50,17 +47,19 @@
 		      :foreground 'unspecified
 		      :background "turquoise")
 
+  ;; Functions have issues with falsely inserting while in strings
+
   (defun cory/insert-angled-pair-or-wrap ()
     (interactive)
     (cond (mark-active (call-interactively #'web-mode-element-wrap))
-	  (t (progn (insert ?<)
-		    (save-excursion
-		      (insert ?>))))))
+          (t (progn (insert ?<)
+        	    (save-excursion
+        	      (insert ?>))))))
 
   (defun cory/close-angled-pair ()
     (interactive)
     (if (looking-at ">")
-	(forward-char 1)
+        (forward-char 1)
       (insert ?>))
     (when (not (looking-back "/ *>"))
       (web-mode-element-close)))
@@ -154,13 +153,13 @@
 	      (cory/web-mode-hook)
 	      (cond
 	       ((and buffer-file-name
-		     (string-match ".*\\.html" buffer-file-name))
+		   (string-match ".*\\.html" buffer-file-name))
 		(cory/web-mode-html-hook))
 	       ((and buffer-file-name
-		     (string-match ".*\\.css" buffer-file-name))
+		   (string-match ".*\\.css" buffer-file-name))
 		(cory/web-mode-css-hook))
 	       ((and buffer-file-name
-		     (string-match "\\(.*\\.js\\)\\|\\(.*\\.jsx\\)\\|\\(.*\\.ts\\)\\|\\(.*\\.tsx\\)" buffer-file-name))
+		   (string-match "\\(.*\\.js\\)\\|\\(.*\\.jsx\\)\\|\\(.*\\.ts\\)\\|\\(.*\\.tsx\\)" buffer-file-name))
 		(cory/web-mode-js-hook))
 	       (t nil))))
 
@@ -176,9 +175,16 @@
 	       (switch-to-buffer buf))))))
     (async-shell-command (concat "firefox file://" buffer-file-name) nil nil)))
 
-;; Typescript
-;; (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
-;; (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
-
 ;; Javascript
 (setq js-indent-level 2)
+
+(use-package rjsx-mode
+  :bind
+  (:map rjsx-mode-map
+   ("C-d" . nil)
+   ("C-y" . rjsx-delete-creates-full-tag))
+  :config
+  (add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode))
+  (add-to-list 'auto-mode-alist '("components\\/.*\\.jsx\\'" . rjsx-mode))
+  (add-to-list 'auto-mode-alist '("components\\/.*\\.ts\\'" . rjsx-mode))
+  (add-to-list 'auto-mode-alist '("components\\/.*\\.tsx\\'" . rjsx-mode)))

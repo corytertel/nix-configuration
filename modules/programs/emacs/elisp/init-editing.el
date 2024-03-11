@@ -37,6 +37,8 @@
                         (c-mode    . "stroustrup")
                         (other     . "gnu")))
 
+(setq-default indent-tabs-mode nil)
+
 ;; (electric-pair-mode 1)
 
 (use-package undo-tree
