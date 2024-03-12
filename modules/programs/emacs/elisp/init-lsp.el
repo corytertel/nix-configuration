@@ -60,9 +60,14 @@
   ;; Add nix lsp
   (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
 
-  ;; Add web-mode
+  ;; ;; Add web-mode
+  ;; (add-to-list 'eglot-server-programs
+  ;;              '((web-mode)
+  ;;       	 "typescript-language-server" "--stdio"))
+
+  ;; Add rjsx-mode
   (add-to-list 'eglot-server-programs
-	       '((web-mode)
+	       '((rjsx-mode)
 		 "typescript-language-server" "--stdio"))
 
   ;; Ignore logging for speed

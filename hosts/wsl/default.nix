@@ -3,7 +3,7 @@
 {
   imports = [
     "${modulesPath}/profiles/minimal.nix"
-    ./network-drive.nix
+    # ./network-drive.nix
     ../../profiles/wsl
   ];
 

@@ -9,4 +9,3 @@ export const ${1:${TM_FILENAME_BASE}} = () => {
     <div>${1:first}</div>
   )
 }
-

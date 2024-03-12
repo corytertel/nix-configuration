@@ -19,4 +19,3 @@ export const ${1:first} = (WrappedComponent) => {
 }
 
 export default WrapperComponent => connect(mapStateToProps, mapDispatchToProps)(${1:first}(WrapperComponent))
-

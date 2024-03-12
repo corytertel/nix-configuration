@@ -6,4 +6,3 @@ export const ${1:first} = (payload) => ({
   type: ${2:second},
   payload
 })
-
