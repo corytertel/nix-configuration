@@ -18,7 +18,7 @@
       preLVM = true;
     };
 
-    kernelPackages = pkgs.linuxPackages_6_1;
+    kernelPackages = pkgs.linuxPackages_6_7;
     kernelParams = [
       # ZFS required flags
       "nohibernate"
@@ -54,7 +54,7 @@
         enable = true;
         user = "cory";
       };
-      layout = "us_dvorak";
+      xkb.layout = "us_dvorak";
       libinput = {
         touchpad = {
           accelProfile = "adaptive";

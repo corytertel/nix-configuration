@@ -169,13 +169,13 @@ in {
           nixos-clean = "sudo nix-collect-garbage --delete-older-than";
           nixos-superclean = "sudo nix-collect-garbage --delete-old";
           cdi = "zi";
-          # ls = "${pkgs.exa}/bin/exa --icons --all --git --binary --group-directories-first";
+          # ls = "${pkgs.eza}/bin/eza --icons --all --git --binary --group-directories-first";
           # l = "ls --classify";
           # ll = "ls -l -h";
-          ls = "${pkgs.exa}/bin/exa --icons --all --group-directories-first --sort extension --classify";
+          ls = "${pkgs.eza}/bin/eza --icons --all --group-directories-first --sort extension --classify";
           l = "ls";
           ll = "ls -l -a -h --git --binary";
-          tree = "${pkgs.exa}/bin/exa --icons --tree";
+          tree = "${pkgs.eza}/bin/eza --icons --tree";
           c = "clear";
           grep = "grep -i --color=auto";
           rm = "rm --verbose";

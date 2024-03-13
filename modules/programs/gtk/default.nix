@@ -109,7 +109,8 @@ in {
     qt = {
       enable = true;
       platformTheme = "qt5ct";
-      style = "Oxygen";
+      # style = "Oxygen";
+      style = "cde";
     };
 
     home-manager.users.cory = with config; {

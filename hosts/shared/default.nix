@@ -37,7 +37,7 @@
     printing.enable = true;
     xserver = {
       enable = true;
-      extraLayouts = {
+      xkb.extraLayouts = {
         us_qwerty = {
           description = "US standard layout";
           languages = [ "eng" ];
@@ -294,8 +294,9 @@
       username = "cory";
       homeDirectory = "/home/cory";
 
+      # TODO
       # Make nix-shell work with nixpkgs from system flake
-      sessionVariables.NIX_PATH = "nixpkgs=${pkgs.outPath}";
+      # sessionVariables.NIX_PATH = "nixpkgs=${pkgs.outPath}";
 
       packages = let
         dyalogscript = import ./dyalogscript.nix {inherit pkgs;};
@@ -426,7 +427,8 @@
         sshfs
         firefox
         chromium
-        megasync
+        # has security issues rn
+        # megasync
 
         # iphone utils
         ifuse

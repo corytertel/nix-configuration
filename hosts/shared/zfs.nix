@@ -6,7 +6,7 @@
   boot.initrd.postDeviceCommands = lib.mkAfter ''
     zfs rollback -r rpool/local/root@blank
   '';
-  boot.zfs.enableUnstable = true;
+  boot.zfs.package = pkgs.zfs_unstable;
   boot.loader.grub.copyKernels = true;
 
   #services.zfs.autoScrub.enable = true;
@@ -22,10 +22,10 @@
   users = {
     mutableUsers = false;
     users = {
-      root.passwordFile = "/persist/secrets/root";
+      root.hashedPasswordFile = "/persist/secrets/root";
       cory = {
         createHome = true;
-        passwordFile = "/persist/secrets/cory";
+        hashedPasswordFile = "/persist/secrets/cory";
       };
     };
     extraGroups.vboxusers.members = [ "cory" ];

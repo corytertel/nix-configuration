@@ -45,10 +45,10 @@ let
   + (builtins.readFile ./elisp/init-buffer.el)
 
   # Langs
-  + (builtins.readFile ./elisp/init-clojure.el)
+  + (builtins.readFile ./elisp/init-elisp.el)
+  # + (builtins.readFile ./elisp/init-clojure.el)
   + (builtins.readFile ./elisp/init-common-lisp.el)
   + (builtins.readFile ./elisp/init-cpp.el)
-  + (builtins.readFile ./elisp/init-elisp.el)
   + (builtins.readFile ./elisp/init-java.el)
   + (builtins.readFile ./elisp/init-apl.el)
   + (builtins.readFile ./elisp/init-other-langs.el)

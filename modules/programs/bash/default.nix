@@ -26,10 +26,10 @@ in {
       shellAliases = {
         nixos-test = "sudo nixos-rebuild test --flake .";
         nixos-switch = "sudo nixos-rebuild switch --flake .";
-        exa = "exa --icons --all --git --binary --group-directories-first";
-        ls = "exa";
-        l = "exa --classify";
-        ll = "exa --long --header";
+        eza = "eza --icons --all --git --binary --group-directories-first";
+        ls = "eza";
+        l = "eza --classify";
+        ll = "eza --long --header";
         c = "clear";
         grep = "grep -i --color=auto";
         rm = "rm --verbose";
@@ -44,6 +44,6 @@ in {
       };
     };
 
-    home-manager.users.cory.home.packages = with pkgs; [ exa neofetch ];
+    home-manager.users.cory.home.packages = with pkgs; [ eza neofetch ];
   };
 }

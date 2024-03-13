@@ -1,13 +1,13 @@
 { pkgs, emacs }:
 pkgs.stdenv.mkDerivation rec {
   name = "emacs-hotfuzz-module-${version}";
-  version = "20230824";
+  version = "20240114";
 
   src = pkgs.fetchFromGitHub {
     owner = "axelf4";
     repo = "hotfuzz";
-    rev = "3076cb250d0cb7ac6c3ec746dc4ccfea09ccdb25";
-    sha256 = "tmvaKfYPtE1cb004GABJ7NIbZsK8MclScNgy9OIagUE=";
+    rev = "0d89041ca494432d79e85b0454f21a75c6e21925";
+    sha256 = "sha256-/X6PV8csWd2KdEjHYH1DIts8vDrHodtLDe2WuPsxXbU==";
   };
 
   EMACS_ROOT = "${emacs}";
