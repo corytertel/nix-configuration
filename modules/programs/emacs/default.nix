@@ -63,7 +63,10 @@ let
 
   # Window Management
   + (builtins.readFile ./elisp/init-window-management.el)
-  + (if config.programs.cory.emacs.popup then builtins.readFile ./elisp/init-popup.el else "")
+  + (if config.programs.cory.emacs.popup
+     then builtins.readFile ./elisp/init-popup.el
+     else # ''(add-to-list 'load-path "${(pkgs.callPackage ./eaf.nix { inherit pkgs; })}")''
+       builtins.readFile ./elisp/init-no-popup.el)
 
   # Informal Packages
   # + (builtins.readFile ./elisp/eshell-undistract-me.el)
@@ -124,6 +127,7 @@ in {
       default = pkgs.emacs-git.override {
         withGTK3 = true;
         withTreeSitter = true;
+        withNativeCompilation = true;
       };
     };
     popup = mkOption {
@@ -177,6 +181,8 @@ in {
       ALTERNATE_EDITOR = "emacs -nw";
       EDITOR = "emacsclient -nw";
       VISUAL = "emacsclient -c -a ''";
+      # eaf
+      QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt6.qtbase.outPath}/lib/qt-6/plugins";
     };
 
     apps.editor = {
@@ -196,18 +202,6 @@ in {
     };
 
     environment.systemPackages = let
-      # tex = (pkgs.texlive.combine {
-      #   inherit (pkgs.texlive)
-      #     # scheme-basic
-      #     scheme-small
-      #     dvisvgm
-      #     dvipng
-      #     wrapfig
-      #     amsmath
-      #     ulem
-      #     hyperref
-      #     capt-of;
-      # });
       tex = pkgs.texlive.combined.scheme-full;
     in with pkgs; [
       tex
@@ -251,6 +245,31 @@ in {
       aspellDicts.en
       hunspell
       hunspellDicts.ru_RU
+
+      # eaf
+      git
+      nodejs
+      # Causes weird cursor bugs on xmonad that make emacs unusable
+      # wmctrl
+      # xdotool
+      ((pkgs.python311.withPackages(ps: with ps; [
+        pandas
+        requests
+        sexpdata tld
+        pyqt6 pyqt6-sip
+        pyqt6-webengine epc lxml # for eaf
+        qrcode # eaf-file-browser
+        pysocks # eaf-browser
+        pymupdf # eaf-pdf-viewer
+        pypinyin # eaf-file-manager
+        psutil # eaf-system-monitor
+        retry # eaf-markdown-previewer
+        markdown
+      ])).override { ignoreCollisions = true; })
+      # eaf-browser
+      aria
+      # eaf-file-manager
+      fd
     ];
 
   };

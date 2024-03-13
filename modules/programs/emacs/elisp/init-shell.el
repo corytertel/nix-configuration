@@ -132,7 +132,7 @@ Else, go to the end of line ARG number of times."
 ;; 			    corfu-quit-no-match t
 ;; 			    corfu-auto t
 ;; 			    completion-at-point-functions
-;; 			    (list (cape-super-capf
+;; 			    (list (cape-capf-super
 ;; 				   #'cape-history
 ;; 				   #'pcomplete-completions-at-point)))
 ;; 	    (corfu-mode 1)))

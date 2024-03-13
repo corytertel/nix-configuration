@@ -118,11 +118,6 @@
 			 (not (or (string-prefix-p "*" name)
 			       (eq 'dired-mode (buffer-local-value 'major-mode buf)))))))
 
-(global-set-key (kbd "C-x 0") #'delete-window)
-(global-set-key (kbd "C-x 1") #'delete-other-windows)
-(global-set-key (kbd "C-x 2") #'split-and-follow-below)
-(global-set-key (kbd "C-x 3") #'split-and-follow-right)
-(global-set-key (kbd "C-x 4 q") #'kill-all-buffers-and-windows)
 (global-set-key (kbd "<f1>") #'mode-line-other-buffer)
 (global-set-key (kbd "C-<f1>") #'mode-line-other-buffer)
 (global-set-key (kbd "M-<f1>") #'mode-line-other-buffer)
@@ -131,14 +126,6 @@
 (global-set-key (kbd "C-S-<f1>") #'mode-line-other-buffer)
 (global-set-key (kbd "M-S-<f1>") #'mode-line-other-buffer)
 (global-set-key (kbd "C-M-S-<f1>") #'mode-line-other-buffer)
-(global-set-key (kbd "<f2>") #'cory/other-window)
-(global-set-key (kbd "C-<f2>") #'cory/other-window)
-(global-set-key (kbd "M-<f2>") #'cory/other-window)
-(global-set-key (kbd "C-M-<f2>") #'cory/other-window)
-(global-set-key (kbd "S-<f2>") #'cory/other-window)
-(global-set-key (kbd "C-S-<f2>") #'cory/other-window)
-(global-set-key (kbd "M-S-<f2>") #'cory/other-window)
-(global-set-key (kbd "C-M-S-<f2>") #'cory/other-window)
 
 ;; Suppress async-shell-command popup
 (add-to-list 'display-buffer-alist

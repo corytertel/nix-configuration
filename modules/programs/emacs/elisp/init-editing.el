@@ -389,39 +389,30 @@
   :hook
   (emacs-startup . global-devil-mode)
   :config
-  ;; (defun devil--invalid-key-p (translated-key)
-;;     "Return t iff TRANSLATED-KEY is an invalid Emacs key sequence."
-;;     (catch 'break
-;;       (dolist (chunk (split-string translated-key " "))
-;; 	(when (or (string= chunk "")
-;; 		 (not (string-match-p "^\\(?:[ACHMSs]-\\)*\\([^-]*\\|<.*>\\)$" chunk))
-;; 		 (string-match-p "\\([ACHMSs]-\\)[^ ]*\\1" chunk))
-;;           (throw 'break t)))))
+  (defcustom devil-global-sets-buffer-default nil
+    "Non-nil iff `global-devil-mode' modifies new buffer defaults.
+When non-nil and `global-devil-mode' is enabled, `devil-mode'
+will be enabled in all new buffers without relying on the
+standard global minor-mode hooks.
+While this solves issues with `devil-mode' not being active in
+buffers which have not called the hooks where a minor-mode could
+be applied, the decision to bypass these hooks is likely to have
+been intentional.  It is not recommended to enable this option
+unless you are absolutely sure of the consequences.
+To work around the most common issue, where `global-devil-mode'
+is enabled during start-up but `devil-mode' is not enabled in the
+default Emacs startup screen, a safer solution is to advise the
+function which creates the startup screen to enable the mode
+locally."
+    :type 'boolean)
 
-;;   (defcustom devil-global-sets-buffer-default nil
-;;     "Non-nil iff `global-devil-mode' modifies new buffer defaults.
-;; When non-nil and `global-devil-mode' is enabled, `devil-mode'
-;; will be enabled in all new buffers without relying on the
-;; standard global minor-mode hooks.
-;; While this solves issues with `devil-mode' not being active in
-;; buffers which have not called the hooks where a minor-mode could
-;; be applied, the decision to bypass these hooks is likely to have
-;; been intentional.  It is not recommended to enable this option
-;; unless you are absolutely sure of the consequences.
-;; To work around the most common issue, where `global-devil-mode'
-;; is enabled during start-up but `devil-mode' is not enabled in the
-;; default Emacs startup screen, a safer solution is to advise the
-;; function which creates the startup screen to enable the mode
-;; locally."
-;;     :type 'boolean)
+  (define-globalized-minor-mode
+    global-devil-mode devil-mode devil--on
+    (if global-devil-mode (devil--add-extra-keys) (devil--remove-extra-keys))
+    (when devil-global-sets-buffer-default
+      (setq-default devil-mode global-devil-mode)))
 
-;;   (define-globalized-minor-mode
-;;     global-devil-mode devil-mode devil--on
-;;     (if global-devil-mode (devil--add-extra-keys) (devil--remove-extra-keys))
-;;     (when devil-global-sets-buffer-default
-;;       (setq-default devil-mode global-devil-mode)))
-
-;;   (setq devil-global-sets-buffer-default t)
+  (setq devil-global-sets-buffer-default t)
 
   (defun devil-helpful-key ()
     "Describe a Devil key sequence with helpful."

@@ -27,7 +27,7 @@
 ;; Completion
 (defun cory/elisp-super-capf ()
   (setq-local completion-at-point-functions
-	      (list (cape-super-capf
+	      (list (cape-capf-super
 		     (cape-company-to-capf #'company-yasnippet)
 		     ;; #'cape-yasnippet
 		     #'elisp-completion-at-point))))

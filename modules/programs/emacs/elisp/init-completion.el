@@ -431,7 +431,7 @@
 
   :config
   ;; (setq-local completion-at-point-functions
-  ;;             (list (cape-super-capf #'cape-dabbrev #'cape-dict #'cape-keyword #'cape-symbol)))
+  ;;             (list (cape-capf-super #'cape-dabbrev #'cape-dict #'cape-keyword #'cape-symbol)))
 
   ;; Silence then pcomplete capf, no errors or messages!
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)

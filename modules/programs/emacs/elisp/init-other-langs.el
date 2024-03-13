@@ -33,7 +33,7 @@
 (use-package fvwm-mode
   :hook (fvwm-mode . (lambda ()
 		       (setq-local completion-at-point-functions
-				   (list (cape-super-capf #'cory/fvwm-mode-capf #'cape-dabbrev) t))
+				   (list (cape-capf-super #'cory/fvwm-mode-capf #'cape-dabbrev) t))
 		       (subword-mode t)))
   :config
   (defvar cory/fvwm-mode-words
@@ -144,7 +144,7 @@
 (add-hook 'sql-mode-hook
 	  (lambda ()
 	    (setq-local completion-at-point-functions
-			(list (cape-super-capf #'cory/sql-capf #'cape-dabbrev) t))))
+			(list (cape-capf-super #'cory/sql-capf #'cape-dabbrev) t))))
 
 ;;; XML
 
@@ -152,7 +152,7 @@
   (add-hook 'nxml-mode-hook
 	    (lambda ()
 	      (setq-local completion-at-point-functions
-			  (list (cape-super-capf
+			  (list (cape-capf-super
 				 #'rng-completion-at-point
 				 #'cape-dabbrev)))))
 

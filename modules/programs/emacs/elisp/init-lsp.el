@@ -34,7 +34,7 @@
   (eglot-managed-mode
    . (lambda ()
        (setq-local completion-at-point-functions
-		   (list (cape-super-capf
+		   (list (cape-capf-super
 			  (cape-company-to-capf #'company-yasnippet)
 			  ;; #'cape-yasnippet
 			  #'eglot-completion-at-point)
@@ -146,7 +146,7 @@
 ;;    . cory/lsp)
 ;;   (lsp-mode . (lambda ()
 ;; 		(setq-local completion-at-point-functions
-;; 			    (list (cape-super-capf
+;; 			    (list (cape-capf-super
 ;; 				   (cape-company-to-capf #'company-yasnippet)
 ;; 				   ;; #'cape-yasnippet
 ;; 				   #'lsp-completion-at-point)

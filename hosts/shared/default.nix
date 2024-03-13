@@ -360,13 +360,13 @@
         # ride
 
         # python
-        (python311.withPackages (ps: with ps; [
-          epc
-          python-lsp-server
-          pygments
-          pip
-          numpy
-        ]))
+        # (python311.withPackages (ps: with ps; [
+        #   epc
+        #   python-lsp-server
+        #   pygments
+        #   pip
+        #   numpy
+        # ]))
 
         # postgres
         postgresql

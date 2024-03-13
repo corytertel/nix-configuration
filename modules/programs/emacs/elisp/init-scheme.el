@@ -147,7 +147,7 @@
 
   (defun scheme-super-capf ()
     (setq-local completion-at-point-functions
-		(list (cape-super-capf
+		(list (cape-capf-super
 		       (cape-company-to-capf #'company-yasnippet)
 		       ;; #'cape-yasnippet
 		       #'geiser-capf--for-filename

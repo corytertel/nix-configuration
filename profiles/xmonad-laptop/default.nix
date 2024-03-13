@@ -7,7 +7,8 @@
   # Editor
   programs.cory.emacs = {
     enable = true;
-    popup = true;
+    # popup = true;
+    popup = false;
     fonts = {
       # monospace.size = 100;
       monospace = {

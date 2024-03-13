@@ -2,7 +2,7 @@
 	  (lambda ()
 	    (unless (equal major-mode 'org-mode)
 	      (setq-local completion-at-point-functions
-			  (list (cape-super-capf
+			  (list (cape-capf-super
 				 #'tags-completion-at-point-function
 				 #'cape-dict))))))
 
