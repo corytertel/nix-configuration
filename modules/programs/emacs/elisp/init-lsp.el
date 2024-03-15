@@ -1,21 +1,4 @@
 
-;; Tree-sitter
-(use-package tree-sitter
-  :after tree-sitter-langs
-  :custom-face
-  (tree-sitter-hl-face:property         ((t (:slant normal))))
-  (tree-sitter-hl-face:method.call      ((t (:inherit font-lock-function-name-face))))
-  (tree-sitter-hl-face:function.call    ((t (:inherit font-lock-function-name-face))))
-  (tree-sitter-hl-face:function.builtin ((t (:inherit font-lock-function-name-face))))
-  (tree-sitter-hl-face:operator         ((t (:inherit default))))
-  (tree-sitter-hl-face:type.builtin     ((t (:inherit font-lock-type-face))))
-  (tree-sitter-hl-face:number           ((t (:inherit highlight-numbers-number))))
-  :config
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-
-;; (use-package tree-sitter-langs)
-
 ;; Eglot
 (use-package eglot
   :after corfu flymake
@@ -23,10 +6,10 @@
   ((c++-mode
     python-mode
     javascript-mode
-    ;; js-mode
-    ;; js-jsx-mode
-    ;; js-ts-mode
-    ;; typescript-ts-mode
+    js-mode
+    js-jsx-mode
+    js-ts-mode
+    typescript-ts-mode
     nix-mode)
    . cory/eglot)
   (eglot-managed-mode
@@ -62,11 +45,6 @@
   ;; (add-to-list 'eglot-server-programs
   ;;              '((web-mode)
   ;;       	 "typescript-language-server" "--stdio"))
-
-  ;; Add rjsx-mode
-  (add-to-list 'eglot-server-programs
-	       '((rjsx-mode)
-		 "typescript-language-server" "--stdio"))
 
   ;; Ignore logging for speed
   (fset #'jsonrpc--log-event #'ignore)

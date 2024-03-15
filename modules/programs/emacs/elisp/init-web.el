@@ -178,13 +178,7 @@
 ;; Javascript
 (setq js-indent-level 2)
 
-(use-package rjsx-mode
-  :bind
-  (:map rjsx-mode-map
-   ("C-d" . nil)
-   ("C-y" . rjsx-delete-creates-full-tag))
-  :config
-  (add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode))
-  (add-to-list 'auto-mode-alist '("components\\/.*\\.jsx\\'" . rjsx-mode))
-  (add-to-list 'auto-mode-alist '("components\\/.*\\.ts\\'" . rjsx-mode))
-  (add-to-list 'auto-mode-alist '("components\\/.*\\.tsx\\'" . rjsx-mode)))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . js-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))

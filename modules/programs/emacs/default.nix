@@ -31,6 +31,7 @@ let
   + (builtins.readFile ./elisp/vertico-frame.el)
   + (builtins.readFile ./elisp/init-completion.el)
   + (builtins.readFile ./elisp/init-lsp.el)
+  + (builtins.readFile ./elisp/init-treesitter.el)
   + (builtins.readFile ./elisp/init-snippets.el)
   + (builtins.readFile ./elisp/company-yasnippet.el)
 
@@ -113,6 +114,7 @@ let
     override = epkgs: epkgs // {
       macrursors = pkgs.callPackage ./macrursors.nix {};
       cape-yasnippet = pkgs.callPackage ./cape-yasnippet.nix {};
+      combobulate = pkgs.callPackage ./combobulate.nix {};
     };
   };
 

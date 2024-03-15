@@ -78,6 +78,11 @@ together in sequence."
      c-end-of-defun                    "C-M-e" "e"
      c-mark-function                   "C-M-i" "i")
 
+    ("combobulate-defun-nav"
+     combobulate-navigate-beginning-of-defun "C-M-a" "a"
+     combobulate-navigate-end-of-defun       "C-M-e" "e"
+     combobulate-mark-defun                  "C-M-i" "i")
+
     ("del-char"
      delete-char                       "C-y" "y" "<deletechar>")
 
@@ -253,8 +258,12 @@ together in sequence."
      org-deadline                      "C-c C-d" "C-d" "d")
 
     ("word-nav"
-     backward-word                     "M-d" "d" "C-<left>"
-     forward-word                      "M-n" "n" "C-<right>")
+     backward-word                     "M-d" "d"
+     forward-word                      "M-n" "n")
+
+    ("combobulate-logical-nav"
+     combobulate-navigate-logical-previous "M-d" "d"
+     combobulate-navigate-logical-next     "M-n" "n")
 
     ("set-mark"
      backward-char                     "C-d" "d" "<left>"            :exitonly
@@ -276,6 +285,9 @@ together in sequence."
 
     ("web-mode-element-select"
      web-mode-element-select           "M-i" "i")
+
+    ("combobulate-mark-node"
+     combobulate-mark-node-dwim        "M-i" "i")
 
     ("repeat"
      repeat                            "C-'" "'")
@@ -305,6 +317,14 @@ together in sequence."
      sp-backward-down-sexp             "C-M-t" "t"
      sp-up-sexp                        "C-M-h" "h"
      sp-backward-up-sexp               "C-M-u" "u")
+
+    ("combobulate-nav"
+     combobulate-forward-node          "C-M-n" "n"
+     combobulate-backward-node         "C-M-d" "d"
+     combobulate-down-node             "C-M-y" "y"
+     combobulate-backward-down-node    "C-M-t" "t"
+     combobulate-up-node               "C-M-h" "h"
+     combobulate-backward-up-node      "C-M-u" "u")
 
     ("smartparens-del-char"
      sp-delete-char                    "C-y" "y" "<deletechar>")
