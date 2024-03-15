@@ -1,0 +1,8 @@
+--- a/package.json
++++ b/package.json
+@@ -1,4 +1,5 @@
+ {
++  "name": "browser",
+   "dependencies": {
+     "@mozilla/readability": "^0.4.1",
+     "darkreader": "^4.9.34"

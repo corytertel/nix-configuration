@@ -22,8 +22,6 @@
   :hook
   ((c++-mode
     python-mode
-    clojure-mode
-    clojurescript-mode
     javascript-mode
     ;; js-mode
     ;; js-jsx-mode
@@ -135,8 +133,6 @@
 ;;     c-mode
 ;;     c++-mode
 ;;     python-mode
-;;     clojure-mode
-;;     clojurescript-mode
 ;;     javascript-mode
 ;;     js-mode
 ;;     js-jsx-mode

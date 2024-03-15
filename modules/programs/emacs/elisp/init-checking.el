@@ -119,19 +119,6 @@
   ;; 		       (t text))))))
   )
 
-(use-package flymake-kondor
-  :ensure t
-  :hook
-  (clojure-mode . flymake-kondor-setup)
-  (clojurescript-mode . flymake-kondor-setup)
-  (clojurec-mode . flymake-kondor-setup))
-
-;; (use-package flymake-joker
-;;   :config
-;;   (add-hook 'clojure-mode-hook #'flymake-joker-clj-enable)
-;;   (add-hook 'clojurescript-mode-hook #'flymake-joker-cljs-enable)
-;;   (add-hook 'clojure-mode-hook #'flymake-mode))
-
 ;; Display help messages automatically in echo area
 (setq help-at-pt-timer-delay 0.1)
 (setq help-at-pt-display-when-idle '(flymake-diagnostic))

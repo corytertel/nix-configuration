@@ -143,10 +143,9 @@
 
 ;; Structural editing
 (use-package smartparens
-  :after clojure-mode
   :hook
   ((prog-mode web-mode sgml-mode) . smartparens-mode)
-  ((emacs-lisp-mode lisp-mode scheme-mode clojure-mode) . smartparens-strict-mode)
+  ((emacs-lisp-mode lisp-mode scheme-mode) . smartparens-strict-mode)
   :custom
   (sp-navigate-consider-stringlike-sexp t)
   (sp-autoskip-closing-pair 'always)
@@ -190,8 +189,6 @@
    :map scheme-mode-map
    (";" . sp-comment)
    :map lisp-mode-map
-   (";" . sp-comment)
-   :map clojure-mode-map
    (";" . sp-comment))
   :init
   (require 'scheme)
@@ -313,9 +310,6 @@
 ;; (dolist (mode '(c-mode-common-hook
 ;; 		emacs-lisp-mode-hook
 ;; 		lisp-mode-hook
-;; 		clojure-mode-hook
-;; 		clojurescript-mode-hook
-;; 		clojurec-mode-hook
 ;; 		java-mode-hook
 ;; 		perl-mode-hook
 ;; 		sh-mode-hook

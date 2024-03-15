@@ -46,7 +46,6 @@ let
 
   # Langs
   + (builtins.readFile ./elisp/init-elisp.el)
-  # + (builtins.readFile ./elisp/init-clojure.el)
   + (builtins.readFile ./elisp/init-common-lisp.el)
   + (builtins.readFile ./elisp/init-cpp.el)
   + (builtins.readFile ./elisp/init-java.el)
@@ -65,8 +64,8 @@ let
   + (builtins.readFile ./elisp/init-window-management.el)
   + (if config.programs.cory.emacs.popup
      then builtins.readFile ./elisp/init-popup.el
-     else # ''(add-to-list 'load-path "${(pkgs.callPackage ./eaf.nix { inherit pkgs; })}")''
-       builtins.readFile ./elisp/init-no-popup.el)
+     else ''(add-to-list 'load-path "${(pkgs.callPackage ./eaf.nix { inherit pkgs; })}")''
+          + builtins.readFile ./elisp/init-no-popup.el)
 
   # Informal Packages
   # + (builtins.readFile ./elisp/eshell-undistract-me.el)
@@ -103,7 +102,6 @@ let
       # don't need these three rn because of scope highlighting
       # tree-sitter-scheme
       # tree-sitter-commonlisp
-      # tree-sitter-clojure
     ]))
   ];
 
@@ -245,31 +243,6 @@ in {
       aspellDicts.en
       hunspell
       hunspellDicts.ru_RU
-
-      # eaf
-      git
-      nodejs
-      # Causes weird cursor bugs on xmonad that make emacs unusable
-      # wmctrl
-      # xdotool
-      ((pkgs.python311.withPackages(ps: with ps; [
-        pandas
-        requests
-        sexpdata tld
-        pyqt6 pyqt6-sip
-        pyqt6-webengine epc lxml # for eaf
-        qrcode # eaf-file-browser
-        pysocks # eaf-browser
-        pymupdf # eaf-pdf-viewer
-        pypinyin # eaf-file-manager
-        psutil # eaf-system-monitor
-        retry # eaf-markdown-previewer
-        markdown
-      ])).override { ignoreCollisions = true; })
-      # eaf-browser
-      aria
-      # eaf-file-manager
-      fd
     ];
 
   };

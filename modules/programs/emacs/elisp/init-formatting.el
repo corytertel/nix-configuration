@@ -37,8 +37,6 @@
     scheme-mode
     emacs-lisp-mode
     lisp-mode
-    clojure-mode
-    clojurescript-mode
     javascript-mode
     js-mode
     js-jsx-mode
@@ -85,7 +83,7 @@
 
 ;; ;; Rainbow blocks
 ;; (use-package rainbow-blocks
-;;   :hook ((emacs-lisp-mode scheme-mode clojure-mode lisp-mode) .
+;;   :hook ((emacs-lisp-mode scheme-mode lisp-mode) .
 ;; 	 (lambda () (rainbow-blocks-mode 1) (rainbow-delimiters-mode -1)))
 ;;   :custom-face
 ;;   (rainbow-blocks-depth-1-face ((t (:foreground nil :background "#ffd5cf"))))
@@ -104,7 +102,6 @@
   ;; :init
   ;; (add-hook 'emacs-lisp-mode-hook (lambda () (rainbow-delimiters-mode -1) (prism-mode 1)))
   ;; (add-hook 'scheme-mode-hook (lambda () (rainbow-delimiters-mode -1) (prism-mode 1)))
-  ;; (add-hook 'clojure-mode-hook (lambda () (rainbow-delimiters-mode -1) (prism-mode 1)))
   ;; (add-hook 'lisp-mode-hook (lambda () (rainbow-delimiters-mode -1) (prism-mode 1)))
   :hook
   (scheme-mode . prism-mode)

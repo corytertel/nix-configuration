@@ -316,15 +316,6 @@
         gdb
         # irony-server
 
-        # clojure
-        # clisp
-        clojure
-        # clojure-lsp
-        # leiningen
-        # # joker
-        # clj-kondo
-        # babashka
-
         # common lisp
         clisp
         sbcl
@@ -360,13 +351,13 @@
         # ride
 
         # python
-        # (python311.withPackages (ps: with ps; [
-        #   epc
-        #   python-lsp-server
-        #   pygments
-        #   pip
-        #   numpy
-        # ]))
+        (python311.withPackages (ps: with ps; [
+          epc
+          python-lsp-server
+          pygments
+          pip
+          numpy
+        ]))
 
         # postgres
         postgresql
