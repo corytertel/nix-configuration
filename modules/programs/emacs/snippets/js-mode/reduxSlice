@@ -8,12 +8,12 @@ const initialState = {
 
 }
 
-const ${1:${TM_FILENAME_BASE}} = createSlice({
+const ${1:`(file-name-sans-extension (buffer-name))`} = createSlice({
   name: ${2:second},
   initialState,
   reducers: {}
 });
 
-export const {} = ${1:${TM_FILENAME_BASE}}.actions
+export const {} = ${1:`(file-name-sans-extension (buffer-name))`}.actions
 
-export default ${1:${TM_FILENAME_BASE}}.reducer
+export default ${1:`(file-name-sans-extension (buffer-name))`}.reducer

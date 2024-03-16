@@ -8,7 +8,7 @@ type Props = {}
 
 type State = {}
 
-class ${1:${TM_FILENAME_BASE}} extends Component<Props, State> {
+class ${1:`(file-name-sans-extension (buffer-name))`} extends Component<Props, State> {
   state = {}
 
   render() {
@@ -18,4 +18,4 @@ class ${1:${TM_FILENAME_BASE}} extends Component<Props, State> {
   }
 }
 
-export default ${1:${TM_FILENAME_BASE}}
+export default ${1:`(file-name-sans-extension (buffer-name))`}

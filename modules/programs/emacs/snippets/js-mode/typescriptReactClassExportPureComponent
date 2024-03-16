@@ -6,7 +6,7 @@ import React, { PureComponent } from 'react'
 
 type Props = {}
 
-class ${1:${TM_FILENAME_BASE}} extends PureComponent<Props> {
+class ${1:`(file-name-sans-extension (buffer-name))`} extends PureComponent<Props> {
   render() {
     return (
       <div>${1:first}</div>
@@ -14,4 +14,4 @@ class ${1:${TM_FILENAME_BASE}} extends PureComponent<Props> {
   }
 }
 
-export default ${1:${TM_FILENAME_BASE}}
+export default ${1:`(file-name-sans-extension (buffer-name))`}

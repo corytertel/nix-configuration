@@ -5,12 +5,12 @@
 import PropTypes from 'prop-types'
 import React, { memo } from 'react'
 
-const ${1:${TM_FILENAME_BASE}} = memo((props) => {
+const ${1:`(file-name-sans-extension (buffer-name))`} = memo((props) => {
   return (
     <div>${1:first}</div>
   )
 })
 
-${1:${TM_FILENAME_BASE}}.propTypes = {}
+${1:`(file-name-sans-extension (buffer-name))`}.propTypes = {}
 
-export default ${1:${TM_FILENAME_BASE}}
+export default ${1:`(file-name-sans-extension (buffer-name))`}

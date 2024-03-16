@@ -5,11 +5,11 @@
 import React from 'react'
 import renderer from 'react-test-renderer'
 
-import { ${1:${TM_FILENAME_BASE}} } from '../${1:${TM_FILENAME_BASE}}'
+import { ${1:`(file-name-sans-extension (buffer-name))`} } from '../${1:`(file-name-sans-extension (buffer-name))`}'
 
-describe('<${1:${TM_FILENAME_BASE}} />', () => {
+describe('<${1:`(file-name-sans-extension (buffer-name))`} />', () => {
   const defaultProps = {}
-  const wrapper = renderer.create(<${1:${TM_FILENAME_BASE}} {...defaultProps} />)
+  const wrapper = renderer.create(<${1:`(file-name-sans-extension (buffer-name))`} {...defaultProps} />)
 
   test('render', () => {
     expect(wrapper).toMatchSnapshot()

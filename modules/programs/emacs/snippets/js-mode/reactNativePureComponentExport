@@ -5,7 +5,7 @@
 import { Text, View } from 'react-native'
 import React, { PureComponent } from 'react'
 
-export class ${1:${TM_FILENAME_BASE}} extends PureComponent {
+export class ${1:`(file-name-sans-extension (buffer-name))`} extends PureComponent {
   render() {
     return (
       <View>
@@ -15,4 +15,4 @@ export class ${1:${TM_FILENAME_BASE}} extends PureComponent {
   }
 }
 
-export default ${1:${TM_FILENAME_BASE}}
+export default ${1:`(file-name-sans-extension (buffer-name))`}

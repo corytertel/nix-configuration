@@ -9,7 +9,7 @@ type Props = {}
 
 type State = {}
 
-export class ${1:${TM_FILENAME_BASE}} extends Component<Props, State> {
+export class ${1:`(file-name-sans-extension (buffer-name))`} extends Component<Props, State> {
   state = {}
 
   render() {
@@ -23,4 +23,4 @@ const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = {}
 
-export default connect(mapStateToProps, mapDispatchToProps)(${1:${TM_FILENAME_BASE}})
+export default connect(mapStateToProps, mapDispatchToProps)(${1:`(file-name-sans-extension (buffer-name))`})

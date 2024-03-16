@@ -6,10 +6,10 @@ import React from 'react'
 
 type Props = {}
 
-function ${1:${TM_FILENAME_BASE}}({}: Props) {
+function ${1:`(file-name-sans-extension (buffer-name))`}({}: Props) {
   return (
     <div>${1:first}</div>
   )
 }
 
-export default ${1:${TM_FILENAME_BASE}}
+export default ${1:`(file-name-sans-extension (buffer-name))`}

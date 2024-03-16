@@ -5,7 +5,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 
-export default class ${1:${TM_FILENAME_BASE}} extends Component {
+export default class ${1:`(file-name-sans-extension (buffer-name))`} extends Component {
   static propTypes = {${2:second}: ${3:third}}
 
   render() {

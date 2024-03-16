@@ -4,10 +4,10 @@
 # --
 import React, { memo } from 'react'
 
-const ${1:${TM_FILENAME_BASE}} = memo(() => {
+const ${1:`(file-name-sans-extension (buffer-name))`} = memo(() => {
   return (
     <div>${1:first}</div>
   )
 })
 
-export default ${1:${TM_FILENAME_BASE}}
+export default ${1:`(file-name-sans-extension (buffer-name))`}

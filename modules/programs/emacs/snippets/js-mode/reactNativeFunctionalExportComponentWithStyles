@@ -5,7 +5,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const ${1:${TM_FILENAME_BASE}} = () => {
+const ${1:`(file-name-sans-extension (buffer-name))`} = () => {
   return (
     <View>
       <Text>${1:first}</Text>
@@ -13,6 +13,6 @@ const ${1:${TM_FILENAME_BASE}} = () => {
   )
 }
 
-export default ${1:${TM_FILENAME_BASE}}
+export default ${1:`(file-name-sans-extension (buffer-name))`}
 
 const styles = StyleSheet.create({})
