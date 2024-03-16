@@ -11,3 +11,99 @@
 	(width . 150)
 	(height . 12)))
 (vertico-frame-mode t)
+
+;; Modeline
+(set-face-attribute 'mode-line nil
+    		    :foreground "#141404"
+		    :background "#ffffff"
+		    :box '(:line-width 1 :color "#3647d9" :style nil)
+		    :underline nil
+		    :overline nil
+		    :family variable-font-name
+		    :height variable-font-height)
+
+(setq repeat-echo-function (lambda (keymap)
+			     ;; (repeat-echo-message keymap)
+			     (cond
+			      (keymap
+			       (set-face-attribute 'mode-line nil
+					           :foreground "#141404"
+					           :background "#ffdac0")
+			       (set-face-attribute 'mode-line-inactive nil
+					           :foreground "#141404"
+					           :background "#ffffff"))
+			      (t
+			       (set-face-attribute 'mode-line nil
+					           :foreground "#141404"
+					           :background "#ffffff")
+			       (set-face-attribute 'mode-line-inactive nil
+					           :foreground "#141404"
+					           :background "#ffffff")))))
+
+;; Find-file launches external os apps
+(defun cory/find-file ()
+  (interactive)
+  (let* ((file (car (find-file-read-args
+		     "Find file: "
+		     (confirm-nonexistent-file-or-buffer))))
+	 (run (lambda (command)
+		(async-shell-command
+		 (concat command " " (shell-quote-argument (expand-file-name file)))))))
+    (cond
+     ((string-match-p ".*\.mp4$" file) (funcall run "vlc"))
+     ((string-match-p ".*\.mpeg$" file) (funcall run "vlc"))
+     ((string-match-p ".*\.ogg$" file) (funcall run "vlc"))
+     ((string-match-p ".*\.mkv$" file) (funcall run "vlc"))
+     ((string-match-p ".*\.mov$" file) (funcall run "vlc"))
+     ((string-match-p ".*\.webm$" file) (funcall run "vlc"))
+     ((string-match-p ".*\.mp3$" file) (funcall run "strawberry"))
+     ((string-match-p ".*\.opus$" file) (funcall run "strawberry"))
+     ((string-match-p ".*\.wav$" file) (funcall run "strawberry"))
+     ((string-match-p ".*\.weba$" file) (funcall run "strawberry"))
+     ((string-match-p ".*\.aac$" file) (funcall run "strawberry"))
+     ((string-match-p ".*\.doc$" file) (funcall run "libreoffice"))
+     ((string-match-p ".*\.docx$" file) (funcall run "libreoffice"))
+     ((string-match-p ".*\.odt$" file) (funcall run "libreoffice"))
+     ((string-match-p ".*\.ppt$" file) (funcall run "libreoffice"))
+     ((string-match-p ".*\.pptx$" file) (funcall run "libreoffice"))
+     ((string-match-p ".*\.xcf$" file) (funcall run "gimp"))
+     ((string-match-p ".*\.pdf$" file) (funcall run "zathura"))
+     ((string-match-p ".*\.jpg$" file) (funcall run "sxiv"))
+     ((string-match-p ".*\.jpeg$" file) (funcall run "sxiv"))
+     ((string-match-p ".*\.png$" file) (funcall run "sxiv"))
+     ((string-match-p ".*\.xpm$" file) (funcall run "sxiv"))
+     ((string-match-p ".*\.xbm$" file) (funcall run "sxiv"))
+     ((string-match-p ".*\.svg$" file) (funcall run "sxiv"))
+     ((string-match-p ".*\.webp$" file) (funcall run "sxiv"))
+     (t (find-file file)))))
+
+(global-set-key [remap find-file] #'cory/find-file)
+
+;; Dired opes external os apps
+(use-package dired-open
+  :custom
+  (dired-open-extensions '(("mp4" . "vlc")
+			   ("mpeg" . "vlc")
+			   ("ogg" . "vlc")
+			   ("mkv" . "vlc")
+			   ("mov" . "vlc")
+			   ("webm" . "vlc")
+			   ("mp3" . "strawberry")
+			   ("opus" . "strawberry")
+			   ("wav" . "strawberry")
+			   ("weba" . "strawberry")
+			   ("aac" . "strawberry")
+			   ("doc" . "libreoffice")
+			   ("docx" . "libreoffice")
+			   ("odt" . "libreoffice")
+			   ("ppt" . "libreoffice")
+			   ("pptx" . "libreoffice")
+			   ("xcf" . "gimp")
+			   ("pdf" . "zathura")
+			   ("jpg" . "sxiv")
+			   ("jpeg" . "sxiv")
+			   ("png" . "sxiv")
+			   ("xpm" . "sxiv")
+			   ("xbm" . "sxiv")
+			   ("svg" . "sxiv")
+			   ("webp" . "sxiv"))))

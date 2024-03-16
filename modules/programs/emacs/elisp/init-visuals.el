@@ -280,17 +280,9 @@
 ;; (add-hook 'emacs-startup-hook (lambda () (load-theme 'plain-light t)))
 
 ;; Basic theme settings
-;; (set-face-attribute 'mode-line nil
-;;     		    :foreground "#141404"
-;; 		    :background "#c0daff"
-;; 		    :box '(:line-width 1 :color "#3647d9" :style nil)
-;; 		    :underline nil
-;; 		    :overline nil
-;; 		    :family variable-font-name
-;; 		    :height variable-font-height)
 (set-face-attribute 'mode-line nil
     		    :foreground "#141404"
-		    :background "#ffffff"
+		    :background "#c0daff"
 		    :box '(:line-width 1 :color "#3647d9" :style nil)
 		    :underline nil
 		    :overline nil

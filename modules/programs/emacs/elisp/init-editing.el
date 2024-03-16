@@ -379,7 +379,8 @@
   :bind
   (("C-h k" . devil-helpful-key)
    ;; ("C-h k" . devil-describe-key)
-   ("C-\\" . devil-quoted-insert))
+   ("C-\\" . devil-quoted-insert)
+   ("C-x q" . exchange-point-and-mark))
   :hook
   (emacs-startup . global-devil-mode)
   :config

@@ -266,7 +266,6 @@
 (global-set-key [remap beginning-of-buffer] #'cory/beginning-of-workspace)
 (global-set-key [remap end-of-buffer] #'cory/end-of-workspace)
 (global-set-key [remap kill-buffer] #'kill-this-buffer)
-(global-set-key [remap find-file] #'cory/find-file)
 (global-set-key [remap yank] #'cory/yank)
 
 ;; TODO `k' and `SPC' key variation in text and prog modes

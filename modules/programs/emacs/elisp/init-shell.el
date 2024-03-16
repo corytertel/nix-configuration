@@ -469,10 +469,27 @@ This function is meant to be used as advice around
 ;; (add-hook 'eshell-pre-command-hook #'eshell-undistract-me-pre-command)
 ;; (add-hook 'eshell-before-prompt-hook #'eshell-undistract-me-before-prompt)
 
+;; Copy or interrupt
+(defun eshell-kill-ring-save-or-interrupt (beg end &optional region)
+  (interactive (list (mark) (point) 'region))
+  (if mark-active
+      (kill-ring-save beg end region)
+    (eshell-interrupt-process)))
+
+(with-eval-after-load 'esh-proc
+  (define-key eshell-proc-mode-map (kbd "C-c C-c") nil)
+  (define-key eshell-proc-mode-map (kbd "C-j") #'eshell-kill-ring-save-or-interrupt))
+
 ;; Vterm
 (use-package vterm
-  :ensure t
-  :commands (vterm))
+  :config
+  (defmacro cory/vterm-send-fn (key &optional shift meta control)
+    `(lambda ()
+       (interactive)
+       (when vterm--term
+         (vterm-send-key ,key ,shift ,meta ,control))))
+  (define-key vterm-mode-map (kbd "C-c C-c") (cory/vterm-send-fn "j" nil nil t))
+  (define-key vterm-mode-map (kbd "C-j") (cory/vterm-send-fn "c" nil nil t)))
 
 ;; (use-package multi-vterm
 ;;   :ensure t

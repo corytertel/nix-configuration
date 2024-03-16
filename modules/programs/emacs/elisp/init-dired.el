@@ -23,35 +23,6 @@
 (define-key dired-mode-map
   (vector 'remap 'end-of-buffer) 'dired-jump-to-bottom)
 
-;; Open certain file extensions in external programs
-(use-package dired-open
-  :custom
-  (dired-open-extensions '(("mp4" . "vlc")
-			   ("mpeg" . "vlc")
-			   ("ogg" . "vlc")
-			   ("mkv" . "vlc")
-			   ("mov" . "vlc")
-			   ("webm" . "vlc")
-			   ("mp3" . "strawberry")
-			   ("opus" . "strawberry")
-			   ("wav" . "strawberry")
-			   ("weba" . "strawberry")
-			   ("aac" . "strawberry")
-			   ("doc" . "libreoffice")
-			   ("docx" . "libreoffice")
-			   ("odt" . "libreoffice")
-			   ("ppt" . "libreoffice")
-			   ("pptx" . "libreoffice")
-			   ("xcf" . "gimp")
-			   ("pdf" . "zathura")
-			   ("jpg" . "sxiv")
-			   ("jpeg" . "sxiv")
-			   ("png" . "sxiv")
-			   ("xpm" . "sxiv")
-			   ("xbm" . "sxiv")
-			   ("svg" . "sxiv")
-			   ("webp" . "sxiv"))))
-
 (defun cory/dired ()
   (interactive)
   (dired default-directory))

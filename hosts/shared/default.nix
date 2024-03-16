@@ -351,13 +351,21 @@
         # ride
 
         # python
-        (python311.withPackages (ps: with ps; [
-          epc
-          python-lsp-server
-          pygments
-          pip
-          numpy
-        ]))
+        (python311.withPackages (ps: with ps;
+          let
+            qgis = buildPythonPackage {
+              pname = "qgis";
+              version = "3.36.0";
+              src = "${pkgs.qgis}/share/qgis/python/qgis/";
+            };
+          in [
+            epc
+            python-lsp-server
+            pygments
+            pip
+            numpy
+            # qgis
+          ]))
 
         # postgres
         postgresql

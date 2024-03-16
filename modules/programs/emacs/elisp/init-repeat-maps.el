@@ -371,27 +371,7 @@ This must be in the form required by the
 
 (repeaters-define-maps repeaters-maps)
 (setq repeat-exit-key "g"
-      repeat-exit-timeout 30
-      repeat-echo-function (lambda (keymap)
-			     ;; (repeat-echo-message keymap)
-			     (cond
-			      (keymap
-			       (set-face-attribute 'mode-line nil
-						   :foreground "#141404"
-						   :background "#ffdac0")
-			       (set-face-attribute 'mode-line-inactive nil
-						   :foreground "#141404"
-						   :background "#ffffff"))
-			      (t
-			       ;; (set-face-attribute 'mode-line nil
-			       ;; 			   :foreground "#141404"
-			       ;; 			   :background "#c0daff")
-			       (set-face-attribute 'mode-line nil
-						   :foreground "#141404"
-						   :background "#ffffff")
-			       (set-face-attribute 'mode-line-inactive nil
-						   :foreground "#141404"
-						   :background "#ffffff")))))
+      repeat-exit-timeout 30)
 
 ;; ;; Disable the built-in repeat-mode hinting
 ;; (setq repeat-echo-function #'ignore)
