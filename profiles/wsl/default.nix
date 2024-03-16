@@ -21,7 +21,7 @@
     '';
   };
 
-  # programs.cory.nushell.enable = true;
+  programs.cory.zsh.enable = true;
 
   theme = with pkgs; {
     font = {
