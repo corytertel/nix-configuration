@@ -5,25 +5,31 @@
   windowManagers.cory.fvwm.laptop.enable = true;
 
   # # Editor
-  programs.cory.emacs.enable = true;
+  programs.cory.emacs = {
+    enable = true;
+    popup = false;
+    fonts = {
+      # monospace.size = 100;
+      monospace = {
+        package = pkgs.librecode;
+        name = "Librecode";
+        size = 115;
+      };
+      variable.size = 115;
+    };
+  };
 
   # Terminal
   programs.cory.kitty.enable = true;
 
   # Browser
-  programs.cory.firefox = {
-    enable = true;
-    changeColor = false;
-  };
+  programs.cory.firefox.enable = true;
 
   # File Manager
   programs.cory.caja.enable = true;
 
   # Photo Viewer
-  programs.cory.gwenview = {
-    enable = true;
-    config = import ../../config/gwenview/config.nix;
-  };
+  programs.cory.sxiv.enable = true;
 
   # Video Player
   programs.cory.mpc-qt.enable = true;
@@ -32,31 +38,11 @@
   programs.cory.qpdfview.enable = true;
 
   # Set other apps
-  apps = {
-    photoEditor = {
-      name = "photogimp";
-      command = "gimp";
-      desktopFile = "gimp.desktop";
-      package = pkgs.photogimp;
-    };
-    musicPlayer = {
-      name = "strawberry";
-      command = "strawberry";
-      desktopFile = "org.strawberrymusicplayer.strawberry.desktop";
-      package = pkgs.strawberry;
-    };
-    archiver = {
-      name = "ark";
-      command = "ark";
-      desktopFile = "org.kde.ark.desktop";
-      package = pkgs.libsForQt5.ark;
-    };
-    launcher = {
-      name = "emacs-run-launcher";
-      command = "xdotool mousemove 1800 1200; emacsclient -e '(emacs-run-launcher)'";
-      desktopFile = "emacsclient.desktop";
-      package = pkgs.emacs-git;
-    };
+  apps.musicPlayer = {
+    name = "strawberry";
+    command = "strawberry";
+    desktopFile = "org.strawberrymusicplayer.strawberry.desktop";
+    package = pkgs.strawberry;
   };
 
   # Notifications
@@ -72,7 +58,8 @@
   # Discord
   programs.cory.discord = {
     enable = true;
-    css = builtins.readFile ../../config/discocss/skeuocord.theme.css;
+    # css = builtins.readFile ../../config/discocss/skeuocord.theme.css;
+    css = "";
   };
 
   # Shell
@@ -100,15 +87,23 @@
       package = crystal-nova-icon-theme;
     };
     font = {
-      system = {
-        package = oxygenfonts;
-        name = "Oxygen-Sans";
-        size = 11;
+      serif = {
+        package = liberation_ttf;
+        name = "Liberation Serif";
+        size = 12;
+      };
+      sansSerif = {
+        package = liberation_ttf;
+        name = "Liberation Sans";
+        size = 12;
       };
       monospace = {
         package = julia-mono-nerdfont;
         name = "JuliaMono Nerd Font";
         size = 10;
+        # package = librecode;
+        # name = "Librecode";
+        # size = 12;
       };
     };
     color = {

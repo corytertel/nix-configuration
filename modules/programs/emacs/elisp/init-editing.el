@@ -192,6 +192,19 @@
    (";" . sp-comment))
   :init
   (require 'scheme)
+  (require 'smartparens)
+  (setq sp--html-modes
+        '(sgml-mode
+          html-mode
+          rhtml-mode
+          nxhtml-mode
+          nxml-mode
+          web-mode
+          jinja2-mode
+          html-erb-mode
+          js-jsx-mode
+          js-ts-mode
+          tsx-ts-mode))
   (require 'smartparens-config)
   :config
   ;; Create keybindings to wrap symbol/region in pairs

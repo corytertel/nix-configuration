@@ -40,12 +40,15 @@ PipeRead fvwm-menu-xlock
 PipeRead fvwm-menu-desktop
 
 # Reads in the file "xdgmenu" that contains a menu with all apps
-# that have a .desktop file. Before rebuilding read over and
-# correct the file to ensure that:
-# 1. There are no hard paths to the nix store
-# 2. All icons that are displayed are the same size
-# 3. There is no menu title
-# 4. The "Emacs (Client)" option works
+# that have a .desktop file.
+# This file needs to be manually generated due to the requirement of being
+# run within an X session. Nix sandboxing prevents it from being
+# automatically generated.
+#
+# xdgmenumaker -i -f fvwm -s 32 \
+#       | grep -v -G "Title$" \
+#       | sed s#'\+ "\(.*\)%.*\(48x48\|256x256\|512x512\|pixmaps\).*"'#'+ "\1"'# \
+#       > xdgmenu
 Read xdgmenu
 
 # Set the cursor
@@ -102,17 +105,15 @@ AddToFunc   StartFunction
 # Ran when fvwm first starts an never ran again, even on restart.
 DestroyFunc InitFunction
 AddToFunc InitFunction
-+ I Exec exec mkdir -p /tmp/fvwm-cache
-+ I Exec exec emacs --daemon
-# + I Exec exec dolphin --daemon
++ I Exec exec mkdir -p $[fvwm_cache]
+# Can't start emacs in daemon mode because eaf won't work
+# + I Exec exec emacs --daemon
 + I Exec exec touchegg --client
 + I Exec exec conky
 + I Exec exec nm-applet
 + I Exec exec blueman-applet
-# + I Exec exec pasystray
 + I Exec exec mate-volume-control-status-icon
 + I Exec exec cbatticon
-# + I Exec exec flameshot
 + I Exec exec xscreensaver --no-splash
 + I SetVolume 0
 
@@ -341,9 +342,9 @@ DesktopSize 3x3
 #
 # Set EdgeScroll 0 0 and/or EdgeResistance -1 to disable.
 EdgeScroll 100 100 wrap
-EdgeResistance 350
+EdgeResistance 200
 EdgeThickness 1
-Style * EdgeMoveDelay 350, EdgeMoveResistance 350
+Style * EdgeMoveDelay 200, EdgeMoveResistance 200
 
 # EwmhBaseStruts [left] [right] [top] [bottom]
 # Reserves space along the edge(s) of the Screen that will not
@@ -361,7 +362,7 @@ Style * SloppyFocus, MouseFocusClickRaises
 Module FvwmAuto 1000 "Silent AutoRaise"
 
 # Default Font
-DefaultFont "xft:JuliaMono Nerd Font:size=11:antialias=True"
+DefaultFont "xft:Librecode:size=12:antialias=True"
 
 # Window Placement
 # Style * MinOverlapPlacement, GrabFocusOff, !UsePPosition
@@ -414,9 +415,6 @@ Style ConfirmQuit !Title, PositionPlacement Center, WindowListSkip, Layer 6
 Style FvwmIdent WindowListSkip
 Style DesktopEditors NoTitle, !Borders, !Handles
 Style Steam NoTitle, !Borders, !Handles
-# Style firefox NoTitle, !Borders, !Handles
-# Style emacs NoTitle, !Borders, !Handles
-Style emacs-run-launcher NoTitle, !Borders, !Handles
 Style Conky NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
 
@@ -480,13 +478,13 @@ MenuStyle * MenuColorset 5, ActiveColorset 6, GreyedColorset 7, TitleColorset 8
 MenuStyle * Hilight3DOff, HilightBack, HilightTitleBack, SeparatorsLong
 MenuStyle * TrianglesSolid, TrianglesUseFore
 MenuStyle * ItemFormat "%|%8.0i%24.24l%10.4>%|"
-MenuStyle * Font "xft:JuliaMono Nerd Font:size=11:antialias=True"
+MenuStyle * Font "xft:Librecode:size=11:antialias=True"
 
 MenuStyle * PopupDelayed, PopupDelay 300, PopdownImmediately
 MenuStyle * PopupOffset -5 100, TitleWarpOff
 MenuStyle * TitleUnderlines2
 MenuStyle * AnimationOff, AutomaticHotkeysOff
-MenuStyle * BorderWidth 0
+MenuStyle * BorderWidth 1, BorderColorset 3, HilightBorderColorset 4
 MenuStyle * PopupAsSubmenu, HoldSubmenus, SubmenusRight
 MenuStyle * VerticalItemSpacing 5 5, VerticalTitleSpacing 10 10
 MenuStyle * ActiveFore
@@ -732,7 +730,7 @@ Silent Key F5 A N Next ($[w.class]) FocusWindow
 # Silent Key F6 A N Prev (AcceptsFocus) FocusWindow
 Silent Key F6 A N WindowList Root c c NoDeskSort CurrentAtEnd, SelectOnRelease F6
 # Silent Key F6 A N SwitchWindow
-Silent Key F7 A N FullScreen
+# Silent Key F7 A N FullScreen
 Silent Key F8 A N Close
 Silent Key F9 A N Next ("emacs") FocusWindow
 Silent Key F10 A N Next ("firefox|chromium-browser") FocusWindow
@@ -781,15 +779,6 @@ Silent Key Down     A    4M       MoveAndGotoPage 0p +1p
 Silent Key Left     A    4M       MoveAndGotoPage -1p 0p
 Silent Key Right    A    4M       MoveAndGotoPage +1p 0p
 Silent Key Tab      A    4        GotoPage prev
-# Silent Key F1       A    4        GotoPage 0 0
-# Silent Key F2       A    4        GotoPage 1 0
-# Silent Key F3       A    4        GotoPage 2 0
-# Silent Key F4       A    4        GotoPage 0 1
-# Silent Key F5       A    4        GotoPage 1 1
-# Silent Key F6       A    4        GotoPage 2 1
-# Silent Key F7       A    4        GotoPage 0 2
-# Silent Key F8       A    4        GotoPage 1 2
-# Silent Key F9       A    4        GotoPage 2 2
 
 # Window Switching
 # TODO alt-tab behavior
@@ -835,7 +824,9 @@ Mouse 1	T    A RaiseMoveX Move FullScreen
 Mouse 1	FS   A RaiseMove Resize
 Mouse 4	T    A WindowShade True
 Mouse 5	T    A WindowShade False
-Mouse 1	R    A Menu MenuFvwmRoot
+# Mouse 1	R    A Menu MenuFvwmRoot
+Mouse 1	R    A Nop
+Mouse 8	A    A Menu MenuFvwmRoot
 Mouse 2	R    A WindowList
 Mouse 3	R    A Menu MenuWindowOpsLong
 Mouse 1	I    A RaiseMoveX Move "Iconify off"
@@ -880,7 +871,7 @@ Mouse 2 T    A AnimatedMove 50-50w 50-50w
 
 DestroyDecor WindowDecor
 AddToDecor   WindowDecor
-+ TitleStyle Centered Height 40 -- Flat
++ TitleStyle Centered Height 35 -- Flat
 + ButtonStyle 1 \
         ActiveUp          (Pixmap $[fvwm_img]/button/stick-activeup.png -- Flat) \
         ActiveDown        (Pixmap $[fvwm_img]/button/stick-activedown.png -- Flat) \
@@ -900,7 +891,7 @@ AddToDecor   WindowDecor
 
 DestroyDecor FullScreenDecor
 AddToDecor   FullScreenDecor
-+ TitleStyle Centered Height 40 -- Flat
++ TitleStyle Centered Height 35 -- Flat
 + ButtonStyle 1 \
         ActiveUp          (Pixmap $[fvwm_img]/button/stick-fullscreenup.png -- Flat) \
         ActiveDown        (Pixmap $[fvwm_img]/button/stick-fullscreendown.png -- Flat) \
@@ -928,7 +919,7 @@ AddToDecor   FullScreenDecor
 # a window. One use is getting the class/resource/name of a window.
 DestroyModuleConfig FvwmIdent:*
 *FvwmIdent: Colorset 10
-*FvwmIdent: Font "xft:JuliaMono Nerd Font:size=13:antialias=True"
+*FvwmIdent: Font "xft:Librecode:size=13:antialias=True"
 
 # FvwmScript
 #
@@ -940,7 +931,7 @@ DestroyModuleConfig FvwmIdent:*
 #     quitting fvwm.
 DestroyModuleConfig FvwmScript:*
 *FvwmScript: DefaultColorset 10
-*FvwmScript: Font "xft:JuliaMono Nerd Font:size=13"
+*FvwmScript: Font "xft:Librecode:size=13"
 
 # FvwmButtons - RightPanel
 #
@@ -956,7 +947,7 @@ DestroyModuleConfig RightPanel:*
 *RightPanel: Rows 380
 *RightPanel: Columns 120
 *RightPanel: Frame 0
-*RightPanel: Font "xft:JuliaMono Nerd Font:size=13:antialias=True"
+*RightPanel: Font "xft:Librecode:size=13:antialias=True"
 *RightPanel: (120x200, Icon "$[fvwm_img]/nixos-logo.png", Frame 0)
 *RightPanel: (120x5, Frame 0)
 *RightPanel: (5x120, Frame 0)
@@ -980,7 +971,7 @@ DestroyModuleConfig FvwmPager:*
 *FvwmPager: WindowColorsets 10 11
 *FvwmPager: Font None
 *FvwmPager: Balloons All
-*FvwmPager: BalloonFont "xft:JuliaMono Nerd Font:size=11:antialias=True"
+*FvwmPager: BalloonFont "xft:Librecode:size=11:antialias=True"
 *FvwmPager: BallonYOffset +2
 # *FvwmPager: Window3dBorders
 *FvwmPager: MiniIcons
@@ -1005,7 +996,7 @@ DestroyModuleConfig FvwmIconMan:*
 *FvwmIconMan: DrawIcons always
 *FvwmIconMan: ReliefThickness 0
 *FvwmIconMan: Format "%t"
-*FvwmIconMan: Font "xft:JuliaMono Nerd Font:size=11:antialias=True"
+*FvwmIconMan: Font "xft:Librecode:size=11:antialias=True"
 *FvwmIconMan: Action Mouse 0 A ret
 *FvwmIconMan: Action Mouse 1 A sendcommand IconManClick
 *FvwmIconMan: Action Mouse 3 A sendcommand "Menu MenuIconOps"

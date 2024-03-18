@@ -179,16 +179,22 @@ in {
 
     environment.variables = {
       ALTERNATE_EDITOR = "emacs -nw";
-      EDITOR = "emacsclient -nw";
-      VISUAL = "emacsclient -c -a ''";
+      # emacsclient does not work bc of eaf
+      # EDITOR = "emacsclient -nw";
+      # VISUAL = "emacsclient -c -a ''";
+      EDITOR = "emacs -nw";
+      VISUAL = "emacs -c -a ''";
       # eaf
       QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt6.qtbase.outPath}/lib/qt-6/plugins";
     };
 
     apps.editor = {
       name = "emacs";
-      command = "emacsclient -c -e '(fancy-startup-screen)'";
-      desktopFile = "emacsclient.desktop";
+      # command = "emacsclient -c -e '(fancy-startup-screen)'";
+      # desktopFile = "emacsclient.desktop";
+      # emacsclient does not work bc of eaf
+      command = "emacs -c -e '(fancy-startup-screen)'";
+      desktopFile = "emacs.desktop";
       package = emacsPackage;
     };
 

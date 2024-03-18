@@ -18,8 +18,17 @@
 
 ;; Focus selected window
 (use-package golden-ratio
+  :bind
+  (("<f7>" . cory/toggle-golden-ratio))
   :config
-  (golden-ratio-mode 1))
+  (golden-ratio-mode 1)
+  (defun cory/toggle-golden-ratio ()
+    (interactive)
+    (if golden-ratio-mode
+        (progn
+          (golden-ratio-mode 0)
+          (balance-windows))
+      (golden-ratio-mode 1))))
 
 ;; Modeline
 (setq repeat-echo-function (lambda (keymap)
@@ -99,13 +108,26 @@ i.e. windows tiled side-by-side."
 
 ;; Popup Terminal
 (use-package popper
-  :bind (("C-`"   . popper-toggle)
+  :bind (("C-`"   . cory/toggle-eshell)
          ("M-`"   . popper-cycle)
          ("C-M-`" . popper-toggle-type))
   :config
-  (setq popper-reference-buffers '(eshell-mode))
-  (popper-mode 1)
-  (popper-echo-mode 1))
+  (defun cory/toggle-eshell ()
+    (interactive)
+    (cl-assert eshell-buffer-name)
+    (unless (get-buffer eshell-buffer-name)
+      (let ((buf (generate-new-buffer eshell-buffer-name)))
+        (with-current-buffer eshell-buffer-name
+          (eshell-mode))
+        (setq popper-buried-popup-alist `((nil (nil . ,buf))))))
+    (popper-toggle))
+
+  (setq popper-reference-buffers '(eshell-mode)
+        popper-window-height
+        (lambda (win)
+          (floor (frame-height) 2)))
+
+  (popper-mode 1))
 
 ;; Pdf viewer
 (use-package pdf-tools

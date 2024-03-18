@@ -64,6 +64,7 @@
    ("C-c C-p" . nil)
    ("C-c C-t" . org-previous-visible-heading)
    ("C-c C-g" . org-goto)
+   ("C-c C-d" . org-deadline)
    ("C-M-t" . org-metaup)
    ("C-M-h" . org-metadown)
    ("C-M-n" . org-metaright)
@@ -170,6 +171,11 @@
   (org-export-backends '(ascii html latex odt md))
   ;; org v8 bundled with Emacs 24.4
   (org-odt-preferred-output-format "docx")
+
+  ;; Agenda
+  (org-agenda-files '("~/Org/todo.org"))
+  (org-agenda-start-on-weekday nil)
+  (org-deadline-warning-days 0)
 
   :config
   (set-face-attribute 'org-document-title nil :height 1.5 :underline t)

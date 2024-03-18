@@ -7,8 +7,15 @@ let
   fvwm-config = pkgs.stdenv.mkDerivation {
     name = "fvwm-config";
     dontBuild = true;
+    # buildInputs = [ pkgs.xdgmenumaker ];
+    # buildPhase = ''
+    #   xdgmenumaker -i -f fvwm -s 32 \
+    #   | grep -v -G "Title$" \
+    #   | sed s#'\+ "\(.*\)%.*\(48x48\|256x256\|512x512\).*"'#'+ "\1"'# \
+    #   > xdgmenu
+    # '';
     installPhase = ''
-      cp -aR $src $out
+      cp -r $src $out
     '';
     src = ../../../config/fvwm-laptop;
   };
@@ -44,7 +51,7 @@ in {
       fvwm_img = "${fvwm-config}/images";
       fvwm_icon = "${config.theme.icons.package}/share/icons/crystal-nova";
       fvwm_wallpaper = "${fvwm-config}/images/wallpaper";
-      fvwm_cache = "/tmp/fvwm-cache";
+      fvwm_cache = "/tmp/.fvwm-cache";
       fvwm_scripts = "${fvwm-config}/scripts";
 
       fvwm_term = config.apps.terminal.command;
@@ -53,15 +60,12 @@ in {
       fvwm_file_manager = config.apps.fileManager.command;
       fvwm_music_player = config.apps.musicPlayer.command;
       fvwm_video_player = config.apps.videoPlayer.command;
-      fvwm_launch = config.apps.launcher.command;
       fvwm_chat = "discord";
       fvwm_mail = "thunderbird";
 
       QT_AUTO_SCREEN_SCALE_FACTOR = "0";
       PLASMA_USE_QT_SCALING = "1";
     };
-
-    security.pam.services.cory.enableKwallet = true;
 
     environment = {
       systemPackages = with pkgs; [
@@ -98,17 +102,6 @@ in {
         upower
         mate.mate-media
       ];
-    };
-
-    home-manager.users.cory.home.pointerCursor = with config.theme; {
-      name = cursor.theme;
-      size = cursor.size;
-      gtk.enable = true;
-      package = cursor.package;
-      x11 = {
-        enable = true;
-        defaultCursor = "left_ptr";
-      };
     };
   };
 }

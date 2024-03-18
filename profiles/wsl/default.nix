@@ -3,10 +3,18 @@
 {
   programs.cory.emacs = {
     enable = true;
-    package = pkgs.emacs-pgtk;
+    package = pkgs.emacs-pgtk.override {
+      withTreeSitter = true;
+      withNativeCompilation = true;
+    };
     popup = false;
     fonts = {
-      monospace.size = 140;
+      # monospace.size = 140;
+      monospace = {
+        package = pkgs.librecode;
+        name = "Librecode";
+        size = 150;
+      };
       variable.size = 150;
     };
     extraConfig = ''
