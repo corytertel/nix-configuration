@@ -60,12 +60,21 @@ let
   + (builtins.readFile ./elisp/init-dired.el)
   + (builtins.readFile ./elisp/init-nixos.el)
   + (builtins.readFile ./elisp/init-org.el)
+  + (if config.programs.cory.emacs.eaf
+     then ''
+       (add-to-list 'load-path "${(pkgs.callPackage ./eaf.nix { inherit pkgs; })}")
+       (require 'eaf)
+       (require 'eaf-browser)
+       (defun youtube ()
+         (interactive)
+         (eaf-open-browser "https://youtube.com/"))
+     '' else "")
 
   # Window Management
   + (builtins.readFile ./elisp/init-window-management.el)
   + (if config.programs.cory.emacs.popup
      then builtins.readFile ./elisp/init-popup.el
-     else ''(add-to-list 'load-path "${(pkgs.callPackage ./eaf.nix { inherit pkgs; })}")''
+     else ''''
           + builtins.readFile ./elisp/init-no-popup.el)
 
   # Informal Packages
@@ -133,6 +142,10 @@ in {
     popup = mkOption {
       type = types.bool;
       default = false;
+    };
+    eaf = mkOption {
+      type = types.bool;
+      default = !config.programs.cory.emacs.popup;
     };
     fonts = {
       monospace = {

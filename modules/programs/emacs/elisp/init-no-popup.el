@@ -97,15 +97,6 @@ i.e. windows tiled side-by-side."
 
 ;;; Install applications to be used in emacs because emacs is no longer intergrates with the os.
 
-;; Browser for YouTube in emacs
-;; https://github.com/emacs-eaf/emacs-application-framework/wiki/NixOS
-(require 'eaf)
-(require 'eaf-browser)
-
-(defun youtube ()
-  (interactive)
-  (eaf-open-browser "https://youtube.com/"))
-
 ;; Popup Terminal
 (use-package popper
   :bind (("C-`"   . cory/toggle-eshell)

@@ -8,13 +8,14 @@
       withNativeCompilation = true;
     };
     popup = false;
+    eaf = false;
     fonts = {
-      # monospace.size = 140;
-      monospace = {
-        package = pkgs.librecode;
-        name = "Librecode";
-        size = 150;
-      };
+      monospace.size = 140;
+      # monospace = {
+      #   package = pkgs.librecode;
+      #   name = "Librecode";
+      #   size = 150;
+      # };
       variable.size = 150;
     };
     extraConfig = ''
