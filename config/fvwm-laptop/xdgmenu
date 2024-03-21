@@ -21,7 +21,7 @@ AddToMenu "Accessories"
 
 DestroyMenu "Development"
 AddToMenu "Development"
-+ "DrRacket%/nix/store/mj0agkpzghqgc9kpl0f51x0b2wk2bgb8-racket-8.12/share/racket/drracket-exe-icon.png%" Exec /nix/store/mj0agkpzghqgc9kpl0f51x0b2wk2bgb8-racket-8.12/bin/drracket -singleInstance 
++ "DrRacket" Exec /nix/store/mj0agkpzghqgc9kpl0f51x0b2wk2bgb8-racket-8.12/bin/drracket -singleInstance 
 + "Emacs%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/emacs.png%" Exec emacs 
 + "Emacs (Client)%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/emacs.png%" Exec sh -c "if [ -n \\"\\$*\\" ]; then exec /nix/store/i0grjarcqj3b5kc737332q4rq3n78544-emacs-git-20240312.0/bin/emacsclient --alternate-editor= --display=\\"\\$DISPLAY\\" \\"\\$@\\"; else exec emacsclient --alternate-editor= --create-frame; fi" sh 
 + "Grapejuice%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/grapejuice.png%" Exec /nix/store/kq8fbk8ypqigxkplmx2k6c18f24ww9q9-grapejuice-7.20.11/bin/grapejuice-gui
@@ -47,7 +47,7 @@ AddToMenu "Graphics"
 + "Inkscape%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/org.inkscape.Inkscape.png%" Exec inkscape 
 + "KolourPaint%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/kolourpaint.png%" Exec kolourpaint 
 + "PhotoGIMP%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/photogimp.png%" Exec gimp-2.10 
-+ "Slideshow%/nix/store/mj0agkpzghqgc9kpl0f51x0b2wk2bgb8-racket-8.12/share/racket/slideshow-exe-icon.png%" Exec /nix/store/mj0agkpzghqgc9kpl0f51x0b2wk2bgb8-racket-8.12/bin/slideshow
++ "Slideshow" Exec /nix/store/mj0agkpzghqgc9kpl0f51x0b2wk2bgb8-racket-8.12/bin/slideshow
 + "drawio" Exec drawio 
 
 DestroyMenu "Multimedia"

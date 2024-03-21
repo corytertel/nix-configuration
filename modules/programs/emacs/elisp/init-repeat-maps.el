@@ -359,6 +359,9 @@ together in sequence."
     ("kill-this-buffer"
      kill-this-buffer                  "C-<f4>" "<f4>" "C-x k" "k")
 
+    ("delete-window"
+     delete-window                    "C-x 0" "0")
+
     ("join-line"
      join-line                         "M-j" "j")
 

@@ -47,7 +47,7 @@ PipeRead fvwm-menu-desktop
 #
 # xdgmenumaker -i -f fvwm -s 32 \
 #       | grep -v -G "Title$" \
-#       | sed s#'\+ "\(.*\)%.*\(48x48\|256x256\|512x512\|pixmaps\).*"'#'+ "\1"'# \
+#       | sed s#'\+ "\(.*\)%.*\(48x48\|256x256\|512x512\|pixmaps\|racket\).*"'#'+ "\1"'# \
 #       > xdgmenu
 Read xdgmenu
 
@@ -223,9 +223,9 @@ AddToFunc ToggleMute
 DestroyFunc Tile
 AddToFunc Tile
 + I ThisWindow (Maximized) Maximize toggle
-+ I TestRc (Match) WindowStyle Borders, Colorset 1, HilightColorset 2, UseDecor WindowDecor
++ I TestRc (Match) WindowStyle Borders, Colorset 1, HilightColorset 2, BorderColorset 3, HilightBorderColorset 4, UseDecor WindowDecor
 + I TestRc (Match) Break
-+ I TestRc (!Match) WindowStyle !Borders, Colorset 15, HilightColorset 15, UseDecor FullScreenDecor
++ I TestRc (!Match) WindowStyle Borders, Colorset 15, HilightColorset 15, BorderColorset 15, HilightBorderColorset 15, UseDecor FullScreenDecor
 + I Maximize Forget
 + I Raise
 + I Maximize $0 $1
@@ -269,9 +269,9 @@ AddToFunc   AutoRaise
 DestroyFunc FullScreen
 AddToFunc   FullScreen
 # + I ThisWindow (Maximized) WindowStyle Title, Borders
-+ I ThisWindow (Maximized) WindowStyle Borders, Colorset 1, HilightColorset 2, UseDecor WindowDecor
++ I ThisWindow (Maximized) WindowStyle Borders, Colorset 1, HilightColorset 2, BorderColorset 3, HilightBorderColorset 4, UseDecor WindowDecor
 # + I TestRc (!Match) WindowStyle !Title, !Borders
-+ I TestRc (!Match) WindowStyle !Borders, Colorset 15, HilightColorset 15, UseDecor FullScreenDecor
++ I TestRc (!Match) WindowStyle Borders, Colorset 15, HilightColorset 15, BorderColorset 15, HilightBorderColorset 15, UseDecor FullScreenDecor
 + I TestRc (!Match) Raise
 + I TestRc (!Match) UpdateStyles
 + I Maximize 100 100
@@ -470,6 +470,7 @@ Colorset 12 fg #2d2d2d, bg #ffffff, hi, sh, Plain, NoShape
 Colorset 13 fg #141404, bg #c0daff, hi, sh, Plain, NoShape
 Colorset 14 fg #999999, bg #2a2a2a, hi #aaaaaa, sh #999999, Plain, NoShape
 Colorset 15 fg #141404, bg #ffffff, hi, sh, Plain, NoShape
+Colorset 16 fg #3647d9, bg #3647d9, hi, sh, Plain, NoShape
 
 #######
 # 4: Menus
@@ -484,9 +485,9 @@ MenuStyle * PopupDelayed, PopupDelay 300, PopdownImmediately
 MenuStyle * PopupOffset -5 100, TitleWarpOff
 MenuStyle * TitleUnderlines2
 MenuStyle * AnimationOff, AutomaticHotkeysOff
-MenuStyle * BorderWidth 1, BorderColorset 3, HilightBorderColorset 4
+MenuStyle * BorderWidth 1, BorderColorset 16, HilightBorderColorset 16
 MenuStyle * PopupAsSubmenu, HoldSubmenus, SubmenusRight
-MenuStyle * VerticalItemSpacing 5 5, VerticalTitleSpacing 10 10
+MenuStyle * VerticalItemSpacing 10 10, VerticalTitleSpacing 15 15
 MenuStyle * ActiveFore
 
 # Root Menu
@@ -678,14 +679,10 @@ AddToMenu MenuVolume
 
 DestroyMenu MenuKeyboard
 AddToMenu   MenuKeyboard
-+ "US (BEAKL Emacs)" Exec setxkbmap "us_beakl_emacs"
 + "US (QWERTY)" Exec setxkbmap "us_qwerty"
-+ "US (Minimak)" Exec setxkbmap "us_minimak"
-+ "US (QGMLWY)" Exec setxkbmap "us_carplax"
-+ "US (QGMLFJ)" Exec setxkbmap "us_qgmlfj"
-+ "RU (Phonetic BEAKL Emacs)" Exec setxkbmap "ru_beakl_emacs"
-+ "RU (Phonetic)" Exec setxkbmap "ru_phonetic_qwerty"
-+ "RU (Phonetic)" Exec setxkbmap "ru_phonetic_minimak"
++ "US (Dvorak)" Exec setxkbmap "us_dvorak"
++ "RU (Phonetic QWERTY)" Exec setxkbmap "ru_phonetic_qwerty"
++ "RU (Phonetic Dvorak)" Exec setxkbmap "ru_phonetic_dvorak"
 
 #######
 # 5: Mouse and Key bindings
@@ -726,7 +723,8 @@ Silent Key Tab A M WindowList Root c c NoDeskSort CurrentAtEnd, SelectOnRelease 
 # F2: reserved, universal key (rename)
 # F3: reserved, commonly used key
 # F4: reserved, commonly used key
-Silent Key F5 A N Next ($[w.class]) FocusWindow
+# Silent Key F5 A N Next ($[w.class]) FocusWindow
+Silent Key F5 A N Next (CurrentPage, AnyScreen) FocusWindow
 # Silent Key F6 A N Prev (AcceptsFocus) FocusWindow
 Silent Key F6 A N WindowList Root c c NoDeskSort CurrentAtEnd, SelectOnRelease F6
 # Silent Key F6 A N SwitchWindow
@@ -762,8 +760,8 @@ Silent Key XF86AudioStop A A Exec exec $[fvwm_music_player] --stop
 
 # Screenshot
 Silent Key Print A S Exec exec flameshot full -p ~/Pictures/Screenshots
-Silent Key Print A 4 Exec exec flameshot gui
-Silent Key Print A N Exec exec flameshot launcher
+Silent Key Print A 4 Exec exec flameshot launcher
+Silent Key Print A N Exec exec flameshot gui
 
 # Brightness Buttons
 Silent Key XF86MonBrightnessUp A A Exec exec xbrightness +2500
@@ -1012,6 +1010,23 @@ DestroyModuleConfig FvwmIconMan:*
 DestroyModuleConfig EventNewDesk:*
 *EventNewDesk: PassID
 *EventNewDesk: new_desk ChangeDesk
+
+# Use FvwmEvent to test for presence of emacs.
+# If present, then maximize emacs.
+DestroyModuleConfig FE-Max: *
+*FE-Max: Cmd Function
+*FE-Max: add_window FullScreenHandler
+
+Module FvwmEvent FE-Max
+
+DestroyFunc FullScreenHandler
+AddToFunc FullScreenHandler
++ I ThisWindow (emacs, !Maximized) FullScreen
++ I ThisWindow (firefox, !Maximized) FullScreen
++ I ThisWindow (kitty, !Maximized) FullScreen
++ I ThisWindow (discord, !Maximized) FullScreen
++ I ThisWindow (caja, !Maximized) FullScreen
++ I ThisWindow (strawberry, !Maximized) FullScreen
 
 # FvwmForm
 #

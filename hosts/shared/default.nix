@@ -35,6 +35,7 @@
     flatpak.enable = true;
     openssh.enable = true;
     printing.enable = true;
+    upower.enable = true;
     xserver = {
       enable = true;
       xkb.extraLayouts = {

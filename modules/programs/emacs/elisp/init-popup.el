@@ -3,6 +3,7 @@
 
 (global-set-key (kbd "C-x 2") #'make-frame-command)
 (global-set-key (kbd "C-x 3") #'make-frame-command)
+(global-set-key (kbd "C-x C-n") #'make-frame-command)
 
 ;; vertico-frame for wm integration
 (setq vertico-frame-frame-alist

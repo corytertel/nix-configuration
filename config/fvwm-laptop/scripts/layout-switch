@@ -1,3 +1,19 @@
 #!/bin/sh
 
-if [[ "$(setxkbmap -query | grep layout | awk 'END{print $2}')" == "us_minimak" ]]; then setxkbmap "ru_phonetic_minimak"; else setxkbmap "us_minimak"; fi
+layout=$(setxkbmap -query | grep layout | awk 'END{print $2}')
+
+if [[ "$layout" == "us_dvorak" ]]
+then
+  setxkbmap "ru_phonetic_dvorak"
+elif [[ "$layout" == "ru_phonetic_dvorak" ]]
+then
+  setxkbmap "us_dvorak"
+elif [[ "$layout" == "us_qwerty" ]]
+then
+  setxkbmap "ru_phonetic_qwerty"
+elif [[ "$layout" == "ru_phonetic_qwerty" ]]
+then
+  setxkbmap "us_qwerty"
+else
+  setxkbmap "us_dvorak"
+fi

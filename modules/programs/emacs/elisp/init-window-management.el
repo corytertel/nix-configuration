@@ -130,9 +130,3 @@
 ;; Suppress async-shell-command popup
 (add-to-list 'display-buffer-alist
 	     '("\\*Async Shell Command\\*.*" display-buffer-no-window))
-
-;; Emacs Everywhere
-(use-package emacs-everywhere
-  :bind
-  (:map emacs-everywhere-mode-map
-   ("C-c q" . emacs-everywhere-finish)))

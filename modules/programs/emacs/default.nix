@@ -61,14 +61,9 @@ let
   + (builtins.readFile ./elisp/init-nixos.el)
   + (builtins.readFile ./elisp/init-org.el)
   + (if config.programs.cory.emacs.eaf
-     then ''
-       (add-to-list 'load-path "${(pkgs.callPackage ./eaf.nix { inherit pkgs; })}")
-       (require 'eaf)
-       (require 'eaf-browser)
-       (defun youtube ()
-         (interactive)
-         (eaf-open-browser "https://youtube.com/"))
-     '' else "")
+     then ''(add-to-list 'load-path "${(pkgs.callPackage ./eaf.nix { inherit pkgs; })}")''
+          + (builtins.readFile ./elisp/init-eaf.el)
+     else "")
 
   # Window Management
   + (builtins.readFile ./elisp/init-window-management.el)
@@ -251,12 +246,6 @@ in {
       # dictionary
       scowl
       ispell
-      # for emacs-everywhere
-      xclip
-      xdotool
-      xorg.xprop
-      xorg.xwininfo
-      # fish
       # spelling
       enchant
       pkgconf

@@ -54,6 +54,7 @@
 (defun split-window-sensibly-prefer-horizontal (&optional window)
   "Based on split-window-sensibly, but designed to prefer a horizontal split,
 i.e. windows tiled side-by-side."
+  (interactive)
   (let ((window (or window (selected-window))))
     (or (and (window-splittable-p window t)
           ;; Split window horizontally
@@ -86,6 +87,7 @@ i.e. windows tiled side-by-side."
               (split-window-right))))))))
 
 (defun split-window-really-sensibly (&optional window)
+  (interactive)
   (let ((window (or window (selected-window))))
     (if (> (window-total-width window) (* 2 (window-total-height window)))
         (with-selected-window window (split-window-sensibly-prefer-horizontal window))
@@ -94,6 +96,16 @@ i.e. windows tiled side-by-side."
 (setq split-height-threshold 4
       split-width-threshold 40
       split-window-preferred-function 'split-window-really-sensibly)
+
+(defun cory/split-window (&optional window)
+  (interactive)
+  (let ((window (or window (selected-window))))
+    (if (> (window-total-width window) (* 2 (window-total-height window)))
+        (split-window-right nil window)
+      (split-window-below nil window))
+    (other-window 1)))
+
+(global-set-key (kbd "C-x C-n") #'cory/split-window)
 
 ;;; Install applications to be used in emacs because emacs is no longer intergrates with the os.
 

@@ -291,7 +291,7 @@
  ("C-<f4>" . kill-this-buffer)
  ("<deletechar>" . delete-char)
  ("C-x c" . set-goal-column)
- ("C-x C-n" . make-frame-command))
+ ("C-x C-n" . nil))
 
 ;; Scroll Keybinds
 (global-set-key (kbd "C-<mouse-4>") #'ignore)
