@@ -165,9 +165,6 @@ in {
                     }
         '';
         shellAliases = {
-          nixos-update = "nix flake update";
-          nixos-clean = "sudo nix-collect-garbage --delete-older-than";
-          nixos-superclean = "sudo nix-collect-garbage --delete-old";
           cdi = "zi";
           # ls = "${pkgs.eza}/bin/eza --icons --all --git --binary --group-directories-first";
           # l = "ls --classify";

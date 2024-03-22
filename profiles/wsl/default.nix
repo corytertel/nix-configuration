@@ -30,7 +30,7 @@
     '';
   };
 
-  programs.cory.zsh.enable = true;
+  programs.cory.bash.enable = true;
 
   theme = with pkgs; {
     font = {

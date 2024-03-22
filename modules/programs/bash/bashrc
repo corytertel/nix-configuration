@@ -14,49 +14,13 @@
 # fi
 
 # Session Variables
-export ALTERNATE_EDITOR="emacs -nw";
-export EDITOR="emacsclient -nw";
-export VISUAL="emacsclient -c -a ''";
-export BROWSER="firefox";
-export CALIBRE_USE_SYSTEM_THEME="1";
+export CALIBRE_USE_SYSTEM_THEME="1"
+export LONG_RUNNING_COMMAND_TIMEOUT="10"
+export UDM_PLAY_SOUND="1"
 
-# Prompt
-bash_prompt() {
-    black="\e[0;30m"
-    red="\e[0;31m"
-    green="\e[0;32m"
-    yellow="\e[0;33m"
-    blue="\e[0;34m"
-    magenta="\e[0;35m"
-    cyan="\e[0;36m"
-    white="\e[0;37m"
-    bold="\e[1m"
-    uline="\e[4m"
-    reset="\e[0m"
-
-    # Finding the git branch
-    #git rev-parse --abbrev-ref HEAD
-    #git status 2>/dev/null | grep 'On branch' | sed 's/On branch / => /'
-    #git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
-
-    # How many files were modified git
-    #git status -s | sed -n '$='
-    #if [ "git status -s | sed -n '$='" == "" ]; then echo "modified"; fi
-
-    # Aesthetics
-    #╭╴
-    #╰─>
-    #╰─❯
-    #╰─λ
-
-    # Default
-    # export PS1='[\u@\h \W]\$ '
-
-    export PS1="╭╴${cyan}${bold}  ${reset}${blue}${bold}\W${reset} ${green}${uline}\$(git rev-parse --abbrev-ref HEAD 2>/dev/null)${reset}\n╰─λ "
-}
-
-bash_prompt
-unset bash_prompt
+# blesh
+ble-face auto_complete='underline,italic'
+bleopt exec_errexit_mark=''
 
 # Extract any archive
 function extract() {
