@@ -16,7 +16,7 @@ in {
 
       # enableLsColors = true;
 
-      blesh.enable = true;
+      # blesh.enable = true;
 
       # undistractMe = {
       #   enable = true;
@@ -53,7 +53,7 @@ in {
         });
       in {
         # emacs = "${emacs24}/bin/emacs";
-        ls = "${pkgs.lsd}/bin/lsd -l --group-directories-first --header --blocks permission --blocks user --blocks group --blocks date --blocks size --blocks name --classify --icon never ";
+        ls = "${pkgs.lsd}/bin/lsd -l --group-directories-first --header --blocks permission --blocks user --blocks group --blocks date --blocks size --blocks name --classify --icon never";
         l = "ls";
         ll = "ls -a";
         tree = "ls -a --tree";

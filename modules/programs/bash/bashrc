@@ -19,8 +19,8 @@ export LONG_RUNNING_COMMAND_TIMEOUT="10"
 export UDM_PLAY_SOUND="1"
 
 # blesh
-ble-face auto_complete='underline,italic'
-bleopt exec_errexit_mark=''
+# ble-face auto_complete='underline,italic'
+# bleopt exec_errexit_mark=''
 
 # Extract any archive
 function extract() {
