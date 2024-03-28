@@ -7,14 +7,14 @@ let
 
   initFile = '';;; default.el --- init -*- lexical-binding: t; no-byte-compile: nil; -*-
   ''
-  + (builtins.readFile ./elisp/init-performance.el)
-  + (builtins.readFile ./elisp/init-base.el)
-  + (builtins.readFile ./elisp/init-functions.el)
-  + (builtins.readFile ./elisp/init-keybinds.el)
-  + (builtins.readFile ./elisp/init-search.el)
-  + (builtins.readFile ./elisp/init-eww.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-performance.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-base.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-functions.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-keybinds.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-search.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-eww.el)
 
-  + (builtins.readFile ./elisp/init-help.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-help.el)
 
   +
   ''
@@ -23,61 +23,61 @@ let
   (defvar variable-font-name "${config.programs.cory.emacs.fonts.variable.name}")
   (defvar variable-font-height ${toString config.programs.cory.emacs.fonts.variable.size})
   ''
-  + (builtins.readFile ./elisp/init-visuals.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-visuals.el)
 
   # Completion
   + ''(add-to-list 'load-path "${(pkgs.callPackage ./hotfuzz-module.nix
     { inherit pkgs; emacs = config.programs.cory.emacs.package; })}")''
-  + (builtins.readFile ./elisp/vertico-frame.el)
-  + (builtins.readFile ./elisp/init-completion.el)
-  + (builtins.readFile ./elisp/init-lsp.el)
-  + (builtins.readFile ./elisp/init-treesitter.el)
-  + (builtins.readFile ./elisp/init-snippets.el)
-  + (builtins.readFile ./elisp/company-yasnippet.el)
+  + (builtins.readFile ../../../config/emacs/elisp/vertico-frame.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-completion.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-lsp.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-treesitter.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-snippets.el)
+  + (builtins.readFile ../../../config/emacs/elisp/company-yasnippet.el)
 
   # IDE Stuff
-  + (builtins.readFile ./elisp/init-checking.el)
-  + (builtins.readFile ./elisp/init-formatting.el)
-  + (builtins.readFile ./elisp/init-editing.el)
-  + (builtins.readFile ./elisp/init-shell.el)
-  + (builtins.readFile ./elisp/init-projects.el)
-  + (builtins.readFile ./elisp/init-ssh.el)
-  + (builtins.readFile ./elisp/init-movement.el)
-  + (builtins.readFile ./elisp/init-buffer.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-checking.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-formatting.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-editing.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-shell.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-projects.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-ssh.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-movement.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-buffer.el)
 
   # Langs
-  + (builtins.readFile ./elisp/init-elisp.el)
-  + (builtins.readFile ./elisp/init-common-lisp.el)
-  + (builtins.readFile ./elisp/init-cpp.el)
-  + (builtins.readFile ./elisp/init-java.el)
-  + (builtins.readFile ./elisp/init-apl.el)
-  + (builtins.readFile ./elisp/init-other-langs.el)
-  + (builtins.readFile ./elisp/init-python.el)
-  + (builtins.readFile ./elisp/init-scheme.el)
-  + (builtins.readFile ./elisp/init-web.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-elisp.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-common-lisp.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-cpp.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-java.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-apl.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-other-langs.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-python.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-scheme.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-web.el)
 
   # Other
-  + (builtins.readFile ./elisp/init-dired.el)
-  + (builtins.readFile ./elisp/init-nixos.el)
-  + (builtins.readFile ./elisp/init-org.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-dired.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-nixos.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-org.el)
   + (if config.programs.cory.emacs.eaf
      then ''(add-to-list 'load-path "${(pkgs.callPackage ./eaf.nix { inherit pkgs; })}")''
-          + (builtins.readFile ./elisp/init-eaf.el)
+          + (builtins.readFile ../../../config/emacs/elisp/init-eaf.el)
      else "")
 
   # Window Management
-  + (builtins.readFile ./elisp/init-window-management.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-window-management.el)
   + (if config.programs.cory.emacs.popup
-     then builtins.readFile ./elisp/init-popup.el
+     then builtins.readFile ../../../config/emacs/elisp/init-popup.el
      else ''''
-          + builtins.readFile ./elisp/init-no-popup.el)
+          + builtins.readFile ../../../config/emacs/elisp/init-no-popup.el)
 
   # Informal Packages
-  # + (builtins.readFile ./elisp/eshell-undistract-me.el)
-  + (builtins.readFile ./elisp/app-launcher.el)
+  # + (builtins.readFile ../../../config/emacs/elisp/eshell-undistract-me.el)
+  + (builtins.readFile ../../../config/emacs/elisp/app-launcher.el)
 
   # Repeat Maps (last)
-  + (builtins.readFile ./elisp/init-repeat-maps.el)
+  + (builtins.readFile ../../../config/emacs/elisp/init-repeat-maps.el)
 
   + config.programs.cory.emacs.extraConfig;
 
@@ -207,9 +207,9 @@ in {
     };
 
     home-manager.users.cory.home.file = {
-      ".emacs.d/eshell/alias".source = ./alias;
+      ".emacs.d/eshell/alias".source = ../../../config/emacs/alias;
       ".emacs.d/snippets" = {
-        source = ./snippets;
+        source = ../../../config/emacs/snippets;
         recursive = true;
       };
       ".local/share/dict/words".source = "${pkgs.scowl}/share/dict/words.txt";

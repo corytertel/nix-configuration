@@ -1,7 +1,0 @@
-[Desktop Entry]
-Exec=urxvtd --quiet
-Icon=
-Name=urxvtd
-Path=
-Terminal=False
-Type=Application

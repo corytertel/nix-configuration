@@ -1,7 +1,0 @@
-[Desktop Entry]
-Exec=sxhkd ~/.config/sxhkd/sxhkdrc
-Icon=
-Name=sxhkd
-Path=
-Terminal=False
-Type=Application
