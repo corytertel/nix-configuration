@@ -4,7 +4,7 @@
   # Window Manager
   windowManagers.cory.fvwm.laptop.enable = true;
 
-  # # Editor
+  # Editor
   programs.cory.emacs = {
     enable = true;
     popup = false;
@@ -64,7 +64,6 @@
 
   # Shell
   programs.cory.bat.enable = true;
-  programs.cory.neofetch.enable = true;
   programs.cory.bash.enable = true;
 
   # Gestures

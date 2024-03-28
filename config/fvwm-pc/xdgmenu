@@ -14,138 +14,115 @@ AddToMenu "xdgmenu"
 
 DestroyMenu "Accessories"
 AddToMenu "Accessories"
-+ "Ark%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/ark.png%" Exec ark 
-+ "KCalc%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/accessories-calculator.png%" Exec kcalc
-+ "KRename%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/krename.png%" Exec krename -qwindowtitle "
-+ "Plank" Exec plank
++ "Qalculate!%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/qalculate.png%" Exec qalculate-gtk
 + "Winetricks" Exec winetricks --gui
++ "Xarchiver%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/xarchiver.png%" Exec xarchiver 
 + "picom" Exec picom
 
 DestroyMenu "Development"
 AddToMenu "Development"
-+ "DrRacket" Exec drracket -singleInstance 
++ "DrRacket" Exec /nix/store/mj0agkpzghqgc9kpl0f51x0b2wk2bgb8-racket-8.12/bin/drracket -singleInstance 
 + "Emacs%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/emacs.png%" Exec emacs 
-+ "Emacs (Client)%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/emacs.png%" Exec emacsclient -c
-+ "Grapejuice%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/grapejuice.png%" Exec grapejuice-gui
-+ "Kompare%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/kompare.png%" Exec kompare -o 
-+ "Roblox Studio%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/grapejuice-roblox-studio.png%" Exec grapejuice studio 
++ "Emacs (Client)%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/emacs.png%" Exec sh -c "if [ -n \\"\\$*\\" ]; then exec /nix/store/i0grjarcqj3b5kc737332q4rq3n78544-emacs-git-20240312.0/bin/emacsclient --alternate-editor= --display=\\"\\$DISPLAY\\" \\"\\$@\\"; else exec emacsclient --alternate-editor= --create-frame; fi" sh 
++ "Grapejuice%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/grapejuice.png%" Exec /nix/store/kq8fbk8ypqigxkplmx2k6c18f24ww9q9-grapejuice-7.20.11/bin/grapejuice-gui
++ "Roblox Studio%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/grapejuice-roblox-studio.png%" Exec /nix/store/kq8fbk8ypqigxkplmx2k6c18f24ww9q9-grapejuice-7.20.11/bin/grapejuice studio 
++ "dbeaver" Exec dbeaver
 
 DestroyMenu "Education"
 AddToMenu "Education"
++ "Anki" Exec anki 
 + "Klavaro%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/klavaro.png%" Exec klavaro
 
 DestroyMenu "Games"
 AddToMenu "Games"
-+ "Airshipper" Exec airshipper
++ "Airshipper%/etc/profiles/per-user/cory/share/icons/net.veloren.airshipper.png%" Exec airshipper
 + "Alien Swarm: Reactive Drop%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_563560.png%" Exec steam steam://rungameid/563560
-+ "Aperture Desk Job%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_1902490.png%" Exec steam steam://rungameid/1902490
 + "Borderlands 2" Exec steam steam://rungameid/49520
-+ "Borderlands: The Pre-Sequel" Exec steam steam://rungameid/261640
 + "Capcom Fighting Collection%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_1685750.png%" Exec steam steam://rungameid/1685750
 + "Cities: Skylines%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_255710.png%" Exec steam steam://rungameid/255710
-+ "DEATH STRANDING%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_1190460.png%" Exec steam steam://rungameid/1190460
 + "Dota 2%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_570.png%" Exec steam steam://rungameid/570
 + "Duskers%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_254320.png%" Exec steam steam://rungameid/254320
-+ "Euro Truck Simulator 2%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_227300.png%" Exec steam steam://rungameid/227300
-+ "Fallout: New Vegas%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_22380.png%" Exec steam steam://rungameid/22380
 + "HELLDIVERS™%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_394510.png%" Exec steam steam://rungameid/394510
 + "Hotline Miami%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_219150.png%" Exec steam steam://rungameid/219150
 + "HuniePop%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/steam.png%" Exec steam steam://rungameid/339800
-+ "KMahjongg%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/kmahjongg.png%" Exec kmahjongg -qwindowtitle 
-+ "KMines%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/kmines.png%" Exec kmines -qwindowtitle 
-+ "KPatience%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/kpat.png%" Exec kpat -qwindowtitle 
-+ "KSpaceDuel%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/kspaceduel.png%" Exec kspaceduel -qwindowtitle 
-+ "KSudoku%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/ksudoku.png%" Exec ksudoku -qwindowicon ksudoku -qwindowtitle 
-+ "Kapman%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/kapman.png%" Exec kapman
-+ "Killbots%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/killbots.png%" Exec killbots -qwindowtitle 
-+ "Knights%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/knights.png%" Exec knights -qwindowtitle 
-+ "Kolf%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/kolf.png%" Exec kolf 
-+ "Konquest%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/konquest.png%" Exec konquest -qwindowtitle 
-+ "Metro 2033 Redux%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_286690.png%" Exec steam steam://rungameid/286690
 + "Minecraft Launcher" Exec minecraft-launcher
-+ "Naval Battle%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/knavalbattle.png%" Exec knavalbattle -qwindowtitle 
 + "Orcs Must Die! 2%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_201790.png%" Exec steam steam://rungameid/201790
 + "Orcs Must Die! 3%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_1522820.png%" Exec steam steam://rungameid/1522820
 + "PAYDAY 2%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_218620.png%" Exec steam steam://rungameid/218620
 + "Peggle Extreme%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/steam.png%" Exec steam steam://rungameid/3483
-+ "Phasmophobia%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_739630.png%" Exec steam steam://rungameid/739630
 + "Poker Night 2%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_234710.png%" Exec steam steam://rungameid/234710
 + "Portal 2%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_620.png%" Exec steam steam://rungameid/620
-+ "Roblox App%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/grapejuice-roblox-player.png%" Exec grapejuice app
++ "Roblox App%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/grapejuice-roblox-player.png%" Exec /nix/store/kq8fbk8ypqigxkplmx2k6c18f24ww9q9-grapejuice-7.20.11/bin/grapejuice app
 + "S.T.A.L.K.E.R.: Shadow of Chernobyl%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_4500.png%" Exec steam steam://rungameid/4500
 + "Sanctum%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_91600.png%" Exec steam steam://rungameid/91600
 + "Sanctum 2%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_210770.png%" Exec steam steam://rungameid/210770
-+ "Spiral Knights%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_99900.png%" Exec steam steam://rungameid/99900
-+ "SuperTux 2" Exec supertux2
-+ "SuperTuxKart%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/supertuxkart.png%" Exec supertuxkart
-+ "Ultra Street Fighter IV%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_45760.png%" Exec steam steam://rungameid/45760
 + "Viscera Cleanup Detail%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_246900.png%" Exec steam steam://rungameid/246900
 + "Warhammer 40,000: Mechanicus%/home/cory/.local/share/icons/hicolor/32x32/apps/steam_icon_673880.png%" Exec steam steam://rungameid/673880
 
 DestroyMenu "Graphics"
 AddToMenu "Graphics"
 + "Blender%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/blender.png%" Exec blender 
-+ "Flameshot" Exec flameshot
-+ "Gwenview%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/gwenview.png%" Exec gwenview 
++ "Flameshot" Exec /nix/store/v8cfrlgr4qi50jprfwga4xk7iwp15myl-flameshot-12.1.0/bin/flameshot
 + "Inkscape%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/org.inkscape.Inkscape.png%" Exec inkscape 
-+ "Peek" Exec peek
++ "KolourPaint%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/kolourpaint.png%" Exec kolourpaint 
 + "PhotoGIMP%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/photogimp.png%" Exec gimp-2.10 
-+ "Slideshow" Exec slideshow
++ "Slideshow" Exec /nix/store/mj0agkpzghqgc9kpl0f51x0b2wk2bgb8-racket-8.12/bin/slideshow
++ "drawio" Exec drawio 
 
 DestroyMenu "Multimedia"
 AddToMenu "Multimedia"
-+ "Media Player Classic Qute Theater%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/mpc-qt.png%" Exec mpc-qt 
 + "OBS Studio" Exec obs
 + "PulseAudio System Tray" Exec pasystray
 + "PulseAudio Volume Control%/org/gtk/libgtk/icons/16x16/actions/multimedia-volume-control.png%" Exec pavucontrol
-+ "Strawberry" Exec strawberry
++ "Strawberry" Exec strawberry 
++ "VLC media player%/run/current-system/sw/share/icons/hicolor/32x32/apps/vlc.png%" Exec /nix/store/agb88xy88m7958jnypjnczsvl6pw47ds-vlc-3.0.20/bin/vlc --started-from-file 
 
 DestroyMenu "Network"
 AddToMenu "Network"
++ "Chromium%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/chromium.png%" Exec chromium 
 + "Discord%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/discord.png%" Exec Discord
-+ "Firefox%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/firefox.png%" Exec firefox 
-+ "KGet%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/kget.png%" Exec kget -qwindowtitle 
++ "Firefox%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/firefox.png%" Exec firefox --name firefox 
++ "Microsoft Teams for Linux%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/teams-for-linux.png%" Exec teams-for-linux
 + "Steam%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/steam.png%" Exec steam 
 + "Telegram Desktop%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/telegram.png%" Exec telegram-desktop -- 
-+ "Thunderbird%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/thunderbird.png%" Exec thunderbird 
++ "Thunderbird%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/thunderbird.png%" Exec thunderbird --name thunderbird 
++ "Zoom" Exec /nix/store/yddivdwjyp3wbw0rzjsy9rvlqvacswq7-zoom-5.17.10.3512/bin/zoom 
 + "qBittorrent%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/qbittorrent.png%" Exec qbittorrent 
 
 DestroyMenu "Office"
 AddToMenu "Office"
-+ "LibreOffice 7.3%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/startcenter.png%" Exec libreoffice 
-+ "LibreOffice 7.3 Base%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/base.png%" Exec libreoffice --base 
-+ "LibreOffice 7.3 Calc%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/calc.png%" Exec libreoffice --calc 
-+ "LibreOffice 7.3 Draw%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/draw.png%" Exec libreoffice --draw 
-+ "LibreOffice 7.3 Impress%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/impress.png%" Exec libreoffice --impress 
-+ "LibreOffice 7.3 Math%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/mimetypes/math.png%" Exec libreoffice --math 
-+ "LibreOffice 7.3 Writer%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/writer.png%" Exec libreoffice --writer 
-+ "qpdfview" Exec qpdfview --unique 
++ "LibreOffice 7.5%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/startcenter.png%" Exec soffice 
++ "LibreOffice 7.5 Base%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/base.png%" Exec soffice --base 
++ "LibreOffice 7.5 Calc%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/calc.png%" Exec soffice --calc 
++ "LibreOffice 7.5 Draw%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/draw.png%" Exec soffice --draw 
++ "LibreOffice 7.5 Impress%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/impress.png%" Exec soffice --impress 
++ "LibreOffice 7.5 Math%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/math.png%" Exec soffice --math 
++ "LibreOffice 7.5 Writer%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/writer.png%" Exec soffice --writer 
++ "Xournal++" Exec xournalpp 
++ "Zathura%/etc/profiles/per-user/cory/share/icons/hicolor/32x32/apps/org.pwmt.zathura.png%" Exec zathura 
 
 DestroyMenu "Other"
 AddToMenu "Other"
 + "Ledger Live" Exec ledger-live-desktop --no-sandbox 
-+ "Rofi Launcher%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/kde.png%" Exec rofi -show drun -modi drun,run -show-icons -scroll-method 0 -sort -hover-select -me-select-entry "" -me-accept-entry MousePrimary
++ "Rofi" Exec rofi -show
 + "Rofi Theme Selector" Exec rofi-theme-selector
-+ "Waydroid" Exec waydroid show-full-ui
++ "XScreenSaver" Exec xscreensaver
 
 DestroyMenu "Settings"
 AddToMenu "Settings"
 + "Advanced Network Configuration%/etc/profiles/per-user/cory/share/icons/crystal-nova/preferences/32x32/preferences-system-network.png%" Exec nm-connection-editor
-+ "NVIDIA X Server Settings" Exec nvidia-settings
++ "NVIDIA X Server Settings%/run/current-system/sw/share/icons/hicolor/128x128/apps/nvidia-settings.png%" Exec nvidia-settings
 + "Qt5 Settings%/etc/profiles/per-user/cory/share/icons/crystal-nova/preferences/32x32/preferences-desktop-theme.png%" Exec qt5ct
-+ "Tint2 Settings" Exec tint2conf
++ "Qt6 Settings%/etc/profiles/per-user/cory/share/icons/crystal-nova/preferences/32x32/preferences-desktop-theme.png%" Exec qt6ct
++ "XScreenSaver Settings" Exec xscreensaver-settings
 
 DestroyMenu "System"
 AddToMenu "System"
-+ "Dolphin%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/system-file-manager.png%" Exec dolphin 
-+ "GParted%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/gparted.png%" Exec gparted 
-+ "KWalletManager%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/kwalletmanager.png%" Exec kwalletmanager5 
-+ "Konsole%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/utilities-terminal.png%" Exec konsole
 + "Manage Printing%/etc/profiles/per-user/cory/share/icons/crystal-nova/devices/32x32/cups.png%" Exec xdg-open http://localhost:631/
 + "NixOS Manual%/run/current-system/sw/share/icons/hicolor/32x32/apps/nix-snowflake.png%" Exec nixos-help
 + "Oracle VM VirtualBox%/run/current-system/sw/share/icons/hicolor/32x32/apps/virtualbox.png%" Exec VirtualBox 
-+ "System Monitor%/etc/profiles/per-user/cory/share/icons/crystal-nova/apps/32x32/utilities-system-monitor.png%" Exec plasma-systemmonitor
-+ "Tint2" Exec tint2
 + "XTerm" Exec xterm
-+ "btop++" Exec xterm -e btop
++ "conky" Exec conky --daemonize --pause=1
++ "jgmenu" Exec jgmenu_run
++ "kitty" Exec kitty
 

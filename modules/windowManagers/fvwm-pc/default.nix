@@ -53,7 +53,6 @@ in {
       fvwm_file_manager = config.apps.fileManager.command;
       fvwm_music_player = config.apps.musicPlayer.command;
       fvwm_video_player = config.apps.videoPlayer.command;
-      fvwm_launch = config.apps.launcher.command;
       fvwm_chat = "discord";
       fvwm_mail = "thunderbird";
 
@@ -88,24 +87,16 @@ in {
         lm_sensors
         lsb-release
 
-        libsForQt5.kwallet
-        libsForQt5.kwallet-pam
-        libsForQt5.kwalletmanager
-        libsForQt5.plasma-systemmonitor
-        libsForQt5.kirigami2
-        libsForQt5.kirigami-addons
+        # all configured in dconf
+        mate.eom
+        mate.caja
+        mate.atril
+        mate.mate-terminal
+        mate.mate-system-monitor
+        mate.mate-power-manager
+        upower
+        mate.mate-media
       ];
-    };
-
-    home-manager.users.cory.home.pointerCursor = with config.theme; {
-      name = cursor.theme;
-      size = cursor.size;
-      gtk.enable = true;
-      package = cursor.package;
-      x11 = {
-        enable = true;
-        defaultCursor = "left_ptr";
-      };
     };
   };
 }

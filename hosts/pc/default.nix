@@ -4,7 +4,7 @@
   imports = [
     ./hardware-configuration.nix
     ../shared
-    ../../profiles/xmonad-pc
+    ../../profiles/fvwm-pc
   ];
 
   nix.settings.cores = 4;
@@ -36,7 +36,7 @@
 
   services.xserver = {
     videoDrivers = [ "nvidia" ];
-    layout = "us_qwerty";
+    xkb.layout = "us_dvorak";
     libinput.mouse = {
       # Mouse
       # accelProfile = "flat";

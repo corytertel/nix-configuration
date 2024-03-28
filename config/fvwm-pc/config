@@ -1,3 +1,4 @@
+# -*- mode: fvwm -*-
 ##################################
 #  ____________________________
 # (   _________________________)
@@ -39,12 +40,15 @@ PipeRead fvwm-menu-xlock
 PipeRead fvwm-menu-desktop
 
 # Reads in the file "xdgmenu" that contains a menu with all apps
-# that have a .desktop file. Before rebuilding read over and
-# correct the file to ensure that:
-# 1. There are no hard paths to the nix store
-# 2. All icons that are displayed are the same size
-# 3. There is no menu title
-# 4. The "Emacs (Client)" option works
+# that have a .desktop file.
+# This file needs to be manually generated due to the requirement of being
+# run within an X session. Nix sandboxing prevents it from being
+# automatically generated.
+#
+# xdgmenumaker -i -f fvwm -s 32 \
+#       | grep -v -G "Title$" \
+#       | sed s#'\+ "\(.*\)%.*\(48x48\|256x256\|512x512\|pixmaps\|racket\).*"'#'+ "\1"'# \
+#       > xdgmenu
 Read xdgmenu
 
 # Set the cursor
@@ -99,11 +103,10 @@ AddToFunc   StartFunction
 # Ran when fvwm first starts an never ran again, even on restart.
 DestroyFunc InitFunction
 AddToFunc InitFunction
-+ I Exec exec mkdir -p /tmp/fvwm-cache
-+ I Exec exec emacs --daemon
-+ I Exec exec dolphin --daemon
++ I Exec exec mkdir -p $[fvwm_cache]
+# Can't start emacs in daemon mode because eaf won't work
+# + I Exec exec emacs --daemon
 + I Exec exec conky
-+ I Exec exec kwalletd5
 + I Exec exec nm-applet
 + I Exec exec pasystray
 + I Exec exec flameshot
@@ -213,7 +216,9 @@ AddToFunc ToggleMute
 DestroyFunc Tile
 AddToFunc Tile
 + I ThisWindow (Maximized) Maximize toggle
++ I TestRc (Match) WindowStyle Borders, Colorset 1, HilightColorset 2, BorderColorset 3, HilightBorderColorset 4, UseDecor WindowDecor
 + I TestRc (Match) Break
++ I TestRc (!Match) WindowStyle Borders, Colorset 15, HilightColorset 15, BorderColorset 15, HilightBorderColorset 15, UseDecor FullScreenDecor
 + I Maximize Forget
 + I Raise
 + I Maximize $0 $1
@@ -256,8 +261,10 @@ AddToFunc   AutoRaise
 # Fullscreens the focused app.
 DestroyFunc FullScreen
 AddToFunc   FullScreen
-+ I ThisWindow (Maximized) WindowStyle Title, Borders
-+ I TestRc (!Match) WindowStyle !Title, !Borders
+# + I ThisWindow (Maximized) WindowStyle Title, Borders
++ I ThisWindow (Maximized) WindowStyle Borders, Colorset 1, HilightColorset 2, BorderColorset 3, HilightBorderColorset 4, UseDecor WindowDecor
+# + I TestRc (!Match) WindowStyle !Title, !Borders
++ I TestRc (!Match) WindowStyle Borders, Colorset 15, HilightColorset 15, BorderColorset 15, HilightBorderColorset 15, UseDecor FullScreenDecor
 + I TestRc (!Match) Raise
 + I TestRc (!Match) UpdateStyles
 + I Maximize 100 100
@@ -317,7 +324,7 @@ Style * SloppyFocus, MouseFocusClickRaises
 Module FvwmAuto 500 "Silent AutoRaise"
 
 # Default Font
-DefaultFont "xft:Oxygen-Sans:size=11:antialias=True"
+DefaultFont "xft:Librecode:size=12:antialias=True"
 
 # Window Placement
 # Style * MinOverlapPlacement, GrabFocusOff, !UsePPosition
@@ -341,6 +348,7 @@ Style * WindowShadeScrolls, WindowShadeSteps 10
 IgnoreModifiers L25
 
 # Decor Styles
+Style * UseDecor WindowDecor
 Style * BorderWidth 8, HandleWidth 8, MWMButtons, FvwmBorder, FirmBorder
 Style * Colorset 1, HilightColorset 2
 Style * BorderColorset 3, HilightBorderColorset 4
@@ -369,7 +377,6 @@ Style ConfirmQuit !Title, PositionPlacement Center, WindowListSkip, Layer 6
 Style FvwmIdent WindowListSkip
 Style DesktopEditors NoTitle, !Borders, !Handles,
 Style Steam NoTitle, !Borders, !Handles
-Style emacs-run-launcher NoTitle, !Borders, !Handles,
 Style Conky NoTitle, !Handles, !Borders, Sticky, WindowListSkip, \
   CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable
 
@@ -410,17 +417,21 @@ BusyCursor 	DynamicMenu True, Read True, Wait True
 Colorset 0  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
 Colorset 1  fg #83aad8, bg #e0dfde, hi, sh, Plain, NoShape
 Colorset 2  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
-Colorset 3  fg #83aad8, bg #e0dfde, hi, sh, Plain, NoShape
-Colorset 4  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
+# Colorset 3  fg #83aad8, bg #e0dfde, hi, sh, Plain, NoShape
+# Colorset 4  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
+Colorset 3  fg #85aad0, bg #85aad0, hi, sh, Plain, NoShape
+Colorset 4  fg #85aad0, bg #85aad0, hi, sh, Plain, NoShape
 Colorset 5 RootTransparent, fg #e9eaea, bg #1a1a1a, hi, sh, Tint #1a1a1a 70, bgTint #1a1a1a 70
 Colorset 6  fg #141404, bg #c3dcf7, hi, sh, Plain, NoShape
 Colorset 7  fg grey30, bg #c3dcf7, hi, sh, Plain, NoShape
 Colorset 8  fg #141404, bg #c0daff, hi, sh, Plain, NoShape
-Colorset 10 fg #ffffff, bg #1a1a1a, hi #aaaaaa, sh #999999, Plain, NoShape
+Colorset 10 fg #141404, bg #ffffff, hi, sh, Plain, NoShape
 Colorset 11 fg #141404, bg #c0daff, hi #ffffff, sh #ffffff, Plain, NoShape
 Colorset 12 fg #2d2d2d, bg #ffffff, hi, sh, Plain, NoShape
 Colorset 13 fg #141404, bg #c0daff, hi, sh, Plain, NoShape
 Colorset 14 fg #999999, bg #2a2a2a, hi #aaaaaa, sh #999999, Plain, NoShape
+Colorset 15 fg #141404, bg #ffffff, hi, sh, Plain, NoShape
+Colorset 16 fg #3647d9, bg #3647d9, hi, sh, Plain, NoShape
 
 #######
 # 4: Menus
@@ -429,13 +440,13 @@ MenuStyle * MenuColorset 5, ActiveColorset 6, GreyedColorset 7, TitleColorset 8
 MenuStyle * Hilight3DOff, HilightBack, HilightTitleBack, SeparatorsLong
 MenuStyle * TrianglesSolid, TrianglesUseFore
 MenuStyle * ItemFormat "%|%8.0i%24.24l%10.4>%|"
-MenuStyle * Font "xft:Oxygen-Sans:size=11:antialias=True"
+MenuStyle * Font "xft:Librecode:size=11:antialias=True"
 
 MenuStyle * PopupDelayed, PopupDelay 300, PopdownImmediately
 MenuStyle * PopupOffset -5 100, TitleWarpOff
 MenuStyle * TitleUnderlines2
 MenuStyle * AnimationOff, AutomaticHotkeysOff
-MenuStyle * BorderWidth 0
+MenuStyle * BorderWidth 1, BorderColorset 16, HilightBorderColorset 16
 MenuStyle * PopupAsSubmenu, HoldSubmenus, SubmenusRight
 MenuStyle * VerticalItemSpacing 5 5, VerticalTitleSpacing 10 10
 MenuStyle * ActiveFore
@@ -628,10 +639,9 @@ AddToMenu   MenuVolume
 DestroyMenu MenuKeyboard
 AddToMenu   MenuKeyboard
 + "US (QWERTY)" Exec setxkbmap "us_qwerty"
-+ "US (BEAKL Emacs)" Exec setxkbmap "us_beakl_emacs"
-+ "US (Minimak)" Exec setxkbmap "us_minimak"
-+ "RU (Phonetic)" Exec setxkbmap "ru_phonetic_qwerty"
-+ "RU (Phonetic BEAKL Emacs)" Exec setxkbmap "ru_beakl_emacs"
++ "US (Dvorak)" Exec setxkbmap "us_dvorak"
++ "RU (Phonetic QWERTY)" Exec setxkbmap "ru_phonetic_qwerty"
++ "RU (Phonetic Dvorak)" Exec setxkbmap "ru_phonetic_dvorak"
 
 #######
 # 5: Mouse and Key bindings
@@ -668,9 +678,12 @@ Silent Key Menu A A Menu MenuFvwmRoot
 # F2: reserved, universal key (rename)
 # F3: reserved, commonly used key
 # F4: reserved, commonly used key
-Silent Key F5 A N Next ($[w.class]) FocusWindow
-Silent Key F6 A N Prev (AcceptsFocus) FocusWindow
-Silent Key F7 A N FullScreen
+# Silent Key F5 A N Next ($[w.class]) FocusWindow
+Silent Key F5 A N Next (CurrentPage, AnyScreen) FocusWindow
+# Silent Key F6 A N Prev (AcceptsFocus) FocusWindow
+Silent Key F6 A N WindowList Root c c NoDeskSort CurrentAtEnd, SelectOnRelease F6
+# Silent Key F6 A N SwitchWindow
+# Silent Key F7 A N FullScreen
 Silent Key F8 A N Close
 Silent Key F9 A N Next ("emacs") FocusWindow
 Silent Key F10 A N Next ("firefox|chromium-browser") FocusWindow
@@ -717,15 +730,17 @@ Mouse 1	T    A RaiseMoveX Move FullScreen
 Mouse 1	FS   A RaiseMove Resize
 Mouse 4	T    A WindowShade True
 Mouse 5	T    A WindowShade False
-Mouse 1	R    A Menu MenuFvwmRoot
+# Mouse 1	R    A Menu MenuFvwmRoot
+Mouse 1	R    A Nop
+Mouse 8	A    A Menu MenuFvwmRoot
 Mouse 2	R    A WindowList
 Mouse 3	R    A Menu MenuWindowOpsLong
 Mouse 1	I    A RaiseMoveX Move "Iconify off"
 Mouse 3	T    A Menu MenuWindowOps
 Mouse 3 I    A Menu MenuIconOps
 Mouse 2 T    A AnimatedMove 50-50w 50-50w
-Mouse 9 A A Next (AcceptsFocus, CurrentPage) FocusWindow
-Mouse 8 A A Prev (AcceptsFocus, CurrentPage) FocusWindow
+# Mouse 9 A A Next (AcceptsFocus, CurrentPage) FocusWindow
+# Mouse 8 A A Prev (AcceptsFocus, CurrentPage) FocusWindow
 
 #######
 # 6: Window Decor
@@ -760,23 +775,45 @@ Mouse 8 A A Prev (AcceptsFocus, CurrentPage) FocusWindow
 # ButtonStyle 4 - MwmDecorMax
 # ButtonStyle 6 - MwmDecorMin
 
-TitleStyle Centered Height 46 -- Flat
-ButtonStyle 1 \
-      ActiveUp          (Pixmap $[fvwm_img]/button/stick-activeup.png -- Flat) \
-      ActiveDown        (Pixmap $[fvwm_img]/button/stick-activedown.png -- Flat) \
-      Inactive          (Pixmap $[fvwm_img]/button/stick-inactive.png -- Flat) \
-      ToggledActiveUp   (Pixmap $[fvwm_img]/button/stick-activedown.png -- Flat) \
-      ToggledActiveDown (Pixmap $[fvwm_img]/button/stick-activeup.png -- Flat) \
-      ToggledInactive   (Pixmap $[fvwm_img]/button/stick-inactivedown.png -- Flat)
-ButtonStyle 2 \
-      ActiveUp          (Pixmap $[fvwm_img]/button/close-activeup.png -- Flat) \
-      ActiveDown        (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat) \
-      Inactive          (Pixmap $[fvwm_img]/button/close-inactive.png -- Flat)
-ButtonStyle All - Clear
-ButtonStyle 1 - MwmDecorStick
-TitleStyle -- Flat
-BorderStyle Simple -- HiddenHandles NoInset Flat
-ButtonStyle All -- UseTitleStyle
+DestroyDecor WindowDecor
+AddToDecor   WindowDecor
++ TitleStyle Centered Height 35 -- Flat
++ ButtonStyle 1 \
+        ActiveUp          (Pixmap $[fvwm_img]/button/stick-activeup.png -- Flat) \
+        ActiveDown        (Pixmap $[fvwm_img]/button/stick-activedown.png -- Flat) \
+        Inactive          (Pixmap $[fvwm_img]/button/stick-inactive.png -- Flat) \
+        ToggledActiveUp   (Pixmap $[fvwm_img]/button/stick-activedown.png -- Flat) \
+        ToggledActiveDown (Pixmap $[fvwm_img]/button/stick-activeup.png -- Flat) \
+        ToggledInactive   (Pixmap $[fvwm_img]/button/stick-inactivedown.png -- Flat)
++ ButtonStyle 2 \
+        ActiveUp          (Pixmap $[fvwm_img]/button/close-activeup.png -- Flat) \
+        ActiveDown        (Pixmap $[fvwm_img]/button/close-activedown.png -- Flat) \
+        Inactive          (Pixmap $[fvwm_img]/button/close-inactive.png -- Flat)
++ ButtonStyle All - Clear
++ ButtonStyle 1 - MwmDecorStick
++ TitleStyle -- Flat
++ BorderStyle Simple -- HiddenHandles NoInset Flat
++ ButtonStyle All -- UseTitleStyle
+
+DestroyDecor FullScreenDecor
+AddToDecor   FullScreenDecor
++ TitleStyle Centered Height 35 -- Flat
++ ButtonStyle 1 \
+        ActiveUp          (Pixmap $[fvwm_img]/button/stick-fullscreenup.png -- Flat) \
+        ActiveDown        (Pixmap $[fvwm_img]/button/stick-fullscreendown.png -- Flat) \
+        Inactive          (Pixmap $[fvwm_img]/button/stick-fullscreenup.png -- Flat) \
+        ToggledActiveUp   (Pixmap $[fvwm_img]/button/stick-fullscreendown.png -- Flat) \
+        ToggledActiveDown (Pixmap $[fvwm_img]/button/stick-fullscreenup.png -- Flat) \
+        ToggledInactive   (Pixmap $[fvwm_img]/button/stick-fullscreendown.png -- Flat)
++ ButtonStyle 2 \
+        ActiveUp          (Pixmap $[fvwm_img]/button/close-fullscreenup.png -- Flat) \
+        ActiveDown        (Pixmap $[fvwm_img]/button/close-fullscreendown.png -- Flat) \
+        Inactive          (Pixmap $[fvwm_img]/button/close-fullscreenup.png -- Flat)
++ ButtonStyle All - Clear
++ ButtonStyle 1 - MwmDecorStick
++ TitleStyle -- Flat
++ BorderStyle Simple -- HiddenHandles NoInset Flat
++ ButtonStyle All -- UseTitleStyle
 
 ############
 # 7: Modules
@@ -788,7 +825,7 @@ ButtonStyle All -- UseTitleStyle
 # a window. One use is getting the class/resource/name of a window.
 DestroyModuleConfig FvwmIdent:*
 *FvwmIdent: Colorset 10
-*FvwmIdent: Font "xft:Oxygen-Sans:size=13:antialias=True"
+*FvwmIdent: Font "xft:Librecode:size=13:antialias=True"
 
 # FvwmScript
 #
@@ -800,7 +837,7 @@ DestroyModuleConfig FvwmIdent:*
 #     quitting fvwm.
 DestroyModuleConfig FvwmScript:*
 *FvwmScript: DefaultColorset 10
-*FvwmScript: Font "xft:Oxygen-Sans:size=13"
+*FvwmScript: Font "xft:Librecode:size=13"
 
 # FvwmButtons - RightPanel
 #
@@ -816,7 +853,7 @@ DestroyModuleConfig RightPanel:*
 *RightPanel: Rows 380
 *RightPanel: Columns 120
 *RightPanel: Frame 0
-*RightPanel: Font "xft:Oxygen-Sans:size=13:antialias=True"
+*RightPanel: Font "xft:Librecode:size=13:antialias=True"
 *RightPanel: (120x200, Icon "$[fvwm_img]/nixos-logo.png", Frame 0)
 *RightPanel: (120x5, Frame 0)
 *RightPanel: (5x120, Frame 0)
@@ -840,7 +877,7 @@ DestroyModuleConfig FvwmPager:*
 *FvwmPager: WindowColorsets 10 11
 *FvwmPager: Font None
 *FvwmPager: Balloons All
-*FvwmPager: BalloonFont "xft:Oxygen-Sans:size=11:antialias=True"
+*FvwmPager: BalloonFont "xft:Librecode:size=11:antialias=True"
 *FvwmPager: BallonYOffset +2
 # *FvwmPager: Window3dBorders
 *FvwmPager: MiniIcons
@@ -865,7 +902,7 @@ DestroyModuleConfig FvwmIconMan:*
 *FvwmIconMan: DrawIcons always
 *FvwmIconMan: ReliefThickness 0
 *FvwmIconMan: Format "%t"
-*FvwmIconMan: Font "xft:Oxygen-Sans:size=11:antialias=True"
+*FvwmIconMan: Font "xft:Librecode:size=11:antialias=True"
 *FvwmIconMan: Action Mouse 0 A ret
 *FvwmIconMan: Action Mouse 1 A sendcommand IconManClick
 *FvwmIconMan: Action Mouse 3 A sendcommand "Menu MenuIconOps"
@@ -881,6 +918,23 @@ DestroyModuleConfig FvwmIconMan:*
 DestroyModuleConfig EventNewDesk:*
 *EventNewDesk: PassID
 *EventNewDesk: new_desk ChangeDesk
+
+# Use FvwmEvent to test for presence of emacs.
+# If present, then maximize emacs.
+DestroyModuleConfig FE-Max: *
+*FE-Max: Cmd Function
+*FE-Max: add_window FullScreenHandler
+
+Module FvwmEvent FE-Max
+
+DestroyFunc FullScreenHandler
+AddToFunc FullScreenHandler
++ I ThisWindow (emacs, !Maximized) FullScreen
++ I ThisWindow (firefox, !Maximized) FullScreen
++ I ThisWindow (kitty, !Maximized) FullScreen
++ I ThisWindow (discord, !Maximized) FullScreen
++ I ThisWindow (caja, !Maximized) FullScreen
++ I ThisWindow (strawberry, !Maximized) FullScreen
 
 # FvwmForm
 #
