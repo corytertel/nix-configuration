@@ -50,8 +50,6 @@
         };
 
     in {
-      devShell.${system} = import ./shell.nix { inherit pkgs; };
-
       nixosConfigurations = {
         pc = mkHost {
           machineConfig = [ ./hosts/pc  ];
