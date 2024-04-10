@@ -7,9 +7,11 @@ import React, { PureComponent } from 'react'
 export class ${1:`(file-name-sans-extension (buffer-name))`} extends PureComponent {
   render() {
     return (
-      <div>${1:first}</div>
+      <>
+        ${0}
+      </>
     )
   }
 }
 
-export default ${1:`(file-name-sans-extension (buffer-name))`}
+export default ${1}

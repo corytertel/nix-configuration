@@ -2,14 +2,16 @@
 # name: typescriptReactArrowFunctionExportComponent
 # key: tsrafce
 # --
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 
 type Props = {}
 
 const ${1:`(file-name-sans-extension (buffer-name))`} = (props: Props) => {
   return (
-    <div>${1:first}</div>
+    <>
+      ${0}
+    </>
   )
 }
 
-export default ${1:`(file-name-sans-extension (buffer-name))`}
+export default ${1}

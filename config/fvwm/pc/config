@@ -486,6 +486,7 @@ AddToMenu   MenuSystem
 + "&Restart FVWM%$[fvwm_icon]/actions/32x32/system-reboot.png%" Restart
 + "&Quit FVWM%$[fvwm_icon]/actions/32x32/system-shutdown.png%" Module FvwmScript FvwmScript-ConfirmQuit
 + "" Nop
++ "Do Not Disturb%$[fvwm_icon]/actions/32x32/edit-comment.png%", Exect dunstctl set-paused toggle
 + "Sleep" Exec systemctl suspend
 + "Reboot%$[fvwm_icon]/actions/32x32/system-reboot.png%" Exec reboot
 + "Poweroff%$[fvwm_icon]/actions/32x32/system-shutdown.png%" Exec poweroff

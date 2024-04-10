@@ -2,15 +2,17 @@
 # name: reactFunctionalComponentWithPropTypes
 # key: rfcp
 # --
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types'
 
 function ${1:`(file-name-sans-extension (buffer-name))`}(props) {
   return (
-    <div>${1:first}</div>
+    <>
+      ${0}
+    </>
   )
 }
 
-${1:`(file-name-sans-extension (buffer-name))`}.propTypes = {}
+${1}.propTypes = {}
 
-export default ${1:`(file-name-sans-extension (buffer-name))`}
+export default ${1}

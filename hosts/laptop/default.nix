@@ -3,7 +3,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./t14.nix
+    ./framework.nix
     ../shared
     ../../profiles/fvwm-laptop
   ];
@@ -30,8 +30,8 @@
 
   networking = {
     hostId = "e5e55245"; # for zfs
-    interfaces.wlp2s0.useDHCP = true; # wifi
-    interfaces.enp1s0f0.useDHCP = true; # ethernet
+    interfaces.wlp1s0.useDHCP = true; # wifi
+    interfaces.enp195s0f3u1.useDHCP = true; # ethernet
   };
 
   powerManagement = {
@@ -46,7 +46,7 @@
     #   enable = true;
     #   package = pkgs.ananicy-cpp;
     # };
-    tlp.enable = true;
+    # tlp.enable = true;
     # thermald.enable = true;
     # gnome.gnome-keyring.enable = true;
     xserver = {
@@ -54,7 +54,7 @@
         enable = true;
         user = "cory";
       };
-      xkb.layout = "us_dvorak";
+      xkb.layout = "us_dvorak_iso";
       libinput = {
         touchpad = {
           accelProfile = "adaptive";
@@ -96,19 +96,6 @@
 
   system.stateVersion = "23.05";
 
-  environment.systemPackages = with pkgs; [
-
-  ];
-
-  # home-manager.users.cory.services.xcape = {
-  #   enable = true;
-  #   mapExpression = {
-  #     # Shift_L = "Escape";
-  #     # Shift_R = "Escape";
-  #   };
-  #   timeout = 300;
-  # };
-
   # Bluetooth
   services.blueman.enable = true;
 
@@ -122,8 +109,6 @@
     xresources.extraConfig = ''
       Xft.dpi: 125
     '';
-
-    home.packages = with pkgs; [];
 
     home.stateVersion = "23.05";
   };

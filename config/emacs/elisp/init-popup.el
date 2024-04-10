@@ -13,6 +13,35 @@
 	(height . 12)))
 (vertico-frame-mode t)
 
+;; Center text in window
+;; perfect-margin is the fastest to recenter when refocusing/resizing the emacs frame
+(use-package perfect-margin
+  :custom
+  (perfect-margin-visible-width 100)
+  ;; (perfect-margin-ignore-regexps '())
+  (perfect-margin-ignore-regexps '(" \\*Minibuf-[0-9]+\\*"))
+  (perfect-margin-hide-fringes nil)
+  :init
+  ;; Set fringes before turning on perfect-margin
+  ;; Set the fringe to an big enough widthh
+  (setq-default fringe-mode 20)
+  (set-fringe-mode 20)
+  :config
+  ;; enable perfect-mode
+  (perfect-margin-mode t)
+  ;; auto-center minibuffer windows
+  ;; (setq perfect-margin-ignore-filters nil)
+  ;; auto-center special windows
+  ;; (setq perfect-margin-ignore-regexps nil)
+  ;; add additinal bding on margin area
+  (dolist (margin '("<left-margin> " "<right-margin> "))
+    (global-set-key (kbd (concat margin "<mouse-1>")) 'ignore)
+    (global-set-key (kbd (concat margin "<mouse-3>")) 'ignore)
+    (global-set-key (kbd (concat margin "<wheel-up>")) 'mwheel-scroll)
+    (global-set-key (kbd (concat margin "<wheel-down>")) 'mwheel-scroll))
+
+  (add-hook 'eww-mode-hook (lambda () (setq-local perfect-margin-visible-width 128))))
+
 ;; Modeline
 (set-face-attribute 'mode-line nil
     		    :foreground "#141404"

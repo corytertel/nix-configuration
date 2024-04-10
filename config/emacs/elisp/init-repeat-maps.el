@@ -319,8 +319,10 @@ together in sequence."
      sp-backward-up-sexp               "C-M-u" "u")
 
     ("combobulate-nav"
-     combobulate-forward-node          "C-M-n" "n"
-     combobulate-backward-node         "C-M-d" "d"
+     ;; combobulate-forward-node          "C-M-n" "n"
+     ;; combobulate-backward-node         "C-M-d" "d"
+     sp-forward-sexp                   "C-M-n" "n"
+     sp-backward-sexp                  "C-M-d" "d"
      combobulate-down-node             "C-M-y" "y"
      combobulate-backward-down-node    "C-M-t" "t"
      combobulate-up-node               "C-M-h" "h"

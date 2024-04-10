@@ -83,9 +83,9 @@ in {
         xdgmenumaker
         xbrightness
         imagemagick
-        kde-gtk-config
         trash-cli
         xdotool
+        alsa-utils
 
         conky
         lua

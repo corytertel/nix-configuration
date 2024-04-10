@@ -31,9 +31,11 @@
   (avy-escape-chars '(?\e ?\C-g ?g))
 
   :config
-  (defun cory/avy ()
-    (interactive)
-    (call-interactively #'avy-goto-word-1))
+  (defun cory/avy (arg)
+    (interactive "P")
+    (if arg
+        (call-interactively #'avy-goto-word-1-below)
+      (call-interactively #'avy-goto-word-1)))
 
   ;; Redefine to make Avy work with Devil
 

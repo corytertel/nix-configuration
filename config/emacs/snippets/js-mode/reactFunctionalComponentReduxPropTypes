@@ -3,16 +3,18 @@
 # key: rfcreduxp
 # --
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux'
 
 export const ${1:`(file-name-sans-extension (buffer-name))`} = (props) => {
   return (
-    <div>${1:first}</div>
+    <>
+      ${0}
+    </>
   )
 }
 
-${1:`(file-name-sans-extension (buffer-name))`}.propTypes = {
+${1}.propTypes = {
   ${2:second}: PropTypes.${3:third}
 }
 
@@ -20,4 +22,4 @@ const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = {}
 
-export default connect(mapStateToProps, mapDispatchToProps)(${1:`(file-name-sans-extension (buffer-name))`})
+export default connect(mapStateToProps, mapDispatchToProps)(${1})

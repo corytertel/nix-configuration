@@ -53,10 +53,14 @@ in {
         });
       in {
         # emacs = "${emacs24}/bin/emacs";
-        ls = "${pkgs.lsd}/bin/lsd -l --group-directories-first --header --blocks permission --blocks user --blocks group --blocks date --blocks size --blocks name --classify --icon never";
-        l = "ls";
-        ll = "ls -a";
-        tree = "ls -a --tree";
+        # ls = "${pkgs.lsd}/bin/lsd -l --group-directories-first --header --blocks permission --blocks user --blocks group --blocks date --blocks size --blocks name --classify --icon never";
+        # l = "ls";
+        # ll = "ls -a";
+        # tree = "ls -a --tree";
+        ls = "${pkgs.eza}/bin/eza";
+        l = "ls --group-directories-first -l -h --classify";
+        ll = "l -a";
+        tree = "${pkgs.eza}/bin/eza --tree";
         c = "clear";
         grep = "grep -i --color=auto";
         rm = "rm --verbose";
@@ -77,7 +81,7 @@ in {
       enable = true;
       settings = {
         add_newline = false;
-        format = "$directory$git_branch$git_state$git_status$nix_shell$cmd_duration$line_break$character";
+        format = "$directory$username$git_branch$git_state$git_status$nix_shell$cmd_duration$line_break$character";
         scan_timeout = 10;
 
         character = {
@@ -95,6 +99,14 @@ in {
           style = "bold blue";
           truncation_length = 3;
           truncation_symbol = "…/";
+        };
+
+        username = {
+          style_user = "bold yellow";
+          style_root = "bold red";
+          format = "[$user]($style) ";
+          disabled = false;
+          show_always = false;
         };
 
         git_branch = {

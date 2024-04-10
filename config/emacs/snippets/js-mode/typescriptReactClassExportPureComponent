@@ -9,9 +9,11 @@ type Props = {}
 class ${1:`(file-name-sans-extension (buffer-name))`} extends PureComponent<Props> {
   render() {
     return (
-      <div>${1:first}</div>
+      <>
+        ${0}
+      </>
     )
   }
 }
 
-export default ${1:`(file-name-sans-extension (buffer-name))`}
+export default ${1}

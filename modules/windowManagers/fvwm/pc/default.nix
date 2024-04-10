@@ -79,6 +79,7 @@ in {
         trash-cli
         xdotool
         xbrightness
+        alsa-utils
 
         conky
         lua

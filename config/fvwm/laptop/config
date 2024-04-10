@@ -39,18 +39,6 @@ ImagePath $[fvwm_img]:$[fvwm_img];.png:$[fvwm_wallpaper]:+
 PipeRead fvwm-menu-xlock
 PipeRead fvwm-menu-desktop
 
-# Reads in the file "xdgmenu" that contains a menu with all apps
-# that have a .desktop file.
-# This file needs to be manually generated due to the requirement of being
-# run within an X session. Nix sandboxing prevents it from being
-# automatically generated.
-#
-# xdgmenumaker -i -f fvwm -s 32 \
-#       | grep -v -G "Title$" \
-#       | sed s#'\+ "\(.*\)%.*\(48x48\|256x256\|512x512\|pixmaps\|racket\).*"'#'+ "\1"'# \
-#       > xdgmenu
-Read xdgmenu
-
 # Set the cursor
 CursorStyle ROOT          left_ptr
 CursorStyle TITLE         left_ptr
@@ -106,6 +94,7 @@ AddToFunc   StartFunction
 DestroyFunc InitFunction
 AddToFunc InitFunction
 + I Exec exec mkdir -p $[fvwm_cache]
++ I PipeRead 'bash $[fvwm_scripts]/xdgmenu "$[fvwm_cache]"'
 # Can't start emacs in daemon mode because eaf won't work
 # + I Exec exec emacs --daemon
 + I Exec exec touchegg --client
@@ -537,6 +526,7 @@ AddToMenu   MenuSystem
 + "&Restart FVWM%$[fvwm_icon]/actions/32x32/system-reboot.png%" Restart
 + "&Quit FVWM%$[fvwm_icon]/actions/32x32/system-shutdown.png%" Module FvwmScript FvwmScript-ConfirmQuit
 + "" Nop
++ "Do Not Disturb%$[fvwm_icon]/actions/32x32/edit-comment.png%", Exect dunstctl set-paused toggle
 + "Sleep" Exec systemctl suspend
 + "Reboot%$[fvwm_icon]/actions/32x32/system-reboot.png%" Exec reboot
 + "Poweroff%$[fvwm_icon]/actions/32x32/system-shutdown.png%" Exec poweroff
@@ -679,10 +669,9 @@ AddToMenu MenuVolume
 
 DestroyMenu MenuKeyboard
 AddToMenu   MenuKeyboard
-+ "US (QWERTY)" Exec setxkbmap "us_qwerty"
-+ "US (Dvorak)" Exec setxkbmap "us_dvorak"
-+ "RU (Phonetic QWERTY)" Exec setxkbmap "ru_phonetic_qwerty"
-+ "RU (Phonetic Dvorak)" Exec setxkbmap "ru_phonetic_dvorak"
++ "QWERTY ISO" Exec setxkbmap "gb"
++ "Dvorak ISO" Exec setxkbmap "us_dvorak_iso"
++ "RU (Phonetic Dvorak ISO)" Exec setxkbmap "ru_phonetic_dvorak_iso"
 
 #######
 # 5: Mouse and Key bindings
@@ -822,9 +811,9 @@ Mouse 1	T    A RaiseMoveX Move FullScreen
 Mouse 1	FS   A RaiseMove Resize
 Mouse 4	T    A WindowShade True
 Mouse 5	T    A WindowShade False
-# Mouse 1	R    A Menu MenuFvwmRoot
-Mouse 1	R    A Nop
-Mouse 8	A    A Menu MenuFvwmRoot
+Mouse 1	R    A Menu MenuFvwmRoot
+# Mouse 1	R    A Nop
+# Mouse 8	A    A Menu MenuFvwmRoot
 Mouse 2	R    A WindowList
 Mouse 3	R    A Menu MenuWindowOpsLong
 Mouse 1	I    A RaiseMoveX Move "Iconify off"

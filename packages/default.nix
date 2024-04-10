@@ -18,6 +18,7 @@
   (import ./keyboard-layouts { inherit pkgs; })
   (import ./layout-switch.nix {inherit pkgs; })
   (import ./librecode.nix { inherit lib pkgs; })
+  (import ./lips.nix)
   (import ./newaita-reborn.nix { inherit lib pkgs; })
   (import ./new-tab-override.nix { inherit lib pkgs; })
   (import ./nf-julia.nix { inherit lib pkgs; })

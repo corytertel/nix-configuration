@@ -272,55 +272,55 @@
   :hook (org-mode . org-appear-mode))
 
 ;; A nicer set of default display options
-(use-package org-modern
-  :hook (org-mode . org-modern-mode)
-  :custom
-  (org-modern-hide-stars nil) ;; compatibility w/org-indent
-  ;; (org-modern-priority nil)
-  ;; (org-modern-todo nil)
-  (org-modern-tag t)
-  (org-modern-table nil)
-  ;; Customize this per your font
-  (org-modern-label-border .25)
-  (org-modern-star ["
-\u200b" "\u200b" "•" "-" "•" "–" "•" "–"])
-  :config
-  (set-face-attribute 'org-modern-tag nil
-		      :inherit '(org-modern-label))
-  (set-face-attribute 'org-modern-done nil
-		      :inherit '(org-done org-modern-label))
-  (set-face-attribute 'org-modern-todo nil
-		      :weight 'semibold
-		      :inverse-video t
-		      :inherit '(org-todo org-modern-label))
-  (set-face-attribute 'org-modern-label nil
-		      :width 'condensed
-		      :height 0.9
-		      :weight 'regular
-		      :underline nil
-		      :box '(:color "black"
-			     :line-width (1 . -3))
-		      :background "grey90"
-		      :foreground "grey10")
-  (set-face-attribute 'org-modern-symbol nil
-		      :inherit 'bold)
-  (set-face-attribute 'org-modern-priority nil
-		      :weight 'semibold
-		      :inverse-video t
-		      :inherit   '(org-priority org-modern-label))
-  (set-face-attribute 'org-modern-block-name nil
-		      :inherit '(org-block-begin-line))
-  (set-face-attribute 'org-modern-statistics nil
-		      :inherit 'org-modern-done)
-  (set-face-attribute 'org-modern-horizontal-rule nil
-		      :strike-through "grey10"
-		      :inherit 'org-hide)
-  (set-face-attribute 'org-modern-date-active nil
-		      :inherit 'org-modern-done)
-  (set-face-attribute 'org-modern-date-inactive nil
-		      :foreground "grey90"
-		      :background "dark red"
-		      :inherit 'org-modern-label))
+;; (use-package org-modern
+;;   :hook (org-mode . org-modern-mode)
+;;   :custom
+;;   (org-modern-hide-stars nil) ;; compatibility w/org-indent
+;;   ;; (org-modern-priority nil)
+;;   ;; (org-modern-todo nil)
+;;   (org-modern-tag t)
+;;   (org-modern-table nil)
+;;   ;; Customize this per your font
+;;   (org-modern-label-border .25)
+;;   (org-modern-star ["
+;; \u200b" "\u200b" "•" "-" "•" "–" "•" "–"])
+;;   :config
+;;   (set-face-attribute 'org-modern-tag nil
+;; 		      :inherit '(org-modern-label))
+;;   (set-face-attribute 'org-modern-done nil
+;; 		      :inherit '(org-done org-modern-label))
+;;   (set-face-attribute 'org-modern-todo nil
+;; 		      :weight 'semibold
+;; 		      :inverse-video t
+;; 		      :inherit '(org-todo org-modern-label))
+;;   (set-face-attribute 'org-modern-label nil
+;; 		      :width 'condensed
+;; 		      :height 0.9
+;; 		      :weight 'regular
+;; 		      :underline nil
+;; 		      :box '(:color "black"
+;; 			     :line-width (1 . -3))
+;; 		      :background "grey90"
+;; 		      :foreground "grey10")
+;;   (set-face-attribute 'org-modern-symbol nil
+;; 		      :inherit 'bold)
+;;   (set-face-attribute 'org-modern-priority nil
+;; 		      :weight 'semibold
+;; 		      :inverse-video t
+;; 		      :inherit   '(org-priority org-modern-label))
+;;   (set-face-attribute 'org-modern-block-name nil
+;; 		      :inherit '(org-block-begin-line))
+;;   (set-face-attribute 'org-modern-statistics nil
+;; 		      :inherit 'org-modern-done)
+;;   (set-face-attribute 'org-modern-horizontal-rule nil
+;; 		      :strike-through "grey10"
+;; 		      :inherit 'org-hide)
+;;   (set-face-attribute 'org-modern-date-active nil
+;; 		      :inherit 'org-modern-done)
+;;   (set-face-attribute 'org-modern-date-inactive nil
+;; 		      :foreground "grey90"
+;; 		      :background "dark red"
+;; 		      :inherit 'org-modern-label))
 
 ;; Make org-modern work better with org-indent
 ;; (use-package org-modern-indent

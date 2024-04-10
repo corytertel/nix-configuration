@@ -13,7 +13,9 @@ export class ${1:`(file-name-sans-extension (buffer-name))`} extends Component {
 
   render() {
     return (
-      <div>${1:first}</div>
+      <>
+        ${0}
+      </>
     )
   }
 }
@@ -22,4 +24,4 @@ const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = {}
 
-export default connect(mapStateToProps, mapDispatchToProps)(${1:`(file-name-sans-extension (buffer-name))`})
+export default connect(mapStateToProps, mapDispatchToProps)(${1})

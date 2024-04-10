@@ -2,12 +2,14 @@
 # name: reactFunctionalComponentRedux
 # key: rfcredux
 # --
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux'
 
 export const ${1:`(file-name-sans-extension (buffer-name))`} = (props) => {
   return (
-    <div>${1:first}</div>
+    <>
+      ${0}
+    </>
   )
 }
 
@@ -15,4 +17,4 @@ const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = {}
 
-export default connect(mapStateToProps, mapDispatchToProps)(${1:`(file-name-sans-extension (buffer-name))`})
+export default connect(mapStateToProps, mapDispatchToProps)(${1})

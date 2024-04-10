@@ -39,13 +39,13 @@
   (defun combobulate-up-node (&optional arg)
     (interactive "^p")
     (with-argument-repetition arg
-      (combobulate-visual-move-to-node (combobulate--navigate-up) t)))
+                              (combobulate-visual-move-to-node (combobulate--navigate-up) t)))
 
   ;; TODO does not work as expected
   (defun combobulate-backward-down-node (&optional arg)
     (interactive "^p")
     (with-argument-repetition arg
-      (combobulate-visual-move-to-node (combobulate--navigate-down) t)))
+                              (combobulate-visual-move-to-node (combobulate--navigate-down) t)))
 
   (with-eval-after-load 'combobulate-navigation
     (define-key combobulate-key-map (kbd "C-M-h") #'combobulate-up-node)
@@ -53,9 +53,11 @@
     (define-key combobulate-key-map (kbd "C-M-y") #'combobulate-down-node)
     (define-key combobulate-key-map (kbd "C-M-t") #'combobulate-backward-down-node)
     (define-key combobulate-key-map (kbd "C-M-i") #'combobulate-mark-defun)
-    (define-key combobulate-key-map (kbd "C-M-n") #'combobulate-forward-node)
+    ;; (define-key combobulate-key-map (kbd "C-M-n") #'combobulate-forward-node)
+    (define-key combobulate-key-map (kbd "C-M-n") nil)
     (define-key combobulate-key-map (kbd "C-M-p") nil)
-    (define-key combobulate-key-map (kbd "C-M-d") #'combobulate-backward-node)
+    ;; (define-key combobulate-key-map (kbd "C-M-d") #'combobulate-backward-node)
+    (define-key combobulate-key-map (kbd "C-M-d") nil)
     (define-key combobulate-key-map (kbd "C-M-b") #'combobulate-transpose-sexps)
     (define-key combobulate-key-map (kbd "M-N") #'combobulate-drag-down)
     (define-key combobulate-key-map (kbd "M-P") nil)

@@ -49,6 +49,11 @@
           languages = [ "eng" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_dvorak";
         };
+        us_dvorak_iso = {
+          description = "US standard layout";
+          languages = [ "eng" ];
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/us_dvorak_iso";
+        };
         ru_phonetic_qwerty = {
           description = "Russian phonetic translation of the US qwerty layout";
           languages = [ "rus" ];
@@ -59,20 +64,37 @@
           languages = [ "rus" ];
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_phonetic_dvorak";
         };
+        ru_phonetic_dvorak_iso = {
+          description = "Russian phonetic translation of the US dvorak layout";
+          languages = [ "rus" ];
+          symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_phonetic_dvorak_iso";
+        };
       };
       libinput.enable = true;
     };
-    # postgresql = {
-    #   enable = true;
-    #   package = pkgs.postgresql;
-    #   dataDir = "/persist/postgresql/data";
-    #   authentication = lib.mkForce ''
-    #     # Generated file; do not edit!
-    #     local all all              trust
-    #     host  all all 127.0.0.1/32 md5
-    #     host  all all ::1/128      md5
-    #   '';
-    # };
+
+    # Postgres service
+    postgresql = {
+      enable = true;
+      package = pkgs.postgresql_15;
+      dataDir = "/persist/postgresql/data";
+      authentication = lib.mkOverride 10 ''
+        # Must allow at least postgres local peer connection for those tha pass the ident check
+        local postgres all peer map=superuser_map
+
+        # Allow local users to connect to any database, but postgres, if the password is correct.
+        local postgres all reject
+        local all all scram-sha-256
+
+        # Allow localhost users to connect to any database, but postgres, if the password is correct.
+        host postgres all 127.0.0.1/32 reject
+        host all all 127.0.0.1/32 scram-sha-256
+      '';
+      identMap = ''
+        superuser_map root postgres
+        superuser_map postgres postgres
+      '';
+    };
   };
 
   location = {
@@ -84,7 +106,8 @@
     services.nix-gc.unitConfig.ConditionACPower = true;
   };
 
-  sound.enable = true;
+  # Pipewire
+  sound.enable = false;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -127,11 +150,18 @@
     };
   };
 
-  # TODO potentially split these up like in a normal system between sh and bash
+  # Make /bin/bash exist so scripts work
   system.activationScripts.binbash = {
-    deps = [ "binsh" ];
     text = ''
-      ln -sfn /bin/sh /bin/bash
+      ln -sfn ${pkgs.bash}/bin/bash /bin/bash
+    '';
+  };
+
+  # Create postgres folder
+  system.activationScripts.postgres = {
+    text = ''
+      mkdir -p /persist/postgresql
+      chown postgres:postgres /persist/postgresql
     '';
   };
 
@@ -291,6 +321,67 @@
       };
     };
 
+    services = {
+      # Music
+      # Needs to run as user, not system-wide, or else audio is played as root and unreachable
+      mopidy = {
+        enable = true;
+        extensionPackages = with pkgs; [
+          mopidy-mpd
+          mopidy-local
+          mopidy-soundcloud
+        ];
+        settings = {
+          # file = {
+          #   media_dirs = [
+          #     "~/Music|Library"
+          #   ];
+          #   follow_symlinks = true;
+          #   excluded_file_extensions = [
+          #     ".html"
+          #     ".zip"
+          #     ".jpg"
+          #     ".jpeg"
+          #     ".png"
+          #   ];
+          # };
+
+          # audio = {
+          #   mixer = ''software'';
+          #   output = ''autoaudiosink'';
+          # };
+
+          mpd = {
+            enabled = true;
+            port = 6600;
+            # zeroconf = "Mopidy server on $hostname";
+            # default_playlist_scheme = "m3u";
+          };
+
+          # local = {
+          #   enabled = true;
+          #   media_dir = "~/Music";
+          #   excluded_file_extensions = ''
+          #     .directory
+          #     .html
+          #     .jpeg
+          #     .jpg
+          #     .log
+          #     .nfo
+          #     .png
+          #     .txt
+          #   '';
+          # };
+
+          soundcloud = {
+            enabled = true;
+            auth_token = "3-35204-181561843-jUBNEp7hTDGbFwY";
+            explore_songs = 100;
+          };
+        };
+      };
+    };
+
     home = {
       username = "cory";
       homeDirectory = "/home/cory";
@@ -327,6 +418,7 @@
         chicken-pkgs
         # chicken-docs
         tcl
+        lips
 
         # racket
         racket
@@ -365,6 +457,11 @@
             pygments
             pip
             numpy
+
+            flask
+            flask-wtf
+            python-dotenv
+
             # qgis
           ]))
 
@@ -375,6 +472,7 @@
 
         # smalltalk
         squeak
+        gnu-smalltalk
 
         # powershell
         # powershell
@@ -396,6 +494,7 @@
         xarchiver
         xournalpp
         teams-for-linux
+        cantata
 
         # command line utils
         mg
@@ -409,6 +508,7 @@
         imagemagick
         pciutils
         killall
+        tokei
 
         # libs
         ffmpeg

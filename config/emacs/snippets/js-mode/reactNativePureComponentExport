@@ -9,10 +9,10 @@ export class ${1:`(file-name-sans-extension (buffer-name))`} extends PureCompone
   render() {
     return (
       <View>
-        <Text>${1:first}</Text>
+        <Text>${0}</Text>
       </View>
     )
   }
 }
 
-export default ${1:`(file-name-sans-extension (buffer-name))`}
+export default ${1}

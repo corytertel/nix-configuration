@@ -10,7 +10,9 @@ export default class ${1:`(file-name-sans-extension (buffer-name))`} extends Pur
 
   render() {
     return (
-      <div>${1:first}</div>
+      <>
+        ${0}
+      </>
     )
   }
 }

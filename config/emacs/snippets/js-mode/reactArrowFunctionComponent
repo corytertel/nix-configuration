@@ -2,10 +2,12 @@
 # name: reactArrowFunctionComponent
 # key: rafc
 # --
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 
 export const ${1:`(file-name-sans-extension (buffer-name))`} = () => {
   return (
-    <div>${1:first}</div>
+    <>
+      ${0}
+    </>
   )
 }

@@ -2,12 +2,14 @@
 # name: typescriptReactFunctionalComponent
 # key: tsrfc
 # --
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 
 type Props = {}
 
 export default function ${1:`(file-name-sans-extension (buffer-name))`}({}: Props) {
   return (
-    <div>${1:first}</div>
+    <>
+      ${0}
+    </>
   )
 }

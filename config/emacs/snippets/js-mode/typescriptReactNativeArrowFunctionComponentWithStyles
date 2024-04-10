@@ -3,18 +3,18 @@
 # key: tsrnfs
 # --
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 
 type Props = {}
 
 const ${1:`(file-name-sans-extension (buffer-name))`} = (props: Props) => {
   return (
     <View>
-      <Text>${1:first}</Text>
+      <Text>${0}</Text>
     </View>
   )
 }
 
-export default ${1:`(file-name-sans-extension (buffer-name))`}
+export default ${1}
 
 const styles = StyleSheet.create({})

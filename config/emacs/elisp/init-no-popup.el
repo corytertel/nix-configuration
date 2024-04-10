@@ -16,19 +16,35 @@
 (global-set-key (kbd "M-S-<f2>") #'cory/other-window)
 (global-set-key (kbd "C-M-S-<f2>") #'cory/other-window)
 
+;; Center text in window
+;; visual-fill-column works with golden-ratio
+(use-package visual-fill-column
+  :init
+  ;; Set fringes before turning on visual-fill-column
+  ;; Set the fringe to an big enough widthh
+  (setq-default fringe-mode 20)
+  (set-fringe-mode 20)
+  :config
+  (global-visual-fill-column-mode 1)
+  :custom
+  (visual-fill-column-width 100)
+  (visual-fill-column-center-text t))
+
 ;; Focus selected window
 (use-package golden-ratio
   :bind
   (("<f7>" . cory/toggle-golden-ratio))
   :config
-  (golden-ratio-mode 1)
+  ;; TODO have golden ratio on by default
+  ;; (golden-ratio-mode 1)
   (defun cory/toggle-golden-ratio ()
     (interactive)
     (if golden-ratio-mode
         (progn
           (golden-ratio-mode 0)
           (balance-windows))
-      (golden-ratio-mode 1))))
+      (golden-ratio-mode 1)
+      (golden-ratio))))
 
 ;; Modeline
 (setq repeat-echo-function (lambda (keymap)
