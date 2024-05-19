@@ -106,8 +106,18 @@
     services.nix-gc.unitConfig.ConditionACPower = true;
   };
 
+  # # Pulseaudio
+  # sound.enable = true;
+  # hardware.pulseaudio = {
+  #   enable = true;
+  #   # For the qpaeq equalizer
+  #   extraConfig = ''
+  #     load-module module-equalizer-sink
+  #     load-module module-dbus-protocol
+  #   '';
+  # };
   # Pipewire
-  sound.enable = false;
+  sound.enable = false; # only meant for ALSA-based configs
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -158,12 +168,12 @@
   };
 
   # Create postgres folder
-  system.activationScripts.postgres = {
-    text = ''
-      mkdir -p /persist/postgresql
-      chown postgres:postgres /persist/postgresql
-    '';
-  };
+  # system.activationScripts.postgres = {
+  #   text = ''
+  #     mkdir -p /persist/postgresql
+  #     chown postgres:postgres /persist/postgresql
+  #   '';
+  # };
 
   environment = {
     variables = with pkgs; {
@@ -173,6 +183,9 @@
         "${chicken-pkgs}/lib/chicken/${toString chicken.binaryVersion}";
       # CHICKEN_DOC_REPOSITORY = "${pkgs.chicken-docs}";
       _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd";
+      # Display matplotlib in kitty
+      MPLBACKEND = "module://matplotlib-backend-kitty";
+      MPLBACKEND_KITTY_SIZING = "manual";
     };
     sessionVariables = with pkgs; {
       DOTNET_ROOT = "${dotnet-sdk_7}";
@@ -451,16 +464,37 @@
               version = "3.36.0";
               src = "${pkgs.qgis}/share/qgis/python/qgis/";
             };
+
+            matplotlib-backend-kitty = buildPythonPackage rec {
+              pname = "matplotlib-backend-kitty";
+              version = "2.1.2";
+              format = "pyproject";
+              src = fetchPypi {
+                inherit pname version;
+                sha256 = "sha256-q30X7wAYbGgKmJr4yb6fyJAKUF9cEH3H2avGexpX8VA=";
+              };
+              propagatedBuildInputs = [
+                matplotlib
+                setuptools
+              ];
+            };
           in [
             epc
             python-lsp-server
             pygments
             pip
             numpy
+            pandas
+            scipy
 
             flask
             flask-wtf
             python-dotenv
+
+            opencv4
+            scikit-image
+            matplotlib
+            matplotlib-backend-kitty
 
             # qgis
           ]))
@@ -476,6 +510,31 @@
 
         # powershell
         # powershell
+
+        # perl
+        # TODO figure out perl LSP
+        # (perl538.withPackages (ps: with ps; [
+        # For web scraping
+        #   HTMLTiny
+        #   HTMLTree # includes HTMLTreeBuilder
+        #   IOSocketSSL
+        #   NetSSLeay
+
+        #   # LSP and dependencies
+        #   PerlLanguageServer
+        #   AnyEventAIO
+        #   Coro
+        #   AnyEvent
+        #   ClassRefresh
+        #   CompilerLexer
+        #   DataDump
+        #   IOAIO
+        #   JSON
+        #   Moose
+        #   PadWalker
+        #   ScalarListUtils
+        #   HashSafeKeys
+        # ]))
 
         # desktop apps
         tdesktop
@@ -509,6 +568,8 @@
         pciutils
         killall
         tokei
+        vim
+        nano
 
         # libs
         ffmpeg

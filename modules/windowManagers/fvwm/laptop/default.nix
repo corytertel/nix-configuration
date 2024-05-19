@@ -85,7 +85,7 @@ in {
         imagemagick
         trash-cli
         xdotool
-        alsa-utils
+        pamixer
 
         conky
         lua
