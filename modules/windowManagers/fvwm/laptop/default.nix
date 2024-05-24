@@ -86,6 +86,7 @@ in {
         trash-cli
         xdotool
         pamixer
+        arandr
 
         conky
         lua

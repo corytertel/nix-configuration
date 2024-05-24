@@ -13,7 +13,7 @@
         ("t" . "insert_or_scroll_down")
         ("d" . "insert_or_scroll_left")
         ("n" . "insert_or_scroll_right")
-        ("SPC" . "insert_or_scroll_up_page")
+        ;; ("SPC" . "insert_or_scroll_up_page")
         ("C-p" . "scroll_up_page")
         ("M-p" . "scroll_down_page")
         ("C-v" . "yank_text")
