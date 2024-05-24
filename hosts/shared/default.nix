@@ -167,6 +167,7 @@
 
   environment = {
     variables = with pkgs; {
+      PAGER = "less -S";
       BROWSER = config.apps.browser.command;
       # CLASSPATH = "${postgresql_jdbc}/share/java/postgresql-jdbc.jar";
       CHICKEN_REPOSITORY_PATH =

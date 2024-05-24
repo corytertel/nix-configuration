@@ -115,6 +115,10 @@
     '';
   };
 
+  environment.variables = {
+    PAGER = "less -S";
+  };
+
   environment.systemPackages = with pkgs; [
     mg
     wget
@@ -181,10 +185,15 @@
         # utils
         fd
         ripgrep
+        jq
         yt-dlp
         unzip
         nix-prefetch-github
         imagemagick
+        tokei
+        nano
+        vim
+        openssl
       ];
 
       stateVersion = "23.11";
