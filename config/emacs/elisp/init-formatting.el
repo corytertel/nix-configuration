@@ -116,7 +116,9 @@
 	whitespace-line-column 100)
   (add-hook 'prog-mode-hook 'whitespace-mode)
   (set-face-attribute 'whitespace-line nil
-		      :background 'unspecified))
+		      :background 'unspecified
+                      :foreground 'unspecified
+                      :underline '(:style wave :color "violet")))
 
 ;; Highlight and navigate TODO keywords
 (use-package hl-todo

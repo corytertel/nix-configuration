@@ -167,3 +167,8 @@
   (define-key nxml-mode-map (kbd "M-{") nil)
   (define-key nxml-mode-map (kbd "M-}") nil)
   (define-key nxml-mode-map (kbd "M-i") nil))
+
+
+;;; Perl
+
+(fset 'perl-mode 'cperl-mode)

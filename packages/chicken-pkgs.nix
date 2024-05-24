@@ -48,6 +48,9 @@ super: self: {
         simple-timer # simple timer; deps: llrb-tree, pigeon-hole
         llrb-tree
         pigeon-hole
+
+        sqlite3
+        arrays
       ];
     };
 }

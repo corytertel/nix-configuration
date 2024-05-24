@@ -10,7 +10,9 @@
     js-jsx-mode
     js-ts-mode
     typescript-ts-mode
-    nix-mode)
+    nix-mode
+    perl-mode
+    cperl-mode)
    . cory/eglot)
   (eglot-managed-mode
    . (lambda ()

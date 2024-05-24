@@ -19,7 +19,8 @@ in {
         disable_ligatures = "cursor";
         cursor_blink_interval = "0.5";
         cursor_stop_blinking_after = 0;
-        cursor_shape = "beam";
+        # cursor_shape = "beam";
+        cursor_shape = "block";
         scrollback_lines = 5000;
         enable_audio_bell = "yes";
         update_check_interval = 0;
