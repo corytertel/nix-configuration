@@ -333,6 +333,26 @@
         userName  = "corytertel";
         userEmail = "ctertel@comcast.net";
       };
+
+      neovim = {
+        enable = true;
+        plugins = with pkgs.vimPlugins; [
+          # Emacs colorscheme
+          {
+            plugin = vim-colorschemes;
+            config = "colorscheme emacs";
+          }
+          # Hardtime
+          {
+            plugin = hardtime-nvim;
+            type = "lua";
+            config = ''require("hardtime").setup()'';
+          }
+          # Dependencies of Hardtime
+          nui-nvim
+          plenary-nvim
+        ];
+      };
     };
 
     services = {
