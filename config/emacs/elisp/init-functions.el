@@ -249,3 +249,13 @@ argument, query for word to search."
       (if (thing-at-point 'word)
           (dictionary-lookup-definition)
         (dictionary-search-dwim '(4))))))
+
+(defun cory/kill-buffer-and-window-and-save ()
+  (interactive)
+  (save-buffer)
+  (kill-buffer-and-window))
+
+(defmacro cory/define-keys (map &rest l)
+  ""
+  `(dolist (pair ',l)
+     (define-key ,map (kbd (car pair)) (cdr pair))))

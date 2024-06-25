@@ -120,12 +120,12 @@
   (defun crux-kill-and-join-backward ()
     (interactive)
     (if (and (save-mark-and-excursion
-	       (let ((orig-point (point)))
-		 (move-beginning-of-line 1)
-		 (while (looking-at "[[:space:]\t]")
-		   (forward-char 1))
-		 (= orig-point (point))))
-	     (not (eolp)))
+	     (let ((orig-point (point)))
+	       (move-beginning-of-line 1)
+	       (while (looking-at "[[:space:]\t]")
+		 (forward-char 1))
+	       (= orig-point (point))))
+	   (not (eolp)))
 	(delete-indentation)
       (kill-line 0)
       (indent-according-to-mode)))
@@ -135,7 +135,12 @@
     (interactive "P")
     (if (not arg)
 	(crux-kill-and-join-forward)
-      (crux-kill-and-join-backward))))
+      (crux-kill-and-join-backward)))
+
+  (evil-define-motion evil-beginning-of-line ()
+    "Move the cursor to the beginning of the current line."
+    :type exclusive
+    (crux-move-beginning-of-line nil)))
 
 ;; better comment-dwim
 (use-package comment-dwim-2
@@ -184,6 +189,13 @@
    ("DEL"   . sp-backward-delete-char)
    ("M-DEL" . sp-backward-kill-word)
    ("M-y"   . sp-kill-word)
+   ;; :map evil-motion-state-map
+   ;; ("H" . sp-backward-sexp)
+   ;; ("L" . sp-forward-sexp)
+   ;; ("(" . sp-backward-up-sexp)
+   ;; (")" . sp-up-sexp)
+   ;; ("{" . sp-down-sexp)
+   ;; ("}" . sp-backward-down-sexp)
    :map emacs-lisp-mode-map
    (";" . sp-comment)
    :map scheme-mode-map
@@ -247,6 +259,14 @@
 		:post-handlers
 		'(((lambda (&rest _ignored)
                      (crux-smart-open-line-above)) "RET"))))
+
+(use-package evil-cleverparens
+  :config
+  (add-hook 'emacs-lisp-mode-hook #'evil-cleverparens-mode)
+  (add-hook 'lisp-mode-hook #'evil-cleverparens-mode)
+  (add-hook 'scheme-mode-hook #'evil-cleverparens-mode)
+  ;; (add-hook 'clojure-mode-hook #'evil-cleverparens-mode)
+  )
 
 ;; Smart-region: Smart region selection
 ;; Smart region guesses what you want to select by one command:
@@ -388,141 +408,141 @@
 ;; 	  map)))
 
 ;; Devil mode
-(use-package devil
-  :bind
-  (("C-h k" . devil-helpful-key)
-   ;; ("C-h k" . devil-describe-key)
-   ("C-\\" . devil-quoted-insert)
-   ("C-x q" . exchange-point-and-mark))
-  :hook
-  (emacs-startup . global-devil-mode)
-  :config
-  (defcustom devil-global-sets-buffer-default nil
-    "Non-nil iff `global-devil-mode' modifies new buffer defaults.
-When non-nil and `global-devil-mode' is enabled, `devil-mode'
-will be enabled in all new buffers without relying on the
-standard global minor-mode hooks.
-While this solves issues with `devil-mode' not being active in
-buffers which have not called the hooks where a minor-mode could
-be applied, the decision to bypass these hooks is likely to have
-been intentional.  It is not recommended to enable this option
-unless you are absolutely sure of the consequences.
-To work around the most common issue, where `global-devil-mode'
-is enabled during start-up but `devil-mode' is not enabled in the
-default Emacs startup screen, a safer solution is to advise the
-function which creates the startup screen to enable the mode
-locally."
-    :type 'boolean)
+;; (use-package devil
+;;   :bind
+;;   (("C-h k" . devil-helpful-key)
+;;    ;; ("C-h k" . devil-describe-key)
+;;    ("C-\\" . devil-quoted-insert)
+;;    ("C-x q" . exchange-point-and-mark))
+;;   :hook
+;;   (emacs-startup . global-devil-mode)
+;;   :config
+;;   (defcustom devil-global-sets-buffer-default nil
+;;     "Non-nil iff `global-devil-mode' modifies new buffer defaults.
+;; When non-nil and `global-devil-mode' is enabled, `devil-mode'
+;; will be enabled in all new buffers without relying on the
+;; standard global minor-mode hooks.
+;; While this solves issues with `devil-mode' not being active in
+;; buffers which have not called the hooks where a minor-mode could
+;; be applied, the decision to bypass these hooks is likely to have
+;; been intentional.  It is not recommended to enable this option
+;; unless you are absolutely sure of the consequences.
+;; To work around the most common issue, where `global-devil-mode'
+;; is enabled during start-up but `devil-mode' is not enabled in the
+;; default Emacs startup screen, a safer solution is to advise the
+;; function which creates the startup screen to enable the mode
+;; locally."
+;;     :type 'boolean)
 
-  (define-globalized-minor-mode
-    global-devil-mode devil-mode devil--on
-    (if global-devil-mode (devil--add-extra-keys) (devil--remove-extra-keys))
-    (when devil-global-sets-buffer-default
-      (setq-default devil-mode global-devil-mode)))
+;;   (define-globalized-minor-mode
+;;     global-devil-mode devil-mode devil--on
+;;     (if global-devil-mode (devil--add-extra-keys) (devil--remove-extra-keys))
+;;     (when devil-global-sets-buffer-default
+;;       (setq-default devil-mode global-devil-mode)))
 
-  (setq devil-global-sets-buffer-default t)
+;;   (setq devil-global-sets-buffer-default t)
 
-  (defun devil-helpful-key ()
-    "Describe a Devil key sequence with helpful."
-    (interactive)
-    (devil--log "Activated with %s" (key-description (this-command-keys)))
-    (let* ((result (devil--read-key devil-describe-prompt (vector)))
-           (key (devil--aget 'key result))
-           (translated-key (devil--aget 'translated-key result))
-           (binding (devil--aget 'binding result)))
-      (devil--log "Read key: %s => %s => %s => %s"
-                  key (key-description key) translated-key binding)
-      (if translated-key
-          (helpful-key (kbd translated-key))
-  	;; Create a transient keymap to describe special key sequence.
-  	(let* ((virtual-keymap (make-sparse-keymap))
-               (exit-function (set-transient-map virtual-keymap)))
-          (define-key virtual-keymap key binding)
-          (helpful-key key)
-          (funcall exit-function)))))
+;;   (defun devil-helpful-key ()
+;;     "Describe a Devil key sequence with helpful."
+;;     (interactive)
+;;     (devil--log "Activated with %s" (key-description (this-command-keys)))
+;;     (let* ((result (devil--read-key devil-describe-prompt (vector)))
+;;            (key (devil--aget 'key result))
+;;            (translated-key (devil--aget 'translated-key result))
+;;            (binding (devil--aget 'binding result)))
+;;       (devil--log "Read key: %s => %s => %s => %s"
+;;                   key (key-description key) translated-key binding)
+;;       (if translated-key
+;;           (helpful-key (kbd translated-key))
+;;   	;; Create a transient keymap to describe special key sequence.
+;;   	(let* ((virtual-keymap (make-sparse-keymap))
+;;                (exit-function (set-transient-map virtual-keymap)))
+;;           (define-key virtual-keymap key binding)
+;;           (helpful-key key)
+;;           (funcall exit-function)))))
 
-  (defun devil-quoted-insert ()
-    "Insert a Devil key sequence."
-    (interactive)
-    (devil--log "Activated with %s" (key-description (this-command-keys)))
-    (let* ((result (devil--read-key devil-describe-prompt (vector)))
-           (key (devil--aget 'key result))
-           (translated-key (devil--aget 'translated-key result))
-           (binding (devil--aget 'binding result)))
-      (devil--log "Read key: %s => %s => %s => %s"
-                  key (key-description key) translated-key binding)
-      (if translated-key
-          (insert (kbd translated-key))
-  	;; Create a transient keymap to describe special key sequence.
-  	(let* ((virtual-keymap (make-sparse-keymap))
-               (exit-function (set-transient-map virtual-keymap)))
-          (define-key virtual-keymap key binding)
-          (insert key)
-          (funcall exit-function)))))
+;;   (defun devil-quoted-insert ()
+;;     "Insert a Devil key sequence."
+;;     (interactive)
+;;     (devil--log "Activated with %s" (key-description (this-command-keys)))
+;;     (let* ((result (devil--read-key devil-describe-prompt (vector)))
+;;            (key (devil--aget 'key result))
+;;            (translated-key (devil--aget 'translated-key result))
+;;            (binding (devil--aget 'binding result)))
+;;       (devil--log "Read key: %s => %s => %s => %s"
+;;                   key (key-description key) translated-key binding)
+;;       (if translated-key
+;;           (insert (kbd translated-key))
+;;   	;; Create a transient keymap to describe special key sequence.
+;;   	(let* ((virtual-keymap (make-sparse-keymap))
+;;                (exit-function (set-transient-map virtual-keymap)))
+;;           (define-key virtual-keymap key binding)
+;;           (insert key)
+;;           (funcall exit-function)))))
 
-  ;; Fix inability to type . and , in isearch
-  (define-key isearch-mode-map (kbd ",") #'isearch-printing-char)
+;;   ;; Fix inability to type . and , in isearch
+;;   (define-key isearch-mode-map (kbd ",") #'isearch-printing-char)
 
-  ;; TODO find cleaner solution that doesn't require repeating oneself
-  (add-hook 'isearch-mode-hook
-	    (lambda ()
-	      (setq-local devil-special-keys
-			  (list (cons "%k %k" (lambda () (interactive) (isearch-printing-char ?.)))
-				(cons "%k SPC"
-				      (lambda () (interactive)
-					(if isearch-regexp
-					    (progn (isearch-printing-char ?\\ 1)
-						   (isearch-printing-char ?. 1)
-						   (isearch-printing-char ?. 1)
-						   (isearch-printing-char ?* 1))
-					  (isearch-printing-char ?. 1)
-					  (isearch-printing-char ?  1))))
-				(cons "%k SPC" (devil-key-executor "%k SPC"))
-				(cons "%k RET" (devil-key-executor "%k RET"))
-				(cons "%k \"" (devil-key-executor "%k \""))
-				(cons "%k <return>" (devil-key-executor "%k <return>"))
-				;; (cons "%k i %k k" #'devil-describe-key)
-				(cons "%k i %k k" #'devil-helpful-key)
-				(cons "%k i %k l" #'devil-toggle-logging)))))
+;;   ;; TODO find cleaner solution that doesn't require repeating oneself
+;;   (add-hook 'isearch-mode-hook
+;; 	    (lambda ()
+;; 	      (setq-local devil-special-keys
+;; 			  (list (cons "%k %k" (lambda () (interactive) (isearch-printing-char ?.)))
+;; 				(cons "%k SPC"
+;; 				      (lambda () (interactive)
+;; 					(if isearch-regexp
+;; 					    (progn (isearch-printing-char ?\\ 1)
+;; 						   (isearch-printing-char ?. 1)
+;; 						   (isearch-printing-char ?. 1)
+;; 						   (isearch-printing-char ?* 1))
+;; 					  (isearch-printing-char ?. 1)
+;; 					  (isearch-printing-char ?  1))))
+;; 				(cons "%k SPC" (devil-key-executor "%k SPC"))
+;; 				(cons "%k RET" (devil-key-executor "%k RET"))
+;; 				(cons "%k \"" (devil-key-executor "%k \""))
+;; 				(cons "%k <return>" (devil-key-executor "%k <return>"))
+;; 				;; (cons "%k i %k k" #'devil-describe-key)
+;; 				(cons "%k i %k k" #'devil-helpful-key)
+;; 				(cons "%k i %k l" #'devil-toggle-logging)))))
 
-  ;; TODO find cleaner solution that doesn't require repeating oneself
-  (add-hook 'isearch-mode-end-hook
-	    (lambda ()
-	      (setq-local devil-special-keys
-			  (list (cons "%k %k" (devil-key-executor "%k"))
-				(cons "%k SPC" (devil-key-executor "%k SPC"))
-				(cons "%k SPC" (devil-key-executor "%k SPC"))
-				(cons "%k RET" (devil-key-executor "%k RET"))
-				(cons "%k \"" (devil-key-executor "%k \""))
-				(cons "%k <return>" (devil-key-executor "%k <return>"))
-				;; (cons "%k i %k k" #'devil-describe-key)
-				(cons "%k i %k k" #'devil-helpful-key)
-				(cons "%k i %k l" #'devil-toggle-logging)))))
+;;   ;; TODO find cleaner solution that doesn't require repeating oneself
+;;   (add-hook 'isearch-mode-end-hook
+;; 	    (lambda ()
+;; 	      (setq-local devil-special-keys
+;; 			  (list (cons "%k %k" (devil-key-executor "%k"))
+;; 				(cons "%k SPC" (devil-key-executor "%k SPC"))
+;; 				(cons "%k SPC" (devil-key-executor "%k SPC"))
+;; 				(cons "%k RET" (devil-key-executor "%k RET"))
+;; 				(cons "%k \"" (devil-key-executor "%k \""))
+;; 				(cons "%k <return>" (devil-key-executor "%k <return>"))
+;; 				;; (cons "%k i %k k" #'devil-describe-key)
+;; 				(cons "%k i %k k" #'devil-helpful-key)
+;; 				(cons "%k i %k l" #'devil-toggle-logging)))))
 
-  :custom
-  (devil-key ".")
-  (devil-repeatable-keys nil)
-  (devil-translations
-   (list (cons "%k , ," "C-M-")
-	 (cons "%k , %k" "M-.")
-	 (cons "%k , '" "M-")
-	 (cons "%k ," "M-")
-	 (cons "%k %k" "%k")
-	 (cons "%k '" "C-")
-	 (cons "%k x" "C-q")
-	 (cons "%k q" "C-x")
-	 (cons "%k c" "C-j")
-	 (cons "%k j" "C-c")
-	 (cons "%k h" "<C-h>")
-	 (cons "%k i" "C-h")
-	 (cons "%k"  "C-")))
-  (devil-special-keys
-   (list (cons "%k %k" (devil-key-executor "%k"))
-	 (cons "%k SPC" (devil-key-executor "%k SPC"))
-	 (cons "%k SPC" (devil-key-executor "%k SPC"))
-	 (cons "%k RET" (devil-key-executor "%k RET"))
-	 (cons "%k \"" (devil-key-executor "%k \""))
-	 (cons "%k <return>" (devil-key-executor "%k <return>"))
-	 ;; (cons "%k i %k k" #'devil-describe-key)
-	 (cons "%k i %k k" #'devil-helpful-key)
-	 (cons "%k i %k l" #'devil-toggle-logging))))
+;;   :custom
+;;   (devil-key ".")
+;;   (devil-repeatable-keys nil)
+;;   (devil-translations
+;;    (list (cons "%k , ," "C-M-")
+;; 	 (cons "%k , %k" "M-.")
+;; 	 (cons "%k , '" "M-")
+;; 	 (cons "%k ," "M-")
+;; 	 (cons "%k %k" "%k")
+;; 	 (cons "%k '" "C-")
+;; 	 (cons "%k x" "C-q")
+;; 	 (cons "%k q" "C-x")
+;; 	 (cons "%k c" "C-j")
+;; 	 (cons "%k j" "C-c")
+;; 	 (cons "%k h" "<C-h>")
+;; 	 (cons "%k i" "C-h")
+;; 	 (cons "%k"  "C-")))
+;;   (devil-special-keys
+;;    (list (cons "%k %k" (devil-key-executor "%k"))
+;; 	 (cons "%k SPC" (devil-key-executor "%k SPC"))
+;; 	 (cons "%k SPC" (devil-key-executor "%k SPC"))
+;; 	 (cons "%k RET" (devil-key-executor "%k RET"))
+;; 	 (cons "%k \"" (devil-key-executor "%k \""))
+;; 	 (cons "%k <return>" (devil-key-executor "%k <return>"))
+;; 	 ;; (cons "%k i %k k" #'devil-describe-key)
+;; 	 (cons "%k i %k k" #'devil-helpful-key)
+;; 	 (cons "%k i %k l" #'devil-toggle-logging))))

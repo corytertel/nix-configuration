@@ -73,11 +73,11 @@ let
           + builtins.readFile ../../../config/emacs/elisp/init-no-popup.el)
 
   # Informal Packages
-  # + (builtins.readFile ../../../config/emacs/elisp/eshell-undistract-me.el)
+  + (builtins.readFile ../../../config/emacs/elisp/eshell-undistract-me.el)
   + (builtins.readFile ../../../config/emacs/elisp/app-launcher.el)
 
   # Repeat Maps (last)
-  + (builtins.readFile ../../../config/emacs/elisp/init-repeat-maps.el)
+  # + (builtins.readFile ../../../config/emacs/elisp/init-repeat-maps.el)
 
   + config.programs.cory.emacs.extraConfig;
 
@@ -119,6 +119,7 @@ let
       macrursors = pkgs.callPackage ./macrursors.nix {};
       cape-yasnippet = pkgs.callPackage ./cape-yasnippet.nix {};
       combobulate = pkgs.callPackage ./combobulate.nix {};
+      evil-motion-trainer = pkgs.callPackage ./evil-motion-trainer.nix {};
     };
   };
 
@@ -198,10 +199,10 @@ in {
 
     apps.editor = {
       name = "emacs";
-      # command = "emacsclient -c -e '(fancy-startup-screen)'";
+      # command = "emacsclient -c";
       # desktopFile = "emacsclient.desktop";
       # emacsclient does not work bc of eaf
-      command = "emacs -c -e '(fancy-startup-screen)'";
+      command = "emacs -c";
       desktopFile = "emacs.desktop";
       package = emacsPackage;
     };

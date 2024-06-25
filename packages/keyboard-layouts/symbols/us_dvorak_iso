@@ -66,9 +66,12 @@ xkb_symbols "basic" {
       symbols[Group1] = [ Shift_R, Caps_Lock ]
     };
     
-    // Eliminate CapsLock, making it another Ctrl.
-    replace key <CAPS> { [ Control_L, Control_L ] };
-    modifier_map  Control { <CAPS>, <LCTL> };
+    // // Eliminate CapsLock, making it another Ctrl.
+    // replace key <CAPS> { [ Control_L, Control_L ] };
+    // modifier_map  Control { <CAPS>, <LCTL> };
+    
+    // Make capslock into escape
+    key <CAPS> { [ Escape ], type[group1] = "ONE_LEVEL" };
 
     // Intl key
     key <LSGT>  { [ semicolon,   colon ] };

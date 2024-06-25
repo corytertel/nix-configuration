@@ -172,3 +172,7 @@
 ;;; Perl
 
 (fset 'perl-mode 'cperl-mode)
+
+;;; Lua
+
+(use-package lua-mode)

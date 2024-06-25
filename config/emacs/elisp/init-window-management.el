@@ -43,9 +43,9 @@
   (when (equal (buffer-name) "*Dyalog Symbols*")
     (cory/other-window)))
 
-(defun previous-window ()
-  "Reverse direction of `other-window'."
-  (other-window -1))
+;; (defun previous-window ()
+;;   "Reverse direction of `other-window'."
+;;   (other-window -1))
 
 ;; (defun cory/toggle-last-buffer ()
 ;;   (interactive)

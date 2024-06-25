@@ -22,14 +22,14 @@
 ;; (use-package hydra)
 
 ;; Man keybinds
-(with-eval-after-load 'man
-  (define-key Man-mode-map "<keymap> C-M-i" nil)
-  (define-key Man-mode-map "<keymap> C-M-s" #'backward-button)
-  (define-key Man-mode-map "M-n" nil)
-  (define-key Man-mode-map "M-e" #'Man-next-manpage)
-  (define-key Man-mode-map "M-p" nil)
-  (define-key Man-mode-map "M-i" #'Man-previous-manpage)
-  (define-key Man-mode-map "n" nil)
-  (define-key Man-mode-map "e" #'Man-next-section)
-  (define-key Man-mode-map "p" nil)
-  (define-key Man-mode-map "i" #'Man-previous-section))
+;; (with-eval-after-load 'man
+;;   (define-key Man-mode-map "<keymap> C-M-i" nil)
+;;   (define-key Man-mode-map "<keymap> C-M-s" #'backward-button)
+;;   (define-key Man-mode-map "M-n" nil)
+;;   (define-key Man-mode-map "M-e" #'Man-next-manpage)
+;;   (define-key Man-mode-map "M-p" nil)
+;;   (define-key Man-mode-map "M-i" #'Man-previous-manpage)
+;;   (define-key Man-mode-map "n" nil)
+;;   (define-key Man-mode-map "e" #'Man-next-section)
+;;   (define-key Man-mode-map "p" nil)
+;;   (define-key Man-mode-map "i" #'Man-previous-section))

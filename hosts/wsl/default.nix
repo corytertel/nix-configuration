@@ -144,11 +144,17 @@
 
       neovim = {
         enable = true;
+	      extraLuaConfig = ''
+	        vim.wo.relativenumber = true
+	      '';
         plugins = with pkgs.vimPlugins; [
           # Emacs colorscheme
           {
             plugin = vim-colorschemes;
-            config = "colorscheme emacs";
+            config = ''
+              colorscheme emacs
+              highlight Visual ctermfg=Black ctermbg=Yellow
+            '';
           }
           # Hardtime
           {
