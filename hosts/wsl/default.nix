@@ -140,6 +140,7 @@
         enable = true;
         userName  = "corytertel";
         userEmail = "ctertel@comcast.net";
+        lfs.enable = true;
       };
 
       neovim = {
