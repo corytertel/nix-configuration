@@ -7,6 +7,8 @@
 				 #'cape-dict))))))
 
 (use-package org
+  :init
+  (require 'org)
   :hook
   (org-mode . (lambda ()
 		(org-indent-mode)

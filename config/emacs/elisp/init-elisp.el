@@ -28,8 +28,8 @@
 (defun cory/elisp-super-capf ()
   (setq-local completion-at-point-functions
 	      (list (cape-capf-super
-		     (cape-company-to-capf #'company-yasnippet)
-		     ;; #'cape-yasnippet
+		     ;; (cape-company-to-capf #'company-yasnippet)
+		     #'yasnippet-capf
 		     #'elisp-completion-at-point))))
 
 (add-hook 'emacs-lisp-mode-hook #'cory/elisp-super-capf)

@@ -29,7 +29,8 @@
 
   (yas-global-mode 1))
 
-(use-package cape-yasnippet)
+;; (use-package cape-yasnippet)
+(use-package yasnippet-capf)
 
 ;; Boilerplate code files
 (require 'autoinsert)

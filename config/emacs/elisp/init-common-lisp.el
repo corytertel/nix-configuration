@@ -48,8 +48,8 @@
   (add-hook 'sly-mode-hook (lambda ()
 			     (setq-local completion-at-point-functions
 					 (list (cape-capf-super
-						(cape-company-to-capf #'company-yasnippet)
-						;; #'cape-yasnippet
+						;; (cape-company-to-capf #'company-yasnippet)
+						#'yasnippet-capf
 						#'sly-complete-filename-maybe
 						#'sly-complete-symbol)))))
   :config

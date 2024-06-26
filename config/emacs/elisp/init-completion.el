@@ -242,12 +242,13 @@
   (corfu-echo-documentation t)     ; Enable auto documentation in the minibuffer
   (corfu-preview-current nil)
   (corfu-preselect-first nil)
-  (corfu-popupinfo-max-width 60)
-  (corfu-popupinfo-max-height 30)
-  (corfu-popupinfo-delay nil)
+  ;; (corfu-popupinfo-max-width 60)
+  ;; (corfu-popupinfo-max-height 30)
+  ;; (corfu-popupinfo-delay nil)
   (corfu-indexed-start 1)
   ;; (corfu-count 9)
   (corfu-count 8)
+  (corfu-on-exact-match 'show) ; Prevent snippets from automatically expanding by accident
 
   ;; :custom-face
   ;; (corfu-popupinfo ((t (:height 'unspecified))))
@@ -289,17 +290,25 @@
 	  map))
 
   (global-corfu-mode)
-  (corfu-history-mode)
-  (corfu-popupinfo-mode)
+  ;; (corfu-history-mode)
+  ;; (corfu-popupinfo-mode)
   (corfu-indexed-mode)
 
   :config
+  ;; Fix escape not quitting corfu in evil insert mode
+  (defun evil-corfu-quit-or-force-normal-state ()
+    (interactive)
+    (if corfu--candidates
+        (corfu-quit)
+      (evil-force-normal-state)))
+  (define-key evil-insert-state-map [escape] #'evil-corfu-quit-or-force-normal-state)
+
   ;; Background
   (set-face-attribute 'corfu-default nil :background "white")
   (set-face-attribute 'corfu-border nil :background "grey70")
 
   ;; Fix corfu popup height
-  (set-face-attribute 'corfu-popupinfo nil :height 'unspecified)
+  ;; (set-face-attribute 'corfu-popupinfo nil :height 'unspecified)
 
   ;; Deprecated face
   (set-face-attribute 'corfu-deprecated nil :foreground "magenta" :inherit nil)

@@ -148,8 +148,8 @@
   (defun scheme-super-capf ()
     (setq-local completion-at-point-functions
 		(list (cape-capf-super
-		       (cape-company-to-capf #'company-yasnippet)
-		       ;; #'cape-yasnippet
+		       ;; (cape-company-to-capf #'company-yasnippet)
+		       #'yasnippet-capf
 		       #'geiser-capf--for-filename
 		       #'geiser-capf--for-module
 		       #'geiser-capf--for-symbol)
@@ -167,7 +167,7 @@ With prefix argument, ask for the lookup symbol (with completion)."
     (unless (geiser-doc--manual-available-p)
       (error "No manual available"))
     (let ((symbol (or (and (not arg) (geiser--symbol-at-point))
-                      (geiser-completion--read-symbol "Symbol: ")))
+                     (geiser-completion--read-symbol "Symbol: ")))
 	  (current (buffer-name (current-buffer))))
       (eww (concat "http://api.call-cc.org/5/cdoc/?q="
 		   (symbol-name symbol)

@@ -33,7 +33,7 @@ let
   + (builtins.readFile ../../../config/emacs/elisp/init-lsp.el)
   + (builtins.readFile ../../../config/emacs/elisp/init-treesitter.el)
   + (builtins.readFile ../../../config/emacs/elisp/init-snippets.el)
-  + (builtins.readFile ../../../config/emacs/elisp/company-yasnippet.el)
+  # + (builtins.readFile ../../../config/emacs/elisp/company-yasnippet.el)
 
   # IDE Stuff
   + (builtins.readFile ../../../config/emacs/elisp/init-checking.el)
@@ -117,7 +117,7 @@ let
     extraEmacsPackages = emacsPackages;
     override = epkgs: epkgs // {
       macrursors = pkgs.callPackage ./macrursors.nix {};
-      cape-yasnippet = pkgs.callPackage ./cape-yasnippet.nix {};
+      # cape-yasnippet = pkgs.callPackage ./cape-yasnippet.nix {};
       combobulate = pkgs.callPackage ./combobulate.nix {};
       evil-motion-trainer = pkgs.callPackage ./evil-motion-trainer.nix {};
     };

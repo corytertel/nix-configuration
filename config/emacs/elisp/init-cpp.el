@@ -5,8 +5,8 @@
 	  (lambda ()
 	    (setq-local completion-at-point-functions
 			(list (cape-capf-super
-			       (cape-company-to-capf #'company-yasnippet)
-			       ;; #'cape-yasnippet
+			       ;; (cape-company-to-capf #'company-yasnippet)
+			       #'yasnippet-capf
 			       #'cape-dabbrev
 			       #'tags-completion-at-point-function)
 			      #'cape-file))
