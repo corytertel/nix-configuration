@@ -296,12 +296,12 @@
 
   :config
   ;; Fix escape not quitting corfu in evil insert mode
-  (defun evil-corfu-quit-or-force-normal-state ()
+  (defun evil-corfu-quit-and-force-normal-state ()
     (interactive)
-    (if corfu--candidates
-        (corfu-quit)
-      (evil-force-normal-state)))
-  (define-key evil-insert-state-map [escape] #'evil-corfu-quit-or-force-normal-state)
+    (when corfu--candidates
+      (corfu-quit))
+    (evil-force-normal-state))
+  (define-key evil-insert-state-map [escape] #'evil-corfu-quit-and-force-normal-state)
 
   ;; Background
   (set-face-attribute 'corfu-default nil :background "white")
