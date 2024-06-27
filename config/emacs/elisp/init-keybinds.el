@@ -46,6 +46,9 @@
   (define-key evil-insert-state-map (kbd "C-[") #'evil-normal-state)
   (define-key evil-replace-state-map (kbd "C-[") #'evil-normal-state)
 
+  ;; Make tab work the way it does in emacs
+  (define-key evil-motion-state-map (kbd "TAB") #'indent-for-tab-command)
+
   ;; Make :q not quit emacs
   (global-set-key [remap evil-quit] 'kill-buffer-and-window)
 
