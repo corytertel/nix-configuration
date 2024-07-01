@@ -11,6 +11,7 @@ let
   + (builtins.readFile ../../../config/emacs/elisp/init-base.el)
   + (builtins.readFile ../../../config/emacs/elisp/init-functions.el)
   + (builtins.readFile ../../../config/emacs/elisp/init-keybinds.el)
+  + (builtins.readFile ../../../config/emacs/elisp/evil-M-x.el)
   + (builtins.readFile ../../../config/emacs/elisp/init-search.el)
   + (builtins.readFile ../../../config/emacs/elisp/init-eww.el)
 

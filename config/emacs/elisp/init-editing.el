@@ -55,7 +55,10 @@
    ("<undo>" . undo-tree-undo)
    ("<redo>" . undo-tree-redo)
    ("C-/" . nil)
-   ("C-?" . nil))
+   ("C-?" . nil)
+   :map evil-normal-state-map
+   ("u" . undo-tree-undo)
+   ("C-r" . undo-tree-redo))
   :custom
   (undo-tree-visualizer-timestamps t)
   (undo-tree-visualizer-relative-timestamps t)

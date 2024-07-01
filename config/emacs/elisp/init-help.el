@@ -12,7 +12,10 @@
    ("n" . nil)
    ("h" . forward-button)
    ("p" . nil)
-   ("t" . backward-button)))
+   ("t" . backward-button))
+  :config
+  ;; (add-to-list 'evil-emacs-state-modes 'helpful-mode)
+  (add-to-list 'evil-insert-state-modes 'helpful-mode))
 
 (use-package eldoc
   :ensure nil

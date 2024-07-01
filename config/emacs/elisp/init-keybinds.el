@@ -46,25 +46,37 @@
   (define-key evil-insert-state-map (kbd "C-[") #'evil-normal-state)
   (define-key evil-replace-state-map (kbd "C-[") #'evil-normal-state)
 
+  ;; Make TAB have the same behavior as in emacs
+  (define-key evil-normal-state-map (kbd "TAB") #'indent-for-tab-command)
+
   ;; Make :q not quit emacs
   (global-set-key [remap evil-quit] 'kill-buffer-and-window)
 
   ;; Make : trigger M-x instead
-  (define-key evil-motion-state-map (kbd ":") #'execute-extended-command)
+  ;; (define-key evil-motion-state-map (kbd ":") #'evil-execute-extended-command)
+  (define-key evil-motion-state-map (kbd ":")
+    (lambda ()
+      (interactive)
+      ;; You will want vertico-preselect to be 'prompt for this command, or else you it
+      ;; will be unintutive to submit evil-commands
+      (let ((vertico-preselect 'prompt))
+        (call-interactively #'evil-execute-extended-command))))
+  (define-key evil-motion-state-map (kbd "C-w :") #'execute-extended-command)
+
+  ;; Make M-x trigger in insert mode
+  ;; (define-key evil-insert-state-map (kbd "M-x") #'execute-extended-command)
 
   ;; Define aliases so M-x works like :
-  (defalias 'q #'kill-buffer-and-window)
-  (defalias 'wq #'cory/kill-buffer-and-window-and-save)
-  (defalias 'w #'save-buffer)
+  ;; (defalias 'q #'kill-buffer-and-window)
+  ;; (defalias 'wq #'cory/kill-buffer-and-window-and-save)
+  ;; (defalias 'w #'save-buffer)
 
   ;; Make M-x look similar to :
-  (setq extended-command-versions
-        (list (list ":" (lambda () read-extended-command-predicate))
-              (list "M-X " #'command-completion--command-for-this-buffer-function)))
+  ;; (setq extended-command-versions
+  ;;       (list (list ":" (lambda () read-extended-command-predicate))
+  ;;             (list "M-X " #'command-completion--command-for-this-buffer-function)))
 
-  ;; Make M-x have the line navigation of :
-  ;; (read-extended-command ":")
-
+  ;; Make vim sexp based instead of line based in lisp modes to make it more intuitive to work with
   )
 
 ;;; Use devil as "leader key"
@@ -106,7 +118,14 @@
    '(("%k %k %k %k" . ignore)
      ("%k <escape>" . ignore)
      ("%k %k <escape>" . ignore)
-     ("%k %k %k <escape>" . ignore))))
+     ("%k %k %k <escape>" . ignore)
+     ("%k x <escape>" . ignore)
+     ("%k x %k <escape>" . ignore)
+     ("%k c <escape>" . ignore)
+     ("%k c %k <escape>" . ignore)
+     ("%k h <escape>" . ignore)
+     ("%k %k g <escape>" . ignore)
+     ("%k %k f <escape>" . ignore))))
 
 ;;; Vim training
 
@@ -128,7 +147,7 @@
  ("C-<f4>" . kill-this-buffer))
 
 (cory/define-keys
- evil-motion-state-map
+ evil-normal-state-map
  ("C-b" . switch-to-buffer))
 
 (global-set-key (kbd "M-f") search-map)
@@ -188,8 +207,11 @@
  ("C-S-s" . write-file))
 
 (cory/define-keys
+ evil-normal-state-map
+ ("C-o" . find-file))
+
+(cory/define-keys
  evil-motion-state-map
- ("C-o" . find-file)
  ("C-f" . isearch-forward))
 
 ;;; Scroll Keybinds

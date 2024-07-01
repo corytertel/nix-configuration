@@ -105,7 +105,7 @@
   ;; (vertico-preselect 'prompt)
   (vertico-grid-separator "   ")
   (vertico-grid-min-columns 3)
-  (setq vertico-grid-max-columns 20)
+  (vertico-grid-max-columns 20)
   (vertico-grid-annotate 20)
   (minibuffer-prompt-properties
    '(read-only t cursor-intangible t face minibuffer-prompt))
