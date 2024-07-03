@@ -56,6 +56,7 @@
    ("<redo>" . undo-tree-redo)
    ("C-/" . nil)
    ("C-?" . nil)
+   ;; Faster to directly set rather than go through evil-undo-function/evil-redo-function
    :map evil-normal-state-map
    ("u" . undo-tree-undo)
    ("C-r" . undo-tree-redo))
@@ -140,6 +141,7 @@
 	(crux-kill-and-join-forward)
       (crux-kill-and-join-backward)))
 
+  ;; Redefine evil-beginning of line
   (evil-define-motion evil-beginning-of-line ()
     "Move the cursor to the beginning of the current line."
     :type exclusive
@@ -192,13 +194,6 @@
    ("DEL"   . sp-backward-delete-char)
    ("M-DEL" . sp-backward-kill-word)
    ("M-y"   . sp-kill-word)
-   ;; :map evil-motion-state-map
-   ;; ("H" . sp-backward-sexp)
-   ;; ("L" . sp-forward-sexp)
-   ;; ("(" . sp-backward-up-sexp)
-   ;; (")" . sp-up-sexp)
-   ;; ("{" . sp-down-sexp)
-   ;; ("}" . sp-backward-down-sexp)
    :map emacs-lisp-mode-map
    (";" . sp-comment)
    :map scheme-mode-map
@@ -263,13 +258,13 @@
 		'(((lambda (&rest _ignored)
                      (crux-smart-open-line-above)) "RET"))))
 
-(use-package evil-cleverparens
-  :config
-  (add-hook 'emacs-lisp-mode-hook #'evil-cleverparens-mode)
-  (add-hook 'lisp-mode-hook #'evil-cleverparens-mode)
-  (add-hook 'scheme-mode-hook #'evil-cleverparens-mode)
-  ;; (add-hook 'clojure-mode-hook #'evil-cleverparens-mode)
-  )
+;; (use-package evil-cleverparens
+;;   :config
+;;   (add-hook 'emacs-lisp-mode-hook #'evil-cleverparens-mode)
+;;   (add-hook 'lisp-mode-hook #'evil-cleverparens-mode)
+;;   (add-hook 'scheme-mode-hook #'evil-cleverparens-mode)
+;;   ;; (add-hook 'clojure-mode-hook #'evil-cleverparens-mode)
+;;   )
 
 ;; Smart-region: Smart region selection
 ;; Smart region guesses what you want to select by one command:

@@ -188,12 +188,16 @@ in {
     ];
 
     environment.variables = {
-      ALTERNATE_EDITOR = "emacs -nw";
+      # ALTERNATE_EDITOR = "emacs -nw";
       # emacsclient does not work bc of eaf
       # EDITOR = "emacsclient -nw";
       # VISUAL = "emacsclient -c -a ''";
-      EDITOR = "emacs -nw";
-      VISUAL = "emacs -c -a ''";
+      # EDITOR = "emacs -nw";
+      # VISUAL = "emacs -c -a ''";
+      # Use vim
+      EDITOR = "${pkgs.vim}/bin/vim";
+      VISUAL = "${pkgs.vim}/bin/vim";
+      ALTERNATE_EDITOR = "${pkgs.nano}/bin/nano";
       # eaf
       QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt6.qtbase.outPath}/lib/qt-6/plugins";
     };

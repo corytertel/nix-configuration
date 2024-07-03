@@ -27,11 +27,23 @@
 
 ;;; Evil
 
+;; I do not use evil-collection because I do not want a package which (heavily) modifies
+;; the global state of my emacs upon loading. Evil-collection has vast side-effects and
+;; does not give the user much control over those side effects. I want to pick which side
+;; effects I want and heavily customize them. Thus, I do all of my own manual configuration,
+;; and I'm much happier with the result. It is closer to what I envision integration to be that
+;; what evil-collection could ever accomplish.
+
+;; For each rebind, we need to be careful to preserve the expected behavior.
+;; i.e. adding to macro, switching evil states, etc
+
 (use-package evil
   :custom
   (evil-want-C-u-scroll t)
   (evil-undo-system 'undo-tree)
   (evil-move-beyond-eol t)
+  :init
+  (setq evil-respect-visual-line-mode t)
   :config
   (evil-mode 1)
 
@@ -50,7 +62,7 @@
   (define-key evil-normal-state-map (kbd "TAB") #'indent-for-tab-command)
 
   ;; Make :q not quit emacs
-  (global-set-key [remap evil-quit] 'kill-buffer-and-window)
+  ;; (global-set-key [remap evil-quit] 'kill-buffer-and-window)
 
   ;; Make : trigger M-x instead
   ;; (define-key evil-motion-state-map (kbd ":") #'evil-execute-extended-command)
@@ -66,20 +78,177 @@
   ;; Make M-x trigger in insert mode
   ;; (define-key evil-insert-state-map (kbd "M-x") #'execute-extended-command)
 
-  ;; Define aliases so M-x works like :
+  ;; Make vim sexp based instead of line based in lisp modes to make it more intuitive to work with
+
+  ;; TODO add more emacs integration into the evil-ex commands
+  ;; TODO in the future try to automate this
+  ;; Manually define aliases so M-x has the completion of evil-ex
+
+  ;; "read", "delete", "yank", "put", "substitute", "mark", "<", ">", "=", "sort",
+  ;; "undo", and "print" cannot be aliased due to naming conficts
+
+  ;; Make :q not quit emacs
+  ;; (defalias 'quit #'kill-buffer-and-window)
   ;; (defalias 'q #'kill-buffer-and-window)
   ;; (defalias 'wq #'cory/kill-buffer-and-window-and-save)
-  ;; (defalias 'w #'save-buffer)
+  ;; (defalias 'quitall #'kill-all-buffers-and-windows)
+  ;; (defalias 'quita #'kill-all-buffers-and-windows)
+  ;; (defalias 'qall #'kill-all-buffers-and-windows)
+  ;; (defalias 'qa #'kill-all-buffers-and-windows)
+  ;; ;; (defalias 'cquit #'evil-quit-all-with-error-code)
+  ;; ;; (defalias 'cq #'evil-quit-all-with-error-code)
+  ;; ;; (defalias 'wqall #'evil-save-and-quit)
+  ;; ;; (defalias 'wqa #'evil-save-and-quit)
+  ;; ;; (defalias 'xall #'evil-save-and-quit)
+  ;; ;; (defalias 'xa #'evil-save-and-quit)
 
-  ;; Make M-x look similar to :
-  ;; (setq extended-command-versions
-  ;;       (list (list ":" (lambda () read-extended-command-predicate))
-  ;;             (list "M-X " #'command-completion--command-for-this-buffer-function)))
-
-  ;; Make vim sexp based instead of line based in lisp modes to make it more intuitive to work with
+  ;; (defalias 'edit #'evil-edit)
+  ;; (defalias 'e #'evil-edit)
+  ;; (defalias 'write #'evil-write)
+  ;; (defalias 'w #'evil-write)
+  ;; (defalias 'update #'evil-update)
+  ;; (defalias 'up #'evil-update)
+  ;; (defalias 'wall #'evil-write-all)
+  ;; (defalias 'wa #'evil-write-all)
+  ;; (defalias 'saveas #'evil-save)
+  ;; (defalias 'sav #'evil-save)
+  ;; (defalias 'r #'evil-read)
+  ;; (defalias 'buffer #'evil-buffer)
+  ;; (defalias 'b #'evil-buffer)
+  ;; (defalias 'bnext #'evil-next-buffer)
+  ;; (defalias 'bn #'evil-next-buffer)
+  ;; (defalias 'bprevious #'evil-prev-buffer)
+  ;; (defalias 'bp #'evil-prev-buffer)
+  ;; (defalias 'bNext #'evil-prev-buffer)
+  ;; (defalias 'bN #'evil-prev-buffer)
+  ;; (defalias 'sbuffer #'evil-split-buffer)
+  ;; (defalias 'sb #'evil-split-buffer)
+  ;; (defalias 'sbnext #'evil-split-next-buffer)
+  ;; (defalias 'sbn #'evil-split-next-buffer)
+  ;; (defalias 'sbprevious #'evil-split-prev-buffer)
+  ;; (defalias 'sbp #'evil-split-prev-buffer)
+  ;; (defalias 'sbNext #'evil-split-prev-buffer)
+  ;; (defalias 'sbN #'evil-split-prev-buffer)
+  ;; (defalias 'buffers #'buffer-menu)
+  ;; (defalias 'files #'evil-show-files)
+  ;; (defalias 'ls #'buffer-menu)
+  ;; (defalias 'change #'evil-change)
+  ;; (defalias 'c #'evil-change)
+  ;; (defalias 'copy #'evil-copy)
+  ;; (defalias 'co #'evil-copy)
+  ;; (defalias 't #'evil-copy)
+  ;; (defalias 'move #'evil-move)
+  ;; (defalias 'm #'evil-move)
+  ;; (defalias 'd #'evil-ex-delete)
+  ;; (defalias 'y #'evil-ex-yank)
+  ;; (defalias 'pu #'evil-ex-put)
+  ;; (defalias 'goto #'evil-goto-char)
+  ;; (defalias 'go #'evil-goto-char)
+  ;; (defalias 'join #'evil-ex-join)
+  ;; (defalias 'j #'evil-ex-join)
+  ;; (defalias 'left #'evil-align-left)
+  ;; (defalias 'le #'evil-align-left)
+  ;; (defalias 'right #'evil-align-right)
+  ;; (defalias 'ri #'evil-align-right)
+  ;; (defalias 'center #'evil-align-center)
+  ;; (defalias 'ce #'evil-align-center)
+  ;; (defalias 'split #'evil-window-split)
+  ;; (defalias 'sp #'evil-window-split)
+  ;; (defalias 'vsplit #'evil-window-vsplit)
+  ;; (defalias 'vs #'evil-window-vsplit)
+  ;; (defalias 'new #'evil-window-new)
+  ;; (defalias 'enew #'evil-buffer-new)
+  ;; (defalias 'ene #'evil-buffer-new)
+  ;; (defalias 'vnew #'evil-window-vnew)
+  ;; (defalias 'vne #'evil-window-vnew)
+  ;; (defalias 'close #'evil-window-delete)
+  ;; (defalias 'clo #'evil-window-delete)
+  ;; (defalias 'only #'delete-other-windows)
+  ;; (defalias 'on #'delete-other-windows)
+  ;; (defalias 'xit #'evil-save-modified-and-close)
+  ;; (defalias 'x #'evil-save-modified-and-close)
+  ;; (defalias 'exit #'evil-save-modified-and-close)
+  ;; (defalias 'exi #'evil-save-modified-and-close)
+  ;; (defalias 'bdelete #'evil-delete-buffer)
+  ;; (defalias 'bd #'evil-delete-buffer)
+  ;; (defalias 'bwipeout #'evil-delete-buffer)
+  ;; (defalias 'bw #'evil-delete-buffer)
+  ;; (defalias 'global #'evil-ex-global)
+  ;; (defalias 'g #'evil-ex-global)
+  ;; (defalias 'vglobal #'evil-ex-global-inverted)
+  ;; (defalias 'v #'evil-ex-global-inverted)
+  ;; (defalias 'normal #'evil-ex-normal)
+  ;; (defalias 'norm #'evil-ex-normal)
+  ;; (defalias 's #'evil-ex-substitute)
+  ;; (defalias '& #'evil-ex-repeat-substitute)
+  ;; (defalias '&& #'evil-ex-repeat-substitute-with-flags)
+  ;; (defalias '~ #'evil-ex-repeat-substitute-with-search)
+  ;; (defalias '~& #'evil-ex-repeat-substitute-with-search-and-flags)
+  ;; (defalias 'match #'evil-ex-match)
+  ;; (defalias 'mat #'evil-ex-match)
+  ;; (defalias 'registers #'evil-show-registers)
+  ;; (defalias 'display #'evil-show-registers)
+  ;; (defalias 'di #'evil-show-registers)
+  ;; (defalias 'ma #'evil-set-col-0-mark)
+  ;; (defalias 'marks #'evil-show-marks)
+  ;; (defalias 'delmarks #'evil-delete-marks)
+  ;; (defalias 'delm #'evil-delete-marks)
+  ;; (defalias 'jumps #'evil-show-jumps)
+  ;; (defalias 'ju #'evil-show-jumps)
+  ;; (defalias 'nohlsearch #'evil-ex-nohighlight)
+  ;; (defalias 'noh #'evil-ex-nohighlight)
+  ;; (defalias 'file #'evil-show-file-info)
+  ;; (defalias 'f #'evil-show-file-info)
+  ;; (defalias '! #'evil-shell-command)
+  ;; (defalias '@: #'evil-ex-repeat)
+  ;; (defalias 'make #'evil-make)
+  ;; (defalias 'mak #'evil-make)
+  ;; (defalias 'cc #'evil-goto-error)
+  ;; (defalias 'cfirst #'first-error)
+  ;; (defalias 'cfir #'first-error)
+  ;; (defalias 'crewind #'first-error)
+  ;; (defalias 'cr #'first-error)
+  ;; (defalias 'cnext #'next-error)
+  ;; (defalias 'cn #'next-error)
+  ;; (defalias 'cprevious #'previous-error)
+  ;; (defalias 'cp #'previous-error)
+  ;; (defalias 'set-initial-state #'evil-ex-set-initial-state)
+  ;; (defalias 'show-digraphs #'evil-ex-show-digraphs)
+  ;; (defalias 'sor #'evil-ex-sort)
+  ;; (defalias 'resize #'evil-ex-resize)
+  ;; (defalias 'res #'evil-ex-resize)
+  ;; (defalias 'u #'evil-undo)
+  ;; (defalias 'redo #'evil-redo)
+  ;; (defalias 'red #'evil-redo)
+  ;; (defalias 'p #'evil-ex-print)
+  ;; (defalias 'Print #'evil-ex-print)
+  ;; (defalias 'P #'evil-ex-print)
+  ;; (defalias 'number #'evil-ex-numbered-print)
+  ;; (defalias 'nu #'evil-ex-numbered-print)
+  ;; (defalias '\# #'evil-ex-numbered-print)
+  ;; (defalias 'z #'evil-ex-z)
+  ;; (defalias 'retab #'evil-retab)
+  ;; (defalias 'ret #'evil-retab)
+  ;; (defalias 'tabnew #'tab-bar-new-tab)
+  ;; (defalias 'tabclose #'tab-bar-close-tab)
+  ;; (defalias 'tabc #'tab-bar-close-tab)
+  ;; (defalias 'tabonly #'tab-bar-close-other-tabs)
+  ;; (defalias 'tabo #'tab-bar-close-other-tabs)
+  ;; (defalias 'tabnext #'evil-tab-next)
+  ;; (defalias 'tabn #'evil-tab-next)
+  ;; (defalias 'tabprevious #'tab-bar-switch-to-prev-tab)
+  ;; (defalias 'tabp #'tab-bar-switch-to-prev-tab)
+  ;; (defalias 'undolist #'undo-tree-visualize)
+  ;; (defalias 'undol #'undo-tree-visualize)
+  ;; (defalias 'ul #'undo-tree-visualize)
   )
 
 ;;; Use devil as "leader key"
+
+;; Using devil instead of any other "roll your own" leader key allows you
+;; to reuse emacs binds. Now you have integration with all emacs packages
+;; out of the box, no setup required. RYO leader keys require you to manually
+;; rebind everything (a lot of meaningless work) and the result is esoteric.
 
 (use-package devil
   :after evil
