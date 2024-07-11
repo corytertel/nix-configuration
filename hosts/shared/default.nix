@@ -3,6 +3,7 @@
 {
   imports = [
     ./udev.nix
+    ./wireguard.nix
     ./zfs.nix
   ];
 
@@ -15,6 +16,9 @@
         devices = ["nodev"];
         efiSupport = true;
         useOSProber = true;
+        extraConfig = ''
+          GRUB_CMDLINE_LINUX="reboot=bios"
+        '';
       };
     };
   };
@@ -24,6 +28,7 @@
     wireless.enable = false;  # disables wpa_supplicant
     useDHCP = false;
     networkmanager.enable = true;
+    resolvconf.extraOptions = ["edns0"];
   };
 
   time.timeZone = "America/Phoenix";
@@ -619,6 +624,7 @@
         wine64
         winetricks
         grapejuice
+        soulseekqt
 
         acpi
         klavaro

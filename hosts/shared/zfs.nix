@@ -17,6 +17,7 @@
   environment.etc = {
     "NetworkManager/system-connections".source = "/persist/etc/NetworkManager/system-connections/";
     "nixos".source = "/persist/etc/nixos/";
+    "mullvad-vpn.key".source = "/persist/etc/mullvad-vpn.key";
   };
 
   users = {
