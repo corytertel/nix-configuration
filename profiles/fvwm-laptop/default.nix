@@ -65,6 +65,7 @@
   # Shell
   programs.cory.bat.enable = true;
   programs.cory.bash.enable = true;
+  programs.cory.powershell.enable = true;
 
   # Gestures
   services.cory.touchegg = {
