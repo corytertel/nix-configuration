@@ -28,7 +28,7 @@ in {
   config = mkIf cfg.enable {
     services.xserver = {
       displayManager = {
-        defaultSession = "none+fvwm";
+        defaultSession = "none+fvwm3";
         sddm = {
           enable = true;
           enableHidpi = true;
@@ -36,9 +36,9 @@ in {
       };
 
       windowManager.session = [{
-        name = "fvwm";
+        name = "fvwm3";
         start = ''
-        ${pkgs.fvwm}/bin/fvwm -f ${fvwm-config}/config &
+        ${pkgs.fvwm3}/bin/fvwm3 -f ${fvwm-config}/config &
         waitPID=$!
       '';
       }];
@@ -69,7 +69,7 @@ in {
 
     environment = {
       systemPackages = with pkgs; [
-        fvwm
+        fvwm3
         fvwm-config
         feh
         xorg.xwd

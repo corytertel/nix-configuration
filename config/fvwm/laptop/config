@@ -324,6 +324,9 @@ echo 'SetEnv NDIR Prev'`
 DesktopName 0 Desktop
 DesktopSize 3x3
 
+# Enable each monitor to be able to have its own copy of desks/pages independent from one another
+DesktopConfigutation per-monitor
+
 # EdgeScroll will move the view port between the Pages when the mouse
 # moves to the edge of the screen. This set the amount of distance to
 # scroll at 100% (full page) and the EdgeResistance which is a timer
@@ -331,7 +334,8 @@ DesktopSize 3x3
 #
 # Set EdgeScroll 0 0 and/or EdgeResistance -1 to disable.
 EdgeScroll 100 100 wrap
-EdgeResistance 200
+# EdgeResistance 200
+EdgeResistance 2
 EdgeThickness 1
 Style * EdgeMoveDelay 200, EdgeMoveResistance 200
 
