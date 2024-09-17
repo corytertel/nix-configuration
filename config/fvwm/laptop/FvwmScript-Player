@@ -1,10 +1,10 @@
-WindowTitle {Player}
+WindowTitle {FvwmPlayer}
 WindowSize  160 32
 Font "xft:Sans:style=Bold:size=6"
 
 Init
  Begin
-  Set $Title = (GetOutput {exec playerctl -p strawberry -s metadata title} 1 -1)
+  Set $Title = (GetOutput {exec playerctl -s metadata title} 1 -1)
   ChangeTitle 1 $Title
 End
 
@@ -12,7 +12,7 @@ PeriodicTasks
  Begin
   If (RemainderOfDiv (GetTime) 3)==0 Then
   Begin
-   Set $Title = (GetOutput {exec playerctl -p strawberry -s metadata title} 1 -1)
+   Set $Title = (GetOutput {exec playerctl -s metadata title} 1 -1)
    ChangeTitle 1 $Title
   End
 End

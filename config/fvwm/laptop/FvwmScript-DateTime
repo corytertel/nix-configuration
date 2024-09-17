@@ -1,4 +1,4 @@
-WindowTitle {DateTime}
+WindowTitle {FvwmDateTime}
 WindowSize  120 70
 Font "xft:Sans:style=Bold:size=12"
 

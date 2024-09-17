@@ -1,0 +1,17 @@
+
+I treat "maximized" windows as if I'm putting them into "tiling" mode.
+
+"Shift" is the alternate version of an existing keybind.
+"Control" means that it deals with page operations.
+Numbers mean desk operations.
+
+I try to avoid un-ergonomic binds, and prefer mneumonic binds.
+
+I try to keep binds similar to Windows so there is less overhead when switching.
+
+Ideally, every action must be able to be accomplished through both a mouse and a keybind.
+
+For each application, I try to use a mix of CUA and Vim binds.
+
+
+Desks are meant to be completely disjoint. No operations should be cross-desk.

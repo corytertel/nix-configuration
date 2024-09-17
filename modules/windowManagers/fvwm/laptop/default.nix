@@ -7,13 +7,6 @@ let
   fvwm-config = pkgs.stdenv.mkDerivation {
     name = "fvwm-config";
     dontBuild = true;
-    # buildInputs = [ pkgs.xdgmenumaker ];
-    # buildPhase = ''
-    #   xdgmenumaker -i -f fvwm -s 32 \
-    #   | grep -v -G "Title$" \
-    #   | sed s#'\+ "\(.*\)%.*\(48x48\|256x256\|512x512\).*"'#'+ "\1"'# \
-    #   > xdgmenu
-    # '';
     installPhase = ''
       cp -r $src $out
     '';
@@ -33,26 +26,63 @@ in {
           enable = true;
           enableHidpi = true;
         };
+        sessionCommands = ''
+          # Allow local user to control X settings (specifically the monitor setup)
+          ${pkgs.xorg.xhost}/bin/xhost si:localuser:root
+
+          # Prevent screen from turning off
+          ${pkgs.xorg.xset}/bin/xset s off -dpms
+
+          # Fix horrible default key repeat delay in xorg-server-1.6
+          ${pkgs.xorg.xset}/bin/xset r rate 200 25
+        '';
       };
 
       windowManager.session = [{
         name = "fvwm3";
         start = ''
-        ${pkgs.fvwm3}/bin/fvwm3 -f ${fvwm-config}/config &
+        ${pkgs.fvwm3}/bin/fvwm3 &
         waitPID=$!
       '';
       }];
     };
 
-    environment.variables = {
-      FVWM_DATADIR = "${fvwm-config}";
-      FVWM_USERDIR = "${fvwm-config}";
+    # Auto detect and configure new monitors
+    services.udev.extraRules = let
+      defaultMonitor = "eDP-1";
+      defaultResolution = "2256x1504";
+      # for some reason Nix puts Xauthority in /tmp with a random path, so we must find and set it
+      script = pkgs.writeShellScript "hotplug_monitor.sh" ''
+        export DISPLAY=:0
+        export XAUTHORITY=$(${pkgs.coreutils-full}/bin/ls /tmp | ${pkgs.gnugrep}/bin/grep xauth | ${pkgs.coreutils-full}/bin/head -n1)
 
-      fvwm_img = "${fvwm-config}/images";
+        function connect() {
+          ${pkgs.xorg.xrandr}/bin/xrandr --output DP-4 --auto --right-of ${defaultMonitor}
+          ${pkgs.xorg.xrandr}/bin/xrandr --output DP-4 --auto --scale-from ${defaultResolution} --same-as ${defaultMonitor}
+        }
+
+        function disconnect() {
+          ${pkgs.xorg.xrandr}/bin/xrandr --output DP-4 --off
+        }
+
+        ${pkgs.xorg.xrandr}/bin/xrandr | grep "DP-4 connected" &> /dev/null && connect || disconnect
+      '';
+    in ''
+      ACTION=="change", SUBSYSTEM=="drm", RUN+="${script}"
+    '';
+
+    environment.variables = let
+      fvwm-path = "/etc/fvwm";
+    in {
+      # Link to /etc so the fvwm config can be hot-reloaded
+      FVWM_DATADIR = fvwm-path;
+      FVWM_USERDIR = fvwm-path;
+
+      fvwm_img = "${fvwm-path}/images";
       fvwm_icon = "${config.theme.icons.package}/share/icons/crystal-nova";
-      fvwm_wallpaper = "${fvwm-config}/images/wallpaper";
+      fvwm_wallpaper = "${fvwm-path}/images/background";
       fvwm_cache = "/tmp/.fvwm-cache";
-      fvwm_scripts = "${fvwm-config}/scripts";
+      fvwm_scripts = "${fvwm-path}/scripts";
 
       fvwm_term = config.apps.terminal.command;
       fvwm_browser = config.apps.browser.command;
@@ -68,6 +98,8 @@ in {
     };
 
     environment = {
+      etc."fvwm".source = "${fvwm-config}";
+
       systemPackages = with pkgs; [
         fvwm3
         fvwm-config
@@ -87,11 +119,8 @@ in {
         xdotool
         pamixer
         arandr
-
-        conky
-        lua
-        lm_sensors
-        lsb-release
+        playerctl
+        dmenu
 
         # all configured in dconf
         mate.eom

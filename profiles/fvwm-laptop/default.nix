@@ -3,6 +3,22 @@
 {
   # Window Manager
   windowManagers.cory.fvwm.laptop.enable = true;
+  # services.xserver.windowManager.session = [{
+  #   name = "2bwm";
+  #   # start = "${pkgs.xorg.xinit}/bin/startx";
+  #   start = ''
+  #     # Start window manager in the background. If it dies, X still lives.
+  #     ${pkgs._2bwm}/bin/2bwm &
+
+  #     # Start a terminal in the foreground. If this dies, X dies.
+  #     exec ${pkgs.rxvt-unicode}/bin/urxvt
+  #    '';
+  # }];
+  # services.xserver.displayManager.sddm = {
+  #   enable = true;
+  #   enableHidpi = true;
+  # };
+  # services.xserver.displayManager.defaultSession = "none+2bwm";
 
   # Editor
   programs.cory.emacs = {
@@ -20,7 +36,13 @@
   };
 
   # Terminal
-  programs.cory.kitty.enable = true;
+  # programs.cory.kitty.enable = true;
+  apps.terminal = {
+    name = "xterm";
+    command = "xterm";
+    desktopFile = "xterm.desktop";
+    package = pkgs.xterm;
+  };
 
   # Browser
   programs.cory.firefox.enable = true;
@@ -68,10 +90,10 @@
   programs.cory.powershell.enable = true;
 
   # Gestures
-  services.cory.touchegg = {
-    enable = true;
-    config = ../../config/touchegg/fvwm.conf;
-  };
+  # services.cory.touchegg = {
+  #   enable = true;
+  #   config = ../../config/touchegg/fvwm.conf;
+  # };
 
   # Aesthetics
   theme = with pkgs; {

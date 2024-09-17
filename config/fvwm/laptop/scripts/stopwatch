@@ -52,11 +52,12 @@ def Reset(label):
     # If reset is pressed after pressing pause.
     if pause_time is not None:
         reset['state']='disabled'
+        pause_time = start_time
 
     label['text']='0:00'
 
 root = tk.Tk()
-root.title("Stopwatch")
+root.title("FvwmStopwatch")
 root['background'] = '#003c3c'
 
 # Fixing the window size.
