@@ -1,0 +1,15 @@
+#!/usr/bin/env python
+import tkinter as tk
+import time
+
+root = tk.Tk()
+root.title("Notes")
+root['background'] = '#003c3c'
+
+# Fixing the window size.
+root.geometry("160x400")
+
+text = tk.Text(root, width=160, height=400, fg="white", bg="#003c3c", font="Sans 8 bold")
+text.pack()
+
+root.mainloop()

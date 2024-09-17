@@ -1,0 +1,33 @@
+WindowTitle {Player}
+WindowSize  160 32
+Font "xft:Sans:style=Bold:size=6"
+
+Init
+ Begin
+  Set $Title = (GetOutput {exec playerctl -p strawberry -s metadata title} 1 -1)
+  ChangeTitle 1 $Title
+End
+
+PeriodicTasks
+ Begin
+  If (RemainderOfDiv (GetTime) 3)==0 Then
+  Begin
+   Set $Title = (GetOutput {exec playerctl -p strawberry -s metadata title} 1 -1)
+   ChangeTitle 1 $Title
+  End
+End
+
+Widget 1
+Property
+ Position 0 0
+ Size 160 32
+ Font "xft:Sans:style=Bold:size=6"
+ Type ItemDraw
+ Flags NoReliefString
+ Title {}
+Main
+ Case message of
+  SingleClic :
+  Begin
+  End
+End
