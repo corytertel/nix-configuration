@@ -12,68 +12,82 @@ in {
     users.users.cory.shell = pkgs.bash;
 
     programs.bash = {
-      # enableCompletion = true;
+      enableCompletion = true;
 
-      # enableLsColors = true;
+      enableLsColors = true;
 
-      # blesh.enable = true;
-
-      # undistractMe = {
-      #   enable = true;
-      #   playSound = true;
-      # };
+      undistractMe = {
+        enable = true;
+        playSound = true;
+      };
 
       promptInit = builtins.readFile ./bashrc;
 
-      shellAliases = let
-        emacs24 = (pkgs.callPackage ../emacs/emacs24 {
-          lib = lib;
-          stdenv = pkgs.stdenv;
-          fetchurl = pkgs.fetchurl;
-          ncurses = pkgs.ncurses;
-          libXaw = pkgs.xorg.libXaw;
-          libXpm = pkgs.xorg.libXpm;
-          Xaw3d = pkgs.Xaw3d;
-          pkgconfig = pkgs.pkg-config;
-          gtk = pkgs.gtk2;
-          libXft = pkgs.xorg.libXft;
-          dbus = pkgs.dbus;
-          libpng = pkgs.libpng;
-          libjpeg = pkgs.libjpeg;
-          libungif = pkgs.libungif;
-          libtiff = pkgs.libtiff;
-          librsvg = pkgs.librsvg;
-          texinfo = pkgs.texinfo;
-          gconf = pkgs.gnome2.GConf;
-          libxml2 = pkgs.libxml2;
-          imagemagick = pkgs.imagemagick;
-          gnutls = pkgs.gnutls;
-          alsaLib = pkgs.alsaLib;
-          gcc = pkgs.gcc;
-        });
-      in {
-        # emacs = "${emacs24}/bin/emacs";
-        # ls = "${pkgs.lsd}/bin/lsd -l --group-directories-first --header --blocks permission --blocks user --blocks group --blocks date --blocks size --blocks name --classify --icon never";
-        # l = "ls";
-        # ll = "ls -a";
-        # tree = "ls -a --tree";
-        ls = "${pkgs.eza}/bin/eza";
-        l = "ls --group-directories-first -l -h --classify";
-        ll = "l -a";
-        tree = "${pkgs.eza}/bin/eza --tree";
+      shellAliases = {
+        l = "ls -a";
+        ll = "ls -alh";
         c = "clear";
         grep = "grep -i --color=auto";
-        rm = "rm --verbose";
+        rm = "rm --interactive=once --verbose";
         mv = "mv --interactive --verbose";
         cp = "cp -i --verbose";
         e = "eval $EDITOR";
         n = "cd $HOME/.config/nix";
         fm = config.apps.fileManager.command;
         i = config.apps.photoViewer.command;
-        nd = "nix develop";
-        info = "info -v link-style=blue,underline -v active-link-style=blue,bold -v match-style=black,bgyellow";
+        info = "info --vi-keys -v link-style=blue,underline -v active-link-style=blue,bold -v match-style=black,bgyellow";
         javac = "javac -Xdiags:verbose";
+
         audio-dl = "yt-dlp -x -f bestaudio --audio-quality 0 --add-metadata --embed-thumbnail -o \"%(artist)s - %(title)s.%(ext)s\"";
+        soundcloud-dl = "yt-dlp --add-header \"Authorization: OAuth $(${pkgs.coreutils-full}/bin/cat $HOME/.config/soundcloud.token)\" --add-metadata --write-thumbnail -o \"%(title)s.%(ext)s\"";
+
+        o = "xdg-open";
+
+        # git aliases
+        g = "git";
+        ga = "git add";
+        gb = "git branch";
+        gc = "git commit";
+        gch = "git checkout";
+        gcl = "git clone";
+        gcp = "git cherry-pick";
+        gd = "git diff";
+        gl = "git log";
+        gps = "git push";
+        gpl = "git pull";
+        gr = "git restore";
+        gs = "git status";
+
+        py = "python";
+
+        wrapon = '''echo -ne "\\033[?7h"''; # line wrap on
+        wrapoff = ''echo -ne "\\033[?7l"''; # line wrap off
+
+        sys = "systemctl";
+
+        perl = "perl -p -i -e"; # idk if I want this on pernamently, could lead to confusing situations
+
+        diff = "diff -y --color --brief";
+
+        mk = "make";
+
+        ns = "nix-shell";
+        nd = "nix develop";
+        nrs = "nixos-rebuild switch";
+
+        cclip = "xclip -selection c";
+        pclip = "xclip -selection c -o";
+
+        jo = "journalctl";
+        joxeu = "journalctl -xeu";
+
+        cx = "chmod +x";
+
+        convert = "magick";
+
+        setqw = "setxkbmap us";
+        setdv = "setxkbmap us_dvorak";
+        setdvi = "setxkbmap us_dvorak_iso";
       };
     };
 
@@ -81,7 +95,7 @@ in {
       enable = true;
       settings = {
         add_newline = false;
-        format = "$directory$username$git_branch$git_state$git_status$nix_shell$cmd_duration$line_break$character";
+        format = "$python$directory$username$git_branch$git_state$git_status$nix_shell$cmd_duration$line_break$character";
         scan_timeout = 10;
 
         character = {
@@ -137,6 +151,12 @@ in {
           pure_msg = "pure";
           style = "bold cyan";
           symbol = "  ";
+        };
+
+        python = {
+          # TODO proper parenthesis
+          format = "[$virtualenv]($style)\n";
+          style = "bold yellow";
         };
       };
     };
