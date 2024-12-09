@@ -1,3 +1,5 @@
+# -*- mode: sh -*-
+
 # # Provide a nice prompt if the terminal supports it.
 # if [ "$TERM" != "dumb" ] || [ -n "$INSIDE_EMACS" ]; then
 #   PROMPT_COLOR="1;31m"
@@ -92,7 +94,7 @@ function githelp {
     echo "git checkout [file] # Reset a file to its previous state at last commit"
     echo "-------------------------------------------------------------------------------"
     echo "git tag # List"
-    echo "git tag v0.5 # Lightwieght tag"
+    echo "git tag v0.5 # Lightweight tag"
     echo "git tag -a v1.4 -m 'my version 1.4' # Annotated tag"
     echo "git push origin v1.4 # Pushing"
     echo "-------------------------------------------------------------------------------"
@@ -105,3 +107,12 @@ function githelp {
     echo "git fetch origin ; git remote prune origin"
     echo "-------------------------------------------------------------------------------"
 }
+
+# Always run tmux automatically when you open a terminal.
+# If there's a tmux session, attach to it, or create a session.
+if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ] && [ -z "$INSIDE_EMACS" ]; then
+    # Create session 'main' or attach to 'main' if already exists.
+    # tmux new-session -A -s main
+    # Create a new tmux session on each new terminal
+    exec tmux
+fi

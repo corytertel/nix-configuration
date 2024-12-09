@@ -12,7 +12,7 @@ in {
     users.users.cory.shell = pkgs.bash;
 
     programs.bash = {
-      enableCompletion = true;
+      completion.enable = true;
 
       enableLsColors = true;
 
@@ -24,7 +24,7 @@ in {
       promptInit = builtins.readFile ./bashrc;
 
       shellAliases = {
-        l = "ls -a";
+        l = "ls -A";
         ll = "ls -alh";
         c = "clear";
         grep = "grep -i --color=auto";
@@ -88,6 +88,14 @@ in {
         setqw = "setxkbmap us";
         setdv = "setxkbmap us_dvorak";
         setdvi = "setxkbmap us_dvorak_iso";
+
+        ssh = "ssh -v";
+
+        ".." = "cd ..";
+        "..." = "cd ../..";
+        "...." = "cd ../../..";
+        "....." = "cd ../../../..";
+        "......" = "cd ../../../../..";
       };
     };
 
@@ -95,7 +103,7 @@ in {
       enable = true;
       settings = {
         add_newline = false;
-        format = "$python$directory$username$git_branch$git_state$git_status$nix_shell$cmd_duration$line_break$character";
+        format = "$conda$python$directory$username$git_branch$git_state$git_status$nix_shell$cmd_duration$line_break$character";
         scan_timeout = 10;
 
         character = {
@@ -157,6 +165,10 @@ in {
           # TODO proper parenthesis
           format = "[$virtualenv]($style)\n";
           style = "bold yellow";
+        };
+
+        conda = {
+          format = "[$symbol$environment]($style)\n";
         };
       };
     };
