@@ -12,7 +12,7 @@
 # Set-PSReadLineOption -Colors $ISETheme
 
 # Emacs-like binds
-Set-PSReadLineOption -EditMode Emacs
+# Set-PSReadLineOption -EditMode Emacs
 
 # Enable the same aliases as Windows PowerShell for compatibility
 New-Alias -Name ac -Value Add-Content

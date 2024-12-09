@@ -4,54 +4,44 @@ with lib;
 let
   cfg = config.programs.cory.powershell;
 
-  configFile = pkgs.writeText "powershell.conf" ''
-    shell pwsh -nologo
+  # selection background #fedba9
+  xtermCommand = "xterm -uc -bc"
+                 + " -xrm 'XTerm*title: PowerShell Core'"
+                 + " -xrm 'XTerm*faceName: Consolas'"
+                 + " -xrm 'XTerm*faceSize: 10'"
 
-    font_family Cascadia Code
-    font_size 10
+                 + " -xrm 'XTerm*background: #012456'"
+                 + " -xrm 'XTerm*foreground: #eeedf0'"
 
-    # Campbell PowerShell Theme
-    background #012456
-    foreground #CCCCCC
-    selection_background #8092AB
-    selection_foreground #E6E6E6
-    url_color #CCCCCC
+                 + " -xrm 'XTerm*cursorColor: #fedba9'"
 
-    color0 #0C0C0C
-    color1 #C50F1F
-    color2 #13A10E
-    color3 #C19C00
-    color4 #0037DA
-    color5 #881798
-    color6 #3A96DD
-    color7 #CCCCCC
-    color8 #767676
-    color9 #E74856
-    color10 #16C60C
-    color11 #F9F1A5
-    color12 #3B78FF
-    color13 #B4009E
-    color14 #61D6D6
-    color15 #F2F2F2
+                 # black
+                 + " -xrm 'XTerm*color0  : #000000'"
+                 + " -xrm 'XTerm*color8  : #808080'"
+                 # red
+                 + " -xrm 'XTerm*color1  : #800000'"
+                 + " -xrm 'XTerm*color9  : #ff0000'"
+                 # green
+                 + " -xrm 'XTerm*color2  : #008000'"
+                 + " -xrm 'XTerm*color10 : #00ff00'"
+                 # yellow
+                 + " -xrm 'XTerm*color3  : #eeedf0'"
+                 + " -xrm 'XTerm*color11 : #ffff00'"
+                 # blue
+                 + " -xrm 'XTerm*color4  : #000080'"
+                 + " -xrm 'XTerm*color12 : #0000ff'"
+                 # magenta
+                 + " -xrm 'XTerm*color5  : #012456'"
+                 + " -xrm 'XTerm*color13 : #ff00ff'"
+                 # cyan
+                 + " -xrm 'XTerm*color6  : #008080'"
+                 + " -xrm 'XTerm*color14 : #00ffff'"
+                 # white
+                 + " -xrm 'XTerm*color7  : #ffffff'"
+                 + " -xrm 'XTerm*color15 : #c0c0c0'"
+                 + " -e ${pkgs.powershell}/bin/pwsh";
 
-    cursor #FEDBA9
-    cursor_text_color #333333
-    cursor_shape underline
-    cursor_stop_blinking_after 0
-
-    confirm_os_window_close 0
-    window_padding_width 8
-    cursor_blink_interval 0.5
-    disable_ligatures yes
-    enable_audio_bell no
-    initial_window_height 800
-    initial_window_width 1280
-    remember_window_size no
-    scrollback_lines 5000
-
-    map ctrl+c copy_and_clear_or_interrupt
-    map ctrl+v paste_from_clipboard
-  '';
+  scriptFile = pkgs.writeShellScriptBin "powershell" xtermCommand;
 
   desktopFile = pkgs.writeText "powershell.desktop" ''
     [Desktop Entry]
@@ -60,8 +50,8 @@ let
     Name=PowerShell
     GenericName=Terminal emulator
     Comment=Fast, feature-rich, GPU based terminal
-    TryExec=kitty --class PowerShell --title PowerShell --config ${configFile}
-    Exec=kitty --class PowerShell --title PowerShell --config ${configFile}
+    TryExec=${xtermCommand}
+    Exec=${xtermCommand}
     Icon=powershell
     Categories=System;TerminalEmulator;
   '';
@@ -88,10 +78,10 @@ in {
     environment.systemPackages = with pkgs; [
       powershell
       powershell-app
-      tree
+      scriptFile
     ];
 
-    fonts.packages = [ pkgs.cascadia-code ];
+    fonts.packages = [ pkgs.vistafonts ];
 
     home-manager.users.cory.xdg.configFile.
       "powershell/Microsoft.PowerShell_profile.ps1".source = ./profile.ps1;
