@@ -57,7 +57,7 @@
   console.useXkbConfig = true;
 
   nix = {
-    package = pkgs.nixUnstable;
+    package = pkgs.nixVersions.latest;
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
@@ -120,6 +120,9 @@
   };
 
   environment.systemPackages = with pkgs; [
+    tmux
+    vim
+    nano
     mg
     wget
     curl

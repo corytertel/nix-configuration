@@ -12,7 +12,9 @@ let
   + (builtins.readFile ../../../config/emacs/elisp/init-functions.el)
   + (builtins.readFile ../../../config/emacs/elisp/init-keybinds.el)
   + (builtins.readFile ../../../config/emacs/elisp/evil-M-x.el)
+  # + (builtins.readFile ../../../config/emacs/elisp/evil-sexp-mappings-for-regular-people.el)
   + (builtins.readFile ../../../config/emacs/elisp/evil-sexp.el)
+  + (builtins.readFile ../../../config/emacs/elisp/evil-xml.el)
   + (builtins.readFile ../../../config/emacs/elisp/init-search.el)
   + (builtins.readFile ../../../config/emacs/elisp/init-eww.el)
 
@@ -20,6 +22,7 @@ let
 
   +
   ''
+  (defvar bitmap-font-p ${if config.programs.cory.emacs.fonts.useBitmapFont then "t" else "nil"})
   (defvar monospace-font-name "${config.programs.cory.emacs.fonts.monospace.name}")
   (defvar monospace-font-height ${toString config.programs.cory.emacs.fonts.monospace.size})
   (defvar variable-font-name "${config.programs.cory.emacs.fonts.variable.name}")
@@ -93,22 +96,25 @@ let
     use-package
     vterm
     (treesit-grammars.with-grammars (p: with p; [
-      tree-sitter-c
-      tree-sitter-cpp
       tree-sitter-bash
+      tree-sitter-c
+      tree-sitter-c-sharp
+      tree-sitter-cpp
+      tree-sitter-css
+      tree-sitter-elisp
+      tree-sitter-haskell
+      tree-sitter-html
       tree-sitter-java
       tree-sitter-javascript
-      tree-sitter-html
-      tree-sitter-css
-      tree-sitter-haskell
-      tree-sitter-ocaml
-      tree-sitter-elisp
       tree-sitter-nix
-      tree-sitter-nu
+      tree-sitter-perl
       tree-sitter-python
+      tree-sitter-tsx
+      tree-sitter-typescript
       # don't need these three rn because of scope highlighting
       # tree-sitter-scheme
       # tree-sitter-commonlisp
+      # tree-sitter-clojure
     ]))
   ];
 
@@ -120,8 +126,10 @@ let
     override = epkgs: epkgs // {
       macrursors = pkgs.callPackage ./macrursors.nix {};
       # cape-yasnippet = pkgs.callPackage ./cape-yasnippet.nix {};
+      corfu-terminal = pkgs.callPackage ./corfu-terminal.nix {};
       combobulate = pkgs.callPackage ./combobulate.nix {};
       evil-motion-trainer = pkgs.callPackage ./evil-motion-trainer.nix {};
+      eglot-booster = pkgs.callPackage ./eglot-booster.nix {};
     };
   };
 
@@ -131,11 +139,12 @@ in {
     enable = mkEnableOption "Enables emacs";
     package = mkOption {
       type = types.package;
-      default = pkgs.emacs-git.override {
-        withGTK3 = true;
-        withTreeSitter = true;
-        withNativeCompilation = true;
-      };
+      # default = pkgs.emacs-git.override {
+      #   withGTK3 = true;
+      #   withTreeSitter = true;
+      #   withNativeCompilation = true;
+      # };
+      default = pkgs.emacs-gtk;
     };
     popup = mkOption {
       type = types.bool;
@@ -146,6 +155,10 @@ in {
       default = !config.programs.cory.emacs.popup;
     };
     fonts = {
+      useBitmapFont = mkOption {
+        type = types.bool;
+        default = false;
+      };
       monospace = {
         package = mkOption {
           type = types.package;
@@ -229,6 +242,8 @@ in {
       git
       ripgrep
       flameshot
+      # lsp
+      emacs-lsp-booster
       # eshell-undistract-me
       sound-theme-freedesktop
       pulseaudio

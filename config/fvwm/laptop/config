@@ -84,11 +84,31 @@ AddToFunc InitFunction
 + I SetVolume 0
 
 # Mouse Bindings Functions
-DestroyFunc RaiseMoveX
-AddToFunc RaiseMoveX
+DestroyFunc RaiseMoveTitlebar
+AddToFunc RaiseMoveTitlebar
 + I Raise
-+ M $0
-+ D $1
+# Tile a window fully if double clicked
++ D FullMaximizeButtonFunc
+# Untile window if tiled
++ M Maximize False
+# Move mouse pointer to the window location, if it was tiled
++ M Current (State 1) WarpToWindow 50 0
++ M Current (State 2) WarpToWindow 50 0
++ M Current (State 3) WarpToWindow 50 0
++ M Current (State 4) WarpToWindow 50 0
++ M Current (State 5) WarpToWindow 50 0
++ M Current (State 6) WarpToWindow 50 0
++ M Current (State 7) WarpToWindow 50 0
++ M Current (State 8) WarpToWindow 50 0
++ M Current (State 9) WarpToWindow 50 0
++ M Move
++ M Function ClearTileStatesFunc
+
+DestroyFunc RaiseMoveIconify
+AddToFunc RaiseMoveIconify
++ I Raise
++ M Move
++ D Iconify off
 
 DestroyFunc RaiseMove
 AddToFunc RaiseMove
@@ -124,7 +144,7 @@ AddToFunc   SetBG
 # This function is run from FvwmIconMan when the button is clicked.
 DestroyFunc IconManClick
 AddToFunc   IconManClick
-+ I ThisWindow (Raised, !Shaded, !Iconic, CurrentPage) Iconify
++ I ThisWindow (Focused, !Shaded, !Iconic, CurrentPage) Iconify
 + I TestRc (Match) Break
 + I ThisWindow WindowShade off
 + I ThisWindow Iconify off
@@ -152,6 +172,13 @@ AddToFunc   ChangeDesk
 + I SendToModule FvwmButtons ChangeButton desk2 Colorset 10
 + I SendToModule FvwmButtons ChangeButton desk3 Colorset 10
 + I SendToModule FvwmButtons ChangeButton desk$0 Colorset 11
+
+DestroyFunc GotoDeskPreserve
+AddToFunc GotoDeskPreserve
++ I SetEnv fvwm_desk$[desk.n]_pagex $[page.nx]
++ I SetEnv fvwm_desk$[desk.n]_pagey $[page.ny]
++ I GotoDesk 0 $0
++ I GotoPage [fvwm_desk$0_pagex] $[fvwm_desk$0_pagey]
 
 # Function: SetVolume $0
 #
@@ -191,6 +218,31 @@ DestroyFunc MoveAndGotoPage
 AddToFunc   MoveAndGotoPage
 + I MoveToPage wrapx wrapy $0 $1
 + I GotoPage wrapx wrapy $0 $1
+
+# Function: MoveAndGotoDesk
+#
+# Sends the current window to the selected desk follows it there.
+DestroyFunc MoveAndGotoDesk
+AddToFunc   MoveAndGotoDesk
++ I MoveToDesk $0 $1
++ I GotoDesk $0 $1
+
+# Function: WindowListFunc
+#
+# This function is called when a window is selected from the WindowList.
+DestroyFunc WindowListFunc
+AddToFunc WindowListFunc
++ I Iconify off
++ I FlipFocus
++ I Raise
+
+# Function: ToggleStaysOnTop
+#
+# Toggles the window between layer 4 (regular) and layer 6.
+DestroyFunc ToggleStaysOnTop
+AddToFunc ToggleStaysOnTop
++ I ThisWindow ( Layer 6 ) WindowStyle StaysPut
++ I TestRc (NoMatch) WindowStyle StaysOnTop
 
 # Function: TileFunc $0 $1 $2 $3 $4
 #
@@ -391,6 +443,40 @@ AddToFunc UnTileAndCenter
 + I Current Move 50-50w 50-50w
 + I Current WarpToWindow 99 90
 
+# Function: FullMaximizeButtonFunc
+#
+# If untiled, fully maximize a window. If tiled, then untile.
+DestroyFunc FullMaximizeButtonFunc
+AddToFunc FullMaximizeButtonFunc
+# if not tiled, tile full
++ I Current (!State 1, !State 2, !State 3, !State 4, !State 5, !State 6, !State 7, !State 8, !State 9, !State 10) Function TileFunc 5 100wa 100wa 0 0
++ I TestRc (Match) Break
+# else, untile
++ I Current Function UnTileFunc
+
+# Function: HorizontalMaximizeButtonFunc
+#
+# If untiled, horizontally maximize a window. If tiled, then untile.
+DestroyFunc HorizontalMaximizeButtonFunc
+AddToFunc HorizontalMaximizeButtonFunc
+# if not tiled, tile full
++ I Current (!State 1, !State 2, !State 3, !State 4, !State 5, !State 6, !State 7, !State 8, !State 9, !State 10) Function TileFunc 5 100wa keep 0 keep
++ I TestRc (Match) Break
+# else, untile
++ I Current Function UnTileFunc
+
+# Function: VerticalMaximizeButtonFunc
+#
+# If untiled, vertically maximize a window. If tiled, then untile.
+DestroyFunc VerticalMaximizeButtonFunc
+AddToFunc VerticalMaximizeButtonFunc
+# if not tiled, tile full
++ I Current (!State 1, !State 2, !State 3, !State 4, !State 5, !State 6, !State 7, !State 8, !State 9, !State 10) Function TileFunc 5 keep 100wa keep 0
++ I TestRc (Match) Break
+# else, untile
++ I Current Function UnTileFunc
+
+
 #############
 # 2: Styles #
 #############
@@ -443,24 +529,34 @@ MoveThreshold 3
 # Sets the focus style to SloppyFocus and a mouse click
 # in a window will Raise it.
 Style * SloppyFocus, MouseFocusClickRaises
+# Style * ClickToFocus, ClickToFocusPassesClick, ClickToFocusRaises
+# # Function: AutoRaise
+# #
+# # Focuses a window and adds it to the front of the window list.
+# # FIXME FlipFocus might be buggy
+# DestroyFunc AutoFocus
+# AddToFunc AutoFocus
+# + I Iconify off
+# + I Focus
+# Module FvwmAuto 300 -menter "Silent AutoFocus"
 
 # Default Font
 DefaultFont "xft:Sans:Bold:size=10:antialias=True"
 
 # Window Placement
 # Style * MinOverlapPlacement, GrabFocusOff, !UsePPosition
-# Style * PositionPlacement Center, GrabFocusOff, !UsePPosition
-# Style * TileCascadePlacement, GrabFocusOff, !UsePPosition
-Style * MinOverlapPercentPlacement, GrabFocusOff, !UsePPosition
+# Style * PositionPlacement Center, FPGrabFocus, !UsePPosition
+Style * CascadePlacement, FPGrabFocus, !UsePPosition
 
 # Sets all windows to OpaqueMove (vs a wired frame) and  windows will
 # snap to each other and the edge of the screen.
 OpaqueMoveSize unlimited
-Style * ResizeOpaque, SnapAttraction 20 SameType ScreenAll, SnapGrid
+Style * ResizeOpaque, SnapAttraction 10 SameType ScreenAll, SnapGrid
 
 # Transient Windows (such as open file windows)
 Style * DecorateTransient, StackTransientParent
-Style * !FPGrabFocusTransient, FPReleaseFocusTransient
+# Style * !FPGrabFocusTransient, FPReleaseFocusTransient
+Style * FPGrabFocusTransient, FPReleaseFocusTransient
 
 # WindowShade
 Style * WindowShadeScrolls, WindowShadeSteps 10
@@ -531,6 +627,21 @@ Colorset 11 fg #ffffff, bg #1a6e99, hi #ffffff, sh #ffffff, Plain, NoShape
 Colorset 12 fg #2d2d2d, bg #ffffff, hi, sh, Plain, NoShape
 Colorset 13 fg #ffffff, bg #006c6c, hi, sh, Plain, NoShape
 Colorset 14 fg #555555, bg #003c3c, hi #aaaaaa, sh #999999, Plain, NoShape
+
+# InActive title right & text/bevel colors
+Colorset 1 VGradient 32 4 grey96 30 grey90 50 grey88 85 grey76 10 black, \
+    fg grey50, bg grey50, sh grey50, hi grey100
+# Active title right & text/bevel color
+Colorset 2 VGradient 32 4 grey96 30 grey85 50 grey80 80 grey60 10 black, \
+    fg grey85, bg grey50, sh grey20, hi grey100
+# Active title left. Note how you can use different ways to define colors.
+# The most comfortable way would be using the colors listed in rgb.txt,
+# but rgb:rr/gg/bb works just aswell.
+Colorset 3 VGradient 32 3 #009a00 20 green4 50 darkslategrey 10 black, \
+    bg grey
+# InActive title left
+Colorset 4 VGradient 32 3 grey80 80 grey70 70 grey62 10 black, \
+    bg grey
 
 #######
 # 4: Menus
@@ -607,27 +718,15 @@ AddToMenu   BGMenu "Wallpapers" Title
 + "Space%bgicons/bg3.png%" SetBG bg3.png
 
 # Window Operations Menus
-DestroyMenu MenuWindowOps
-AddToMenu   MenuWindowOps
-+ "Move"      Move
-+ "Resize"    Resize
-+ "Iconify"   Iconify
-+ "Maximize"  Maximize
-+ "Shade"     WindowShade
-+ "Stick"     Stick
-+ "" Nop
-+ "Close"     Close
-+ "More..."   Menu MenuWindowOpsLong This 0 0
-
 DestroyMenu MenuWindowOpsLong
 AddToMenu   MenuWindowOpsLong
 + "Move"                Move
 + "Resize"              Resize
-+ "(De)Iconify"         Iconify
-+ "(Un)Maximize"        Maximize
-+ "(Un)Shade"           WindowShade
-+ "(Un)Sticky"		Stick
-+ "(No)TitleBar"	Pick (CirculateHit) ToggleTitle
++ "Iconify"             Iconify
++ "Maximize"            FullMaximizeButtonFunc
++ "Shade"               WindowShade
++ "Sticky"              Stick
++ "TitleBar"            Pick (CirculateHit) ToggleTitle
 + "Send To"             Popup MenuSendTo
 + "" Nop
 + "Close"               Close
@@ -645,7 +744,7 @@ AddToMenu   MenuWindowOpsLong
 DestroyMenu MenuIconOps
 AddToMenu   MenuIconOps
 + "(De)Iconify"         Iconify
-+ "(Un)Maximize"        Maximize
++ "(Un)Maximize"        FullMaximizeButtonFunc
 + "(Un)Shade"           WindowShade
 + "(Un)Sticky"		Stick
 + "(No)TitleBar"	Pick (CirculateHit) ToggleTitle
@@ -671,17 +770,22 @@ AddToMenu MenuSendTo
 
 DestroyMenu MenuSendToDesk
 AddToMenu   MenuSendToDesk
-+ "Desk 0"	MoveToDesk 0 0
-+ "Desk 1"	MoveToDesk 0 1
-+ "Desk 2"	MoveToDesk 0 2
-+ "Desk 3"	MoveToDesk 0 3
++ "One"	  MoveToDesk 0 0
++ "Two"   MoveToDesk 0 1
++ "Three" MoveToDesk 0 2
++ "Four"  MoveToDesk 0 3
 
 DestroyMenu MenuSendToPage
 AddToMenu   MenuSendToPage
 + "Page (0,0)"	MoveToPage 0 0
 + "Page (0,1)"	MoveToPage 0 1
++ "Page (0,2)"	MoveToPage 0 2
 + "Page (1,0)"	MoveToPage 1 0
 + "Page (1,1)"	MoveToPage 1 1
++ "Page (1,2)"	MoveToPage 1 2
++ "Page (2,0)"	MoveToPage 2 0
++ "Page (2,1)"	MoveToPage 2 1
++ "Page (2,2)"	MoveToPage 2 2
 
 
 # Fvwm Man Pages (Help) Menu
@@ -739,11 +843,16 @@ AddToMenu   MenuFvwmManPages "Help" Title
 # Silent supresses any errors (such as keyboards with no Menu key).
 Silent Key F1 A M Menu MenuFvwmRoot
 Silent Key Menu A A Menu MenuFvwmRoot
-Silent Key Tab A M WindowList Root c-90p c NoDeskSort, SelectOnRelease Meta_L
-Silent Key 1 A 4 GotoDesk 0 0
-Silent Key 2 A 4 GotoDesk 0 1
-Silent Key 3 A 4 GotoDesk 0 2
-Silent Key 4 A 4 GotoDesk 0 3
+# Silent Key Tab A M WindowList Root c-90p c NoDeskSort, SelectOnRelease Meta_L
+Silent Key Tab A M WindowList Root c c CurrentDesk, NoGeometry, CurrentAtEnd, IconifiedAtEnd
+Silent Key 1 A 4 GotoDeskPreserve 0
+Silent Key 2 A 4 GotoDeskPreserve 1
+Silent Key 3 A 4 GotoDeskPreserve 2
+Silent Key 4 A 4 GotoDeskPreserve 3
+Silent Key 1 A S4 MoveAndGotoDesk 0 0
+Silent Key 2 A S4 MoveAndGotoDesk 0 1
+Silent Key 3 A S4 MoveAndGotoDesk 0 2
+Silent Key 4 A S4 MoveAndGotoDesk 0 3
 # Silent Key Super_L A A Exec exec $[infostore.terminal]
 
 # Tiling
@@ -788,19 +897,19 @@ Silent Key Print A 4 Exec exec flameshot launcher
 Silent Key Print A N Exec exec flameshot gui
 
 # Brightness Buttons
-Silent Key XF86MonBrightnessUp A A Exec exec xbrightness +2500
-Silent Key XF86MonBrightnessDown A A Exec exec xbrightness -2500
+Silent Key XF86MonBrightnessUp A A Exec exec xbacklight -inc 2
+Silent Key XF86MonBrightnessDown A A Exec exec xbacklight -dec 2
 
 # Window Buttons: [1 3 5 7 9  TTTTT  0 8 6 4 2]
 #   1 - Open the WindowOps menu.
 #   2 - Close on single click, Destroy on double click.
 #   4 - Maximize (right/middle button will only maximize vertical/horizontal)
 #   6 - Iconify (minimize)
-Mouse 1 1 A Menu MenuWindowOps Delete
+Mouse 1 1 A ToggleStaysOnTop
 Mouse 1 2 A Close
-Mouse 1 4 A Maximize 100 100
-Mouse 2 4 A Maximize 0 100
-Mouse 3 4 A Maximize 100 0
+Mouse 1 4 A FullMaximizeButtonFunc
+Mouse 2 4 A VerticalMaximizeButtonFunc
+Mouse 3 4 A HorizontalMaximizeButtonFunc
 Mouse 1 6 A Iconify
 
 #   TitleBar: Click to Raise, Move, Double Click to Maximize
@@ -810,7 +919,7 @@ Mouse 1 6 A Iconify
 #                Right Click - WindowOps Menu
 #                Middle Click - Window List Menu
 #   Right click TitleBar/Borders for WindowOps Menu
-Mouse 1	T    A RaiseMoveX Move Maximize
+Mouse 1	T    A RaiseMoveTitlebar
 Mouse 1	FS   A RaiseMove Resize
 Mouse 4	T    A WindowShade True
 Mouse 5	T    A WindowShade False
@@ -818,8 +927,8 @@ Mouse 5	T    A WindowShade False
 Mouse 1	R    A Menu MenuPrograms
 Mouse 2	R    A WindowList
 Mouse 3	R    A Menu MenuWindowOpsLong
-Mouse 1	I    A RaiseMoveX Move "Iconify off"
-Mouse 3	T    A Menu MenuWindowOps
+Mouse 1	I    A RaiseMoveIconify
+Mouse 3	T    A Menu MenuWindowOpsLong
 Mouse 3 I    A Menu MenuIconOps
 
 #######
@@ -833,29 +942,48 @@ Mouse 3 I    A Menu MenuIconOps
 #   6 - Minimize
 ###########
 TitleStyle Centered Height 36 -- Flat
-ButtonStyle All ActiveUp Vector 5 15x15@4 15x85@3 85x85@3 85x15@3 \
-                15x15@3 -- Flat
-ButtonStyle All ToggledActiveUp Vector 5 15x15@4 15x85@3 85x85@3 \
-                85x15@3 15x15@3 -- Flat
-ButtonStyle All ActiveDown Vector 5 20x20@4 20x80@3 80x80@3 80x20@3 \
-                20x20@3 -- Flat
-ButtonStyle All ToggledActiveDown Vector 5 20x20@4 20x80@3 80x80@3 \
-                80x20@3 20x20@3 -- Flat
-ButtonStyle All ToggledInactive Vector 5 47x47@3 57x53@3 53x53@3 \
-                53x47@3 47x47@3 -- Flat
-ButtonStyle All Inactive Vector 5 47x47@3 57x53@3 53x53@3 53x47@3 \
-                47x47@3 -- Flat
-AddButtonStyle 1 Active Vector 5 45x45@3 55x45@3 55x55@3 45x55@3 45x45@3
-AddButtonStyle 2 Active Vector 4 35x35@3 65x65@3 65x35@4 35x65@3
-AddButtonStyle 4 Active Vector 8 30x70@3 30x30@3 70x30@3 70x70@3 30x70@3 \
-                 30x50@4 50x50@3 50x70@3
-AddButtonStyle 4 ToggledActiveUp Vector 8 30x70@3 30x30@3 70x30@3 70x70@3 \
-                 30x70@3 50x30@4 50x50@3 70x50@3
-AddButtonStyle 6 Active Vector 5 35x60@3 65x60@3 65x50@3 35x50@3 35x60@3
-ButtonStyle All - Clear
-ButtonStyle 1 - MwmDecorMenu
-ButtonStyle 4 - MwmDecorMax
-ButtonStyle 6 - MwmDecorMin
+
+### Traditional FVWM styled-buttons
+# ButtonStyle All ActiveUp Vector 5 15x15@4 15x85@3 85x85@3 85x15@3 \
+#                 15x15@3 -- Flat
+# ButtonStyle All ToggledActiveUp Vector 5 15x15@4 15x85@3 85x85@3 \
+#                 85x15@3 15x15@3 -- Flat
+# ButtonStyle All ActiveDown Vector 5 20x20@4 20x80@3 80x80@3 80x20@3 \
+#                 20x20@3 -- Flat
+# ButtonStyle All ToggledActiveDown Vector 5 20x20@4 20x80@3 80x80@3 \
+#                 80x20@3 20x20@3 -- Flat
+# ButtonStyle All ToggledInactive Vector 5 47x47@3 57x53@3 53x53@3 \
+#                 53x47@3 47x47@3 -- Flat
+# ButtonStyle All Inactive Vector 5 47x47@3 57x53@3 53x53@3 53x47@3 \
+#                 47x47@3 -- Flat
+# AddButtonStyle 1 Active Vector 5 45x45@3 55x45@3 55x55@3 45x55@3 45x45@3
+# AddButtonStyle 2 Active Vector 4 35x35@3 65x65@3 65x35@4 35x65@3
+# AddButtonStyle 4 Active Vector 8 30x70@3 30x30@3 70x30@3 70x70@3 30x70@3 \
+#                  30x50@4 50x50@3 50x70@3
+# AddButtonStyle 4 ToggledActiveUp Vector 8 30x70@3 30x30@3 70x30@3 70x70@3 \
+#                  30x70@3 50x30@4 50x50@3 70x50@3
+# AddButtonStyle 6 Active Vector 5 35x60@3 65x60@3 65x50@3 35x50@3 35x60@3
+# ButtonStyle All - Clear
+# ButtonStyle 1 - MwmDecorMenu
+# ButtonStyle 4 - MwmDecorMax
+# ButtonStyle 6 - MwmDecorMin
+
+### Sawfish
+ButtonStyle All Vector 3 75x25@1 25x25@1 25x75@1
+AddButtonStyle All Vector 5 20x20@0 20x80@0 80x80@0 80x20@0 20x20@0
+AddButtonStyle All Vector 3 30x85@2 85x85@2 85x20@2
+
+AddButtonStyle 2 Vector 2 40x40@0 60x60@0
+AddButtonStyle 2 Vector 2 40x60@0 60x40@0
+
+AddButtonStyle 4 Vector 5 35x35@0 35x65@0 65x65@0 65x35@0 35x35@0
+AddButtonStyle 4 Vector 2 35x45@0 65x45@0
+AddButtonStyle 4 Vector 2 35x40@0 65x40@0
+
+AddButtonStyle 6 Vector 2 35x65@0 65x65@0
+AddButtonStyle 6 Vector 2 35x60@0 65x60@0
+
+ButtonStyle All -- UseTitleStyle Flat
 
 ############
 # 7: Modules

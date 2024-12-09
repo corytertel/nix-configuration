@@ -14,11 +14,11 @@ in {
       XDG_DESKTOP_PORTAL = "1";
     };
 
-    xdg.portal = {
-      enable = true;
-      config.common.default = "*";
-      extraPortals = [ pkgs.libsForQt5.xdg-desktop-portal-kde ];
-    };
+    # xdg.portal = {
+    #   enable = true;
+    #   config.common.default = "*";
+    #   extraPortals = [ pkgs.libsForQt5.xdg-desktop-portal-kde ];
+    # };
 
     home-manager.users.cory.dconf = {
       enable = true;

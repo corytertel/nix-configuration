@@ -1,0 +1,19 @@
+#!/bin/sh
+
+layout=$(setxkbmap -query | grep layout | awk 'END{print $2}')
+
+if [[ "$layout" == "us_dvorak_iso" ]]
+then
+  setxkbmap "ru_phonetic_dvorak_iso"
+elif [[ "$layout" == "ru_phonetic_dvorak_iso" ]]
+then
+  setxkbmap "us_dvorak_iso"
+elif [[ "$layout" == "us_qwerty" ]]
+then
+  setxkbmap "ru_phonetic_qwerty"
+elif [[ "$layout" == "ru_phonetic_qwerty" ]]
+then
+  setxkbmap "us_qwerty"
+else
+  setxkbmap "us_dvorak_iso"
+fi

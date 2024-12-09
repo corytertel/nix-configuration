@@ -15,14 +15,12 @@ pkgs.emacsPackages.melpaBuild rec {
   buildInputs = with pkgs; [
     emacs
     emacsPackages.cl-lib
-    emacsPackages.subr-x
     emacsPackages.corfu
     emacsPackages.popon
   ];
 
   packageRequires = with pkgs; [
     emacsPackages.cl-lib
-    emacsPackages.subr-x
     emacsPackages.corfu
     emacsPackages.popon
   ];

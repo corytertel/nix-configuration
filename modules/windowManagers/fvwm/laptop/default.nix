@@ -20,24 +20,6 @@ in {
 
   config = mkIf cfg.enable {
     services.xserver = {
-      displayManager = {
-        defaultSession = "none+fvwm3";
-        sddm = {
-          enable = true;
-          enableHidpi = true;
-        };
-        sessionCommands = ''
-          # Allow local user to control X settings (specifically the monitor setup)
-          ${pkgs.xorg.xhost}/bin/xhost si:localuser:root
-
-          # Prevent screen from turning off
-          ${pkgs.xorg.xset}/bin/xset s off -dpms
-
-          # Fix horrible default key repeat delay in xorg-server-1.6
-          ${pkgs.xorg.xset}/bin/xset r rate 200 25
-        '';
-      };
-
       windowManager.session = [{
         name = "fvwm3";
         start = ''
@@ -45,9 +27,28 @@ in {
         waitPID=$!
       '';
       }];
+      displayManager.sessionCommands = ''
+        # Allow local user to control X settings (specifically the monitor setup)
+        ${pkgs.xorg.xhost}/bin/xhost si:localuser:root
+
+        # Prevent screen from turning off
+        ${pkgs.xorg.xset}/bin/xset s off -dpms
+
+        # Fix horrible default key repeat delay in xorg-server-1.6
+        ${pkgs.xorg.xset}/bin/xset r rate 200 25
+      '';
+    };
+
+    services.displayManager = {
+      defaultSession = "none+fvwm3";
+      sddm = {
+        enable = true;
+        enableHidpi = true;
+      };
     };
 
     # Auto detect and configure new monitors
+    # Allow users of the "video" group to change brightness
     services.udev.extraRules = let
       defaultMonitor = "eDP-1";
       defaultResolution = "2256x1504";
@@ -69,6 +70,8 @@ in {
       '';
     in ''
       ACTION=="change", SUBSYSTEM=="drm", RUN+="${script}"
+
+      ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils-full}/bin/chgrp video $sys$devpath/brightness", RUN+="${pkgs.coreutils-full}/bin/chmod g+w $sys$devpath/brightness"
     '';
 
     environment.variables = let
@@ -113,7 +116,7 @@ in {
         networkmanagerapplet
         cbatticon
         xdgmenumaker
-        xbrightness
+        acpilight
         imagemagick
         trash-cli
         xdotool

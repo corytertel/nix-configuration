@@ -24,14 +24,48 @@
   programs.cory.emacs = {
     enable = true;
     popup = false;
+    eaf = false;
     fonts = {
-      # monospace.size = 100;
+      # monospace = {
+      #   package = pkgs.librecode;
+      #   name = "Librecode";
+      #   size = 115;
+      # };
+      # variable = {
+      #   package = pkgs.librecode;
+      #   name = "Librecode";
+      #   size = 115;
+      # };
+      # monospace = {
+      #   package = pkgs.iosevka-comfy.comfy-motion-fixed;
+      #   name = "Iosevka Comfy Motion Fixed";
+      #   size = 105;
+      # };
+      # variable = {
+      #   package = pkgs.iosevka-comfy.comfy-motion-fixed;
+      #   name = "Iosevka Comfy Motion Fixed";
+      #   size = 105;
+      # };
+      # monospace = {
+      #   package = pkgs.dejavu_fonts;
+      #   name = "DejaVu Sans Mono";
+      #   size = 90;
+      # };
+      # variable = {
+      #   package = pkgs.dejavu_fonts;
+      #   name = "DejaVu Sans Mono";
+      #   size = 90;
+      # };
       monospace = {
-        package = pkgs.librecode;
-        name = "Librecode";
-        size = 115;
+        package = pkgs.anonymousPro;
+        name = "Anonymous Pro";
+        size = 105;
       };
-      variable.size = 115;
+      variable = {
+        package = pkgs.anonymousPro;
+        name = "Anonymous Pro";
+        size = 105;
+      };
     };
   };
 
@@ -45,19 +79,26 @@
   };
 
   # Browser
-  programs.cory.firefox.enable = true;
+  # programs.cory.firefox.enable = true;
 
   # File Manager
   programs.cory.caja.enable = true;
 
   # Photo Viewer
-  programs.cory.sxiv.enable = true;
+  # programs.cory.sxiv.enable = true;
+  apps.photoViewer = {
+    name = "nomacs";
+    command = "nomacs";
+    desktopFile = "org.nomacs.ImageLounge.desktop";
+    package = pkgs.nomacs;
+  };
 
   # Video Player
   programs.cory.mpc-qt.enable = true;
 
   # PDF Viewer
-  programs.cory.qpdfview.enable = true;
+  # programs.cory.qpdfview.enable = true;
+  programs.cory.zathura.enable = true;
 
   # Set other apps
   apps.musicPlayer = {
@@ -120,8 +161,8 @@
         size = 12;
       };
       monospace = {
-        package = julia-mono-nerdfont;
-        name = "JuliaMono Nerd Font";
+        package = julia-mono;
+        name = "Julia Mono";
         size = 10;
         # package = librecode;
         # name = "Librecode";

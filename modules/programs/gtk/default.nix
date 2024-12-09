@@ -180,7 +180,7 @@ in {
       };
 
       home.packages = with pkgs; [
-        gnome.gnome-themes-extra
+        gnome-themes-extra
         gsettings-desktop-schemas
         libsForQt5.qtstyleplugins
         libsForQt5.qt5ct

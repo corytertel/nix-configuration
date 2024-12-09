@@ -2,6 +2,14 @@
 
 [[https://builtwithnix.org][https://builtwithnix.org/badge.svg]]
 
+* Theory
+
+Fully reproducible.
+Use home-manager where appropriate, I can have a fully reproducible and portable home directory on any distro.
+(Basically always default to using home-manager, unless it is a core system functionality.)
+Try to avoid esoteric Nix configuration where it happens, so I can take configs to non-Nix machines.
+Future: Also have chezmoi functionality?
+
 * I run a ZFS "Erase my Darlings" Setup
 My nix config is setup in such a way that all system files except those in /nix
 and /boot will be wiped every boot for a stateless machine that results in higher reproducibly. More info can be found here: https://grahamc.com/blog/erase-your-darlings    
