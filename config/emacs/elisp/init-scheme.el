@@ -122,10 +122,11 @@
 
     (define-key geiser-mode-map (kbd "C-.") nil)
     (define-key geiser-mode-map (kbd "C-M-i") nil)
-    (define-key geiser-mode-map (kbd "C-x C-e") #'cory/geiser-eval-last-sexp)
 
     (add-hook 'geiser-mode-hook
-	      (lambda () (add-to-list 'post-command-hook #'geiser--remove-overlay))))
+	      (lambda ()
+                (setq-local eval-last-sexp-function #'cory/geiser-eval-last-sexp)
+                (add-to-list 'post-command-hook #'geiser--remove-overlay))))
 
   (with-eval-after-load 'geiser-doc
     (define-key geiser-doc-mode-map (kbd "N") nil)

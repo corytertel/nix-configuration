@@ -86,7 +86,7 @@
 					 'face
 					 'eval-result-overlay-face)))))
 
-(global-set-key [remap eval-last-sexp] #'cory/eval-last-sexp)
+(setq eval-last-sexp-function #'cory/eval-last-sexp)
 
 (add-hook 'emacs-lisp-mode-hook
 	  (lambda () (add-to-list 'post-command-hook #'cory/elisp--remove-overlay)))

@@ -342,9 +342,9 @@ next VCOUNT - 1 lines below the current one."
  ("C-'"   . repeat)
  ("C-<f4>" . kill-this-buffer))
 
-(cory/define-keys
- evil-normal-state-map
- ("C-b" . switch-to-buffer))
+;; (cory/define-keys
+;;  evil-normal-state-map
+;;  ("C-b" . switch-to-buffer))
 
 (global-set-key (kbd "M-f") search-map)
 

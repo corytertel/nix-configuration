@@ -120,3 +120,16 @@
 
 ;; Make all async-shell-command's have their own buffer
 (setq async-shell-command-buffer 'new-buffer)
+
+;; Make eval vary based on mode
+(defvar eval-last-sexp-function #'eval-last-sexp)
+
+(defun eval-last-sexp-command (eval-last-sexp-arg-internal)
+  (interactive "P")
+  (funcall eval-last-sexp-function eval-last-sexp-arg-internal))
+
+(global-set-key (kbd "C-x C-e") #'eval-last-sexp-command)
+
+;; Default frame size
+(add-to-list 'default-frame-alist '(width . 160))
+(add-to-list 'default-frame-alist '(height . 70))

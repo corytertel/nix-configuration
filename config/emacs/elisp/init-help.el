@@ -1,3 +1,6 @@
+;; Help binds
+(global-set-key (kbd "C-h h") #'help-for-help)
+
 ;; Better help information
 (use-package helpful
   :ensure

@@ -10,9 +10,12 @@
     js-jsx-mode
     js-ts-mode
     typescript-ts-mode
+    tsx-ts-mode
     nix-mode
     perl-mode
-    cperl-mode)
+    cperl-mode
+    csharp-mode
+    powershell-mode)
    . cory/eglot)
   (eglot-managed-mode
    . (lambda ()
@@ -47,6 +50,32 @@
   ;; (add-to-list 'eglot-server-programs
   ;;              '((web-mode)
   ;;       	 "typescript-language-server" "--stdio"))
+
+  ;; Add csharp lsp
+  (add-to-list 'eglot-server-programs '((csharp-mode csharp-ts-mode) . ("OmniSharp" "-lsp")))
+
+  ;; Add powershell lsp (PowerShellEditorServices)
+  (defvar cory/powershell-lsp-dir
+    (expand-file-name (concat user-emacs-directory "PowerShellEditorServices/")))
+
+  ;; Should be idenpotent (I believe it is)
+  ;; Requires curl and unzip
+  (let ((pwsh-lsp-dir cory/powershell-lsp-dir)
+        (src "https://github.com/PowerShell/PowerShellEditorServices/releases/download/v4.1.0/PowerShellEditorServices.zip"))
+    (unless (file-exists-p pwsh-lsp-dir)
+      (make-directory pwsh-lsp-dir)
+      (async-shell-command
+       (concat "curl -L " src " > " pwsh-lsp-dir "PowerShellEditorServices.zip" " && "
+               "unzip " pwsh-lsp-dir "PowerShellEditorServices.zip -d " pwsh-lsp-dir " && "
+               "rm " pwsh-lsp-dir "PowerShellEditorServices.zip"))))
+
+  (let ((start-script
+         (concat cory/powershell-lsp-dir
+                 "PowerShellEditorServices/Start-EditorServices.ps1")))
+    (add-to-list
+     'eglot-server-programs
+     `(powershell-mode
+       . ("pwsh" "-NoLogo" "-NoProfile" "-Command" ,start-script "-Stdio"))))
 
   ;; Ignore logging for speed
   (fset #'jsonrpc--log-event #'ignore)
@@ -103,6 +132,10 @@
 	 ("C-c C-a" . eglot-code-actions)
 	 ("C-c C-f" . eglot-format-buffer)
 	 ("C-c x"   . eglot-rename)))
+
+(use-package eglot-booster
+  :after eglot
+  :config (eglot-booster-mode))
 
 ;; ;; Lsp-mode
 ;; (use-package lsp-mode

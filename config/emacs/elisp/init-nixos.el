@@ -32,8 +32,8 @@
 	      ((string= time "1 day") "1d")
 	      (t (error "Not a valid time")))))))
 
-(global-set-key (kbd "C-c n") #'cory/nixos-flake-rebuild)
-(global-set-key (kbd "C-c N") #'cory/nix-collect-garbage)
+;; (global-set-key (kbd "C-c n") #'cory/nixos-flake-rebuild)
+;; (global-set-key (kbd "C-c N") #'cory/nix-collect-garbage)
 
 ;; ;; This package adds a significant amount of time to emacs startup
 ;; (use-package nixos-options
