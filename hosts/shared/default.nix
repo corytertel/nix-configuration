@@ -3,6 +3,7 @@
 {
   imports = [
     ./udev.nix
+    ./wireguard.nix
     ./zfs.nix
   ];
 
@@ -15,6 +16,9 @@
         devices = ["nodev"];
         efiSupport = true;
         useOSProber = true;
+        extraConfig = ''
+          GRUB_CMDLINE_LINUX="reboot=bios"
+        '';
       };
     };
   };
@@ -24,6 +28,13 @@
     wireless.enable = false;  # disables wpa_supplicant
     useDHCP = false;
     networkmanager.enable = true;
+    resolvconf.extraOptions = ["edns0"];
+
+    firewall = {
+      enable = true;
+      # 8080 is tandoor
+      allowedTCPPorts = [ 80 443 8080 5173 5174 8000 ];
+    };
   };
 
   time.timeZone = "America/Phoenix";
@@ -36,6 +47,7 @@
     openssh.enable = true;
     printing.enable = true;
     upower.enable = true;
+    spice-vdagentd.enable = true; # virt-manager
     xserver = {
       enable = true;
       xkb.extraLayouts = {
@@ -70,8 +82,9 @@
           symbolsFile = "${pkgs.keyboard-layouts}/share/X11/xkb/symbols/ru_phonetic_dvorak_iso";
         };
       };
-      libinput.enable = true;
     };
+
+    libinput.enable = true;
 
     # Postgres service
     postgresql = {
@@ -95,6 +108,24 @@
         superuser_map postgres postgres
       '';
     };
+
+    # Mongodb service
+    # mongodb = {
+    #   enable = true;
+    # };
+
+    # Jellyfin
+    jellyfin = {
+      enable = true;
+      openFirewall = true;
+      dataDir = "/persist/jellyfin";
+    };
+
+    tandoor-recipes = {
+      enable = true;
+      # address = "192.168.50.241";
+      address = "0.0.0.0";
+    };
   };
 
   location = {
@@ -117,7 +148,7 @@
   #   '';
   # };
   # Pipewire
-  sound.enable = false; # only meant for ALSA-based configs
+  # sound.enable = false; # only meant for ALSA-based configs
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -141,7 +172,7 @@
   };
 
   nix = {
-    package = pkgs.nixUnstable;
+    package = pkgs.nixVersions.latest;
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
@@ -176,22 +207,40 @@
   # };
 
   environment = {
-    variables = with pkgs; {
+    variables = let
+      makePluginPath = format:
+        (lib.makeSearchPath format [
+          "$HOME/.nix-profile/lib"
+          "/run/current-system/sw/lib"
+          "/etc/profile/per-user/$USER/lib"
+        ])
+        + ":$HOME/.${format}";
+    in with pkgs; {
       PAGER = "less -S";
       BROWSER = config.apps.browser.command;
-      # CLASSPATH = "${postgresql_jdbc}/share/java/postgresql-jdbc.jar";
+
       CHICKEN_REPOSITORY_PATH =
         "${chicken-pkgs}/lib/chicken/${toString chicken.binaryVersion}";
       # CHICKEN_DOC_REPOSITORY = "${pkgs.chicken-docs}";
+
+      # CLASSPATH = "${postgresql_jdbc}/share/java/postgresql-jdbc.jar";
       _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=lcd";
-      # Display matplotlib in kitty
-      MPLBACKEND = "module://matplotlib-backend-kitty";
-      MPLBACKEND_KITTY_SIZING = "manual";
+
+      # Fix for DAW's expecting FHS paths
+      DSSI_PATH = makePluginPath "dssi";
+      LADSPA_PATh = makePluginPath "ladspa";
+      LV2_PATH = makePluginPath "lv2";
+      LXVST_PATH = makePluginPath "lxvst";
+      VST_PATH = makePluginPath "vst";
+      VST3_PATH = makePluginPath "vst3";
     };
     sessionVariables = with pkgs; {
-      DOTNET_ROOT = "${dotnet-sdk_7}";
+      DOTNET_ROOT = "${dotnetCorePackages.sdk_8_0}";
     };
     systemPackages = with pkgs; [
+      tmux
+      vim
+      nano
       mg
       wget
       curl
@@ -215,7 +264,12 @@
       monospace.package
       corefonts
       vistafonts
-      whatsapp-emoji-font
+      # whatsapp-emoji-font
+      libertinus
+      uw-ttyp0
+      courier-prime
+      libre-franklin
+      iosevka-comfy.comfy-motion-fixed
     ];
     fontconfig = {
       enable = true;
@@ -223,16 +277,34 @@
         serif = [ "${serif.name}" ];
         sansSerif = [ "${sansSerif.name}" ];
         monospace = [ "${monospace.name}" ];
-        emoji = [ "Apple Color Emoji" ];
+        # emoji = [ "Apple Color Emoji" ];
       };
       # FIXME apple emojis for discord
-      localConf = builtins.readFile ./fontconfig.xml;
+      # localConf = builtins.readFile ./fontconfig.xml;
     };
   };
 
   virtualisation = {
-    virtualbox.host.enable = true; # Virtual Box
-    libvirtd.enable = true; # virt-manager
+    libvirtd = {
+      enable = true;
+      qemu = {
+        swtpm.enable = true;
+        ovmf.enable = true;
+        ovmf.packages = [ pkgs.OVMFFull.fd ];
+      };
+    };
+    spiceUSBRedirection.enable = true;
+    # docker
+    docker = { # docker
+      enable = true;
+      rootless = {
+        enable = true;
+        setSocketVariable = true;
+      };
+      daemon.settings = {
+        data-root = "/persist/docker";
+      };
+    };
   };
 
   programs = {
@@ -240,7 +312,6 @@
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
-      pinentryFlavor = "tty";
     };
     steam.enable = true;
   };
@@ -250,6 +321,13 @@
     #   enable = true;
     #   extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     # };
+    portal = {
+      enable = true;
+      config.common.default = "*";
+      # extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+      extraPortals = [ pkgs.lxqt.xdg-desktop-portal-lxqt ];
+      # extraPortals = [ pkgs.libsForQt5.xdg-desktop-portal-kde ];
+    };
     mime.defaultApplications = let
       document = "writer.desktop";
       presentation = "impress.desktop";
@@ -332,6 +410,11 @@
         enable = true;
         userName  = "corytertel";
         userEmail = "ctertel@comcast.net";
+        extraConfig = {
+          init = {
+            defaultBranch = "master";
+          };
+        };
       };
 
       neovim = {
@@ -348,90 +431,139 @@
               highlight Visual ctermfg=Black ctermbg=Yellow
             '';
           }
-          # Hardtime
-          {
-            plugin = hardtime-nvim;
-            type = "lua";
-            config = ''require("hardtime").setup()'';
-          }
-          # Dependencies of Hardtime
-          nui-nvim
-          plenary-nvim
-	  # Rainbow parenthesis
-	  {
-	    plugin = rainbow; config = "let g:rainbow_active = 1";
-	  }
-	  # Matching parenthesis
-	  {
-            plugin = auto-pairs;
-            config = ''
-	      let g:AutoPairsFlyMode = 0
-	    '';
-	  }
+          # # Hardtime
+          # {
+          #   plugin = hardtime-nvim;
+          #   type = "lua";
+          #   config = ''require("hardtime").setup()'';
+          # }
+          # # Dependencies of Hardtime
+          # nui-nvim
+          # plenary-nvim
+	        # Rainbow parenthesis
+	        {
+	          plugin = rainbow; config = "let g:rainbow_active = 1";
+	        }
+	        # # Matching parenthesis
+	        # {
+          #   plugin = auto-pairs;
+          #   config = ''
+	        #     let g:AutoPairsFlyMode = 0
+	        #   '';
+	        # }
+          vim-surround
+          vim-repeat
+          vim-sexp
+          # vim-sexp-mappings-for-regular-people
         ];
       };
     };
 
-    services = {
-      # Music
-      # Needs to run as user, not system-wide, or else audio is played as root and unreachable
-      mopidy = {
-        enable = true;
-        extensionPackages = with pkgs; [
-          mopidy-mpd
-          mopidy-local
-          mopidy-soundcloud
-        ];
-        settings = {
-          # file = {
-          #   media_dirs = [
-          #     "~/Music|Library"
-          #   ];
-          #   follow_symlinks = true;
-          #   excluded_file_extensions = [
-          #     ".html"
-          #     ".zip"
-          #     ".jpg"
-          #     ".jpeg"
-          #     ".png"
-          #   ];
-          # };
+    xresources.extraConfig = with config.theme.color; ''
+       ! ## Enable a color supported XTerm ##
+       XTerm.termName: xterm-256color
 
-          # audio = {
-          #   mixer = ''software'';
-          #   output = ''autoaudiosink'';
-          # };
+       ! ## Set xterm window size ##
+       XTerm*VT100.geometry: 130x50
 
-          mpd = {
-            enabled = true;
-            port = 6600;
-            # zeroconf = "Mopidy server on $hostname";
-            # default_playlist_scheme = "m3u";
-          };
+       ! ## Set font and fontsize ##
+       ! XTerm*faceName: Libertinus Mono
+       ! XTerm*faceSize: 10
+       ! XTerm*font: -uw-ttyp0-medium-r-normal-*-22-*-*-*-*-*-*-*
+       ! XTerm*faceName: Courier Prime Code
+       ! XTerm*faceSize: 10
+       XTerm*faceName: Iosevka Comfy Motion Fixed
+       XTerm*faceSize: 10
 
-          # local = {
-          #   enabled = true;
-          #   media_dir = "~/Music";
-          #   excluded_file_extensions = ''
-          #     .directory
-          #     .html
-          #     .jpeg
-          #     .jpg
-          #     .log
-          #     .nfo
-          #     .png
-          #     .txt
-          #   '';
-          # };
+       ! ! VT Font Menu: Unreadable
+       ! XTerm*faceSize1: 8
+       ! ! VT Font Menu: Tiny
+       ! XTerm*faceSize2: 10
+       ! ! VT Font Menu: Small
+       ! XTerm*faceSize3: 12
+       ! ! VT Font Menu: Medium
+       ! XTerm*faceSize4: 16
+       ! ! VT Font Menu: Large
+       ! XTerm*faceSize5: 22
+       ! ! VT Font Menu: Huge
+       ! XTerm*faceSize6: 24
 
-          soundcloud = {
-            enabled = true;
-            auth_token = "3-35204-181561843-jUBNEp7hTDGbFwY";
-            explore_songs = 100;
-          };
-        };
-      };
-    };
+       ! ## Scrollbar ##
+       XTerm*vt100.scrollBar: false
+
+       ! Scroll when there is new input
+       XTerm*scrollTtyOutput: true
+
+       ! Scrolling by using Shift-PageUp / Shift-PageDown or mousewheel by default ##
+       ! Lines of output you can scroll back over
+       XTerm*saveLines: 15000
+
+       ! Enable copy/paste hotkeyes (mouse highlight = copy ,  shift+Insert = paste)
+       XTerm*selectToClipboard: true
+
+       ! ## Select text ##
+       XTerm*highlightSelection: true
+       ! Remove trailing spaces
+       XTerm*trimSelection: true
+
+       ! ## Keybindings ##
+       XTerm*vt100.translations: #override \n\
+         Ctrl <Key>-: smaller-vt-font() \n\
+         Ctrl <Key>+: larger-vt-font() \n\
+         Ctrl <Key>0: set-vt-font(d) \n\
+         Ctrl Shift <Key>C: copy-selection(CLIPBOARD) \n\
+         Ctrl Shift <Key>V: insert-selection(CLIPBOARD)
+       XTerm*metaSendsEscape: true
+
+       ! ## Mouse cursor ##
+       XTerm*pointerShape: left_ptr
+       XTerm*cursorTheme: Vanilla-DMZ
+       Xcursor.size: 32
+
+       ! ~~~~~~~~~~~~~~~~~~
+       ! ## Color Themes ##
+       ! ~~~~~~~~~~~~~~~~~~
+       ! Color scheme is from https://chrisyeh96.github.io/2020/03/28/terminal-colors.html
+       XTerm*title: XTerm
+       XTerm*background: #000000
+       XTerm*foreground: #d3d7cf
+
+       ! original #86a2b0
+       XTerm*colorUL: #86a2b0
+       XTerm*underlineColor: #86a2b0
+
+       ! ! black
+       XTerm*color0  : #000000
+       XTerm*color8  : #555753
+       !
+       ! ! red
+       XTerm*color1  : #cc0000
+       XTerm*color9  : #ef2929
+       !
+       ! ! green
+       XTerm*color2  : #4e9a06
+       XTerm*color10 : #8ae234
+       !
+       ! ! yellow
+       XTerm*color3  : #c4a000
+       XTerm*color11 : #fce94f
+       !
+       ! ! blue
+       XTerm*color4  : #729fcf
+       XTerm*color12 : #32afff
+       !
+       ! ! magenta
+       XTerm*color5  : #75507b
+       XTerm*color13 : #ad7fa8
+       !
+       ! ! cyan
+       XTerm*color6  : #06989a
+       XTerm*color14 : #34e2e2
+       !
+       ! ! white
+       XTerm*color7  : #d3d7cf
+       XTerm*color15 : #ffffff
+     '';
 
     home = {
       username = "cory";
@@ -477,6 +609,7 @@
         # web
         nodejs
         yarn
+        pnpm
         nodePackages_latest.typescript-language-server
 
         # java
@@ -490,67 +623,66 @@
         nil
 
         # apl
-        dyalog
-        dyalogscript
+        # (dyalog.override { acceptLicense = true; })
+        # dyalogscript
         # ride
 
         # python
-        (python311.withPackages (ps: with ps;
-          let
-            qgis = buildPythonPackage {
-              pname = "qgis";
-              version = "3.36.0";
-              src = "${pkgs.qgis}/share/qgis/python/qgis/";
-            };
+        (python311.withPackages (ps: with ps; [
+          epc
+          python-lsp-server
+          pygments
 
-            matplotlib-backend-kitty = buildPythonPackage rec {
-              pname = "matplotlib-backend-kitty";
-              version = "2.1.2";
-              format = "pyproject";
-              src = fetchPypi {
-                inherit pname version;
-                sha256 = "sha256-q30X7wAYbGgKmJr4yb6fyJAKUF9cEH3H2avGexpX8VA=";
-              };
-              propagatedBuildInputs = [
-                matplotlib
-                setuptools
-              ];
-            };
-          in [
-            epc
-            python-lsp-server
-            pygments
-            pip
-            numpy
-            pandas
-            scipy
+          pip
+          numpy
+          pandas
+          scipy
+          pyarrow
 
-            flask
-            flask-wtf
-            python-dotenv
+          hy
 
-            opencv4
-            scikit-image
-            matplotlib
-            matplotlib-backend-kitty
+          flask
+          flask-wtf
+          python-dotenv
 
-            # qgis
+          opencv4
+          scikit-image
+          matplotlib
+
+          tkinter
+
+          openpyxl
+
+          conda
+          gssapi
+
+          # qgis
           ]))
 
         # postgres
         postgresql
-        dbeaver
+        dbeaver-bin
         postgresql_jdbc # for java
 
         # smalltalk
-        squeak
+        # squeak
         gnu-smalltalk
-
-        # powershell
-        # powershell
 
         # perl
         # TODO figure out perl LSP
+        (perl538.withPackages (ps: with ps; [
+          # Install the default perl modules that come with RHEL
+          Appcpanminus
+          DBDmysql
+          DBDPg
+          DBDSQLite
+          DBI
+          FCGI
+          YAML
+
+          # Tk for fvwm (comes with it anyways)
+          Tk
+        ]))
         # (perl538.withPackages (ps: with ps; [
         # For web scraping
         #   HTMLTiny
@@ -574,6 +706,14 @@
         #   HashSafeKeys
         # ]))
 
+        # c#
+        # dotnetCorePackages.sdk_9_0 # includes both NETCore and AspNetCore
+        dotnetCorePackages.sdk_8_0 # includes both NETCore and AspNetCore
+        # (with dotnetCorePackages; combinePackages [
+        #   sdk_8_0
+        # ])
+        omnisharp-roslyn
+
         # desktop apps
         tdesktop
         photogimp
@@ -592,6 +732,8 @@
         xournalpp
         teams-for-linux
         cantata
+        ardour
+        vital
 
         # command line utils
         mg
@@ -606,19 +748,40 @@
         pciutils
         killall
         tokei
-        vim
-        nano
+        tree
+        xclip
+
+        # security
+        nmap
+        wireshark
+        tcpdump
+
+        # xorg utils
+        xorg.xhost
+        xorg.xset
+        xorg.xev
 
         # libs
         ffmpeg
         libnotify
+        w3m # for images in xterm
+
+        # virt-manager
+        virt-manager
+        virt-viewer
+        spice
+        spice-gtk
+        spice-protocol
+        win-virtio
+        win-spice
+        adwaita-icon-theme # can throw errors if does not exist
 
         # misc
         ledger-live-desktop
         #ledger-udev-rules
-        wine64
-        winetricks
-        grapejuice
+        nicotine-plus
+        wine
+        eclipses.eclipse-java
 
         acpi
         klavaro

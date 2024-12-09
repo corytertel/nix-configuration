@@ -3,39 +3,102 @@
 {
   # Window Manager
   windowManagers.cory.fvwm.laptop.enable = true;
+  # services.xserver.windowManager.session = [{
+  #   name = "2bwm";
+  #   # start = "${pkgs.xorg.xinit}/bin/startx";
+  #   start = ''
+  #     # Start window manager in the background. If it dies, X still lives.
+  #     ${pkgs._2bwm}/bin/2bwm &
+
+  #     # Start a terminal in the foreground. If this dies, X dies.
+  #     exec ${pkgs.rxvt-unicode}/bin/urxvt
+  #    '';
+  # }];
+  # services.xserver.displayManager.sddm = {
+  #   enable = true;
+  #   enableHidpi = true;
+  # };
+  # services.xserver.displayManager.defaultSession = "none+2bwm";
 
   # Editor
   programs.cory.emacs = {
     enable = true;
     popup = false;
+    eaf = false;
     fonts = {
-      # monospace.size = 100;
+      # monospace = {
+      #   package = pkgs.librecode;
+      #   name = "Librecode";
+      #   size = 115;
+      # };
+      # variable = {
+      #   package = pkgs.librecode;
+      #   name = "Librecode";
+      #   size = 115;
+      # };
+      # monospace = {
+      #   package = pkgs.iosevka-comfy.comfy-motion-fixed;
+      #   name = "Iosevka Comfy Motion Fixed";
+      #   size = 105;
+      # };
+      # variable = {
+      #   package = pkgs.iosevka-comfy.comfy-motion-fixed;
+      #   name = "Iosevka Comfy Motion Fixed";
+      #   size = 105;
+      # };
+      # monospace = {
+      #   package = pkgs.dejavu_fonts;
+      #   name = "DejaVu Sans Mono";
+      #   size = 90;
+      # };
+      # variable = {
+      #   package = pkgs.dejavu_fonts;
+      #   name = "DejaVu Sans Mono";
+      #   size = 90;
+      # };
       monospace = {
-        package = pkgs.librecode;
-        name = "Librecode";
-        size = 115;
+        package = pkgs.anonymousPro;
+        name = "Anonymous Pro";
+        size = 105;
       };
-      variable.size = 115;
+      variable = {
+        package = pkgs.anonymousPro;
+        name = "Anonymous Pro";
+        size = 105;
+      };
     };
   };
 
   # Terminal
-  programs.cory.kitty.enable = true;
+  # programs.cory.kitty.enable = true;
+  apps.terminal = {
+    name = "xterm";
+    command = "xterm";
+    desktopFile = "xterm.desktop";
+    package = pkgs.xterm;
+  };
 
   # Browser
-  programs.cory.firefox.enable = true;
+  # programs.cory.firefox.enable = true;
 
   # File Manager
   programs.cory.caja.enable = true;
 
   # Photo Viewer
-  programs.cory.sxiv.enable = true;
+  # programs.cory.sxiv.enable = true;
+  apps.photoViewer = {
+    name = "nomacs";
+    command = "nomacs";
+    desktopFile = "org.nomacs.ImageLounge.desktop";
+    package = pkgs.nomacs;
+  };
 
   # Video Player
   programs.cory.mpc-qt.enable = true;
 
   # PDF Viewer
-  programs.cory.qpdfview.enable = true;
+  # programs.cory.qpdfview.enable = true;
+  programs.cory.zathura.enable = true;
 
   # Set other apps
   apps.musicPlayer = {
@@ -65,12 +128,13 @@
   # Shell
   programs.cory.bat.enable = true;
   programs.cory.bash.enable = true;
+  programs.cory.powershell.enable = true;
 
   # Gestures
-  services.cory.touchegg = {
-    enable = true;
-    config = ../../config/touchegg/fvwm.conf;
-  };
+  # services.cory.touchegg = {
+  #   enable = true;
+  #   config = ../../config/touchegg/fvwm.conf;
+  # };
 
   # Aesthetics
   theme = with pkgs; {
@@ -97,8 +161,8 @@
         size = 12;
       };
       monospace = {
-        package = julia-mono-nerdfont;
-        name = "JuliaMono Nerd Font";
+        package = julia-mono;
+        name = "Julia Mono";
         size = 10;
         # package = librecode;
         # name = "Librecode";

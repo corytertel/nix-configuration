@@ -21,16 +21,13 @@
 			    corfu-count 3
 			    corfu-preselect 'first
 			    corfu-map
-			    (let ((map (make-sparse-keymap))
-				  (f (lambda (x) (lambda () (interactive)
-					      (funcall (cory/corfu-select-index x))
-					      (insert " ")))))
+                            (let ((map (make-sparse-keymap)))
 			      (define-key map [remap completion-at-point] #'corfu-complete)
 			      (define-key map [remap keyboard-escape-quit] #'corfu-quit)
 			      (define-key map [remap keyboard-quit] #'corfu-quit)
-			      (define-key map (kbd "!") (funcall f 0))
-			      (define-key map (kbd "@") (funcall f 1))
-			      (define-key map (kbd "#") (funcall f 2))
+			      (define-key map (kbd "1") (cory/corfu-select-index 0))
+			      (define-key map (kbd "2") (cory/corfu-select-index 0))
+			      (define-key map (kbd "3") (cory/corfu-select-index 0))
 			      map))
 		;; (org-cdlatex-mode)
 		;; (corfu-mode -1)

@@ -10,7 +10,7 @@
   nix.settings.cores = 4;
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_6_7;
+    kernelPackages = pkgs.linuxPackages_6_10;
     kernelParams = [
       "pcie_aspm.policy=performance"
       "intel_iommu=on"

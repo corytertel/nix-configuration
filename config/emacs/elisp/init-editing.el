@@ -256,7 +256,23 @@
 		:transform 'sp-match-sgml-tags
 		:post-handlers
 		'(((lambda (&rest _ignored)
-                     (crux-smart-open-line-above)) "RET"))))
+                     (crux-smart-open-line-above)) "RET")))
+
+  ;; For jsx-like modes, enable <>...</> to be recognized as a tag
+  ;; ((tsx-ts-mode
+  ;;   (:trigger "<" :open "<>" :close "</>" :transform sp-match-sgml-tags
+  ;;    :actions (wrap insert)
+  ;;    :post-handlers (sp-html-post-handler)))
+  ;;  (js-ts-mode
+  ;;   (:trigger "<" :open "<>" :close "</>" :transform sp-match-sgml-tags
+  ;;    :actions (wrap insert)
+  ;;    :post-handlers (sp-html-post-handler)))
+  ;;  (js-jsx-mode
+  ;;   (:trigger "<" :open "<>" :close "</>" :transform sp-match-sgml-tags
+  ;;    :actions (wrap insert)
+  ;;    :post-handlers (sp-html-post-handler)))
+  ;;  )
+  )
 
 ;; (use-package evil-cleverparens
 ;;   :config

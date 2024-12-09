@@ -55,4 +55,16 @@
     url = "https://www.desmos.com/calculator";
     keyword = "desmos";
   };
+  "jellyfin" = {
+    url = "http://localhost:8096";
+    keyword = "jellyfin";
+  };
+  "tandoor" = {
+    url = "http://localhost:8080";
+    keyword = "tandoor";
+  };
+  "Nix Language Frameworks" = {
+    url = "https://github.com/NixOS/nixpkgs/tree/master/doc/languages-frameworks";
+    keyword = "Nix Language Frameworks";
+  };
 }

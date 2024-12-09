@@ -1,0 +1,44 @@
+#!/usr/bin/env python
+import tkinter as tk
+from pathlib import Path
+
+home = str(Path.home())
+
+root = tk.Tk()
+root.title("FvwmNotes")
+root['background'] = '#003c3c'
+
+# Fixing the window size.
+root.geometry("160x284")
+
+text = tk.Text(root, width=160, height=284, fg="white", bg="#003c3c", insertbackground='white', font="Sans 8 bold", highlightthickness=0, borderwidth=0)
+text.pack()
+
+def init():
+    global text
+    # Ensure the directory exists
+    Path(home + '/.local/state/fvwm').mkdir(0o755, True, True)
+    # If the file exists, then read it in
+    try:
+        with open(home + "/.local/state/fvwm/notes", 'r') as file:
+            text.insert(tk.END, file.read())
+            file.close()
+    except:
+        pass
+
+def autosave():
+    global text
+    global root
+    # Save to file
+    # "1.0" means that the input should be read from line one, character zero
+    # "end-1c" means to read until the end of the text box is reached but don't add a newline
+    with open(home + '/.local/state/fvwm/notes', 'w') as file:
+        file.write(text.get('1.0', 'end-1c'))
+        file.close()
+
+    # Auto save every 30 seconds
+    root.after(30000, autosave)
+
+init()
+autosave()
+root.mainloop()

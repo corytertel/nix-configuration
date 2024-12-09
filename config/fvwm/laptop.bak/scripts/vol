@@ -1,0 +1,26 @@
+#!/bin/bash
+
+volume=0
+cmd='pamixer --sink alsa_output.pci-0000_c1_00.6.analog-stereo'
+
+case $1 in
+        up)
+                $cmd -i 2
+                volume="$($cmd --get-volume)"
+                ;;
+        down)
+                $cmd -d 2
+                volume="$($cmd --get-volume)"
+                ;;
+        mute)
+                $cmd -t
+                muted="$($cmd --get-mute)"
+                if $muted ; then
+                        volume=0
+                else
+                        volume="$($cmd --get-volume)"
+                fi
+                ;;
+esac
+
+notify-send " " -h int:value:$volume -h string:synchronous:volume

@@ -11,6 +11,7 @@
     ./programs/gtk
     ./programs/kitty
     ./programs/mpc-qt
+    ./programs/powershell
     ./programs/qpdfview
     ./programs/sxiv
     ./programs/ungoogled-chromium

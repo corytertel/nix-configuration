@@ -18,7 +18,7 @@
       preLVM = true;
     };
 
-    kernelPackages = pkgs.linuxPackages_6_7;
+    kernelPackages = pkgs.linuxPackages_6_10;
     kernelParams = [
       # ZFS required flags
       "nohibernate"
@@ -37,6 +37,7 @@
   powerManagement = {
     # cpuFreqGovernor = "powersave";
     cpuFreqGovernor = "ondemand";
+    # cpuFreqGovernor = "performance";
     enable = true;
     # powertop.enable = true;
   };
@@ -49,47 +50,47 @@
     # tlp.enable = true;
     # thermald.enable = true;
     # gnome.gnome-keyring.enable = true;
+    displayManager.autoLogin = {
+      enable = true;
+      user = "cory";
+    };
     xserver = {
-      displayManager.autoLogin = {
-        enable = true;
-        user = "cory";
-      };
       xkb.layout = "us_dvorak_iso";
-      libinput = {
-        touchpad = {
-          accelProfile = "adaptive";
-          accelSpeed = "0.5";
-          additionalOptions = "";
-          buttonMapping = null;
-          calibrationMatrix = null;
-          clickMethod = "clickfinger"; #sets trackpad to two-finger rightclick instead of button areas
-          dev = null;
-          disableWhileTyping = true;
-          horizontalScrolling = true;
-          leftHanded = false;
-          middleEmulation = false;
-          naturalScrolling = true;
-          scrollButton = null;
-          scrollMethod = "twofinger";
-          sendEventsMode = "enabled";
-          tapping = false;
-          tappingDragLock = false;
-        };
-        mouse = {
-          # Trackball
-          # accelProfile = "flat";
-          # accelSpeed = null;
-          accelProfile = "adaptive";
-          accelSpeed = "0.5";
-          buttonMapping = "1 8 2 4 5 6 7 3 9";
-          # buttonMapping = "1 2 8 4 5 6 7 3 9";
-          disableWhileTyping = true;
-          naturalScrolling = true;
-          scrollButton = 3;
-          # scrollButton = 2;
-          scrollMethod = "button";
-          # transformationMatrix = "2.5 0 0 0 2.5 0 0 0 1";
-        };
+    };
+    libinput = {
+      touchpad = {
+        accelProfile = "adaptive";
+        accelSpeed = "0.2";
+        additionalOptions = "";
+        buttonMapping = null;
+        calibrationMatrix = null;
+        clickMethod = "clickfinger"; #sets trackpad to two-finger rightclick instead of button areas
+        dev = null;
+        disableWhileTyping = true;
+        horizontalScrolling = true;
+        leftHanded = false;
+        middleEmulation = false;
+        naturalScrolling = true;
+        scrollButton = null;
+        scrollMethod = "twofinger";
+        sendEventsMode = "enabled";
+        tapping = false;
+        tappingDragLock = false;
+      };
+      mouse = {
+        # Trackball
+        # accelProfile = "flat";
+        # accelSpeed = null;
+        accelProfile = "adaptive";
+        accelSpeed = "0.5";
+        buttonMapping = "1 8 2 4 5 6 7 3 9";
+        # buttonMapping = "1 2 8 4 5 6 7 3 9";
+        disableWhileTyping = true;
+        naturalScrolling = true;
+        scrollButton = 3;
+        # scrollButton = 2;
+        scrollMethod = "button";
+        # transformationMatrix = "2.5 0 0 0 2.5 0 0 0 1";
       };
     };
   };

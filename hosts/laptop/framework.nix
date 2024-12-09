@@ -33,7 +33,7 @@
     "ath3k"
   ];
 
-  services.xserver.libinput.enable = lib.mkDefault true;
+  services.libinput.enable = lib.mkDefault true;
 
   # TODO research whether this is good with zfs or not
   services.fstrim.enable = lib.mkDefault true;
@@ -58,14 +58,14 @@
 
   services.xserver.videoDrivers = lib.mkDefault [ "modesetting" ];
 
-  hardware.opengl = {
-    driSupport = lib.mkDefault true;
-    driSupport32Bit = lib.mkDefault true;
-  };
+  # hardware.opengl = {
+  #   driSupport = lib.mkDefault true;
+  #   driSupport32Bit = lib.mkDefault true;
+  # ;
 
   boot.initrd.kernelModules = [ "amdgpu" ];
 
-  hardware.opengl.extraPackages = with pkgs.rocmPackages; [ clr clr.icd ];
+  hardware.graphics.extraPackages = with pkgs.rocmPackages; [ clr clr.icd ];
 
   # Sets the kernel version to the latest kernel to make the usage of the iGPU possible if your kernel version is too old
   # Disables scatter/gather which was introduced with kernel version 6.2

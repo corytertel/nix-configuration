@@ -9,8 +9,8 @@ fi
 xdgmenumaker -i -f fvwm -s 32 \
     | grep -v -G "Title$" \
     | sed s#'\+ "\(.*\)%.*\(48x48\|128x128\|256x256\|512x512\|pixmaps\|racket\|airshipper\).*"'#'+ "\1"'# \
-    > $dir/xdgmenu
+    > $dir/XDGMenu
 
 cat <<END
-Read $dir/xdgmenu
+Read $dir/XDGMenu
 END

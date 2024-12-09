@@ -7,13 +7,6 @@ let
   fvwm-config = pkgs.stdenv.mkDerivation {
     name = "fvwm-config";
     dontBuild = true;
-    # buildInputs = [ pkgs.xdgmenumaker ];
-    # buildPhase = ''
-    #   xdgmenumaker -i -f fvwm -s 32 \
-    #   | grep -v -G "Title$" \
-    #   | sed s#'\+ "\(.*\)%.*\(48x48\|256x256\|512x512\).*"'#'+ "\1"'# \
-    #   > xdgmenu
-    # '';
     installPhase = ''
       cp -r $src $out
     '';
@@ -27,32 +20,72 @@ in {
 
   config = mkIf cfg.enable {
     services.xserver = {
-      displayManager = {
-        defaultSession = "none+fvwm";
-        sddm = {
-          enable = true;
-          enableHidpi = true;
-        };
-      };
-
       windowManager.session = [{
-        name = "fvwm";
+        name = "fvwm3";
         start = ''
-        ${pkgs.fvwm}/bin/fvwm -f ${fvwm-config}/config &
+        ${pkgs.fvwm3}/bin/fvwm3 &
         waitPID=$!
       '';
       }];
+      displayManager.sessionCommands = ''
+        # Allow local user to control X settings (specifically the monitor setup)
+        ${pkgs.xorg.xhost}/bin/xhost si:localuser:root
+
+        # Prevent screen from turning off
+        ${pkgs.xorg.xset}/bin/xset s off -dpms
+
+        # Fix horrible default key repeat delay in xorg-server-1.6
+        ${pkgs.xorg.xset}/bin/xset r rate 200 25
+      '';
     };
 
-    environment.variables = {
-      FVWM_DATADIR = "${fvwm-config}";
-      FVWM_USERDIR = "${fvwm-config}";
+    services.displayManager = {
+      defaultSession = "none+fvwm3";
+      sddm = {
+        enable = true;
+        enableHidpi = true;
+      };
+    };
 
-      fvwm_img = "${fvwm-config}/images";
+    # Auto detect and configure new monitors
+    # Allow users of the "video" group to change brightness
+    services.udev.extraRules = let
+      defaultMonitor = "eDP-1";
+      defaultResolution = "2256x1504";
+      # for some reason Nix puts Xauthority in /tmp with a random path, so we must find and set it
+      script = pkgs.writeShellScript "hotplug_monitor.sh" ''
+        export DISPLAY=:0
+        export XAUTHORITY=$(${pkgs.coreutils-full}/bin/ls /tmp | ${pkgs.gnugrep}/bin/grep xauth | ${pkgs.coreutils-full}/bin/head -n1)
+
+        function connect() {
+          ${pkgs.xorg.xrandr}/bin/xrandr --output DP-4 --auto --right-of ${defaultMonitor}
+          ${pkgs.xorg.xrandr}/bin/xrandr --output DP-4 --auto --scale-from ${defaultResolution} --same-as ${defaultMonitor}
+        }
+
+        function disconnect() {
+          ${pkgs.xorg.xrandr}/bin/xrandr --output DP-4 --off
+        }
+
+        ${pkgs.xorg.xrandr}/bin/xrandr | grep "DP-4 connected" &> /dev/null && connect || disconnect
+      '';
+    in ''
+      ACTION=="change", SUBSYSTEM=="drm", RUN+="${script}"
+
+      ACTION=="add", SUBSYSTEM=="backlight", RUN+="${pkgs.coreutils-full}/bin/chgrp video $sys$devpath/brightness", RUN+="${pkgs.coreutils-full}/bin/chmod g+w $sys$devpath/brightness"
+    '';
+
+    environment.variables = let
+      fvwm-path = "/etc/fvwm";
+    in {
+      # Link to /etc so the fvwm config can be hot-reloaded
+      FVWM_DATADIR = fvwm-path;
+      FVWM_USERDIR = fvwm-path;
+
+      fvwm_img = "${fvwm-path}/images";
       fvwm_icon = "${config.theme.icons.package}/share/icons/crystal-nova";
-      fvwm_wallpaper = "${fvwm-config}/images/wallpaper";
+      fvwm_wallpaper = "${fvwm-path}/images/background";
       fvwm_cache = "/tmp/.fvwm-cache";
-      fvwm_scripts = "${fvwm-config}/scripts";
+      fvwm_scripts = "${fvwm-path}/scripts";
 
       fvwm_term = config.apps.terminal.command;
       fvwm_browser = config.apps.browser.command;
@@ -68,8 +101,10 @@ in {
     };
 
     environment = {
+      etc."fvwm".source = "${fvwm-config}";
+
       systemPackages = with pkgs; [
-        fvwm
+        fvwm3
         fvwm-config
         feh
         xorg.xwd
@@ -81,17 +116,14 @@ in {
         networkmanagerapplet
         cbatticon
         xdgmenumaker
-        xbrightness
+        acpilight
         imagemagick
         trash-cli
         xdotool
         pamixer
         arandr
-
-        conky
-        lua
-        lm_sensors
-        lsb-release
+        playerctl
+        dmenu
 
         # all configured in dconf
         mate.eom

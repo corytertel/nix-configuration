@@ -1,16 +1,15 @@
 WindowTitle {ConfirmQuit}
-WindowSize  250 320
-Colorset 7
-Font "xft:NotoSans Nerd Font:size=13:minspace=True:antialias=True"
+WindowSize  300 80
+Font "xft:Sans:style=Bold:size=10"
 Init
  Begin
  End
 
 Widget 1
 Property
- Title {Do you really}
- Size  250 40
- Position 0 40
+ Title {Do you really want to quit Fvwm?}
+ Size  200 30
+ Position 25 0
  Type ItemDraw
  Flags NoReliefString
 Main
@@ -22,23 +21,9 @@ End
 
 Widget 2
 Property
- Title {want to quit?}
- Size  250 40
- Position 0 80
- Type ItemDraw
- Flags NoReliefString
-Main
- Case message of
-  SingleClic :
-  Begin
-  End
-End
-
-Widget 3
-Property
  Title {Quit}
- Size 140 36
- Position 55 170
+ Size 60 28
+ Position 70 40
  Flags NoReliefString
  Type PushButton
  Value 1
@@ -50,11 +35,11 @@ Main
   End
 End
 
-Widget 4
+Widget 3
 Property
  Title {Cancel}
- Size 140 36
- Position 55 230
+ Size 60 28
+ Position 170 40
  Flags NoReliefString
  Type PushButton
  Value 1

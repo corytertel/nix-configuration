@@ -236,7 +236,7 @@
   :custom
   (corfu-cycle t)                  ; Allows cycling through candidates
   (corfu-auto t)                   ; Enable auto completion
-  (corfu-auto-prefix 1)            ; Enable auto completion
+  (corfu-auto-prefix 2)            ; Enable auto completion
   (corfu-auto-delay 0.0)           ; Enable auto completion
   (corfu-quit-at-boundary t)
   (corfu-echo-documentation t)     ; Enable auto documentation in the minibuffer
@@ -279,14 +279,14 @@
 	  ;;   (while (< i 10)
 	  ;;     (define-key map (kbd (int-to-string i)) (cory/corfu-select-index (- i 1)))
 	  ;;     (setq i (1+ i))))
-	  (define-key map (kbd "!") (cory/corfu-select-index 0))
-	  (define-key map (kbd "@") (cory/corfu-select-index 1))
-	  (define-key map (kbd "#") (cory/corfu-select-index 2))
-	  (define-key map (kbd "$") (cory/corfu-select-index 3))
-	  (define-key map (kbd "%") (cory/corfu-select-index 4))
-	  (define-key map (kbd "^") (cory/corfu-select-index 5))
-	  (define-key map (kbd "&") (cory/corfu-select-index 6))
-	  (define-key map (kbd "*") (cory/corfu-select-index 7))
+	  (define-key map (kbd "1") (cory/corfu-select-index 0))
+	  (define-key map (kbd "2") (cory/corfu-select-index 1))
+	  (define-key map (kbd "3") (cory/corfu-select-index 2))
+	  (define-key map (kbd "4") (cory/corfu-select-index 3))
+	  (define-key map (kbd "5") (cory/corfu-select-index 4))
+	  (define-key map (kbd "6") (cory/corfu-select-index 5))
+	  (define-key map (kbd "7") (cory/corfu-select-index 6))
+	  (define-key map (kbd "8") (cory/corfu-select-index 7))
 	  map))
 
   (global-corfu-mode)
@@ -417,6 +417,11 @@
   ;;   (add-to-list 'corfu-margin-formatters
   ;; 	       #'kind-all-the-icons-margin-formatter)
   )
+
+(use-package corfu-terminal
+  :config
+  (unless (display-graphic-p)
+    (corfu-terminal-mode +1)))
 
 ;; Dabbrev
 (require 'dabbrev)

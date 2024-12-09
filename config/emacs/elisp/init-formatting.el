@@ -43,7 +43,9 @@
     js-ts-mode
     typescript-ts-mode
     sql-mode
-    nix-mode)
+    nix-mode
+    tex-mode
+    latex-mode)
    . aggressive-indent-mode)
   :config
   (electric-indent-mode 0))

@@ -17,6 +17,8 @@
   environment.etc = {
     "NetworkManager/system-connections".source = "/persist/etc/NetworkManager/system-connections/";
     "nixos".source = "/persist/etc/nixos/";
+    "mullvad-vpn.key".source = "/persist/etc/mullvad-vpn.key";
+    "aiaec-vpn.key".source = "/persist/etc/aiaec-vpn.key";
   };
 
   users = {
@@ -40,4 +42,6 @@
   };
 
   fileSystems."/persist".neededForBoot = true;
+
+  virtualisation.docker.storageDriver = "zfs";
 }

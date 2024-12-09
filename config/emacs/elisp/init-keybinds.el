@@ -42,6 +42,7 @@
   (evil-want-C-u-scroll t)
   (evil-undo-system 'undo-tree)
   (evil-move-beyond-eol t)
+  (evil-cross-lines t)
   :init
   (setq evil-respect-visual-line-mode t)
   :config
@@ -61,8 +62,31 @@
   ;; Make TAB have the same behavior as in emacs
   (define-key evil-normal-state-map (kbd "TAB") #'indent-for-tab-command)
 
+  ;; Make A also indent
+  (defun evil-append-line (count &optional vcount)
+    "Switch to Insert state at the end of the current line.
+The insertion will be repeated COUNT times.  If VCOUNT is non nil
+it should be number > 0. The insertion will be repeated in the
+next VCOUNT - 1 lines below the current one."
+    (interactive "p")
+    (indent-for-tab-command)
+    (if (and visual-line-mode
+           evil-respect-visual-line-mode)
+        (evil-end-of-visual-line)
+      (evil-move-end-of-line))
+    (setq evil-insert-count count
+          evil-insert-lines nil
+          evil-insert-vcount
+          (and vcount
+             (> vcount 1)
+             (list (line-number-at-pos)
+                   #'end-of-line
+                   vcount)))
+    (evil-insert-state 1))
+
   ;; Make :q not quit emacs
-  ;; (global-set-key [remap evil-quit] 'kill-buffer-and-window)
+  (global-set-key [remap evil-quit] #'kill-buffer-and-window)
+  (global-set-key [remap evil-save-and-close] #'cory/kill-buffer-and-window-and-save)
 
   ;; Make : trigger M-x instead
   ;; (define-key evil-motion-state-map (kbd ":") #'evil-execute-extended-command)
@@ -250,6 +274,9 @@
 ;; out of the box, no setup required. RYO leader keys require you to manually
 ;; rebind everything (a lot of meaningless work) and the result is esoteric.
 
+;; TLDR devil makes evil compatible with the vanilla Emacs keymap (and packages which expect it)
+;; No need for "specialized" packages for evil anymore
+
 (use-package devil
   :after evil
   :bind
@@ -315,9 +342,9 @@
  ("C-'"   . repeat)
  ("C-<f4>" . kill-this-buffer))
 
-(cory/define-keys
- evil-normal-state-map
- ("C-b" . switch-to-buffer))
+;; (cory/define-keys
+;;  evil-normal-state-map
+;;  ("C-b" . switch-to-buffer))
 
 (global-set-key (kbd "M-f") search-map)
 
