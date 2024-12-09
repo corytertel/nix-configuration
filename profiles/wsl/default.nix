@@ -14,9 +14,9 @@
       monospace = {
         package = pkgs.librecode;
         name = "Librecode";
-        size = 135;
+        size = 110;
       };
-      variable.size = 135;
+      variable.size = 110;
     };
     extraConfig = ''
       ;; Teach Emacs how to open links in your default Windows browser
