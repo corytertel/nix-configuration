@@ -1,5 +1,12 @@
 { config, lib, pkgs, modulesPath, ... }:
 
+let
+  dotnetSdk = with pkgs.dotnetCorePackages; combinePackages [
+    sdk_9_0
+    sdk_8_0
+  ];
+  # dotnetSdk = pkgs.dotnetCorePackages.sdk_9_0;
+in
 {
   imports = [
     # "${modulesPath}/profiles/minimal.nix"
@@ -105,7 +112,7 @@
 
   services.postgresql = {
     enable = true;
-    package = pkgs.postgresql;
+    package = pkgs.postgresql_15;
     dataDir = "/postgresql/data";
     authentication = lib.mkForce ''
       # Generated file; do not edit!
@@ -117,6 +124,10 @@
 
   environment.variables = {
     PAGER = "less -S";
+  };
+
+  environment.sessionVariables = with pkgs; {
+    DOTNET_ROOT = "${dotnetSdk}";
   };
 
   environment.systemPackages = with pkgs; [
@@ -148,9 +159,9 @@
 
       neovim = {
         enable = true;
-	      extraLuaConfig = ''
-	        vim.wo.relativenumber = true
-	      '';
+        extraLuaConfig = ''
+          vim.wo.relativenumber = true
+        '';
         plugins = with pkgs.vimPlugins; [
           # Emacs colorscheme
           {
@@ -207,10 +218,16 @@
         nodejs
         nodePackages_latest.typescript-language-server
 
+        # c#
+        # dotnetCorePackages.sdk_9_0 # includes both NETCore and AspNetCore
+        dotnetSdk
+        dotnet-ef
+        omnisharp-roslyn
+
         # postgres
         postgresql
         postgresql_jdbc
-        dbeaver
+        dbeaver-bin
 
         # utils
         fd

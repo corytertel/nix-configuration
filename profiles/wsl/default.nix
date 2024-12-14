@@ -3,20 +3,30 @@
 {
   programs.cory.emacs = {
     enable = true;
-    package = pkgs.emacs-pgtk.override {
-      withTreeSitter = true;
-      withNativeCompilation = true;
-    };
+    # package = pkgs.emacs-pgtk.override {
+    #   withTreeSitter = true;
+    #   withNativeCompilation = true;
+    # };
     popup = false;
     eaf = false;
     fonts = {
       # monospace.size = 140;
+      # monospace = {
+      #   package = pkgs.librecode;
+      #   name = "Librecode";
+      #   size = 110;
+      # };
+      # variable.size = 110;
       monospace = {
-        package = pkgs.librecode;
-        name = "Librecode";
-        size = 110;
+        package = pkgs.anonymousPro;
+        name = "Anonymous Pro";
+        size = 105;
       };
-      variable.size = 110;
+      variable = {
+        package = pkgs.anonymousPro;
+        name = "Anonymous Pro";
+        size = 105;
+      };
     };
     extraConfig = ''
       ;; Teach Emacs how to open links in your default Windows browser

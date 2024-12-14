@@ -16,10 +16,10 @@ in {
 
       enableLsColors = true;
 
-      undistractMe = {
-        enable = true;
-        playSound = true;
-      };
+      # undistractMe = {
+      #   enable = true;
+      #   playSound = true;
+      # };
 
       promptInit = builtins.readFile ./bashrc;
 
