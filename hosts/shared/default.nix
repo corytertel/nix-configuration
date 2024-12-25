@@ -2,6 +2,8 @@
 
 {
   imports = [
+    ./fhs.nix
+    ./homebrew.nix
     ./udev.nix
     ./wireguard.nix
     ./zfs.nix
@@ -102,6 +104,10 @@
         # Allow localhost users to connect to any database, but postgres, if the password is correct.
         host postgres all 127.0.0.1/32 reject
         host all all 127.0.0.1/32 scram-sha-256
+
+        # IPv6 version of above
+        host postgres all ::1/128 reject
+        host all all ::1/128 scram-sha-256
       '';
       identMap = ''
         superuser_map root postgres
@@ -159,13 +165,13 @@
     # jack.enable = true; # to use JACK applications
   };
 
+  # TODO this should not be declarative
   users = {
     users = {
       cory = {
         isNormalUser = true;
         uid = 1000;
-        extraGroups = [ "wheel" "network" "audio" "video" "libvirtd" ];
-        home = "/home/cory";
+        extraGroups = [ "wheel" "network" "audio" "video" "libvirtd" "linuxbrew" ];
       };
     };
     extraGroups.vboxusers.members = [ "cory" ];
@@ -194,7 +200,7 @@
   # Make /bin/bash exist so scripts work
   system.activationScripts.binbash = {
     text = ''
-      ln -sfn ${pkgs.bash}/bin/bash /bin/bash
+      ln -sfn ${pkgs.bashInteractive}/bin/bash /bin/bash
     '';
   };
 
@@ -241,17 +247,51 @@
       tmux
       vim
       nano
-      mg
       wget
       curl
       git
-      gcc
-      gnumake
       cmake
-      which
       ripgrep
       keyboard-layouts
       trim-generations
+
+      # fhs dependencies
+      tcsh
+      ed
+      coreutils-full
+      util-linux
+      procps
+      gnutar
+      cpio
+      gzip
+      nettools
+      iputils
+
+      # base devel
+      autoconf
+      automake
+      binutils
+      bison
+      debugedit
+      fakeroot
+      file
+      findutils
+      flex
+      gawk
+      gcc
+      gettext
+      gnugrep
+      groff
+      gzip
+      libtool
+      gnum4
+      gnumake
+      gnupatch
+      pkgconf
+      gnused
+      sudo
+      texinfo
+      which
     ];
   };
 
@@ -628,7 +668,7 @@
         # ride
 
         # python
-        (python311.withPackages (ps: with ps; [
+        (python312.withPackages (ps: with ps; [
           epc
           python-lsp-server
           pygments
@@ -639,25 +679,12 @@
           scipy
           pyarrow
 
-          hy
-
-          flask
-          flask-wtf
-          python-dotenv
-
           opencv4
           scikit-image
           matplotlib
 
           tkinter
-
-          openpyxl
-
-          conda
-          gssapi
-
-          # qgis
-          ]))
+        ]))
 
         # postgres
         postgresql
@@ -735,11 +762,12 @@
         ardour
         vital
 
+        # base devel
+
         # command line utils
         mg
         fd
         ripgrep
-        file
         jq
         yt-dlp
         unzip
@@ -791,6 +819,24 @@
         chromium
         # has security issues rn
         # megasync
+        btop
+
+        # apt
+        # (stdenv.mkDerivation {
+        #   name = "apt-combined";
+        #   src = symlinkJoin {
+        #     name = "apt-combined-src";
+        #     paths = [
+        #       apt
+        #       dpkg
+        #     ];
+        #   };
+        #   dontBuild = true;
+        #   installPhase = ''
+        #     mkdir -p $out
+        #     cp -rL $src/* $out/
+        #   '';
+        # })
 
         # iphone utils
         ifuse
