@@ -18,6 +18,10 @@ in {
     enable = mkEnableOption "Enable fvwm";
   };
 
+  imports = [
+    ./kde.nix
+  ];
+
   config = mkIf cfg.enable {
     services.xserver = {
       windowManager.session = [{
@@ -36,6 +40,9 @@ in {
 
         # Fix horrible default key repeat delay in xorg-server-1.6
         ${pkgs.xorg.xset}/bin/xset r rate 200 25
+
+        # Load system-wide Xresources
+        ${pkgs.xorg.xrdb}/bin/xrdb -merge /etc/X11/Xresources
       '';
     };
 
@@ -44,6 +51,24 @@ in {
       sddm = {
         enable = true;
         enableHidpi = true;
+        wayland.enable = false;
+      };
+    };
+
+    # Compositor
+    services.picom = {
+      enable = true;
+      shadow = true;
+      shadowOffsets = [ (-15) (-15) ];
+      shadowOpacity = 0.75;
+      fade = true;
+      fadeDelta = 5;
+      settings = {
+        fade-in-step = 1.0; # no fade for new windows
+        inactive-dim = 0.02;
+        focus-exclude = [
+          "class_g = 'RightPanel'"
+        ];
       };
     };
 
@@ -75,9 +100,9 @@ in {
     '';
 
     environment.variables = let
-      fvwm-path = "/etc/fvwm";
+      fvwm-path = "/usr/local/share/fvwm";
     in {
-      # Link to /etc so the fvwm config can be hot-reloaded
+      # Link so the fvwm config can be hot-reloaded
       FVWM_DATADIR = fvwm-path;
       FVWM_USERDIR = fvwm-path;
 
@@ -96,45 +121,48 @@ in {
       fvwm_chat = "discord";
       fvwm_mail = "thunderbird";
 
-      QT_AUTO_SCREEN_SCALE_FACTOR = "0";
-      PLASMA_USE_QT_SCALING = "1";
+      # QT_AUTO_SCREEN_SCALE_FACTOR = "0";
+      # PLASMA_USE_QT_SCALING = "1";
     };
 
-    environment = {
-      etc."fvwm".source = "${fvwm-config}";
+    # Link out fvwm to the expected place of /usr/local/share/fvwm/config
+    system.activationScripts.fvwm.text = ''
+      mkdir -p /usr/local/share
+      chmod 0755 /usr
+      chmod 0755 /usr/local
+      chmod 0755 /usr/local/share
+      ln -sfn ${fvwm-config} /usr/local/share/fvwm
+    '';
 
-      systemPackages = with pkgs; [
-        fvwm3
-        fvwm-config
-        feh
-        xorg.xwd
-        xlockmore
-	      stalonetray
-        flameshot
-        pavucontrol
-        pasystray
-        networkmanagerapplet
-        cbatticon
-        xdgmenumaker
-        acpilight
-        imagemagick
-        trash-cli
-        xdotool
-        pamixer
-        arandr
-        playerctl
-        dmenu
-
-        # all configured in dconf
-        mate.eom
-        mate.caja
-        mate.atril
-        mate.mate-terminal
-        mate.mate-system-monitor
-        mate.mate-power-manager
-        upower
-        mate.mate-media
-      ];
-    };
-  };
+    environment.systemPackages = with pkgs; [
+      fvwm3
+      fvwm-config
+      feh
+      xorg.xwd
+      xlockmore
+      xscreensaver
+	    stalonetray
+      flameshot
+      pavucontrol
+      pasystray
+      networkmanagerapplet
+      cbatticon
+      (xdgmenumaker.overridePythonAttrs (old: rec {
+        pythonPath = with python3Packages; [
+          pygobject3
+          pyxdg
+          pillow
+        ];
+      }))
+      acpilight
+      imagemagick
+      trash-cli
+      xdotool
+      pamixer
+      arandr
+      playerctl
+      rofi
+    ];
+    # } // import ./kde.nix { inherit config lib pkgs; };
+};
 }

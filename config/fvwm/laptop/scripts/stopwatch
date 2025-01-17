@@ -58,16 +58,16 @@ def Reset(label):
 
 root = tk.Tk()
 root.title("FvwmStopwatch")
-root['background'] = '#003c3c'
+root['background'] = '#f6f5f4'
 
 # Fixing the window size.
 root.minsize(width=160, height=90)
-label = tk.Label(root, text="0:00", fg="white", bg='#003c3c', font="Sans 20 bold")
+label = tk.Label(root, text="0:00", fg='#2e3436', bg='#f6f5f4', font=("Noto Sans", 20))
 label.pack()
 f = tk.Frame(root)
-start = tk.Button(f, text='⏵', width=1, fg="white", bg='#003c3c', command=lambda:Start(label))
-pause = tk.Button(f, text='⏸',width=1, fg="white", bg='#003c3c', state='disabled', command=Pause)
-reset = tk.Button(f, text='⏮',width=1, fg="white", bg='#003c3c', state='disabled', command=lambda:Reset(label))
+start = tk.Button(f, text='⏵', width=1, fg='#2e3436', bg='#f6f5f4', command=lambda:Start(label))
+pause = tk.Button(f, text='⏸',width=1, fg='#2e3436', bg='#f6f5f4', state='disabled', command=Pause)
+reset = tk.Button(f, text='⏮',width=1, fg='#2e3436', bg='#f6f5f4', state='disabled', command=lambda:Reset(label))
 f.pack(anchor = 'center',pady=5)
 start.pack(side="left")
 pause.pack(side ="left")

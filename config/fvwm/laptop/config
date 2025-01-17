@@ -32,6 +32,10 @@
 # that FvwmConsole uses. Change this to your terminal of choice
 InfoStoreAdd terminal xterm
 
+# Sets the default path for images to the location of the images
+# folder in the default fvwm config location.
+ImagePath /usr/local/share/fvwm/images
+
 ###########
 # 1: Functions
 #
@@ -57,16 +61,7 @@ InfoStoreAdd terminal xterm
 DestroyFunc StartFunction
 AddToFunc   StartFunction
 + I Test (Init) SetBG maui.jpg
-+ I Test (Init) Module FvwmBanner
-# + I Module FvwmButtons RightPanel
-+ I Module FvwmButtons DesktopManager
-+ I Module FvwmButtons Tray
-+ I Module FvwmButtons ApplicationManager
-+ I Module FvwmButtons Dock
-+ I Module FvwmButtons StopwatchManager
-+ I Module FvwmButtons NotesManager
-+ I Module FvwmButtons AudioManager
-+ I Module FvwmButtons Time
++ I Module FvwmButtons RightPanel
 + I Module FvwmEvent EventNewDesk
 
 # Init Function
@@ -519,12 +514,13 @@ Style * EdgeMoveDelay 0, EdgeMoveResistance 20
 # EwmhBaseStruts [left] [right] [top] [bottom]
 # Reserves space along the edge(s) of the Screen that will not
 # be covered when maximizing or placing windows.
-EwmhBaseStruts 3 180 3 3
+EwmhBaseStruts 0 160 0 0
 
 # This sets the ClickTime and MoveThreshold used to determine
 # Double Clicks, Hold and Move for the mouse.
 ClickTime 250
-MoveThreshold 3
+# MoveThreshold 3
+MoveThreshold 10
 
 # Sets the focus style to SloppyFocus and a mouse click
 # in a window will Raise it.
@@ -541,7 +537,7 @@ Style * SloppyFocus, MouseFocusClickRaises
 # Module FvwmAuto 300 -menter "Silent AutoFocus"
 
 # Default Font
-DefaultFont "xft:Sans:Bold:size=10:antialias=True"
+DefaultFont "xft:Noto Sans:size=10:antialias=True"
 
 # Window Placement
 # Style * MinOverlapPlacement, GrabFocusOff, !UsePPosition
@@ -555,6 +551,7 @@ Style * ResizeOpaque, SnapAttraction 10 SameType ScreenAll, SnapGrid
 
 # Transient Windows (such as open file windows)
 Style * DecorateTransient, StackTransientParent
+# Style * NakedTransient, StackTransientParent
 # Style * !FPGrabFocusTransient, FPReleaseFocusTransient
 Style * FPGrabFocusTransient, FPReleaseFocusTransient
 
@@ -566,7 +563,8 @@ Style * WindowShadeScrolls, WindowShadeSteps 10
 IgnoreModifiers L25
 
 # Decor Styles
-Style * BorderWidth 7, HandleWidth 7, MWMButtons, FvwmBorder, FirmBorder
+# Style * BorderWidth 7, HandleWidth 7, MWMButtons, FvwmBorder, FirmBorder
+Style * BorderWidth 3, HandleWidth 3, MWMButtons, FvwmBorder, FirmBorder
 Style * Colorset 1, HilightColorset 2
 Style * BorderColorset 3, HilightBorderColorset 4
 
@@ -575,16 +573,8 @@ Style * BorderColorset 3, HilightBorderColorset 4
 Style * !Icon
 
 # Window Specific Styles
-# Style RightPanel !Title, !Borders, !Handles, Sticky, \
-#                  WindowListSkip, NeverFocus
-Style DesktopManager !Title, !Handles, Sticky, WindowListSkip, NeverFocus
-Style Tray !Title, !Handles, Sticky, WindowListSkip, NeverFocus
-Style ApplicationManager !Title, !Handles, Sticky, WindowListSkip, NeverFocus
-Style Dock !Title, !Handles, Sticky, WindowListSkip, NeverFocus
-Style AudioManager !Title, !Handles, Sticky, WindowListSkip, NeverFocus
-Style StopwatchManager !Title, !Handles, Sticky, WindowListSkip, NeverFocus
-Style NotesManager !Title, !Handles, Sticky, WindowListSkip
-Style Time !Title, !Handles, Sticky, WindowListSkip, NeverFocus
+# Style RightPanel !Title, !Borders, !Handles, Sticky, WindowListSkip, NeverFocus
+Style RightPanel !Title, !Borders, !Handles, Sticky, WindowListSkip, StaysOnBottom
 Style ConfirmQuit !Title, PositionPlacement Center, WindowListSkip, Layer 6
 Style FvwmIdent WindowListSkip
 
@@ -612,36 +602,32 @@ Style FvwmIdent WindowListSkip
 #      12 - Module ActiveButton (Mouse Hover)
 #      13 - FvwmPager Active Page
 #      14 - FvwmIconMan Iconified Button
+#      15 - Module Tooltips
 ###########
-Colorset 0  fg #ffffff, bg #003c3c, hi, sh, Plain, NoShape
-Colorset 1  fg #000000, bg #8f9f8f, hi, sh, Plain, NoShape
-Colorset 2  fg #ffffff, bg #003c3c, hi, sh, Plain, NoShape
-Colorset 3  fg black, bg #4d4d4d, hi #676767, sh #303030, Plain, NoShape
-Colorset 4  fg black, bg #2d2d2d, hi #474747, sh #101010, Plain, NoShape
-Colorset 5  fg #000000, bg #ffffff, hi, sh, Plain, NoShape
-Colorset 6  fg #ffffff, bg #2d2d2d, hi, sh, Plain, NoShape
-Colorset 7  fg grey30, bg #ffffff, hi, sh, Plain, NoShape
-Colorset 8  fg #ffffff, bg #003c3c, hi, sh, Plain, NoShape
-Colorset 10 fg #ffffff, bg #003c3c, hi #aaaaaa, sh #999999, Plain, NoShape
-Colorset 11 fg #ffffff, bg #1a6e99, hi #ffffff, sh #ffffff, Plain, NoShape
-Colorset 12 fg #2d2d2d, bg #ffffff, hi, sh, Plain, NoShape
-Colorset 13 fg #ffffff, bg #006c6c, hi, sh, Plain, NoShape
-Colorset 14 fg #555555, bg #003c3c, hi #aaaaaa, sh #999999, Plain, NoShape
-
-# InActive title right & text/bevel colors
-Colorset 1 VGradient 32 4 grey96 30 grey90 50 grey88 85 grey76 10 black, \
-    fg grey50, bg grey50, sh grey50, hi grey100
-# Active title right & text/bevel color
-Colorset 2 VGradient 32 4 grey96 30 grey85 50 grey80 80 grey60 10 black, \
-    fg grey85, bg grey50, sh grey20, hi grey100
-# Active title left. Note how you can use different ways to define colors.
-# The most comfortable way would be using the colors listed in rgb.txt,
-# but rgb:rr/gg/bb works just aswell.
-Colorset 3 VGradient 32 3 #009a00 20 green4 50 darkslategrey 10 black, \
-    bg grey
-# InActive title left
-Colorset 4 VGradient 32 3 grey80 80 grey70 70 grey62 10 black, \
-    bg grey
+Colorset 0  fg #2e3436, bg #f6f5f4, hi, sh, Plain, NoShape
+# Colorset 1  fg #000000, bg #8f9f8f, hi, sh, Plain, NoShape
+Colorset 1  fg #b7b0a9, bg #f6f5f4, hi #b7b0a9, sh #aaaaaa, Plain, NoShape
+# Colorset 1  fg #707070, bg #f6f5f4, hi #ffffff, sh #aaaaaa, Plain, NoShape
+# Colorset 2  fg #ffffff, bg #003c3c, hi, sh, Plain, NoShape
+Colorset 2  fg #2e3436, bg #f6f5f4, hi #b7b0a9, sh #aaaaaa, Plain, NoShape
+# Colorset 2  fg #707070, bg #f6f5f4, hi #ffffff, sh #aaaaaa, Plain, NoShape
+# Colorset 3  fg black, bg #4d4d4d, hi #676767, sh #303030, Plain, NoShape
+# Colorset 4  fg black, bg #2d2d2d, hi #474747, sh #101010, Plain, NoShape
+Colorset 3  fg black, bg #cdc7c2, hi #cdc7c2, sh #cdc7c2, Plain, NoShape
+Colorset 4  fg black, bg #cdc7c2, hi #cdc7c2, sh #cdc7c2, Plain, NoShape
+Colorset 5  fg #2e3436, bg #ffffff, hi #cdc7c2, sh #cdc7c2, Plain, NoShape
+Colorset 6  fg #ffffff, bg #3584e4, hi, sh, Plain, NoShape
+Colorset 7  fg #929595, bg #ffffff, hi, sh, Plain, NoShape
+Colorset 8  fg #2e3436, bg #f6f5f4, hi, sh, Plain, NoShape
+Colorset 10 fg #2e3436, bg #f6f5f4, hi #aaaaaa, sh #999999, Plain, NoShape
+Colorset 11 fg #2e3436, bg #d6d1cd, hi #ffffff, sh #ffffff, Plain, NoShape
+Colorset 12 fg #ffffff, bg #3584e4, hi, sh, Plain, NoShape
+Colorset 13 fg #ffffff, bg #3584e4, hi, sh, Plain, NoShape
+Colorset 14 fg #929595, bg #f6f5f4, hi #aaaaaa, sh #999999, Plain, NoShape
+Colorset 15 fg #ffffff, bg #000000, hi, sh, Plain, NoShape
+# Adwaita tooltips actually have a 1px border of   #191919, however, I cannot figure out how to
+# put padding on FVWM module tooltips, so I use the border as padding.
+# If ever figured out, change the border to 1px with color of #191919 to correctly immitate adwaita.
 
 #######
 # 4: Menus
@@ -649,8 +635,12 @@ Colorset 4 VGradient 32 3 grey80 80 grey70 70 grey62 10 black, \
 MenuStyle * MenuColorset 5, ActiveColorset 6, GreyedColorset 7, TitleColorset 8
 MenuStyle * Hilight3DOff, HilightBack, HilightTitleBack, SeparatorsLong
 MenuStyle * TrianglesSolid, TrianglesUseFore
-MenuStyle * ItemFormat "%|%3.1i%5.3l%5.3>%|"
-MenuStyle * Font "xft:Sans:Bold:size=10:antialias=True"
+MenuStyle * ItemFormat "%|%6.i%20.40l%.6>%|"
+MenuStyle * Font "xft:Noto Sans:size=10:antialias=True"
+MenuStyle * BorderWidth 1
+MenuStyle * VerticalItemSpacing 5 5
+MenuStyle * VerticalMargins 3 3
+PopupOffset 0 0
 
 # Root Menu
 #
@@ -658,7 +648,6 @@ MenuStyle * Font "xft:Sans:Bold:size=10:antialias=True"
 # window or using alt-f1 (or menu).
 DestroyMenu MenuFvwmRoot
 AddToMenu   MenuFvwmRoot "Fvwm" Title
-+ "&Programs%icons/programs.png%" Popup MenuPrograms
 + "XDG &Menu%icons/apps.png%" Popup XDGMenu
 + "&XTerm%icons/terminal.png%" Exec exec $[infostore.terminal]
 + "" Nop
@@ -676,7 +665,6 @@ AddToMenu   MenuFvwmRoot "Fvwm" Title
 # The dock menu will PopUp with a click in the dock.
 DestroyMenu MenuDock
 AddToMenu   MenuDock "Fvwm" Title
-+ "&Programs%icons/programs.png%" Popup MenuPrograms
 + "XDG &Menu%icons/apps.png%" Popup XDGMenu
 + "&XTerm%icons/terminal.png%" Exec exec $[infostore.terminal]
 + "" Nop
@@ -691,21 +679,6 @@ AddToMenu   MenuDock "Fvwm" Title
 
 # Generate XDGMenu
 PipeRead 'bash $[fvwm_scripts]/xdgmenu "$[fvwm_cache]"'
-
-# Programs Menu
-#
-# This test for some common programs and adds them to the menu.
-# When adding programs you don't need to use the Test (x foo)
-# lines as this is only to help make this menu portable.
-DestroyMenu MenuPrograms
-AddToMenu   MenuPrograms "Programs" Title
-Test (x chromium) + "Chromium" Exec exec chromium
-Test (x firefox) + "Firefox" Exec exec firefox
-Test (x google-chrome) + "Google-Chrome" Exec exec google-chrome
-Test (x gvim) + "gVim" Exec exec gvim
-Test (x emacs) + "Emacs" Exec exec emacs
-Test (x gimp) + "Gimp" Exec exec gimp
-Test (x vlc) + "VLC" Exec exec vlc
 
 # Background Menu
 #
@@ -924,7 +897,7 @@ Mouse 1	FS   A RaiseMove Resize
 Mouse 4	T    A WindowShade True
 Mouse 5	T    A WindowShade False
 # Mouse 1	R    A Menu MenuFvwmRoot
-Mouse 1	R    A Menu MenuPrograms
+Mouse 1	R    A Menu XDGMenu
 Mouse 2	R    A WindowList
 Mouse 3	R    A Menu MenuWindowOpsLong
 Mouse 1	I    A RaiseMoveIconify
@@ -943,6 +916,9 @@ Mouse 3 I    A Menu MenuIconOps
 ###########
 TitleStyle Centered Height 36 -- Flat
 
+# Vector editor:
+# https://www.fvwm.org/Wiki/Config/VectorButtons/
+
 ### Traditional FVWM styled-buttons
 # ButtonStyle All ActiveUp Vector 5 15x15@4 15x85@3 85x85@3 85x15@3 \
 #                 15x15@3 -- Flat
@@ -957,33 +933,190 @@ TitleStyle Centered Height 36 -- Flat
 # ButtonStyle All Inactive Vector 5 47x47@3 57x53@3 53x53@3 53x47@3 \
 #                 47x47@3 -- Flat
 # AddButtonStyle 1 Active Vector 5 45x45@3 55x45@3 55x55@3 45x55@3 45x45@3
+# AddButtonStyle 1 ToggledActiveUp Vector 10 25x20@1 30x25@1 30x55@1 43x55@0 50x85@1 57x55@0 70x55@0 70x25@0 75x20@0 25x20@1
 # AddButtonStyle 2 Active Vector 4 35x35@3 65x65@3 65x35@4 35x65@3
 # AddButtonStyle 4 Active Vector 8 30x70@3 30x30@3 70x30@3 70x70@3 30x70@3 \
 #                  30x50@4 50x50@3 50x70@3
-# AddButtonStyle 4 ToggledActiveUp Vector 8 30x70@3 30x30@3 70x30@3 70x70@3 \
-#                  30x70@3 50x30@4 50x50@3 70x50@3
 # AddButtonStyle 6 Active Vector 5 35x60@3 65x60@3 65x50@3 35x50@3 35x60@3
 # ButtonStyle All - Clear
 # ButtonStyle 1 - MwmDecorMenu
 # ButtonStyle 4 - MwmDecorMax
 # ButtonStyle 6 - MwmDecorMin
 
+
+# ButtonStyle All ActiveUp Vector 30 20x35@4 22x27@1 24x24@1 27x22@1 35x20@1 \
+#                                    65x20@1 73x22@1 76x24@1 78x27@1 80x35@1 \
+#                                    80x65@1 78x73@1 76x76@1 73x78@1 65x80@1 \
+#                                    35x80@1 27x78@1 24x76@1 22x73@1 20x65@1 \
+#                                    20x35@1 \
+#                                    78+1px27@4 80+1px35@0 \
+#                                    80+1px65@0 78+1px73@0 76+1px76+1p@0 73x78+1p@0 65x80+1p@0 \
+#                                    35x80+1p@0 27x78+1p@0 -- Flat
+
+# ButtonStyle All ToggledActiveUp Vector 30 20x35@4 22x27@1 24x24@1 27x22@1 35x20@1 \
+#                                    65x20@1 73x22@1 76x24@1 78x27@1 80x35@1 \
+#                                    80x65@1 78x73@1 76x76@1 73x78@1 65x80@1 \
+#                                    35x80@1 27x78@1 24x76@1 22x73@1 20x65@1 \
+#                                    20x35@1 \
+#                                    78+1px27@4 80+1px35@0 \
+#                                    80+1px65@0 78+1px73@0 76+1px76+1p@0 73x78+1p@0 65x80+1p@0 \
+#                                    35x80+1p@0 27x78+1p@0 -- Flat
+
+# ButtonStyle All ActiveDown Vector 30 20x35@4 22x27@1 24x24@1 27x22@1 35x20@1 \
+#                                      65x20@1 73x22@1 76x24@1 78x27@1 80x35@1 \
+#                                      80x65@1 78x73@1 76x76@1 73x78@1 65x80@1 \
+#                                      35x80@1 27x78@1 24x76@1 22x73@1 20x65@1 \
+#                                      20x35@1 \
+#                                      22+1px73@4 20+1px65@0 \
+#                                      20+1px35@0 22+1px27@0 24+1px24+1p@0 27x22+1p@0 35x20+1p@0 \
+#                                      65x20+1p@0 73x22+1p@0 -- Flat
+
+# ButtonStyle All ToggledActiveDown Vector 30 20x35@4 22x27@1 24x24@1 27x22@1 35x20@1 \
+#                                      65x20@1 73x22@1 76x24@1 78x27@1 80x35@1 \
+#                                      80x65@1 78x73@1 76x76@1 73x78@1 65x80@1 \
+#                                      35x80@1 27x78@1 24x76@1 22x73@1 20x65@1 \
+#                                      20x35@1 \
+#                                      22+1px73@4 20+1px65@0 \
+#                                      20+1px35@0 22+1px27@0 24+1px24+1p@0 27x22+1p@0 35x20+1p@0 \
+#                                      65x20+1p@0 73x22+1p@0 -- Flat
+
+ButtonStyle All ActiveUp Vector 27 20x35@4 22x27@1 24x24@1 27x22@1 35x20@1 \
+                                   65x20@1 73x22@1 76x24@1 78x27@1 80x35@1 \
+                                   80x65@1 78x73@1 76x76@1 73x78@1 65x80@1 \
+                                   35x80@1 27x78@1 24x76@1 22x73@1 20x65@1 \
+                                   20x35@1 \
+                                   24x76+1p@4 27x78+1p@0 35x80+1p@0 \
+                                   65x80+1p@0 73x78+1p@0 76x76+1p@0 -- Flat
+
+ButtonStyle All ToggledActiveUp Vector 27 20x35@4 22x27@1 24x24@1 27x22@1 35x20@1 \
+                                   65x20@1 73x22@1 76x24@1 78x27@1 80x35@1 \
+                                   80x65@1 78x73@1 76x76@1 73x78@1 65x80@1 \
+                                   35x80@1 27x78@1 24x76@1 22x73@1 20x65@1 \
+                                   20x35@1 \
+                                   24x76+1p@4 27x78+1p@0 35x80+1p@0 \
+                                   65x80+1p@0 73x78+1p@0 76x76+1p@0 -- Flat
+
+ButtonStyle All ActiveDown Vector 29 20x35@4 22x27@1 24x24@1 27x22@1 35x20@1 \
+                                     65x20@1 73x22@1 76x24@1 78x27@1 80x35@1 \
+                                     80x65@1 78x73@1 76x76@1 73x78@1 65x80@1 \
+                                     35x80@1 27x78@1 24x76@1 22x73@1 20x65@1 \
+                                     20x35@1 \
+                                     22+1px27@4 24+1px24+1p@0 27x22+1p@0 \
+                                     35x20+1p@0 65x20+1p@0 73x22+1p@0 \
+                                     76-1px24+1p@0 78-1px27@0 -- Flat
+
+ButtonStyle All ToggledActiveDown Vector 29 20x35@4 22x27@1 24x24@1 27x22@1 35x20@1 \
+                                     65x20@1 73x22@1 76x24@1 78x27@1 80x35@1 \
+                                     80x65@1 78x73@1 76x76@1 73x78@1 65x80@1 \
+                                     35x80@1 27x78@1 24x76@1 22x73@1 20x65@1 \
+                                     20x35@1 \
+                                     22+1px27@4 24+1px24+1p@0 27x22+1p@0 \
+                                     35x20+1p@0 65x20+1p@0 73x22+1p@0 \
+                                     76-1px24+1p@0 78-1px27@0 -- Flat
+
+ButtonStyle All Inactive Vector 27 20x35@4 22x27@1 24x24@1 27x22@1 35x20@1 \
+                                   65x20@1 73x22@1 76x24@1 78x27@1 80x35@1 \
+                                   80x65@1 78x73@1 76x76@1 73x78@1 65x80@1 \
+                                   35x80@1 27x78@1 24x76@1 22x73@1 20x65@1 \
+                                   20x35@1 \
+                                   24x76+1p@4 27x78+1p@0 35x80+1p@0 \
+                                   65x80+1p@0 73x78+1p@0 76x76+1p@0 -- Flat
+
+ButtonStyle All ToggledInactive Vector 27 20x35@4 22x27@1 24x24@1 27x22@1 35x20@1 \
+                                   65x20@1 73x22@1 76x24@1 78x27@1 80x35@1 \
+                                   80x65@1 78x73@1 76x76@1 73x78@1 65x80@1 \
+                                   35x80@1 27x78@1 24x76@1 22x73@1 20x65@1 \
+                                   20x35@1 \
+                                   24x76+1p@4 27x78+1p@0 35x80+1p@0 \
+                                   65x80+1p@0 73x78+1p@0 76x76+1p@0 -- Flat
+
+# ButtonStyle All ActiveUp Vector 29 20x40@4 23x30@1 26x26@1 30x23@1 40x20@1 \
+#                                    60x20@1 70x23@1 74x26@1 77x30@1 80x40@1 \
+#                                    80x60@1 77x70@1 74x74@1 70x77@1 60x80@1 \
+#                                    40x80@1 30x77@1 26x74@1 23x70@1 20x60@1 \
+#                                    20x40@1 80+1px40@4 \
+#                                    80+1px60@0 77+1px70@0 74+1px74+1p@0 70x77+1p@0 60x80+1p@0 \
+#                                    40x80+1p@0 30x77+1p@0 -- Flat
+
+# ButtonStyle All ToggledActiveUp Vector 29 20x40@4 23x30@1 26x26@1 30x23@1 40x20@1 \
+#                                    60x20@1 70x23@1 74x26@1 77x30@1 80x40@1 \
+#                                    80x60@1 77x70@1 74x74@1 70x77@1 60x80@1 \
+#                                    40x80@1 30x77@1 26x74@1 23x70@1 20x60@1 \
+#                                    20x40@1 80+1px40@4 \
+#                                    80+1px60@0 77+1px70@0 74+1px74+1p@0 70x77+1p@0 60x80+1p@0 \
+#                                    40x80+1p@0 30x77+1p@0 -- Flat
+
+# ButtonStyle All ActiveDown Vector 29 20x40@4 23x30@1 26x26@1 30x23@1 40x20@1 \
+#                                      60x20@1 70x23@1 74x26@1 77x30@1 80x40@1 \
+#                                      80x60@1 77x70@1 74x74@1 70x77@1 60x80@1 \
+#                                      40x80@1 30x77@1 26x74@1 23x70@1 20x60@1 \
+#                                      20x40@1 20+1px60@4 \
+#                                      20+1px40@0 23+1px30@0 26+1px26+1p@0 30x23+1p@0 40x20+1p@0 \
+#                                      60x20+1p@0 70x23+1p@0 -- Flat
+
+# ButtonStyle All ToggledActiveDown Vector 29 20x40@4 23x30@1 26x26@1 30x23@1 40x20@1 \
+#                                      60x20@1 70x23@1 74x26@1 77x30@1 80x40@1 \
+#                                      80x60@1 77x70@1 74x74@1 70x77@1 60x80@1 \
+#                                      40x80@1 30x77@1 26x74@1 23x70@1 20x60@1 \
+#                                      20x40@1 20+1px60@4 \
+#                                      20+1px40@0 23+1px30@0 26+1px26+1p@0 30x23+1p@0 40x20+1p@0 \
+#                                      60x20+1p@0 70x23+1p@0 -- Flat
+
+# ButtonStyle All ToggledInactive Vector 5 47x47@0 57x53@0 53x53@0 \
+#                 53x47@0 47x47@0 -- Flat
+
+# ButtonStyle All Inactive Vector 5 47x47@0 57x53@0 53x53@0 53x47@0 \
+#                 47x47@0 -- Flat
+
+# AddButtonStyle 1 Active Vector 5 45x45@3 55x45@3 55x55@3 45x55@3 45x45@3
+AddButtonStyle 1 Active Vector 4 49x49@3 49+1px49@3 49+1px49+1p@3 49x49+1p@3
+AddButtonStyle 1 ToggledActiveUp Vector 10 25x20@0 30x25@0 30x55@0 43x55@0 50x85@0 57x55@0 70x55@0 70x25@0 75x20@0 25x20@0
+AddButtonStyle 1 Inactive Vector 4 49x49@3 49+1px49@3 49+1px49+1p@3 49x49+1p@3
+AddButtonStyle 1 ToggledInactive Vector 10 25x20@0 30x25@0 30x55@0 43x55@0 50x85@0 57x55@0 70x55@0 70x25@0 75x20@0 25x20@0
+AddButtonStyle 2 Active Vector 10 35x35@3 65x65-1p@3 65x65@3 35x35+1p@3 35x35@3 65x35@4 35x65-1p@3 35x65@3 65x35+1p@3 65x35@3
+AddButtonStyle 2 Inactive Vector 10 35x35@3 65x65-1p@3 65x65@3 35x35+1p@3 35x35@3 65x35@4 35x65-1p@3 35x65@3 65x35+1p@3 65x35@3
+# AddButtonStyle 2 Active Vector 17 30x30@4 35x30@3 50x45@3 65x30@3 70x30@3 70x35@3 55x50@3 70x65@3 70x70@3 65x70@3 50x55@3 35x70@3 30x70@3 30x65@3 45x50@3 30x35@3 30x30@3
+# AddButtonStyle 4 Active Vector 8 30x70@3 30x30@3 70x30@3 70x70@3 30x70@3 \
+#                  30x50@4 50x50@3 50x70@3
+# AddButtonStyle 4 ToggledActiveUp Vector 8 30x70@3 30x30@3 70x30@3 70x70@3 \
+#                  30x70@3 50x30@4 50x50@3 70x50@3
+AddButtonStyle 4 Active Vector 5 35x35@4 65x35@3 65x65@3 35x65@3 35x35@3
+AddButtonStyle 4 ToggledActiveUp Vector 10 35x45@4 55x45@3 55x65@3 35x65@3 35x45@3 \
+                                           45x45@4 45x35@3 65x35@3 65x55@3 55x55@3
+AddButtonStyle 4 Inactive Vector 5 35x35@4 65x35@3 65x65@3 35x65@3 35x35@3
+AddButtonStyle 4 ToggledInactive Vector 10 35x45@4 55x45@3 55x65@3 35x65@3 35x45@3 \
+                                           45x45@4 45x35@3 65x35@3 65x55@3 55x55@3
+# AddButtonStyle 6 Active Vector 5 35x60@3 65x60@3 65x50@3 35x50@3 35x60@3
+AddButtonStyle 6 Active Vector 2 35x60@3 65x60@3
+AddButtonStyle 6 Inactive Vector 2 35x60@3 65x60@3
+
+ButtonStyle All - Clear
+ButtonStyle 1 - MwmDecorLayer 6
+ButtonStyle 4 - MwmDecorMax
+ButtonStyle 6 - MwmDecorMin
+
+
+# ButtonStyle 1 Vector 9 0+5px100-6p@3 100-7px100-6p@3 100-7px-0+4p@3 0+5px0+4p@3 0+5px100-5p@3 0+7px100-5p@2 0+8px100-5p@3 100-6px100-5p@3 100-6px-0+6p@3
+# ButtonStyle 4 Vector 9 50-2px50+1p@3 50+2px50+1p@3 50+2px50-3p@3 50-2px50-3p@3 50-2px50+2p@3 50-0px50+2p@2 50-0px50+2p@3 50+3px50+2p@3 50+3px50-1p@3
+# ButtonStyle 6 Vector 9 0+4px50+1p@3 100-6px50+1p@3 100-6px50-2p@3 0+4px50-2p@3 0+4px50+2@3 0+5px50+2p@2 0+6px50+2p@2 100-5px50+2p@3 100-5px50@3
+
+
 ### Sawfish
-ButtonStyle All Vector 3 75x25@1 25x25@1 25x75@1
-AddButtonStyle All Vector 5 20x20@0 20x80@0 80x80@0 80x20@0 20x20@0
-AddButtonStyle All Vector 3 30x85@2 85x85@2 85x20@2
+# ButtonStyle All Vector 3 75x25@1 25x25@1 25x75@1
+# AddButtonStyle All Vector 5 20x20@0 20x80@0 80x80@0 80x20@0 20x20@0
+# AddButtonStyle All Vector 3 30x85@2 85x85@2 85x20@2
 
-AddButtonStyle 2 Vector 2 40x40@0 60x60@0
-AddButtonStyle 2 Vector 2 40x60@0 60x40@0
+# AddButtonStyle 2 Vector 2 40x40@0 60x60@0
+# AddButtonStyle 2 Vector 2 40x60@0 60x40@0
 
-AddButtonStyle 4 Vector 5 35x35@0 35x65@0 65x65@0 65x35@0 35x35@0
-AddButtonStyle 4 Vector 2 35x45@0 65x45@0
-AddButtonStyle 4 Vector 2 35x40@0 65x40@0
+# AddButtonStyle 4 Vector 5 35x35@0 35x65@0 65x65@0 65x35@0 35x35@0
+# AddButtonStyle 4 Vector 2 35x45@0 65x45@0
+# AddButtonStyle 4 Vector 2 35x40@0 65x40@0
 
-AddButtonStyle 6 Vector 2 35x65@0 65x65@0
-AddButtonStyle 6 Vector 2 35x60@0 65x60@0
+# AddButtonStyle 6 Vector 2 35x65@0 65x65@0
+# AddButtonStyle 6 Vector 2 35x60@0 65x60@0
 
-ButtonStyle All -- UseTitleStyle Flat
+# ButtonStyle All -- UseTitleStyle Flat
 
 ############
 # 7: Modules
@@ -995,15 +1128,7 @@ ButtonStyle All -- UseTitleStyle Flat
 # a window. One use is getting the class/resource/name of a window.
 DestroyModuleConfig FvwmIdent:*
 *FvwmIdent: Colorset 10
-*FvwmIdent: Font "xft:Sans:size=12:antialias=True"
-
-# FvwmBanner
-#
-# This displays the Fvwm Logo for 5 seconds. This is displayed
-# when fvwm starts.
-DestroyModuleConfig FvwmBanner:*
-*FvwmBanner: NoDecor
-*FvwmBanner: Timeout 5
+*FvwmIdent: Font "xft:Noto Sans:size=12:antialias=True"
 
 # FvwmScript
 #
@@ -1018,153 +1143,82 @@ DestroyModuleConfig FvwmScript:*
 
 # FvwmButtons - RightPanel
 #
-# FvwmButtons is a powerful module that can be used to build custom
-# panels and docks. This config uses FvwmButtons to build the RightPanel.
-# The panel contains buttons to switch desks, FvwmPager, a system tray,
-# FvwmIconMan (list of running windows), and a clock.
-#
 # Note - To use the system tray you must have "stalonetray" installed.
-# DestroyModuleConfig RightPanel:*
-# *RightPanel: Geometry 160x$[vp.height]-0+0
-# *RightPanel: Colorset 10
-# *RightPanel: Rows $[vp.height]
-# *RightPanel: Columns 160
-# *RightPanel: Frame 0
-# *RightPanel: Font "xft:Sans:Bold:size=12:antialias=True"
-# *RightPanel: (160x60, Icon "fvwm-logo-small.png", Frame 0)
-# *RightPanel: (160x5, Frame 0)
-# *RightPanel: (10x30, Frame 0)
-# *RightPanel: (35x30, Id desk0, Title "1", Action (Mouse 1) GotoDesk 0 0, Colorset 11, ActiveColorset 12, Frame 0)
-# *RightPanel: (35x30, Id desk1, Title "2", Action (Mouse 1) GotoDesk 0 1, ActiveColorset 12, Frame 0)
-# *RightPanel: (35x30, Id desk2, Title "3", Action (Mouse 1) GotoDesk 0 2, ActiveColorset 12, Frame 0)
-# *RightPanel: (35x30, Id desk3, Title "4", Action (Mouse 1) GotoDesk 0 3, ActiveColorset 12, Frame 0)
-# *RightPanel: (10x30, Frame 0)
-# *RightPanel: (5x100, Frame 0)
-# *RightPanel: (150x100, Swallow FvwmPager 'Module FvwmPager *', Frame 0)
-# *RightPanel: (5x100, Frame 0)
-# *RightPanel: (160x5, Frame 0)
-# Test (x stalonetray) *RightPanel: (160x20, Swallow(NoClose,UseOld) \
-#     stalonetray 'Exec exec stalonetray --config \
-#     "$[FVWM_DATADIR]/default-config/.stalonetrayrc"', Frame 0)
-# *RightPanel: (160x5, Frame 0)
-# Test (x stalonetray) PipeRead 'echo "*RightPanel: (160x$(($[vp.height]-300)), \
-#     Top, Swallow FvwmIconMan \'Module FvwmIconMan\', Frame 0)"'
-# Test (!x stalonetray) PipeRead 'echo "*RightPanel: (160x$(($[vp.height]-280)),\
-#     Top, Swallow FvwmIconMan \'Module FvwmIconMan\', Frame 0)"'
-# *RightPanel: (160x70, Swallow DateTime 'Module FvwmScript FvwmScript-DateTime',\
-#     Frame 0)
-# *RightPanel: (160x5, Frame 0)
+DestroyModuleConfig RightPanel:*
+*RightPanel: Geometry 160x$[vp.height]-0+0
+*RightPanel: Colorset 10
+*RightPanel: Rows $[vp.height]
+*RightPanel: Columns 160
+*RightPanel: Frame 0
+*RightPanel: Padding 0 0
+*RightPanel: Font "xft:Noto Sans:size=10:antialias=True"
 
-DestroyModuleConfig DesktopManager:*
-*DesktopManager: Geometry 160x180-3+3
-*DesktopManager: Colorset 10
-*DesktopManager: Rows 185
-*DesktopManager: Columns 160
-*DesktopManager: Frame 0
-*DesktopManager: Padding 0 0
-*DesktopManager: Font "xft:Sans:Bold:size=10:antialias=True"
-*DesktopManager: (160x5, Frame 0)
-*DesktopManager: (5x30, Frame 0)
-*DesktopManager: (70x30, Id desk0, Title "One", Action (Mouse 1) GotoDesk 0 0, Colorset 11, ActiveColorset 12, Frame 2)
-*DesktopManager: (10x30, Frame 0)
-*DesktopManager: (70x30, Id desk1, Title "Two", Action (Mouse 1) GotoDesk 0 1, ActiveColorset 12, Frame 2)
-*DesktopManager: (5x30, Frame 0)
-*DesktopManager: (160x5, Frame 0)
-*DesktopManager: (5x30, Frame 0)
-*DesktopManager: (70x30, Id desk2, Title "Three", Action (Mouse 1) GotoDesk 0 2, ActiveColorset 12, Frame 2)
-*DesktopManager: (10x30, Frame 0)
-*DesktopManager: (70x30, Id desk3, Title "Four", Action (Mouse 1) GotoDesk 0 3, ActiveColorset 12, Frame 2)
-*DesktopManager: (5x30, Frame 0)
-*DesktopManager: (160x5, Frame 0)
-*DesktopManager: (5x100, Frame 0)
-*DesktopManager: (150x100, Swallow FvwmPager 'Module FvwmPager *', Frame 0)
-*DesktopManager: (5x100, Frame 0)
-*DesktopManager: (160x5, Frame 0)
+# 180
+*RightPanel: (160x5, Frame 0)
+*RightPanel: (5x30, Frame 0)
+*RightPanel: (70x30, Id desk0, Title "One", Action (Mouse 1) GotoDesk 0 0, Colorset 11, ActiveColorset 12, Frame 2)
+*RightPanel: (10x30, Frame 0)
+*RightPanel: (70x30, Id desk1, Title "Two", Action (Mouse 1) GotoDesk 0 1, ActiveColorset 12, Frame 2)
+*RightPanel: (5x30, Frame 0)
+*RightPanel: (160x5, Frame 0)
+*RightPanel: (5x30, Frame 0)
+*RightPanel: (70x30, Id desk2, Title "Three", Action (Mouse 1) GotoDesk 0 2, ActiveColorset 12, Frame 2)
+*RightPanel: (10x30, Frame 0)
+*RightPanel: (70x30, Id desk3, Title "Four", Action (Mouse 1) GotoDesk 0 3, ActiveColorset 12, Frame 2)
+*RightPanel: (5x30, Frame 0)
+*RightPanel: (160x5, Frame 0)
+*RightPanel: (5x100, Frame 0)
+*RightPanel: (150x100, Swallow FvwmPager 'Module FvwmPager *', Frame 0)
+*RightPanel: (5x100, Frame 0)
+*RightPanel: (160x5, Frame 0)
 
-DestroyModuleConfig Tray:*
-*Tray: Geometry 160x20-3+203
-*Tray: Colorset 10
-*Tray: Rows 20
-*Tray: Columns 160
-*Tray: Frame 0
-*Tray: Font "xft:Sans:Bold:size=12:antialias=True"
-Test (x stalonetray) *Tray: (160x20, Swallow(NoClose,UseOld) \
+# 20
+*RightPanel: (160x20, Swallow(NoClose,UseOld) \
     stalonetray 'Exec exec stalonetray --config \
     "$[FVWM_USERDIR]/.stalonetrayrc"', Frame 0)
 
-DestroyModuleConfig ApplicationManager:*
-*ApplicationManager: Geometry 160x492-3+243
-*ApplicationManager: Colorset 10
-*ApplicationManager: Rows 1
-*ApplicationManager: Columns 1
-*ApplicationManager: Frame 0
-*ApplicationManager: Font "xft:Sans:Bold:size=12:antialias=True"
-*ApplicationManager: (1x1, Top, Swallow FvwmIconMan 'Module FvwmIconMan', Frame 0)
-
-DestroyModuleConfig Dock: *
-*Dock: Geometry 160x108-3+755
-*Dock: Colorset 10
-*Dock: Rows 3
-*Dock: Columns 3
-*Dock: Frame 0
-*Dock: Padding 0 0
-*Dock: Font "xft:Sans:Bold:size=12:antialias=True"
-*Dock: (1x1, Title "m", Action(Mouse 1) Menu MenuDock, ActiveColorset 12)
-*Dock: (1x1, Title "e", Action(Mouse 1) Exec exec emacs, ActiveColorset 12)
-*Dock: (1x1, Icon $[fvwm_icon]/apps/32x32/utilities-terminal.png, \
+# 108
+*RightPanel: (53x36, Icon icons/apps.png, Action(Mouse 1) Menu XDGMenu, ActiveColorset 12)
+*RightPanel: (54x36, Icon icons/emacs.png, Action(Mouse 1) Exec exec emacs, ActiveColorset 12)
+*RightPanel: (53x36, Icon icons/terminal2.png, \
        Action(Mouse 1) Exec exec $[infostore.terminal], ActiveColorset 12)
-*Dock: (1x1, Icon $[fvwm_icon]/places/32x32/user-home.png, \
+*RightPanel: (53x36, Icon icons/caja.png, \
        Action(Mouse 1) Exec exec caja, ActiveColorset 12)
-*Dock: (1x1, Icon $[fvwm_icon]/apps/32x32/firefox.png, \
+*RightPanel: (54x36, Icon icons/firefox.png, \
        Action(Mouse 1) Exec exec firefox, ActiveColorset 12)
-*Dock: (1x1, Icon $[fvwm_icon]/apps/32x32/firefox.png, \
-       Action(Mouse 1) Exec exec firefox, ActiveColorset 12)
-*Dock: (1x1, Title "d", Action(Mouse 1) Exec exec discord, ActiveColorset 12)
-*Dock: (1x1, Title "g", Action(Mouse 1) Exec exec gimp, ActiveColorset 12)
-*Dock: (1x1, Title "", Action(Mouse 1) Nop, ActiveColorset 12)
+*RightPanel: (53x36, Icon icons/powershell.png, \
+       Action(Mouse 1) Exec exec powershell, ActiveColorset 12)
+*RightPanel: (53x36, Icon icons/discord.png, Action(Mouse 1) Exec exec discord, ActiveColorset 12)
+*RightPanel: (54x36, Icon icons/gimp.png, Action(Mouse 1) Exec exec gimp, ActiveColorset 12)
+*RightPanel: (53x36, Title "", Action(Mouse 1) Nop, ActiveColorset 12)
 
-DestroyModuleConfig AudioManager:*
-*AudioManager: Geometry 160x56-3+883
-*AudioManager: Colorset 10
-*AudioManager: Rows 56
-*AudioManager: Columns 160
-*AudioManager: Frame 0
-*AudioManager: Padding 0 0
-*AudioManager: Font "xft:Sans:Bold:size=16:antialias=True"
-*AudioManager: (160x24, Swallow FvwmPlayer 'Module FvwmScript FvwmScript-Player', Frame 0)
-*AudioManager: (32x32, Title "⏮", Action (Mouse 1) Exec exec playerctl --player=strawberry,%any -s previous, ActiveColorset 12)
-*AudioManager: (32x32, Title "⏯", Action (Mouse 1) Exec exec playerctl --player=strawberry,%any -s play-pause, ActiveColorset 12)
-*AudioManager: (32x32, Title "⏹", Action (Mouse 1) Exec exec playerctl --player=strawberry,%any -s stop, ActiveColorset 12)
-*AudioManager: (32x32, Title "⏭", Action (Mouse 1) Exec exec playerctl --player=strawberry,%any -s next, ActiveColorset 12)
-*AudioManager: (32x32, Title "♫", Action (Mouse 1) Exec exec $[fvwm_music_player], ActiveColorset 12)
+#  $[vp.height] - 888
+PipeRead 'echo "*RightPanel: (160x$(($[vp.height]-888)), Top, Swallow FvwmIconMan \'Module FvwmIconMan\', Frame 0)"'
 
-DestroyModuleConfig NotesManager:*
-*NotesManager: Geometry 160x318-3+959
-*NotesManager: Colorset 10
-*NotesManager: Rows 1
-*NotesManager: Columns 1
-*NotesManager: Frame 0
-*NotesManager: (1x1, Swallow FvwmNotes 'Exec exec $[fvwm_scripts]/notes')
+# 318
+*RightPanel: (160x318, Swallow FvwmNotes 'Exec exec $[fvwm_scripts]/notes')
 
-DestroyModuleConfig StopwatchManager:*
-*StopwatchManager: Geometry 160x90-3-103
-*StopwatchManager: Colorset 10
-*StopwatchManager: Rows 1
-*StopwatchManager: Columns 1
-*StopwatchManager: Frame 0
-*StopwatchManager: (1x1, Swallow FvwmStopwatch 'Exec exec $[fvwm_scripts]/stopwatch')
+# 90
+*RightPanel: (160x90, Swallow FvwmStopwatch 'Exec exec $[fvwm_scripts]/stopwatch')
 
-DestroyModuleConfig Time:*
-*Time: Geometry 160x80-3-3
-*Time: Colorset 10
-*Time: Rows 80
-*Time: Columns 160
-*Time: Frame 0
-*Time: Font "xft:Sans:Bold:size=12:antialias=True"
-*Time: (160x5, Frame 0)
-*Time: (160x70, Swallow FvwmDateTime 'Module FvwmScript FvwmScript-DateTime',\
+# 56
+*RightPanel: (160x24, Swallow FvwmPlayer 'Module FvwmScript FvwmScript-Player', Frame 0)
+*RightPanel: (32x32, Title "⏮", Action (Mouse 1) Exec exec playerctl --player=%any -s previous, ActiveColorset 12)
+*RightPanel: (32x32, Title "⏯", Action (Mouse 1) Exec exec playerctl --player=%any -s play-pause, ActiveColorset 12)
+*RightPanel: (32x32, Title "⏹", Action (Mouse 1) Exec exec playerctl --player=%any -s stop, ActiveColorset 12)
+*RightPanel: (32x32, Title "⏭", Action (Mouse 1) Exec exec playerctl --player=%any -s next, ActiveColorset 12)
+*RightPanel: (32x32, Title "♫", Action (Mouse 1) Exec exec $[fvwm_music_player], ActiveColorset 12)
+
+# 36
+*RightPanel: (53x36, Icon icons/refresh.png, Action(Mouse 1) Restart, ActiveColorset 12)
+*RightPanel: (54x36, Icon icons/restart.png, Action(Mouse 1) Exec exec reboot, ActiveColorset 12)
+*RightPanel: (53x36, Icon icons/quit.png, Action(Mouse 1) Module FvwmScript FvwmScript-ConfirmQuit, ActiveColorset 12)
+
+# 80
+*RightPanel: (160x5, Frame 0)
+*RightPanel: (160x70, Swallow FvwmDateTime 'Module FvwmScript FvwmScript-DateTime',\
     Frame 0)
-*Time: (160x5, Frame 0)
+*RightPanel: (160x5, Frame 0)
 
 # FvwmPager
 #
@@ -1177,7 +1231,7 @@ DestroyModuleConfig FvwmPager:*
 *FvwmPager: WindowColorsets 10 11
 *FvwmPager: Font None
 *FvwmPager: Balloons All
-*FvwmPager: BalloonFont "xft:Sans:Bold:size=10:antialias=True"
+*FvwmPager: BalloonFont "xft:Noto Sans:size=10:antialias=True"
 *FvwmPager: BallonYOffset +2
 *FvwmPager: Window3dBorders
 *FvwmPager: MiniIcons
@@ -1199,12 +1253,15 @@ DestroyModuleConfig FvwmIconMan:*
 *FvwmIconMan: DrawIcons always
 *FvwmIconMan: ReliefThickness 0
 *FvwmIconMan: Format "%t"
-*FvwmIconMan: Font "xft:Sans:Bold:size=8:antialias=True"
+*FvwmIconMan: Font "xft:Noto Sans:size=8:antialias=True"
 *FvwmIconMan: Action Mouse 0 A ret
 *FvwmIconMan: Action Mouse 1 A sendcommand IconManClick
 *FvwmIconMan: Action Mouse 3 A sendcommand "Menu MenuIconOps"
 *FvwmIconMan: Resolution desk
 *FvwmIconMan: Tips needed
+*FvwmIconMan: TipsColorset 15
+*FvwmIconMan: TipsFont "xft:Noto Sans:size=10:antialias=True"
+*FvwmIconMan: TipsBorderWidth 0
 *FvwmIconMan: Sort id
 
 # FvwmEvent
@@ -1224,10 +1281,8 @@ DestroyModuleConfig EventNewDesk:*
 *FvwmFormDefault: Colorset 10
 *FvwmFormDefault: ItemColorset 13
 
-# Local configuration file. For use with the default-config.
+# User local configuration file.
 #
-# If $FVWMUSER_DIR/local.config ($HOME/.fvwm/local.config by default)
-# exists, then read it. This allows changes to default-config settings
-# without needing a full copy of the default-config. This will also allow
-# default-config changes to get used after upgrades (if applicable).
-Test (f $[FVWM_USERDIR]/local.config) Read $[FVWM_USERDIR]/local.config
+# If $HOME/.fvwm/config exists, then read it. This allows the user to have their own
+# fvwm config, or extend this config, if they wish.
+Test (f $[HOME]/.fvwm/config) Read $[HOME]/.fvwm/config

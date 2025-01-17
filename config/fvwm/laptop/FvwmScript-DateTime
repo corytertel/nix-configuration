@@ -1,6 +1,6 @@
 WindowTitle {FvwmDateTime}
 WindowSize  120 70
-Font "xft:Sans:style=Bold:size=12"
+Font "xft:Noto Sans:size=12"
 
 Init
  Begin
@@ -27,7 +27,7 @@ Widget 1
 Property
  Position 0 0
  Size 120 30
- Font "xft:Sans:style=Bold:size=13"
+ Font "xft:Noto Sans:size=13"
  Type ItemDraw
  Flags NoReliefString
  Title {}
@@ -42,7 +42,7 @@ Widget 2
 Property
  Position 0 30
  Size 120 20
- Font "xft:Sans:style=Bold:size=10"
+ Font "xft:Noto Sans:size=10"
  Type ItemDraw
  Flags NoReliefString
  Title {}

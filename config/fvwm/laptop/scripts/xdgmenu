@@ -6,9 +6,9 @@ then
     exit 1
 fi
 
-xdgmenumaker -i -f fvwm -s 32 \
+xdgmenumaker -f fvwm -i -s 32 --max-icon-size \
     | grep -v -G "Title$" \
-    | sed s#'\+ "\(.*\)%.*\(48x48\|128x128\|256x256\|512x512\|pixmaps\|racket\|airshipper\).*"'#'+ "\1"'# \
+    | sed '3i + "Search" Exec exec rofi -show drun -config /home/cory/rofi.rasi' \
     > $dir/XDGMenu
 
 cat <<END

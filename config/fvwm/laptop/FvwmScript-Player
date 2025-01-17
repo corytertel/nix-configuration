@@ -1,6 +1,6 @@
 WindowTitle {FvwmPlayer}
 WindowSize  160 32
-Font "xft:Sans:style=Bold:size=6"
+Font "xft:Noto Sans:size=6"
 
 Init
  Begin
@@ -21,7 +21,7 @@ Widget 1
 Property
  Position 0 0
  Size 160 32
- Font "xft:Sans:style=Bold:size=6"
+ Font "xft:Noto Sans:size=6"
  Type ItemDraw
  Flags NoReliefString
  Title {}

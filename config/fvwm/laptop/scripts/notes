@@ -11,7 +11,7 @@ root['background'] = '#003c3c'
 # Fixing the window size.
 root.geometry("160x284")
 
-text = tk.Text(root, width=160, height=284, fg="white", bg="#003c3c", insertbackground='white', font="Sans 8 bold", highlightthickness=0, borderwidth=0)
+text = tk.Text(root, width=160, height=284, fg='#2e3436', bg='#f6f5f4', insertbackground='#2e3436', font=("Noto Sans", 8), highlightthickness=0, borderwidth=0)
 text.pack()
 
 def init():
