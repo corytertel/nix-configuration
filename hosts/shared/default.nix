@@ -6,6 +6,7 @@
     ./homebrew.nix
     ./udev.nix
     ./wireguard.nix
+    ./xterm.nix
     ./zfs.nix
   ];
 
@@ -35,7 +36,7 @@
     firewall = {
       enable = true;
       # 8080 is tandoor
-      allowedTCPPorts = [ 80 443 8080 5173 5174 8000 ];
+      allowedTCPPorts = [ 80 443 8080 ];
     };
   };
 
@@ -302,8 +303,11 @@
       serif.package
       sansSerif.package
       monospace.package
+
+      # For compatibility with Windows
       corefonts
       vistafonts
+
       # whatsapp-emoji-font
       libertinus
       uw-ttyp0
@@ -311,17 +315,17 @@
       libre-franklin
       iosevka-comfy.comfy-motion-fixed
     ];
-    fontconfig = {
-      enable = true;
-      defaultFonts = {
-        serif = [ "${serif.name}" ];
-        sansSerif = [ "${sansSerif.name}" ];
-        monospace = [ "${monospace.name}" ];
-        # emoji = [ "Apple Color Emoji" ];
-      };
-      # FIXME apple emojis for discord
-      # localConf = builtins.readFile ./fontconfig.xml;
-    };
+    # fontconfig = {
+    #   enable = true;
+    #   defaultFonts = {
+    #     serif = [ "${serif.name}" ];
+    #     sansSerif = [ "${sansSerif.name}" ];
+    #     monospace = [ "${monospace.name}" ];
+    #     # emoji = [ "Apple Color Emoji" ];
+    #   };
+    #   # FIXME apple emojis for discord
+    #   # localConf = builtins.readFile ./fontconfig.xml;
+    # };
   };
 
   virtualisation = {
@@ -353,7 +357,10 @@
       enable = true;
       enableSSHSupport = true;
     };
-    steam.enable = true;
+    # steam.enable = true;
+    firefox.enable = true;
+    chromium.enable = true;
+    partition-manager.enable = true;
   };
 
   xdg = {
@@ -373,17 +380,18 @@
       presentation = "impress.desktop";
       telegram = "telegramdesktop.desktop";
       archiver = "xarchiver.desktop";
+      terminal = "xterm.desktop";
     in with config.apps; {
-      "application/pdf" = pdfViewer.desktopFile;
+      # "application/pdf" = pdfViewer.desktopFile;
       "x-scheme-handler/tg" = telegram;
-      "application/x-sh" = terminal.desktopFile;
-      "text/plain" = editor.desktopFile;
-      "inode/directory" = fileManager.desktopFile;
+      # "application/x-sh" = terminal;
+      # "text/plain" = editor.desktopFile;
+      # "inode/directory" = fileManager.desktopFile;
 
-      "application/zip" = archiver;
-      "application/x-7z-compressed" = archiver;
-      "application/vnd.rar" = archiver;
-      "application/gzip" = archiver;
+      # "application/zip" = archiver;
+      # "application/x-7z-compressed" = archiver;
+      # "application/vnd.rar" = archiver;
+      # "application/gzip" = archiver;
 
       "application/msword" = document;
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = document;
@@ -404,31 +412,31 @@
       "x-scheme-handler/ftp" = browser.desktopFile;
       "x-scheme-handler/unknown" = browser.desktopFile;
 
-      "audio/aac" = musicPlayer.desktopFile;
-      "audio/mpeg" = musicPlayer.desktopFile;
-      "audio/ogg" = musicPlayer.desktopFile;
-      "audio/opus" = musicPlayer.desktopFile;
-      "audio/wav" = musicPlayer.desktopFile;
-      "audio/weba" = musicPlayer.desktopFile;
+      # "audio/aac" = musicPlayer.desktopFile;
+      # "audio/mpeg" = musicPlayer.desktopFile;
+      # "audio/ogg" = musicPlayer.desktopFile;
+      # "audio/opus" = musicPlayer.desktopFile;
+      # "audio/wav" = musicPlayer.desktopFile;
+      # "audio/weba" = musicPlayer.desktopFile;
 
-      "image/bmp" = photoViewer.desktopFile;
-      "image/gif" = photoViewer.desktopFile;
-      "image/ico" = photoViewer.desktopFile;
-      "image/jpeg" = photoViewer.desktopFile;
-      "image/png" = photoViewer.desktopFile;
-      "image/svg" = photoViewer.desktopFile;
-      "image/svg+xml" = photoViewer.desktopFile;
-      "image/svg-xml" = photoViewer.desktopFile;
-      "image/webp" = photoViewer.desktopFile;
-      "image/xpm" = photoViewer.desktopFile;
+      # "image/bmp" = photoViewer.desktopFile;
+      # "image/gif" = photoViewer.desktopFile;
+      # "image/ico" = photoViewer.desktopFile;
+      # "image/jpeg" = photoViewer.desktopFile;
+      # "image/png" = photoViewer.desktopFile;
+      # "image/svg" = photoViewer.desktopFile;
+      # "image/svg+xml" = photoViewer.desktopFile;
+      # "image/svg-xml" = photoViewer.desktopFile;
+      # "image/webp" = photoViewer.desktopFile;
+      # "image/xpm" = photoViewer.desktopFile;
 
-      "video/mp4" = videoPlayer.desktopFile;
-      "video/mpeg" = videoPlayer.desktopFile;
-      "video/ogg" = videoPlayer.desktopFile;
-      "video/webm" = videoPlayer.desktopFile;
-      "video/x-msvideo" = videoPlayer.desktopFile;
-      "video/quicktime" = videoPlayer.desktopFile;
-      "video/x-matroska" = videoPlayer.desktopFile;
+      # "video/mp4" = videoPlayer.desktopFile;
+      # "video/mpeg" = videoPlayer.desktopFile;
+      # "video/ogg" = videoPlayer.desktopFile;
+      # "video/webm" = videoPlayer.desktopFile;
+      # "video/x-msvideo" = videoPlayer.desktopFile;
+      # "video/quicktime" = videoPlayer.desktopFile;
+      # "video/x-matroska" = videoPlayer.desktopFile;
     };
   };
 
@@ -498,112 +506,6 @@
         ];
       };
     };
-
-    xresources.extraConfig = with config.theme.color; ''
-       ! ## Enable a color supported XTerm ##
-       XTerm.termName: xterm-256color
-
-       ! ## Set xterm window size ##
-       XTerm*VT100.geometry: 130x50
-
-       ! ## Set font and fontsize ##
-       ! XTerm*faceName: Libertinus Mono
-       ! XTerm*faceSize: 10
-       ! XTerm*font: -uw-ttyp0-medium-r-normal-*-22-*-*-*-*-*-*-*
-       ! XTerm*faceName: Courier Prime Code
-       ! XTerm*faceSize: 10
-       XTerm*faceName: Iosevka Comfy Motion Fixed
-       XTerm*faceSize: 10
-
-       ! ! VT Font Menu: Unreadable
-       ! XTerm*faceSize1: 8
-       ! ! VT Font Menu: Tiny
-       ! XTerm*faceSize2: 10
-       ! ! VT Font Menu: Small
-       ! XTerm*faceSize3: 12
-       ! ! VT Font Menu: Medium
-       ! XTerm*faceSize4: 16
-       ! ! VT Font Menu: Large
-       ! XTerm*faceSize5: 22
-       ! ! VT Font Menu: Huge
-       ! XTerm*faceSize6: 24
-
-       ! ## Scrollbar ##
-       XTerm*vt100.scrollBar: false
-
-       ! Scroll when there is new input
-       XTerm*scrollTtyOutput: true
-
-       ! Scrolling by using Shift-PageUp / Shift-PageDown or mousewheel by default ##
-       ! Lines of output you can scroll back over
-       XTerm*saveLines: 15000
-
-       ! Enable copy/paste hotkeyes (mouse highlight = copy ,  shift+Insert = paste)
-       XTerm*selectToClipboard: true
-
-       ! ## Select text ##
-       XTerm*highlightSelection: true
-       ! Remove trailing spaces
-       XTerm*trimSelection: true
-
-       ! ## Keybindings ##
-       XTerm*vt100.translations: #override \n\
-         Ctrl <Key>-: smaller-vt-font() \n\
-         Ctrl <Key>+: larger-vt-font() \n\
-         Ctrl <Key>0: set-vt-font(d) \n\
-         Ctrl Shift <Key>C: copy-selection(CLIPBOARD) \n\
-         Ctrl Shift <Key>V: insert-selection(CLIPBOARD)
-       XTerm*metaSendsEscape: true
-
-       ! ## Mouse cursor ##
-       XTerm*pointerShape: left_ptr
-       XTerm*cursorTheme: Vanilla-DMZ
-       Xcursor.size: 32
-
-       ! ~~~~~~~~~~~~~~~~~~
-       ! ## Color Themes ##
-       ! ~~~~~~~~~~~~~~~~~~
-       ! Color scheme is from https://chrisyeh96.github.io/2020/03/28/terminal-colors.html
-       XTerm*title: XTerm
-       XTerm*background: #000000
-       XTerm*foreground: #d3d7cf
-
-       ! original #86a2b0
-       XTerm*colorUL: #86a2b0
-       XTerm*underlineColor: #86a2b0
-
-       ! ! black
-       XTerm*color0  : #000000
-       XTerm*color8  : #555753
-       !
-       ! ! red
-       XTerm*color1  : #cc0000
-       XTerm*color9  : #ef2929
-       !
-       ! ! green
-       XTerm*color2  : #4e9a06
-       XTerm*color10 : #8ae234
-       !
-       ! ! yellow
-       XTerm*color3  : #c4a000
-       XTerm*color11 : #fce94f
-       !
-       ! ! blue
-       XTerm*color4  : #729fcf
-       XTerm*color12 : #32afff
-       !
-       ! ! magenta
-       XTerm*color5  : #75507b
-       XTerm*color13 : #ad7fa8
-       !
-       ! ! cyan
-       XTerm*color6  : #06989a
-       XTerm*color14 : #34e2e2
-       !
-       ! ! white
-       XTerm*color7  : #d3d7cf
-       XTerm*color15 : #ffffff
-     '';
 
     home = {
       username = "cory";
@@ -755,9 +657,9 @@
         drawio
         zoom-us
         qbittorrent
-        xarchiver
+        # xarchiver
         xournalpp
-        teams-for-linux
+        # teams-for-linux
         cantata
         ardour
         vital
@@ -792,7 +694,6 @@
         # libs
         ffmpeg
         libnotify
-        w3m # for images in xterm
 
         # virt-manager
         virt-manager
@@ -815,11 +716,9 @@
         klavaro
         anki
         sshfs
-        firefox
-        chromium
         # has security issues rn
         # megasync
-        btop
+        chromium
 
         # apt
         # (stdenv.mkDerivation {

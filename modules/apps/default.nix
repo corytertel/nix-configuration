@@ -34,15 +34,15 @@ in {
   };
 
   config = {
-    environment.systemPackages = [
-      cfg.terminal.package
-      cfg.browser.package
-      cfg.editor.package
-      cfg.photoViewer.package
-      cfg.musicPlayer.package
-      cfg.videoPlayer.package
-      cfg.fileManager.package
-      cfg.pdfViewer.package
-    ];
+    # environment.systemPackages = [
+    #   cfg.terminal.package
+    #   cfg.browser.package
+    #   cfg.editor.package
+    #   cfg.photoViewer.package
+    #   cfg.musicPlayer.package
+    #   cfg.videoPlayer.package
+    #   cfg.fileManager.package
+    #   cfg.pdfViewer.package
+    # ];
   };
 }

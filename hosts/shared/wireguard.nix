@@ -1,6 +1,8 @@
 { config, lib, pkgs, ... }:
 
 {
+  services.resolved.enable = true;
+
   networking.wg-quick.interfaces = {
     # Unique Gopher on Mullvad
    Mullvad = let

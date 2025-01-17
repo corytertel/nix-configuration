@@ -116,3 +116,6 @@ if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] &&
     # Create a new tmux session on each new terminal
     exec tmux
 fi
+
+# Add .NET Core SDK tools
+export PATH="$PATH:/home/cory/.dotnet/tools"

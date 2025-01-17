@@ -8,7 +8,7 @@ let
   xtermCommand = "xterm -uc -bc"
                  + " -xrm 'XTerm*title: PowerShell Core'"
                  + " -xrm 'XTerm*faceName: Consolas'"
-                 + " -xrm 'XTerm*faceSize: 10'"
+                 + " -xrm 'XTerm*faceSize: 11'"
 
                  + " -xrm 'XTerm*background: #012456'"
                  + " -xrm 'XTerm*foreground: #eeedf0'"
@@ -39,7 +39,7 @@ let
                  # white
                  + " -xrm 'XTerm*color7  : #ffffff'"
                  + " -xrm 'XTerm*color15 : #c0c0c0'"
-                 + " -e ${pkgs.powershell}/bin/pwsh";
+                 + " -e ${pkgs.powershell}/bin/pwsh -nologo";
 
   scriptFile = pkgs.writeShellScriptBin "powershell" xtermCommand;
 

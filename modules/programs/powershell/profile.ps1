@@ -14,7 +14,7 @@
 # Emacs-like binds
 # Set-PSReadLineOption -EditMode Emacs
 
-# Enable the same aliases as Windows PowerShell for compatibility
+# Ensure that we have the same aliases as Windows PowerShell for ease of use/portability
 New-Alias -Name ac -Value Add-Content
 New-Alias -Name asnp -Value Add-PSSnapin
 New-Alias -Name cat -Value Get-Content
@@ -64,7 +64,7 @@ New-Alias -Name wget -Value Invoke-WebRequest
 New-Alias -Name write -Value Write-Output
 
 # Extra Linux compatibility aliases
-New-Alias -Name grep -Value Select-String
+# New-Alias -Name grep -Value Select-String
 
 # # Personal Aliases
 # New-Alias -Name l -Value Get-ChildItem
@@ -89,3 +89,69 @@ New-Alias -Name grep -Value Select-String
 
 # # fm = config.apps.fileManager.command;
 # # i = config.apps.photoViewer.command;
+
+
+# New-Alias -Name l -Value Get-ChildItem
+# New-Alias -Name c -Value Clear-Host
+# New-Alias -Name rm -Value rm --interactive=once --verbose
+# New-Alias -Name mv -Value mv --interactive --verbose
+# New-Alias -Name cp -Value cp -i --verbose
+# New-Alias -Name e -Value eval $EDITOR
+# New-Alias -Name n -Value cd $HOME/.config/nix
+# New-Alias -Name javac -Value javac -Xdiags:verbose
+
+# New-Alias -Name audio-dl -Value yt-dlp -x -f bestaudio --audio-quality 0 --add-metadata --embed-thumbnail -o \"%(artist)s - %(title)s.%(ext)s\"
+# New-Alias -Name soundcloud-dl -Value yt-dlp --add-header \"Authorization: OAuth $(${pkgs.coreutils-full}/bin/cat $HOME/.config/soundcloud.token)\" --add-metadata --write-thumbnail -o \"%(title)s.%(ext)s\"
+
+# New-Alias -Name o -Value xdg-open
+
+# # git aliases
+# New-Alias -Name g -Value git
+# New-Alias -Name ga -Value git add
+# New-Alias -Name gb -Value git branch
+# New-Alias -Name gc -Value git commit
+# New-Alias -Name gch -Value git checkout
+# New-Alias -Name gcl -Value git clone
+# New-Alias -Name gcp -Value git cherry-pick
+# New-Alias -Name gd -Value git diff
+# New-Alias -Name gl -Value git log
+# New-Alias -Name gps -Value git push
+# New-Alias -Name gpl -Value git pull
+# New-Alias -Name gr -Value git restore
+# New-Alias -Name gs -Value git status
+
+# New-Alias -Name py -Value python
+
+# New-Alias -Name sys -Value systemctl
+
+# New-Alias -Name perl -Value perl -p -i -e # idk if I want this on pernamently, could lead to confusing situations
+
+# New-Alias -Name diff -Value diff -y --color --brief
+
+# New-Alias -Name mk -Value make
+
+# New-Alias -Name ns -Value nix-shell
+# New-Alias -Name nd -Value nix develop
+# New-Alias -Name nrs -Value nixos-rebuild switch
+
+# New-Alias -Name cclip -Value xclip -selection c
+# New-Alias -Name pclip -Value xclip -selection c -o
+
+# New-Alias -Name jo -Value journalctl
+# New-Alias -Name joxeu -Value journalctl -xeu
+
+# New-Alias -Name cx -Value chmod +x
+
+# New-Alias -Name convert -Value magick
+
+# New-Alias -Name setqw -Value setxkbmap us
+# New-Alias -Name setdv -Value setxkbmap us_dvorak
+# New-Alias -Name setdvi -Value setxkbmap us_dvorak_iso
+
+# New-Alias -Name ssh -Value ssh -v
+
+# New-Alias -Name ".." -Value cd ..
+# New-Alias -Name "..." -Value cd ../..
+# New-Alias -Name "...." -Value cd ../../..
+# New-Alias -Name "....." -Value cd ../../../..
+# New-Alias -Name "......" -Value cd ../../../../..

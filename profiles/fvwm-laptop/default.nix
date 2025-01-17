@@ -56,16 +56,16 @@
       #   name = "DejaVu Sans Mono";
       #   size = 90;
       # };
-      monospace = {
-        package = pkgs.anonymousPro;
-        name = "Anonymous Pro";
-        size = 105;
-      };
-      variable = {
-        package = pkgs.anonymousPro;
-        name = "Anonymous Pro";
-        size = 105;
-      };
+      # monospace = {
+      #   package = pkgs.anonymousPro;
+      #   name = "Anonymous Pro";
+      #   size = 105;
+      # };
+      # variable = {
+      #   package = pkgs.anonymousPro;
+      #   name = "Anonymous Pro";
+      #   size = 105;
+      # };
     };
   };
 
@@ -111,13 +111,6 @@
   # Notifications
   services.cory.dunst.enable = true;
 
-  # Compositor
-  services.cory.picom = {
-    enable = true;
-    roundBorders = false;
-    cornerRadius = 0;
-  };
-
   # Discord
   programs.cory.discord = {
     enable = true;
@@ -137,78 +130,78 @@
   # };
 
   # Aesthetics
-  theme = with pkgs; {
-    name = "PlainLight";
-    darkTheme = false;
-    gtk = {
-      enable = true;
-      name = "Breeze";
-      package = pkgs.libsForQt5.breeze-gtk;
-    };
-    icons = {
-      name = "crystal-nova";
-      package = crystal-nova-icon-theme;
-    };
-    font = {
-      serif = {
-        package = liberation_ttf;
-        name = "Liberation Serif";
-        size = 12;
-      };
-      sansSerif = {
-        package = liberation_ttf;
-        name = "Liberation Sans";
-        size = 12;
-      };
-      monospace = {
-        package = julia-mono;
-        name = "Julia Mono";
-        size = 10;
-        # package = librecode;
-        # name = "Librecode";
-        # size = 12;
-      };
-    };
-    color = {
-      foreground      = "#141404";
-      background      = "#ffffff";
-      background-alt1 = "#eeeeee";
-      background-alt2 = "#e8e8e8";
-      background-alt3 = "#dddddd";
-      background-alt4 = "#cccccc";
-      color0          = "#141404";
-      color8          = "#141404";
-      color1          = "#e60909";
-      color9          = "#e60909";
-      color2          = "#1f8c35";
-      color10         = "#1f8c35";
-      color3          = "#ed8f23";
-      color11         = "#ed8f23";
-      color4          = "#3647d9";
-      color12         = "#3647d9";
-      color5          = "#e01bd0";
-      color13         = "#e01bd0";
-      color6          = "#2d9574";
-      color14         = "#2d9574";
-      color7          = "#ffffff";
-      color15         = "#ffffff";
-    };
-    cursor = {
-      theme = "Vanilla-DMZ";
-      size = 32;
-      package = pkgs.vanilla-dmz;
-    };
-  };
+  # theme = with pkgs; {
+  #   name = "PlainLight";
+  #   darkTheme = false;
+  #   gtk = {
+  #     enable = true;
+  #     name = "Breeze";
+  #     package = pkgs.libsForQt5.breeze-gtk;
+  #   };
+  #   icons = {
+  #     name = "crystal-nova";
+  #     package = crystal-nova-icon-theme;
+  #   };
+  #   font = {
+  #     serif = {
+  #       package = liberation_ttf;
+  #       name = "Liberation Serif";
+  #       size = 12;
+  #     };
+  #     sansSerif = {
+  #       package = liberation_ttf;
+  #       name = "Liberation Sans";
+  #       size = 12;
+  #     };
+  #     monospace = {
+  #       package = julia-mono;
+  #       name = "Julia Mono";
+  #       size = 10;
+  #       # package = librecode;
+  #       # name = "Librecode";
+  #       # size = 12;
+  #     };
+  #   };
+  #   color = {
+  #     foreground      = "#141404";
+  #     background      = "#ffffff";
+  #     background-alt1 = "#eeeeee";
+  #     background-alt2 = "#e8e8e8";
+  #     background-alt3 = "#dddddd";
+  #     background-alt4 = "#cccccc";
+  #     color0          = "#141404";
+  #     color8          = "#141404";
+  #     color1          = "#e60909";
+  #     color9          = "#e60909";
+  #     color2          = "#1f8c35";
+  #     color10         = "#1f8c35";
+  #     color3          = "#ed8f23";
+  #     color11         = "#ed8f23";
+  #     color4          = "#3647d9";
+  #     color12         = "#3647d9";
+  #     color5          = "#e01bd0";
+  #     color13         = "#e01bd0";
+  #     color6          = "#2d9574";
+  #     color14         = "#2d9574";
+  #     color7          = "#ffffff";
+  #     color15         = "#ffffff";
+  #   };
+  #   cursor = {
+  #     theme = "Vanilla-DMZ";
+  #     size = 32;
+  #     package = pkgs.vanilla-dmz;
+  #   };
+  # };
 
-  home-manager.users.cory.home.file.".config/gtk-3.0" = {
-    source = ./gtk-3.0;
-    recursive = true;
-  };
+  # home-manager.users.cory.home.file.".config/gtk-3.0" = {
+  #   source = ./gtk-3.0;
+  #   recursive = true;
+  # };
 
-  home-manager.users.cory.home.file.".config/qt5ct" = {
-    source = ./qt5ct;
-    recursive = true;
-  };
+  # home-manager.users.cory.home.file.".config/qt5ct" = {
+  #   source = ./qt5ct;
+  #   recursive = true;
+  # };
 
   home-manager.users.cory.home.file.".config/conky" = {
     source = ../../config/conky/laptop;
@@ -216,7 +209,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-
+    mpc-qt
   ];
 
   home-manager.users.cory.home.packages = with pkgs; [

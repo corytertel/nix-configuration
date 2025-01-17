@@ -107,6 +107,7 @@
     # Xft.hintstyle: hintslight
     # Xft.rgba: rgb
     # Xft.lcdfilter: lcddefault
+
     xresources.extraConfig = ''
       Xft.dpi: 125
     '';
