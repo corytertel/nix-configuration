@@ -53,7 +53,12 @@
   (setq display-line-numbers 'relative)
 
   ;; Cursor
-  (setq evil-default-cursor 'hollow)
+  ;; (setq evil-default-cursor 'hollow)
+  (setq evil-default-cursor '(box "black"))
+  (setq evil-normal-state-cursor '(box "black"))
+  (setq evil-visual-state-cursor '(box "black"))
+  (setq evil-motion-state-cursor '(box "black"))
+  (setq evil-insert-state-cursor '((bar . 2) "green"))
 
   ;; Enable C-[
   (define-key evil-insert-state-map (kbd "C-[") #'evil-normal-state)
@@ -71,17 +76,17 @@ next VCOUNT - 1 lines below the current one."
     (interactive "p")
     (indent-for-tab-command)
     (if (and visual-line-mode
-           evil-respect-visual-line-mode)
+             evil-respect-visual-line-mode)
         (evil-end-of-visual-line)
       (evil-move-end-of-line))
     (setq evil-insert-count count
           evil-insert-lines nil
           evil-insert-vcount
           (and vcount
-             (> vcount 1)
-             (list (line-number-at-pos)
-                   #'end-of-line
-                   vcount)))
+               (> vcount 1)
+               (list (line-number-at-pos)
+                     #'end-of-line
+                     vcount)))
     (evil-insert-state 1))
 
   ;; Make :q not quit emacs

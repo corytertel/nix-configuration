@@ -2,14 +2,16 @@
 ;; --- WINDOW MANAGEMENT
 ;;
 
+;; The goal of this is to get as close to tmux window management as possible.
+
 (setq focus-follows-mouse t
       mouse-autoselect-window t)
 
 ;; Smooth scrolling
-(pixel-scroll-precision-mode t)
-(with-eval-after-load 'pixel-scroll
-  (define-key pixel-scroll-precision-mode-map (kbd "<next>") nil)
-  (define-key pixel-scroll-precision-mode-map (kbd "<prior>") nil))
+;; (pixel-scroll-precision-mode t)
+;; (with-eval-after-load 'pixel-scroll
+;;   (define-key pixel-scroll-precision-mode-map (kbd "<next>") nil)
+;;   (define-key pixel-scroll-precision-mode-map (kbd "<prior>") nil))
 
 ;; Mouse scrolling in terminal emacs
 ;; (mouse-wheel-mode 1)
@@ -342,6 +344,11 @@ only when you click on its \"x\" close button."
       (switch-to-buffer buf)))
   )
 
+;; Selecting a window by number
+(use-package winum)
+
+;;; Keymap
+
 (require 'keymap)
 
 (defvar-keymap window-map
@@ -363,6 +370,7 @@ only when you click on its \"x\" close button."
   "n" #'next-workspace
   "p" #'previous-workspace
   "t" #'world-clock
+  "q" #'winum-select-window-by-number
   "0" #'switch-to-workspace-0
   "1" #'switch-to-workspace-1
   "2" #'switch-to-workspace-2

@@ -2,37 +2,16 @@
 ;; --- MISC ---
 ;;
 
-(scroll-bar-mode -1) ; Disables the visible scrollbar
+;; (scroll-bar-mode -1) ; Disables the visible scrollbar
 (tool-bar-mode -1)   ; Disables the toolbar
 (menu-bar-mode -1)   ; Disables the menubar
 (tooltip-mode -1)    ; Disables tooltips
 
 ;; Make the cursor a bar
-(setq-default cursor-type 'hollow)
-;; (setq-default cursor-type 'box)
+;; (setq-default cursor-type 'hollow)
+(setq-default cursor-type 'box)
 ;; (set-cursor-color "darkseagreen2")
-
-(setq initial-scratch-message nil)
-
-;; Beacon
-;; (use-package beacon
-;;   :config
-;;   (beacon-mode 1))
-
-;; Visual feedback on yank/kill
-;; (use-package goggles
-;;   :hook ((prog-mode text-mode) . goggles-mode)
-;;   :config
-;;   (setq-default goggles-pulse nil))
-
-;; Window dividers
-;; (setq window-divider-default-right-width 3)
-;; (let ((color (face-background 'mode-line)))
-;;   (dolist (face '(window-divider-first-pixel
-;; 		  window-divider-last-pixel
-;; 		  window-divider))
-;;     (set-face-foreground face color)))
-;; (window-divider-mode 1)
+(set-cursor-color "black")
 
 ;;
 ;; --- FONT ---
@@ -62,11 +41,11 @@
 
 ;; Font locks
 (set-face-attribute 'font-lock-comment-face nil :foreground "dark red")
-(unless bitmap-font-p
-  (set-face-attribute 'font-lock-comment-face nil
-		      :foreground "dark red"
-		      :family variable-font-name
-		      :height variable-font-height))
+;; (unless bitmap-font-p
+;;   (set-face-attribute 'font-lock-comment-face nil
+;; 		      :foreground "dark red"
+;; 		      :family variable-font-name
+;; 		      :height variable-font-height))
 (set-face-attribute 'font-lock-comment-delimiter-face nil
 		    :foreground "dark red"
 		    :inherit nil)
@@ -120,55 +99,55 @@
     (all-the-icons-install-fonts t)))
 
 ;; Ligatures and Indicators
-(add-hook 'prog-mode-hook 'prettify-symbols-mode)
+;; (add-hook 'prog-mode-hook 'prettify-symbols-mode)
 
-;; APL-like characters for scheme
-(add-hook
- 'scheme-mode-hook
- (lambda ()
-   (setq prettify-symbols-alist '(("lambda" . #x3BB)
-				  ("->"    . #x2192)
-				  ("<=="   . #x21D0)
-				  ("==>"   . #x21D2)
-				  ("<="       . "≤")
-				  (">="       . "≥")
-				  ;; ("define"   . "≝")
-				  ;; ("set!"     . "≐")
-				  ;; ("set-car!" . "≔")
-				  ;; ("set-cdr!" . "≕")
-				  ("#t"       . "✓")
-				  ("#f"       . "✗")
-				  ("'()"      . "∅")
-				  ("null"     . "∅")
-				  ;; ("if"       . "⁇")
-				  ("or"       . "∨")
-				  ("and"      . "∧")
-				  ("not"      . "¬")
-				  ("chain"        . (?~ (Br . Bl) ?>))
-				  ("chain-and"    . (#x2227 (Br . Bl) ?~ (Br . Bl) ?>))
-				  ("chain-when"   . (#x2047 (Br . Bl) ?~ (Br . Bl) ?>))
-				  ("chain-lambda" . (#x3bb  (Br . Bl) ?~ (Br . Bl) ?>))
-				  ("case-lambda" . (?c (Br . Bl) ?a (Br . Bl) ?s (Br . Bl) ?e (Br . Bl) ?- (Br . Bl) #x3bb))))
-   (prettify-symbols-mode 1)))
+;; ;; APL-like characters for scheme
+;; (add-hook
+;;  'scheme-mode-hook
+;;  (lambda ()
+;;    (setq prettify-symbols-alist '(("lambda" . #x3BB)
+;; 				  ("->"    . #x2192)
+;; 				  ("<=="   . #x21D0)
+;; 				  ("==>"   . #x21D2)
+;; 				  ("<="       . "≤")
+;; 				  (">="       . "≥")
+;; 				  ;; ("define"   . "≝")
+;; 				  ;; ("set!"     . "≐")
+;; 				  ;; ("set-car!" . "≔")
+;; 				  ;; ("set-cdr!" . "≕")
+;; 				  ("#t"       . "✓")
+;; 				  ("#f"       . "✗")
+;; 				  ("'()"      . "∅")
+;; 				  ("null"     . "∅")
+;; 				  ;; ("if"       . "⁇")
+;; 				  ("or"       . "∨")
+;; 				  ("and"      . "∧")
+;; 				  ("not"      . "¬")
+;; 				  ("chain"        . (?~ (Br . Bl) ?>))
+;; 				  ("chain-and"    . (#x2227 (Br . Bl) ?~ (Br . Bl) ?>))
+;; 				  ("chain-when"   . (#x2047 (Br . Bl) ?~ (Br . Bl) ?>))
+;; 				  ("chain-lambda" . (#x3bb  (Br . Bl) ?~ (Br . Bl) ?>))
+;; 				  ("case-lambda" . (?c (Br . Bl) ?a (Br . Bl) ?s (Br . Bl) ?e (Br . Bl) ?- (Br . Bl) #x3bb))))
+;;    (prettify-symbols-mode 1)))
 
-;; APL-like characters for elisp
-(add-hook
- 'emacs-lisp-mode-hook
- (lambda ()
-   (setq prettify-symbols-alist '(("lambda" . #x3BB)
-				  ("->"    . #x2192)
-				  ("<=="   . #x21D0)
-				  ("==>"   . #x21D2)
-				  ("<="       . "≤")
-				  (">="       . "≥")
-				  ("t"        . "✓")
-				  ("'()"      . "∅")
-				  ("nil"      . "∅")
-				  ;; ("if"       . "⁇")
-				  ("or"       . "∨")
-				  ("and"      . "∧")
-				  ("not"      . "¬")))
-   (prettify-symbols-mode 1)))
+;; ;; APL-like characters for elisp
+;; (add-hook
+;;  'emacs-lisp-mode-hook
+;;  (lambda ()
+;;    (setq prettify-symbols-alist '(("lambda" . #x3BB)
+;; 				  ("->"    . #x2192)
+;; 				  ("<=="   . #x21D0)
+;; 				  ("==>"   . #x21D2)
+;; 				  ("<="       . "≤")
+;; 				  (">="       . "≥")
+;; 				  ("t"        . "✓")
+;; 				  ("'()"      . "∅")
+;; 				  ("nil"      . "∅")
+;; 				  ;; ("if"       . "⁇")
+;; 				  ("or"       . "∨")
+;; 				  ("and"      . "∧")
+;; 				  ("not"      . "¬")))
+;;    (prettify-symbols-mode 1)))
 
 ;;
 ;; --- THEME ---
@@ -399,6 +378,10 @@
 ;;
 ;; --- Fringes ---
 ;;
+
+;; Set the fringe to an big enough widthh
+(setq-default fringe-mode 20)
+(set-fringe-mode 20)
 
 ;; Truncation indicators
 ;; (define-fringe-bitmap 'left-curly-arrow

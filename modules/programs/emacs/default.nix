@@ -162,11 +162,11 @@ in {
       monospace = {
         package = mkOption {
           type = types.package;
-          default = config.theme.font.monospace.package;
+          default = pkgs.dejavu_fonts;
         };
         name = mkOption {
           type = types.str;
-          default = config.theme.font.monospace.name;
+          default = "DejaVu Sans Mono";
         };
         size = mkOption {
           type = types.int;
@@ -176,11 +176,11 @@ in {
       variable = {
         package = mkOption {
           type = types.package;
-          default = config.theme.font.serif.package;
+          default = pkgs.noto-fonts;
         };
         name = mkOption {
           type = types.str;
-          default = config.theme.font.serif.name;
+          default = "Noto Sans";
         };
         size = mkOption {
           type = types.int;
@@ -213,7 +213,7 @@ in {
       VISUAL = "${pkgs.vim}/bin/vim";
       ALTERNATE_EDITOR = "${pkgs.nano}/bin/nano";
       # eaf
-      QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt6.qtbase.outPath}/lib/qt-6/plugins";
+      # QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt6.qtbase.outPath}/lib/qt-6/plugins";
     };
 
     apps.editor = {
@@ -235,9 +235,12 @@ in {
       ".local/share/dict/words".source = "${pkgs.scowl}/share/dict/words.txt";
     };
 
+    xdg.mime.defaultApplications."text/plain" = "emacs.desktop";
+
     environment.systemPackages = let
       tex = pkgs.texlive.combined.scheme-full;
     in with pkgs; [
+      emacsPackage
       tex
       git
       ripgrep

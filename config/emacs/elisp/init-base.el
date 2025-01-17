@@ -129,7 +129,3 @@
   (funcall eval-last-sexp-function eval-last-sexp-arg-internal))
 
 (global-set-key (kbd "C-x C-e") #'eval-last-sexp-command)
-
-;; Default frame size
-(add-to-list 'default-frame-alist '(width . 160))
-(add-to-list 'default-frame-alist '(height . 70))
