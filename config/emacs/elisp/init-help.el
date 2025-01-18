@@ -13,7 +13,7 @@
   :config
   ;; (add-to-list 'evil-emacs-state-modes 'helpful-mode)
   ;; (add-to-list 'evil-insert-state-modes 'helpful-mode)
-  (evil-define-key 'normal 'helpful-mode-map (kbd "q") #'quit-window))
+  )
 
 (use-package eldoc
   :ensure nil

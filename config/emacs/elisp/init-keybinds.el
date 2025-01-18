@@ -66,6 +66,7 @@
 
   ;; Make TAB have the same behavior as in emacs
   (define-key evil-normal-state-map (kbd "TAB") #'indent-for-tab-command)
+  (define-key evil-visual-state-map (kbd "TAB") #'indent-for-tab-command)
 
   ;; Make A also indent
   (defun evil-append-line (count &optional vcount)
@@ -311,22 +312,36 @@ next VCOUNT - 1 lines below the current one."
   (devil-key " ")
   (devil-repeatable-keys nil)
   (devil-global-sets-buffer-default t)
+  ;; ;; Use vim leader as a way to execute emacs binds without control
+  ;; (devil-translations
+  ;;  '(("%k %k %k" . "C-M-")
+  ;;    ("%k %k" . "M-")
+  ;;    ("%k" . "C-")))
+  ;; (devil-special-keys
+  ;;  '(("%k %k %k %k" . ignore)
+  ;;    ("%k <escape>" . ignore)
+  ;;    ("%k %k <escape>" . ignore)
+  ;;    ("%k %k %k <escape>" . ignore)
+  ;;    ("%k x <escape>" . ignore)
+  ;;    ("%k x %k <escape>" . ignore)
+  ;;    ("%k c <escape>" . ignore)
+  ;;    ("%k c %k <escape>" . ignore)
+  ;;    ("%k h <escape>" . ignore)
+  ;;    ("%k %k g <escape>" . ignore)
+  ;;    ("%k %k f <escape>" . ignore))
+  ;; Use C-c binds as the leader map
   (devil-translations
-   '(("%k %k %k" . "C-M-")
-     ("%k %k" . "M-")
-     ("%k" . "C-")))
+   '(("%k" . "C-c")))
   (devil-special-keys
-   '(("%k %k %k %k" . ignore)
-     ("%k <escape>" . ignore)
-     ("%k %k <escape>" . ignore)
-     ("%k %k %k <escape>" . ignore)
-     ("%k x <escape>" . ignore)
-     ("%k x %k <escape>" . ignore)
-     ("%k c <escape>" . ignore)
-     ("%k c %k <escape>" . ignore)
-     ("%k h <escape>" . ignore)
-     ("%k %k g <escape>" . ignore)
-     ("%k %k f <escape>" . ignore))))
+   '(("%k %k" . ignore)
+     ("%k <escape>" . ignore))))
+
+;; Leader keys
+(cory/define-keys
+ global-map
+ ("C-c o" . find-file)
+ ("C-c e" . eval-last-sexp-command)
+ ("C-c b" . tabspaces-switch-to-buffer))
 
 ;;; Vim training
 

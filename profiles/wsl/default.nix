@@ -18,14 +18,14 @@
       # };
       # variable.size = 110;
       monospace = {
-        package = pkgs.anonymousPro;
-        name = "Anonymous Pro";
-        size = 105;
+        # package = pkgs.anonymousPro;
+        # name = "Anonymous Pro";
+        # size = 105;
       };
       variable = {
-        package = pkgs.anonymousPro;
-        name = "Anonymous Pro";
-        size = 105;
+        # package = pkgs.anonymousPro;
+        # name = "Anonymous Pro";
+        # size = 105;
       };
     };
     extraConfig = ''
