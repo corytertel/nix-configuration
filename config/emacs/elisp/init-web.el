@@ -153,13 +153,13 @@
 	      (cory/web-mode-hook)
 	      (cond
 	       ((and buffer-file-name
-		   (string-match ".*\\.html" buffer-file-name))
+		     (string-match ".*\\.html" buffer-file-name))
 		(cory/web-mode-html-hook))
 	       ((and buffer-file-name
-		   (string-match ".*\\.css" buffer-file-name))
+		     (string-match ".*\\.css" buffer-file-name))
 		(cory/web-mode-css-hook))
 	       ((and buffer-file-name
-		   (string-match "\\(.*\\.js\\)\\|\\(.*\\.jsx\\)\\|\\(.*\\.ts\\)\\|\\(.*\\.tsx\\)" buffer-file-name))
+		     (string-match "\\(.*\\.js\\)\\|\\(.*\\.jsx\\)\\|\\(.*\\.ts\\)\\|\\(.*\\.tsx\\)" buffer-file-name))
 		(cory/web-mode-js-hook))
 	       (t nil))))
 
@@ -175,10 +175,12 @@
 	       (switch-to-buffer buf))))))
     (async-shell-command (concat "firefox file://" buffer-file-name) nil nil)))
 
-;; Javascript
+;; Javascript / Typescript
 (setq js-indent-level 2)
+
+(require 'typescript-ts-mode)
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . js-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
