@@ -24,8 +24,8 @@
    (css-ts-mode . combobulate-mode)
    (yaml-ts-mode . combobulate-mode)
    (typescript-ts-mode . combobulate-mode)
-   (json-ts-mode . combobulate-mode)
-   (tsx-ts-mode . combobulate-mode))
+   (tsx-ts-mode . combobulate-mode)
+   (json-ts-mode . combobulate-mode))
   :init
   ;; You can customize Combobulate's key prefix here.
   ;; Note that you may have to restart Emacs for this to take effect!

@@ -42,6 +42,7 @@
     js-jsx-mode
     js-ts-mode
     typescript-ts-mode
+    tsx-ts-mode
     sql-mode
     nix-mode
     tex-mode
