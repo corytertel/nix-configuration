@@ -108,9 +108,9 @@
     # Xft.rgba: rgb
     # Xft.lcdfilter: lcddefault
 
-    xresources.extraConfig = ''
-      Xft.dpi: 125
-    '';
+    # xresources.extraConfig = ''
+    #   Xft.dpi: 125
+    # '';
 
     home.stateVersion = "23.05";
   };

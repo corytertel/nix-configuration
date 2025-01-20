@@ -70,5 +70,5 @@
 		   (completing-read "user@server.address:"
 				    (cory/read-ssh-history))))))
 
-(global-set-key (kbd "C-c s") #'cory/connect-ssh)
-(global-set-key (kbd "C-c S") #'cory/disconnect-ssh)
+;; (global-set-key (kbd "C-c s") #'cory/connect-ssh)
+;; (global-set-key (kbd "C-c S") #'cory/disconnect-ssh)

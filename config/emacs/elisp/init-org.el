@@ -335,31 +335,31 @@
    ("C-c C-p" . org-download-screenshot)))
 
 ;; Org roam
-(use-package org-roam
-  :ensure t
-  :init
-  (setq org-roam-v2-ack t)
-  :custom
-  (org-roam-directory "~/Org/Roam")
-  (org-roam-complete-everywhere t)
-  (org-roam-capture-templates
-   `(("d" "default" plain "%?"
-      :if-new (file+head
-	       "%<%Y%m%d%H%M%S>-${slug}.org"
-	       ,(let ((options '("#+options: _:{}"
-				 "#+options: ^:{}"
-				 "#+startup: latexpreview"
-				 "#+startup: entitiespretty"
-				 "#+startup: inlineimages"
-				 "#+title: ${title}"
-				 "#+date: %U")))
-		  (mapconcat 'identity options "\n")))
-      :unnarrowed t)))
-  :bind (("C-c o n l" . org-roam-buffer-toggle)
-	 ("C-c o n f" . org-roam-node-find)
-	 ("C-c o n i" . org-roam-node-insert))
-  :config
-  (org-roam-setup))
+;; (use-package org-roam
+;;   :ensure t
+;;   :init
+;;   (setq org-roam-v2-ack t)
+;;   :custom
+;;   (org-roam-directory "~/Org/Roam")
+;;   (org-roam-complete-everywhere t)
+;;   (org-roam-capture-templates
+;;    `(("d" "default" plain "%?"
+;;       :if-new (file+head
+;; 	       "%<%Y%m%d%H%M%S>-${slug}.org"
+;; 	       ,(let ((options '("#+options: _:{}"
+;; 				 "#+options: ^:{}"
+;; 				 "#+startup: latexpreview"
+;; 				 "#+startup: entitiespretty"
+;; 				 "#+startup: inlineimages"
+;; 				 "#+title: ${title}"
+;; 				 "#+date: %U")))
+;; 		  (mapconcat 'identity options "\n")))
+;;       :unnarrowed t)))
+;;   :bind (("C-c o n l" . org-roam-buffer-toggle)
+;; 	 ("C-c o n f" . org-roam-node-find)
+;; 	 ("C-c o n i" . org-roam-node-insert))
+;;   :config
+;;   (org-roam-setup))
 
 ;; Writing
 (use-package writegood-mode

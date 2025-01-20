@@ -10,10 +10,10 @@
 
 ;;; C#
 
-(use-package csharp-mode
-  ;; :config
-  ;; (add-to-list 'auto-mode-alist '("\\.cs\\'" . csharp-tree-sitter-mode))
-  )
+;; (use-package csharp-mode
+;;   ;; :config
+;;   ;; (add-to-list 'auto-mode-alist '("\\.cs\\'" . csharp-tree-sitter-mode))
+;;   )
 
 ;; (use-package omnisharp)
 

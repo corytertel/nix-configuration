@@ -42,4 +42,4 @@
 
 ;; (define-key org-mode-map (kbd "C-c <C-h>") 'eww-wiktionary-search)
 
-(global-set-key (kbd "C-c e") #'cory/eww)
+;; (global-set-key (kbd "C-c e") #'cory/eww)
