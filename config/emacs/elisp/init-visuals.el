@@ -372,8 +372,9 @@
   )
 
 ;;; Line Numbers
-(setq display-line-numbers-type 'relative)
+;; (setq display-line-numbers-type 'relative)
 ;; (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(set-face-attribute 'line-number nil :inherit '(shadow fixed-pitch))
 
 ;;
 ;; --- Fringes ---

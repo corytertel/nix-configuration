@@ -37,6 +37,11 @@
 ;; For each rebind, we need to be careful to preserve the expected behavior.
 ;; i.e. adding to macro, switching evil states, etc
 
+;; The rule is: if vim ships with the behavior out of the box (e.g. a keybind to do something),
+;; then emulate that behavior. But, if vim does not ship with the feature, then do it the emacs
+;; way. This way we fully support default vim, but get to use the emacs ecosystem for everything
+;; else. In a way, it's like using vim with emacs as a giant plugin.
+
 (use-package evil
   :custom
   (evil-want-C-u-scroll t)
@@ -51,6 +56,7 @@
   ;; Relative line numbers
   (global-display-line-numbers-mode 1)
   (setq display-line-numbers 'relative)
+  (setq display-line-numbers-type 'relative)
 
   ;; Cursor
   ;; (setq evil-default-cursor 'hollow)
@@ -69,13 +75,26 @@
   (define-key evil-visual-state-map (kbd "TAB") #'indent-for-tab-command)
 
   ;; Make A also indent
+  (defvar evil-indent-and-append-modes
+    '(emacs-lisp-mode
+      lisp-mode
+      scheme-proc
+      c-mode
+      csharp-mode
+      typescript-ts-mode
+      tsx-ts-mode
+      javascript-mode
+      js-jsx-mode
+      js-ts-mode))
+
   (defun evil-append-line (count &optional vcount)
     "Switch to Insert state at the end of the current line.
 The insertion will be repeated COUNT times.  If VCOUNT is non nil
 it should be number > 0. The insertion will be repeated in the
 next VCOUNT - 1 lines below the current one."
     (interactive "p")
-    (indent-for-tab-command)
+    (when (memq major-mode evil-indent-and-append-modes)
+      (indent-for-tab-command))
     (if (and visual-line-mode
              evil-respect-visual-line-mode)
         (evil-end-of-visual-line)

@@ -405,6 +405,12 @@ only when you click on its \"x\" close button."
 ;; Only in normal mode should C-b be used for window management
 
 (define-key evil-normal-state-map (kbd "C-b") window-map)
+(define-key evil-emacs-state-map (kbd "C-b") window-map)
+(define-key evil-motion-state-map (kbd "C-b") window-map)
+(define-key evil-insert-state-map (kbd "C-b") window-map)
+(define-key evil-visual-state-map (kbd "C-b") window-map)
+(define-key evil-replace-state-map (kbd "C-b") window-map)
+(define-key evil-operator-state-map (kbd "C-b") window-map)
 
 ;;; Unbind default emacs window management binds
 

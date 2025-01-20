@@ -108,14 +108,14 @@ function githelp {
     echo "-------------------------------------------------------------------------------"
 }
 
-# Always run tmux automatically when you open a terminal.
-# If there's a tmux session, attach to it, or create a session.
-if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ] && [ -z "$INSIDE_EMACS" ]; then
-    # Create session 'main' or attach to 'main' if already exists.
-    # tmux new-session -A -s main
-    # Create a new tmux session on each new terminal
-    exec tmux
-fi
+## Always run tmux automatically when you open a terminal.
+## If there's a tmux session, attach to it, or create a session.
+#if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ] && [ -z "$INSIDE_EMACS" ]; then
+#    # Create session 'main' or attach to 'main' if already exists.
+#    # tmux new-session -A -s main
+#    # Create a new tmux session on each new terminal
+#    exec tmux
+#fi
 
 # Add .NET Core SDK tools
 export PATH="$PATH:/home/cory/.dotnet/tools"
