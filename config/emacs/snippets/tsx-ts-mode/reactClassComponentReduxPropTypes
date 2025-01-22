@@ -1,0 +1,27 @@
+# -*- mode: snippet -*-
+# name: reactClassComponentReduxPropTypes
+# key: rcreduxp
+# --
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+
+export class ${1:`(file-name-sans-extension (buffer-name))`} extends Component {
+  static propTypes = {
+    ${2:second}: ${3:third}
+  }
+
+  render() {
+    return (
+      <>
+        ${0}
+      </>
+    )
+  }
+}
+
+const mapStateToProps = (state) => ({})
+
+const mapDispatchToProps = {}
+
+export default connect(mapStateToProps, mapDispatchToProps)(${1})

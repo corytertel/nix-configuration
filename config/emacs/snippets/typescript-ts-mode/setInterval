@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: setInterval
+# key: sti
+# --
+setInterval(() => { ${1:first} }, ${2:second})

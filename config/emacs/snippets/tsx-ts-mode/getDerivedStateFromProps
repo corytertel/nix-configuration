@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: getDerivedStateFromProps
+# key: gdsfp
+# --
+static getDerivedStateFromProps(props, state) {${1:first}}

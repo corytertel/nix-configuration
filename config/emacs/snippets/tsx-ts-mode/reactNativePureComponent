@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: reactNativePureComponent
+# key: rnpc
+# --
+import { Text, View } from 'react-native'
+import React, { PureComponent } from 'react'
+
+export default class ${1:`(file-name-sans-extension (buffer-name))`} extends PureComponent {
+  render() {
+    return (
+      <View>
+        <Text>${0}</Text>
+      </View>
+    )
+  }
+}

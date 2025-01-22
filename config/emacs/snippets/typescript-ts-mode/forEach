@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: forEach
+# key: fre
+# --
+${1:first}.forEach(${2:second} => {${3:third}})

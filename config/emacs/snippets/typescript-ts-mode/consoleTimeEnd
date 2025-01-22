@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: consoleTimeEnd
+# key: cte
+# --
+console.timeEnd('${1:first}')

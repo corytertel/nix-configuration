@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: mappingToProps
+# key: reduxmap
+# --
+const mapStateToProps = (state) => ({})
+
+const mapDispatchToProps = {}

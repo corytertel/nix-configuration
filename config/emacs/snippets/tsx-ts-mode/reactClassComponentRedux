@@ -1,0 +1,22 @@
+# -*- mode: snippet -*-
+# name: reactClassComponentRedux
+# key: rcredux
+# --
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+
+export class ${1:`(file-name-sans-extension (buffer-name))`} extends Component {
+  render() {
+    return (
+      <>
+        ${0}
+      </>
+    )
+  }
+}
+
+const mapStateToProps = (state) => ({})
+
+const mapDispatchToProps = {}
+
+export default connect(mapStateToProps, mapDispatchToProps)(${1})

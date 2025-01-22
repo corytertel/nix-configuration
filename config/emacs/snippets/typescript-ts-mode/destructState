@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: destructState
+# key: cs
+# --
+const { ${1:first} } = this.state

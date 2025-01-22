@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: reactFunctionMemoComponent
+# key: rmc
+# --
+import React, { memo } from 'react'
+
+const ${1:`(file-name-sans-extension (buffer-name))`} = memo(() => {
+  return (
+    <>
+      ${0}
+    </>
+  )
+})
+
+export default ${1}

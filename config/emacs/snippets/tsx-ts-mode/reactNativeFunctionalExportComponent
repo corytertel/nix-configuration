@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: reactNativeFunctionalExportComponent
+# key: rnfe
+# --
+import { View, Text } from 'react-native'
+import React, { useEffect, useState } from 'react';
+
+const ${1:`(file-name-sans-extension (buffer-name))`} = () => {
+  return (
+    <View>
+      <Text>${0}</Text>
+    </View>
+  )
+}
+
+export default ${1}

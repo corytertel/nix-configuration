@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: useState
+# key: ust
+# --
+const [${1:variable}, set${1:$(concat (upcase (substring yas-text 0 1)) (substring yas-text 1))}] = useState(${2:value});

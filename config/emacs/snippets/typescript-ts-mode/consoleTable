@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: consoleTable
+# key: ctl
+# --
+console.table([${1:first}])

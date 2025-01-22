@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: reduxSelector
+# key: rxselect
+# --
+import { createSelector } from 'reselect'
+
+export const ${1:first} = state => state.${2:second}

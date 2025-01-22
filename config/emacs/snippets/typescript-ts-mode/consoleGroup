@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: consoleGroup
+# key: cgr
+# --
+console.group('${1:first}')

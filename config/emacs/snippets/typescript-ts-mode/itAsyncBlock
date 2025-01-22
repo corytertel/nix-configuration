@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: itAsyncBlock
+# key: tita
+# --
+it('should ${1:first}', async () => { ${2:second} })

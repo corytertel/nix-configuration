@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: useContext
+# key: useContextSnippet
+# --
+const ${1:first} = useContext(${2:second})

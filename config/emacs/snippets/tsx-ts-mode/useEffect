@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: useEffect
+# key: useEffectSnippet
+# --
+useEffect(() => {
+  ${1:first}
+
+  return () => {
+    ${2:second}
+  }
+}, [${3:third}])

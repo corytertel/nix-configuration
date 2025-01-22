@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+# name: typescriptReactClassExportPureComponent
+# key: tsrpce
+# --
+import React, { PureComponent } from 'react'
+
+type Props = {}
+
+class ${1:`(file-name-sans-extension (buffer-name))`} extends PureComponent<Props> {
+  render() {
+    return (
+      <>
+        ${0}
+      </>
+    )
+  }
+}
+
+export default ${1}

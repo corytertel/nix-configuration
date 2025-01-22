@@ -7,8 +7,6 @@
   ;; The active keymap while a snippet expansion is in progress.
   (setq yas-keymap
 	(let ((map (make-sparse-keymap)))
-	  (define-key map (kbd "<C-h>")  (yas-filtered-definition 'yas-next-field-or-maybe-expand))
-	  (define-key map (kbd "C-t")    (yas-filtered-definition 'yas-prev-field))
 	  (define-key map (kbd "<down>") (yas-filtered-definition 'yas-next-field-or-maybe-expand))
 	  (define-key map (kbd "<up>")   (yas-filtered-definition 'yas-prev-field))
 	  (define-key map (kbd "C-g")    (yas-filtered-definition 'yas-abort-snippet))
@@ -20,11 +18,10 @@
   (setq yas-minor-mode-map
 	(let ((map (make-sparse-keymap)))
 	  ;; (define-key map (kbd "C-<tab>") yas-maybe-expand)
-	  (define-key map (kbd "<C-h>") yas-maybe-expand)
 	  (define-key map (kbd "<down>") yas-maybe-expand)
-	  (define-key map "\C-c&\C-s" 'yas-insert-snippet)
-	  (define-key map "\C-c&\C-n" 'yas-new-snippet)
-	  (define-key map "\C-c&\C-v" 'yas-visit-snippet-file)
+	  (define-key map (kbd "C-c C-s") 'yas-insert-snippet)
+	  (define-key map (kbd "C-c C-n") 'yas-new-snippet)
+	  (define-key map (kbd "C-c C-v") 'yas-visit-snippet-file)
 	  map))
 
   (yas-global-mode 1))

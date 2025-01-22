@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: shouldComponentUpdate
+# key: scu
+# --
+shouldComponentUpdate(nextProps, nextState) { ${1:first} }

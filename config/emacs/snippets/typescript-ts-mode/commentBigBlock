@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: commentBigBlock
+# key: cmmb
+# --
+/**
+ * ${1:first}
+ */

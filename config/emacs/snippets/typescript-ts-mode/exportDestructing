@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: exportDestructing
+# key: exd
+# --
+export { ${2:second} } from '${1:first}'

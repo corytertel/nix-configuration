@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: propTypeExactRequired
+# key: ptexr
+# --
+PropTypes.exact({
+  $0
+}).isRequired

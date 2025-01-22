@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: reactFunctionMemoComponentWithPropTypes
+# key: rmcp
+# --
+import PropTypes from 'prop-types'
+import React, { memo } from 'react'
+
+const ${1:`(file-name-sans-extension (buffer-name))`} = memo((props) => {
+  return (
+    <>
+      ${0}
+    </>
+  )
+})
+
+${1}.propTypes = {}
+
+export default ${1}

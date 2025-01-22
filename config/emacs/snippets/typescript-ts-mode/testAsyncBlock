@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: testAsyncBlock
+# key: testa
+# --
+test('should ${1:first}', async () => { ${2:second} })

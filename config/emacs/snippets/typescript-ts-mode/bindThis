@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: bindThis
+# key: bnd
+# --
+this.${1:first} = this.${1:first}.bind(this)

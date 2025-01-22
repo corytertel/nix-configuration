@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: componentProps
+# key: props
+# --
+this.props.${1:first}

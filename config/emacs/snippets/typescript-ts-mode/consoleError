@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: consoleError
+# key: cer
+# --
+console.error(${1:first})

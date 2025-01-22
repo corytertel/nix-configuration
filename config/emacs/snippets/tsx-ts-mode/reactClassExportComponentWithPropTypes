@@ -1,0 +1,20 @@
+# -*- mode: snippet -*-
+# name: reactClassExportComponentWithPropTypes
+# key: rcep
+# --
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+
+export class ${1:`(file-name-sans-extension (buffer-name))`} extends Component {
+  static propTypes = {}
+
+  render() {
+    return (
+      <>
+        ${0}
+      </>
+    )
+  }
+}
+
+export default ${1}

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: consoleLogJson
+# key: clj
+# --
+console.log('${1:first}', JSON.stringify(${1:first}, null, 2))

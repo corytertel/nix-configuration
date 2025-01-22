@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: anonymousFunction
+# key: afn
+# --
+(${1:first}) => { ${2:second} }

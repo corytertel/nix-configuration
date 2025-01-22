@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: reactClassPureComponent
+# key: rpc
+# --
+import React, { PureComponent } from 'react'
+
+export default class ${1:`(file-name-sans-extension (buffer-name))`} extends PureComponent {
+  render() {
+    return (
+      <>
+        ${0}
+      </>
+    )
+  }
+}

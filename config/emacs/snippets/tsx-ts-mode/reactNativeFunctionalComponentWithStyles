@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: reactNativeFunctionalComponentWithStyles
+# key: rnfs
+# --
+import { StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react';
+
+export default function ${1:`(file-name-sans-extension (buffer-name))`}() {
+  return (
+    <View>
+      <Text>${0}</Text>
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({})

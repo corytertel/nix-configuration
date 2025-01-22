@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: propertySet
+# key: pse
+# --
+set ${1:first}(${2:second}) {${3:third}}

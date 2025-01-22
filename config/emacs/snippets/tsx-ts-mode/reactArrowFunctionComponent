@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: reactArrowFunctionComponent
+# key: rafc
+# --
+import React, { useEffect, useState } from 'react';
+
+export const ${1:`(file-name-sans-extension (buffer-name))`} = () => {
+  return (
+    <>
+      ${0}
+    </>
+  )
+}

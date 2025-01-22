@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: typescriptReactNativeArrowFunctionComponent
+# key: tsrnf
+# --
+import { View, Text } from 'react-native'
+import React, { useEffect, useState } from 'react';
+
+type Props = {}
+
+const ${1:`(file-name-sans-extension (buffer-name))`} = (props: Props) => {
+  return (
+    <View>
+      <Text>${0}</Text>
+    </View>
+  )
+}
+
+export default ${1}

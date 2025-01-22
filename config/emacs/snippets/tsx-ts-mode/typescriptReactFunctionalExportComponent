@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# name: typescriptReactFunctionalExportComponent
+# key: tsrfce
+# --
+import React, { useEffect, useState } from 'react';
+
+type Props = {}
+
+function ${1:`(file-name-sans-extension (buffer-name))`}({}: Props) {
+  return (
+    <>
+      ${0}
+    </>
+  )
+}
+
+export default ${1}

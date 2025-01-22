@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: importBrowserRouterWithRouteAndNavLink
+# key: imrr
+# --
+import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'

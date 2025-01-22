@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: consoleLog
+# key: clg
+# --
+console.log(${1:first})

@@ -1,0 +1,23 @@
+# -*- mode: snippet -*-
+# name: setupReactComponentTestWithRedux
+# key: srtest
+# --
+import React from 'react'
+import renderer from 'react-test-renderer'
+import { Provider } from 'react-redux'
+
+import store from '~/store'
+import { ${1:`(file-name-sans-extension (buffer-name))`} } from '../${1:`(file-name-sans-extension (buffer-name))`}'
+
+describe('<${1:`(file-name-sans-extension (buffer-name))`} />', () => {
+  const defaultProps = {}
+  const wrapper = renderer.create(
+    <Provider store={store}>
+     <${1:`(file-name-sans-extension (buffer-name))`} {...defaultProps} />
+    </Provider>,
+  )
+
+  test('render', () => {
+    expect(wrapper).toMatchSnapshot()
+  })
+})

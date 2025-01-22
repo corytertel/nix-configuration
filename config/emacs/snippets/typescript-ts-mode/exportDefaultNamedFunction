@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: exportDefaultNamedFunction
+# key: ednf
+# --
+export default function ${1:first}(${2:second}) {${3:third}}

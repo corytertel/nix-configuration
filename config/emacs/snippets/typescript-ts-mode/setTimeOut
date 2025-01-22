@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: setTimeOut
+# key: sto
+# --
+setTimeout(() => { ${1:first} }, ${2:second})

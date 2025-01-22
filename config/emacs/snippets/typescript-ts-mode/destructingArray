@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: destructingArray
+# key: dar
+# --
+const [${2:second}] = ${1:first}

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: forOf
+# key: fof
+# --
+for(let ${1:first} of ${2:second}) {${3:third}}

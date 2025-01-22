@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: typescriptReactArrowFunctionComponent
+# key: tsrafc
+# --
+import React, { useEffect, useState } from 'react';
+
+type Props = {}
+
+const ${1:`(file-name-sans-extension (buffer-name))`} = (props: Props) => {
+  return (
+    <>
+      ${0}
+    </>
+  )
+}

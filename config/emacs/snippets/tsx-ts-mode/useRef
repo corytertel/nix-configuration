@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: useRef
+# key: useRefSnippet
+# --
+const ${1:first} = useRef(${2:second})

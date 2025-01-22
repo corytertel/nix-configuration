@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: setupReactNativeTest
+# key: sntest
+# --
+import 'react-native'
+import React from 'react'
+import renderer from 'react-test-renderer'
+
+import ${1:`(file-name-sans-extension (buffer-name))`} from '../${1:`(file-name-sans-extension (buffer-name))`}'
+
+describe('<${1:`(file-name-sans-extension (buffer-name))`} />', () => {
+  const defaultProps = {}
+  const wrapper = renderer.create(<${1:`(file-name-sans-extension (buffer-name))`} {...defaultProps} />)
+
+  test('render', () => {
+    expect(wrapper).toMatchSnapshot()
+  })
+})

@@ -1,0 +1,23 @@
+# -*- mode: snippet -*-
+# name: typescriptReactClassExportComponent
+# key: tsrce
+# --
+import React, { Component } from 'react'
+
+type Props = {}
+
+type State = {}
+
+class ${1:`(file-name-sans-extension (buffer-name))`} extends Component<Props, State> {
+  state = {}
+
+  render() {
+    return (
+      <>
+        ${0}
+      </>
+    )
+  }
+}
+
+export default ${1}

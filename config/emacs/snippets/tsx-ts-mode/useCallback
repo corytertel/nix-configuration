@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: useCallback
+# key: useCallbackSnippet
+# --
+useCallback(
+  () => {
+    ${1:first}
+  },
+  [${2:second}],
+)

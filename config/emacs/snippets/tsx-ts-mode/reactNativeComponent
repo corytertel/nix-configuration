@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: reactNativeComponent
+# key: rnc
+# --
+import { Text, View } from 'react-native'
+import React, { Component } from 'react'
+
+export default class ${1:`(file-name-sans-extension (buffer-name))`} extends Component {
+  render() {
+    return (
+      <View>
+        <Text>${0}</Text>
+      </View>
+    )
+  }
+}

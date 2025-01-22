@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: reactFunctionalComponent
+# key: rfc
+# --
+import React, { useEffect, useState } from 'react';
+
+export default function ${1:`(file-name-sans-extension (buffer-name))`}() {
+  return (
+    <>
+      ${0}
+    </>
+  )
+}

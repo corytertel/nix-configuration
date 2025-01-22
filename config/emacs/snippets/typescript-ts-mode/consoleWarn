@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: consoleWarn
+# key: cwa
+# --
+console.warn(${1:first})

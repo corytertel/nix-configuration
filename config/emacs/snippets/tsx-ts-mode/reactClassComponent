@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: reactClassComponent
+# key: rcc
+# --
+import React, { Component } from 'react'
+
+export default class ${1:`(file-name-sans-extension (buffer-name))`} extends Component {
+  render() {
+    return (
+      <>
+        ${0}
+      </>
+    )
+  }
+}

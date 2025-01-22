@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: emptyState
+# key: est
+# --
+state = { ${1:first} }

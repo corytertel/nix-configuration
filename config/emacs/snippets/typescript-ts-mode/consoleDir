@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: consoleDir
+# key: cdi
+# --
+console.dir(${1:first})

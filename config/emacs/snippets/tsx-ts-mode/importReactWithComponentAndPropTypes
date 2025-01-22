@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: importReactWithComponentAndPropTypes
+# key: imrcp
+# --
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'

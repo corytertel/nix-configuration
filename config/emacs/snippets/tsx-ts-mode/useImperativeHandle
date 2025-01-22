@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: useImperativeHandle
+# key: useImperativeHandleSnippet
+# --
+useImperativeHandle(
+  ${1:first},
+  () => {
+    ${2:second}
+  },
+  [${3:third}],
+)

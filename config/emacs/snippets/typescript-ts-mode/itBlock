@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: itBlock
+# key: tit
+# --
+it('should ${1:first}', () => { ${2:second} })

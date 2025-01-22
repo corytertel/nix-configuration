@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: exportAs
+# key: exa
+# --
+export { ${2:second} as ${3:third} } from '${1:first}'
