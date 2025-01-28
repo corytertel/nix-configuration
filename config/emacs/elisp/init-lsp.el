@@ -20,11 +20,11 @@
   (eglot-managed-mode
    . (lambda ()
        (setq-local completion-at-point-functions
-		   (list (cape-capf-super
-			  ;; (cape-company-to-capf #'company-yasnippet)
-			  #'yasnippet-capf
-			  #'eglot-completion-at-point)
-			 #'cape-file))))
+                   (list (cape-capf-super
+                          ;; (cape-company-to-capf #'company-yasnippet)
+                          #'yasnippet-capf
+                          #'eglot-completion-at-point)
+                         #'cape-file))))
   ;; :custom
   ;; (eglot-autoshutdown t)
   ;; (eglot-autoreconnect nil)
@@ -49,7 +49,7 @@
   ;; ;; Add web-mode
   ;; (add-to-list 'eglot-server-programs
   ;;              '((web-mode)
-  ;;       	 "typescript-language-server" "--stdio"))
+  ;;                "typescript-language-server" "--stdio"))
 
   ;; Add csharp lsp
   (add-to-list 'eglot-server-programs '((csharp-mode csharp-ts-mode) . ("OmniSharp" "-lsp")))
@@ -106,32 +106,32 @@
 
   ;; Disable some capabilities for speed
   (setq eglot-ignored-server-capabilities
-	'(:hoverProvider
-	  :signatureHelpProvider
-	  :definitionProvider
-	  :typeDefinitionProvider
-	  :implementationProvider
-	  :declarationProvider
-	  :referencesProvider
-	  :documentHighlightProvider
-	  :documentSymbolProvider
-	  :workspaceSymbolProvider
-	  :codeActionProvider
-	  :codeLensProvider
-	  :documentFormattingProvider
-	  :documentRangeFormattingProvider
-	  :documentOnTypeFormattingProvider
-	  :renameProvider
-	  :documentLinkProvider
-	  :colorProvider
-	  :foldingRangeProvider
-	  :executeCommandProvider
-	  :inlayHintProvider))
+        '(:hoverProvider
+          :signatureHelpProvider
+          ;; :definitionProvider
+          :typeDefinitionProvider
+          :implementationProvider
+          :declarationProvider
+          :referencesProvider
+          :documentHighlightProvider
+          :documentSymbolProvider
+          :workspaceSymbolProvider
+          :codeActionProvider
+          :codeLensProvider
+          :documentFormattingProvider
+          :documentRangeFormattingProvider
+          :documentOnTypeFormattingProvider
+          :renameProvider
+          :documentLinkProvider
+          :colorProvider
+          :foldingRangeProvider
+          :executeCommandProvider
+          :inlayHintProvider))
 
   :bind (:map eglot-mode-map
-	 ("C-c C-a" . eglot-code-actions)
-	 ("C-c C-f" . eglot-format-buffer)
-	 ("C-c x"   . eglot-rename)))
+         ("C-c C-a" . eglot-code-actions)
+         ("C-c C-f" . eglot-format-buffer)
+         ("C-c x"   . eglot-rename)))
 
 (use-package eglot-booster
   :after eglot
@@ -154,29 +154,29 @@
 ;;     powershell-mode)
 ;;    . cory/lsp)
 ;;   (lsp-mode . (lambda ()
-;; 		(setq-local completion-at-point-functions
-;; 			    (list (cape-capf-super
-;; 				   (cape-company-to-capf #'company-yasnippet)
-;; 				   ;; #'cape-yasnippet
-;; 				   #'lsp-completion-at-point)
-;; 				  #'cape-file))))
+;;                 (setq-local completion-at-point-functions
+;;                             (list (cape-capf-super
+;;                                    (cape-company-to-capf #'company-yasnippet)
+;;                                    ;; #'cape-yasnippet
+;;                                    #'lsp-completion-at-point)
+;;                                   #'cape-file))))
 ;;   :init
 ;;   (setq lsp-keymap-prefix "C-c C-a")
 ;;   :bind (:map lsp-mode-map
 ;;          ("C-c C-l" . lsp-execute-code-action)
 ;;          ("M-." . lsp-find-definition)
 ;;          ("M-," . lsp-find-references)
-;; 	 ("C-c C-a r" . lsp-rename)
+;;          ("C-c C-a r" . lsp-rename)
 ;;          ("C-c C-a f" . lsp-format-buffer)
 ;;          ("C-c C-a g" . lsp-format-region)
 ;;          ("C-c C-a a" . lsp-execute-code-action)
 ;;          ("C-c C-a r" . lsp-find-references)
-;; 	 ;; :map global-map
-;; 	 ("C-h ." . cory/display-local-help)
-;; 	 ("<help> ." . cory/display-local-help)
-;; 	 ;; :map help-map
-;; 	 ;; ("." . cory/display-local-help)
-;; 	 )
+;;          ;; :map global-map
+;;          ("C-h ." . cory/display-local-help)
+;;          ("<help> ." . cory/display-local-help)
+;;          ;; :map help-map
+;;          ;; ("." . cory/display-local-help)
+;;          )
 ;;   ;; :custom
 ;;   ;; (lsp-log-io nil)
 ;;   ;; (lsp-enable-folding nil)
@@ -211,7 +211,7 @@
 ;;   (defun cory/display-local-help ()
 ;;     (interactive)
 ;;     (if (lsp-mode)
-;; 	(call-interactively #'lsp-describe-thing-at-point)
+;;         (call-interactively #'lsp-describe-thing-at-point)
 ;;       (call-interactively #'display-local-help)))
 
 ;;   ;; ;; don't ping LSP lanaguage server too frequently

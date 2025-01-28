@@ -595,7 +595,7 @@
 
         # smalltalk
         # squeak
-        gnu-smalltalk
+        # gnu-smalltalk
 
         # perl
         # TODO figure out perl LSP
@@ -642,6 +642,7 @@
         #   sdk_8_0
         # ])
         omnisharp-roslyn
+        # ilspycmd
 
         # desktop apps
         tdesktop

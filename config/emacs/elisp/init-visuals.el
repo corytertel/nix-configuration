@@ -3,9 +3,9 @@
 ;;
 
 ;; (scroll-bar-mode -1) ; Disables the visible scrollbar
-(tool-bar-mode -1)   ; Disables the toolbar
-(menu-bar-mode -1)   ; Disables the menubar
-(tooltip-mode -1)    ; Disables tooltips
+;; (tool-bar-mode -1)   ; Disables the toolbar
+;; (menu-bar-mode -1)   ; Disables the menubar
+;; (tooltip-mode -1)    ; Disables tooltips
 
 ;; Make the cursor a bar
 ;; (setq-default cursor-type 'hollow)
