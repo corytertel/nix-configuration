@@ -118,20 +118,21 @@ let
     ]))
   ];
 
-  emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
-    config = initFile;
-    alwaysEnsure = true;
-    package = config.programs.cory.emacs.package;
-    extraEmacsPackages = emacsPackages;
-    override = epkgs: epkgs // {
-      macrursors = pkgs.callPackage ./macrursors.nix {};
-      # cape-yasnippet = pkgs.callPackage ./cape-yasnippet.nix {};
-      corfu-terminal = pkgs.callPackage ./corfu-terminal.nix {};
-      combobulate = pkgs.callPackage ./combobulate.nix {};
-      evil-motion-trainer = pkgs.callPackage ./evil-motion-trainer.nix {};
-      eglot-booster = pkgs.callPackage ./eglot-booster.nix {};
-    };
-  };
+  emacsPackage = config.programs.cory.emacs.package;
+  # emacsPackage = pkgs.emacsWithPackagesFromUsePackage {
+  #   config = initFile;
+  #   alwaysEnsure = true;
+  #   package = config.programs.cory.emacs.package;
+  #   extraEmacsPackages = emacsPackages;
+  #   override = epkgs: epkgs // {
+  #     macrursors = pkgs.callPackage ./macrursors.nix {};
+  #     # cape-yasnippet = pkgs.callPackage ./cape-yasnippet.nix {};
+  #     corfu-terminal = pkgs.callPackage ./corfu-terminal.nix {};
+  #     combobulate = pkgs.callPackage ./combobulate.nix {};
+  #     evil-motion-trainer = pkgs.callPackage ./evil-motion-trainer.nix {};
+  #     eglot-booster = pkgs.callPackage ./eglot-booster.nix {};
+  #   };
+  # };
 
 in {
 
