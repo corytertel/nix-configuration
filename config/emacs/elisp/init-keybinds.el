@@ -81,11 +81,12 @@
       scheme-proc
       c-mode
       csharp-mode
-      typescript-ts-mode
-      tsx-ts-mode
+      web-mode
       javascript-mode
       js-jsx-mode
-      js-ts-mode))
+      js-ts-mode
+      typescript-ts-mode
+      tsx-ts-mode))
 
   (defun evil-append-line (count &optional vcount)
     "Switch to Insert state at the end of the current line.

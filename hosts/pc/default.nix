@@ -7,8 +7,6 @@
     ../../profiles/fvwm-pc
   ];
 
-  nix.settings.cores = 4;
-
   boot = {
     kernelPackages = pkgs.linuxPackages_6_10;
     kernelParams = [

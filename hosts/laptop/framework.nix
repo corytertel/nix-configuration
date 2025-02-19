@@ -3,8 +3,6 @@
 {
   ### Framework manual optimizations ###
 
-  nix.settings.cores = 6;
-
   # Fix TRRS headphones missing a mic
   # https://community.frame.work/t/headset-microphone-on-linux/12387/3
   boot.extraModprobeConfig = lib.mkIf (lib.versionOlder pkgs.linux.version "6.6.8") ''

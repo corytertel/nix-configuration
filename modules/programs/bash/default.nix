@@ -37,6 +37,7 @@ in {
         i = config.apps.photoViewer.command;
         info = "info --vi-keys -v link-style=blue,underline -v active-link-style=blue,bold -v match-style=black,bgyellow";
         javac = "javac -Xdiags:verbose";
+        emacs = "emacs -nw";
 
         audio-dl = "yt-dlp -x -f bestaudio --audio-quality 0 --add-metadata --embed-thumbnail -o \"%(artist)s - %(title)s.%(ext)s\"";
         soundcloud-dl = "yt-dlp --add-header \"Authorization: OAuth $(${pkgs.coreutils-full}/bin/cat $HOME/.config/soundcloud.token)\" --add-metadata --write-thumbnail -o \"%(title)s.%(ext)s\"";

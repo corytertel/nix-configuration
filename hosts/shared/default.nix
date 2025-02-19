@@ -193,6 +193,7 @@
       dates = [ "weekly" ];
     };
     settings = {
+      cores = 1;
       auto-optimise-store = true;
       trusted-users = [ "root" "cory" ];
     };

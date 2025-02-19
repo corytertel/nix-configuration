@@ -75,6 +75,7 @@ in
       automatic = false;
     };
     settings = {
+      cores = 1;
       auto-optimise-store = false;
       trusted-users = [ "root" "cory" ];
     };
@@ -121,6 +122,8 @@ in
       host  all all ::1/128      md5
     '';
   };
+
+  virtualisation.docker.enable = true;
 
   environment.variables = {
     PAGER = "less -S";
@@ -199,9 +202,7 @@ in
         jetbrains.pycharm-community
         pipreqs
         (python311.withPackages (ps: with ps; [
-          epc
           python-lsp-server
-          hy
           pygments
           pip
           python-dotenv
@@ -210,8 +211,27 @@ in
           # flask-sqlalchemy
           # flask_migrate
           # psycopg2
-          # pandas
+          numpy
+          pandas
+          sqlalchemy
+          psycopg2
+          # beautifulsoup4
+
+          # lsp-bridge
+          epc
+          orjson
+          sexpdata
+          six
+          setuptools
+          paramiko
+          rapidfuzz
+          watchdog
+          packaging
         ]))
+
+        # c/c++
+        # clang
+        clang-tools
 
         # web
         yarn
@@ -223,6 +243,11 @@ in
         dotnetSdk
         dotnet-ef
         omnisharp-roslyn
+
+        # java
+        jdk23
+        maven
+        gradle
 
         # postgres
         postgresql
@@ -241,6 +266,8 @@ in
         nano
         vim
         openssl
+
+        html-tidy
       ];
 
       stateVersion = "23.11";
